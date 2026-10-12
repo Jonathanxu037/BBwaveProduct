@@ -183,8 +183,10 @@
 
   function normalize(data) {
     var list = (data && Array.isArray(data.items)) ? data.items : [];
+    // 按创建时间倒序：最新创建的排在最上面。按时间值比较（本地模式和 GitHub 模式写入的时区格式不同，不能按字符串比）
+    var t = function (it) { var v = Date.parse(it.createdAt); return isNaN(v) ? 0 : v; };
     return list.slice().sort(function (a, b) {
-      return String(a.createdAt).localeCompare(String(b.createdAt)) || (a.id || 0) - (b.id || 0);
+      return t(b) - t(a) || (b.id || 0) - (a.id || 0);
     });
   }
 
@@ -291,7 +293,7 @@
   function render(flashFolder) {
     var all = state.items, tb = $('rows');
     renderOwnerOptions();
-    // 序号按完整列表编号，查询后保持不变
+    // 序号按完整列表（创建时间倒序）从上到下编号，查询后保持不变
     var shown = [];
     all.forEach(function (it, i) { if (matches(it)) shown.push({ it: it, no: i + 1 }); });
     $('listMeta').textContent = hasFilter()
