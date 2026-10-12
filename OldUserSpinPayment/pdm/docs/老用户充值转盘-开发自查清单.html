@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>开发自查清单</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<div class="with-nav">
+  <header class="ck-head" id="ckhead">
+    <div class="ck-top">
+      <div>
+        <div class="k">789BINGO · 功能自查</div>
+        <h1>老用户充值转盘 · 开发自查清单 · v1.0</h1>
+        <div class="d">勾选状态保存在本机浏览器，按角色分别保存；换电脑或换浏览器后看不到，留档请导出 CSV。</div>
+      </div>
+      <div class="ck-total"><b id="tp">0%</b><span id="tn">0 / 0 项</span><div class="pbar"><i id="tb" style="width:0"></i></div></div>
+    </div>
+    <div class="filters">
+      <div class="fgroup" data-g="role"><span class="gl">角色</span></div>
+      <div class="fgroup" data-g="type"><span class="gl">类型</span></div>
+      <div class="fgroup" data-g="state"><span class="gl">状态</span></div>
+      <div class="fgroup"><button class="pill" type="button" id="exall">全部展开</button><button class="pill" type="button" id="coall">全部收起</button><button class="pill" type="button" id="csv">导出 CSV</button><button class="pill" type="button" id="prt">打印</button></div>
+      <button class="clearbtn" type="button" id="clear">清空勾选</button>
+    </div>
+  </header>
+  <div class="split" id="split">
+    <div class="ck-left" id="list"></div>
+    <div class="divider" id="divider" role="separator" aria-label="拖动调整宽度"></div>
+    <div class="ck-right">
+      <div class="rhead">PRD 需求文档 <button type="button" id="up" aria-label="上一处标注">↑</button><button type="button" id="dn" aria-label="下一处标注">↓</button><span class="cnt2" id="hitn"></span></div>
+      <iframe id="prd" src="老用户充值转盘-需求开发PRD文档.html" title="PRD 需求文档"></iframe>
+    </div>
+  </div>
+</div>
+
+<script>
+/* 顶栏右侧「在新标签页打开」。左侧目录栏默认始终显示，方便跳到其他页面；
+   需要更宽的两栏时，点目录栏右上角「隐藏」，再点顶栏「展开目录」恢复（规范第十章 3.1 第 5 条） */
+window.NAV_NEWWIN_TEXT = "在新标签页打开";
+window.addEventListener("navtoggle", function () { setTimeout(fitHead, 0); });
+</script>
+<script>window.NAV_ROOT = "../";</script>
+<script src="../assets/nav-data.js"></script>
+<script src="../assets/nav.js"></script>
+<script>
+/* 自查项：[类型, 适用角色, 关键, 检查什么, 预期结果, 新增或修改的版本]。新自查项只追加在各组末尾，保证已有编号不变。
+   类型 fn 功能 / bd 边界值 / ex 异常 / un 非常规；角色 d 设计 / f 前端 / b 后端 / q 测试。功能点名称与 PRD 保持一致。 */
+var DATA = [
+ { c: "F01", n: "充值方式选项", s: [
+  { c: "F01-01", n: "新增原生Gcash 选项", i: [
+   ["fn", "fq", 1, "打开充值方式下拉", "在线上现有选项之后显示「原生Gcash」，现有选项保持不变（现有选项以线上为准）"],
+   ["fn", "b", 1, "新选项的保存值", "与现有选项用同一种方式保存，对应生产环境的原生Gcash 通道（名称和标识以 PRD 待确认 Q1 的结论为准）"],
+   ["fn", "d", 0, "选项名称和「?」说明", "选项名称为「原生Gcash」（2026-10-09 已确认，大小写和写法一致）；「?」文字与 PRD 4.3 帮助提示内容一致"]
+  ]},
+  { c: "F01-02", n: "勾选、保存与已选值显示", i: [
+   ["fn", "fq", 1, "单独勾选原生Gcash 后保存，再进入编辑", "标签正确显示"],
+   ["fn", "fq", 1, "原生Gcash 与 PayCools 等多选后保存，再进入编辑", "所有已选标签都正确显示"],
+   ["fn", "fq", 0, "点选项取消勾选、点标签 × 删除、点下拉外部", "分别取消、删除、收起下拉，与现有选项一致"],
+   ["fn", "q", 0, "编辑上线前已存在的活动", "不会自动勾选原生Gcash，其他配置不变"]
+  ]}
+ ]},
+ { c: "F02", n: "生效方式", s: [
+  { c: "F02-01", n: "原生Gcash 订单获得转盘次数", i: [
+   ["fn", "bq", 1, "活动勾选原生Gcash，老用户经原生Gcash 通道充值成功，金额在档位内", "按现有规则获得转盘次数"],
+   ["fn", "bq", 1, "活动未勾选原生Gcash，老用户经原生Gcash 通道充值成功", "不获得次数，充值正常到账"],
+   ["fn", "dfq", 0, "C 端回归：H5、iOS 原生、安卓 Flutter、iOS Flutter 的充值页", "勾选后原生Gcash 对应入口显示 Lucky Spin 标识和金额角标；未勾选不显示（C 端是否不用发版以 PRD 待确认 Q2 为准）"],
+   ["fn", "bq", 1, "回归：勾选其他现有选项的活动；不选任何充值方式时点保存", "获得次数和 C 端展示与上线前一致；是否必填的表现与上线前一致"]
+  ]}
+ ]}
+];
+var VER = "v1.0", KEY = "老用户充值转盘功能需求-" + VER + "-仅新增选项-checklist", PREV = "";
+var RN = { d: "设计", f: "前端", b: "后端", q: "测试" }, TN = { fn: "功能", bd: "边界值", ex: "异常", un: "非常规" };
+var F = { role: "all", type: "all", state: "all" };
+var store = {};
+try { store = JSON.parse(localStorage.getItem(KEY) || "null"); } catch (e) { store = null; }
+try { var sv = JSON.parse(localStorage.getItem(KEY + "-filters") || "{}"); if (sv.role) F = sv; } catch (e) {}
+/* 新版本首次打开：沿用上一版未改动自查项的勾选；本版新增或修改的自查项清空 */
+var MIGRATE = store === null; if (MIGRATE) store = {};
+function save() { try { localStorage.setItem(KEY, JSON.stringify(store)); localStorage.setItem(KEY + "-filters", JSON.stringify(F)); } catch (e) {} }
+function done(it, role) {
+  var rs = role === "all" ? it.r.split("") : [role];
+  return rs.every(function (r) { return store[r + ":" + it.id]; });
+}
+function setDone(it, on) { (F.role === "all" ? it.r.split("") : [F.role]).forEach(function (r) { if (on) store[r + ":" + it.id] = 1; else delete store[r + ":" + it.id]; }); }
+/* 展开数据 */
+var ITEMS = [];
+DATA.forEach(function (fp) { fp.s.forEach(function (s) { s.i.forEach(function (x, k) {
+  var it = { id: s.c + "-" + (k + 1), fp: fp, sub: s, t: x[0], r: x[1], key: !!x[2], q: x[3], e: x[4], v: x[5] || "" }; ITEMS.push(it); s.items = (s.items || []).concat(it);
+}); }); });
+function inRole(it) { return F.role === "all" || it.r.indexOf(F.role) >= 0; }
+function visible(it) {
+  if (!inRole(it)) return false;
+  if (F.type === "fn" && it.t !== "fn") return false;
+  if (F.type === "bd" && it.t !== "bd") return false;
+  if (F.type === "ex" && it.t !== "ex" && it.t !== "un") return false;
+  var d = done(it, F.role);
+  if (F.state === "todo" && d) return false;
+  if (F.state === "done" && !d) return false;
+  if (F.state === "key" && !it.key) return false;
+  return true;
+}
+function stat(list) { var n = list.length, c = list.filter(function (it) { return done(it, F.role); }).length; return { n: n, c: c, p: n ? Math.round(c * 100 / n) : 0 }; }
+var closed = {};
+function render() {
+  var html = "";
+  DATA.forEach(function (fp) {
+    var all = []; fp.s.forEach(function (s) { all = all.concat(s.items.filter(inRole)); });
+    var vis = all.filter(visible); if (!vis.length) return;
+    var st = stat(all), tag = st.c === 0 ? '<span class="stt">未开始</span>' : st.c === st.n ? '<span class="stt done">已完成</span>' : '<span class="stt ing">进行中</span>';
+    html += '<section class="fpc' + (closed[fp.c] ? " closed" : "") + '" data-fp="' + fp.c + '"><div class="fpc-h">' +
+      '<button class="tri" type="button" data-tog="' + fp.c + '" aria-label="展开或收起">▼</button><span class="code">' + fp.c + '</span><span class="nm">' + fp.n + "</span>" + tag +
+      '<span class="mbar"><i style="width:' + st.p + '%"></i></span><span class="num">' + st.c + " / " + st.n + "</span>" +
+      '<button class="selall" type="button" data-sel="' + fp.c + '">全选本组</button><button class="gopr" type="button" data-pr="' + fp.c + '">查看 PRD ›</button></div><div class="fpc-b">';
+    fp.s.forEach(function (s) {
+      var sv = s.items.filter(visible); if (!sv.length) return;
+      var ss = stat(s.items.filter(inRole));
+      html += '<div class="sub-h"><span class="code2">' + s.c + '</span><span class="nm">' + s.n + '</span><span class="mbar"><i style="width:' + ss.p + '%"></i></span><span class="num">' + ss.c + " / " + ss.n + '</span><button class="gopr" type="button" data-pr="' + s.c + '">查看 PRD ›</button></div><ul class="items">';
+      sv.forEach(function (it) {
+        var d = done(it, F.role);
+        html += '<li class="' + (d ? "done" : "") + (it.v ? " vmark" + (it.v === VER ? "" : " old") : "") + '"><input type="checkbox" data-id="' + it.id + '"' + (d ? " checked" : "") + ' aria-label="' + it.q.replace(/"/g, "&quot;") + '"><div><span class="tx">' + it.q +
+          '<span class="tags"><span class="lb t-' + it.t + '">' + TN[it.t] + "</span>" + it.r.split("").map(function (r) { return '<span class="lb r-' + r + '">' + RN[r] + "</span>"; }).join("") + (it.key ? '<span class="lb key">关键</span>' : "") +
+          (it.v ? '<sup class="vtag' + (it.v === VER ? "" : " old") + '" title="' + it.v + '">' + it.v + "</sup>" : "") +
+          '</span></span><span class="ex">预期：' + it.e + "</span></div></li>";
+      });
+      html += "</ul>";
+    });
+    html += "</div></section>";
+  });
+  document.getElementById("list").innerHTML = html || '<div class="empty">当前筛选下没有检查项</div>';
+  var t = stat(ITEMS.filter(inRole));
+  document.getElementById("tp").textContent = t.p + "%";
+  document.getElementById("tn").textContent = t.c + " / " + t.n + " 项";
+  document.getElementById("tb").style.width = t.p + "%";
+}
+var byId = {}; ITEMS.forEach(function (it) { byId[it.id] = it; });
+if (MIGRATE) { try { var old = JSON.parse(localStorage.getItem(PREV) || "{}"); Object.keys(old).forEach(function (k) { var it = byId[k.split(":")[1]]; if (it && it.v !== VER) store[k] = old[k]; }); } catch (e) {} save(); }
+var list = document.getElementById("list");
+list.addEventListener("change", function (e) { var id = e.target.dataset.id; if (!id) return; setDone(byId[id], e.target.checked); save(); render(); });
+list.addEventListener("click", function (e) {
+  var b = e.target.closest("button"); if (!b) return;
+  if (b.dataset.tog) { closed[b.dataset.tog] = !closed[b.dataset.tog]; b.closest(".fpc").classList.toggle("closed"); }
+  if (b.dataset.sel) {
+    var its = ITEMS.filter(function (it) { return it.fp.c === b.dataset.sel && visible(it); });
+    var allOn = its.every(function (it) { return done(it, F.role); });
+    its.forEach(function (it) { setDone(it, !allOn); }); save(); render();
+  }
+  if (b.dataset.pr) showPRD(b.dataset.pr);
+});
+/* 查看 PRD：宽屏在右栏定位并标荧光粉；窄屏在新页面打开 */
+var frame = document.getElementById("prd"), ready = false, pending = null;
+frame.addEventListener("load", function () { ready = true; if (pending) { frame.contentWindow.postMessage({ type: "prd-show", code: pending }, "*"); pending = null; } });
+function showPRD(code) {
+  if (window.matchMedia("(max-width:699px)").matches) { window.open("老用户充值转盘-需求开发PRD文档.html#" + code, "_blank"); return; }
+  if (!ready) { pending = code; return; }   /* PRD 还没加载完：加载完成后再定位 */
+  frame.contentWindow.postMessage({ type: "prd-show", code: code }, "*");
+}
+document.getElementById("up").onclick = function () { frame.contentWindow.postMessage({ type: "prd-step", dir: -1 }, "*"); };
+document.getElementById("dn").onclick = function () { frame.contentWindow.postMessage({ type: "prd-step", dir: 1 }, "*"); };
+window.addEventListener("message", function (e) {
+  var d = e.data || {}; if (d.type !== "prd-hits") return;
+  document.getElementById("hitn").textContent = d.total ? "第 " + (d.pos + 1) + " / " + d.total + " 处标注" : "";
+});
+/* 筛选 */
+var GROUPS = { role: [["all", "全部"], ["d", "设计"], ["f", "前端"], ["b", "后端"], ["q", "测试"]], type: [["all", "全部"], ["fn", "功能"], ["bd", "边界值"], ["ex", "异常与非常规操作"]], state: [["all", "全部"], ["todo", "未完成"], ["done", "已完成"], ["key", "仅关键项"]] };
+Object.keys(GROUPS).forEach(function (g) {
+  var box = document.querySelector('[data-g="' + g + '"]');
+  GROUPS[g].forEach(function (o) {
+    var b = document.createElement("button"); b.type = "button"; b.className = "pill"; b.textContent = o[1]; b.setAttribute("aria-pressed", F[g] === o[0]);
+    b.onclick = function () { F[g] = o[0]; box.querySelectorAll(".pill").forEach(function (x) { x.setAttribute("aria-pressed", x === b); }); save(); render(); };
+    box.appendChild(b);
+  });
+});
+document.getElementById("exall").onclick = function () { closed = {}; render(); };
+document.getElementById("coall").onclick = function () { DATA.forEach(function (fp) { closed[fp.c] = true; }); render(); };
+document.getElementById("prt").onclick = function () { window.print(); };
+document.getElementById("clear").onclick = function () {
+  var m = document.createElement("div"); m.className = "cfm";
+  m.innerHTML = '<div role="dialog" aria-modal="true"><p><b>清空勾选</b></p><p>将清空本需求 v1.0 在本浏览器里所有角色的勾选，不能撤销。</p><div class="row2"><button class="obtn" type="button" data-x="0">取消</button><button class="obtn" type="button" data-x="1" style="border-color:#C00000;color:#C00000">确认清空</button></div></div>';
+  m.onclick = function (e) { var x = e.target.dataset.x; if (x === undefined) return; if (x === "1") { store = {}; save(); render(); } m.remove(); };
+  document.body.appendChild(m);
+};
+document.getElementById("csv").onclick = function () {
+  var rows = [["大功能点", "子功能点", "编号", "类型", "适用角色", "关键", "检查什么", "预期结果", "设计", "前端", "后端", "测试"]];
+  ITEMS.forEach(function (it) {
+    rows.push([it.fp.c + " " + it.fp.n, it.sub.c + " " + it.sub.n, it.id, TN[it.t], it.r.split("").map(function (r) { return RN[r]; }).join("/"), it.key ? "是" : "",
+      it.q, it.e].concat(["d", "f", "b", "q"].map(function (r) { return it.r.indexOf(r) < 0 ? "—" : store[r + ":" + it.id] ? "已勾" : "未勾"; })));
+  });
+  var csv = "﻿" + rows.map(function (r) { return r.map(function (c) { return '"' + String(c).replace(/"/g, '""') + '"'; }).join(","); }).join("\r\n");
+  var a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([csv], { type: "text/csv;charset=utf-8" })); a.download = "老用户充值转盘-开发自查清单-" + VER + ".csv";
+  document.body.appendChild(a); a.click(); a.remove();
+};
+/* 分隔条拖动 */
+(function () {
+  var split = document.getElementById("split"), dv = document.getElementById("divider"), drag = false;
+  dv.addEventListener("mousedown", function (e) { drag = true; frame.style.pointerEvents = "none"; e.preventDefault(); });
+  window.addEventListener("mouseup", function () { drag = false; frame.style.pointerEvents = ""; });
+  window.addEventListener("mousemove", function (e) {
+    if (!drag) return;
+    var r = split.getBoundingClientRect(), p = Math.min(70, Math.max(25, (e.clientX - r.left) * 100 / r.width));
+    split.style.setProperty("--lw", p + "%");
+  });
+})();
+/* 分栏高度 = 视口 - 顶栏 - 头图 */
+function fitHead() { document.getElementById("split").style.setProperty("--headh", document.getElementById("ckhead").offsetHeight + "px"); }
+window.addEventListener("resize", fitHead);
+render(); setTimeout(fitHead, 0);
+</script>
+</body>
+</html>

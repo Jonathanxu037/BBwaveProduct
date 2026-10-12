@@ -1,2 +1,99 @@
 <!doctype html>
-<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="prdhub-placeholder" content="1"><title>需求待上传</title></head><body style="margin:0;font-family:'Microsoft YaHei',sans-serif;background:#F6F3EE;color:#1B1720"><div style="max-width:520px;margin:12vh auto;padding:32px 24px;background:#fff;border:1px solid #D9D2E4;border-radius:14px;text-align:center"><div style="font-size:11px;font-weight:700;letter-spacing:.24em;color:#C89A3C">789BINGO</div><h1 style="font-size:20px;color:#16052F;margin:8px 0 6px">老用户充值转盘增加新充值项</h1><p style="color:#6A6076;line-height:1.7">该需求还没有上传产品角色页面。上传需求包后，这里会显示需求与原型中心。</p><p><a href="../../" style="color:#1677FF">← 返回需求列表</a></p></div></body></html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>老用户充值转盘需求</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<div class="with-nav">
+<main class="home">
+  <div class="home-head">
+    <div>
+      <h1>需求与原型中心</h1>
+      <p>老用户充值转盘 · 需求包按访问链接的角色显示可查看的页面</p>
+    </div>
+    <div class="hbtns"><button class="obtn" type="button" id="ex">全部展开</button><button class="obtn" type="button" id="co">全部收起</button></div>
+  </div>
+
+  <section class="reqcard">
+    <div class="reqcard-h"><b>老用户充值转盘 · 充值方式新增「原生Gcash」· v1.0</b><small>老用户充值转盘功能需求</small></div>
+    <div class="reqcard-b">
+      <div>
+        <p style="margin:0 0 6px">在【活动中心 › 老用户充值转盘】的「范围配置 › 充值渠道 › 充值方式」下拉里新增「原生Gcash」选项，用法和生效方式与现有选项完全一致，不新增其他规则。只改后台（后台前端 + 后端），C 端做回归。</p>
+        <div class="facts">
+          <div><b>1</b><span>后台原型页面</span></div>
+          <div><b>2</b><span>大功能点</span></div>
+          <div><b>3</b><span>子功能点</span></div>
+          <div><b>3</b><span>本需求规则</span></div>
+          <div><b>2</b><span>待确认事项</span></div>
+          <div><b>GMT+8</b><span>业务时区</span></div>
+        </div>
+        <p style="margin:0"><span class="warn-2">※ 勾选后的生效方式与现有选项完全一致，判定逻辑不改（PRD 3.2 规则 N3）。</span></p>
+        <div class="tbl" style="margin-top:12px"><table class="mini">
+          <tr><th>版本号</th><th>时间</th><th>修改人</th><th>概述</th></tr>
+          <tr><td>v1.0</td><td>2026-10-07</td><td>Joshua</td><td>创建老用户充值转盘 v1.0</td></tr>
+        </table></div>
+      </div>
+      <div class="ltree" id="tree"></div>
+    </div>
+  </section>
+
+  <section class="reqcard arch">
+    <div class="reqcard-h"><b>需求文档架构图</b><small>按角色和需求文件展示整体结构：各角色能访问哪些页面、打开后的默认页</small></div>
+    <div class="arch-b" id="arch"></div>
+  </section>
+
+  <section class="reqcard oc-log">
+    <div class="reqcard-h"><b>运营需求修改记录</b><small>按提交时间倒序，最新提交的在最上面</small></div>
+    <div class="reqcard-b oc-log-b">
+      <p class="oc-log-note">※ 记录来自本机浏览器：运营提交的版本，需要在「运营需求确认」页点「导入版本文件」导入运营发来的文件后才会出现在这里。</p>
+      <div class="tbl"><table class="mini oc-log-t">
+        <thead><tr><th>提交时间</th><th>版本</th><th>版本名称</th><th>条数</th><th>产品已回复</th><th>是否修改</th><th></th></tr></thead>
+        <tbody id="ocLog"><tr><td colspan="7" class="oc-log-empty">正在读取…</td></tr></tbody>
+      </table></div>
+      <p class="oc-log-foot" id="ocLogFoot"></p>
+    </div>
+  </section>
+</main>
+</div>
+<script>window.NAV_ROOT = "";</script>
+<script src="assets/nav-data.js"></script>
+<script src="assets/nav.js"></script>
+<script src="assets/oc-store.js"></script>
+<script src="assets/arch.js"></script>
+<script>
+var t = NAV.buildTree(document.getElementById("tree"), { light: true });
+ARCH.render(document.getElementById("arch"));
+document.getElementById("ex").onclick = t.expandAll;
+document.getElementById("co").onclick = t.collapseAll;
+
+/* 运营需求修改记录：读「运营需求确认」页的本机数据，按提交时间倒序 */
+(function () {
+  var CONFIRM = "docs/老用户充值转盘-运营需求确认.html";
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+  OCStore.read(OCStore.key("老用户充值转盘")).then(function (S) {
+    var V = OCStore.byTime(S && S.versions), body = document.getElementById("ocLog");
+    if (!V.length) {
+      body.innerHTML = '<tr><td colspan="7" class="oc-log-empty">还没有运营提交的需求修改记录。</td></tr>';
+    } else {
+      body.innerHTML = V.map(function (v, i) {
+        var s = OCStore.stats(v), d = s.dec;
+        var href = CONFIRM + "#ver=" + encodeURIComponent(v.name);
+        return "<tr" + (i === 0 ? ' class="latest"' : "") + "><td>" + esc(v.at || "—") + (i === 0 ? ' <span class="oc-new">最新</span>' : "") + "</td>" +
+          "<td><b>v" + v.major + "." + v.minor + "</b></td>" +
+          '<td class="w">' + esc(v.name) + (v.from ? '<div class="oc-log-from">由「' + esc(v.from) + "」修改</div>" : "") + "</td>" +
+          "<td>" + s.total + "</td><td>" + s.replied + " / " + s.total + "</td>" +
+          '<td class="w"><span class="oc-dtag d确认修改">确认修改 ' + d["确认修改"] + '</span> <span class="oc-dtag d部分修改">部分修改 ' + d["部分修改"] + '</span> <span class="oc-dtag d不修改">不修改 ' + d["不修改"] + '</span> <span class="oc-dtag d待确认">待确认 ' + d["待确认"] + "</span></td>" +
+          '<td><a href="' + href + '">查看 ›</a></td></tr>';
+      }).join("");
+    }
+    document.getElementById("ocLogFoot").textContent = V.length
+      ? "共 " + V.length + " 个版本" + (S.sealed ? "；已于 " + S.sealed.at + " 封板，最终版本 v" + S.sealed.ver : "；未封板")
+      : "";
+  });
+})();
+</script>
+</body>
+</html>

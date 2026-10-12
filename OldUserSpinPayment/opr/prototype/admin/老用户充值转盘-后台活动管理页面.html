@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>老用户转盘活动管理原型</title>
+<link rel="stylesheet" href="../../assets/style.css">
+<style>.bo-tabs span{cursor:pointer}.bo-tabs span:hover{color:#409EFF}</style>
+</head>
+<body>
+<div class="with-nav">
+<div class="adm-stage">
+  <div class="bo">
+    <div class="bo-top1"><span>当前时间：2026/10/07 06:30:00 -04:00</span><span class="sp">简体中文</span><span>运营账号A ▾</span></div>
+    <div class="bo-top2"><span>在线人数<b class="bo-n r">12</b></span><span>当日注册<b class="bo-n g">8</b></span><span>当日充值成功<b class="bo-n g">15</b></span><span>提款<b class="bo-n g">0</b></span><span>风控审核<b class="bo-n r">1</b></span></div>
+    <div class="bo-body">
+      <nav class="bo-menu" aria-label="后台菜单">
+        <div class="mt">菜单 ≡</div>
+        <div class="g">用户管理</div><div class="g">财务管理</div><div class="g">充值配置</div><div class="g">日志管理</div>
+        <div class="g open">活动中心</div>
+        <div class="i on">老用户充值转盘</div><div class="i">绑定手机号码活动</div><div class="i">KYC认证送彩金活动</div><div class="i">登录送彩金活动</div><div class="i">充值活动</div><div class="i">每日首充活动</div><div class="i">新用户转盘活动</div><div class="i">新用户首充活动</div><div class="i">邀请好友活动</div>
+        <div class="g">系统管理</div>
+      </nav>
+      <div class="bo-main">
+        <div class="bo-crumb" id="crumb">位置 › 活动中心 › <b>老用户充值转盘</b></div>
+        <div class="bo-tabs" role="tablist">
+          <span role="tab" tabindex="0" id="tabCfg" data-tab="cfg" class="on" aria-selected="true">活动配置</span>
+          <span role="tab" aria-disabled="true" title="本需求不涉及，点击无效果" style="cursor:default">活动统计</span>
+        </div>
+
+        <!-- ============ 活动配置 · 列表 ============ -->
+        <section id="vList" hidden>
+          <div class="bo-filter"><button class="bo-btn n" type="button" data-go="new">+ 创建活动</button></div>
+          <div class="bo-content">
+            <table>
+              <tr><th>活动编号</th><th>活动名称</th><th>活动类型</th><th>总预算</th><th>已使用预算</th><th>创建人</th><th>状态</th><th>操作</th></tr>
+              <tr><td>OS-1002</td><td>老用户充值转盘-10月</td><td>oldUserRechargeSpin</td><td>100,000.000</td><td>36,120.000</td><td>运营账号A</td><td class="st-on">开启</td><td><button class="bo-btn link" type="button" data-go="edit">编辑</button></td></tr>
+              <tr><td>OS-1001</td><td>老用户充值转盘-9月</td><td>oldUserRechargeSpin</td><td>80,000.000</td><td>80,000.000</td><td>运营账号A</td><td class="st-off">关闭</td><td><button class="bo-btn link" type="button" data-go="edit">编辑</button></td></tr>
+            </table>
+            <p style="font-size:12px;color:#909399;margin:10px 0 0">示例数据均为虚构。列表沿用现状，本需求不改动。</p>
+          </div>
+        </section>
+
+        <!-- ============ 活动配置 · 创建 / 编辑表单 ============ -->
+        <section id="vForm" class="bo-content" hidden>
+          <div style="margin-bottom:6px"><button class="bo-btn link" type="button" data-go="list">‹ 返回列表</button></div>
+          <div class="frow"><span class="fl">活动展示开关</span><div class="fctl"><span class="rd on"><i></i>开启</span><span class="rd"><i></i>关闭</span></div></div>
+
+          <div class="fsec">基础配置</div>
+          <div class="frow"><label for="nm"><span class="req">*</span>活动名称</label><div class="fctl"><input class="bo-inp" id="nm" style="width:260px" placeholder="请输入"></div></div>
+          <div class="frow"><span class="fl">活动开始时间</span><div class="fctl"><input class="bo-inp" style="width:200px" value="2026-10-08 00:00:00" aria-label="活动开始时间"></div></div>
+          <div class="frow"><span class="fl">活动结束时间</span><div class="fctl"><input class="bo-inp" style="width:200px" value="2026-10-31 23:59:59" aria-label="活动结束时间"></div></div>
+          <div class="frow"><span class="fl">领取方式</span><div class="fctl"><span class="rd on"><i></i>手动领取</span><span class="rd dis"><i></i>自动发放</span></div></div>
+          <div class="frow"><span class="fl">是否需要KYC</span><div class="fctl"><span class="rd"><i></i>是</span><span class="rd on"><i></i>否</span></div></div>
+          <div class="frow"><span class="fl">是否需要有过充值记录</span><div class="fctl"><span class="rd"><i></i>是</span><span class="rd on"><i></i>否</span></div></div>
+
+          <div class="fsec">范围配置</div>
+          <div class="frow"><span class="fl">人群范围</span><div class="fctl"><span class="lab">用户充值次数</span><select class="bo-inp" aria-label="比较方式"><option>≥</option></select><input class="bo-inp" style="width:90px" value="1" aria-label="充值次数"></div></div>
+          <div class="frow"><span class="fl">充值渠道</span>
+            <div class="fctl">
+              <span class="lab">充值方式</span>
+              <div class="ms">
+                <div class="ms-box" id="msBox" tabindex="0" role="combobox" aria-expanded="false" aria-label="充值方式"></div>
+                <div class="ms-pop" id="msPop" hidden></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="disabled-sec">
+            <div class="fsec">奖励配置（本需求不改动）</div>
+            <div class="frow"><span class="fl">奖池总预算额度</span><div class="fctl"><input class="bo-inp" style="width:160px" value="100000" disabled aria-label="奖池总预算额度"></div></div>
+            <div class="frow"><span class="fl">奖励档位</span><div class="fctl" style="font-size:12px;color:#909399">首次 / 非首次两组：充值金额最小值 — 最大值、奖励金额 N、中奖概率 %；白名单奖励档位两组（现状）</div></div>
+            <div class="fsec">奖励提现（本需求不改动）</div>
+            <div class="frow"><span class="fl">首次 / 非首次</span><div class="fctl" style="font-size:12px;color:#909399">彩金提现所需流水倍数；提现稽核流水是否包含本金、是否包含奖金（各三项）</div></div>
+            <div class="fsec">活动文案配置（本需求不改动）</div>
+          </div>
+
+          <div style="display:flex;gap:10px;margin-top:16px;padding-left:160px">
+            <button class="bo-btn q" type="button" id="save">保存</button>
+            <button class="bo-btn" type="button" data-go="list">取消</button>
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
+
+  <aside class="notes adm-notes">
+    <h2>后台活动管理页面</h2>
+    <p class="sub">活动中心 › 老用户充值转盘。本需求只在「范围配置 › 充值方式」下拉里新增「原生Gcash」选项（带淡色光晕的就是新增项）。</p>
+    <h3>模拟场景</h3>
+    <div class="sim">
+      <button type="button" data-go="list"><span class="simtag">活动配置</span>活动列表</button>
+      <button type="button" data-go="new"><span class="simtag">活动配置</span>创建活动</button>
+      <button type="button" data-go="edit"><span class="simtag">活动配置</span>编辑已有活动（已选 PayCools）</button>    </div>
+    <h3>规则批注</h3>
+    <ol>
+      <li><b>新增选项</b>：充值方式下拉在线上现有选项之后追加「原生Gcash」（原型里的现有选项是 QA 示例，以线上为准），对应在线支付配置中的 GCash 原生通道。<span class="ref">PRD 规则 N1 · F01-01 新增原生Gcash 选项</span></li>
+      <li><b>交互一致</b>：可单独勾选或多选；点标签 × 删除；保存后再次编辑显示已保存的值；已有活动不会自动勾选「原生Gcash」。<span class="ref">PRD 规则 N2 · F01-02 勾选、保存与已选值显示</span></li>
+      <li><b>生效方式</b>：勾选后，经原生Gcash 通道成功充值的老用户，和其他充值方式一样按现有档位获得转盘次数。<span class="ref">PRD 规则 N3 · F02-01 原生Gcash 订单获得转盘次数</span></li>
+      <li><b>其他</b>：充值方式是否必填保持原有规则；保存提示、列表和其他配置项都沿用现状。「活动统计」标签保留现有样子，本需求不涉及，原型里点击无效果。<span class="ref">PRD 第 0 章「本迭代范围」</span></li>
+    </ol>
+    <h3>评审待确认</h3>
+    <ol>
+      <li><b>生产环境通道信息</b>：原生Gcash 通道的支付名称、标识，以及新选项保存什么值。<span class="ref">PRD 待确认 Q1</span></li>
+      <li><b>C 端是否不用发版</b>：C 端能否按配置自动在原生Gcash 入口显示 Lucky Spin 标识。<span class="ref">PRD 待确认 Q2</span></li>
+      
+    </ol>
+  </aside>
+</div>
+</div>
+<script>window.NAV_ROOT = "../../";</script>
+<script src="../../assets/nav-data.js"></script>
+<script src="../../assets/nav.js"></script>
+<script>
+(function () {
+  /* 选项：唯一标识 + 显示名称（示例数据）；isNew 为本需求新增，只加淡色光晕 */
+  var OPTS = [
+    { id: "paymongo", name: "PayMongo" },
+    { id: "paycools", name: "PayCools" },
+    { id: "traxionpay", name: "TraxionPay" },
+    { id: "gcash_native", name: "原生Gcash", isNew: true }
+  ];
+  var HELP_GCASH = "对应【充值配置 › 在线支付配置】中的 GCash 原生通道。勾选后，经该通道成功充值的订单按本活动规则获得转盘次数。";
+  var SCENES = {
+    new: { title: "创建活动", name: "老用户充值转盘-11月", sel: [] },
+    edit: { title: "编辑活动 · OS-1002", name: "老用户充值转盘-10月", sel: ["paycools"] }
+  };
+  var sel = [], open = false;
+  var box = document.getElementById("msBox"), pop = document.getElementById("msPop");
+  function byId(id) { return OPTS.filter(function (o) { return o.id === id; })[0]; }
+
+  function renderBox() {
+    box.innerHTML = "";
+    if (!sel.length) { var ph = document.createElement("span"); ph.className = "ms-ph"; ph.textContent = "Select"; box.appendChild(ph); }
+    sel.forEach(function (id) {
+      var o = byId(id), t = document.createElement("span");
+      t.className = "ms-tag" + (o.isNew ? " glow" : "");
+      t.innerHTML = o.name + '<button type="button" aria-label="删除 ' + o.name + '">✕</button>';
+      t.querySelector("button").onclick = function (e) { e.stopPropagation(); sel = sel.filter(function (x) { return x !== id; }); renderBox(); renderPop(); };
+      box.appendChild(t);
+    });
+    box.classList.toggle("focus", open);
+    box.setAttribute("aria-expanded", open);
+  }
+  function renderPop() {
+    pop.innerHTML = "";
+    OPTS.forEach(function (o) {
+      var d = document.createElement("div"), on = sel.indexOf(o.id) >= 0;
+      d.className = "ms-opt" + (on ? " sel" : "") + (o.isNew ? " glow" : "");
+      d.setAttribute("role", "option"); d.setAttribute("aria-selected", on);
+      d.innerHTML = "<span>" + o.name + (o.isNew ? '<i class="qm" tabindex="0">?</i>' : "") + "</span>";
+      var q = d.querySelector(".qm"); if (q) q.setAttribute("data-tip", HELP_GCASH);
+      d.onclick = function (e) {
+        e.stopPropagation();
+        sel = on ? sel.filter(function (x) { return x !== o.id; }) : sel.concat(o.id);
+        renderBox(); renderPop();
+      };
+      pop.appendChild(d);
+    });
+  }
+  function toggle(v) { open = v; pop.hidden = !v; renderBox(); if (v) renderPop(); }
+  box.onclick = function (e) { e.stopPropagation(); toggle(!open); };
+  box.onkeydown = function (e) { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toggle(!open); } if (e.key === "Escape") toggle(false); };
+  document.addEventListener("click", function () { if (open) toggle(false); });
+
+  /* 视图切换：list / new / edit（都在活动配置 Tab 内） */
+  function show(view) {
+    if (view !== "list" && !SCENES[view]) view = "list";
+    var isForm = !!SCENES[view];
+    document.getElementById("vList").hidden = view !== "list";
+    document.getElementById("vForm").hidden = !isForm;
+    document.getElementById("crumb").innerHTML = "位置 › 活动中心 › 老用户充值转盘 › <b>" + (isForm ? SCENES[view].title : "活动配置") + "</b>";
+    if (isForm) { sel = SCENES[view].sel.slice(); document.getElementById("nm").value = SCENES[view].name; toggle(false); }
+    if (location.hash.slice(1) !== view) history.replaceState(null, "", "#" + view);
+    window.scrollTo(0, 0);
+    /* 嵌在「运营需求确认」页时，把当前视图告诉外层，用来同步切换按钮 */
+    if (window.self !== window.top) window.parent.postMessage({ type: "proto-view", view: view }, "*");
+  }
+  window.addEventListener("hashchange", function () { show(location.hash.slice(1) || "list"); });
+  document.addEventListener("click", function (e) { var b = e.target.closest("[data-go]"); if (b) { e.preventDefault(); show(b.dataset.go); } });
+  document.querySelectorAll("[data-tab]").forEach(function (t) {
+    function go() { show("list"); }
+    t.onclick = go; t.onkeydown = function (e) { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); go(); } };
+  });
+
+  /* 保存：沿用现有提示，保存成功后返回列表 */
+  document.getElementById("save").onclick = function () {
+    toggle(false);
+    var m = document.createElement("div"); m.className = "bo-msg ok"; m.textContent = "保存成功"; m.setAttribute("role", "status");
+    document.body.appendChild(m); setTimeout(function () { m.remove(); }, 1800);
+    setTimeout(function () { show("list"); }, 600);
+  };
+  show(location.hash.slice(1) || "list");
+})();
+</script>
+</body>
+</html>

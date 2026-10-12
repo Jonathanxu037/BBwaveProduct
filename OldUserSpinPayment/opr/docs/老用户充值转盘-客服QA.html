@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>客服 QA 双语</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body class="qa-page" data-lang="both">
+<div class="with-nav">
+<div class="desk"><article class="paper qa">
+
+<h1 class="doc-title">老用户充值转盘 · 客服 QA<span class="qa-sub">Lucky Spin · Customer Service Q&amp;A</span></h1>
+<div class="doc-meta"><span>版本 / Version：v1.0</span><span>适用 / For：客服 Customer Service</span><span>依据 / Based on：<span class="link-off" title="当前角色不能查看这个页面">PRD</span>、<a href="老用户充值转盘-后台操作手册.html">后台操作手册 Admin Manual</a></span></div>
+<div class="qa-lang" role="group" aria-label="语言 Language">
+  <button type="button" data-l="both" aria-pressed="true">双语 Bilingual</button>
+  <button type="button" data-l="zh" aria-pressed="false">中文</button>
+  <button type="button" data-l="en" aria-pressed="false">English</button>
+</div>
+<hr class="doc-rule">
+
+<h2 id="q0">适用范围 <span class="en-t">Scope</span></h2>
+<div class="bi">
+  <div class="zh">活动：老用户充值转盘（前台名称 Lucky Spin）。端：所有能参加 Lucky Spin 的端，与现有规则一致。生效：本功能上线后，运营在活动里勾选「原生Gcash」之后，充值成功的订单才适用。</div>
+  <div class="en">Event: Lucky Spin for existing players (deposit spin event). Platforms: all platforms where Lucky Spin is available, same as today. Effective: applies only to deposits that succeed after this feature goes live AND after Operations adds native GCash to the event.</div>
+</div>
+
+<h2 id="q1">这次改了什么 <span class="en-t">What changed</span></h2>
+<div class="bi">
+  <div class="zh">运营现在可以把 GCash 原生支付通道加入 Lucky Spin 活动的充值方式。活动加入该通道后，老用户经该通道充值成功、金额达到活动档位的，按现有规则获得转盘次数；活动没有加入该通道时，经该通道充值不获得转盘次数。档位、次数、奖励和流水要求等其他规则都不变。</div>
+  <div class="en">Operations can now add the native GCash payment channel to a Lucky Spin event. Once added, existing players whose deposits through this channel are successful and reach the event's amount tier get spins under the existing rules. If the event does not include this channel, deposits through it do not earn spins. All other rules (tiers, number of spins, rewards, wagering requirements) stay the same.</div>
+</div>
+<div class="qa-key bi">
+  <div class="zh">※ 前台可能有多个都叫 GCash 的充值入口，背后是不同的支付通道。只有活动选中的通道才给次数；充值页上带 Lucky Spin 标识的入口才参加活动。</div>
+  <div class="en">※ The deposit page may show several options named GCash, and each uses a different payment channel. Only channels selected in the event earn spins. Only options showing the Lucky Spin badge on the deposit page are part of the event.</div>
+</div>
+
+<h2 id="q2">客服核查步骤 <span class="en-t">How to check</span></h2>
+<p class="qa-note bi"><span class="zh">回复玩家前按顺序查，任何一步不满足，按规则不给次数。</span><span class="en">Check in this order before replying. If any step fails, no spin is given under the rules.</span></p>
+<ol class="qa-steps">
+  <li class="bi"><div class="zh"><b>订单状态</b>：在【财务管理 › 充值记录】查这笔订单是否充值成功。处理中或失败的订单不给次数。</div><div class="en"><b>Order status</b>: In 财务管理 › 充值记录 (Finance › Deposit Records), check whether the order is successful. Processing or failed orders get no spins.</div></li>
+  <li class="bi"><div class="zh"><b>实际支付通道</b>：在同一条记录里看这笔订单实际走的支付通道（支付名称）。</div><div class="en"><b>Actual channel</b>: In the same record, check which payment channel the order actually used (payment name).</div></li>
+  <li class="bi"><div class="zh"><b>活动的充值方式</b>：在【活动中心 › 老用户充值转盘】打开玩家充值时正在进行的活动，看「范围配置 › 充值方式」里有没有这笔订单的通道；原生 GCash 对应选项「原生Gcash」。</div><div class="en"><b>Event payment methods</b>: In 活动中心 › 老用户充值转盘 (Activity Center › Lucky Spin for existing players), open the event running at the deposit time and check 范围配置 › 充值方式 (Scope › Payment Methods). Native GCash appears as the option "原生Gcash".</div></li>
+  <li class="bi"><div class="zh"><b>金额和其他条件</b>：金额是否在活动档位内；充值时间是否在活动时间内；玩家是否满足活动的其他参与条件（如充值次数、是否需要 KYC），以活动配置为准。</div><div class="en"><b>Amount and other conditions</b>: Is the amount within an event tier? Was the deposit made during the event period? Does the player meet the other conditions (such as deposit count and KYC)? Follow the event settings.</div></li>
+  <li class="bi"><div class="zh"><b>是否已发放</b>：在活动的「活动统计」或玩家资金明细（类型「老用户充值转盘」）查有没有领取记录。</div><div class="en"><b>Already credited?</b> Check the event's 活动统计 (Statistics) tab or the player's 资金明细 (fund details) (type "老用户充值转盘") for a claim record.</div></li>
+  <li class="bi"><div class="zh"><b>都满足仍没有次数</b>：转技术排查，见「转交与升级」。</div><div class="en"><b>All met but no spin</b>: escalate to Tech. See "Escalation".</div></li>
+</ol>
+
+<h2 id="q3">问答 <span class="en-t">Q&amp;A</span></h2>
+
+<section class="qa-card" id="qa1">
+  <h3><span class="qa-no">1</span><span class="bi-inline"><span class="zh">我用 GCash 充值了，为什么没有 Lucky Spin？</span><span class="en">I deposited with GCash. Why didn't I get a Lucky Spin?</span></span></h3>
+  <div class="qa-row"><b>回复玩家<small>Reply</small></b>
+    <div class="bi"><div class="en qa-reply">Thank you for reaching out. Lucky Spin chances are given only for successful deposits made through a payment option that shows the Lucky Spin badge on the deposit page, and the amount must reach the event's minimum tier. There are several GCash options, and not all of them are part of the event. Please share your order number and deposit time, and we will check it for you.<button type="button" class="qa-copy">复制 Copy</button></div>
+    <div class="zh">感谢联系。Lucky Spin 次数只给充值成功、且使用充值页上带 Lucky Spin 标识的支付方式的订单，金额还要达到活动的最低档位。GCash 有多个选项，并不是每个都参加活动。请提供订单号和充值时间，我们帮你查询。</div></div></div>
+  <div class="qa-row"><b>客服核查<small>Check</small></b>
+    <div class="bi"><div class="zh">按「客服核查步骤」第 1～5 步逐项查。</div><div class="en">Go through steps 1–5 in "How to check".</div></div></div>
+  <div class="qa-row"><b>转交<small>Escalate</small></b>
+    <div class="bi"><div class="zh">订单成功、通道在活动内、金额在档位内、其他条件都满足仍没有次数时，转技术。</div><div class="en">If the order is successful, the channel is in the event, the amount is within a tier, and all other conditions are met but there is still no spin, escalate to Tech.</div></div></div>
+</section>
+
+<section class="qa-card" id="qa2">
+  <h3><span class="qa-no">2</span><span class="bi-inline"><span class="zh">哪个 GCash 能参加 Lucky Spin？</span><span class="en">Which GCash option gives a Lucky Spin?</span></span></h3>
+  <div class="qa-row"><b>回复玩家<small>Reply</small></b>
+    <div class="bi"><div class="en qa-reply">Please choose the payment option that shows the Lucky Spin badge on the deposit page. The options included can change from event to event, so please check for the badge each time before you deposit.<button type="button" class="qa-copy">复制 Copy</button></div>
+    <div class="zh">请选择充值页上带 Lucky Spin 标识的支付方式。参加活动的选项可能随活动变化，每次充值前请先确认有没有这个标识。</div></div></div>
+  <div class="qa-row"><b>客服核查<small>Check</small></b>
+    <div class="bi"><div class="zh">查当前进行中活动的「充值方式」。不要把后台通道名称或编码告诉玩家，只引导玩家看 Lucky Spin 标识。</div><div class="en">Check 充值方式 (Payment Methods) of the current event. Do not share internal channel names or codes with players. Only guide them to look for the Lucky Spin badge.</div></div></div>
+</section>
+
+<section class="qa-card" id="qa3">
+  <h3><span class="qa-no">3</span><span class="bi-inline"><span class="zh">我之前用 GCash 充值的订单，能补 Lucky Spin 吗？</span><span class="en">Can I get a Lucky Spin for my earlier GCash deposit?</span></span></h3>
+  <div class="qa-row"><b>回复玩家<small>Reply</small></b>
+    <div class="bi"><div class="en qa-reply">Lucky Spin chances follow the event rules at the time your deposit was successful. Deposits made before that payment option was added to the event are not eligible.<button type="button" class="qa-copy">复制 Copy</button></div>
+    <div class="zh">Lucky Spin 次数按充值成功当时的活动规则判断。该支付方式加入活动之前的充值订单不参加活动。</div></div></div>
+  <div class="qa-row"><b>客服核查<small>Check</small></b>
+    <div class="bi"><div class="zh">对比订单的充值成功时间和活动加入原生Gcash 的时间。加入后才充值成功的订单如果没有次数，按第 1 条处理。</div><div class="en">Compare the order's success time with the time native GCash was added to the event. If the order succeeded after it was added and has no spin, follow Q1.</div></div></div>
+</section>
+
+<section class="qa-card" id="qa4">
+  <h3><span class="qa-no">4</span><span class="bi-inline"><span class="zh">我的充值还在处理中 / 失败了，会给 Lucky Spin 吗？</span><span class="en">My deposit is still processing or failed. Will I get a Lucky Spin?</span></span></h3>
+  <div class="qa-row"><b>回复玩家<small>Reply</small></b>
+    <div class="bi"><div class="en qa-reply">Lucky Spin chances are given only after a deposit is successful. If your deposit is still processing, please wait for it to complete. Failed deposits are not eligible.<button type="button" class="qa-copy">复制 Copy</button></div>
+    <div class="zh">Lucky Spin 次数只在充值成功后给。充值还在处理中的，请等处理完成；充值失败的订单不参加活动。</div></div></div>
+  <div class="qa-row"><b>客服核查<small>Check</small></b>
+    <div class="bi"><div class="zh">查订单状态。订单后来变为成功仍没有次数时，按第 1 条处理。</div><div class="en">Check the order status. If it later becomes successful and still has no spin, follow Q1.</div></div></div>
+</section>
+
+<section class="qa-card" id="qa5">
+  <h3><span class="qa-no">5</span><span class="bi-inline"><span class="zh">充多少钱才有 Lucky Spin？能转几次？</span><span class="en">How much do I need to deposit, and how many spins can I get?</span></span></h3>
+  <div class="qa-row"><b>回复玩家<small>Reply</small></b>
+    <div class="bi"><div class="en qa-reply">The minimum deposit and the number of spins depend on the current event. Please check the Lucky Spin details shown on the event and deposit pages.<button type="button" class="qa-copy">复制 Copy</button></div>
+    <div class="zh">最低充值金额和转盘次数按当前活动规定。请以活动页和充值页上显示的 Lucky Spin 说明为准。</div></div></div>
+  <div class="qa-row"><b>客服核查<small>Check</small></b>
+    <div class="bi"><div class="zh">金额档位在活动「奖励配置」里，首次和非首次分别配置。回复时不要说具体数字，以页面显示为准。</div><div class="en">Tiers are set in the event's 奖励配置 (Reward Settings), separately for first-time and non-first-time. Do not quote exact numbers. Refer players to what the page shows.</div></div></div>
+</section>
+
+<section class="qa-card" id="qa6">
+  <h3><span class="qa-no">6</span><span class="bi-inline"><span class="zh">我是新玩家，为什么参加不了 Lucky Spin？</span><span class="en">I'm a new player. Why can't I join Lucky Spin?</span></span></h3>
+  <div class="qa-row"><b>回复玩家<small>Reply</small></b>
+    <div class="bi"><div class="en qa-reply">Lucky Spin is for players who already have a deposit record. New players can check the events available for new players on the promotions page.<button type="button" class="qa-copy">复制 Copy</button></div>
+    <div class="zh">Lucky Spin 面向已有充值记录的玩家。新玩家可以在活动页查看面向新玩家的活动。</div></div></div>
+  <div class="qa-row"><b>客服核查<small>Check</small></b>
+    <div class="bi"><div class="zh">看活动「范围配置」的人群范围和用户充值次数条件（现有活动为充值次数 ≥ 1），以活动配置为准。</div><div class="en">Check the audience and deposit count condition under 范围配置 (Scope) (current events use deposit count ≥ 1). Follow the event settings.</div></div></div>
+</section>
+
+<section class="qa-card" id="qa7">
+  <h3><span class="qa-no">7</span><span class="bi-inline"><span class="zh">Lucky Spin 的奖金能马上提现吗？</span><span class="en">Can I withdraw my Lucky Spin reward right away?</span></span></h3>
+  <div class="qa-row"><b>回复玩家<small>Reply</small></b>
+    <div class="bi"><div class="en qa-reply">Lucky Spin rewards have a wagering (turnover) requirement set by the event. You can withdraw after you complete it. We can help you check the requirement for your reward.<button type="button" class="qa-copy">复制 Copy</button></div>
+    <div class="zh">Lucky Spin 奖金有活动规定的流水要求，完成后才能提现。我们可以帮你查这笔奖金的流水要求。</div></div></div>
+  <div class="qa-row"><b>客服核查<small>Check</small></b>
+    <div class="bi"><div class="zh">看活动「奖励提现」：首次和非首次的流水倍数，以及流水是否包含本金、是否包含奖金。</div><div class="en">Check 奖励提现 (Reward Withdrawal) in the event: the turnover multiplier for first-time and non-first-time, and whether turnover includes the deposit and the bonus.</div></div></div>
+</section>
+
+<section class="qa-card" id="qa8">
+  <h3><span class="qa-no">8</span><span class="bi-inline"><span class="zh">在哪里看 Lucky Spin 的奖金？</span><span class="en">Where can I see my Lucky Spin reward?</span></span></h3>
+  <div class="qa-row"><b>回复玩家<small>Reply</small></b>
+    <div class="bi"><div class="en qa-reply">You can find the reward in your account's transaction records. If you can't find it, please share your account and the time you spun, and we will check it for you.<button type="button" class="qa-copy">复制 Copy</button></div>
+    <div class="zh">奖金可以在你账户的交易记录里查看。找不到的话，请提供账号和转盘时间，我们帮你查询。</div></div></div>
+  <div class="qa-row"><b>客服核查<small>Check</small></b>
+    <div class="bi"><div class="zh">在玩家资金明细里查类型「老用户充值转盘」的记录，或在活动「活动统计」里查领取金额和领取时间。</div><div class="en">Look for type "老用户充值转盘" in the player's 资金明细 (fund details), or check the claim amount and time in the event's 活动统计 (Statistics) tab.</div></div></div>
+</section>
+
+<section class="qa-card" id="qa9">
+  <h3><span class="qa-no">9</span><span class="bi-inline"><span class="zh">GCash 选项上有 Lucky Spin 标识，我也充值成功了，还是没有次数。</span><span class="en">The GCash option showed the Lucky Spin badge and my deposit was successful, but I still didn't get a spin.</span></span></h3>
+  <div class="qa-row"><b>回复玩家<small>Reply</small></b>
+    <div class="bi"><div class="en qa-reply">Sorry for the inconvenience. Please send us your order number, deposit time, amount, and a screenshot of the payment option you used. We will pass it to the relevant team to check.<button type="button" class="qa-copy">复制 Copy</button></div>
+    <div class="zh">抱歉给你带来不便。请提供订单号、充值时间、金额和所用支付方式的截图，我们转给相关团队核查。</div></div></div>
+  <div class="qa-row"><b>客服核查<small>Check</small></b>
+    <div class="bi"><div class="zh">先按核查步骤查一遍。前台有标识但活动没选这个通道，或者活动选了但前台没标识，属于配置和展示不一致，按「转交与升级」处理。不要向玩家承诺补发。</div><div class="en">Run the checks first. If the page shows the badge but the event does not include the channel (or the reverse), it is a mismatch between settings and display. Follow "Escalation". Do not promise any compensation.</div></div></div>
+</section>
+
+<h2 id="q4">转交与升级 <span class="en-t">Escalation</span></h2>
+<div class="tbl"><table class="qa-tbl">
+  <thead><tr><th>情况 <small>Situation</small></th><th>转给 <small>To</small></th></tr></thead>
+  <tbody>
+    <tr><td class="bi"><div class="zh">订单成功、通道在活动内、金额在档位内、其他条件都满足，仍没有次数</div><div class="en">Order successful, channel in the event, amount within a tier, other conditions met, but no spin</div></td><td class="bi"><div class="zh">技术</div><div class="en">Tech</div></td></tr>
+    <tr><td class="bi"><div class="zh">充值页的 Lucky Spin 标识和活动配置的充值方式不一致</div><div class="en">The Lucky Spin badge on the deposit page does not match the event's payment methods</div></td><td class="bi"><div class="zh">运营（核对活动配置），必要时再转技术</div><div class="en">Operations (check event settings), then Tech if needed</div></td></tr>
+    <tr><td class="bi"><div class="zh">玩家对活动规则有异议，或要求补发次数、奖金</div><div class="en">Player disputes the rules or asks for spins or rewards to be added</div></td><td class="bi"><div class="zh">运营</div><div class="en">Operations</div></td></tr>
+  </tbody>
+</table></div>
+<p class="qa-note bi"><span class="zh">转交时附上：会员账号、订单号、充值时间（GMT+8）、金额、所用支付方式截图、充值页截图，以及已经查过的核查步骤和结果。</span><span class="en">When escalating, include: player account, order number, deposit time (GMT+8), amount, a screenshot of the payment option used, a screenshot of the deposit page, and the checks you have done with their results.</span></p>
+
+<h2 id="q5">资料未覆盖的问题 <span class="en-t">Not covered yet</span></h2>
+<p class="qa-note bi"><span class="zh">以下问题需求文档和知识库都没有写到，客服不要自行答复，统一转运营确认后再回复玩家。</span><span class="en">The following are not covered by the requirement or the knowledge base. Do not answer them on your own. Escalate to Operations and reply after they confirm.</span></p>
+<ul class="qa-open">
+  <li class="bi"><div class="zh">充值时活动还在进行，到账时活动已结束或预算已用完，是否给次数。</div><div class="en">The event was running at deposit time but had ended or run out of budget when the deposit succeeded: are spins given?</div></li>
+  <li class="bi"><div class="zh">玩家关掉了转盘弹窗后，还能不能再转、从哪里进入。</div><div class="en">After a player closes the spin pop-up, can they still spin, and where?</div></li>
+  <li class="bi"><div class="zh">同一时间有多个 Lucky Spin 活动时，一笔充值算哪个活动。</div><div class="en">If several Lucky Spin events run at the same time, which event does a deposit count toward?</div></li>
+  <li class="bi"><div class="zh">充值成功后又被退款或冲正的订单，已获得的次数和奖金怎么处理。</div><div class="en">If a successful deposit is later refunded or reversed, what happens to the spins and rewards already earned?</div></li>
+  <li class="bi"><div class="zh">各端充值页上原生 GCash 入口显示的名称（待前端确认）。</div><div class="en">The display name of the native GCash option on the deposit page on each platform (pending Frontend confirmation).</div></li>
+</ul>
+
+<p class="qa-src bi"><span class="zh">依据：需求开发 PRD 文档第 3、7、8 章；后台操作手册常见问题；平台知识库中老用户充值转盘的现有规则。</span><span class="en">Sources: PRD chapters 3, 7 and 8; Admin Manual FAQ; existing Lucky Spin rules in the platform knowledge base.</span></p>
+
+</article></div>
+</div>
+<script>window.NAV_ROOT = "../";</script>
+<script src="../assets/nav-data.js"></script>
+<script src="../assets/nav.js"></script>
+<script>
+(function () {
+  /* 语言切换：双语 / 中文 / English，记在本机浏览器 */
+  var KEY = "老用户充值转盘功能需求-v1.0-客服QA-lang";
+  function set(l) {
+    document.body.dataset.lang = l;
+    document.querySelectorAll(".qa-lang button").forEach(function (b) { b.setAttribute("aria-pressed", b.dataset.l === l); });
+    try { localStorage.setItem(KEY, l); } catch (e) {}
+  }
+  document.querySelectorAll(".qa-lang button").forEach(function (b) { b.onclick = function () { set(b.dataset.l); }; });
+  try { var s = localStorage.getItem(KEY); if (s) set(s); } catch (e) {}
+  /* 复制英文回复 */
+  document.addEventListener("click", function (e) {
+    var b = e.target.closest(".qa-copy"); if (!b) return;
+    var box = b.parentNode.cloneNode(true); box.querySelector(".qa-copy").remove();
+    var text = box.textContent.trim();
+    function done(ok) { b.textContent = ok ? "已复制 Copied" : "复制失败 Failed"; setTimeout(function () { b.textContent = "复制 Copy"; }, 1500); }
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(function () { done(true); }, function () { done(fallback(text)); });
+    else done(fallback(text));
+  });
+  function fallback(text) {
+    var t = document.createElement("textarea"); t.value = text; t.style.cssText = "position:fixed;left:-9999px"; document.body.appendChild(t); t.select();
+    var ok = false; try { ok = document.execCommand("copy"); } catch (e) {}
+    t.remove(); return ok;
+  }
+})();
+</script>
+</body>
+</html>
