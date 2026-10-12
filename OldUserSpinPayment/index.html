@@ -10,7 +10,7 @@ h1{font-size:19px;margin:0 0 10px}p{font-size:14px;line-height:1.7;color:var(--m
 /* 没有分身份的链接（仓库根地址）：先进这台电脑上次使用的角色站点，没有记录时进产品站点（要输密码） */
 (function () {
   var r = ""; try { r = localStorage.getItem("req-role") || ""; } catch (e) {}
-  if (!/^(pdm|opr|dev)$/.test(r)) r = "pdm";
+  if (!/^(pdm|opr|dev|repo)$/.test(r)) r = "pdm";
   location.replace(r + "/");
 })();
 </script></head>

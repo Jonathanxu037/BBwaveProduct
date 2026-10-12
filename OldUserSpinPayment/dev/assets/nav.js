@@ -16,15 +16,15 @@
   function absPath(href) { return norm(new URL(ROOT + href.split("#")[0], location.href).pathname); }
   var here = norm(location.pathname);
 
-  var ROLE_NAMES = { pdm: "产品", opr: "运营", dev: "开发" };
-  var BRAND = { pdm: "需求与原型中心", opr: "运营需求中心", dev: "开发需求中心" };
+  var ROLE_NAMES = { pdm: "产品", opr: "运营", dev: "开发", repo: "报告" };
+  var BRAND = { pdm: "需求与原型中心", opr: "运营需求中心", dev: "开发需求中心", repo: "需求报告中心" };
   /* REAL：访问者的真实角色。发布后的角色站点（pdm/、opr/、dev/）在 nav-data.js 里写死 role，以它为准 */
   /* 没有分身份的链接（不带 ?role=、也不是角色站点）：先用这台电脑上次使用的角色，没有记录时按产品角色（要输密码） */
   var REAL = (function () {
     var r = "";
     if (DATA && ROLE_NAMES[DATA.role]) r = DATA.role;
     else {
-      var m = /[?&]role=(pdm|opr|dev)(?:&|$)/.exec(location.search); r = m ? m[1] : "";
+      var m = /[?&]role=(pdm|opr|dev|repo)(?:&|$)/.exec(location.search); r = m ? m[1] : "";
       if (!r) { try { r = localStorage.getItem("req-role") || ""; } catch (e) {} }
     }
     if (!ROLE_NAMES[r]) r = "pdm";
@@ -232,7 +232,7 @@
       /* 产品：角色标签是下拉框，可随时切换成运营或开发的视角，切换后跳到该角色的默认页 */
       rc = document.createElement("select"); rc.className = "tb-role r-" + ROLE; rc.setAttribute("aria-label", "切换查看角色");
       rc.title = "产品可以切换成运营或开发的视角，查看他们看到的页面";
-      ["pdm", "opr", "dev"].forEach(function (r) { var o = document.createElement("option"); o.value = r; o.textContent = "角色：" + ROLE_NAMES[r] + (r === "pdm" ? "" : "（视角）"); if (r === ROLE) o.selected = true; rc.appendChild(o); });
+      ["pdm", "opr", "dev", "repo"].forEach(function (r) { var o = document.createElement("option"); o.value = r; o.textContent = "角色：" + ROLE_NAMES[r] + (r === "pdm" ? "" : "（视角）"); if (r === ROLE) o.selected = true; rc.appendChild(o); });
       rc.onchange = function () {
         try { if (rc.value === "pdm") sessionStorage.removeItem("req-view-role"); else sessionStorage.setItem("req-view-role", rc.value); } catch (e) {}
         location.href = ROOT + homeOf(rc.value);

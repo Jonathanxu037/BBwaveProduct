@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>老用户充值转盘 PRD</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<div class="with-nav">
+<div id="fp-banner" class="fp-banner" hidden><span id="fp-text"></span><button type="button" id="fp-clear">清除标注</button></div>
+<div class="desk"><article class="paper" id="doc">
+
+<h1 class="doc-title">老用户充值转盘 · 充值方式新增「原生Gcash」· 产品开发需求文档（PRD）· v1.0</h1>
+<div class="doc-meta"><span>版本：v1.0</span><span>平台：789Bingo（PH）</span><span>端：管理后台（后台前端 + 后端）</span><span>状态：确认中</span><span>时区：GMT+8</span></div>
+<hr class="doc-rule">
+
+<h2 id="ver">需求版本管理表</h2>
+<div class="tbl"><table id="vtable">
+<tr><th>版本号</th><th>时间</th><th>修改人</th><th>概述</th><th>涉及章节</th></tr>
+<tr data-v="v1.0" data-sum="创建老用户充值转盘 v1.0"><td>v1.0</td><td>2026-10-07</td><td>Joshua</td><td class="w">创建老用户充值转盘 v1.0</td><td>全文</td></tr>
+</table></div>
+
+<h2 id="toc">全文目录</h2>
+<nav class="toc-full" aria-label="全文目录"><ol id="toc-list"></ol></nav>
+
+<!-- ======================= 0 ======================= -->
+<h2 id="c0">0. 本迭代范围</h2>
+<p>本需求只做一件事：在老用户充值转盘活动配置的「充值方式」下拉列表里，新增一个「原生Gcash」选项。勾选后的生效方式与现有选项完全一致（现有选项以线上为准），不新增其他规则。与本文档其他章节冲突时，以本章为准。</p>
+<div class="tbl"><table>
+<tr><th>类别</th><th>本迭代包含</th><th>顺延至</th></tr>
+<tr data-fp="F01"><td>后台前端</td><td class="w">活动配置页「范围配置 › 充值渠道 › 充值方式」下拉新增「原生Gcash」选项，交互与现有选项一致</td><td>—</td></tr>
+<tr data-fp="F01 F02"><td>后端</td><td class="w">新选项可以保存和读取；勾选后，经原生Gcash 通道成功充值的订单，按现有判定逻辑获得转盘次数</td><td>—</td></tr>
+<tr data-fp="F02"><td>C 端（H5 / iOS / Flutter）</td><td class="w">不开发，只做回归：按现有逻辑，已选充值方式对应的充值入口会自动显示 Lucky Spin（幸运转盘）标识和金额角标（现有规则来自 BB2025789-4672：老用户转盘充值渠道新增 PayCools、TraxionPay）。如前端确认需要改动，另起子任务（见第 9 章待确认 Q2：C 端是否不用发版）</td><td>需要改动时另起子任务</td></tr>
+<tr><td>其他</td><td class="w">不包含：转盘档位、概率、预算、流水倍数、弹窗、活动列表、操作日志、在线支付配置都不改；其他转盘活动不改</td><td>不顺延</td></tr>
+</table></div>
+
+<!-- ======================= 1 ======================= -->
+<h2 id="c1">1. 项目概述</h2>
+<div class="tbl"><table>
+<tr><th>项目</th><th>说明</th></tr>
+<tr data-fp="F01-01 F02-01"><td>需求描述</td><td class="w">在管理后台【活动中心 › 老用户充值转盘】活动配置的「范围配置 › 充值渠道 › 充值方式」下拉中，于线上现有选项之后新增选项「原生Gcash」；交互、是否必填及勾选后的转盘次数判定，均与现有选项一致。</td></tr>
+<tr><td>背景</td><td class="w">老用户充值转盘按「充值方式」决定哪些充值订单能获得转盘次数。已知的现有选项包括 PayMongo、PayCools、TraxionPay（后两项由 BB2025789-4672 新增，2026-06-10 完成；具体以线上为准），其中没有原生Gcash，所以通过原生Gcash 通道充值的老用户拿不到转盘次数。</td></tr>
+<tr><td>目标</td><td class="w">运营可以在充值方式里勾选「原生Gcash」；勾选后，经原生Gcash 通道成功充值的老用户，和其他充值方式一样按现有档位获得转盘次数。</td></tr>
+<tr><td>名词</td><td class="w"><b>原生Gcash</b>：GCash 官方直连的充值通道，在【充值配置 › 在线支付配置】中单独作为一条通道配置。QA 环境里它的支付名称是「GCASH2 (GCASH 原生)」，通道编码 <code>onlineType</code> = 5146（管理后台知识库 §4.8、§11.4，2026-10-02 QA 扫描）；生产环境的名称和标识以后台为准，见第 9 章待确认事项「生产环境原生Gcash 通道的支付名称和通道标识」。<br>
+<b>充值方式</b>：本文指活动配置里「范围配置 › 充值渠道 › 充值方式」这个下拉字段，不是前台充值页的入口名称。</td></tr>
+<tr><td>多端范围</td><td class="w">后台前端、后端开发；H5、iOS 原生、安卓 Flutter、iOS Flutter 只做回归（见第 6 章验收 A5：各端充值页的 Lucky Spin 标识）。</td></tr>
+<tr><td>时间与时区</td><td class="w">业务时间统一按 GMT+8。上线时间待排期。</td></tr>
+</table></div>
+
+<!-- ======================= 2 ======================= -->
+<h2 id="c2">2. 整体业务流程</h2>
+<h3 id="c2-1">2.1 主流程</h3>
+<div class="flow">
+  <div class="fs key" data-fp="F01-02"><div class="no">1</div><div><b>进入活动</b>：运营进入【活动中心 › 老用户充值转盘】→「活动配置」Tab 的活动列表 → 点「创建活动」或某个活动的「编辑」。</div></div>
+  <div class="fa">↓</div>
+  <div class="fs key" data-fp="F01-01 F01-02"><div class="no">2</div><div><b>选择充值方式</b>：范围配置 › 充值渠道 › 充值方式 → 打开下拉 → 勾选「原生Gcash」，可单独勾选，也可与其他现有选项同时勾选 → 点「保存」（<a href="#c4-2">配置要求见 4.2</a>）。</div></div>
+  <div class="fa">↓</div>
+  <div class="fs" data-fp="F02-01"><div class="no">3</div><div><b>用户充值</b>：满足活动门槛的老用户，经原生Gcash 通道充值成功。</div></div>
+  <div class="fa">↓</div>
+  <div class="fs key" data-fp="F02-01"><div class="no">4</div><div><b>获得次数</b>：按现有判定逻辑给转盘次数，与勾选其他现有充值方式时完全一致；C 端按现有逻辑在对应充值入口显示 Lucky Spin 标识。</div></div>
+</div>
+
+<!-- ======================= 3 ======================= -->
+<h2 id="c3">3. 业务规则</h2>
+<h3 id="c3-1">3.1 现状（不改动，仅作依据）</h3>
+<div class="tbl"><table>
+<tr><th>规则</th><th>说明</th><th>依据</th></tr>
+<tr><td>菜单与页面</td><td class="w">【活动中心 › 老用户充值转盘】，用「列表 + 创建活动」管理；在「活动配置」Tab 里查看列表、创建和编辑活动；页面另有「活动统计」标签，沿用现状，本需求不涉及</td><td>BB2025789-4672 截图；管理后台知识库 §4.11（路由 <code>old-user-spin-activities</code>）</td></tr>
+<tr><td>充值方式</td><td class="w">可单选或多选；已选项以标签显示，点 × 删除；是否必填按原有规则。现有选项以线上为准（QA 环境为 PayMongo、PayCools、TraxionPay；知识库里的选项多来自 QA 和 UAT 测试数据，逻辑与生产一致，具体选项以线上为准）</td><td>BB2025789-4672 描述和截图、BB2025789-4737 截图；产品确认（2026-10-09）</td></tr>
+<tr><td>C 端展示</td><td class="w">已选充值方式对应的充值入口显示转盘标识和 Lucky Spin 标识（原名 Free Spin），金额档位显示转盘角标</td><td>BB2025789-4672、BB2025789-6274（Free Spin 改名 Lucky Spin）</td></tr>
+<tr><td>配置存储</td><td class="w">QA 活动配置里充值方式存在 <code>rechargeChannels</code>，值为「Traxion Pay」「PayMongo」「PayCools」</td><td>管理后台知识库 §11.7</td></tr>
+</table></div>
+
+<h3 id="c3-2">3.2 本需求规则</h3>
+<div class="tbl"><table>
+<tr><th>编号</th><th>规则</th><th>功能点</th></tr>
+<tr id="n1" data-fp="F01-01"><td>N1</td><td class="w">充值方式下拉新增一个选项，显示名称「原生Gcash」，排在现有选项之后。选项对应在线支付配置中的原生Gcash 通道；保存的值与现有选项用同一种方式（生产环境的通道名称和标识见第 9 章待确认 Q1）</td><td>F01-01 新增原生Gcash 选项</td></tr>
+<tr id="n2" data-fp="F01-02"><td>N2</td><td class="w">交互与现有选项完全一致：可单独勾选，也可与其他选项多选；点标签上的 × 删除；保存后再次编辑，显示已保存的值；充值方式是否必填保持原有规则。默认不勾选，已有活动不会自动勾选「原生Gcash」</td><td>F01-02 勾选、保存与已选值显示</td></tr>
+<tr id="n3" data-fp="F02-01"><td>N3</td><td class="w">勾选后的生效方式与现有选项完全一致：经原生Gcash 通道成功充值、且满足活动其他条件的订单，按现有档位规则获得转盘次数；判定逻辑本需求不改</td><td>F02-01 原生Gcash 订单获得转盘次数</td></tr>
+</table></div>
+
+<!-- ======================= 4 ======================= -->
+<h2 id="c4">4. 运营后台需求</h2>
+<h3 id="c4-1">4.1 活动列表（不改动）</h3>
+<p>原型：<a href="../prototype/admin/老用户充值转盘-后台活动管理页面.html#list">后台活动管理页面</a>（「活动配置」Tab 的活动列表）</p>
+<div class="tbl"><table>
+<tr><th>功能</th><th>说明</th></tr>
+<tr><td>活动列表</td><td class="w">沿用现状：活动编号、活动名称、活动类型（oldUserRechargeSpin）、总预算（可「不限金额」）、已使用预算、创建人、状态、操作（编辑）</td></tr>
+<tr><td>活动统计标签</td><td class="w">沿用现状，本需求不改动；原型中只做展示，点击无效果</td></tr></table></div>
+
+<h3 id="c4-2">4.2 活动配置页 › 范围配置 › 充值方式（本次改动）</h3>
+<p>原型：<a href="../prototype/admin/老用户充值转盘-后台活动管理页面.html#new">后台活动管理页面 › 活动配置</a>（可切换「创建活动」「编辑已有活动」两个场景）</p>
+<div class="tbl"><table>
+<tr><th>功能</th><th>说明</th></tr>
+<tr id="F01" data-fp="F01-01"><td><span class="fp">F01-01</span>下拉选项</td><td class="w">线上现有选项保持不变，在其后追加「原生Gcash」；现有选项以线上为准（QA 环境为 PayMongo、PayCools、TraxionPay），本需求只追加这一项（规则 N1：下拉新增「原生Gcash」，排在现有选项之后）</td></tr>
+<tr data-fp="F01-02"><td><span class="fp">F01-02</span>勾选与删除</td><td class="w">点下拉框展开；点选项勾选，再点取消勾选；已选项以标签显示在框内，点标签上的 × 删除；点下拉外部收起（规则 N2：交互与现有选项一致）</td></tr>
+<tr data-fp="F01-02"><td><span class="fp">F01-02</span>已选值显示</td><td class="w">编辑已有活动时，按已保存的值显示标签；已有活动不会自动勾选原生Gcash</td></tr>
+<tr data-fp="F01-02"><td>是否必填与其他字段</td><td class="w"><b>充值方式是否必填，保持原有规则不变</b>（本需求不新增、也不取消必填校验）；保存提示和其他配置项沿用现状，不改动</td></tr>
+</table></div>
+
+<h3 id="c4-3">4.3 帮助提示内容</h3>
+<p>后台原型里「?」图标的说明文字取自本表。</p>
+<div class="tbl"><table id="help">
+<tr><th>数据项</th><th>说明内容</th></tr>
+<tr data-fp="F01-01"><td>原生Gcash</td><td class="w" data-help="gcash">对应【充值配置 › 在线支付配置】中的 GCash 原生通道。勾选后，经该通道成功充值的订单按本活动规则获得转盘次数。</td></tr>
+</table></div>
+
+<!-- ======================= 5 ======================= -->
+<h2 id="c5">5. 接口与异常</h2>
+<p>沿用现有活动配置页的处理方式，本需求不新增异常处理：选项列表加载失败、保存失败、连点保存、无权限访问等，表现与勾选其他充值方式时一致。</p>
+
+<!-- ======================= 6 ======================= -->
+<h2 id="c6">6. 验收标准</h2>
+<ol>
+<li data-fp="F01-01"><span class="fp">F01</span>A1 充值方式下拉在线上现有选项之后显示「原生Gcash」，现有选项保持不变（现有选项以线上为准）。</li>
+<li data-fp="F01-02"><span class="fp">F01</span>A2 单独勾选原生Gcash、以及与其他选项多选后保存，重新进入编辑页，标签都正确显示；点 × 可以删除。</li>
+<li data-fp="F01-02"><span class="fp">F01</span>A3 上线前已存在的活动，打开编辑后不会自动勾选原生Gcash，其他配置不变。</li>
+<li data-fp="F02-01"><span class="fp">F02</span>A4 活动勾选原生Gcash 后，老用户经原生Gcash 通道充值成功、金额在档位内，按现有规则获得转盘次数；未勾选时不获得。</li>
+<li data-fp="F02-01"><span class="fp">F02</span>A5 回归：H5、iOS 原生、安卓 Flutter、iOS Flutter 的充值页，勾选后原生Gcash 对应入口显示 Lucky Spin 标识和金额角标；未勾选时不显示。</li>
+<li data-fp="F02-01"><span class="fp">F02</span>A6 回归：勾选其他现有选项的活动，获得次数和 C 端展示与上线前一致；充值方式是否必填与上线前一致。</li>
+</ol>
+
+<!-- ======================= 7 ======================= -->
+<h2 id="c7">7. 上线方式</h2>
+<ul>
+<li><b>开关</b>：不加新开关。新选项默认不勾选，已有活动不受影响，运营勾选后才生效。</li>
+<li><b>上线前</b>：后端提供生产环境原生Gcash 通道的名称和标识（第 9 章待确认 Q1）；前端确认 C 端不需要发版（第 9 章待确认 Q2）。</li>
+<li><b>验证</b>：上线后先在一个测试活动里勾选原生Gcash，用测试账号充值一笔，确认获得次数、C 端标识正确，再对正式活动开放。</li>
+<li><b>回滚</b>：先在所有活动里取消勾选原生Gcash，再回滚版本。</li>
+</ul>
+
+<!-- ======================= 8 ======================= -->
+<h2 id="c8">8. 风险与依赖</h2>
+<div class="tbl"><table>
+<tr><th>风险</th><th>等级</th><th>应对</th></tr>
+<tr data-fp="F02-01"><td class="w">用户理解：前台有多个入口都叫「GCash」，背后的通道不同（BB2025789-4737、BB2025789-4526 报为缺陷后被否决，推测是现行设计）。用户走的不是原生Gcash 通道时拿不到次数，可能引发客诉</td><td>低</td><td class="w">客服按订单实际通道答复（见后台操作手册常见问题和客服 QA）</td></tr>
+<tr><td class="w">依赖：生产环境原生Gcash 通道的名称和标识；C 端是否自动匹配新选项</td><td>—</td><td class="w">等后端回复「生产环境原生Gcash 通道的支付名称和通道标识」、前端回复「前台是否按配置自动显示 Lucky Spin 标识、无需发版」（第 9 章待确认事项）</td></tr>
+</table></div>
+
+<!-- ======================= 9 ======================= -->
+<h2 id="c9">9. 待确认事项</h2>
+<div class="tbl"><table>
+<tr><th>编号</th><th>事项</th><th>负责人</th><th>状态</th></tr>
+<tr><td>Q1</td><td class="w">生产环境原生Gcash 通道的支付名称和通道标识；新选项保存什么值（QA 现有选项存的是名称，如「Traxion Pay」）</td><td>后端</td><td>待确认</td></tr>
+<tr><td>Q2</td><td class="w">C 端是否按配置自动在原生Gcash 入口显示 Lucky Spin 标识、无需发版；原生Gcash 在各端对应哪个入口（QA 为「GCASH2」）</td><td>前端（H5 / iOS / Flutter）</td><td>待确认</td></tr>
+<tr><td>Q3</td><td class="w">选项显示名称：已确认为「原生Gcash」（与在线支付配置里的支付名称不同，QA 为「GCASH2 (GCASH 原生)」）</td><td>产品</td><td>已确认（2026-10-09）</td></tr>
+</table></div>
+
+<!-- ======================= 10 ======================= -->
+<h2 id="c10">10. 各角色协作 Tips</h2>
+<div class="roles-cards">
+  <div class="rc" style="--c:#C89A3C"><h4>设计</h4><ul><li>沿用现有下拉组件，只多一个选项，不需要新设计稿。</li></ul></div>
+  <div class="rc" style="--c:#6A2BB8"><h4>前端</h4><ul><li>后台下拉追加一项，交互与现有选项一致。</li><li>C 端先查入口与配置值的匹配代码，回复第 9 章待确认 Q2（C 端是否不用发版）。</li></ul></div>
+  <div class="rc" style="--c:#1560A8"><h4>后端</h4><ul><li>新选项与现有选项走同一套保存和判定逻辑。</li><li>先回复第 9 章待确认 Q1（生产环境通道名称、标识和保存值）。</li></ul></div>
+  <div class="rc" style="--c:#1B7A4C"><h4>测试</h4><ul><li>重点测第 6 章验收 A4（原生Gcash 订单获得次数）和 A6（其他选项不受影响）。</li><li>QA 中原生Gcash 的前台入口为「GCASH2」。</li></ul></div>
+  <div class="rc" style="--c:#B5601A"><h4>运营</h4><ul><li>勾选前，先在在线支付配置里确认原生Gcash 已启用，并对目标会员层级开放。</li></ul></div>
+  <div class="rc" style="--c:#8A1020"><h4>客服</h4><ul><li>用户说「用 GCash 充值没拿到转盘」：先查订单实际通道。不是活动所选的通道，按规则不给次数；是所选通道、金额也在档位内的，转技术查。</li><li>对玩家的回复口径、核查步骤和转交规则见客服 QA。</li></ul></div>
+</div>
+
+</article></div>
+</div>
+<script>window.NAV_ROOT = "../";</script>
+<script src="../assets/nav-data.js"></script>
+<script src="../assets/nav.js"></script>
+<script>
+(function () {
+  /* 功能点名称（与开发自查清单保持一致） */
+  var FP = {
+    F01: "充值方式选项", "F01-01": "新增原生Gcash 选项", "F01-02": "勾选、保存与已选值显示",
+    F02: "生效方式", "F02-01": "原生Gcash 订单获得转盘次数"
+  };
+  var doc = document.getElementById("doc");
+
+  /* 子功能点锚点：第一处相关内容 */
+  Object.keys(FP).forEach(function (code) {
+    if (code.length === 3 || document.getElementById(code)) return;
+    var el = [].filter.call(doc.querySelectorAll('[data-fp~="' + code + '"]'), function (e) { var f = e.querySelector(".fp"); return f && f.textContent === code; })[0] ||
+      doc.querySelector('[data-fp~="' + code + '"]');
+    if (!el) return;
+    if (!el.id) { el.id = code; return; }
+    var a = document.createElement("span"); a.id = code;
+    (el.tagName === "TR" ? el.cells[0] : el).prepend(a);
+  });
+  /* 大功能点 F02 锚到 3.2 的规则 N3 */
+  if (!document.getElementById("F02")) { var s = document.createElement("span"); s.id = "F02"; document.getElementById("n3").cells[0].prepend(s); }
+
+  /* 全文目录：按正文 h2 / h3 自动生成 */
+  var list = document.getElementById("toc-list"), sub = null;
+  doc.querySelectorAll("h2, h3").forEach(function (h) {
+    if (h.id === "toc" || !h.id) return;
+    var li = document.createElement("li"), a = document.createElement("a");
+    a.href = "#" + h.id; a.textContent = h.textContent; li.appendChild(a);
+    if (h.tagName === "H2") { list.appendChild(li); sub = document.createElement("ol"); li.appendChild(sub); }
+    else if (sub) sub.appendChild(li);
+  });
+  list.querySelectorAll("ol").forEach(function (o) { if (!o.children.length) o.remove(); });
+
+  /* 版本标注（v1.0 首版没有标注；以后的版本沿用这段逻辑） */
+  var rows = [].slice.call(document.querySelectorAll("#vtable tr[data-v]"));
+  var latest = rows[0].dataset.v, sum = {};
+  rows.forEach(function (r) { sum[r.dataset.v] = r.dataset.sum; });
+  doc.querySelectorAll(".vmark").forEach(function (m) { if (m.dataset.v !== latest) m.classList.add("old"); });
+  var tip = null;
+  function hideTip() { if (tip) { tip.remove(); tip = null; } }
+  doc.querySelectorAll(".vtag").forEach(function (t) {
+    if (t.dataset.v !== latest) t.classList.add("old");
+    t.tabIndex = 0;
+    function show(e) {
+      if (e) e.stopPropagation();
+      hideTip();
+      tip = document.createElement("div"); tip.className = "vtip"; tip.textContent = t.dataset.v + "：" + (sum[t.dataset.v] || "");
+      document.body.appendChild(tip);
+      var r = t.getBoundingClientRect();
+      tip.style.left = Math.max(8, Math.min(r.left + scrollX, innerWidth - 370)) + "px"; tip.style.top = (r.bottom + scrollY + 6) + "px";
+    }
+    t.addEventListener("mouseenter", show); t.addEventListener("click", show); t.addEventListener("focus", show);
+    t.addEventListener("mouseleave", hideTip);
+  });
+  document.addEventListener("click", hideTip);
+  document.querySelectorAll("[data-chg]").forEach(function (b) {
+    var ul = document.getElementById(b.dataset.chg), n = ul.children.length;
+    b.textContent = "查看详细（共 " + n + " 项）";
+    b.onclick = function () { ul.hidden = !ul.hidden; };
+  });
+
+  /* 荧光粉：只在网址以 #功能点编号 结尾时出现（来自开发自查清单） */
+  var banner = document.getElementById("fp-banner"), hits = [], pos = -1;
+  function report() { try { if (parent !== window) parent.postMessage({ type: "prd-hits", total: hits.length, pos: pos }, "*"); } catch (e) {} }
+  function clearHit() { doc.querySelectorAll(".fp-hit,.fp-cur").forEach(function (e) { e.classList.remove("fp-hit", "fp-cur"); }); hits = []; pos = -1; banner.hidden = true; }
+  function go(i) {
+    if (!hits.length) return;
+    pos = (i + hits.length) % hits.length;
+    hits.forEach(function (h) { h.classList.remove("fp-cur"); });
+    hits[pos].classList.add("fp-cur");
+    hits[pos].scrollIntoView({ block: "center" });
+    report();
+  }
+  function applyHit() {
+    var code = decodeURIComponent(location.hash.slice(1));
+    clearHit();
+    if (!/^F\d{2}(-\d{2})?$/.test(code) || !FP[code]) { report(); return; }
+    doc.querySelectorAll("[data-fp]").forEach(function (e) {
+      if (e.dataset.fp.split(/\s+/).some(function (c) { return c === code || c.indexOf(code + "-") === 0; })) { e.classList.add("fp-hit"); hits.push(e); }
+    });
+    var big = code.slice(0, 3);
+    document.getElementById("fp-text").textContent = "正在查看：" + (code.length > 3 ? big + " " + FP[big] + " › " + code + " " + FP[code] : code + " " + FP[code]) + "（共标出 " + hits.length + " 处）";
+    banner.hidden = false;
+    go(0);
+  }
+  document.getElementById("fp-clear").onclick = function () { clearHit(); history.replaceState(null, "", location.pathname); report(); };
+  window.addEventListener("message", function (e) {
+    var d = e.data || {};
+    if (d.type === "prd-step") go(pos + d.dir);
+    if (d.type === "prd-show") { if (location.hash === "#" + d.code) applyHit(); else location.hash = d.code; }
+  });
+  window.addEventListener("hashchange", applyHit);
+  applyHit();
+})();
+</script>
+</body>
+</html>
