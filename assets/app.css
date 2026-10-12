@@ -170,7 +170,8 @@ table.list { width: 100%; border-collapse: collapse; font-size: 13.5px; min-widt
 }
 .addr { flex: 1; min-width: 0; color: var(--link); text-decoration: none; font-family: Consolas, monospace; word-break: break-all; }
 .addr:hover { text-decoration: underline; }
-.st { flex: none; font-size: 11px; padding: 0 6px; border-radius: 4px; background: var(--panel); color: var(--sub); }
+.st { flex: none; font-size: 11px; padding: 0 6px; border-radius: 4px; background: var(--panel); color: var(--sub); white-space: nowrap; }
+.st.ok { background: #F6FFED; color: #389E0D; }
 .btn-xs { flex: none; padding: 2px 10px; font-size: 12px; border-radius: 5px; }
 .btn-xs.done { background: #F6FFED; border-color: #B7EB8F; color: #389E0D; }
 

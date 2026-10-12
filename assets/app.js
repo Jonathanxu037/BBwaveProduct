@@ -18,7 +18,7 @@
   var RESERVED = ['assets', 'data', 'api', 'tools', 'index', 'readme', 'pdm', 'opr', 'dev', 'docs', 'node_modules'];
   var FOLDER_RE = /^[A-Za-z][A-Za-z0-9_-]{1,39}$/;
 
-  var state = { mode: 'readonly', items: [], gh: null };
+  var state = { mode: 'readonly', items: [], gh: null, roleTimes: {} };
 
   function $(id) { return document.getElementById(id); }
   function esc(s) {
@@ -244,22 +244,93 @@
       return r.text().then(function (t) { return t.indexOf('name="prdhub-placeholder"') < 0; });
     }).catch(function () { return false; }).then(function (ok) {
       avail[key] = ok;
-      var el = document.querySelector('.link[data-key="' + key + '"] .st');
-      if (el) paintAvail(el, ok);
+      if (ok) fetchRoleTime(folder, code);
+      scheduleRender();
     });
   }
-  function paintAvail(el, ok) {
-    el.hidden = ok !== false;
-    el.textContent = ok === false ? '未上传' : '';
+
+  /* 各角色站点最后一次更新的时间（state.roleTimes[文件夹][角色]）
+   * 本地管理模式：由本地服务按仓库的 Git 提交记录计算，随需求列表一起返回。
+   * 其他模式：用 GitHub 接口查该角色文件夹最后一次提交的时间，结果在本浏览器缓存 10 分钟；
+   * 接口不可用（如未登录时的调用次数限制）时，沿用需求列表里记录的最后上传时间。 */
+  var K_RT = 'prdhub.rt.', RT_TTL = 10 * 60 * 1000, rtPending = {};
+
+  function repoInfo() {
+    if (state.gh) return { owner: state.gh.owner, repo: state.gh.repo, token: state.gh.token };
+    var g = ghGuess();
+    return g.owner ? { owner: g.owner, repo: g.repo } : null;
+  }
+
+  function setRoleTime(folder, code, t) {
+    (state.roleTimes[folder] = state.roleTimes[folder] || {})[code] = t;
+  }
+  function getRoleTime(folder, code) {
+    var m = state.roleTimes[folder];
+    return m && m.hasOwnProperty(code) ? m[code] : undefined;
+  }
+
+  function fetchRoleTime(folder, code) {
+    if (state.mode === 'local') return;           // 本地服务已经给出
+    if (getRoleTime(folder, code) !== undefined) return;
+    var info = repoInfo(), key = folder + '/' + code;
+    if (!info || rtPending[key]) return;
+    var ck = K_RT + info.owner + '/' + info.repo + '/' + key, c = lGet(ck);
+    if (c && Date.now() - c.at < RT_TTL) { setRoleTime(folder, code, c.t); scheduleRender(); return; }
+    rtPending[key] = true;
+    var headers = { 'Accept': 'application/vnd.github+json' };
+    if (info.token) headers.Authorization = 'Bearer ' + info.token;
+    fetch('https://api.github.com/repos/' + encodeURIComponent(info.owner) + '/' + encodeURIComponent(info.repo) +
+      '/commits?per_page=1&path=' + encodeURIComponent(key), { headers: headers, cache: 'no-store' })
+      .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+      .then(function (list) {
+        var t = (list && list[0] && list[0].commit && list[0].commit.committer && list[0].commit.committer.date) || null;
+        lSet(ck, { t: t, at: Date.now() });
+        setRoleTime(folder, code, t);
+        scheduleRender();
+      })
+      .catch(function () {})
+      .then(function () { delete rtPending[key]; });
+  }
+
+  function clearRtCache() {
+    try {
+      for (var i = localStorage.length - 1; i >= 0; i--) {
+        var k = localStorage.key(i);
+        if (k && k.indexOf(K_RT) === 0) localStorage.removeItem(k);
+      }
+    } catch (e) {}
+  }
+
+  // 需求的最后上传时间 = 已上传的各角色站点里最晚的更新时间；还拿不到时沿用需求列表里记录的时间
+  function lastUp(it) {
+    var best = null;
+    ROLES.forEach(function (r) {
+      var t = getRoleTime(it.folder, r.code);
+      if (t && avail[it.folder + '/' + r.code] !== false && (!best || Date.parse(t) > Date.parse(best))) best = t;
+    });
+    return best || it.lastUploadAt || null;
+  }
+
+  function roleStatus(folder, code) {
+    var key = folder + '/' + code, ok = avail[key], t = getRoleTime(folder, code);
+    if (ok === false) return { text: '未上传', cls: '' };
+    if (ok && t) return { text: '更新于 ' + fmt(t), cls: 'ok' };
+    return null;
+  }
+
+  var renderTimer;
+  function scheduleRender() {
+    clearTimeout(renderTimer);
+    renderTimer = setTimeout(function () { render(); }, 120);
   }
 
   function linksHtml(it) {
     return '<div class="links">' + ROLES.map(function (r) {
-      var url = roleUrl(it.folder, r.code), key = it.folder + '/' + r.code;
+      var url = roleUrl(it.folder, r.code), key = it.folder + '/' + r.code, st = roleStatus(it.folder, r.code);
       return '<div class="link" data-key="' + esc(key) + '">' +
         '<span class="role">' + r.name + '<b>' + r.code + '</b></span>' +
         '<a class="addr" href="' + esc(url) + '" target="_blank" rel="noopener">' + esc(url) + '</a>' +
-        '<span class="st" hidden></span>' +
+        (st ? '<span class="st ' + st.cls + '">' + esc(st.text) + '</span>' : '') +
         '<button class="btn btn-line btn-xs" type="button" data-copy="' + esc(url) + '" aria-label="复制' + r.name + '角色地址">复制</button>' +
         '</div>';
     }).join('') + '</div>';
@@ -301,10 +372,14 @@
 
   function refresh(flashFolder) {
     avail = {};
+    state.roleTimes = {};
     $('listMeta').textContent = '加载中…';
     $('loadErr').hidden = true;
     return loadItems().then(function (data) {
       state.items = normalize(data);
+      state.items.forEach(function (it) {
+        if (it.roleTimes) { state.roleTimes[it.folder] = it.roleTimes; delete it.roleTimes; }
+      });
       render(flashFolder);
     }).catch(function (e) {
       $('listMeta').textContent = '';
@@ -334,7 +409,7 @@
   function matches(it) {
     if (filter.name && norm(it.name).indexOf(norm(filter.name)) < 0) return false;
     if (filter.owner && it.owner !== filter.owner) return false;
-    return inRange(it.createdAt, filter.cFrom, filter.cTo) && inRange(it.lastUploadAt, filter.uFrom, filter.uTo);
+    return inRange(it.createdAt, filter.cFrom, filter.cTo) && inRange(lastUp(it), filter.uFrom, filter.uTo);
   }
 
   // 需求方下拉：列出当前列表里所有不重复的需求方；已选的需求方不在列表里了（如被改名）就回到「全部」
@@ -397,7 +472,8 @@
     $('colOps').hidden = !local;
     tb.innerHTML = shown.map(function (row) {
       var it = row.it, i = row.no - 1;
-      var up = it.lastUploadAt ? esc(fmt(it.lastUploadAt)) : '<span class="none">未上传</span>';
+      var lu = lastUp(it);
+      var up = lu ? esc(fmt(lu)) : '<span class="none">未上传</span>';
       var ops = local ? '<td class="ops">' +
         '<button class="btn btn-line btn-sm" type="button" data-op="upload">上传需求包</button>' +
         '<button class="btn btn-line btn-sm" type="button" data-op="version">改版本号</button></td>' : '';
@@ -411,11 +487,12 @@
         '<td>' + up + '</td>' + ops + '</tr>' +
         '<tr class="links-row' + (it.folder === flashFolder ? ' flash' : '') + '"><td></td><td colspan="' + (local ? 6 : 5) + '">' + linksHtml(it) + '</td></tr>';
     }).join('');
-    shown.forEach(function (row) {
+    // 检查全部需求（不只是当前显示的），这样按最后上传时间查询时，各需求的时间都是完整的
+    all.forEach(function (it) {
       ROLES.forEach(function (r) {
-        var key = row.it.folder + '/' + r.code;
-        if (key in avail && avail[key] !== null) paintAvail(document.querySelector('.link[data-key="' + key + '"] .st'), avail[key]);
-        else checkAvail(row.it.folder, r.code);
+        var key = it.folder + '/' + r.code;
+        if (!(key in avail)) checkAvail(it.folder, r.code);
+        else if (avail[key]) fetchRoleTime(it.folder, r.code);
       });
     });
   }
@@ -851,7 +928,7 @@
   function bind() {
     $('loginForm').addEventListener('submit', onLogin);
     $('logoutBtn').addEventListener('click', logout);
-    $('refreshBtn').addEventListener('click', function () { refresh(); });
+    $('refreshBtn').addEventListener('click', function () { clearRtCache(); refresh(); });
     $('addBtn').addEventListener('click', openAdd);
     $('addCancel').addEventListener('click', cancelAdd);
     $('addForm').addEventListener('submit', onAddSubmit);
