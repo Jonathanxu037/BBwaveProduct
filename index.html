@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>产品需求管理</title>
+<link rel="stylesheet" href="assets/app.css">
+</head>
+<body>
+
+<!-- 登录页 -->
+<section id="login" class="login" hidden>
+  <form class="login-card" id="loginForm" autocomplete="off" novalidate>
+    <div class="brand-sm">789BINGO</div>
+    <h1>产品需求管理系统</h1>
+    <p class="muted">请输入访问密码</p>
+    <label class="field">
+      <span class="sr">访问密码</span>
+      <input id="pwd" type="password" placeholder="访问密码" maxlength="64" autocomplete="current-password" autofocus>
+    </label>
+    <div class="err" id="loginErr" role="alert"></div>
+    <button class="btn btn-gold btn-block" id="loginBtn" type="submit">登录</button>
+    <p class="hint">密码请向系统的产品管理人获取。</p>
+  </form>
+</section>
+
+<!-- 首页 -->
+<section id="home" class="home" hidden>
+  <header class="topbar">
+    <div class="tb-brand"><span class="brand-sm">789BINGO</span><b>产品需求管理系统</b></div>
+    <div class="tb-right">
+      <button class="chip" id="modeChip" type="button" title="写入通道设置"></button>
+      <button class="btn btn-line btn-sm" id="logoutBtn" type="button">退出登录</button>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <div class="page-head">
+      <div>
+        <h2>需求列表</h2>
+        <p class="muted" id="listMeta">加载中…</p>
+      </div>
+      <button class="btn btn-line btn-sm" id="refreshBtn" type="button">刷新</button>
+    </div>
+
+    <form class="filters" id="filterForm" autocomplete="off" novalidate>
+      <label class="flt">
+        <span>需求名称</span>
+        <input id="qName" type="search" maxlength="50" placeholder="输入关键字，模糊匹配">
+      </label>
+      <label class="flt">
+        <span>需求方</span>
+        <select id="qOwner"><option value="">全部</option></select>
+      </label>
+      <div class="flt flt-range">
+        <span>创建时间</span>
+        <div class="range">
+          <input id="qCFrom" type="date" aria-label="创建时间开始日期">
+          <i>至</i>
+          <input id="qCTo" type="date" aria-label="创建时间结束日期">
+        </div>
+      </div>
+      <div class="flt flt-range">
+        <span>最后上传时间</span>
+        <div class="range">
+          <input id="qUFrom" type="date" aria-label="最后上传时间开始日期">
+          <i>至</i>
+          <input id="qUTo" type="date" aria-label="最后上传时间结束日期">
+        </div>
+      </div>
+      <div class="flt-btns">
+        <button class="btn btn-gold btn-sm" type="submit">查询</button>
+        <button class="btn btn-line btn-sm" id="qReset" type="button">重置</button>
+      </div>
+      <div class="err flt-err" id="qErr" role="alert"></div>
+    </form>
+
+    <div class="card">
+      <div class="table-scroll">
+        <table class="list">
+          <thead>
+            <tr>
+              <th class="c-no">序号</th>
+              <th>需求名称</th>
+              <th>需求方</th>
+              <th class="c-ver">版本号</th>
+              <th class="c-time">创建时间</th>
+              <th class="c-time">最后上传时间</th>
+              <th class="c-ops" id="colOps" hidden>操作</th>
+            </tr>
+          </thead>
+          <tbody id="rows"></tbody>
+        </table>
+      </div>
+      <div class="empty" id="empty" hidden>
+        <div class="empty-ico">📂</div>
+        <p>还没有需求，点击下方「新增需求」创建第一个。</p>
+      </div>
+      <div class="empty" id="noMatch" hidden>
+        <div class="empty-ico">🔍</div>
+        <p>没有符合查询条件的需求。<button class="link-btn" id="qReset2" type="button">清空条件</button></p>
+      </div>
+      <div class="err pad" id="loadErr" role="alert" hidden></div>
+    </div>
+
+    <div class="actions">
+      <button class="btn btn-gold" id="addBtn" type="button">＋ 新增需求</button>
+    </div>
+  </main>
+</section>
+
+<!-- 新增需求弹窗 -->
+<div class="mask" id="addMask" hidden>
+  <form class="dialog" id="addForm" role="dialog" aria-modal="true" aria-labelledby="addTitle" novalidate>
+    <h3 id="addTitle">新增需求</h3>
+    <div class="err" id="addErr" role="alert"></div>
+
+    <label class="field">
+      <span>需求名称 <i>*</i></span>
+      <input id="fName" type="text" maxlength="50" placeholder="例如：老用户充值转盘">
+      <small class="f-err" data-for="fName"></small>
+    </label>
+    <label class="field">
+      <span>需求方 <i>*</i></span>
+      <input id="fOwner" type="text" maxlength="30" placeholder="例如：运营部">
+      <small class="f-err" data-for="fOwner"></small>
+    </label>
+    <label class="field">
+      <span>文件夹名称 <i>*</i></span>
+      <input id="fFolder" type="text" maxlength="40" placeholder="例如：recharge-wheel" spellcheck="false" autocapitalize="off">
+      <small class="f-tip">只能用英文字母、数字、短横线「-」和下划线「_」，以字母开头，2–40 个字符；创建后不能修改。</small>
+      <small class="f-err" data-for="fFolder"></small>
+    </label>
+
+    <dl class="auto">
+      <div><dt>创建时间</dt><dd>点击「确定」时自动记录</dd></div>
+      <div><dt>初始版本号</dt><dd id="fVer">v1.0</dd></div>
+    </dl>
+
+    <div class="dlg-btns">
+      <button class="btn btn-line" id="addCancel" type="button">取消</button>
+      <button class="btn btn-gold" id="addOk" type="submit">确定</button>
+    </div>
+  </form>
+</div>
+
+<!-- 上传需求包弹窗（本地管理模式） -->
+<div class="mask" id="upMask" hidden>
+  <form class="dialog" id="upForm" role="dialog" aria-modal="true" aria-labelledby="upTitle" novalidate>
+    <h3 id="upTitle">上传需求包</h3>
+    <dl class="auto">
+      <div><dt>需求名称</dt><dd id="upName"></dd></div>
+      <div><dt>文件夹</dt><dd id="upFolder" class="mono"></dd></div>
+      <div><dt>当前版本</dt><dd id="upCur"></dd></div>
+    </dl>
+    <div class="err" id="upErr" role="alert"></div>
+    <label class="field">
+      <span>需求包压缩包（.zip）<i>*</i></span>
+      <input id="upFile" type="file" accept=".zip,application/zip">
+      <small class="f-tip">支持角色站点包（含 pdm/、opr/、dev/）和旧版单站点包（含 index.html，会放进 pdm/）。上传后会替换该需求文件夹里的全部旧内容。</small>
+      <small class="f-err" data-for="upFile"></small>
+    </label>
+    <label class="field">
+      <span>版本号 <i>*</i></span>
+      <input id="upVer" type="text" maxlength="9" placeholder="例如：v1.1" spellcheck="false" autocapitalize="off">
+      <small class="f-tip">格式为 v主版本.次版本，不能低于当前版本；默认在当前版本上加 0.1，首次上传默认沿用当前版本。</small>
+      <small class="f-err" data-for="upVer"></small>
+    </label>
+    <div class="dlg-btns">
+      <button class="btn btn-line" id="upCancel" type="button">取消</button>
+      <button class="btn btn-gold" id="upOk" type="submit">上传</button>
+    </div>
+  </form>
+</div>
+
+<!-- 修改版本号弹窗（本地管理模式） -->
+<div class="mask" id="verMask" hidden>
+  <form class="dialog" id="verForm" role="dialog" aria-modal="true" aria-labelledby="verTitle" novalidate>
+    <h3 id="verTitle">修改版本号</h3>
+    <dl class="auto">
+      <div><dt>需求名称</dt><dd id="verName"></dd></div>
+      <div><dt>当前版本</dt><dd id="verCur"></dd></div>
+    </dl>
+    <div class="err" id="verErr" role="alert"></div>
+    <label class="field">
+      <span>新版本号 <i>*</i></span>
+      <input id="verVal" type="text" maxlength="9" placeholder="例如：v1.1" spellcheck="false" autocapitalize="off">
+      <small class="f-tip">格式为 v主版本.次版本。只改列表里显示的版本号，不改需求文件夹里的内容。</small>
+      <small class="f-err" data-for="verVal"></small>
+    </label>
+    <div class="dlg-btns">
+      <button class="btn btn-line" id="verCancel" type="button">取消</button>
+      <button class="btn btn-gold" id="verOk" type="submit">确定</button>
+    </div>
+  </form>
+</div>
+
+<!-- 修改需求方弹窗 -->
+<div class="mask" id="ownMask" hidden>
+  <form class="dialog" id="ownForm" role="dialog" aria-modal="true" aria-labelledby="ownTitle" novalidate>
+    <h3 id="ownTitle">修改需求方</h3>
+    <dl class="auto">
+      <div><dt>需求名称</dt><dd id="ownName"></dd></div>
+      <div><dt>当前需求方</dt><dd id="ownCur"></dd></div>
+    </dl>
+    <div class="err" id="ownErr" role="alert"></div>
+    <label class="field">
+      <span>新需求方 <i>*</i></span>
+      <input id="ownVal" type="text" maxlength="30" placeholder="例如：运营部">
+      <small class="f-err" data-for="ownVal"></small>
+    </label>
+    <div class="dlg-btns">
+      <button class="btn btn-line" id="ownCancel" type="button">取消</button>
+      <button class="btn btn-gold" id="ownOk" type="submit">确定</button>
+    </div>
+  </form>
+</div>
+
+<!-- 写入通道设置弹窗 -->
+<div class="mask" id="ghMask" hidden>
+  <form class="dialog" id="ghForm" role="dialog" aria-modal="true" aria-labelledby="ghTitle" novalidate>
+    <h3 id="ghTitle">写入通道设置</h3>
+    <p class="muted small" id="ghIntro"></p>
+    <div class="err" id="ghErr" role="alert"></div>
+    <label class="field"><span>仓库所有者（用户名或组织）<i>*</i></span><input id="gOwner" type="text" spellcheck="false" autocapitalize="off"></label>
+    <label class="field"><span>仓库名 <i>*</i></span><input id="gRepo" type="text" spellcheck="false" autocapitalize="off"></label>
+    <label class="field"><span>分支 <i>*</i></span><input id="gBranch" type="text" value="main" spellcheck="false" autocapitalize="off"></label>
+    <label class="field"><span>访问令牌（Personal Access Token）<i>*</i></span><input id="gToken" type="password" autocomplete="off" spellcheck="false">
+      <small class="f-tip">需要该仓库的 Contents（内容）读写权限。令牌只保存在当前浏览器，不会写入仓库。</small></label>
+    <div class="dlg-btns">
+      <button class="btn btn-line" id="ghDisconnect" type="button" hidden>断开连接</button>
+      <span class="grow"></span>
+      <button class="btn btn-line" id="ghCancel" type="button">取消</button>
+      <button class="btn btn-gold" id="ghOk" type="submit">测试并保存</button>
+    </div>
+  </form>
+</div>
+
+<div class="toast" id="toast" role="status" hidden></div>
+
+<script src="assets/config.js"></script>
+<script src="assets/app.js"></script>
+</body>
+</html>
