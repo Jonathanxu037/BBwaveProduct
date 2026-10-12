@@ -1,13 +1,3 @@
 {
-    "items":  [
-                  {
-                      "id":  1,
-                      "name":  "老用户转盘需求增加充值方式",
-                      "owner":  "johnny",
-                      "folder":  "OlduserSpinPay",
-                      "version":  "v1.0",
-                      "createdAt":  "2026-10-12T12:04:36+08:00",
-                      "lastUploadAt":  null
-                  }
-              ]
+  "items": []
 }
