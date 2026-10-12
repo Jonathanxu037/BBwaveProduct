@@ -130,7 +130,11 @@
   function detectLocal() {
     return fetch('api/ping', { cache: 'no-store' }).then(function (r) {
       if (!r.ok) return false;
-      return r.json().then(function (j) { return !!(j && j.mode === 'local'); });
+      return r.json().then(function (j) {
+        if (!(j && j.mode === 'local')) return false;
+        state.pagesBase = j.pagesBase || null;
+        return true;
+      });
     }).catch(function () { return false; });
   }
 
@@ -209,7 +213,94 @@
     });
   }
 
+  /* ---------- 角色访问地址 ---------- */
+
+  var ROLES = [
+    { code: 'pdm', name: '产品' },
+    { code: 'opr', name: '运营' },
+    { code: 'dev', name: '开发' },
+    { code: 'repo', name: '报告' }   // 只读的报告角色：全部原型页面 + 完整 PRD（生成内容规范 v4.57）
+  ];
+  var avail = {};   // 「文件夹/角色」→ true 已上传 / false 未上传；每次刷新列表时重新检查
+
+  // 公开网址的根：本地管理模式用服务端从仓库配置推算的 GitHub Pages 网址；其他情况用当前页面所在目录
+  function siteBase() {
+    if (state.mode === 'local' && state.pagesBase) return state.pagesBase;
+    if (state.mode === 'github' && state.gh && /^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname)) {
+      var o = state.gh.owner.toLowerCase(), r = state.gh.repo;
+      return r.toLowerCase() === o + '.github.io' ? 'https://' + o + '.github.io/' : 'https://' + o + '.github.io/' + r + '/';
+    }
+    return new URL('.', location.href).href;
+  }
+  function roleUrl(folder, code) { return siteBase() + folder + '/' + code + '/'; }
+
+  // 检查角色站点是否已上传：请求本站同一相对路径，404 或「待上传」占位页都算未上传
+  function checkAvail(folder, code) {
+    var key = folder + '/' + code;
+    if (key in avail) return;
+    avail[key] = null;
+    fetch(folder + '/' + code + '/', { cache: 'no-store' }).then(function (r) {
+      if (!r.ok) return false;
+      return r.text().then(function (t) { return t.indexOf('name="prdhub-placeholder"') < 0; });
+    }).catch(function () { return false; }).then(function (ok) {
+      avail[key] = ok;
+      var el = document.querySelector('.link[data-key="' + key + '"] .st');
+      if (el) paintAvail(el, ok);
+    });
+  }
+  function paintAvail(el, ok) {
+    el.hidden = ok !== false;
+    el.textContent = ok === false ? '未上传' : '';
+  }
+
+  function linksHtml(it) {
+    return '<div class="links">' + ROLES.map(function (r) {
+      var url = roleUrl(it.folder, r.code), key = it.folder + '/' + r.code;
+      return '<div class="link" data-key="' + esc(key) + '">' +
+        '<span class="role">' + r.name + '<b>' + r.code + '</b></span>' +
+        '<a class="addr" href="' + esc(url) + '" target="_blank" rel="noopener">' + esc(url) + '</a>' +
+        '<span class="st" hidden></span>' +
+        '<button class="btn btn-line btn-xs" type="button" data-copy="' + esc(url) + '" aria-label="复制' + r.name + '角色地址">复制</button>' +
+        '</div>';
+    }).join('') + '</div>';
+  }
+
+  // 旧式复制：用隐藏文本框 + execCommand，兼容剪贴板接口不可用或被浏览器拒绝的情况
+  function legacyCopy(text) {
+    var ta = document.createElement('textarea');
+    ta.value = text; ta.setAttribute('readonly', ''); ta.style.position = 'fixed'; ta.style.top = '0'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.select();
+    var ok = false;
+    try { ok = document.execCommand('copy'); } catch (e) {}
+    document.body.removeChild(ta);
+    return ok;
+  }
+
+  function copyText(text) {
+    if (navigator.clipboard && window.isSecureContext) {
+      return navigator.clipboard.writeText(text).catch(function () {
+        if (!legacyCopy(text)) throw new Error('copy');
+      });
+    }
+    return legacyCopy(text) ? Promise.resolve() : Promise.reject(new Error('copy'));
+  }
+
+  function onCopy(btn) {
+    var url = btn.getAttribute('data-copy');
+    copyText(url).then(function () {
+      btn.textContent = '已复制'; btn.classList.add('done');
+      setTimeout(function () { btn.textContent = '复制'; btn.classList.remove('done'); }, 1500);
+      toast('已复制地址：' + url);
+    }).catch(function () {
+      // 两种方式都失败时，选中地址文字，方便按 Ctrl + C 复制
+      var a = btn.parentNode.querySelector('.addr'), sel = window.getSelection(), range = document.createRange();
+      range.selectNodeContents(a); sel.removeAllRanges(); sel.addRange(range);
+      toast('浏览器不允许自动复制，已选中地址，请按 Ctrl + C 复制');
+    });
+  }
+
   function refresh(flashFolder) {
+    avail = {};
     $('listMeta').textContent = '加载中…';
     $('loadErr').hidden = true;
     return loadItems().then(function (data) {
@@ -317,8 +408,16 @@
           '<button class="edit-ico" type="button" data-op="owner" title="修改需求方" aria-label="修改需求方">✎</button></span></td>' +
         '<td><span class="ver">' + esc(it.version || INIT_VER) + '</span></td>' +
         '<td>' + esc(fmt(it.createdAt)) + '</td>' +
-        '<td>' + up + '</td>' + ops + '</tr>';
+        '<td>' + up + '</td>' + ops + '</tr>' +
+        '<tr class="links-row' + (it.folder === flashFolder ? ' flash' : '') + '"><td></td><td colspan="' + (local ? 6 : 5) + '">' + linksHtml(it) + '</td></tr>';
     }).join('');
+    shown.forEach(function (row) {
+      ROLES.forEach(function (r) {
+        var key = row.it.folder + '/' + r.code;
+        if (key in avail && avail[key] !== null) paintAvail(document.querySelector('.link[data-key="' + key + '"] .st'), avail[key]);
+        else checkAvail(row.it.folder, r.code);
+      });
+    });
   }
 
   function findItem(folder) {
@@ -768,6 +867,8 @@
     $('ghDisconnect').addEventListener('click', onGhDisconnect);
     $('ghForm').addEventListener('submit', onGhSubmit);
     $('rows').addEventListener('click', function (e) {
+      var cp = e.target.closest('[data-copy]');
+      if (cp) { onCopy(cp); return; }
       var tr = e.target.closest('tr[data-folder]');
       if (!tr) return;
       var folder = tr.getAttribute('data-folder'), op = e.target.closest('[data-op]');
