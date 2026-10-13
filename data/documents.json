@@ -1,0 +1,27 @@
+{
+  "items": [
+    {
+      "id": "documents/第三方风控-分析报告-2026-10-13.pdf",
+      "name": "第三方风控-分析报告-2026-10-13.pdf",
+      "file": "documents/第三方风控-分析报告-2026-10-13.pdf",
+      "size": 678763,
+      "uploadedAt": "2026-10-13T04:20:24Z",
+      "groupId": "gmv66bw33w6id"
+    },
+    {
+      "id": "documents/第三方风控-同盾商务对接会议大纲.pdf",
+      "name": "第三方风控-同盾商务对接会议大纲.pdf",
+      "file": "documents/第三方风控-同盾商务对接会议大纲.pdf",
+      "size": 593815,
+      "uploadedAt": "2026-10-13T04:20:24Z",
+      "groupId": "gmv66bw33w6id"
+    }
+  ],
+  "groups": [
+    {
+      "id": "gmv66bw33w6id",
+      "name": "第三方风控对接-同盾",
+      "createdAt": "2026-10-13T04:21:32.079Z"
+    }
+  ]
+}
