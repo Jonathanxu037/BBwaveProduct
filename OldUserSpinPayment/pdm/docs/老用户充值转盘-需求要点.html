@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>老用户转盘需求要点</title>
+<title>老用户充值转盘-需求要点</title>
 <link rel="stylesheet" href="../assets/style.css">
 </head>
 <body>
@@ -11,11 +11,11 @@
 <div class="desk"><article class="paper">
 
 <h1 class="doc-title">老用户充值转盘 · 需求要点 · v1.0</h1>
-<div class="doc-meta"><span>版本：v1.0</span><span>端：管理后台（后台前端 + 后端），C 端只回归</span><span>依据：<a href="老用户充值转盘-需求开发PRD文档.html">需求开发 PRD 文档</a></span></div>
+<div class="doc-meta"><span>版本：v1.0</span><span>端：管理后台（后台前端 + 后端），C 端回归（是否需要发版由技术研发决定）</span><span>依据：<a href="老用户充值转盘-需求开发PRD文档.html">需求开发 PRD 文档</a></span></div>
 <hr class="doc-rule">
 
 <h2 id="k1">一句话需求</h2>
-<div class="oneline">在管理后台【活动中心 › 老用户充值转盘】活动配置的「范围配置 › 充值渠道 › 充值方式」下拉中，于线上现有选项之后新增选项「原生Gcash」；交互、是否必填及勾选后的转盘次数判定，均与现有选项一致。</div>
+<div class="oneline">在管理后台【活动中心 › 老用户充值转盘】活动配置的「范围配置 › 充值渠道 › 充值方式」下拉中，由技术在系统写死的选项里新增「原生Gcash」，排在线上现有选项之后；交互、是否必填、勾选后的转盘次数判定和生效时间，都与现有选项一致；其他沿用平台现有规则。</div>
 
 <h2 id="k2">业务流程</h2>
 <div class="flow">
@@ -23,16 +23,16 @@
   <div class="fa">↓</div>
   <div class="fs key"><div class="no">2</div><div><b>勾选并保存</b>：范围配置 › 充值方式 → 勾选「原生Gcash」（可多选）→ 保存</div></div>
   <div class="fa">↓</div>
-  <div class="fs"><div class="no">3</div><div><b>用户充值</b>：老用户经原生Gcash 通道充值成功</div></div>
+  <div class="fs"><div class="no">3</div><div><b>用户充值</b>：老用户经原生 GCash 通道充值成功</div></div>
   <div class="fa">↓</div>
-  <div class="fs key"><div class="no">4</div><div><b>判定给次数</b>：按订单实际通道判定 → 按现有金额档位给转盘次数</div></div>
+  <div class="fs key"><div class="no">4</div><div><b>判定给次数</b>：按订单实际通道判定 → 按现有规则给转盘次数</div></div>
 </div>
 <div class="brs">
   <div class="bc"><h5>A - 活动已勾选「原生Gcash」</h5>
-    <p class="s"><b>原生Gcash 订单充值成功</b><small>满足活动现有的全部参与门槛</small></p><div class="d">↓</div>
-    <p class="s"><b>给转盘次数</b><small>C 端对应入口显示 Lucky Spin 标识</small></p></div>
+    <p class="s"><b>经原生 GCash 通道充值成功</b><small>满足活动其他条件</small></p><div class="d">↓</div>
+    <p class="s"><b>给转盘次数</b><small>按现有规则</small></p></div>
   <div class="bc br"><h5>B - 活动未勾选「原生Gcash」</h5>
-    <p class="s"><b>原生Gcash 订单充值成功</b><small>—</small></p><div class="d">↓</div>
+    <p class="s"><b>经原生 GCash 通道充值成功</b><small>—</small></p><div class="d">↓</div>
     <p class="s"><b>不给次数</b><small>充值照常到账</small></p></div>
 </div>
 
@@ -43,9 +43,8 @@
   <div class="fpgrid">
     <b>要做什么</b>
     <ul>
-      <li>充值方式下拉在线上现有选项之后追加「原生Gcash」</li>
-      <li>选项对应在线支付配置中的 GCash 原生通道</li>
-      <li>保存值与现有选项同一口径（生产通道标识待后端确认）</li>
+      <li>在系统写死的充值方式选项里新增「原生Gcash」，排在线上现有选项之后</li>
+      <li>对应原生 GCash 通道，写法、保存值和对应关系按现有选项的方式实现</li>
     </ul>
     <b>示意</b>
     <div><div class="dd-demo"><div class="cap">充值方式（现有选项以线上为准）</div><div>PayMongo</div><div>PayCools</div><div>TraxionPay</div><div class="new">原生Gcash（新增）</div></div></div>
@@ -63,7 +62,7 @@
     <ul>
       <li>可单选，也可与其他选项多选；点 × 删除</li>
       <li>保存后再次编辑，显示已保存的值</li>
-      <li>已有活动默认不勾选「原生Gcash」</li>
+      <li>默认不勾选，已有活动不会自动勾选「原生Gcash」</li>
       <li>是否必填保持原有规则</li>
     </ul>
     <b>公式</b>
@@ -78,12 +77,12 @@
   <div class="fpgrid">
     <b>要做什么</b>
     <ul>
-      <li>充值成功后，原生Gcash 通道的订单进入现有判定逻辑</li>
-      <li>命中则按现有金额档位给转盘次数，判定逻辑不改</li>
-      <li>C 端已选入口显示 Lucky Spin 标识（回归，是否需发版待前端确认）</li>
+      <li>勾选后，经原生 GCash 通道成功充值的订单按现有规则获得转盘次数；未勾选时不获得</li>
+      <li>判定逻辑和生效时间与现有选项一致，不改</li>
+      <li>C 端只做回归，是否需要发版由技术研发决定</li>
     </ul>
     <b>判定条件</b>
-    <div class="formula">给次数 ＝ 订单充值成功<br>　　　 且 订单实际通道 ∈ 活动已选充值方式<br>　　　 且 满足活动现有的全部参与门槛（沿用现有规则）<br>次数 ＝ 现有金额档位规则（不变）</div>
+    <div class="formula">给次数 ＝ 订单充值成功<br>　　　 且 订单实际通道 ∈ 活动已选充值方式<br>　　　 且 满足活动其他条件（沿用现有规则）<br>次数 ＝ 现有规则（不变）</div>
     <b>涉及端</b>
     <div class="ends"><span>后端</span><span>C 端回归</span></div>
   </div>

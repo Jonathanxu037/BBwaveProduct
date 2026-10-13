@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>老用户转盘操作手册</title>
+<title>老用户充值转盘-后台操作手册</title>
 <link rel="stylesheet" href="../assets/style.css">
 </head>
 <body>
@@ -11,49 +11,63 @@
   <header class="mh">
     <div class="k">789BINGO · 后台操作手册 <span class="vp">v1.0</span></div>
     <h1>老用户充值转盘 · 充值方式「原生Gcash」操作手册</h1>
-    <p>写给运营和客服：怎样让通过原生Gcash 充值的老用户获得转盘次数，以及用户问起时怎么判断。</p>
+    <p>写给运营和客服：怎样让经原生 GCash 通道充值的老用户获得转盘次数。</p>
     <div class="btns"><a class="b1" href="../prototype/admin/老用户充值转盘-后台活动管理页面.html">打开后台原型 ›</a><a class="b2" href="老用户充值转盘-需求开发PRD文档.html">查看 PRD ›</a></div>
   </header>
 
   <div class="mk">
     <b>重要结论</b>
     <ul>
-      <li>本次只在「充值方式」下拉里新增了「原生Gcash」选项，用法和现有选项完全一样，现有选项以线上为准。（详见 PRD 3.2 规则 N1–N3：新增选项、交互一致、生效方式一致）</li>
-      <li><span class="warn-2">※ 是否给次数，看订单实际走的通道。</span>前台好几个入口都叫「GCash」，背后的通道可能不同，只有实际走原生Gcash 通道的订单才按这个选项给次数。</li>
+      <li>本次只在「充值方式」下拉中新增「原生Gcash」选项，用法和生效方式与现有选项一致；其他沿用平台现有规则。</li>
+      <li><span class="warn-2">※ 是否给次数，以订单实际通道和活动规则为准。</span></li>
     </ul>
   </div>
 
   <div class="mbody">
     <nav class="mtoc" aria-label="手册目录">
-      <a href="#m1">01 配置充值方式</a>
-      <a href="#m5">常见问题</a>
+      <a href="#m0">01 整体操作流程</a>
+      <a href="#m1">02 配置充值方式</a>
+      <a href="#m2">03 后台通用</a>
+      <a href="#m3">04 常见问题</a>
     </nav>
     <div>
-      <section class="mcard" id="m1">
-        <h2><span class="no2">01</span>配置充值方式</h2>
-        <h3>菜单路径与权限</h3>
-        <p>活动中心 › 老用户充值转盘 › 活动配置 Tab › 创建活动 / 编辑。需要该菜单的编辑权限（沿用现有权限）。</p>
-        <h3>字段说明</h3>
-        <table>
-          <tr><th>字段</th><th>含义</th><th>默认值</th></tr>
-          <tr><td>原生Gcash</td><td>对应【充值配置 › 在线支付配置】中的 GCash 原生通道。勾选后，经该通道成功充值的订单按本活动规则获得转盘次数。</td><td>不勾选</td></tr>
-        </table>
-        <h3>操作步骤</h3>
+      <section class="mcard" id="m0">
+        <h2><span class="no2">01</span>整体操作流程</h2>
         <div class="msteps">
-          <div class="mstep"><i>1</i><div>先到【充值配置 › 在线支付配置】确认原生Gcash 通道已启用，并对目标会员层级开放（QA 中该通道的支付名称为「GCASH2 (GCASH 原生)」，生产环境以后台为准）。</div></div>
-          <div class="mstep"><i>2</i><div>在老用户充值转盘的活动列表点「创建活动」，或在目标活动行点「编辑」。</div></div>
-          <div class="mstep"><i>3</i><div>在「范围配置 › 充值渠道 › 充值方式」点下拉框，勾选「原生Gcash」，可以和其他充值方式一起勾选。</div></div>
-          <div class="mstep"><i>4</i><div>点「保存」，看到「保存成功」即生效。只对之后充值成功的订单生效。</div></div>
+          <div class="mstep"><i>1</i><div>创建或编辑活动，在「充值方式」勾选「原生Gcash」并保存。</div></div>
+          <div class="mstep"><i>2</i><div>经原生 GCash 通道成功充值的老用户，按本活动规则获得转盘次数。</div></div>
         </div>
       </section>
 
-      <section class="mcard" id="m5">
-        <h2>常见问题</h2>
+      <section class="mcard" id="m1">
+        <h2><span class="no2">02</span>配置充值方式</h2>
+        <h3>菜单路径</h3>
+        <p>活动中心 › 老用户充值转盘 › 活动配置 Tab › 创建活动 / 编辑。</p>
+        <h3>字段说明</h3>
+        <table>
+          <tr><th>字段</th><th>含义</th><th>是否必填</th><th>取值</th><th>默认值</th></tr>
+          <tr><td>原生Gcash（「充值方式」下拉中的选项）</td><td>对应【充值配置 › 在线支付配置】中的原生 GCash 通道。勾选后，经该通道成功充值的订单按本活动规则获得转盘次数；生效时间与现有选项一致。默认不勾选。</td><td>沿用「充值方式」原有规则</td><td>勾选 / 不勾选</td><td>不勾选</td></tr>
+        </table>
+        <h3>操作步骤</h3>
+        <div class="msteps">
+          <div class="mstep"><i>1</i><div>在活动列表点「创建活动」，或在目标活动行点「编辑」。</div></div>
+          <div class="mstep"><i>2</i><div>在「范围配置 › 充值渠道 › 充值方式」点下拉框，勾选「原生Gcash」，可与其他选项一起勾选。</div></div>
+          <div class="mstep"><i>3</i><div>点「保存」。</div></div>
+        </div>
+      </section>
+
+      <section class="mcard" id="m2">
+        <h2><span class="no2">03</span>后台通用</h2>
+        <p>权限和操作日志沿用现状，本需求不改。</p>
+      </section>
+
+      <section class="mcard" id="m3">
+        <h2><span class="no2">04</span>常见问题</h2>
         <dl class="faq">
-          <dt>用户说用 GCash 充值了，却没拿到转盘次数？</dt>
-          <dd>先在【财务管理 › 充值记录】查这笔订单的实际支付通道。不是活动所选的充值方式，按规则不给次数；是所选的充值方式、金额也在档位内，转技术排查。</dd>
-          <dt>以前的活动会自动加上原生Gcash 吗？</dt>
+          <dt>以前的活动会自动勾选「原生Gcash」吗？</dt>
           <dd>不会。需要的活动要手动编辑勾选。</dd>
+          <dt>用户说用 GCash 充值了，却没拿到转盘次数？</dt>
+          <dd>按客服 QA「客服核查步骤」查：以订单实际通道和活动规则为准。</dd>
         </dl>
       </section>
     </div>

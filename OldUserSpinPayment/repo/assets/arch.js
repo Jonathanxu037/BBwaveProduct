@@ -2,7 +2,7 @@
    入口页（产品主页）调用 ARCH.render(容器)。新增页面或调整权限时不用改本文件。 */
 window.ARCH = (function () {
   var ROLES = [
-    { k: "pdm", name: "产品角色", code: "pdm", who: "产品经理、行政管理人员", note: "顶端角色：可看全部页面，顶栏可切换运营、开发视角；进入需输入密码" },
+    { k: "pdm", name: "产品角色", code: "pdm", who: "产品经理、行政管理人员", note: "顶端角色：可看全部页面，顶栏可切换运营、开发、报告视角；进入需输入密码" },
     { k: "opr", name: "运营角色", code: "opr", who: "运营、客服、商务", note: "提出修改意见、配置后台、对外解释规则" },
     { k: "dev", name: "技术开发角色", code: "dev", who: "UI 设计、前端、后端、测试", note: "按需求设计、开发和验证" },
     { k: "repo", name: "报告角色", code: "repo", who: "汇报和评审对象", note: "只读查看全部原型页面和完整 PRD" }

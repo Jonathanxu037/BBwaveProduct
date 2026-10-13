@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>老用户转盘活动管理原型</title>
+<title>老用户充值转盘-后台活动管理页面</title>
 <link rel="stylesheet" href="../../assets/style.css">
 <style>.bo-tabs span{cursor:pointer}.bo-tabs span:hover{color:#409EFF}</style>
 </head>
@@ -33,11 +33,11 @@
           <div class="bo-filter"><button class="bo-btn n" type="button" data-go="new">+ 创建活动</button></div>
           <div class="bo-content">
             <table>
-              <tr><th>活动编号</th><th>活动名称</th><th>活动类型</th><th>总预算</th><th>已使用预算</th><th>创建人</th><th>状态</th><th>操作</th></tr>
+              <tr><th>活动编号</th><th>活动名称<span style="font-weight:400;font-size:11px;color:#909399">（示意，以线上为准）</span></th><th>活动类型</th><th>总预算</th><th>已使用预算</th><th>创建人</th><th>状态</th><th>操作</th></tr>
               <tr><td>OS-1002</td><td>老用户充值转盘-10月</td><td>oldUserRechargeSpin</td><td>100,000.000</td><td>36,120.000</td><td>运营账号A</td><td class="st-on">开启</td><td><button class="bo-btn link" type="button" data-go="edit">编辑</button></td></tr>
               <tr><td>OS-1001</td><td>老用户充值转盘-9月</td><td>oldUserRechargeSpin</td><td>80,000.000</td><td>80,000.000</td><td>运营账号A</td><td class="st-off">关闭</td><td><button class="bo-btn link" type="button" data-go="edit">编辑</button></td></tr>
             </table>
-            <p style="font-size:12px;color:#909399;margin:10px 0 0">示例数据均为虚构。列表沿用现状，本需求不改动。</p>
+            <p style="font-size:12px;color:#909399;margin:10px 0 0">示例数据均为虚构。列表沿用现状，本需求不改动；列表字段以线上为准，「活动名称」列只是示意。</p>
           </div>
         </section>
 
@@ -94,23 +94,28 @@
       <button type="button" data-go="edit"><span class="simtag">活动配置</span>编辑已有活动（已选 PayCools）</button>    </div>
     <h3>规则批注</h3>
     <ol>
-      <li><b>新增选项</b>：充值方式下拉在线上现有选项之后追加「原生Gcash」（原型里的现有选项是 QA 示例，以线上为准），对应在线支付配置中的 GCash 原生通道。<span class="ref">PRD 规则 N1 · F01-01 新增原生Gcash 选项</span></li>
-      <li><b>交互一致</b>：可单独勾选或多选；点标签 × 删除；保存后再次编辑显示已保存的值；已有活动不会自动勾选「原生Gcash」。<span class="ref">PRD 规则 N2 · F01-02 勾选、保存与已选值显示</span></li>
-      <li><b>生效方式</b>：勾选后，经原生Gcash 通道成功充值的老用户，和其他充值方式一样按现有档位获得转盘次数。<span class="ref">PRD 规则 N3 · F02-01 原生Gcash 订单获得转盘次数</span></li>
-      <li><b>其他</b>：充值方式是否必填保持原有规则；保存提示、列表和其他配置项都沿用现状。「活动统计」标签保留现有样子，本需求不涉及，原型里点击无效果。<span class="ref">PRD 第 0 章「本迭代范围」</span></li>
+      <li><b>新增选项</b>：充值方式下拉在线上现有选项之后追加「原生Gcash」，对应原生 GCash 通道；由技术写死在系统中，写法、保存值和对应通道按现有选项的方式实现（原型里的现有选项是 QA 示例，以线上为准）。<span class="ref">PRD 规则 N1 · F01-01 新增原生Gcash 选项</span></li>
+      <li><b>交互一致</b>：可单选或多选；点标签 × 删除；保存后再次编辑显示已保存的值；默认不勾选，已有活动不会自动勾选「原生Gcash」。<span class="ref">PRD 规则 N2 · F01-02 勾选、保存与已选值显示</span></li>
+      <li><b>生效方式</b>：勾选后，经原生 GCash 通道成功充值的订单按现有规则获得转盘次数；未勾选时不获得；生效时间与现有选项一致。<span class="ref">PRD 规则 N3 · F02-01 原生Gcash 订单获得转盘次数</span></li>
+      <li><b>其他沿用现状</b>：其他沿用平台现有规则；「活动统计」标签本需求不涉及，原型里点击无效果。<span class="ref">PRD 第 0 章「本迭代范围」</span></li>
     </ol>
     <h3>评审待确认</h3>
     <ol>
-      <li><b>生产环境通道信息</b>：原生Gcash 通道的支付名称、标识，以及新选项保存什么值。<span class="ref">PRD 待确认 Q1</span></li>
-      <li><b>C 端是否不用发版</b>：C 端能否按配置自动在原生Gcash 入口显示 Lucky Spin 标识。<span class="ref">PRD 待确认 Q2</span></li>
-      
+      <li>暂无。<span class="ref">PRD 第 9 章「待确认事项」</span></li>
     </ol>
+    <h3>模拟操作</h3>
+    <p class="sub">演示勾选后一笔充值能不能获得转盘次数（规则 N3）。全部为模拟，不调用接口。开关与「编辑已有活动」场景保存的值同步。</p>
+    <div class="sim" id="simPanel"></div>
+    <p class="sub" id="simResult" role="status" aria-live="polite"></p>
+    <!-- 上一页 / 下一页：本需求只有这一个原型页面，按运营配置流程在三个视图之间切换：活动列表 → 创建活动 → 编辑活动 -->
+    <div class="pager" id="pager"></div>
   </aside>
 </div>
 </div>
 <script>window.NAV_ROOT = "../../";</script>
 <script src="../../assets/nav-data.js"></script>
 <script src="../../assets/nav.js"></script>
+<script src="../../assets/proto.js"></script>
 <script>
 (function () {
   /* 选项：唯一标识 + 显示名称（示例数据）；isNew 为本需求新增，只加淡色光晕 */
@@ -120,12 +125,15 @@
     { id: "traxionpay", name: "TraxionPay" },
     { id: "gcash_native", name: "原生Gcash", isNew: true }
   ];
-  var HELP_GCASH = "对应【充值配置 › 在线支付配置】中的 GCash 原生通道。勾选后，经该通道成功充值的订单按本活动规则获得转盘次数。";
+  var HELP_GCASH = "对应【充值配置 › 在线支付配置】中的原生 GCash 通道。勾选后，经该通道成功充值的订单按本活动规则获得转盘次数；生效时间与现有选项一致。默认不勾选。";
+  /* sel 是各场景没有保存过时的默认已选值；点「保存」后记在模拟状态 saved_new / saved_edit 里，再次进入该场景时读回 */
   var SCENES = {
     new: { title: "创建活动", name: "老用户充值转盘-11月", sel: [] },
     edit: { title: "编辑活动 · OS-1002", name: "老用户充值转盘-10月", sel: ["paycools"] }
   };
-  var sel = [], open = false;
+  function savedSel(view) { var v = P.get("saved_" + view); return (Array.isArray(v) ? v : SCENES[view].sel).slice(); }
+  var curView = "list";
+  var sel = [], open = false, tip = false;   /* tip：「?」说明是否展开 */
   var box = document.getElementById("msBox"), pop = document.getElementById("msPop");
   function byId(id) { return OPTS.filter(function (o) { return o.id === id; })[0]; }
 
@@ -148,8 +156,14 @@
       var d = document.createElement("div"), on = sel.indexOf(o.id) >= 0;
       d.className = "ms-opt" + (on ? " sel" : "") + (o.isNew ? " glow" : "");
       d.setAttribute("role", "option"); d.setAttribute("aria-selected", on);
-      d.innerHTML = "<span>" + o.name + (o.isNew ? '<i class="qm" tabindex="0">?</i>' : "") + "</span>";
-      var q = d.querySelector(".qm"); if (q) q.setAttribute("data-tip", HELP_GCASH);
+      d.innerHTML = "<span>" + o.name + (o.isNew ? '<i class="qm' + (tip ? " on" : "") + '" tabindex="0" role="button" aria-label="查看说明" aria-expanded="' + tip + '">?</i>' : "") + "</span>";
+      var q = d.querySelector(".qm");
+      if (q) {
+        q.setAttribute("data-tip", HELP_GCASH);
+        /* 点「?」只开关说明，不勾选选项；再点一次、点外部或按 Esc 关闭 */
+        q.onclick = function (e) { e.stopPropagation(); tip = !tip; q.classList.toggle("on", tip); q.setAttribute("aria-expanded", tip); };
+        q.onkeydown = function (e) { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); e.stopPropagation(); q.onclick(e); } if (e.key === "Escape") { e.stopPropagation(); tip = false; q.classList.remove("on"); q.setAttribute("aria-expanded", false); } };
+      }
       d.onclick = function (e) {
         e.stopPropagation();
         sel = on ? sel.filter(function (x) { return x !== o.id; }) : sel.concat(o.id);
@@ -158,10 +172,11 @@
       pop.appendChild(d);
     });
   }
-  function toggle(v) { open = v; pop.hidden = !v; renderBox(); if (v) renderPop(); }
+  function toggle(v) { open = v; tip = false; pop.hidden = !v; renderBox(); if (v) renderPop(); }
   box.onclick = function (e) { e.stopPropagation(); toggle(!open); };
   box.onkeydown = function (e) { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toggle(!open); } if (e.key === "Escape") toggle(false); };
   document.addEventListener("click", function () { if (open) toggle(false); });
+  document.addEventListener("keydown", function (e) { if (e.key === "Escape" && open) toggle(false); });
 
   /* 视图切换：list / new / edit（都在活动配置 Tab 内） */
   function show(view) {
@@ -170,12 +185,56 @@
     document.getElementById("vList").hidden = view !== "list";
     document.getElementById("vForm").hidden = !isForm;
     document.getElementById("crumb").innerHTML = "位置 › 活动中心 › 老用户充值转盘 › <b>" + (isForm ? SCENES[view].title : "活动配置") + "</b>";
-    if (isForm) { sel = SCENES[view].sel.slice(); document.getElementById("nm").value = SCENES[view].name; toggle(false); }
+    curView = view;
+    if (isForm) { sel = savedSel(view); document.getElementById("nm").value = SCENES[view].name; toggle(false); }
     if (location.hash.slice(1) !== view) history.replaceState(null, "", "#" + view);
     window.scrollTo(0, 0);
     /* 嵌在「运营需求确认」页时，把当前视图告诉外层，用来同步切换按钮 */
     if (window.self !== window.top) window.parent.postMessage({ type: "proto-view", view: view }, "*");
+    renderPager(view);
   }
+  /* 上一页 / 下一页：按运营配置流程的顺序 */
+  var FLOW = [["list", "活动列表"], ["new", "创建活动"], ["edit", "编辑活动"]];
+  function renderPager(view) {
+    var i = FLOW.map(function (x) { return x[0]; }).indexOf(view), pg = document.getElementById("pager"); if (!pg) return;
+    pg.innerHTML = (i > 0 ? '<a href="#' + FLOW[i - 1][0] + '" data-go="' + FLOW[i - 1][0] + '">← 上一页：' + FLOW[i - 1][1] + "</a>" : "<span></span>") +
+      (i < FLOW.length - 1 ? '<a href="#' + FLOW[i + 1][0] + '" data-go="' + FLOW[i + 1][0] + '">下一页：' + FLOW[i + 1][1] + " →</a>" : "<span></span>");
+  }
+
+  /* 模拟操作面板：演示「是否给转盘次数」的判定（规则 N3，沿用现有逻辑），全部为模拟 */
+  /* 「本活动」指「编辑已有活动」场景的 OS-1002：开关默认取该场景保存的值里有没有 gcash_native，切换开关时同步回该场景 */
+  var DEF = { ch: "native", st: "ok" };
+  P.init({ defaults: DEF });
+  DEF.picked = savedSel("edit").indexOf("gcash_native") >= 0;
+  P.init({ defaults: DEF });
+  function syncEdit(on) {
+    var s = savedSel("edit").filter(function (x) { return x !== "gcash_native"; });
+    if (on) s.push("gcash_native");
+    P.set("saved_edit", s);
+    if (curView === "edit") {   /* 正在编辑该活动时，只同步「原生Gcash」这一项，表单里其他未保存的勾选保持不变 */
+      sel = sel.filter(function (x) { return x !== "gcash_native"; });
+      if (on) sel.push("gcash_native");
+      renderBox(); if (open) renderPop();
+    }
+  }
+  function renderPanel() { P.panel(document.getElementById("simPanel"), [
+    { title: "活动配置", items: [{ type: "check", key: "picked", label: "本活动已勾选「原生Gcash」", change: syncEdit }] },
+    { title: "模拟一笔老用户充值", items: [
+      { type: "select", key: "ch", label: "订单实际通道", options: [["native", "原生 GCash 通道"], ["other", "其他未勾选的通道"]] },
+      { type: "radio", key: "st", tag: "订单状态", options: [["ok", "成功"], ["pending", "处理中"], ["fail", "失败"]] }
+    ]},
+    { items: [{ type: "reset" }] }
+  ]); }
+  renderPanel();
+  function judge() {
+    var why = [];
+    if (P.get("st") !== "ok") why.push(P.get("st") === "pending" ? "订单还在处理中" : "订单失败");
+    if (P.get("ch") !== "native") why.push("实际通道不在本活动已勾选的充值方式里");
+    else if (!P.get("picked")) why.push("活动没有勾选「原生Gcash」");
+    document.getElementById("simResult").textContent = why.length ? "结果：不获得转盘次数（" + why.join("；") + "）" : "结果：按现有规则获得转盘次数";
+  }
+  window.addEventListener("proto-change", judge);
+  judge();
   window.addEventListener("hashchange", function () { show(location.hash.slice(1) || "list"); });
   document.addEventListener("click", function (e) { var b = e.target.closest("[data-go]"); if (b) { e.preventDefault(); show(b.dataset.go); } });
   document.querySelectorAll("[data-tab]").forEach(function (t) {
@@ -183,9 +242,13 @@
     t.onclick = go; t.onkeydown = function (e) { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); go(); } };
   });
 
-  /* 保存：沿用现有提示，保存成功后返回列表 */
+  /* 保存：记下当前场景的已选值（再次进入该场景时读回）；编辑场景同步模拟面板的开关；沿用现有提示后返回列表 */
   document.getElementById("save").onclick = function () {
     toggle(false);
+    if (SCENES[curView]) {
+      P.set("saved_" + curView, sel.slice());
+      if (curView === "edit") { P.set("picked", sel.indexOf("gcash_native") >= 0); renderPanel(); }
+    }
     var m = document.createElement("div"); m.className = "bo-msg ok"; m.textContent = "保存成功"; m.setAttribute("role", "status");
     document.body.appendChild(m); setTimeout(function () { m.remove(); }, 1800);
     setTimeout(function () { show("list"); }, 600);

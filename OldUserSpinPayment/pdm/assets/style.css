@@ -1,4 +1,4 @@
-/* 老用户充值转盘需求包 · 全站共用样式（生成内容规范 v4.6 第十章 3.1：视觉按样板网站，冲突处以规范为准）
+/* 需求包 · 全站共用样式（生成内容规范第十章 3.1：视觉按样板网站，冲突处以规范为准；来自 Product Materials\_需求包模板）
    外壳：左侧 300px 深紫目录栏 + 46px 白色顶栏；文档页为纸张样式；后台原型仿平台真实后台；操作手册为卡片式。 */
 :root{
   --purple:#16052F; --gold:#C89A3C; --gold-l:#F0D291; --gold-sel:#E8C06A;
@@ -17,16 +17,9 @@
   --app-gold:#f2b632; --app-gold-ink:#2a1d00; --app-err:#ff6b6b; --app-ok:#3ecf8e;
   color-scheme:light;
 }
-@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
-  --shell-bg:#121016; --desk:#17151b; --paper:#1f1c25; --fg:#E6E1EC; --title:#F0E6FF; --muted:#A79DB3;
-  --line:#3A3346; --topline:#2E2A35; --panel:#2A2433; --panel-2:#241F2C; --link:#69B1FF;
-  --tip-bg:#2D2616; --tip-fg:#F0D291; --key-bg:#3A1F2E; --warn:#FF6B6B; color-scheme:dark}}
-:root[data-theme="dark"]{
-  --shell-bg:#121016; --desk:#17151b; --paper:#1f1c25; --fg:#E6E1EC; --title:#F0E6FF; --muted:#A79DB3;
-  --line:#3A3346; --topline:#2E2A35; --panel:#2A2433; --panel-2:#241F2C; --link:#69B1FF;
-  --tip-bg:#2D2616; --tip-fg:#F0D291; --key-bg:#3A1F2E; --warn:#FF6B6B; color-scheme:dark}
-
+/* 发布页面只做浅色，不做深色模式（需求包框架规范第 3.1 节，用户决定 D13、C59） */
 *{box-sizing:border-box}
+h2[id],h3[id],h4[id],[id].fp-anchor{scroll-margin-top:56px}
 html{scroll-behavior:smooth}
 body{margin:0;background:var(--shell-bg);color:var(--fg);font-family:var(--font);font-size:14.5px;line-height:1.75}
 a{color:var(--link)}
@@ -151,7 +144,8 @@ body.embedded .fp-banner{top:0}
 .fp-banner button{font-family:var(--font);background:#16052F;color:#F0D291;border:0;border-radius:5px;padding:3px 10px;cursor:pointer}
 /* 全文目录 */
 .toc-full{background:var(--panel-2);border:1px solid var(--line);border-radius:8px;padding:12px 18px;margin:12px 0 4px;font-size:13px}
-.toc-full ol{margin:0;padding-left:18px}
+.toc-full ol{margin:0;padding-left:18px;list-style:none}
+.toc-full>ol{padding-left:0}
 .toc-full>ol{columns:2;column-gap:28px}
 .toc-full li{break-inside:avoid;margin:1px 0}
 .toc-full a{text-decoration:none}
@@ -418,8 +412,9 @@ body.embedded .fp-banner{top:0}
 .bo td{white-space:nowrap}
 .bo td.w{white-space:normal;min-width:260px}
 .bo .st-on{color:#52C41A}.bo .st-off{color:#999}
-.qm{display:inline-grid;place-items:center;width:14px;height:14px;border-radius:50%;background:#C0C4CC;color:#fff;font-size:10px;font-weight:700;margin-left:4px;cursor:help;position:relative;vertical-align:1px;font-style:normal}
-.qm:hover::after,.qm:focus::after{content:attr(data-tip);position:absolute;left:18px;top:-6px;z-index:50;width:280px;background:#303133;color:#fff;font-size:12px;font-weight:400;line-height:1.6;padding:8px 10px;border-radius:4px;white-space:normal;text-align:left}
+.qm{display:inline-grid;place-items:center;width:14px;height:14px;border-radius:50%;background:#C0C4CC;color:#fff;font-size:10px;font-weight:700;margin-left:4px;cursor:pointer;position:relative;vertical-align:1px;font-style:normal}
+.qm:hover,.qm.on{background:#909399}
+.qm.on::after{content:attr(data-tip);position:absolute;left:18px;top:-6px;z-index:50;width:280px;background:#303133;color:#fff;font-size:12px;font-weight:400;line-height:1.6;padding:8px 10px;border-radius:4px;white-space:normal;text-align:left}
 .fsec{margin:16px 0 6px;font-weight:700;color:#333;display:flex;align-items:center;gap:6px}
 .fsec::before{content:"";width:8px;height:8px;border-radius:50%;background:#409EFF}
 .frow{display:grid;grid-template-columns:150px minmax(0,1fr);gap:10px;align-items:start;padding:7px 0}
@@ -653,6 +648,22 @@ body.oc-modal-on{overflow:hidden}
 .oc-role.ops{background:#E6F4FF;color:#0958D9}
 .oc-role.product{background:#FADB14;color:#5C3D00}
 .oc-rtxt{font-size:13px;line-height:1.65;white-space:normal;word-break:break-word}
+/* 产品回复后锁定、只能补充 */
+.oc-row.locked{background:var(--panel-2)}
+.oc-lock{font-size:12px;color:var(--muted);white-space:nowrap}
+.oc-nt{font-size:12px;color:var(--muted);margin:2px 0}
+.oc-notes{list-style:none;margin:8px 0 0;padding:0;display:flex;flex-direction:column;gap:6px}
+.oc-notes li{border-left:3px solid var(--line);padding:4px 8px;font-size:13px;line-height:1.6;background:var(--panel-2);border-radius:0 6px 6px 0;word-break:break-word}
+.oc-notes li .oc-nt{display:inline;margin-left:6px}
+.oc-notes li .oc-dtag{font-size:11.5px;padding:1px 6px;margin-left:6px}
+.oc-nr{font-size:12px;font-weight:700;border-radius:4px;padding:1px 6px}
+.oc-nr.r-pdm{color:#8A5A00;background:var(--gold-l)}
+.oc-nr.r-opr{color:#1677FF;background:#E6F4FF}
+.oc-add{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;align-items:center}
+.oc-note{flex:1 1 100%;box-sizing:border-box;min-height:52px;resize:vertical;font-family:var(--font);font-size:13px;line-height:1.6;border:1px solid var(--line);border-radius:6px;padding:6px 8px;background:var(--paper);color:var(--fg)}
+.oc-note:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 2px var(--gold-l)}
+.oc-ndec{font-size:12.5px;border:1px solid var(--line);border-radius:6px;padding:3px 6px;background:var(--paper);color:var(--fg)}
+.c-rep>.oc-a{margin-top:6px}
 .oc-dtag{display:inline-block;font-size:12.5px;font-weight:700;border:1px solid var(--line);border-radius:6px;padding:3px 8px}
 .oc-dtag.d确认修改{color:#237804;border-color:#B7EB8F;background:#F6FFED}
 .oc-dtag.d部分修改{color:#AD6800;border-color:#FFE58F;background:#FFFBE6}
@@ -829,3 +840,22 @@ html.gate-lock body > *:not(.pdm-gate){display:none!important}
 .arch-lanes{grid-template-columns:repeat(4,minmax(0,1fr))}
 .arch-lanes::before{left:12.5%;right:12.5%}
 @media (max-width:1180px) and (min-width:901px){.arch-lanes{grid-template-columns:repeat(2,minmax(0,1fr))}.arch-lanes::before,.arch-lanes::after{display:none}.arch-lanes{padding-top:0}}
+
+/* 共享文件夹状态条 */
+.oc-sync{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:12px;line-height:1.5;padding:6px 10px;border-bottom:1px solid var(--line);background:#F6FFED;color:#237804}
+.oc-sync .oc-sync-t{flex:1;min-width:0}
+.oc-sync .oc-a{font-weight:700;white-space:nowrap}
+.oc-sync.s-none,.oc-sync.s-na{background:var(--panel-2);color:var(--muted)}
+.oc-sync.s-prompt{background:#FFFBE6;color:#AD6800}
+.oc-sync.s-err{background:#FFF1F0;color:#A8071A}
+.oc-log-b .oc-sync,.sum .oc-sync{border:1px solid var(--line);border-radius:6px;margin:0 0 8px}
+/* 封板记录（运营需求确认、需求修改总结：显示在最新一版意见列表的最后） */
+.oc-seallog{margin:12px 0 4px;padding:8px 12px;border:1px dashed #FFA39E;border-radius:6px;background:#FFF8F7;font-size:12.5px;line-height:1.7}
+.oc-seallog b{color:#A8071A}.oc-seallog ol{margin:4px 0 0;padding-left:20px}.oc-seallog li.a-unseal{color:#237804}
+/* 原型模拟操作面板分组（assets/proto.js 生成） */
+.simgrp{font-size:11.5px;font-weight:700;color:var(--muted,#6A6076);margin-top:6px}
+.simrow{display:flex;flex-wrap:wrap;gap:6px}.simrow button[aria-pressed=true]{border-color:var(--gold);font-weight:700}
+.simnote{margin:0;font-size:12px;color:var(--muted,#6A6076);line-height:1.6}
+.simfb{display:flex;flex-wrap:wrap;align-items:center;gap:4px 6px;font-size:12px;line-height:1.5;color:#6A4A10;background:#FBF6EC;border:1px dashed #C89A3C;border-radius:6px;padding:4px 8px}
+.simfbtag{font-size:10.5px;font-weight:700;color:#fff;background:#C89A3C;border-radius:4px;padding:0 5px}
+.simfbtip{margin-left:auto;font-size:11px;color:#9A8752}

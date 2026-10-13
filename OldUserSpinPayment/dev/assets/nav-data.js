@@ -27,7 +27,11 @@ window.NAV_DATA = {
         { title: "7. 上线方式", href: "docs/老用户充值转盘-需求开发PRD文档.html#c7" },
         { title: "8. 风险与依赖", href: "docs/老用户充值转盘-需求开发PRD文档.html#c8" },
         { title: "9. 待确认事项", href: "docs/老用户充值转盘-需求开发PRD文档.html#c9" },
-        { title: "10. 各角色协作 Tips", href: "docs/老用户充值转盘-需求开发PRD文档.html#c10" }
+        { title: "10. 各角色协作 Tips", href: "docs/老用户充值转盘-需求开发PRD文档.html#c10" },
+        { title: "11. 数据埋点", href: "docs/老用户充值转盘-需求开发PRD文档.html#c11" },
+        { title: "附录 A 评审清单核对", href: "docs/老用户充值转盘-需求开发PRD文档.html#appA" },
+        { title: "附录 B 原型对照表", href: "docs/老用户充值转盘-需求开发PRD文档.html#appB" },
+        { title: "开发备忘参考", href: "docs/老用户充值转盘-需求开发PRD文档.html#memo" }
       ]},
       { title: "开发自查清单", href: "docs/老用户充值转盘-开发自查清单.html", type: "doc", roles: ["dev"] },
       { title: "后台操作手册", href: "docs/老用户充值转盘-后台操作手册.html", type: "doc", roles: ["opr"] },

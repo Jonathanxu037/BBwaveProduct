@@ -19,18 +19,34 @@
   var ROLE_NAMES = { pdm: "产品", opr: "运营", dev: "开发", repo: "报告" };
   var BRAND = { pdm: "需求与原型中心", opr: "运营需求中心", dev: "开发需求中心", repo: "需求报告中心" };
   /* REAL：访问者的真实角色。发布后的角色站点（pdm/、opr/、dev/）在 nav-data.js 里写死 role，以它为准 */
-  /* 没有分身份的链接（不带 ?role=、也不是角色站点）：先用这台电脑上次使用的角色，没有记录时按产品角色（要输密码） */
+  /* 没有分身份的链接（不带 ?role=、也不是角色站点，即本地源文件夹预览）：
+     先用本标签页记住的角色（sessionStorage，每个标签页单独保存，不会被其他标签页或其他对话改掉），
+     再用这台电脑上次使用的角色（localStorage，只给新开的标签页用），都没有时按产品角色（要输密码） */
+  var FIXED_ROLE = !!(DATA && ROLE_NAMES[DATA.role]);
   var REAL = (function () {
     var r = "";
-    if (DATA && ROLE_NAMES[DATA.role]) r = DATA.role;
+    if (FIXED_ROLE) r = DATA.role;
     else {
       var m = /[?&]role=(pdm|opr|dev|repo)(?:&|$)/.exec(location.search); r = m ? m[1] : "";
+      if (!r) { try { r = sessionStorage.getItem("req-role-tab") || ""; } catch (e) {} }
       if (!r) { try { r = localStorage.getItem("req-role") || ""; } catch (e) {} }
     }
     if (!ROLE_NAMES[r]) r = "pdm";
+    if (!FIXED_ROLE) { try { sessionStorage.setItem("req-role-tab", r); } catch (e) {} }   /* 本标签页的角色 */
     try { localStorage.setItem("req-role", r); } catch (e) {}   /* 记下本机最近使用的角色 */
     return r;
   })();
+  /* 本地源文件夹预览时，点击站内链接自动带上当前角色（?role=），点到哪一页都保持原来的角色；发布后的角色站点不需要 */
+  if (!FIXED_ROLE) {
+    document.addEventListener("click", function (e) {
+      var a = e.target && e.target.closest ? e.target.closest("a[href]") : null;
+      if (!a) return;
+      var u; try { u = new URL(a.getAttribute("href"), location.href); } catch (x) { return; }
+      if (u.origin !== location.origin || !/\.html?$|\/$/.test(u.pathname)) return;
+      if (u.pathname === location.pathname && u.hash && !u.search) return;   /* 同页锚点不处理 */
+      u.searchParams.set("role", REAL); a.href = u.href;
+    }, true);
+  }
   /* 产品入口密码：真实角色是产品、且 nav-data 设了 gate（盐 + SHA-256 哈希，不存明文）时，先输入密码；
      本标签页验证通过后不再询问。注意：静态页面的密码只能挡住随手打开，不能防止有人直接读取页面文件。 */
   var GATE = REAL === "pdm" && !embedded && DATA.gate && DATA.gate.hash ? DATA.gate : null;
@@ -58,8 +74,9 @@
       crypto.subtle.digest("SHA-256", new TextEncoder().encode(GATE.salt + v)).then(function (buf) {
         var hex = Array.prototype.map.call(new Uint8Array(buf), function (b) { return ("0" + b.toString(16)).slice(-2); }).join("");
         if (hex === GATE.hash) {
-          try { sessionStorage.setItem(GATE_KEY, "1"); } catch (x) {}
+          try { sessionStorage.setItem(GATE_KEY, "1"); sessionStorage.setItem("req-pdm-key", v); } catch (x) {}   /* 产品密码只留在本标签页，用于向云端证明产品身份 */
           g.remove(); document.documentElement.classList.remove("gate-lock");
+          window.dispatchEvent(new Event("pdm-unlocked"));   /* 通知页面：已拿到产品身份，可以读写云端 */
           return;
         }
         fails++; inp.value = ""; inp.focus();
@@ -71,7 +88,7 @@
     };
   }
 
-  /* ROLE：当前按哪个角色显示。产品可以在顶栏随时切换成运营或开发的视角（只在本标签页有效）；运营和开发不能切换 */
+  /* ROLE：当前按哪个角色显示。产品可以在顶栏随时切换成运营、开发或报告的视角（只在本标签页有效）；运营和开发不能切换 */
   var ROLE = REAL;
   if (REAL === "pdm") { try { var vr = sessionStorage.getItem("req-view-role"); if (ROLE_NAMES[vr]) ROLE = vr; } catch (e) {} }
   function can(n) { return ROLE === "pdm" || !n.roles || (!!ROLE && n.roles.indexOf(ROLE) >= 0); }
@@ -229,9 +246,9 @@
     bar.appendChild(crumb);
     var rc;
     if (REAL === "pdm") {
-      /* 产品：角色标签是下拉框，可随时切换成运营或开发的视角，切换后跳到该角色的默认页 */
+      /* 产品：角色标签是下拉框，可随时切换成运营、开发或报告的视角，切换后跳到该角色的默认页 */
       rc = document.createElement("select"); rc.className = "tb-role r-" + ROLE; rc.setAttribute("aria-label", "切换查看角色");
-      rc.title = "产品可以切换成运营或开发的视角，查看他们看到的页面";
+      rc.title = "产品可以切换成运营、开发或报告的视角，查看他们看到的页面";
       ["pdm", "opr", "dev", "repo"].forEach(function (r) { var o = document.createElement("option"); o.value = r; o.textContent = "角色：" + ROLE_NAMES[r] + (r === "pdm" ? "" : "（视角）"); if (r === ROLE) o.selected = true; rc.appendChild(o); });
       rc.onchange = function () {
         try { if (rc.value === "pdm") sessionStorage.removeItem("req-view-role"); else sessionStorage.setItem("req-view-role", rc.value); } catch (e) {}
@@ -309,4 +326,22 @@
   if (window.NAV_AUTO_HIDE) document.body.classList.add("nav-collapsed");
 
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", mount); else mount();
+})();
+
+/* 后台字段的「?」帮助按钮：点击开关说明；再点一次、点外部或按 Esc 关闭；同一时间只显示一个（规范第十章第 4 节） */
+(function () {
+  function closeAll(except) { [].forEach.call(document.querySelectorAll(".qm.on"), function (q) { if (q !== except) { q.classList.remove("on"); q.setAttribute("aria-expanded", "false"); } }); }
+  document.addEventListener("click", function (e) {
+    var q = e.target.closest && e.target.closest(".qm");
+    if (!q) return closeAll(null);
+    e.preventDefault();
+    closeAll(q);
+    var on = !q.classList.contains("on");
+    q.classList.toggle("on", on); q.setAttribute("aria-expanded", on ? "true" : "false");
+  });
+  document.addEventListener("keydown", function (e) {
+    var q = e.target.closest && e.target.closest(".qm");
+    if (e.key === "Escape") return closeAll(null);
+    if (q && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); q.click(); }
+  });
 })();

@@ -3,16 +3,31 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>老用户充值转盘 PRD</title>
+<title>老用户充值转盘-需求开发PRD文档</title>
 <link rel="stylesheet" href="../assets/style.css">
+<style>
+/* 开发备忘参考：问题和建议用不同样式区分（只用于本页） */
+.memo-note{border:1px solid #E8D9B5;background:#FFF9EC;color:#6B4E16;border-radius:6px;padding:10px 14px;margin:10px 0 16px;font-size:13.5px;line-height:1.7}
+.memo-item{border:1px solid var(--line,#D9D2E4);border-radius:8px;margin:0 0 14px;overflow:hidden}
+.memo-h{display:flex;gap:8px;align-items:center;padding:8px 12px;background:var(--panel,#F3EFF8);font-weight:700;font-size:13.5px}
+.memo-h .no{font-family:Consolas,monospace;color:#6A2BB8}
+.memo-h .lv{font-size:12px;border-radius:4px;padding:0 6px;font-weight:700}
+.memo-h .lv.m{background:#FFF7E6;color:#D46B08}.memo-h .lv.l{background:#F3EFF8;color:#6A2BB8}
+.memo-q,.memo-s,.memo-d{padding:8px 12px 8px 14px;font-size:13.5px;line-height:1.7}
+.memo-q{border-left:4px solid #FA8C16;background:#FFFBF5}
+.memo-s{border-left:4px solid #1677FF;background:#F5F9FF}
+.memo-d{border-left:4px solid #389E0D;background:#F6FFED}
+.memo-q b,.memo-s b,.memo-d b{display:inline-block;min-width:4.5em;font-size:12.5px}
+.memo-q b{color:#D46B08}.memo-s b{color:#1677FF}.memo-d b{color:#389E0D}
+</style>
 </head>
 <body>
 <div class="with-nav">
 <div id="fp-banner" class="fp-banner" hidden><span id="fp-text"></span><button type="button" id="fp-clear">清除标注</button></div>
 <div class="desk"><article class="paper" id="doc">
 
-<h1 class="doc-title">老用户充值转盘 · 充值方式新增「原生Gcash」· 产品开发需求文档（PRD）· v1.0</h1>
-<div class="doc-meta"><span>版本：v1.0</span><span>平台：789Bingo（PH）</span><span>端：管理后台（后台前端 + 后端）</span><span>状态：确认中</span><span>时区：GMT+8</span></div>
+<h1 class="doc-title">老用户充值转盘 · 充值方式新增「原生Gcash」· 需求开发 PRD 文档 · v1.0</h1>
+<div class="doc-meta"><span>版本：v1.0</span><span>日期：2026-10-07</span><span>平台：789Bingo（PH）</span><span>端：管理后台（后台前端 + 后端）</span><span>状态：确认中</span><span>时区：GMT+8</span></div>
 <hr class="doc-rule">
 
 <h2 id="ver">需求版本管理表</h2>
@@ -26,25 +41,26 @@
 
 <!-- ======================= 0 ======================= -->
 <h2 id="c0">0. 本迭代范围</h2>
-<p>本需求只做一件事：在老用户充值转盘活动配置的「充值方式」下拉列表里，新增一个「原生Gcash」选项。勾选后的生效方式与现有选项完全一致（现有选项以线上为准），不新增其他规则。与本文档其他章节冲突时，以本章为准。</p>
+<p>本需求只做一件事：在老用户充值转盘活动配置的「充值方式」下拉中，由技术在系统写死的选项里新增「原生Gcash」。其他沿用平台现有规则，本需求不改。与本文档其他章节冲突时，以本章为准。</p>
 <div class="tbl"><table>
 <tr><th>类别</th><th>本迭代包含</th><th>顺延至</th></tr>
-<tr data-fp="F01"><td>后台前端</td><td class="w">活动配置页「范围配置 › 充值渠道 › 充值方式」下拉新增「原生Gcash」选项，交互与现有选项一致</td><td>—</td></tr>
-<tr data-fp="F01 F02"><td>后端</td><td class="w">新选项可以保存和读取；勾选后，经原生Gcash 通道成功充值的订单，按现有判定逻辑获得转盘次数</td><td>—</td></tr>
-<tr data-fp="F02"><td>C 端（H5 / iOS / Flutter）</td><td class="w">不开发，只做回归：按现有逻辑，已选充值方式对应的充值入口会自动显示 Lucky Spin（幸运转盘）标识和金额角标（现有规则来自 BB2025789-4672：老用户转盘充值渠道新增 PayCools、TraxionPay）。如前端确认需要改动，另起子任务（见第 9 章待确认 Q2：C 端是否不用发版）</td><td>需要改动时另起子任务</td></tr>
-<tr><td>其他</td><td class="w">不包含：转盘档位、概率、预算、流水倍数、弹窗、活动列表、操作日志、在线支付配置都不改；其他转盘活动不改</td><td>不顺延</td></tr>
+<tr data-fp="F01"><td>后台前端</td><td class="w">「范围配置 › 充值渠道 › 充值方式」下拉新增「原生Gcash」选项，交互与现有选项一致</td><td>—</td></tr>
+<tr data-fp="F01 F02"><td>后端</td><td class="w">在系统写死的充值方式选项中新增「原生Gcash」，写法、保存值和对应通道按现有选项的方式实现</td><td>—</td></tr>
+<tr data-fp="F02"><td>C 端</td><td class="w">本需求不安排开发，只做回归；是否需要发版由技术研发根据实际情况决定（第 9 章 Q2：C 端是否需要发版、前台对应入口）</td><td>需要改动时另起子任务</td></tr>
+<tr><td>其他</td><td class="w">其他沿用平台现有规则，本需求不改</td><td>不顺延</td></tr>
 </table></div>
 
 <!-- ======================= 1 ======================= -->
 <h2 id="c1">1. 项目概述</h2>
 <div class="tbl"><table>
 <tr><th>项目</th><th>说明</th></tr>
-<tr data-fp="F01-01 F02-01"><td>需求描述</td><td class="w">在管理后台【活动中心 › 老用户充值转盘】活动配置的「范围配置 › 充值渠道 › 充值方式」下拉中，于线上现有选项之后新增选项「原生Gcash」；交互、是否必填及勾选后的转盘次数判定，均与现有选项一致。</td></tr>
-<tr><td>背景</td><td class="w">老用户充值转盘按「充值方式」决定哪些充值订单能获得转盘次数。已知的现有选项包括 PayMongo、PayCools、TraxionPay（后两项由 BB2025789-4672 新增，2026-06-10 完成；具体以线上为准），其中没有原生Gcash，所以通过原生Gcash 通道充值的老用户拿不到转盘次数。</td></tr>
-<tr><td>目标</td><td class="w">运营可以在充值方式里勾选「原生Gcash」；勾选后，经原生Gcash 通道成功充值的老用户，和其他充值方式一样按现有档位获得转盘次数。</td></tr>
-<tr><td>名词</td><td class="w"><b>原生Gcash</b>：GCash 官方直连的充值通道，在【充值配置 › 在线支付配置】中单独作为一条通道配置。QA 环境里它的支付名称是「GCASH2 (GCASH 原生)」，通道编码 <code>onlineType</code> = 5146（管理后台知识库 §4.8、§11.4，2026-10-02 QA 扫描）；生产环境的名称和标识以后台为准，见第 9 章待确认事项「生产环境原生Gcash 通道的支付名称和通道标识」。<br>
-<b>充值方式</b>：本文指活动配置里「范围配置 › 充值渠道 › 充值方式」这个下拉字段，不是前台充值页的入口名称。</td></tr>
-<tr><td>多端范围</td><td class="w">后台前端、后端开发；H5、iOS 原生、安卓 Flutter、iOS Flutter 只做回归（见第 6 章验收 A5：各端充值页的 Lucky Spin 标识）。</td></tr>
+<tr data-fp="F01-01 F02-01"><td>需求描述</td><td class="w">在管理后台【活动中心 › 老用户充值转盘】活动配置的「范围配置 › 充值渠道 › 充值方式」下拉中，由技术新增「原生Gcash」，排在线上现有选项之后；交互、是否必填、勾选后的转盘次数判定和生效时间，都与现有选项一致。</td></tr>
+<tr><td>背景</td><td class="w">充值方式决定哪些充值订单能获得转盘次数。线上现有选项（QA 环境为 PayMongo、PayCools、TraxionPay）中没有原生 GCash 通道，经该通道充值的老用户拿不到转盘次数（BB2025789-4672）。</td></tr>
+<tr><td>目标</td><td class="w">运营可以在充值方式中勾选「原生Gcash」；勾选后，经原生 GCash 通道成功充值的老用户，与其他充值方式一样按现有规则获得转盘次数。</td></tr>
+<tr><td>名词</td><td class="w"><b>原生Gcash</b>：本需求在充值方式下拉中新增的选项名称。<br>
+<b>原生 GCash 通道</b>：【充值配置 › 在线支付配置】中的原生 GCash 支付通道，生产环境的名称以后台为准。<br>
+<b>充值方式</b>：活动配置中「范围配置 › 充值渠道 › 充值方式」这个下拉字段。</td></tr>
+<tr><td>多端范围</td><td class="w">后台前端、后端开发；C 端本需求不安排开发，只做回归，是否需要发版由技术研发决定（第 9 章 Q2：C 端是否需要发版、前台对应入口）。</td></tr>
 <tr><td>时间与时区</td><td class="w">业务时间统一按 GMT+8。上线时间待排期。</td></tr>
 </table></div>
 
@@ -52,13 +68,13 @@
 <h2 id="c2">2. 整体业务流程</h2>
 <h3 id="c2-1">2.1 主流程</h3>
 <div class="flow">
-  <div class="fs key" data-fp="F01-02"><div class="no">1</div><div><b>进入活动</b>：运营进入【活动中心 › 老用户充值转盘】→「活动配置」Tab 的活动列表 → 点「创建活动」或某个活动的「编辑」。</div></div>
+  <div class="fs key" data-fp="F01-02"><div class="no">1</div><div><b>进入活动</b>：运营进入【活动中心 › 老用户充值转盘】→「活动配置」Tab → 点「创建活动」或某个活动的「编辑」。</div></div>
   <div class="fa">↓</div>
-  <div class="fs key" data-fp="F01-01 F01-02"><div class="no">2</div><div><b>选择充值方式</b>：范围配置 › 充值渠道 › 充值方式 → 打开下拉 → 勾选「原生Gcash」，可单独勾选，也可与其他现有选项同时勾选 → 点「保存」（<a href="#c4-2">配置要求见 4.2</a>）。</div></div>
+  <div class="fs key" data-fp="F01-01 F01-02"><div class="no">2</div><div><b>选择充值方式</b>：范围配置 › 充值渠道 › 充值方式 → 勾选「原生Gcash」（可单选，也可与其他选项多选）→ 点「保存」（<a href="#c4-2">第 4.2 节「活动配置页 › 范围配置 › 充值方式」</a>）。</div></div>
   <div class="fa">↓</div>
-  <div class="fs" data-fp="F02-01"><div class="no">3</div><div><b>用户充值</b>：满足活动门槛的老用户，经原生Gcash 通道充值成功。</div></div>
+  <div class="fs" data-fp="F02-01"><div class="no">3</div><div><b>用户充值</b>：老用户经原生 GCash 通道充值成功。</div></div>
   <div class="fa">↓</div>
-  <div class="fs key" data-fp="F02-01"><div class="no">4</div><div><b>获得次数</b>：按现有判定逻辑给转盘次数，与勾选其他现有充值方式时完全一致；C 端按现有逻辑在对应充值入口显示 Lucky Spin 标识。</div></div>
+  <div class="fs key" data-fp="F02-01"><div class="no">4</div><div><b>获得次数</b>：按现有判定逻辑给转盘次数，与勾选其他现有选项时一致。</div></div>
 </div>
 
 <!-- ======================= 3 ======================= -->
@@ -66,98 +82,226 @@
 <h3 id="c3-1">3.1 现状（不改动，仅作依据）</h3>
 <div class="tbl"><table>
 <tr><th>规则</th><th>说明</th><th>依据</th></tr>
-<tr><td>菜单与页面</td><td class="w">【活动中心 › 老用户充值转盘】，用「列表 + 创建活动」管理；在「活动配置」Tab 里查看列表、创建和编辑活动；页面另有「活动统计」标签，沿用现状，本需求不涉及</td><td>BB2025789-4672 截图；管理后台知识库 §4.11（路由 <code>old-user-spin-activities</code>）</td></tr>
-<tr><td>充值方式</td><td class="w">可单选或多选；已选项以标签显示，点 × 删除；是否必填按原有规则。现有选项以线上为准（QA 环境为 PayMongo、PayCools、TraxionPay；知识库里的选项多来自 QA 和 UAT 测试数据，逻辑与生产一致，具体选项以线上为准）</td><td>BB2025789-4672 描述和截图、BB2025789-4737 截图；产品确认（2026-10-09）</td></tr>
-<tr><td>C 端展示</td><td class="w">已选充值方式对应的充值入口显示转盘标识和 Lucky Spin 标识（原名 Free Spin），金额档位显示转盘角标</td><td>BB2025789-4672、BB2025789-6274（Free Spin 改名 Lucky Spin）</td></tr>
-<tr><td>配置存储</td><td class="w">QA 活动配置里充值方式存在 <code>rechargeChannels</code>，值为「Traxion Pay」「PayMongo」「PayCools」</td><td>管理后台知识库 §11.7</td></tr>
+<tr><td>菜单与页面</td><td class="w">【活动中心 › 老用户充值转盘】，在「活动配置」Tab 查看列表、创建和编辑活动</td><td>BB2025789-4672；管理后台知识库 §4.11</td></tr>
+<tr><td>充值方式</td><td class="w">可单选或多选；已选项以标签显示，点 × 删除；是否必填按原有规则。选项写死在系统里，新增选项需要技术改代码并发版；现有选项以线上为准</td><td>BB2025789-4672；技术反馈（2026-10-12）</td></tr>
+<tr><td>配置存储</td><td class="w">活动的充值方式保存在 <code>rechargeChannels</code></td><td>管理后台知识库 §11.7</td></tr>
+<tr><td>其他规则</td><td class="w">其他沿用平台现有规则，本需求不改</td><td>技术反馈（2026-10-12）</td></tr>
 </table></div>
 
 <h3 id="c3-2">3.2 本需求规则</h3>
 <div class="tbl"><table>
-<tr><th>编号</th><th>规则</th><th>功能点</th></tr>
-<tr id="n1" data-fp="F01-01"><td>N1</td><td class="w">充值方式下拉新增一个选项，显示名称「原生Gcash」，排在现有选项之后。选项对应在线支付配置中的原生Gcash 通道；保存的值与现有选项用同一种方式（生产环境的通道名称和标识见第 9 章待确认 Q1）</td><td>F01-01 新增原生Gcash 选项</td></tr>
-<tr id="n2" data-fp="F01-02"><td>N2</td><td class="w">交互与现有选项完全一致：可单独勾选，也可与其他选项多选；点标签上的 × 删除；保存后再次编辑，显示已保存的值；充值方式是否必填保持原有规则。默认不勾选，已有活动不会自动勾选「原生Gcash」</td><td>F01-02 勾选、保存与已选值显示</td></tr>
-<tr id="n3" data-fp="F02-01"><td>N3</td><td class="w">勾选后的生效方式与现有选项完全一致：经原生Gcash 通道成功充值、且满足活动其他条件的订单，按现有档位规则获得转盘次数；判定逻辑本需求不改</td><td>F02-01 原生Gcash 订单获得转盘次数</td></tr>
+<tr><th>编号</th><th>规则</th><th>起因</th><th>功能点</th></tr>
+<tr id="n1" data-fp="F01-01"><td>N1</td><td class="w">充值方式下拉新增选项「原生Gcash」，排在现有选项之后；由技术写死在系统中，对应原生 GCash 通道，写法、保存值和对应关系按现有选项的方式实现</td><td class="w">经原生 GCash 通道充值的老用户拿不到转盘次数（第 1 章「背景」）</td><td>F01-01 新增原生Gcash 选项</td></tr>
+<tr id="n2" data-fp="F01-02"><td>N2</td><td class="w">交互与现有选项一致：可单选或多选，点标签 × 删除，保存后再次编辑显示已保存的值；是否必填保持原有规则。默认不勾选，已有活动不会自动勾选「原生Gcash」</td><td class="w">运营按活动自行决定是否开放；避免上线后改变已有活动的范围</td><td>F01-02 勾选、保存与已选值显示</td></tr>
+<tr id="n3" data-fp="F02-01"><td>N3</td><td class="w">勾选后，经原生 GCash 通道成功充值、且满足活动其他条件的订单，按现有规则获得转盘次数；未勾选时不获得。判定逻辑和生效时间与现有选项一致，本需求不改</td><td class="w">本需求只新增选项（第 0 章「本迭代范围」）</td><td>F02-01 原生Gcash 订单获得转盘次数</td></tr>
 </table></div>
 
-<!-- ======================= 4 ======================= -->
-<h2 id="c4">4. 运营后台需求</h2>
+<h3 id="c3-3">3.3 与知识库的冲突与取舍</h3>
+<div class="tbl"><table>
+<tr><th>冲突点</th><th>说法 A（出处）</th><th>说法 B（出处）</th><th>以哪个为准</th></tr>
+<tr><td colspan="4" class="w">无冲突</td></tr>
+</table></div>
+
+<h3 id="c3-4">3.4 依赖的现有后台配置</h3>
+<div class="tbl"><table>
+<tr><th>配置项</th><th>菜单位置</th><th>测试环境值</th><th>关联功能点</th></tr>
+<tr><td>原生 GCash 通道</td><td class="w">【充值配置 › 在线支付配置】</td><td>QA 通道编码 <code>onlineType</code> = 5146（管理后台知识库 §4.8）</td><td><span class="fp">F01-01</span> 新增原生Gcash 选项</td></tr>
+<tr><td>活动的充值方式</td><td class="w">【活动中心 › 老用户充值转盘】› 范围配置 › 充值渠道 › 充值方式</td><td>QA 存在 <code>rechargeChannels</code>（管理后台知识库 §11.7）</td><td><span class="fp">F01-02</span> 勾选、保存与已选值显示</td></tr>
+</table></div>
+<p><span class="warn-2">※ 测试环境值只用于测试和原型演示，生产环境以后台为准。</span></p>
+
+<!-- ======================= 4 ======================= --><h2 id="c4">4. 运营后台需求</h2>
 <h3 id="c4-1">4.1 活动列表（不改动）</h3>
 <p>原型：<a href="../prototype/admin/老用户充值转盘-后台活动管理页面.html#list">后台活动管理页面</a>（「活动配置」Tab 的活动列表）</p>
 <div class="tbl"><table>
 <tr><th>功能</th><th>说明</th></tr>
-<tr><td>活动列表</td><td class="w">沿用现状：活动编号、活动名称、活动类型（oldUserRechargeSpin）、总预算（可「不限金额」）、已使用预算、创建人、状态、操作（编辑）</td></tr>
-<tr><td>活动统计标签</td><td class="w">沿用现状，本需求不改动；原型中只做展示，点击无效果</td></tr></table></div>
+<tr><td>活动列表、活动统计标签</td><td class="w">沿用现状，本需求不改；原型中的列表字段只是示意，以线上为准</td></tr>
+</table></div>
 
 <h3 id="c4-2">4.2 活动配置页 › 范围配置 › 充值方式（本次改动）</h3>
 <p>原型：<a href="../prototype/admin/老用户充值转盘-后台活动管理页面.html#new">后台活动管理页面 › 活动配置</a>（可切换「创建活动」「编辑已有活动」两个场景）</p>
 <div class="tbl"><table>
 <tr><th>功能</th><th>说明</th></tr>
-<tr id="F01" data-fp="F01-01"><td><span class="fp">F01-01</span>下拉选项</td><td class="w">线上现有选项保持不变，在其后追加「原生Gcash」；现有选项以线上为准（QA 环境为 PayMongo、PayCools、TraxionPay），本需求只追加这一项（规则 N1：下拉新增「原生Gcash」，排在现有选项之后）</td></tr>
-<tr data-fp="F01-02"><td><span class="fp">F01-02</span>勾选与删除</td><td class="w">点下拉框展开；点选项勾选，再点取消勾选；已选项以标签显示在框内，点标签上的 × 删除；点下拉外部收起（规则 N2：交互与现有选项一致）</td></tr>
-<tr data-fp="F01-02"><td><span class="fp">F01-02</span>已选值显示</td><td class="w">编辑已有活动时，按已保存的值显示标签；已有活动不会自动勾选原生Gcash</td></tr>
-<tr data-fp="F01-02"><td>是否必填与其他字段</td><td class="w"><b>充值方式是否必填，保持原有规则不变</b>（本需求不新增、也不取消必填校验）；保存提示和其他配置项沿用现状，不改动</td></tr>
+<tr id="F01" data-fp="F01-01"><td><span class="fp">F01-01</span>下拉选项</td><td class="w">线上现有选项不变，在其后追加「原生Gcash」（规则 N1：新增选项）</td></tr>
+<tr data-fp="F01-02"><td><span class="fp">F01-02</span>勾选与删除</td><td class="w">点下拉框展开；点选项勾选，再点取消勾选；已选项以标签显示，点 × 删除；点下拉外部收起（规则 N2：交互与现有选项一致）</td></tr>
+<tr data-fp="F01-02"><td><span class="fp">F01-02</span>已选值显示</td><td class="w">编辑已有活动时，按已保存的值显示标签；已有活动不会自动勾选「原生Gcash」</td></tr>
+<tr data-fp="F01-02"><td>是否必填与其他字段</td><td class="w">充值方式是否必填保持原有规则；其他配置项沿用现状</td></tr>
 </table></div>
 
 <h3 id="c4-3">4.3 帮助提示内容</h3>
 <p>后台原型里「?」图标的说明文字取自本表。</p>
 <div class="tbl"><table id="help">
 <tr><th>数据项</th><th>说明内容</th></tr>
-<tr data-fp="F01-01"><td>原生Gcash</td><td class="w" data-help="gcash">对应【充值配置 › 在线支付配置】中的 GCash 原生通道。勾选后，经该通道成功充值的订单按本活动规则获得转盘次数。</td></tr>
+<tr data-fp="F01-01"><td>原生Gcash</td><td class="w" data-help="gcash">对应【充值配置 › 在线支付配置】中的原生 GCash 通道。勾选后，经该通道成功充值的订单按本活动规则获得转盘次数；生效时间与现有选项一致。默认不勾选。</td></tr>
 </table></div>
 
 <!-- ======================= 5 ======================= -->
 <h2 id="c5">5. 接口与异常</h2>
-<p>沿用现有活动配置页的处理方式，本需求不新增异常处理：选项列表加载失败、保存失败、连点保存、无权限访问等，表现与勾选其他充值方式时一致。</p>
+<p>沿用现有活动配置页的处理，本需求不新增。</p>
 
 <!-- ======================= 6 ======================= -->
 <h2 id="c6">6. 验收标准</h2>
+<h3 id="c6-1">6.1 验收条目</h3>
 <ol>
-<li data-fp="F01-01"><span class="fp">F01</span>A1 充值方式下拉在线上现有选项之后显示「原生Gcash」，现有选项保持不变（现有选项以线上为准）。</li>
-<li data-fp="F01-02"><span class="fp">F01</span>A2 单独勾选原生Gcash、以及与其他选项多选后保存，重新进入编辑页，标签都正确显示；点 × 可以删除。</li>
-<li data-fp="F01-02"><span class="fp">F01</span>A3 上线前已存在的活动，打开编辑后不会自动勾选原生Gcash，其他配置不变。</li>
-<li data-fp="F02-01"><span class="fp">F02</span>A4 活动勾选原生Gcash 后，老用户经原生Gcash 通道充值成功、金额在档位内，按现有规则获得转盘次数；未勾选时不获得。</li>
-<li data-fp="F02-01"><span class="fp">F02</span>A5 回归：H5、iOS 原生、安卓 Flutter、iOS Flutter 的充值页，勾选后原生Gcash 对应入口显示 Lucky Spin 标识和金额角标；未勾选时不显示。</li>
-<li data-fp="F02-01"><span class="fp">F02</span>A6 回归：勾选其他现有选项的活动，获得次数和 C 端展示与上线前一致；充值方式是否必填与上线前一致。</li>
+<li data-fp="F01-01"><span class="fp">F01-01</span> A1 充值方式下拉在线上现有选项之后显示「原生Gcash」，现有选项不变。</li>
+<li data-fp="F01-02"><span class="fp">F01-02</span> A2 单独勾选「原生Gcash」、或与其他选项多选后保存，再次编辑时标签正确显示；点 × 可以删除。</li>
+<li data-fp="F01-02"><span class="fp">F01-02</span> A3 上线前已存在的活动，打开编辑后不会自动勾选「原生Gcash」。</li>
+<li data-fp="F02-01"><span class="fp">F02-01</span> A4 活动勾选「原生Gcash」后，经原生 GCash 通道成功充值的订单按现有规则获得转盘次数；未勾选时不获得。</li>
+<li data-fp="F02-01"><span class="fp">F02-01</span> A5 勾选其他现有选项的活动，获得次数与上线前一致。</li>
+<li data-fp="F02-01"><span class="fp">F02-01</span> A6 C 端回归：各端充值页的展示与勾选现有选项时的规则一致。</li>
 </ol>
 
-<!-- ======================= 7 ======================= -->
-<h2 id="c7">7. 上线方式</h2>
+<h3 id="c6-2">6.2 跨端验收矩阵</h3>
+<p>✓ 需要验证；— 不涉及。次数判定在后端，任选一端充值验证即可。</p>
+<div class="tbl"><table>
+<tr><th>验收项</th><th>功能点</th><th>H5</th><th>PC</th><th>iOS</th><th>Android / Flutter</th><th>后台</th></tr>
+<tr data-fp="F01-01"><td class="w">A1 下拉显示「原生Gcash」</td><td><span class="fp">F01-01</span></td><td>—</td><td>—</td><td>—</td><td>—</td><td>✓</td></tr>
+<tr data-fp="F01-02"><td class="w">A2 勾选、删除、再次编辑显示已保存的值</td><td><span class="fp">F01-02</span></td><td>—</td><td>—</td><td>—</td><td>—</td><td>✓</td></tr>
+<tr data-fp="F01-02"><td class="w">A3 已有活动不自动勾选</td><td><span class="fp">F01-02</span></td><td>—</td><td>—</td><td>—</td><td>—</td><td>✓</td></tr>
+<tr data-fp="F02-01"><td class="w">A4 原生 GCash 通道订单获得次数，未勾选时不获得</td><td><span class="fp">F02-01</span></td><td>✓</td><td>—</td><td>—</td><td>—</td><td>✓（查发放记录）</td></tr>
+<tr data-fp="F02-01"><td class="w">A5 勾选其他现有选项的活动不受影响</td><td><span class="fp">F02-01</span></td><td>✓</td><td>—</td><td>—</td><td>—</td><td>✓</td></tr>
+<tr data-fp="F02-01"><td class="w">A6 C 端回归</td><td><span class="fp">F02-01</span></td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>—</td></tr>
+</table></div>
+
+<!-- ======================= 7 ======================= --><h2 id="c7">7. 上线方式</h2>
 <ul>
-<li><b>开关</b>：不加新开关。新选项默认不勾选，已有活动不受影响，运营勾选后才生效。</li>
-<li><b>上线前</b>：后端提供生产环境原生Gcash 通道的名称和标识（第 9 章待确认 Q1）；前端确认 C 端不需要发版（第 9 章待确认 Q2）。</li>
-<li><b>验证</b>：上线后先在一个测试活动里勾选原生Gcash，用测试账号充值一笔，确认获得次数、C 端标识正确，再对正式活动开放。</li>
-<li><b>回滚</b>：先在所有活动里取消勾选原生Gcash，再回滚版本。</li>
+<li><b>开关</b>：不加新开关。选项随后端和后台前端的版本一起发布；新选项默认不勾选，运营勾选后才生效。</li>
+<li><b>验证</b>：上线后先在测试活动中勾选「原生Gcash」，用测试账号经原生 GCash 通道充值一笔，确认获得次数后，再对正式活动开放。</li>
+<li><b>回滚</b>：沿用平台现有的发版回滚方式。</li>
 </ul>
 
 <!-- ======================= 8 ======================= -->
 <h2 id="c8">8. 风险与依赖</h2>
 <div class="tbl"><table>
 <tr><th>风险</th><th>等级</th><th>应对</th></tr>
-<tr data-fp="F02-01"><td class="w">用户理解：前台有多个入口都叫「GCash」，背后的通道不同（BB2025789-4737、BB2025789-4526 报为缺陷后被否决，推测是现行设计）。用户走的不是原生Gcash 通道时拿不到次数，可能引发客诉</td><td>低</td><td class="w">客服按订单实际通道答复（见后台操作手册常见问题和客服 QA）</td></tr>
-<tr><td class="w">依赖：生产环境原生Gcash 通道的名称和标识；C 端是否自动匹配新选项</td><td>—</td><td class="w">等后端回复「生产环境原生Gcash 通道的支付名称和通道标识」、前端回复「前台是否按配置自动显示 Lucky Spin 标识、无需发版」（第 9 章待确认事项）</td></tr>
+<tr><td class="w">扩展性：选项写死在系统里，以后新增充值方式都要技术改代码并发版</td><td>低</td><td class="w">本需求按现状处理</td></tr>
+<tr><td class="w">依赖：C 端是否需要发版</td><td>低</td><td class="w">由技术研发根据实际情况决定（第 9 章 Q2：C 端是否需要发版、前台对应入口）</td></tr>
 </table></div>
 
 <!-- ======================= 9 ======================= -->
 <h2 id="c9">9. 待确认事项</h2>
 <div class="tbl"><table>
 <tr><th>编号</th><th>事项</th><th>负责人</th><th>状态</th></tr>
-<tr><td>Q1</td><td class="w">生产环境原生Gcash 通道的支付名称和通道标识；新选项保存什么值（QA 现有选项存的是名称，如「Traxion Pay」）</td><td>后端</td><td>待确认</td></tr>
-<tr><td>Q2</td><td class="w">C 端是否按配置自动在原生Gcash 入口显示 Lucky Spin 标识、无需发版；原生Gcash 在各端对应哪个入口（QA 为「GCASH2」）</td><td>前端（H5 / iOS / Flutter）</td><td>待确认</td></tr>
-<tr><td>Q3</td><td class="w">选项显示名称：已确认为「原生Gcash」（与在线支付配置里的支付名称不同，QA 为「GCASH2 (GCASH 原生)」）</td><td>产品</td><td>已确认（2026-10-09）</td></tr>
+<tr><td>Q1</td><td class="w">实现方式：选项写死在系统里，「原生Gcash」由技术写入，写法、保存值和对应通道按现有选项的方式实现</td><td>后端</td><td>已确认（技术反馈，2026-10-12）</td></tr>
+<tr><td>Q2</td><td class="w">C 端是否需要发版、前台对应入口：由技术研发根据实际情况决定，沿用现有逻辑</td><td>技术研发</td><td>已确认（产品，2026-10-12）</td></tr>
+<tr><td>Q3</td><td class="w">选项名称：「原生Gcash」</td><td>产品</td><td>已确认（2026-10-09）</td></tr>
 </table></div>
 
 <!-- ======================= 10 ======================= -->
 <h2 id="c10">10. 各角色协作 Tips</h2>
 <div class="roles-cards">
   <div class="rc" style="--c:#C89A3C"><h4>设计</h4><ul><li>沿用现有下拉组件，只多一个选项，不需要新设计稿。</li></ul></div>
-  <div class="rc" style="--c:#6A2BB8"><h4>前端</h4><ul><li>后台下拉追加一项，交互与现有选项一致。</li><li>C 端先查入口与配置值的匹配代码，回复第 9 章待确认 Q2（C 端是否不用发版）。</li></ul></div>
-  <div class="rc" style="--c:#1560A8"><h4>后端</h4><ul><li>新选项与现有选项走同一套保存和判定逻辑。</li><li>先回复第 9 章待确认 Q1（生产环境通道名称、标识和保存值）。</li></ul></div>
-  <div class="rc" style="--c:#1B7A4C"><h4>测试</h4><ul><li>重点测第 6 章验收 A4（原生Gcash 订单获得次数）和 A6（其他选项不受影响）。</li><li>QA 中原生Gcash 的前台入口为「GCASH2」。</li></ul></div>
-  <div class="rc" style="--c:#B5601A"><h4>运营</h4><ul><li>勾选前，先在在线支付配置里确认原生Gcash 已启用，并对目标会员层级开放。</li></ul></div>
-  <div class="rc" style="--c:#8A1020"><h4>客服</h4><ul><li>用户说「用 GCash 充值没拿到转盘」：先查订单实际通道。不是活动所选的通道，按规则不给次数；是所选通道、金额也在档位内的，转技术查。</li><li>对玩家的回复口径、核查步骤和转交规则见客服 QA。</li></ul></div>
+  <div class="rc" style="--c:#6A2BB8"><h4>前端</h4><ul><li>后台下拉追加「原生Gcash」，与后端写入的选项保持一致；交互与现有选项一致。</li></ul></div>
+  <div class="rc" style="--c:#1560A8"><h4>后端</h4><ul><li>在系统写死的充值方式选项中新增「原生Gcash」，与现有选项走同一套保存和判定逻辑。</li></ul></div>
+  <div class="rc" style="--c:#1B7A4C"><h4>测试</h4><ul><li>重点测第 6.1 节验收 A4（原生 GCash 通道订单获得次数）和 A5（其他选项不受影响）。</li></ul></div>
+  <div class="rc" style="--c:#B5601A"><h4>运营</h4><ul><li>按后台操作手册「02 配置充值方式」勾选「原生Gcash」并保存。</li></ul></div>
+  <div class="rc" style="--c:#8A1020"><h4>客服</h4><ul><li>以订单实际通道和活动规则为准答复，核查步骤见客服 QA。</li></ul></div>
 </div>
 
+<!-- ======================= 11 ======================= -->
+<h2 id="c11">11. 数据埋点</h2>
+<p>本需求不需要数据埋点，数据埋点内容与平台现有内容保持一致；数据看板和统计按平台现有逻辑，由技术评估是否需要调整。</p>
+
+<!-- ======================= 附录 A ======================= -->
+<h2 id="appA">附录 A 评审清单核对</h2>
+<h3 id="appA-1">A.1 通用评审清单（知识库「四、通用需求评审清单」12 项）</h3>
+<div class="tbl"><table>
+<tr><th>项</th><th>结论</th><th>位置</th></tr>
+<tr><td>1. 合规</td><td class="w">不涉及（沿用平台现有规则）</td><td>—</td></tr>
+<tr><td>2. 资金</td><td class="w">获得转盘次数的订单范围增加原生 GCash 通道，发放仍受活动现有预算控制</td><td>第 3.2 节规则 N3（勾选后获得次数）</td></tr>
+<tr><td>3. 口径</td><td class="w">按订单实际通道判定，判定逻辑不改</td><td>第 3.2 节规则 N3（勾选后获得次数）</td></tr>
+<tr><td>4. 防刷与风控</td><td class="w">不涉及（沿用平台现有规则）</td><td>—</td></tr>
+<tr><td>5. 多端范围</td><td class="w">后台前端、后端开发；C 端只做回归，是否发版由技术研发决定</td><td>第 1 章「多端范围」；第 9 章 Q2（C 端是否需要发版、前台对应入口）</td></tr>
+<tr><td>6. 后台配套</td><td class="w">只新增一个下拉选项，帮助提示和操作手册已同步</td><td>第 4 章「运营后台需求」</td></tr>
+<tr><td>7. 系统约束</td><td class="w">选项写死在系统里，新增要改代码并发版</td><td>第 8 章「风险与依赖」（扩展性）</td></tr>
+<tr><td>8. 性能</td><td class="w">不涉及（沿用平台现有规则）</td><td>—</td></tr>
+<tr><td>9. 安全</td><td class="w">不涉及（沿用平台现有规则）</td><td>—</td></tr>
+<tr><td>10. 上线方式</td><td class="w">不加开关，新选项默认不勾选，先在测试活动验证</td><td>第 7 章「上线方式」</td></tr>
+<tr><td>11. 验收</td><td class="w">6 条验收条目和跨端验收矩阵</td><td>第 6 章「验收标准」</td></tr>
+<tr><td>12. 工单规范</td><td class="w">按后端、后台前端拆子任务；C 端需要改动时另起子任务</td><td>第 0 章「本迭代范围」</td></tr>
+</table></div>
+<h3 id="appA-2">A.2 异常边界覆盖（规范第五章第 0 节 8 类）</h3>
+<div class="tbl"><table>
+<tr><th>类别</th><th>本需求处理位置</th></tr>
+<tr><td>边界值</td><td class="w">不涉及（沿用平台现有规则）</td></tr>
+<tr><td>时间</td><td class="w">生效时间与现有选项一致，见第 3.2 节规则 N3（勾选后获得次数）</td></tr>
+<tr><td>异常</td><td class="w">不涉及（沿用平台现有规则），见第 5 章「接口与异常」</td></tr>
+<tr><td>并发与重复</td><td class="w">不涉及（沿用平台现有规则）</td></tr>
+<tr><td>状态</td><td class="w">只有充值成功的订单才获得次数，见第 3.2 节规则 N3（勾选后获得次数）</td></tr>
+<tr><td>用户与权限</td><td class="w">不涉及（沿用平台现有规则）</td></tr>
+<tr><td>端与版本</td><td class="w">C 端只做回归，是否发版由技术研发决定，见第 9 章 Q2（C 端是否需要发版、前台对应入口）</td></tr>
+<tr><td>数据</td><td class="w">已有活动不自动勾选，见第 3.2 节规则 N2（交互与现有选项一致）；保存值按现有选项的写法，见第 9 章 Q1（实现方式）</td></tr>
+</table></div>
+
+<!-- ======================= 附录 B ======================= -->
+<h2 id="appB">附录 B 原型对照表</h2>
+<div class="tbl"><table>
+<tr><th>原型页面</th><th>功能点</th><th>可演示的交互</th><th>是否模拟</th></tr>
+<tr data-fp="F01-01"><td><a href="../prototype/admin/老用户充值转盘-后台活动管理页面.html#new">后台活动管理页面 › 创建活动</a></td><td><span class="fp">F01-01</span> 新增原生Gcash 选项</td><td class="w">打开充值方式下拉，「原生Gcash」排在现有选项之后；点「?」查看帮助说明</td><td>真实交互</td></tr>
+<tr data-fp="F01-02"><td><a href="../prototype/admin/老用户充值转盘-后台活动管理页面.html#edit">后台活动管理页面 › 编辑活动</a></td><td><span class="fp">F01-02</span> 勾选、保存与已选值显示</td><td class="w">单选、多选、点标签 × 删除；保存后再次编辑显示已保存的值；首次进入只显示已保存的 PayCools，不自动勾选「原生Gcash」</td><td>真实交互</td></tr>
+<tr data-fp="F02-01"><td><a href="../prototype/admin/老用户充值转盘-后台活动管理页面.html#list">后台活动管理页面 › 模拟操作</a></td><td><span class="fp">F02-01</span> 原生Gcash 订单获得转盘次数</td><td class="w">切换「本活动已勾选『原生Gcash』」「订单实际通道」「订单状态」，显示能否获得转盘次数</td><td>模拟操作面板模拟</td></tr>
+</table></div>
+
+<!-- ======================= 开发备忘参考 ======================= -->
+<h2 id="memo">开发备忘参考</h2>
+<div class="memo-note">※ 以下是 2026-10-13 第 12、13 轮需求检查发现的 14 个问题和建议。<b>统一结论：按目前平台现有逻辑处理，具体方式由研发在开发过程中决定。</b>这里的建议只供开发和测试参考，不是本需求的规则，也不改变前面各章的内容。</div>
+<div class="memo-item"><div class="memo-h"><span class="no">C73</span><span class="lv m">中</span>C 端回归的验收写法</div>
+<div class="memo-q"><b>问题</b>PRD「6.1 验收条目」第 6 条和开发自查清单最后一项写「各端充值页的展示与勾选现有选项时的规则一致」，没说清「展示」指什么，测试不好判定是否通过。</div>
+<div class="memo-s"><b>建议参考</b>写成可验证的结果：活动勾选「原生Gcash」后，各端充值页原生 GCash 通道是否显示 Lucky Spin 渠道和金额角标，与勾选现有选项时的显示规则相同；未勾选时不显示。</div>
+<div class="memo-d"><b>处理方式</b>按目前平台现有逻辑处理，具体由研发在开发过程中决定。</div></div>
+<div class="memo-item"><div class="memo-h"><span class="no">C74</span><span class="lv m">中</span>客服遇到「之前的订单能不能补次数」</div>
+<div class="memo-q"><b>问题</b>客服 QA 没有「转交与升级」「资料未覆盖的问题」两节；问答 2 让客服对比充值时间和活动勾选时间，客服在后台查不到勾选时间，查不出结论。</div>
+<div class="memo-s"><b>建议参考</b>订单成功、通道是原生 GCash、活动已勾选但没有次数时转技术，转交时收集订单号、充值时间（GMT+8）、金额、支付方式截图；勾选之前已成功的订单能否补次数，转运营确认，不自行答复。</div>
+<div class="memo-d"><b>处理方式</b>按目前平台现有逻辑处理，具体由研发在开发过程中决定。</div></div>
+<div class="memo-item"><div class="memo-h"><span class="no">C75</span><span class="lv l">低</span>充值方式是否必填</div>
+<div class="memo-q"><b>问题</b>原型里一个充值方式都不选也能保存，也没有必填星号；PRD 写的是「是否必填保持原有规则」。</div>
+<div class="memo-s"><b>建议参考</b>按线上原有规则校验；原型没有演示必填校验，空选能保存只是演示效果，不代表规则。</div>
+<div class="memo-d"><b>处理方式</b>按目前平台现有逻辑处理，具体由研发在开发过程中决定。</div></div>
+<div class="memo-item"><div class="memo-h"><span class="no">C76</span><span class="lv l">低</span>新建活动默认不勾选</div>
+<div class="memo-q"><b>问题</b>规则写了「默认不勾选」，但验收和自查只验了「已有活动不自动勾选」。</div>
+<div class="memo-s"><b>建议参考</b>开发和测试时一并确认：新建活动打开充值方式下拉，「原生Gcash」默认不勾选。</div>
+<div class="memo-d"><b>处理方式</b>按目前平台现有逻辑处理，具体由研发在开发过程中决定。</div></div>
+<div class="memo-item"><div class="memo-h"><span class="no">C77</span><span class="lv l">低</span>资料出处和现有选项写法</div>
+<div class="memo-q"><b>问题</b>通道编码 5146 记录在管理后台知识库 §11.4（PRD 写的是 §4.8）；QA 实测的保存值是「Traxion Pay、PayMongo、PayCools」，和 PRD 背景里的写法不同。</div>
+<div class="memo-s"><b>建议参考</b>以后台实际配置为准：QA 通道名「GCASH2 (GCASH 原生)」见管理后台知识库 §4.8，通道编码 5146 见 §11.4，现有选项的保存值见 §11.7。</div>
+<div class="memo-d"><b>处理方式</b>按目前平台现有逻辑处理，具体由研发在开发过程中决定。</div></div>
+<div class="memo-item"><div class="memo-h"><span class="no">C78</span><span class="lv l">低</span>知识库里的「GCash」</div>
+<div class="memo-q"><b>问题</b>平台知识库把这个活动写成「按指定充值渠道（如 GCash / Paymongo）」，容易被理解成线上已经有 GCash 选项。</div>
+<div class="memo-s"><b>建议参考</b>评审被问到时说明：那里的「GCash」不是原生 GCash 通道，现有选项里没有原生 GCash 通道，以技术确认为准。</div>
+<div class="memo-d"><b>处理方式</b>按目前平台现有逻辑处理，具体由研发在开发过程中决定。</div></div>
+<div class="memo-item"><div class="memo-h"><span class="no">C79</span><span class="lv l">低</span>跨端验收的验证端</div>
+<div class="memo-q"><b>问题</b>跨端验收矩阵说明写「任选一端充值验证即可」，但只在 H5 列打了 ✓。</div>
+<div class="memo-s"><b>建议参考</b>次数判定在后端，以 H5 充值验证即可，其他端不重复验证。</div>
+<div class="memo-d"><b>处理方式</b>按目前平台现有逻辑处理，具体由研发在开发过程中决定。</div></div>
+<div class="memo-item"><div class="memo-h"><span class="no">C80</span><span class="lv l">低</span>菜单路径写法</div>
+<div class="memo-q"><b>问题</b>需求要点和客服 QA 写「范围配置 › 充值方式」，少了「充值渠道」一级；需求要点分支 B 的「充值照常到账」在 PRD 里没有。</div>
+<div class="memo-s"><b>建议参考</b>以 PRD 写法为准：范围配置 › 充值渠道 › 充值方式；充值到账沿用现有逻辑，不属于本需求规则。</div>
+<div class="memo-d"><b>处理方式</b>按目前平台现有逻辑处理，具体由研发在开发过程中决定。</div></div>
+<div class="memo-item"><div class="memo-h"><span class="no">C81</span><span class="lv l">低</span>运营操作注意事项</div>
+<div class="memo-q"><b>问题</b>后台操作手册「02 配置充值方式」没有单独写权限、生效时间和注意事项。</div>
+<div class="memo-s"><b>建议参考</b>权限与现有活动配置相同；生效时间与现有选项一致；已有活动不会自动勾选，需要的活动要逐个编辑勾选；取消勾选并保存后，经原生 GCash 通道的订单不再获得次数。</div>
+<div class="memo-d"><b>处理方式</b>按目前平台现有逻辑处理，具体由研发在开发过程中决定。</div></div>
+<div class="memo-item"><div class="memo-h"><span class="no">C82</span><span class="lv l">低</span>客服如何认出原生 GCash 通道</div>
+<div class="memo-q"><b>问题</b>客服核查让看「支付渠道」「付款方式」，但没说显示什么值就算原生 GCash 通道。</div>
+<div class="memo-s"><b>建议参考</b>付款方式显示为【充值配置 › 在线支付配置】中原生 GCash 通道的支付名称时，即为原生 GCash 通道（QA 环境为「GCASH2 (GCASH 原生)」，生产以后台为准）。</div>
+<div class="memo-d"><b>处理方式</b>按目前平台现有逻辑处理，具体由研发在开发过程中决定。</div></div>
+
+<div class="memo-item"><div class="memo-h"><span class="no">C83</span><span class="lv l">低</span>备忘里 C78、C81、C82 三条有漏写</div>
+<div class="memo-q"><b>问题</b>这三条各漏了检查发现的一部分：C78 漏了 PRD「3.3 与知识库的冲突与取舍」只写「无冲突」、没有列出比对过的知识库文件；C81 漏了后台操作手册「重要结论」两条没有标出处；C82 漏了客服 QA 英文对同一选项有两种叫法（add native GCash 和 add "原生Gcash"）。</div>
+<div class="memo-s"><b>建议参考</b>比对文件可列：789平台现状知识库、Jira 单共享知识库（产品侧）、789Bingo平台知识库、789Bingo管理后台知识库、Nustar_789Bingo_分析与竞品报告；手册重要结论两条分别对应 PRD「0. 本迭代范围」和「3.2 本需求规则」第 3 条；英文统一写成 the "原生Gcash" option (native GCash channel)。</div>
+<div class="memo-d"><b>处理方式</b>按目前平台现有逻辑处理，具体由研发在开发过程中决定。</div></div>
+<div class="memo-item"><div class="memo-h"><span class="no">C84</span><span class="lv l">低</span>深色模式下备忘编号看不清</div>
+<div class="memo-q"><b>问题</b>本章每条标题栏里的编号是紫色，深色模式下标题栏背景是深紫色，编号几乎看不清。</div>
+<div class="memo-s"><b>建议参考</b>深色模式下把编号改成浅紫色（如 #C9A6FF）。</div>
+<div class="memo-d"><b>处理方式</b>按目前平台现有逻辑处理，具体由研发在开发过程中决定。</div></div>
+<div class="memo-item"><div class="memo-h"><span class="no">C85</span><span class="lv l">低</span>备忘说明框的「※」</div>
+<div class="memo-q"><b>问题</b>本章顶部说明框以「※」开头，但整段是棕色字，和规范对「※」提示（红色、分三级）的规定不一致。</div>
+<div class="memo-s"><b>建议参考</b>这是普通说明，可以去掉开头的「※」，保留棕色说明框。</div>
+<div class="memo-d"><b>处理方式</b>按目前平台现有逻辑处理，具体由研发在开发过程中决定。</div></div>
+<div class="memo-item"><div class="memo-h"><span class="no">C86</span><span class="lv l">低</span>备忘的适用对象</div>
+<div class="memo-q"><b>问题</b>说明框写「只供开发和测试参考」，但 C74、C82 是给客服的，C81 是给运营的，C78 是给评审的；运营站点看不到 PRD，这几条不会传到运营和客服手里。</div>
+<div class="memo-s"><b>建议参考</b>改为「只供参考」；客服和运营相关的 3 条（C74、C81、C82）需要时由产品转告运营和客服。</div>
+<div class="memo-d"><b>处理方式</b>按目前平台现有逻辑处理，具体由研发在开发过程中决定。</div></div>
 </article></div>
 </div>
 <script>window.NAV_ROOT = "../";</script>

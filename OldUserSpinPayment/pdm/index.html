@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>老用户充值转盘需求</title>
+<title>老用户充值转盘-需求与原型中心</title>
 <link rel="stylesheet" href="assets/style.css">
 </head>
 <body>
@@ -21,16 +21,16 @@
     <div class="reqcard-h"><b>老用户充值转盘 · 充值方式新增「原生Gcash」· v1.0</b><small>老用户充值转盘功能需求</small></div>
     <div class="reqcard-b">
       <div>
-        <p style="margin:0 0 6px">在【活动中心 › 老用户充值转盘】的「范围配置 › 充值渠道 › 充值方式」下拉里新增「原生Gcash」选项，用法和生效方式与现有选项完全一致，不新增其他规则。只改后台（后台前端 + 后端），C 端做回归。</p>
+        <p style="margin:0 0 6px">在【活动中心 › 老用户充值转盘】的「范围配置 › 充值渠道 › 充值方式」下拉中，由技术在系统写死的选项里新增「原生Gcash」，交互和生效方式与现有选项一致；其他沿用平台现有规则。后台前端、后端开发；C 端只做回归，是否需要发版由技术研发决定。</p>
         <div class="facts">
           <div><b>1</b><span>后台原型页面</span></div>
           <div><b>2</b><span>大功能点</span></div>
           <div><b>3</b><span>子功能点</span></div>
           <div><b>3</b><span>本需求规则</span></div>
-          <div><b>2</b><span>待确认事项</span></div>
+          <div><b>0</b><span>待确认事项</span></div>
           <div><b>GMT+8</b><span>业务时区</span></div>
         </div>
-        <p style="margin:0"><span class="warn-2">※ 勾选后的生效方式与现有选项完全一致，判定逻辑不改（PRD 3.2 规则 N3）。</span></p>
+        <p style="margin:0"><span class="warn-2">※ 勾选后的生效方式与现有选项一致，判定逻辑不改（PRD 第 3.2 节规则 N3：勾选后获得次数）。</span></p>
         <div class="tbl" style="margin-top:12px"><table class="mini">
           <tr><th>版本号</th><th>时间</th><th>修改人</th><th>概述</th></tr>
           <tr><td>v1.0</td><td>2026-10-07</td><td>Joshua</td><td>创建老用户充值转盘 v1.0</td></tr>
@@ -48,7 +48,8 @@
   <section class="reqcard oc-log">
     <div class="reqcard-h"><b>运营需求修改记录</b><small>按提交时间倒序，最新提交的在最上面</small></div>
     <div class="reqcard-b oc-log-b">
-      <p class="oc-log-note">※ 记录来自本机浏览器：运营提交的版本，需要在「运营需求确认」页点「导入版本文件」导入运营发来的文件后才会出现在这里。</p>
+      <p class="oc-log-note">※ 运营提交的版本、产品回复和补充都保存在云端，换电脑、换浏览器打开都能看到，每分钟自动刷新；产品输入产品密码后才能读取。重新打包上传不会删除或覆盖这些记录。</p>
+      <div class="oc-sync" id="logSync"></div>
       <div class="tbl"><table class="mini oc-log-t">
         <thead><tr><th>提交时间</th><th>版本</th><th>版本名称</th><th>条数</th><th>产品已回复</th><th>是否修改</th><th></th></tr></thead>
         <tbody id="ocLog"><tr><td colspan="7" class="oc-log-empty">正在读取…</td></tr></tbody>
@@ -69,11 +70,12 @@ ARCH.render(document.getElementById("arch"));
 document.getElementById("ex").onclick = t.expandAll;
 document.getElementById("co").onclick = t.collapseAll;
 
-/* 运营需求修改记录：读「运营需求确认」页的本机数据，按提交时间倒序 */
+/* 运营需求修改记录：云端优先（读不到云端时用本机缓存），数据与「运营需求确认」页同源，按提交时间倒序 */
 (function () {
   var CONFIRM = "docs/老用户充值转盘-运营需求确认.html";
   function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
-  OCStore.read(OCStore.key("老用户充值转盘")).then(function (S) {
+  var KEY = OCStore.key("老用户充值转盘");
+  function renderLog(S) {
     var V = OCStore.byTime(S && S.versions), body = document.getElementById("ocLog");
     if (!V.length) {
       body.innerHTML = '<tr><td colspan="7" class="oc-log-empty">还没有运营提交的需求修改记录。</td></tr>';
@@ -90,9 +92,12 @@ document.getElementById("co").onclick = t.collapseAll;
       }).join("");
     }
     document.getElementById("ocLogFoot").textContent = V.length
-      ? "共 " + V.length + " 个版本" + (S.sealed ? "；已于 " + S.sealed.at + " 封板，最终版本 v" + S.sealed.ver : "；未封板")
+      ? "共 " + V.length + " 个版本" + (S.sealed ? "；已于 " + S.sealed.at + "（GMT+8）" + (OCStore.ROLE_NAME[S.sealed.role] ? "由" + OCStore.ROLE_NAME[S.sealed.role] : "") + "封板，最终版本 v" + S.sealed.ver : "；未封板")
+        + (OCStore.sealLog(S).length ? "。封板记录：" + OCStore.sealLog(S).map(OCStore.sealLine).join("；") : "")
       : "";
-  });
+  }
+  OCStore.read(KEY).then(renderLog);
+  OCSync.bar(document.getElementById("logSync"), KEY, "老用户充值转盘", renderLog);   /* 从共享文件夹读取运营提交的版本文件 */
 })();
 </script>
 </body>
