@@ -15,7 +15,7 @@
   var DATA_PATH = 'data/requirements.json';
   var K_AUTH = 'prdhub.auth', K_FAIL = 'prdhub.fail', K_GH = 'prdhub.github';
   // 仓库根目录已占用或有特殊含义的名字，不能作为需求文件夹名
-  var RESERVED = ['assets', 'data', 'api', 'tools', 'index', 'readme', 'pdm', 'opr', 'dev', 'docs', 'node_modules'];
+  var RESERVED = ['assets', 'data', 'api', 'tools', 'index', 'readme', 'pdm', 'opr', 'dev', 'repo', 'docs', 'documents', 'node_modules'];
   var FOLDER_RE = /^[A-Za-z][A-Za-z0-9_-]{1,39}$/;
 
   var state = { mode: 'readonly', items: [], gh: null, roleTimes: {} };
@@ -458,6 +458,7 @@
 
   function render(flashFolder) {
     var all = state.items, tb = $('rows');
+    $('tabReqN').textContent = '（' + all.length + '）';
     renderOwnerOptions();
     // 序号按完整列表（创建时间倒序）从上到下编号，查询后保持不变
     var shown = [];
@@ -526,7 +527,25 @@
     $(id).hidden = true;
     if (lastFocus && lastFocus.focus) lastFocus.focus();
   }
-  function closeAll() { ['addMask', 'ghMask', 'ownMask', 'upMask', 'verMask'].forEach(function (id) { $(id).hidden = true; }); }
+  function closeAll() {
+    ['addMask', 'ghMask', 'ownMask', 'upMask', 'verMask', 'grpMask', 'renMask', 'viewMask'].forEach(function (id) { if ($(id)) $(id).hidden = true; });
+  }
+
+  /* ---------- 页签：开发需求管理 / 方案文档管理 ---------- */
+
+  function showTab(name) {
+    var docs = name === 'docs';
+    $('panelReq').hidden = docs; $('panelDocs').hidden = !docs;
+    $('tabReq').classList.toggle('on', !docs); $('tabDocs').classList.toggle('on', docs);
+    $('tabReq').setAttribute('aria-selected', String(!docs)); $('tabDocs').setAttribute('aria-selected', String(docs));
+    try { history.replaceState(null, '', docs ? '#docs' : location.pathname + location.search); } catch (e) {}
+  }
+
+  // 刷新两个页签的数据（文档模块在 docs.js 里）
+  function refreshAll(flashFolder) {
+    if (window.PRDHUB_DOCS) window.PRDHUB_DOCS.refresh();
+    return refresh(flashFolder);
+  }
 
   function resetAdd() {
     ['fName', 'fOwner', 'fFolder'].forEach(function (id) { $(id).value = ''; $(id).classList.remove('bad'); });
@@ -611,24 +630,30 @@
     });
   }
 
-  /* 向仓库做一次原子提交：读取分支最新的需求列表 → build 修改数据并返回要一起提交的文件 → 提交并移动分支。
-   * build(data, headSha) 返回 Promise 或对象：{ message, files: [{path, content}], result } */
-  function ghCommit(build, retried) {
+  /* 向仓库做一次原子提交：读取分支最新的数据文件 → build 修改数据并返回要一起提交的文件 → 提交并移动分支。
+   * build(data, headSha) 返回 Promise 或对象：{ message, files: [{path, content} 或 {path, sha}], result }
+   * opt.path：数据文件（默认需求列表）；opt.normalize(d)：把读到的数据整理成标准结构（文件不存在时 d 为 null） */
+  function ghCommit(build, opt) {
+    opt = opt || {};
+    var path = opt.path || DATA_PATH;
+    var norm = opt.normalize || function (d) { return d && Array.isArray(d.items) ? d : { items: [] }; };
     var branch = state.gh.branch, headSha, data, plan;
     return ghApi('GET', '/git/ref/heads/' + encodeURIComponent(branch)).then(function (ref) {
       headSha = ref.object.sha;
-      return ghApi('GET', '/contents/' + DATA_PATH + '?ref=' + headSha)
+      return ghApi('GET', '/contents/' + path + '?ref=' + headSha)
         .then(function (j) { return JSON.parse(b64ToUtf8(j.content)); })
-        .catch(function (e) { if (e.status === 404) return { items: [] }; throw e; });
+        .catch(function (e) { if (e.status === 404) return null; throw e; });
     }).then(function (d) {
-      data = d && Array.isArray(d.items) ? d : { items: [] };
+      data = norm(d);
       return build(data, headSha);
     }).then(function (p) {
       plan = p;
       return ghApi('GET', '/git/commits/' + headSha);
     }).then(function (commit) {
-      var tree = [{ path: DATA_PATH, mode: '100644', type: 'blob', content: JSON.stringify(data, null, 2) + '\n' }];
-      (plan.files || []).forEach(function (f) { tree.push({ path: f.path, mode: '100644', type: 'blob', content: f.content }); });
+      var tree = [{ path: path, mode: '100644', type: 'blob', content: JSON.stringify(data, null, 2) + '\n' }];
+      (plan.files || []).forEach(function (f) {
+        tree.push(f.sha ? { path: f.path, mode: '100644', type: 'blob', sha: f.sha } : { path: f.path, mode: '100644', type: 'blob', content: f.content });
+      });
       return ghApi('POST', '/git/trees', { base_tree: commit.tree.sha, tree: tree });
     }).then(function (tree) {
       return ghApi('POST', '/git/commits', { message: plan.message, tree: tree.sha, parents: [headSha] });
@@ -636,7 +661,7 @@
       return ghApi('PATCH', '/git/refs/heads/' + encodeURIComponent(branch), { sha: c.sha, force: false });
     }).then(function () { return plan.result; }).catch(function (e) {
       // 提交期间分支被别人更新：重新读取后再试一次
-      if (e.status === 422 && !retried) return ghCommit(build, true);
+      if (e.status === 422 && !opt.retried) return ghCommit(build, { path: opt.path, normalize: opt.normalize, retried: true });
       throw e;
     });
   }
@@ -891,7 +916,7 @@
       renderMode();
       closeMask('ghMask');
       toast('已连接 GitHub 仓库 ' + g.owner + '/' + g.repo);
-      refresh();
+      refreshAll();
     }).catch(function (err) {
       state.gh = prev;
       $('ghOk').disabled = false; $('ghOk').textContent = '测试并保存';
@@ -906,7 +931,7 @@
     renderMode();
     closeMask('ghMask');
     toast('已断开 GitHub 连接，令牌已从本浏览器删除');
-    refresh();
+    refreshAll();
   }
 
   /* ---------- 启动 ---------- */
@@ -914,21 +939,32 @@
   var homeReady = false;
   function enterHome() {
     $('login').hidden = true; $('home').hidden = false;
-    if (homeReady) { refresh(); return; }
+    if (homeReady) { refreshAll(); return; }
     homeReady = true;
+    showTab(location.hash === '#docs' ? 'docs' : 'req');
     detectLocal().then(function (isLocal) {
       var saved = lGet(K_GH);
       if (isLocal) state.mode = 'local';
       else if (saved && saved.token) { state.mode = 'github'; state.gh = saved; }
       renderMode();
-      refresh();
+      refreshAll();
     });
   }
+
+  // 给方案文档模块（docs.js）用的公共方法
+  window.PRDHUB = {
+    state: state, $: $, esc: esc, fmt: fmt, pad: pad, toast: toast, lGet: lGet, lSet: lSet,
+    ghApi: ghApi, ghCommit: ghCommit, ghErrText: ghErrText, b64ToUtf8: b64ToUtf8,
+    openMask: openMask, closeMask: closeMask, fieldErr: fieldErr, btnBusy: btnBusy, postJson: postJson,
+    siteBase: siteBase, openGh: openGh, repoInfo: repoInfo, localDay: function (iso) { return localDay(iso); }
+  };
 
   function bind() {
     $('loginForm').addEventListener('submit', onLogin);
     $('logoutBtn').addEventListener('click', logout);
     $('refreshBtn').addEventListener('click', function () { clearRtCache(); refresh(); });
+    $('tabReq').addEventListener('click', function () { showTab('req'); });
+    $('tabDocs').addEventListener('click', function () { showTab('docs'); });
     $('addBtn').addEventListener('click', openAdd);
     $('addCancel').addEventListener('click', cancelAdd);
     $('addForm').addEventListener('submit', onAddSubmit);

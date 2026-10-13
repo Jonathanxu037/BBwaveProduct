@@ -35,9 +35,15 @@
   </header>
 
   <main class="wrap">
+    <nav class="tabs" role="tablist" aria-label="管理模块">
+      <button class="tab on" id="tabReq" type="button" role="tab" aria-selected="true" aria-controls="panelReq">开发需求管理<span class="tab-n" id="tabReqN">（0）</span></button>
+      <button class="tab" id="tabDocs" type="button" role="tab" aria-selected="false" aria-controls="panelDocs">方案文档管理<span class="tab-n" id="tabDocsN">（0）</span></button>
+    </nav>
+
+    <div id="panelReq" role="tabpanel" aria-labelledby="tabReq">
     <div class="page-head">
       <div>
-        <h2>需求列表</h2>
+        <h2>开发需求列表</h2>
         <p class="muted" id="listMeta">加载中…</p>
       </div>
       <button class="btn btn-line btn-sm" id="refreshBtn" type="button">刷新</button>
@@ -106,6 +112,73 @@
     <div class="actions">
       <button class="btn btn-gold" id="addBtn" type="button">＋ 新增需求</button>
     </div>
+    </div><!-- /panelReq -->
+
+    <!-- 方案文档管理 -->
+    <div id="panelDocs" role="tabpanel" aria-labelledby="tabDocs" hidden>
+      <div class="page-head">
+        <div>
+          <h2>方案文档列表</h2>
+          <p class="muted" id="docMeta">加载中…</p>
+        </div>
+        <button class="btn btn-line btn-sm" id="docRefresh" type="button">刷新</button>
+      </div>
+
+      <form class="filters filters-docs" id="docFilter" autocomplete="off" novalidate>
+        <label class="flt">
+          <span>文档名称</span>
+          <input id="dqName" type="search" maxlength="100" placeholder="输入关键字，模糊匹配">
+        </label>
+        <div class="flt flt-range">
+          <span>上传时间</span>
+          <div class="range">
+            <input id="dqFrom" type="date" aria-label="上传时间开始日期">
+            <i>至</i>
+            <input id="dqTo" type="date" aria-label="上传时间结束日期">
+          </div>
+        </div>
+        <div class="flt-btns">
+          <button class="btn btn-gold btn-sm" type="submit">查询</button>
+          <button class="btn btn-line btn-sm" id="dqReset" type="button">重置</button>
+        </div>
+        <div class="err flt-err" id="dqErr" role="alert"></div>
+      </form>
+
+      <div class="doc-bar">
+        <button class="btn btn-line btn-sm" id="docGroupBtn" type="button" disabled>📁 分组</button>
+        <button class="btn btn-line btn-sm" id="docUngroupBtn" type="button" disabled>移出分组</button>
+        <span class="doc-sel" id="docSel"></span>
+        <span class="grow"></span>
+        <button class="btn btn-line btn-sm" id="docExpandAll" type="button">全部展开</button>
+        <button class="btn btn-line btn-sm" id="docCollapseAll" type="button">全部收起</button>
+      </div>
+
+      <div class="card">
+        <div class="table-scroll" id="docTableWrap">
+          <table class="list docs">
+            <thead>
+              <tr>
+                <th class="c-chk"><input type="checkbox" id="docChkAll" aria-label="全选当前列表里的文档"></th>
+                <th class="c-no">序号</th>
+                <th>文档名称</th>
+                <th class="c-time">上传日期</th>
+                <th class="c-dops">操作</th>
+              </tr>
+            </thead>
+            <tbody id="docRows"></tbody>
+          </table>
+        </div>
+        <div class="empty" id="docEmpty" hidden>
+          <div class="empty-ico">📄</div>
+          <p>还没有方案文档。把文档放进仓库的 <code>documents</code> 文件夹，用 GitHub Desktop 提交并推送后，这里就会显示。</p>
+        </div>
+        <div class="empty" id="docNoMatch" hidden>
+          <div class="empty-ico">🔍</div>
+          <p>没有符合查询条件的文档。<button class="link-btn" id="dqReset2" type="button">清空条件</button></p>
+        </div>
+        <div class="err pad" id="docLoadErr" role="alert" hidden></div>
+      </div>
+    </div><!-- /panelDocs -->
   </main>
 </section>
 
@@ -216,6 +289,59 @@
   </form>
 </div>
 
+<!-- 文档分组弹窗 -->
+<div class="mask" id="grpMask" hidden>
+  <form class="dialog" id="grpForm" role="dialog" aria-modal="true" aria-labelledby="grpTitle" novalidate>
+    <h3 id="grpTitle">文档分组</h3>
+    <p class="muted small" id="grpIntro"></p>
+    <div class="err" id="grpErr" role="alert"></div>
+    <label class="radio-row"><input type="radio" name="grpMode" value="new" checked> 新建分组</label>
+    <label class="field">
+      <span class="sr">新分组名称</span>
+      <input id="grpName" type="text" maxlength="30" placeholder="输入组名，例如：会员体系方案">
+      <small class="f-err" data-for="grpName"></small>
+    </label>
+    <label class="radio-row"><input type="radio" name="grpMode" value="exist" id="grpModeExist"> 放入已有分组</label>
+    <label class="field">
+      <span class="sr">选择已有分组</span>
+      <select id="grpSelect" class="sel"></select>
+    </label>
+    <div class="dlg-btns">
+      <button class="btn btn-line" id="grpCancel" type="button">取消</button>
+      <button class="btn btn-gold" id="grpOk" type="submit">确定</button>
+    </div>
+  </form>
+</div>
+
+<!-- 分组重命名弹窗 -->
+<div class="mask" id="renMask" hidden>
+  <form class="dialog" id="renForm" role="dialog" aria-modal="true" aria-labelledby="renTitle" novalidate>
+    <h3 id="renTitle">重命名分组</h3>
+    <div class="err" id="renErr" role="alert"></div>
+    <label class="field">
+      <span>组名 <i>*</i></span>
+      <input id="renName" type="text" maxlength="30">
+      <small class="f-err" data-for="renName"></small>
+    </label>
+    <div class="dlg-btns">
+      <button class="btn btn-line" id="renCancel" type="button">取消</button>
+      <button class="btn btn-gold" id="renOk" type="submit">确定</button>
+    </div>
+  </form>
+</div>
+
+<!-- 文本类文档在线浏览 -->
+<div class="mask" id="viewMask" hidden>
+  <div class="dialog dialog-wide" role="dialog" aria-modal="true" aria-labelledby="viewTitle">
+    <h3 id="viewTitle"></h3>
+    <pre class="viewer" id="viewBody"></pre>
+    <div class="dlg-btns">
+      <a class="btn btn-line" id="viewDownload" href="#" download>下载</a>
+      <button class="btn btn-gold" id="viewClose" type="button">关闭</button>
+    </div>
+  </div>
+</div>
+
 <!-- 写入通道设置弹窗 -->
 <div class="mask" id="ghMask" hidden>
   <form class="dialog" id="ghForm" role="dialog" aria-modal="true" aria-labelledby="ghTitle" novalidate>
@@ -240,5 +366,6 @@
 
 <script src="assets/config.js"></script>
 <script src="assets/app.js"></script>
+<script src="assets/docs.js"></script>
 </body>
 </html>

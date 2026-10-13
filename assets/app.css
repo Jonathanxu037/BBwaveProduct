@@ -110,6 +110,57 @@ body {
 .wrap { max-width: 1100px; margin: 0 auto; padding: 28px 20px 48px; }
 .page-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; margin-bottom: 14px; }
 .page-head h2 { margin: 0; font-size: 22px; color: var(--title); }
+/* 页签 */
+.tabs { display: flex; flex-wrap: wrap; gap: 4px; border-bottom: 2px solid var(--line); margin-bottom: 18px; overflow: visible; }
+.tab {
+  font: inherit; font-size: 15px; font-weight: 700; color: var(--sub); background: none; border: 0; cursor: pointer;
+  padding: 10px 16px; margin-bottom: -2px; border-bottom: 3px solid transparent; white-space: nowrap;
+}
+.tab:hover { color: var(--title); }
+.tab.on { color: var(--title); border-bottom-color: var(--gold); }
+.tab-n { font-weight: 400; font-size: 13px; margin-left: 2px; }
+.tab.on .tab-n { color: var(--gold); font-weight: 700; }
+
+/* 方案文档 */
+.filters-docs { grid-template-columns: minmax(200px, 1.4fr) minmax(250px, 1.5fr) auto; }
+.doc-bar { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
+.doc-sel { font-size: 12.5px; color: var(--sub); }
+.c-chk { width: 38px; text-align: center; }
+.c-chk input { width: 15px; height: 15px; cursor: pointer; vertical-align: middle; }
+.c-dops { width: 170px; }
+table.list.docs { min-width: 640px; }
+.list.docs tbody tr { cursor: default; }
+.list.docs tr.doc-row td, .list.docs tr.grp-row td { border-bottom: 1px solid var(--line); padding-bottom: 12px; }
+.list.docs tbody tr:last-child td { border-bottom: 0; }
+.d-name { display: inline-flex; align-items: center; gap: 6px; font-weight: 700; color: var(--title); word-break: break-all; }
+.d-ico, .g-ico { font-size: 15px; flex: none; }
+.d-size { display: block; font-size: 11.5px; color: var(--sub); margin-top: 2px; }
+.doc-row.child td { background: var(--panel-2); }
+.doc-row.child .d-name, .doc-row.child .d-size { padding-left: 22px; }
+.doc-row.child .d-name { padding-left: 0; }
+.tree-line { display: inline-block; width: 16px; height: 1px; border-top: 1px dashed var(--line); margin: 0 2px 0 6px; flex: none; }
+.no-sub { background: var(--panel); color: var(--title); }
+.grp-row td { background: var(--paper); }
+.grp-toggle {
+  font: inherit; display: inline-flex; align-items: center; gap: 6px; background: none; border: 0; cursor: pointer;
+  color: var(--title); padding: 2px 4px; border-radius: 6px; text-align: left;
+}
+.grp-toggle:hover { background: var(--panel-2); }
+.grp-toggle b { font-size: 14px; }
+.caret { font-size: 10px; color: var(--sub); transition: transform .15s; display: inline-block; }
+.grp-row.open .caret { transform: rotate(90deg); }
+.ops .btn-xs + .btn-xs { margin-left: 6px; }
+a.btn { text-decoration: none; display: inline-block; }
+.radio-row { display: flex; align-items: center; gap: 6px; font-size: 13.5px; font-weight: 700; color: var(--title); margin: 4px 0 6px; cursor: pointer; }
+.sel { width: 100%; font: inherit; font-size: 14px; padding: 8px 10px; border-radius: 7px; border: 1px solid var(--line); background: var(--paper); color: var(--text); }
+.dialog-wide { max-width: 860px; }
+.viewer {
+  max-height: 60vh; overflow: auto; background: var(--panel-2); border: 1px solid var(--line); border-radius: 8px; padding: 12px 14px;
+  font-family: Consolas, "Microsoft YaHei", monospace; font-size: 12.5px; line-height: 1.6; white-space: pre-wrap; word-break: break-word; margin: 0 0 14px;
+}
+@media (max-width: 1040px) { .filters-docs { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 560px) { .filters-docs { grid-template-columns: 1fr; } }
+
 /* 查询条件 */
 .filters {
   display: grid; grid-template-columns: minmax(160px, 1.2fr) minmax(130px, .9fr) minmax(250px, 1.5fr) minmax(250px, 1.5fr) auto;
