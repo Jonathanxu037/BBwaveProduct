@@ -26,6 +26,15 @@
       "version": "v1.0",
       "createdAt": "2026-10-14T06:22:42.326Z",
       "lastUploadAt": null
+    },
+    {
+      "id": 4,
+      "name": "实体商品进销存功能",
+      "owner": "Joshua",
+      "folder": "InveManagePhysicalPrizes",
+      "version": "v1.0",
+      "createdAt": "2026-10-14T06:24:18.397Z",
+      "lastUploadAt": null
     }
   ]
 }
