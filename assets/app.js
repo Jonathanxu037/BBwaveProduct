@@ -301,13 +301,17 @@
     } catch (e) {}
   }
 
-  // 需求的最后上传时间 = 已上传的各角色站点里最晚的更新时间；还拿不到时沿用需求列表里记录的时间
+  // 需求的最后上传时间 = 已上传的各角色站点里最晚的更新时间；还拿不到时沿用需求列表里记录的时间。
+  // 手动修改过（lastUploadSetAt 有值）时以手动设置的时间为准，直到之后又有角色站点更新（更新时间晚于修改操作的时间）。
   function lastUp(it) {
     var best = null;
     ROLES.forEach(function (r) {
       var t = getRoleTime(it.folder, r.code);
       if (t && avail[it.folder + '/' + r.code] !== false && (!best || Date.parse(t) > Date.parse(best))) best = t;
     });
+    if (it.lastUploadSetAt) {
+      return best && Date.parse(best) > Date.parse(it.lastUploadSetAt) ? best : (it.lastUploadAt || null);
+    }
     return best || it.lastUploadAt || null;
   }
 
@@ -484,8 +488,10 @@
         '<td><span class="own">' + esc(it.owner) +
           '<button class="edit-ico" type="button" data-op="owner" title="修改需求方" aria-label="修改需求方">✎</button></span></td>' +
         '<td><span class="ver">' + esc(it.version || INIT_VER) + '</span></td>' +
-        '<td>' + esc(fmt(it.createdAt)) + '</td>' +
-        '<td>' + up + '</td>' + ops + '</tr>' +
+        '<td><span class="own">' + esc(fmt(it.createdAt)) +
+          '<button class="edit-ico" type="button" data-op="times" title="修改创建时间和最后上传时间" aria-label="修改创建时间">✎</button></span></td>' +
+        '<td><span class="own">' + up +
+          '<button class="edit-ico" type="button" data-op="times" title="修改创建时间和最后上传时间" aria-label="修改最后上传时间">✎</button></span></td>' + ops + '</tr>' +
         '<tr class="links-row' + (it.folder === flashFolder ? ' flash' : '') + '"><td></td><td colspan="' + (local ? 6 : 5) + '">' + linksHtml(it) + '</td></tr>';
     }).join('');
     // 检查全部需求（不只是当前显示的），这样按最后上传时间查询时，各需求的时间都是完整的
@@ -528,7 +534,7 @@
     if (lastFocus && lastFocus.focus) lastFocus.focus();
   }
   function closeAll() {
-    ['addMask', 'ghMask', 'ownMask', 'upMask', 'verMask', 'grpMask', 'renMask', 'viewMask'].forEach(function (id) { if ($(id)) $(id).hidden = true; });
+    ['addMask', 'ghMask', 'ownMask', 'tmMask', 'upMask', 'verMask', 'grpMask', 'renMask', 'viewMask'].forEach(function (id) { if ($(id)) $(id).hidden = true; });
   }
 
   /* ---------- 页签：开发需求管理 / 方案文档管理 ---------- */
@@ -705,6 +711,84 @@
         if (!r.ok) throw new Error(j.error || ('本地服务返回 ' + r.status));
         return j;
       });
+    });
+  }
+
+  /* ---------- 修改创建时间、最后上传时间（本地管理模式、GitHub 模式都可用） ---------- */
+
+  // ISO 时间 ↔ 日期时间框（本机时区，精确到分钟）
+  function toLocalInput(iso) {
+    var d = new Date(iso);
+    if (!iso || isNaN(d)) return '';
+    return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()) + 'T' + pad(d.getHours()) + ':' + pad(d.getMinutes());
+  }
+  function fromLocalInput(v) {   // 返回带本机时区的 ISO 时间，如 2026-10-20T14:30:00+08:00
+    var d = new Date(v);
+    if (!v || isNaN(d)) return null;
+    var off = -d.getTimezoneOffset(), sign = off >= 0 ? '+' : '-', a = Math.abs(off);
+    return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()) + 'T' + pad(d.getHours()) + ':' + pad(d.getMinutes()) + ':00' +
+      sign + pad(Math.floor(a / 60)) + ':' + pad(a % 60);
+  }
+
+  var timing = null;
+  function openTimes(it) {
+    if (state.mode === 'readonly') {
+      openGh('当前是只读模式，修改时间需要先连接 GitHub 仓库（或在本机用本地管理模式打开）。');
+      return;
+    }
+    timing = it;
+    var lu = lastUp(it);
+    $('tmName').textContent = it.name;
+    $('tmCreated').value = toLocalInput(it.createdAt);
+    $('tmUpload').value = toLocalInput(lu);
+    $('tmUploadNow').textContent = lu ? fmt(lu) + (it.lastUploadSetAt ? '（手动设置）' : '（自动计算）') : '未上传';
+    fieldErr('tmCreated', ''); fieldErr('tmUpload', '');
+    $('tmErr').textContent = '';
+    btnBusy('tmOk', 'tmCancel', false, '确定');
+    openMask('tmMask');
+    setTimeout(function () { $('tmCreated').focus(); }, 0);
+  }
+
+  function onTimesSubmit(e) {
+    e.preventDefault();
+    if ($('tmOk').disabled || !timing) return;
+    var it = timing;
+    var created = fromLocalInput($('tmCreated').value);
+    var upRaw = $('tmUpload').value, upload = upRaw ? fromLocalInput(upRaw) : null;
+    var now = Date.now() + 60000;   // 允许 1 分钟误差
+    var okC = fieldErr('tmCreated', !created ? '请填写创建时间。' : (Date.parse(created) > now ? '创建时间不能晚于现在。' : ''));
+    var okU = fieldErr('tmUpload', upRaw && !upload ? '时间格式不正确。' :
+      (upload && Date.parse(upload) > now ? '最后上传时间不能晚于现在。' :
+      (upload && created && Date.parse(upload) < Date.parse(created) ? '最后上传时间不能早于创建时间。' : '')));
+    if (!okC || !okU) return;
+    // 最后上传时间没动过时只改创建时间，不把自动计算的时间变成手动设置
+    var upChanged = upRaw !== toLocalInput(lastUp(it));
+    if (created === it.createdAt && !upChanged) { $('tmErr').textContent = '时间没有变化，无需修改。'; return; }
+    $('tmErr').textContent = '';
+    btnBusy('tmOk', 'tmCancel', true, '正在保存…');
+    var body = { createdAt: created };
+    if (upChanged) body.lastUploadAt = upload;   // null 表示清空，恢复自动计算
+    var job = state.mode === 'local'
+      ? postJson('api/requirements/' + encodeURIComponent(it.folder) + '/times', body)
+      : ghCommit(function (data) {
+          var hit = data.items.filter(function (x) { return x.folder === it.folder; })[0];
+          if (!hit) throw new Error('仓库里找不到这个需求，可能已被删除，请刷新列表。');
+          hit.createdAt = created;
+          if (upChanged) {
+            if (upload) { hit.lastUploadAt = upload; hit.lastUploadSetAt = new Date().toISOString(); }
+            else { hit.lastUploadAt = null; delete hit.lastUploadSetAt; }
+          }
+          return { message: '修改需求时间：' + it.name, files: [], result: hit };
+        });
+    job.then(function () {
+      btnBusy('tmOk', 'tmCancel', false, '确定');
+      closeMask('tmMask');
+      toast('已修改「' + it.name + '」的时间' + (upChanged && !upload ? '，最后上传时间恢复自动计算' : ''));
+      timing = null;
+      return refresh(it.folder);
+    }).catch(function (err) {
+      btnBusy('tmOk', 'tmCancel', false, '确定');
+      $('tmErr').textContent = state.mode === 'github' && err.status ? ghErrText(err) : ('修改失败：' + err.message);
     });
   }
 
@@ -994,6 +1078,7 @@
       if (kind === 'owner') openOwner(it);
       else if (kind === 'upload') openUpload(it);
       else if (kind === 'version') openVersion(it);
+      else if (kind === 'times') openTimes(it);
     });
     $('rows').addEventListener('keydown', function (e) {
       if (e.key !== 'Enter' && e.key !== ' ') return;
@@ -1005,6 +1090,11 @@
     $('qReset').addEventListener('click', resetFilter);
     $('qReset2').addEventListener('click', resetFilter);
     $('qOwner').addEventListener('change', onQuery);
+    $('tmForm').addEventListener('submit', onTimesSubmit);
+    $('tmCancel').addEventListener('click', function () { if (!$('tmCancel').disabled) { timing = null; closeMask('tmMask'); } });
+    $('tmClear').addEventListener('click', function () { $('tmUpload').value = ''; fieldErr('tmUpload', ''); });
+    $('tmCreated').addEventListener('input', function () { fieldErr('tmCreated', ''); });
+    $('tmUpload').addEventListener('input', function () { fieldErr('tmUpload', ''); });
     $('ownForm').addEventListener('submit', onOwnerSubmit);
     $('ownCancel').addEventListener('click', function () { cancelMask('ownMask', 'ownCancel'); });
     $('ownVal').addEventListener('input', function () { if (this.value.trim()) fieldErr('ownVal', ''); });
@@ -1019,6 +1109,7 @@
       if (e.key !== 'Escape') return;
       if (!$('addMask').hidden) cancelAdd();
       else if (!$('ownMask').hidden) cancelMask('ownMask', 'ownCancel');
+      else if (!$('tmMask').hidden && !$('tmCancel').disabled) { timing = null; closeMask('tmMask'); }
       else if (!$('upMask').hidden) cancelMask('upMask', 'upCancel');
       else if (!$('verMask').hidden) cancelMask('verMask', 'verCancel');
       else if (!$('ghMask').hidden) closeMask('ghMask');

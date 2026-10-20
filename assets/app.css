@@ -234,6 +234,8 @@ table.list { width: 100%; border-collapse: collapse; font-size: 13.5px; min-widt
 .ops .btn + .btn { margin-left: 6px; }
 .mono { font-family: Consolas, monospace; }
 .own { display: inline-flex; align-items: center; gap: 6px; }
+.inline-row { display: flex; gap: 8px; align-items: center; }
+.inline-row input { flex: 1; min-width: 0; }
 .edit-ico {
   font: inherit; font-size: 12px; line-height: 1; cursor: pointer; border: 1px solid transparent; border-radius: 5px;
   background: transparent; color: var(--sub); padding: 3px 5px;

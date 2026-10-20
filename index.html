@@ -268,6 +268,37 @@
   </form>
 </div>
 
+<!-- 修改时间弹窗 -->
+<div class="mask" id="tmMask" hidden>
+  <form class="dialog" id="tmForm" role="dialog" aria-modal="true" aria-labelledby="tmTitle" novalidate>
+    <h3 id="tmTitle">修改时间</h3>
+    <dl class="auto">
+      <div><dt>需求名称</dt><dd id="tmName"></dd></div>
+      <div><dt>当前上传时间</dt><dd id="tmUploadNow"></dd></div>
+    </dl>
+    <div class="err" id="tmErr" role="alert"></div>
+    <label class="field">
+      <span>创建时间 <i>*</i></span>
+      <input id="tmCreated" type="datetime-local">
+      <small class="f-tip">列表按创建时间倒序排列，修改后位置会跟着变。</small>
+      <small class="f-err" data-for="tmCreated"></small>
+    </label>
+    <label class="field">
+      <span>最后上传时间</span>
+      <span class="inline-row">
+        <input id="tmUpload" type="datetime-local">
+        <button class="btn btn-line btn-sm" id="tmClear" type="button">清空</button>
+      </span>
+      <small class="f-tip">修改后以这个时间为准；之后再有角色站点更新时，自动换成最新的更新时间。清空表示恢复自动计算（按各角色站点最后一次更新的时间）。</small>
+      <small class="f-err" data-for="tmUpload"></small>
+    </label>
+    <div class="dlg-btns">
+      <button class="btn btn-line" id="tmCancel" type="button">取消</button>
+      <button class="btn btn-gold" id="tmOk" type="submit">确定</button>
+    </div>
+  </form>
+</div>
+
 <!-- 修改需求方弹窗 -->
 <div class="mask" id="ownMask" hidden>
   <form class="dialog" id="ownForm" role="dialog" aria-modal="true" aria-labelledby="ownTitle" novalidate>
