@@ -38,6 +38,7 @@
     if (isNaN(d)) return '';
     return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()) + ' ' + pad(d.getHours()) + ':' + pad(d.getMinutes());
   }
+  function fmtDate(iso) { return fmt(iso).slice(0, 10); }   // 只显示日期 YYYY-MM-DD
 
   var toastTimer;
   function toast(msg) {
@@ -478,7 +479,8 @@
     tb.innerHTML = shown.map(function (row) {
       var it = row.it, i = row.no - 1;
       var lu = lastUp(it);
-      var up = lu ? esc(fmt(lu)) : '<span class="none">未上传</span>';
+      // 列表里的创建时间、最后上传时间只显示日期；完整时间放在鼠标悬停提示里
+      var up = lu ? '<span title="' + esc(fmt(lu)) + '">' + esc(fmtDate(lu)) + '</span>' : '<span class="none">未上传</span>';
       var ops = local ? '<td class="ops">' +
         '<button class="btn btn-line btn-sm" type="button" data-op="upload">上传需求包</button>' +
         '<button class="btn btn-line btn-sm" type="button" data-op="version">改版本号</button></td>' : '';
@@ -488,7 +490,7 @@
         '<td><span class="own">' + esc(it.owner) +
           '<button class="edit-ico" type="button" data-op="owner" title="修改需求方" aria-label="修改需求方">✎</button></span></td>' +
         '<td><span class="ver">' + esc(it.version || INIT_VER) + '</span></td>' +
-        '<td><span class="own">' + esc(fmt(it.createdAt)) +
+        '<td><span class="own"><span title="' + esc(fmt(it.createdAt)) + '">' + esc(fmtDate(it.createdAt)) + '</span>' +
           '<button class="edit-ico" type="button" data-op="times" title="修改创建时间和最后上传时间" aria-label="修改创建时间">✎</button></span></td>' +
         '<td><span class="own">' + up +
           '<button class="edit-ico" type="button" data-op="times" title="修改创建时间和最后上传时间" aria-label="修改最后上传时间">✎</button></span></td>' + ops + '</tr>' +

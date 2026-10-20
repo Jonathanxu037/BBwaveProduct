@@ -229,6 +229,8 @@ table.list { width: 100%; border-collapse: collapse; font-size: 13.5px; min-widt
 .c-no { width: 64px; }
 .c-ver { width: 86px; }
 .c-time { width: 156px; white-space: nowrap; }
+.list:not(.docs) .c-time { width: 128px; }
+.list:not(.docs) td .own { white-space: nowrap; }   /* 日期和 ✎ 保持在一行 */
 .c-ops { width: 190px; }
 .ops { white-space: nowrap; }
 .ops .btn + .btn { margin-left: 6px; }
