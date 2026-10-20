@@ -1,0 +1,424 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>游戏快捷侧边栏-游戏页快捷侧边栏</title>
+<link rel="stylesheet" href="../../assets/style.css">
+<style>
+[hidden]{display:none!important}
+:root{--g-purple:#7b3fe4;--g-green:#00d9a0;--g-ink:#14092e}
+.app{background:#000;color:#fff}
+#game{position:absolute;inset:30px 0 0;overflow:hidden;background:#05070d;touch-action:none}
+#gbg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+#gph{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;font-weight:800}
+#gph b{font-size:28px;text-shadow:0 2px 12px rgba(0,0,0,.5)}#gph small{font-size:13px;opacity:.8;font-weight:400}
+#gbal{position:absolute;left:8px;bottom:118px;padding:4px 8px;border-radius:6px;background:rgba(0,0,0,.55);font-weight:800;font-size:20px;transition:color .3s}
+#gbal.flash{color:#5ee8a8}
+#gmenu{all:unset;position:absolute;left:8px;bottom:70px;width:40px;height:40px;border-radius:50%;background:rgba(0,0,0,.55);display:grid;place-items:center;cursor:pointer;font-size:20px}
+#gbar{position:absolute;left:0;right:0;bottom:118px;height:58px;background:rgba(20,16,12,.94);display:flex;justify-content:space-around;align-items:center}
+#gbar button{all:unset;width:42px;height:42px;border-radius:50%;background:radial-gradient(circle at 50% 28%,#fff,#e9dfd2 60%,#cdbba4);color:#3b2f25;display:grid;place-items:center;cursor:pointer;font-size:18px}
+#float{all:unset;position:absolute;z-index:6;width:46px;height:46px;border-radius:50%;cursor:pointer;touch-action:none;user-select:none;border:3px solid transparent;background:linear-gradient(#fff,#fff) padding-box,linear-gradient(135deg,var(--g-purple),var(--g-green)) border-box;box-shadow:0 4px 16px rgba(123,63,228,.55);display:grid;place-items:center;box-sizing:border-box;transition:left .35s cubic-bezier(.34,1.4,.64,1),top .35s,transform .3s,opacity .2s}
+#float.drag{transition:none}#float img{width:34px;pointer-events:none}
+#float.hide{opacity:0;transform:scale(.4) rotate(-90deg);pointer-events:none}
+#outside{position:absolute;inset:0;z-index:7}
+#sb{position:absolute;z-index:8;width:150px;padding:10px;display:flex;flex-direction:column;gap:10px;background:linear-gradient(180deg,rgba(92,42,210,.97),rgba(40,20,110,.97) 38%,rgba(10,52,62,.97)) padding-box,linear-gradient(180deg,#a47bff,var(--g-green)) border-box;border:2px solid transparent;box-sizing:border-box;transition:clip-path .45s cubic-bezier(.65,0,.35,1)}
+#sb.L{left:0;border-left:none;border-radius:0 18px 18px 0;box-shadow:10px 10px 30px rgba(0,0,0,.5)}
+#sb.R{right:0;border-right:none;border-radius:18px 0 0 18px;box-shadow:-10px 10px 30px rgba(0,0,0,.5)}
+#sbHead{height:62px;margin:-10px -10px -24px;display:flex;justify-content:center;background:linear-gradient(180deg,rgba(92,42,210,0),rgba(92,42,210,.35) 35%,rgba(92,42,210,.8) 65%,rgba(92,42,210,.97)),linear-gradient(90deg,var(--g-purple),var(--g-green))}
+#sb.R #sbHead{border-radius:16px 0 0 0}#sb.L #sbHead{border-radius:0 16px 0 0}
+.gs-logo{position:relative;display:flex;align-items:baseline;font-style:italic;font-weight:800;padding-top:12px;font-family:Arial,sans-serif}
+.gs-logo .n{font-size:26px;letter-spacing:-.04em;padding:0 4px 0 2px;margin-right:-3px;background:linear-gradient(180deg,#fff6c8,#ffd54a 45%,#f29a1a 55%,#ffcf4a);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-stroke:.6px #7a3a00;filter:drop-shadow(0 2px 0 #3d1580)}
+.gs-logo .b{font-size:15px;font-weight:900;letter-spacing:.05em;color:#fff;text-shadow:0 1.5px 0 #3d1580,0 0 8px rgba(0,217,160,.9)}
+.gs-logo svg{position:absolute;left:31px;top:2px}
+#sbClose{all:unset;position:absolute;top:28px;z-index:2;width:30px;height:30px;border-radius:50%;background:radial-gradient(120% 90% at 30% 15%,rgba(255,255,255,.55),rgba(255,255,255,0) 45%),linear-gradient(160deg,#8a4dff,#5a24c8 50%,#0fae8a);box-shadow:0 0 0 3px #e9dcff,0 4px 10px rgba(20,8,60,.6);display:grid;place-items:center;cursor:pointer;color:#fff;font-weight:900;font-size:16px}
+#sb.R #sbClose{left:-16px}#sb.L #sbClose{right:-16px}
+.qa3{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;position:relative}
+.qa3 button{all:unset;box-sizing:border-box;aspect-ratio:1/1;border-radius:12px;display:grid;place-items:center;cursor:pointer;border:2px solid rgba(255,255,255,.9);box-shadow:inset 0 2px 0 rgba(255,255,255,.55),inset 0 -3px 4px rgba(0,0,0,.25),0 4px 10px rgba(0,0,0,.45);transition:transform .12s}
+.qa3 button:active{transform:scale(.92)}
+.qa3 svg{width:26px;height:26px;filter:drop-shadow(0 1.5px 1px rgba(0,0,0,.35))}
+#qHome{background:radial-gradient(120% 80% at 30% 0%,rgba(255,255,255,.5),rgba(255,255,255,0) 50%),linear-gradient(160deg,#5cc8ff,#1f6fe8)}
+#qDep{background:radial-gradient(120% 80% at 30% 0%,rgba(255,255,255,.5),rgba(255,255,255,0) 50%),linear-gradient(160deg,#ffcf4a,#f0780f)}
+#qRel{background:radial-gradient(120% 80% at 30% 0%,rgba(255,255,255,.5),rgba(255,255,255,0) 50%),linear-gradient(160deg,#2ef0b8,#079474)}
+#ban{all:unset;position:relative;aspect-ratio:5/2;border-radius:10px;overflow:hidden;cursor:pointer;background:#222 center/cover no-repeat;box-shadow:0 0 0 1px rgba(255,255,255,.3)}
+#ban i{position:absolute;right:3px;bottom:3px;width:14px;height:14px;border-radius:50%;background:rgba(20,10,50,.5);font-size:9px;font-style:normal;display:grid;place-items:center}
+#rec{height:211px;overflow-y:auto;scrollbar-width:none;-webkit-mask-image:linear-gradient(#000 85%,transparent)}
+#rec::-webkit-scrollbar{display:none}
+#recGrid{display:grid;grid-template-columns:repeat(2,54px);gap:8px;justify-content:center}
+#recGrid button{all:unset;width:54px;height:54px;border-radius:12px;border:2px solid rgba(164,123,255,.55);box-sizing:border-box;background:#333 center/cover;cursor:pointer;font-weight:800;font-size:13px;display:grid;place-items:center}
+#recGrid.lock button{opacity:.55}
+.gs-more{margin:8px 0 2px;color:#c3cbe4;font-size:11px}
+.recmsg{font-size:11px;color:#c3cbe4;text-align:center;padding:14px 0;display:grid;gap:8px;justify-items:center}
+.recmsg button{all:unset;padding:4px 12px;border-radius:12px;background:linear-gradient(90deg,var(--g-purple),var(--g-green));cursor:pointer;font-weight:700}
+#cfm{position:absolute;inset:0;z-index:5;background:rgba(4,2,14,.62)}
+#cfm .box{position:absolute;left:28px;right:28px;top:42%;border-radius:18px;padding:20px;background:linear-gradient(180deg,#2a1670,#150d3a);border:2px solid #a47bff;text-align:center;display:grid;gap:6px}
+#cfm h4{margin:0;font-size:18px}#cfm p{margin:0;font-size:13px;color:#c9c3e6}
+#cfm .gs-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+#cfm .gs-row button{all:unset;height:42px;border-radius:21px;cursor:pointer;font-weight:800;text-align:center;line-height:42px}
+#cfmKeep{background:linear-gradient(90deg,var(--g-purple),var(--g-green))}#cfmExit{border:1px solid rgba(255,255,255,.4);line-height:40px!important}
+#settle{position:absolute;inset:0;z-index:20;background:rgba(6,4,20,.5);display:grid;place-items:center}
+#settle div{padding:14px 18px;border-radius:14px;background:rgba(20,14,48,.95);border:1px solid rgba(164,123,255,.45);font-size:13px;font-weight:700}
+.scr{position:absolute;inset:30px 0 0;z-index:25;background:#0d1426;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:30px;text-align:center}
+.scr h4{margin:0;font-size:20px}.scr p{margin:0;font-size:13px;color:#9aa6c8;word-break:break-all}
+.scr button{all:unset;padding:11px 20px;border-radius:22px;background:linear-gradient(90deg,var(--g-purple),var(--g-green));cursor:pointer;font-weight:700}
+.scr .gi{width:72px;height:72px;border-radius:16px;background:#333 center/cover}
+#gate{position:absolute;inset:30px 0 0;z-index:22;background:rgba(0,0,0,.55);display:grid;place-items:center;padding:24px}
+#gate .dlg{background:#1c1440;border-color:#a47bff;color:#fff}#gate p{margin:0;font-size:13px;color:#d6d0f0}
+#gate .gs-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}#gate .gs-row button{all:unset;text-align:center;height:38px;line-height:38px;border-radius:19px;cursor:pointer;font-weight:700;border:1px solid rgba(255,255,255,.4)}#gate #gateGo{background:linear-gradient(90deg,var(--g-purple),var(--g-green));border:0}
+#toast{top:45%;bottom:auto;background:rgba(20,20,24,.95);color:#fff;border:1px solid rgba(255,255,255,.15)}
+.st-box{font-size:12.5px;display:grid;gap:4px;background:#F7F8FA;border:1px solid #E4E7ED;border-radius:6px;padding:8px 10px}
+.st-box div{display:flex;justify-content:space-between;gap:8px}
+#evlog{font:11.5px/1.5 Consolas,monospace;background:#F7F8FA;border:1px solid #E4E7ED;border-radius:6px;padding:6px 8px;max-height:150px;overflow:auto}
+</style>
+</head>
+<body>
+<!-- 前台原型：游戏页快捷侧边栏。手机画面中文，打包时按 assets/proto-en.js 显示英文。本需求新增的控件加 glow。 -->
+<div class="with-nav">
+<div class="stage">
+  <div class="app" role="region" aria-label="手机画面">
+    <div class="sb"><span>9:41</span><span>●●● 5G</span></div>
+    <div id="game">
+      <img id="gbg" src="../../assets/img/game-wukong.png" alt="">
+      <div id="gph" hidden><b id="gphName"></b><small>游戏画面（示意）</small></div>
+      <div id="gbal">₱500.00</div>
+      <div id="gbar" hidden>
+        <button type="button" aria-label="说明">ⓘ</button><button type="button" aria-label="声音">♪</button><button type="button" aria-label="投注记录">☰</button><button type="button" id="gExit" aria-label="退出游戏">⌂</button>
+      </div>
+      <button type="button" id="gmenu" aria-label="菜单">≡</button>
+      <div id="cfm" hidden><div class="box" role="dialog" aria-modal="true"><h4 id="cfmT"></h4><p>将返回大厅。</p><div class="gs-row"><button type="button" id="cfmKeep">继续游戏</button><button type="button" id="cfmExit">退出</button></div></div></div>
+      <div id="outside" hidden></div>
+      <button type="button" id="float" class="glow" aria-label="打开快捷侧边栏"><img src="../../assets/img/789bingo-logo.png" alt="789bingo" draggable="false"></button>
+      <div id="sb" class="R glow" hidden>
+        <button type="button" id="sbClose" aria-label="收起侧边栏">»</button>
+        <div id="sbHead"><div class="gs-logo"><span class="n">789</span><span class="b">BINGO</span><svg width="22" height="17" viewBox="0 0 22 17" aria-hidden="true"><defs><linearGradient id="cg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff3b0"/><stop offset=".45" stop-color="#ffc83a"/><stop offset="1" stop-color="#d97a0a"/></linearGradient></defs><path d="M2.5 13 1.6 4.8l5 3.9L11 1.8l4.4 6.9 5-3.9-.9 8.2z" fill="url(#cg)" stroke="#8a4500" stroke-width=".7" stroke-linejoin="round"/><rect x="2.3" y="12.6" width="17.4" height="3" rx="1" fill="#d98a10" stroke="#8a4500" stroke-width=".6"/><circle cx="11" cy="1.8" r="1.4" fill="#fff" stroke="#8a4500" stroke-width=".5"/><circle cx="11" cy="10.2" r="1.5" fill="#00d9a0" stroke="#fff" stroke-width=".5"/></svg></div></div>
+        <div class="qa3"><button type="button" id="qHome" aria-label="首页"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.2 10.6 12 3.5l8.8 7.1" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M5.5 10v9.2c0 .7.5 1.2 1.2 1.2h3.6v-5.2a1.7 1.7 0 0 1 3.4 0v5.2h3.6c.7 0 1.2-.5 1.2-1.2V10L12 5z" fill="#fff"/></svg></button><button type="button" id="qDep" aria-label="充值"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="6" width="19" height="14" rx="3" fill="#fff"/><path d="M5 6l10.5-3.2c1-.3 1.9.3 2.1 1.2L18 6" fill="none" stroke="#fff" stroke-width="1.8" stroke-linejoin="round"/><rect x="14.5" y="10.5" width="7" height="5" rx="2.5" fill="#e2700c"/><circle cx="17.2" cy="13" r="1.2" fill="#fff"/></svg></button><button type="button" id="qRel" aria-label="刷新余额"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19.5 12a7.5 7.5 0 1 1-2.2-5.3" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round"/><path d="M20.6 3.6v5.3h-5.3z" fill="#fff" stroke="#fff" stroke-width="1.2" stroke-linejoin="round"/><circle cx="12" cy="12" r="2.4" fill="#fff"/></svg></button></div>
+        <button type="button" id="ban" aria-label="查看活动"><i>›</i></button>
+        <div id="recWrap"></div>
+      </div>
+      <div id="settle" hidden><div id="settleT">正在结算游戏余额…</div></div>
+    </div>
+    <div class="scr" id="sLoad" hidden><div class="gi" id="sLoadI"></div><h4 id="sLoadT"></h4></div>
+    <div class="scr" id="sLobby" hidden><h4 id="sLobbyT">已退出到大厅</h4><p id="sLobbyP"></p><button type="button" id="reenter"></button></div>
+    <div id="gate" hidden><div class="dlg" role="dialog" aria-modal="true"><h3>提醒</h3><p>根据 PAGCOR 规定，请先完成身份认证后再进入该游戏。</p><div class="gs-row"><button type="button" id="gateNo" data-cancel>取消</button><button type="button" id="gateGo">立即认证</button></div></div></div>
+    <div class="toast" id="toast" role="status" hidden></div>
+  </div>
+
+  <aside class="notes">
+    <h2>游戏页快捷侧边栏</h2>
+    <p class="sub">入口：H5、iOS、Flutter 三端进入任意游戏后的游戏页。本需求是对现有 G 图标悬浮快捷按钮的优化升级，三端同期上线；Home 跳转平台首页；游戏菜单和退出入口由第三方游戏厂商提供，退出确认沿用线上（原型仅示意）。带淡色光晕的是本需求新增的控件。</p>
+    <h3>会话状态</h3>
+    <div class="st-box" id="stBox"></div>
+    <h3>模拟场景</h3>
+    <div class="sim">
+      <button type="button" id="simExit"><span class="simtag">操作</span>模拟点游戏菜单里的「退出」</button>
+      <button type="button" id="simClose"><span class="simtag">操作</span>模拟点厂商关闭 / Home 按钮 / 安卓 APP 返回键</button>
+      <button type="button" id="simBack"><span class="simtag">操作</span>模拟点浏览器返回（不触发自动展开）</button>
+      <button type="button" id="simTuck"><span class="simtag">操作</span>让浮标立即进入闲置贴边状态（跳过 15 秒）</button>
+    </div>
+    <h3>模拟操作</h3>
+    <div class="sim" id="simPanel"></div>
+    <h3>埋点事件（演示）</h3>
+    <div id="evlog">—</div>
+    <h3>规则批注</h3>
+    <ol>
+      <li><b>浮标</b>：后台总开关开启时进入游戏显示在屏幕右侧上方（三端一致，与顶部保留安全距离、不贴顶），图案为当前站点的品牌 Logo（原型用 789Bingo）；关闭或配置接口失败时不显示。<span class="ref">PRD 规则 N1 · F01-01 浮标显示与开关</span></li>
+      <li><b>拖动吸边</b>：移动 ≥ 5 像素算拖动，松手吸附到较近一侧，高度不变；记住吸附的一侧和高度，换游戏、刷新后沿用。<span class="ref">PRD 规则 N2 · F01-02 拖动与自动吸边</span></li>
+      <li><b>闲置贴边</b>：15 秒无操作缩进只露 2/3；点击先恢复再展开。<span class="ref">PRD 规则 N3 · F01-03 闲置贴边隐藏</span></li>
+      <li><b>侧边栏</b>：跟随浮标所在一侧展开，拖到左侧时贴左侧展开并适配左侧布局，从上到下为品牌标识、收起按钮、Home / 充值 / 刷新余额、Mini Banner、推荐游戏；点外部区域收起（退出确认显示时除外）。<span class="ref">PRD 规则 N4、N5 · F02-01、F02-02</span></li>
+      <li><b>Home / 刷新余额</b>：先显示「正在结算游戏余额…」；Home 同步完成后跳首页；刷新余额先做准入校验（不通过按现有方式拦截、不结算、留在当前游戏，可在模拟面板勾选「准入校验不通过」演示），通过后结算并重新加载当前游戏，显示最新余额，自动展开机会不重置。新用户转盘奖励的免费次数（Free Spin）使用中时提示「免费次数使用中，用完后再切换」，不离开。<span class="ref">PRD 规则 N6、N13 · F02-03、F06-01</span></li>
+      <li><b>充值</b>：侧边栏收起，打开半屏充值，不做结算（跳到「游戏内半屏充值」原型页演示，原型分两页，实际游戏不刷新）。<span class="ref">PRD 规则 N14 · F07-01 打开与关闭半屏充值</span></li>
+      <li><b>首次退出 / 关闭</b>：第三方游戏厂商提供的退出、关闭或 Home 按钮（原型里的退出按钮只是示意）、安卓 APP 返回键都会触发，浏览器返回不触发；退出确认弹出的同时自动展开；取消退出或点侧边栏收起按钮时，侧边栏和退出确认一起关闭，留在当前游戏；同一游戏再次退出不再展开；刷新页面不重置；平台拦截不到退出按钮的厂商不触发自动展开。<span class="ref">PRD 规则 N7、N8 · F03-01、F03-02</span></li>
+      <li><b>加载更多</b>：推荐区首次显示 10 个，滚动到底自动加载下一批 10 个（也可点「加载更多」），加载中显示「加载中…」，全部加载完显示「没有更多了」，加载失败显示「加载失败，点击重试」；最多到后台展示数量，每次展开侧边栏从第一批重新显示。<span class="ref">PRD 4.1 列表分页 · F04-01</span></li>
+      <li><b>推荐游戏</b>：2 列 × 3.5 个，只显示图标；过滤维护、下架和当前游戏；连点只处理第一次；点击时先校验：维护中提示「该游戏当前维护中」、已下架提示「该游戏暂不可用」，提示后刷新列表清除这些游戏；准入校验不通过（如需 KYC、余额超阈值须在 PWA 投注）按现有弹窗拦截，不结算、不退出当前游戏；启动失败或超时回原游戏并提示「所选游戏暂时不可用，请换一款试试」。<span class="ref">PRD 规则 N9、N10 · F04-01、F04-02</span></li>
+      <li><b>未结算</b>：显示「本局结算中…」半透明蒙层，结算后再离开。<span class="ref">PRD 规则 N11 · F04-03 当前局未结算时切换</span></li>
+      <li><b>Mini Banner</b>：只显示 1 张，不轮播；选择活动：先结算再跳活动详情页；自定义链接：新标签页（APP 为系统浏览器）打开，不离开游戏、不结算。<span class="ref">PRD 规则 N12 · F05-01、F05-02</span></li>
+      <li><b>加载期间</b>：游戏页打开后立即显示浮标，厂商游戏还在加载时也能展开侧边栏。<span class="ref">PRD 规则 N1 · F01-01</span></li>
+      <li><b>按钮配色</b>：按 Claire 设计图，首页蓝、充值橙、刷新绿；视觉以设计稿为准。</li>
+      <li><b>后台联动</b>：在「后台游戏快捷侧边栏管理」原型保存的配置，会直接用在本页（同一浏览器标签页内）。</li>
+    </ol>
+    <h3>评审待确认</h3>
+    <ol>
+      <li><b>三方游戏跳转结算机制</b>：各供应商的结算、未结算判断和失败回滚方式。<span class="ref">PRD 待确认 Q1</span></li>
+      
+      
+    </ol>
+    <div class="pager"><span></span><a href="游戏快捷侧边栏-游戏内半屏充值.html">下一页：游戏内半屏充值 →</a></div>
+  </aside>
+</div>
+</div>
+<script>window.NAV_ROOT = "../../";</script>
+<script src="../../assets/nav-data.js"></script>
+<script src="../../assets/nav.js"></script>
+<script src="../../assets/proto-en.js"></script>
+<script src="../../assets/proto.js"></script>
+<script>
+/* ===== 共享数据（与后台原型、半屏充值原型一致） ===== */
+var IMG = "../../assets/img/";
+var GAMES = {
+  wukong: { n: "Black Wukong", img: "game-wukong.png" }, "dragon-tiger": { n: "D Dragon Tiger" }, "pok-deng": { n: "D Pok Deng" }, "sic-bo": { n: "D Sic Bo" },
+  "crazy-time": { n: "Crazy Time", st: "maintenance" }, "fortune-goddess": { n: "Fortune Goddess" }, "fortune-gems": { n: "Fortune Gems" }, "fortune-bingo": { n: "Fortune Bingo" },
+  "fortune-gems-2": { n: "Fortune Gems 2" }, "super-ace-deluxe": { n: "Super Ace Deluxe" }, "super-ace-joker": { n: "Super Ace Joker" }, "money-coming": { n: "Money Coming", st: "offline" }
+};
+function gImg(id) { var g = GAMES[id]; return g.img ? IMG + g.img : (g.st || id.indexOf("demo-") === 0 ? "" : IMG + "games/" + id + ".png"); }
+var DEF_CFG = { enabled: true, autoExpand: true, showBanner: true, bType: "promo", bPromo: "friday-jackpot-drop", bImg: IMG + "banner-1.png", bLink: "", count: 10,
+  rec: ["dragon-tiger", "pok-deng", "sic-bo", "crazy-time", "money-coming", "fortune-goddess", "fortune-gems", "fortune-bingo", "fortune-gems-2", "super-ace-deluxe", "super-ace-joker"] };
+P.init({ defaults: { recEmpty: false, recMany: false, moreFail: false, cfg1: null, game: "wukong", balance: 500, used: {}, cfgFail: false, listErr: false, unsettled: false, unsynced: false, syncFail: false, nextFail: false } });
+function cfg() { return P.get("cfg1") || DEF_CFG; }
+function setCfg(k, v) { var c = JSON.parse(JSON.stringify(cfg())); c[k] = v; P.set("cfg1", c); }
+
+/* ===== 页面状态 ===== */
+var $ = function (id) { return document.getElementById(id); };
+var S = { shown: 10, open: false, mode: null, fx: 0, fy: 56, tucked: false, lock: false, busy: false, cfm: false, refreshed: false, retryOk: false, closedAfterAuto: false, screen: "game" };
+var FS = 46, M = 10, idleT = null, log = [];
+function W() { return $("game").clientWidth; } function H() { return $("game").clientHeight; }
+function ev(name) { log.unshift(new Date().toTimeString().slice(0, 8) + "  " + name); log = log.slice(0, 10); $("evlog").textContent = log.join("\n"); }
+function enabled() { return !P.get("cfgFail") && cfg().enabled !== false; }
+function autoOn() { return enabled() && cfg().autoExpand !== false; }
+function used() { return !!(P.get("used") || {})[P.get("game")]; }
+function setUsed(v) { var u = JSON.parse(JSON.stringify(P.get("used") || {})); u[P.get("game")] = v; P.set("used", u); }
+function money(v) { return "₱" + Number(v).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
+
+function recList() {
+  var c = cfg(), unsync = P.get("unsynced") && !S.refreshed;
+  if (P.get("recEmpty")) return [];
+  if (P.get("recMany")) { var base = (c.rec || []).filter(function (id) { return GAMES[id] && !GAMES[id].st && id !== P.get("game"); }); for (var i = 1; i <= 30; i++) { var did = "demo-" + i; GAMES[did] = GAMES[did] || { n: "Demo " + i }; base.push(did); } return base.slice(0, 30); }
+  return (c.rec || []).filter(function (id) { var g = GAMES[id]; return g && id !== P.get("game") && (unsync ? true : !g.st); }).slice(0, c.count || 10);
+}
+
+/* ===== 渲染 ===== */
+function render() {
+  var g = GAMES[P.get("game")], img = gImg(P.get("game"));
+  $("gbg").hidden = P.get("game") !== "wukong"; $("gph").hidden = P.get("game") === "wukong";
+  $("gph").style.background = img ? "url('" + img + "') center/cover" : "#333"; $("gphName").textContent = g.n;
+  $("gbal").textContent = money(P.get("balance"));
+  var on = enabled();
+  $("float").hidden = !on || S.screen !== "game";
+  $("float").classList.toggle("hide", S.open);
+  var L = S.fx + FS / 2 < W() / 2;
+  var x = S.tucked && !S.open ? (L ? -FS / 3 : W() - FS * 2 / 3) : S.fx;
+  $("float").style.left = x + "px"; $("float").style.top = S.fy + "px";
+  /* 侧边栏 */
+  var sb = $("sb"); sb.hidden = !on; sb.className = (L ? "L" : "R") + " glow";
+  $("sbClose").textContent = L ? "‹" : "›";
+  var h = sb.offsetHeight || 420, top = Math.max(10, Math.min(H() - h - 10, S.fy - 10));
+  sb.style.top = top + "px";
+  var cx = (L ? S.fx + FS / 2 : S.fx + FS / 2 - (W() - sb.offsetWidth)), cy = S.fy + FS / 2 - top;
+  sb.style.clipPath = "circle(" + (S.open ? 1100 : 0) + "px at " + cx + "px " + cy + "px)";
+  sb.style.pointerEvents = S.open ? "auto" : "none";
+  $("outside").hidden = !S.open;
+  /* Banner */
+  var c = cfg(), showBan = c.showBanner !== false && c.bImg && (c.bType === "link" ? !!c.bLink : !!c.bPromo);
+  $("ban").hidden = !showBan; if (showBan) $("ban").style.backgroundImage = "url('" + c.bImg + "')";
+  /* 推荐 */
+  var wrap = $("recWrap");
+  if (P.get("listErr") && !S.retryOk) wrap.innerHTML = '<div class="recmsg">游戏加载失败<button type="button" id="retry">重试</button></div>';
+  else {
+    var list = recList(), st = $("rec") ? $("rec").scrollTop : 0;
+    if (!list.length) wrap.innerHTML = '<div class="recmsg">暂无可用游戏</div>';
+    else {
+      wrap.innerHTML = '<div id="rec"><div id="recGrid"' + (S.lock ? ' class="lock"' : "") + "></div></div>";
+      list.slice(0, S.shown).forEach(function (id) {
+        var b = document.createElement("button"); b.type = "button"; b.dataset.id = id; b.setAttribute("aria-label", GAMES[id].n);
+        var im = gImg(id); if (im) b.style.backgroundImage = "url('" + im + "')"; else b.textContent = GAMES[id].n.split(" ").map(function (w) { return w[0]; }).join("").slice(0, 2);
+        $("recGrid").appendChild(b);
+      });
+      /* 加载更多（PRD 4.1 列表分页）：每批 10 个，滚动到底自动加载，最多到后台展示数量 */
+      if (list.length > BATCH) {
+        var mb = document.createElement("button"); mb.type = "button"; mb.className = "ui-loadmore gs-more"; mb.id = "more";
+        if (S.shown >= list.length) { mb.textContent = "没有更多了"; mb.disabled = true; }
+        else mb.textContent = S.moreLoading ? "加载中…" : S.moreErr ? "加载失败，点击重试" : "加载更多";
+        $("rec").appendChild(mb);
+      }
+      $("rec").scrollTop = st;
+      $("rec").onscroll = function () { var r = $("rec"); if (r.scrollTop + r.clientHeight >= r.scrollHeight - 4) loadMore(); };
+    }
+  }
+  /* 退出确认 */
+  $("cfm").hidden = !S.cfm; $("cfmT").textContent = "退出 " + g.n + "？";
+  /* 屏幕 */
+  $("sLoad").hidden = S.screen !== "loading"; $("sLobby").hidden = S.screen !== "lobby" && S.screen !== "home" && S.screen !== "promo";
+  /* 会话状态 */
+  $("stBox").innerHTML = "<div><span>当前游戏</span><b>" + g.n + "</b></div>" +
+    "<div><span>退出自动展开机会</span><b>" + (!autoOn() ? "未启用" : used() ? "已使用" : "可用") + "</b></div>" +
+    "<div><span>侧边栏</span><b>" + (S.open ? (S.mode === "auto" ? "已展开（自动）" : "已展开（手动）") : "已收起") + "</b></div>" +
+    "<div><span>浮标</span><b>" + (!on ? "不显示" : S.tucked ? "闲置贴边" : "完整显示") + "</b></div>";
+}
+
+/* ===== 闲置贴边 ===== */
+function armIdle() { clearTimeout(idleT); idleT = setTimeout(function () { if (!S.open && S.screen === "game") { S.tucked = true; ev("float_tuck"); render(); } }, 15000); }
+
+/* ===== 展开 / 收起 ===== */
+var BATCH = 10;
+function loadMore() {
+  var list = recList(); if (S.moreLoading || S.shown >= list.length) return;
+  S.moreLoading = true; S.moreErr = false; render();
+  setTimeout(function () { S.moreLoading = false; if (P.get("moreFail")) { S.moreErr = true; P.set("moreFail", false); } else S.shown = Math.min(list.length, S.shown + BATCH); render(); }, 600);
+}
+function openSb(mode) { S.shown = BATCH; S.moreErr = false; S.open = true; S.mode = mode; S.tucked = false; clearTimeout(idleT); ev("sidebar_open mode=" + mode); if (recList().length) ev("rec_impression ×" + Math.min(7, recList().length)); render(); }
+function closeSb(by) { if (!S.open) return; var auto = S.mode === "auto"; S.open = false; S.mode = null; if (auto) S.closedAfterAuto = true; ev("sidebar_close closeBy=" + by); armIdle(); render(); }
+
+/* ===== 离开当前游戏前结算（N13 / N11） ===== */
+function leave(fn) {
+  if (S.busy) return;
+  if (P.get("freeSpin")) { P.toast("免费次数使用中，用完后再切换"); return; }   /* N13：免费次数使用中不结算、不离开 */
+  S.busy = true;
+  var unsettled = P.get("unsettled");
+  $("settleT").textContent = unsettled ? "本局结算中…" : "正在结算游戏余额…"; $("settle").hidden = false;
+  setTimeout(function () {
+    if (unsettled) $("settleT").textContent = "正在结算游戏余额…";
+    setTimeout(function () {
+      $("settle").hidden = true; S.busy = false;
+      if (P.get("syncFail")) { P.toast("余额同步失败，请稍后重试"); return; }
+      fn();
+    }, 700);
+  }, unsettled ? 1600 : 0);
+}
+
+/* ===== 浮标拖动 ===== */
+(function () {
+  var f = $("float"), sx, sy, ox, oy, moved, wasTucked, down = false;
+  f.addEventListener("pointerdown", function (e) {
+    down = true; clearTimeout(idleT); wasTucked = S.tucked; moved = false;
+    if (S.tucked) { S.tucked = false; render(); }
+    sx = e.clientX; sy = e.clientY; ox = S.fx; oy = S.fy; f.setPointerCapture(e.pointerId);
+  });
+  f.addEventListener("pointermove", function (e) {
+    if (!down) return;
+    var dx = e.clientX - sx, dy = e.clientY - sy;
+    if (!moved && Math.hypot(dx, dy) < 5) return;
+    moved = true; f.classList.add("drag");
+    S.fx = Math.max(0, Math.min(W() - FS, ox + dx)); S.fy = Math.max(0, Math.min(H() - FS, oy + dy)); render();
+  });
+  f.addEventListener("pointerup", function () {
+    if (!down) return; down = false; f.classList.remove("drag");
+    if (moved) {
+      var L = S.fx + FS / 2 < W() / 2; S.fx = L ? M : W() - FS - M; S.fy = Math.max(44, Math.min(H() - FS - 90, S.fy));   /* N1、N2：不贴顶，避开状态栏和刘海 */
+      P.set("floatPos", { L: L, fy: S.fy });   /* N2：记住吸附的一侧和高度 */
+      ev("float_drag side=" + (L ? "left" : "right")); armIdle(); render(); return;
+    }
+    if (wasTucked) setTimeout(function () { openSb("manual"); }, 380); else openSb("manual");
+  });
+})();
+
+/* ===== 退出 ===== */
+function exitTap() {
+  $("gbar").hidden = true;
+  if (S.screen !== "game") return;
+  var first = autoOn() && !used();
+  ev("exit_tap isFirst=" + first);
+  S.cfm = true;
+  if (first) { setUsed(true); if (!S.open) openSb("auto"); else { S.mode = "auto"; render(); } return; }
+  render();
+}
+$("gmenu").onclick = function () { $("gbar").hidden = !$("gbar").hidden; };
+$("gExit").onclick = exitTap;
+$("simExit").onclick = function () { P.note("已模拟：点退出", this); exitTap(); };
+$("simClose").onclick = function () { P.note("已模拟：厂商关闭 / Home 按钮或安卓 APP 返回键", this); exitTap(); };
+$("simBack").onclick = function () { P.note("浏览器返回无法拦截，按浏览器行为离开页面，不自动展开（原型不实际离开）", this); };
+$("simTuck").onclick = function () { if (S.open) { P.note("侧边栏展开期间不贴边", this); return; } S.tucked = true; ev("float_tuck"); render(); P.note("浮标已贴边，只露出 2/3", this); };
+$("cfmKeep").onclick = function () { S.cfm = false; ev("exit_cancel"); if (S.open && S.mode === "auto") closeSb("exit_cancel"); else render(); };
+$("cfmExit").onclick = function () {
+  leave(function () { S.cfm = false; S.open = false; S.mode = null; S.screen = "lobby"; ev("exit_confirm"); showScr("已退出到大厅", ""); });
+};
+$("outside").onclick = function () { if (S.cfm) return; closeSb("outside"); };
+$("sbClose").onclick = function () { if (S.cfm && S.mode === "auto") { S.cfm = false; ev("exit_cancel"); } closeSb("button"); };
+
+/* ===== 快捷功能 ===== */
+$("qHome").onclick = function () { ev("quick_action_click action=home"); leave(function () { S.open = false; S.screen = "home"; showScr("平台首页", ""); }); };
+$("qRel").onclick = function () {
+  ev("quick_action_click action=reload");
+  if (S.busy) return;
+  if (P.get("gateFail")) { $("gate").hidden = false; return; }   /* N6：Reload 先做准入校验，不通过不结算、留在当前游戏 */
+  leave(function () {   /* N6：结算后重新加载当前游戏，机会不重置 */
+    var g = GAMES[P.get("game")]; S.open = false; S.screen = "loading"; $("sLoadT").textContent = "正在加载 " + g.n + "…"; var im = gImg(P.get("game")); $("sLoadI").style.backgroundImage = im ? "url('" + im + "')" : ""; render();
+    setTimeout(function () { S.screen = "game"; render(); $("gbal").classList.add("flash"); setTimeout(function () { $("gbal").classList.remove("flash"); }, 1200); }, 900);
+  });
+};
+$("qDep").onclick = function () {
+  if (S.busy) return;
+  ev("quick_action_click action=deposit"); S.cfm = false; closeSb("deposit");
+  P.set("depFrom", "sidebar");
+  setTimeout(function () { location.href = "游戏快捷侧边栏-游戏内半屏充值.html#sheet"; }, 250);
+};
+$("ban").onclick = function () {
+  var c = cfg(), url = c.bType === "link" ? c.bLink : "https://789bingo.com/promo/" + c.bPromo;
+  ev("banner_click linkType=" + (c.bType === "link" ? "custom" : "detail"));
+  if (c.bType === "link") { P.toast("已在新标签页打开跳转链接"); return; }   /* N12：自定义链接新标签页（APP 为系统浏览器）打开，不离开游戏、不结算 */
+  leave(function () { S.open = false; S.cfm = false; S.screen = "promo"; showScr(c.bType === "link" ? "跳转链接" : "活动详情页", url); });
+};
+
+/* ===== 推荐游戏 ===== */
+$("recWrap").addEventListener("click", function (e) {
+  if (e.target.id === "retry") { S.retryOk = true; render(); return; }
+  if (e.target.id === "more") { loadMore(); return; }
+  var b = e.target.closest("button[data-id]"); if (!b || S.lock || S.busy) return;
+  var id = b.dataset.id, g = GAMES[id];
+  ev("rec_click toGameId=" + id + " mode=" + (S.mode || "manual"));
+  if (g.st) { S.refreshed = true; P.toast(g.st === "offline" ? "该游戏暂不可用" : "该游戏当前维护中"); render(); return; }   /* N10 ①：提示后刷新列表，清除维护和下架的游戏 */
+  if (P.get("gateFail")) { $("gate").hidden = false; return; }   /* N10 ②：准入校验不通过，不结算、不退出当前游戏 */
+  S.lock = true; render();
+  leave(function () {
+    var back = P.get("game"), fail = P.get("nextFail");
+    S.cfm = false; S.open = false; S.screen = "loading";
+    $("sLoadT").textContent = "正在加载 " + g.n + "…"; var im = gImg(id); $("sLoadI").style.backgroundImage = im ? "url('" + im + "')" : "";
+    render();
+    setTimeout(function () {
+      if (fail) {
+        P.set("nextFail", false); S.screen = "game"; S.open = true; S.lock = false; ev("game_switch_result result=fail"); render();
+        P.toast("所选游戏暂时不可用，请换一款试试"); return;
+      }
+      P.set("game", id); S.screen = "game"; S.lock = false; S.mode = null; S.closedAfterAuto = false; S.refreshed = false;
+      setUsed(false); ev("game_switch_result result=success"); ev("sidebar_float_impression"); armIdle(); render();
+    }, 1000);
+  });
+});
+
+/* ===== 屏幕 ===== */
+function showScr(t, p) { $("sLobbyT").textContent = t; $("sLobbyP").textContent = p; $("reenter").textContent = "重新进入 " + GAMES[P.get("game")].n; render(); }
+$("reenter").onclick = function () { S.screen = "game"; S.open = false; setUsed(false); ev("sidebar_float_impression"); armIdle(); render(); };
+
+/* ===== 模拟操作面板 ===== */
+P.panel($("simPanel"), [
+  { title: "切换后台配置项（改的是已保存的配置）", items: [
+    { type: "check", key: "_en", label: "启用游戏快捷侧边栏", change: function (v) { setCfg("enabled", v); } },
+    { type: "check", key: "_au", label: "启用退出时自动展开", change: function (v) { setCfg("autoExpand", v); } },
+    { type: "check", key: "_bn", label: "Mini Banner 是否展示", change: function (v) { setCfg("showBanner", v); } }
+  ] },
+  { title: "推荐列表数据", items: [
+    { type: "check", key: "recMany", label: "多批：推荐 30 个游戏（不足部分用示例游戏补齐，展示数量按 30 演示），看加载更多和「没有更多了」" },
+    { type: "check", key: "recEmpty", label: "空列表：没有可用的推荐游戏" },
+    { type: "button", label: "下一次加载更多失败", run: function () { P.set("moreFail", true); } }
+  ] },
+  { title: "注入异常", items: [
+    { type: "check", key: "cfgFail", label: "侧边栏配置接口失败" },
+    { type: "check", key: "unsettled", label: "当前局已投注、未结算" },
+    { type: "check", key: "syncFail", label: "结算 / 余额同步失败" },
+    { type: "check", key: "gateFail", label: "准入校验不通过（如需先完成 KYC；点推荐游戏或刷新余额时拦截）" },
+    { type: "check", key: "freeSpin", label: "当前游戏在使用新用户转盘的免费次数" },
+    { type: "check", key: "unsynced", label: "推荐列表未同步（混入维护中的 Crazy Time 和已下架的 Money Coming）" },
+    { type: "check", key: "listErr", label: "推荐列表加载失败" },
+    { type: "button", label: "下一次切换时新游戏启动失败", run: function () { P.set("nextFail", true); } }
+  ] },
+  { title: "演示值说明", items: [{ type: "note", text: "演示余额 ₱500.00；游戏、活动、图片均为示意数据；跳转首页、活动页只显示示意画面，不真实跳转。在当前游戏刷新页面，自动展开机会保持不变（演示 N8）。" }] },
+  { items: [{ type: "reset" }] }
+]);
+function syncChecks() { var c = cfg(); P.set("_en", c.enabled !== false); P.set("_au", c.autoExpand !== false); P.set("_bn", c.showBanner !== false); }
+window.addEventListener("proto-change", function (e) {
+  if (e.detail.key === "listErr") S.retryOk = false;
+  if (e.detail.key === "unsynced") S.refreshed = false;
+  render();
+});
+document.querySelectorAll("#simPanel input[type=checkbox]").forEach(function (cb) { cb.addEventListener("change", render); });
+
+/* 初始化 */
+(function () { var c = cfg(); P.get("_en") === undefined; ["_en", "_au", "_bn"].forEach(function (k, i) { var v = [c.enabled, c.autoExpand, c.showBanner][i] !== false; var box = [].filter.call(document.querySelectorAll("#simPanel label"), function (l) { return l.textContent.indexOf(["启用游戏快捷侧边栏", "启用退出时自动展开", "Mini Banner 是否展示"][i]) >= 0; })[0]; if (box) box.querySelector("input").checked = v; }); })();
+var FP = P.get("floatPos"); S.fx = FP && FP.L ? M : W() - FS - M; if (FP) S.fy = FP.fy;
+$("gateNo").onclick = function () { $("gate").hidden = true; };
+$("gateGo").onclick = function () { $("gate").hidden = true; leave(function () { S.open = false; S.screen = "home"; showScr("身份认证页", ""); }); };
+if (P.get("depBack")) { P.set("depBack", false); }
+ev("sidebar_float_impression"); armIdle(); render(); setTimeout(render, 50);
+if (window.self !== window.top) window.parent.postMessage({ type: "proto-view", view: "default" }, "*");
+window.addEventListener("resize", render);
+</script>
+</body>
+</html>

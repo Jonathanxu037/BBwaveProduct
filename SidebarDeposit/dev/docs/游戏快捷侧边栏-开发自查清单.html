@@ -1,0 +1,365 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>游戏快捷侧边栏-开发自查清单</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<div class="with-nav">
+  <header class="ck-head" id="ckhead">
+    <div class="ck-top">
+      <div>
+        <div class="k">789BINGO · 功能自查</div>
+        <h1>游戏快捷侧边栏 · 开发自查清单 · <span id="hdVer">v1.1</span></h1>
+        <div class="d">勾选状态保存在本机浏览器，按角色分别保存；换电脑或换浏览器后看不到，留档请导出 CSV。</div>
+      </div>
+      <div class="ck-total"><b id="tp">0%</b><span id="tn">0 / 0 项</span><div class="pbar"><i id="tb" style="width:0"></i></div></div>
+    </div>
+    <div class="filters">
+      <div class="fgroup" data-g="role"><span class="gl">角色</span></div>
+      <div class="fgroup" data-g="type"><span class="gl">类型</span></div>
+      <div class="fgroup" data-g="state"><span class="gl">状态</span></div>
+      <div class="fgroup"><button class="pill" type="button" id="exall">全部展开</button><button class="pill" type="button" id="coall">全部收起</button><button class="pill" type="button" id="csv">导出 CSV</button><button class="pill" type="button" id="prt">打印</button></div>
+      <button class="clearbtn" type="button" id="clear">清空勾选</button>
+    </div>
+  </header>
+  <div class="split" id="split">
+    <div class="ck-left" id="list"></div>
+    <div class="divider" id="divider" role="separator" aria-label="拖动调整宽度"></div>
+    <div class="ck-right">
+      <div class="rhead">PRD 需求文档 <button type="button" id="up" aria-label="上一处标注">↑</button><button type="button" id="dn" aria-label="下一处标注">↓</button><span class="cnt2" id="hitn"></span></div>
+      <iframe id="prd" src="游戏快捷侧边栏-需求开发PRD文档.html" title="PRD 需求文档"></iframe>
+    </div>
+  </div>
+</div>
+
+<script>
+/* 顶栏右侧「在新标签页打开」。左侧目录栏默认始终显示，方便跳到其他页面；
+   需要更宽的两栏时，点目录栏右上角「隐藏」，再点顶栏「展开目录」恢复（需求包框架规范第 3.1.5 节） */
+window.NAV_NEWWIN_TEXT = "在新标签页打开";
+window.addEventListener("navtoggle", function () { setTimeout(fitHead, 0); });
+</script>
+<script>window.NAV_ROOT = "../";</script>
+<script src="../assets/nav-data.js"></script>
+<script src="../assets/nav.js"></script>
+<script>
+/* 自查项：[类型, 适用角色, 关键, 检查什么, 预期结果, 新增或修改的版本]。新自查项只追加在各组末尾，保证已有编号不变。
+   类型 fn 功能 / bd 边界值 / ex 异常 / un 非常规；角色 d 设计 / f 前端 / b 后端 / q 测试。功能点名称与 PRD 保持一致。 */
+var DATA = [
+ { c: "F01", n: "浮标", s: [
+  { c: "F01-01", n: "浮标显示与开关", i: [
+   ["fn", "fq", 1, "后台总开关开，进入游戏", "屏幕右侧上方显示 789Bingo 浮标；iOS 也在右侧，浮标上沿不贴屏幕顶部、不压住状态栏和刘海"],
+   ["fn", "bq", 1, "后台总开关关，进入游戏", "不显示浮标和侧边栏，首次退出不自动展开"],
+   ["ex", "fbq", 1, "侧边栏配置接口失败或超时", "不显示浮标，游戏正常运行，退出按现有流程"],
+   ["fn", "fq", 0, "厂商游戏还在加载画面时", "浮标已显示，可以展开侧边栏；点推荐游戏或 Home 先结算再离开", "v1.1"],
+   ["fn", "d", 0, "浮标样式和动效", "与设计稿一致"],
+   ["fn", "dfq", 0, "789games 站点进入游戏", "浮标和标题栏显示 789games 的品牌 Logo", "v1.1"],
+   ["fn", "fq", 1, "H5、iOS、Flutter 三端进入游戏", "只显示本需求的浮标，不再出现 G 图标悬浮按钮；低于最低支持版本的 APP 仍显示 G 图标，且不受后台总开关影响（最低版本由技术判断，Q15）", "v1.1"],
+   ["un", "q", 0, "回归：进入游戏", "不出现黑屏只剩浮标（-2145）", "v1.1"]
+  ]},
+  { c: "F01-02", n: "拖动与自动吸边", i: [
+   ["bd", "fq", 0, "按下移动 4 像素松手", "按点击处理，展开侧边栏"],
+   ["bd", "fq", 0, "按下移动 5 像素松手", "按拖动处理，不展开"],
+   ["fn", "fq", 0, "拖到屏幕中线左 / 右侧松手", "吸附左 / 右边，高度不变，上下不遮挡状态栏和底部操作区"],
+   ["un", "fq", 0, "浮标拖到左侧后换游戏、刷新页面", "浮标仍在左侧原高度；清除浏览器数据后回到屏幕右侧上方", "v1.1"]
+  ]},
+  { c: "F01-03", n: "闲置贴边隐藏", i: [
+   ["bd", "fq", 0, "无操作 14 秒 / 15 秒", "14 秒不缩进；15 秒缩进只露 2/3"],
+   ["fn", "fq", 0, "缩进状态点击浮标", "先恢复完整显示，再展开侧边栏"],
+   ["un", "fq", 0, "侧边栏展开或半屏充值打开期间等待 15 秒以上", "浮标不缩进；关闭后重新计时"]
+  ]}
+ ]},
+ { c: "F02", n: "快捷侧边栏", s: [
+  { c: "F02-01", n: "侧边栏结构与展开位置", i: [
+   ["fn", "dfq", 0, "浮标在左 / 右侧时展开", "贴对应一侧展开，模块顺序为品牌、收起按钮、快捷功能、Mini Banner、推荐游戏"],
+   ["bd", "fq", 0, "浮标贴近屏幕底部时展开", "侧边栏自动上移，完整显示"]
+  ]},
+  { c: "F02-02", n: "展开与收起", i: [
+   ["fn", "fq", 0, "点收起按钮 / 点侧边栏外区域 / 点 Deposit", "侧边栏收起，浮标回到原位置"],
+   ["un", "fq", 1, "退出确认显示期间点侧边栏外区域", "侧边栏不收起"]
+  ]},
+  { c: "F02-03", n: "快捷功能 Home / Reload", i: [
+   ["fn", "fbq", 1, "点 Home", "先显示「正在结算游戏余额…」，同步完成后跳平台首页"],
+   ["fn", "fbq", 1, "点 Reload", "先做准入校验，通过后结算同步，再重新加载当前游戏，加载完显示最新余额；自动展开机会不重置", "v1.1"],
+   ["ex", "fbq", 1, "首充后余额超过 PWA 投注阈值时在 H5 点 Reload", "按现有拦截方式提示，不结算，留在当前游戏", "v1.1"],
+   ["un", "q", 0, "回归：点 Home", "不会跳到充值页（-2144）", "v1.1"],
+   ["un", "fbq", 1, "快速连点 Reload", "只结算一次，不出现 Home 失效或 Connect Close (20010)"]
+  ]}
+ ]},
+ { c: "F03", n: "退出自动展开", s: [
+  { c: "F03-01", n: "首次退出自动展开", i: [
+   ["fn", "fq", 1, "在当前游戏首次点第三方游戏厂商提供的退出、关闭或 Home 按钮 / 安卓 APP 返回键", "现有退出确认弹出，同时自动展开侧边栏", "v1.1"],
+   ["un", "fq", 0, "首次点浏览器返回", "不自动展开，按浏览器行为离开", "v1.1"],
+   ["fn", "fq", 0, "自动展开后取消退出", "侧边栏同时收起，留在当前游戏"],
+   ["fn", "fq", 1, "自动展开后点侧边栏收起按钮", "侧边栏和退出确认一起关闭，留在当前游戏", "v1.1"],
+   ["fn", "fq", 0, "同一游戏再次点退出", "按现有流程退出，不再自动展开"],
+   ["fn", "fq", 0, "后台关闭「启用退出时自动展开」", "退出按现有流程，浮标和手动展开正常"],
+   ["fn", "dq", 0, "退出确认页面", "样式、文案、按钮和交互与线上一致，未被修改"],
+   ["ex", "fq", 1, "平台拦截不到退出按钮的厂商游戏，点退出", "按厂商现有行为退出，不自动展开；浮标和手动展开正常", "v1.1"]
+  ]},
+  { c: "F03-02", n: "自动展开机会记录与重置", i: [
+   ["un", "fq", 1, "在当前游戏刷新页面（含断线重连）", "已使用的不重置，未使用的保留"],
+   ["fn", "fq", 0, "切换到其他游戏或从大厅重新进入", "机会重置为可用"],
+   ["fn", "fq", 0, "手动展开再收起 / 打开再关闭半屏充值后首次退出", "仍自动展开"]
+  ]}
+ ]},
+ { c: "F04", n: "推荐游戏与游戏切换", s: [
+  { c: "F04-01", n: "推荐列表数据规则", i: [
+   ["fn", "dfq", 0, "展开侧边栏看推荐区", "2 列 × 3.5 个，可滑动，只显示图标，无名称和标签"],
+   ["fn", "bq", 1, "后台列表含维护中、已下架和当前游戏", "前台都不显示，后面依次前移，顺序与后台位次提示一致"],
+   ["bd", "bq", 0, "展示数量 10、可用游戏 7 个 / 0 个", "显示 7 个 / 显示「暂无可用游戏」"],
+   ["ex", "fq", 0, "推荐列表加载失败", "显示「游戏加载失败」和重试，其他模块正常"],
+   ["bd", "fq", 1, "分页：可用游戏 10 个 / 11 个 / 30 个时展开推荐区并滚动到底", "10 个不显示加载更多；11 个首批 10 个、加载后 11 个并显示「没有更多了」；30 个分 3 批加载完", "v1.1"],
+   ["ex", "fq", 0, "分页：加载更多失败后点重试", "已显示的保留，重试成功后接着显示下一批", "v1.1"]
+  ]},
+  { c: "F04-02", n: "点击推荐游戏切换", i: [
+   ["fn", "fbq", 1, "点可进入的推荐游戏", "结算同步后直接进入所选游戏，不经过大厅"],
+   ["un", "fq", 1, "快速连点 3 个推荐游戏", "只触发一次切换"],
+   ["ex", "fbq", 0, "点到列表没同步的维护中 / 已下架游戏", "分别提示「该游戏当前维护中」/「该游戏暂不可用」，不退出当前游戏，列表刷新并清除这些游戏", "v1.1"],
+   ["ex", "fbq", 1, "点一款准入校验不通过的推荐游戏（需 KYC、Casino 屏障、APP 解锁 H5 等）", "弹现有拦截提示，不结算、不退出当前游戏，列表保持展开", "v1.1"],
+   ["ex", "fq", 0, "新游戏启动超时", "按启动失败处理，提示「所选游戏暂时不可用，请换一款试试」，不显示「维护中」", "v1.1"],
+   ["ex", "fbq", 1, "新游戏启动失败", "回到原游戏，余额同步回原供应商，提示「所选游戏暂时不可用，请换一款试试」，侧边栏保持展开"],
+   ["ex", "fbq", 1, "余额超过设定金额（须在 PWA 投注）时在 H5 点推荐游戏", "按现有拦截方式提示，不结算、不退出当前游戏", "v1.1"]
+  ]},
+  { c: "F04-03", n: "当前局未结算时切换", i: [
+   ["fn", "fbq", 1, "已投注未结算时点推荐游戏", "显示「本局结算中…」半透明蒙层，能看到本局结果，结算完才切换"],
+   ["un", "fq", 0, "蒙层期间点其他按钮", "无效"]
+  ]}
+ ]},
+ { c: "F05", n: "Mini Banner", s: [
+  { c: "F05-01", n: "展示与隐藏", i: [
+   ["fn", "fq", 0, "后台配置有效", "只显示 1 张图，不轮播"],
+   ["ex", "fbq", 0, "是否展示关闭 / 活动已下架或结束 / 图片加载失败", "整块隐藏，其他模块正常"]
+  ]},
+  { c: "F05-02", n: "点击跳转", i: [
+   ["fn", "fbq", 1, "点 Mini Banner（选择活动）", "先结算同步，再跳活动详情页"],
+   ["fn", "fq", 1, "点 Mini Banner（自定义链接，任意域名）", "H5 新标签页、APP 系统浏览器打开，当前游戏不离开、不结算；链接不拼接 token 和玩家信息", "v1.1"]
+  ]}
+ ]},
+ { c: "F06", n: "离开当前游戏的余额保障", s: [
+  { c: "F06-01", n: "离开前结算与余额同步", i: [
+   ["fn", "bq", 1, "推荐游戏、Home、Reload、Banner（选择活动）、确认退出", "都在结算与余额同步完成后执行，前后余额一致、不丢失、不重复"],
+   ["ex", "fbq", 1, "结算超时或余额同步失败", "关闭蒙层，留在当前游戏，提示「余额同步失败，请稍后重试」"],
+   ["un", "fbq", 1, "结算中再点其他离开操作 / 并发请求", "无效；后端同一会话只结算一次"],
+   ["fn", "fq", 1, "点 Deposit", "不触发结算"],
+   ["ex", "fbq", 1, "新用户转盘奖励的免费次数（Free Spin）使用中点推荐游戏 / Home / Reload / Mini Banner（选择活动）", "提示「免费次数使用中，用完后再切换」，不结算、不离开；砸金蛋、Spin、转盘等活动相关处理由技术按当前平台逻辑", "v1.1"]
+  ]}
+ ]},
+ { c: "F07", n: "游戏内半屏充值", s: [
+  { c: "F07-01", n: "打开与关闭半屏充值", i: [
+   ["fn", "fq", 1, "点侧边栏 Deposit", "侧边栏收起，半屏从底部升起；游戏不关闭、不刷新、不重新加载"],
+   ["bd", "dfq", 1, "半屏高度：内容短于 / 长于游戏页面 2/3；在小屏手机（如游戏页面高约 640 像素）上打开", "短于时按内容高度；长于时固定 2/3，在半屏内可滚动到条款和提交；上方游戏有半透明遮罩、不能操作", "v1.1"],
+   ["fn", "fq", 0, "点 × 或上方遮罩", "立即关闭，回到游戏，只显示浮标，已填金额不保留"],
+   ["fn", "fq", 0, "退出确认显示时点 Deposit", "退出确认一并关闭"]
+  ]},
+  { c: "F07-02", n: "充值内容与提交", i: [
+   ["fn", "dfq", 1, "对比半屏与 Wallet 充值页", "支付方式及排序、充值活动、快捷金额、赠送标签、限额、说明、条款完全一致"],
+   ["bd", "fbq", 1, "输入限额外的金额提交；绕过前端直接调下单接口", "提示「请输入 X-Y 之间的金额」；接口同样拦截"],
+   ["un", "fq", 0, "连点 Submit", "只下单一次"],
+   ["fn", "fq", 1, "未认证玩家在半屏提交", "弹现有 KYC 提醒；Later 留在半屏；Verify Now 先结算再跳 KYC 页", "v1.1"],
+   ["bd", "fbq", 0, "首充成功后再次打开半屏", "不再显示首充券（-2281）", "v1.1"],
+   ["ex", "fbq", 0, "多次 Submit 后都未支付", "可能触发最大未处理线上充值订单数或当日最大连续未支付笔数，按现有规则提示", "v1.1"]
+  ]},
+  { c: "F07-03", n: "二维码支付与返回原游戏", i: [
+   ["fn", "fq", 1, "H5 Submit 成功", "半屏收起，新标签页打开二维码支付页，原游戏标签页保持打开", "v1.1"],
+   ["fn", "fbq", 1, "H5 支付完成", "回跳到「支付完成」中间页，自动关闭新标签页，回到原游戏标签页，不进大厅", "v1.1"],
+   ["ex", "fq", 0, "H5 支付完成但浏览器不允许自动关闭", "中间页显示「支付已完成，请返回游戏页面」和「关闭此页面」，不进大厅", "v1.1"],
+   ["ex", "fq", 0, "在 TG / Facebook 内置浏览器、小程序或已安装的 PWA 中充值", "支付页在系统浏览器打开且不要求登录；付完款中间页只显示「支付已完成，请返回游戏页面」，没有按钮和平台入口；切回原 App / PWA 原游戏保持（PRD 5.1）", "v1.1"],
+   ["fn", "b", 0, "生成支付页地址和回跳中间页地址", "地址里不带登录 token 和玩家身份信息（-6595）；其他参数（如来源环境 from）由技术按当前平台规则处理", "v1.1"],
+   ["fn", "fb", 1, "半屏充值成功后触发活动弹窗（首充转盘、6954 充返转盘等）", "游戏页上不弹，玩家回到平台原生页面后再显示", "v1.1"],
+   ["ex", "fq", 1, "H5 在 Safari、Chrome 打开支付页", "不被拦截；被拦截时半屏保持打开，提示「支付页面打开失败，请重试」"],
+   ["fn", "fq", 0, "APP Submit 成功", "按渠道现有方式用独立支付页、WebView 或外部浏览器打开，原游戏页面保持"],
+   ["fn", "fbq", 1, "支付完成后回到原游戏", "不跳大厅、不重新加载；没有充值成功弹窗或 Toast；到账按现有逻辑"],
+   ["ex", "fq", 0, "支付期间厂商 Session 失效", "平台不关闭或重建游戏页，按厂商机制重连"],
+   ["fn", "fbq", 1, "半屏充值提交和到账", "不弹 Payment Information、充值返回弹窗，游戏页内不弹到账推送", "v1.1"],
+   ["fn", "fbq", 1, "新用户在半屏完成首充", "可继续当前游戏；关闭游戏回到平台页面后才出现首充转盘、PWA / APP 引导", "v1.1"],
+   ["fn", "fq", 0, "APP 打开支付页付款后", "需手动切回 APP，原游戏保持、半屏已收起；不被带到聊天室（-4863）", "v1.1"],
+   ["ex", "fq", 1, "首充用户在半屏充值后继续玩三方游戏到第 4 局", "强制 KYC 照常在游戏内弹出、不能关闭（合规拦截不受「游戏页上不弹出」限制）", "v1.1"]
+  ]}
+ ]},
+ { c: "F08", n: "后台游戏快捷侧边栏管理", s: [
+  { c: "F08-02", n: "功能配置", i: [
+   ["fn", "fq", 0, "关闭「启用游戏快捷侧边栏」", "「启用退出时自动展开」置灰不可操作"]
+  ]},
+  { c: "F08-03", n: "Mini Banner 配置", i: [
+   ["ex", "fbq", 1, "是否展示开启时不上传图片 / 不选活动 / 链接不以 http(s):// 开头", "不能保存，分别提示对应原因；接口同样校验"],
+   ["fn", "fq", 0, "是否展示关闭", "不校验图片和跳转目标"],
+   ["fn", "bq", 0, "后台 Mini Banner「选择活动」下拉", "选项取「活动图素材管理 › 优惠活动」里正在展示的活动，详情页地址取自同一处", "v1.1"]
+  ]},
+  { c: "F08-04", n: "推荐游戏配置", i: [
+   ["bd", "fbq", 1, "展示数量输入 0、31、2.5 / 1、30", "前三个提示「展示数量需为 1–30 的整数」不能保存；后两个可保存"],
+   ["fn", "fq", 0, "添加游戏弹窗", "可搜索、多选，已添加的置灰，确定后追加到末尾；× 等同取消"],
+   ["fn", "fq", 0, "上移 / 下移 / 删除", "第一行不能上移，最后一行不能下移；位次提示随之更新"],
+   ["bd", "fbq", 1, "分页：列表 20 条 / 21 条 / 0 条，每页 20 条", "20 条 1 页；21 条 2 页；0 条显示「暂无数据」", "v1.1"],
+   ["bd", "fq", 0, "分页：删除末页仅剩的 1 条；前往页码输入 0、-1、99", "删除后回到上一页；页码越界取首页或末页", "v1.1"],
+   ["fn", "fq", 0, "分页：改每页条数；在第 2 页上移第一行", "改条数回到第 1 页；第一行上移到上一页末尾，位次提示按全部列表计算", "v1.1"],
+   ["fn", "fq", 0, "分页：添加游戏弹窗搜索、跨页勾选后确定", "搜索后回第 1 页；跨页勾选的全部追加到列表末尾，提示所在页", "v1.1"]
+  ]},
+  { c: "F08-05", n: "保存与重置", i: [
+   ["fn", "fbq", 1, "保存后新进入游戏", "读取新配置；已在游戏中的玩家下次进入生效"],
+   ["fn", "fq", 0, "修改后点重置", "恢复为上次保存的配置"],
+   ["fn", "bq", 1, "保存配置成功 / 失败", "成功记一条操作日志（操作人、时间、修改前后值），失败不记录", "v1.1"],
+   ["un", "fbq", 1, "A、B 同时编辑，A 先保存后 B 保存", "B 提示「配置已被他人修改，请刷新后再改」，A 的配置不被覆盖", "v1.1"]
+  ]}
+ ]},
+ { c: "F09", n: "数据埋点", s: [
+  { c: "F09-01", n: "事件上报", i: [
+   ["fn", "fbq", 1, "逐个触发 PRD 7.3 的事件", "各上报一次，公共参数齐全"],
+   ["fn", "bq", 0, "上线首日核对", "deposit_submit 数量与同来源订单数量一致"],
+   ["fn", "f", 1, "点推荐游戏被拦截 / 免费次数阻止离开 / 中间页尝试关闭", "分别上报 switch_blocked（含 reason）、freespin_block、pay_done_close（含 closed、env）", "v1.1"]
+  ]}
+ ]}
+];
+/* VER：文档版本号（如 v1.3，和 PRD 需求版本管理表一致），不是迭代名。
+   ITER：多迭代需求包的迭代名（如 "v1.0"、"完整需求"，需求包框架规范第 3 节），单版本需求留空。
+   勾选状态按「需求 + 迭代 + 文档版本」分开保存；升版本后第一次打开时，自动找本机保存过的、版本号比 VER 小的最近一版，
+   沿用其中没有改动的自查项的勾选（本版新增或修改的项，即 it.v === VER 的项，清空重查）。不需要手工填写上一版本。 */
+var VER = "v1.1", ITER = "", BASE = "游戏快捷侧边栏功能需求-" + (ITER ? ITER + "-" : ""), KEY = BASE + VER + "-checklist";
+document.getElementById("hdVer").textContent = VER;   /* 标题版本号跟着 VER 显示，升版本只改 VER */
+var PREV = (function () {
+  function vn(v) { var m = /^v(\d+)\.(\d+)$/.exec(v || ""); return m ? (+m[1]) * 1000 + (+m[2]) : -1; }
+  var best = "", bestN = -1, cur = vn(VER);
+  try { for (var i = 0; i < localStorage.length; i++) { var k = localStorage.key(i); if (k.indexOf(BASE) !== 0 || !/-checklist$/.test(k)) continue;
+    var v = k.slice(BASE.length, -"-checklist".length), n = vn(v); if (n >= 0 && n < cur && n > bestN) { best = k; bestN = n; } } } catch (e) {}
+  return best;
+})();
+var RN = { d: "设计", f: "前端", b: "后端", q: "测试" }, TN = { fn: "功能", bd: "边界值", ex: "异常", un: "非常规" };
+var F = { role: "all", type: "all", state: "all" };
+var store = {};
+try { store = JSON.parse(localStorage.getItem(KEY) || "null"); } catch (e) { store = null; }
+try { var sv = JSON.parse(localStorage.getItem(KEY + "-filters") || "{}"); if (sv.role) F = sv; } catch (e) {}
+/* 新版本首次打开：沿用上一版未改动自查项的勾选；本版新增或修改的自查项清空 */
+var MIGRATE = store === null; if (MIGRATE) store = {};
+function save() { try { localStorage.setItem(KEY, JSON.stringify(store)); localStorage.setItem(KEY + "-filters", JSON.stringify(F)); } catch (e) {} }
+function done(it, role) {
+  var rs = role === "all" ? it.r.split("") : [role];
+  return rs.every(function (r) { return store[r + ":" + it.id]; });
+}
+function setDone(it, on) { (F.role === "all" ? it.r.split("") : [F.role]).forEach(function (r) { if (on) store[r + ":" + it.id] = 1; else delete store[r + ":" + it.id]; }); }
+/* 展开数据 */
+var ITEMS = [];
+DATA.forEach(function (fp) { fp.s.forEach(function (s) { s.i.forEach(function (x, k) {
+  var it = { id: s.c + "-" + (k + 1), fp: fp, sub: s, t: x[0], r: x[1], key: !!x[2], q: x[3], e: x[4], v: x[5] || "" }; ITEMS.push(it); s.items = (s.items || []).concat(it);
+}); }); });
+function inRole(it) { return F.role === "all" || it.r.indexOf(F.role) >= 0; }
+function visible(it) {
+  if (!inRole(it)) return false;
+  if (F.type === "fn" && it.t !== "fn") return false;
+  if (F.type === "bd" && it.t !== "bd") return false;
+  if (F.type === "ex" && it.t !== "ex" && it.t !== "un") return false;
+  var d = done(it, F.role);
+  if (F.state === "todo" && d) return false;
+  if (F.state === "done" && !d) return false;
+  if (F.state === "key" && !it.key) return false;
+  return true;
+}
+function stat(list) { var n = list.length, c = list.filter(function (it) { return done(it, F.role); }).length; return { n: n, c: c, p: n ? Math.round(c * 100 / n) : 0 }; }
+var closed = {};
+function render() {
+  var html = "";
+  DATA.forEach(function (fp) {
+    var all = []; fp.s.forEach(function (s) { all = all.concat(s.items.filter(inRole)); });
+    var vis = all.filter(visible); if (!vis.length) return;
+    var st = stat(all), tag = st.c === 0 ? '<span class="stt">未开始</span>' : st.c === st.n ? '<span class="stt done">已完成</span>' : '<span class="stt ing">进行中</span>';
+    html += '<section class="fpc' + (closed[fp.c] ? " closed" : "") + '" data-fp="' + fp.c + '"><div class="fpc-h">' +
+      '<button class="tri" type="button" data-tog="' + fp.c + '" aria-label="展开或收起">▼</button><span class="code">' + fp.c + '</span><span class="nm">' + fp.n + "</span>" + tag +
+      '<span class="mbar"><i style="width:' + st.p + '%"></i></span><span class="num">' + st.c + " / " + st.n + "</span>" +
+      '<button class="selall" type="button" data-sel="' + fp.c + '">全选本组</button><button class="gopr" type="button" data-pr="' + fp.c + '">查看 PRD ›</button></div><div class="fpc-b">';
+    fp.s.forEach(function (s) {
+      var sv = s.items.filter(visible); if (!sv.length) return;
+      var ss = stat(s.items.filter(inRole));
+      html += '<div class="sub-h"><span class="code2">' + s.c + '</span><span class="nm">' + s.n + '</span><span class="mbar"><i style="width:' + ss.p + '%"></i></span><span class="num">' + ss.c + " / " + ss.n + '</span><button class="gopr" type="button" data-pr="' + s.c + '">查看 PRD ›</button></div><ul class="items">';
+      sv.forEach(function (it) {
+        var d = done(it, F.role);
+        html += '<li class="' + (d ? "done" : "") + (it.v ? " vmark" + (it.v === VER ? "" : " old") : "") + '"><input type="checkbox" data-id="' + it.id + '"' + (d ? " checked" : "") + ' aria-label="' + it.q.replace(/"/g, "&quot;") + '"><div><span class="tx">' + it.q +
+          '<span class="tags"><span class="lb t-' + it.t + '">' + TN[it.t] + "</span>" + it.r.split("").map(function (r) { return '<span class="lb r-' + r + '">' + RN[r] + "</span>"; }).join("") + (it.key ? '<span class="lb key">关键</span>' : "") +
+          (it.v ? '<sup class="vtag' + (it.v === VER ? "" : " old") + '" title="' + it.v + '">' + it.v + "</sup>" : "") +
+          '</span></span><span class="ex">预期：' + it.e + "</span></div></li>";
+      });
+      html += "</ul>";
+    });
+    html += "</div></section>";
+  });
+  document.getElementById("list").innerHTML = html || '<div class="empty">当前筛选下没有检查项</div>';
+  var t = stat(ITEMS.filter(inRole));
+  document.getElementById("tp").textContent = t.p + "%";
+  document.getElementById("tn").textContent = t.c + " / " + t.n + " 项";
+  document.getElementById("tb").style.width = t.p + "%";
+}
+var byId = {}; ITEMS.forEach(function (it) { byId[it.id] = it; });
+if (MIGRATE && PREV) { try { var old = JSON.parse(localStorage.getItem(PREV) || "{}"); Object.keys(old).forEach(function (k) { var it = byId[k.split(":")[1]]; if (it && it.v !== VER) store[k] = old[k]; }); } catch (e) {} save(); }
+var list = document.getElementById("list");
+list.addEventListener("change", function (e) { var id = e.target.dataset.id; if (!id) return; setDone(byId[id], e.target.checked); save(); render(); });
+list.addEventListener("click", function (e) {
+  var b = e.target.closest("button"); if (!b) return;
+  if (b.dataset.tog) { closed[b.dataset.tog] = !closed[b.dataset.tog]; b.closest(".fpc").classList.toggle("closed"); }
+  if (b.dataset.sel) {
+    var its = ITEMS.filter(function (it) { return it.fp.c === b.dataset.sel && visible(it); });
+    var allOn = its.every(function (it) { return done(it, F.role); });
+    its.forEach(function (it) { setDone(it, !allOn); }); save(); render();
+  }
+  if (b.dataset.pr) showPRD(b.dataset.pr);
+});
+/* 查看 PRD：宽屏在右栏定位并标荧光粉；窄屏在新页面打开 */
+var frame = document.getElementById("prd"), ready = false, pending = null;
+frame.addEventListener("load", function () { ready = true; if (pending) { frame.contentWindow.postMessage({ type: "prd-show", code: pending }, "*"); pending = null; } });
+function showPRD(code) {
+  if (window.matchMedia("(max-width:699px)").matches) { window.open("游戏快捷侧边栏-需求开发PRD文档.html#" + code, "_blank"); return; }
+  if (!ready) { pending = code; return; }   /* PRD 还没加载完：加载完成后再定位 */
+  frame.contentWindow.postMessage({ type: "prd-show", code: code }, "*");
+}
+document.getElementById("up").onclick = function () { frame.contentWindow.postMessage({ type: "prd-step", dir: -1 }, "*"); };
+document.getElementById("dn").onclick = function () { frame.contentWindow.postMessage({ type: "prd-step", dir: 1 }, "*"); };
+window.addEventListener("message", function (e) {
+  var d = e.data || {}; if (d.type !== "prd-hits") return;
+  document.getElementById("hitn").textContent = d.total ? "第 " + (d.pos + 1) + " / " + d.total + " 处标注" : "";
+});
+/* 筛选 */
+var GROUPS = { role: [["all", "全部"], ["d", "设计"], ["f", "前端"], ["b", "后端"], ["q", "测试"]], type: [["all", "全部"], ["fn", "功能"], ["bd", "边界值"], ["ex", "异常与非常规操作"]], state: [["all", "全部"], ["todo", "未完成"], ["done", "已完成"], ["key", "仅关键项"]] };
+Object.keys(GROUPS).forEach(function (g) {
+  var box = document.querySelector('[data-g="' + g + '"]');
+  GROUPS[g].forEach(function (o) {
+    var b = document.createElement("button"); b.type = "button"; b.className = "pill"; b.textContent = o[1]; b.setAttribute("aria-pressed", F[g] === o[0]);
+    b.onclick = function () { F[g] = o[0]; box.querySelectorAll(".pill").forEach(function (x) { x.setAttribute("aria-pressed", x === b); }); save(); render(); };
+    box.appendChild(b);
+  });
+});
+document.getElementById("exall").onclick = function () { closed = {}; render(); };
+document.getElementById("coall").onclick = function () { DATA.forEach(function (fp) { closed[fp.c] = true; }); render(); };
+document.getElementById("prt").onclick = function () { window.print(); };
+document.getElementById("clear").onclick = function () {
+  var m = document.createElement("div"); m.className = "cfm";
+  m.innerHTML = '<div role="dialog" aria-modal="true"><p><b>清空勾选</b></p><p>将清空本需求 ' + VER + ' 在本浏览器里所有角色的勾选，不能撤销。</p><div class="row2"><button class="obtn" type="button" data-x="0">取消</button><button class="obtn" type="button" data-x="1" style="border-color:#C00000;color:#C00000">确认清空</button></div></div>';
+  m.onclick = function (e) { var x = e.target.dataset.x; if (x === undefined) return; if (x === "1") { store = {}; save(); render(); } m.remove(); };
+  document.body.appendChild(m);
+};
+document.getElementById("csv").onclick = function () {
+  var rows = [["大功能点", "子功能点", "编号", "类型", "适用角色", "关键", "检查什么", "预期结果", "设计", "前端", "后端", "测试"]];
+  ITEMS.forEach(function (it) {
+    rows.push([it.fp.c + " " + it.fp.n, it.sub.c + " " + it.sub.n, it.id, TN[it.t], it.r.split("").map(function (r) { return RN[r]; }).join("/"), it.key ? "是" : "",
+      it.q, it.e].concat(["d", "f", "b", "q"].map(function (r) { return it.r.indexOf(r) < 0 ? "—" : store[r + ":" + it.id] ? "已勾" : "未勾"; })));
+  });
+  var csv = "﻿" + rows.map(function (r) { return r.map(function (c) { return '"' + String(c).replace(/"/g, '""') + '"'; }).join(","); }).join("\r\n");
+  var a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([csv], { type: "text/csv;charset=utf-8" })); a.download = "游戏快捷侧边栏-开发自查清单-" + VER + ".csv";
+  document.body.appendChild(a); a.click(); a.remove();
+};
+/* 分隔条拖动 */
+(function () {
+  var split = document.getElementById("split"), dv = document.getElementById("divider"), drag = false;
+  dv.addEventListener("mousedown", function (e) { drag = true; frame.style.pointerEvents = "none"; e.preventDefault(); });
+  window.addEventListener("mouseup", function () { drag = false; frame.style.pointerEvents = ""; });
+  window.addEventListener("mousemove", function (e) {
+    if (!drag) return;
+    var r = split.getBoundingClientRect(), p = Math.min(70, Math.max(25, (e.clientX - r.left) * 100 / r.width));
+    split.style.setProperty("--lw", p + "%");
+  });
+})();
+/* 分栏高度 = 视口 - 顶栏 - 头图 */
+function fitHead() { document.getElementById("split").style.setProperty("--headh", document.getElementById("ckhead").offsetHeight + "px"); }
+window.addEventListener("resize", fitHead);
+render(); setTimeout(fitHead, 0);
+</script>
+</body>
+</html>

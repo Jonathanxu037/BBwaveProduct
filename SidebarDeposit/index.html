@@ -1,2 +1,17 @@
 <!doctype html>
-<html lang="zh-CN"><head><meta charset="utf-8"><meta name="prdhub-placeholder" content="1"><meta http-equiv="refresh" content="0; url=pdm/"><title>跳转中</title></head><body><a href="pdm/">进入产品角色页面</a></body></html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>游戏快捷侧边栏 需求</title>
+<style>:root{--bg:#F5F5F4;--card:#fff;--fg:#1B1720;--muted:#6A6076;--gold:#C89A3C}
+@media (prefers-color-scheme: dark){:root{--bg:#17151b;--card:#1f1c25;--fg:#E6E1EC;--muted:#A79DB3}}
+body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);color:var(--fg);font-family:"Microsoft YaHei","微软雅黑",sans-serif;padding:16px;box-sizing:border-box}
+.c{max-width:460px;background:var(--card);border-top:4px solid var(--gold);border-radius:10px;padding:28px 32px;box-shadow:0 4px 16px rgba(22,5,47,.1)}
+h1{font-size:19px;margin:0 0 10px}p{font-size:14px;line-height:1.7;color:var(--muted);margin:0}</style>
+<script>
+/* 没有分身份的链接（仓库根地址）：先进这台电脑上次使用的角色站点，没有记录时进产品站点（要输密码） */
+(function () {
+  var r = ""; try { r = localStorage.getItem("req-role") || ""; } catch (e) {}
+  if (!/^(pdm|opr|dev|repo)$/.test(r)) r = "pdm";
+  location.replace(r + "/");
+})();
+</script></head>
+<body><div class="c"><h1>游戏快捷侧边栏 需求</h1><p>正在进入……如果没有自动跳转，请使用发给你的访问链接打开。</p></div></body></html>

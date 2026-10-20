@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>游戏快捷侧边栏-游戏内半屏充值</title>
+<link rel="stylesheet" href="../../assets/style.css">
+<style>
+[hidden]{display:none!important}
+:root{--d-or:#FF7A2F;--d-or2:#FF5A1F;--d-ink:#1d1f24;--d-mut:#7a808c;--d-line:#E3E6EB}
+.app{background:#000;color:#fff}
+#game{position:absolute;inset:30px 0 0;overflow:hidden}
+#game img.bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+#gbal{position:absolute;left:8px;bottom:118px;padding:4px 8px;border-radius:6px;background:rgba(0,0,0,.55);font-weight:800;font-size:20px}
+#float{all:unset;position:absolute;right:10px;top:20px;z-index:3;width:46px;height:46px;border-radius:50%;box-sizing:border-box;border:3px solid transparent;background:linear-gradient(#fff,#fff) padding-box,linear-gradient(135deg,#7b3fe4,#00d9a0) border-box;display:grid;place-items:center;cursor:pointer;transition:opacity .2s}
+#float img{width:34px}#float.hide{opacity:0;pointer-events:none}
+#mask{position:absolute;inset:0;z-index:10;background:rgba(0,0,0,.45);transition:opacity .3s}
+#mask.off{opacity:0;pointer-events:none}
+#sheet{position:absolute;left:0;right:0;bottom:0;z-index:11;background:#fff;color:var(--d-ink);border-radius:18px 18px 0 0;display:flex;flex-direction:column;transform:translateY(100%);max-height:66.7%;transition:transform .35s cubic-bezier(.2,.8,.2,1);font-family:var(--app-font)}
+#sheet.on{transform:translateY(0)}
+#sheet .hd{flex:none;padding:6px 16px 8px;position:relative}
+#sheet .grab{width:38px;height:4px;border-radius:2px;background:#D5D8DE;margin:0 auto 8px}
+#sheet h3{margin:0;font-size:20px;font-weight:800}#sheet .sub{font-size:12.5px;color:var(--d-mut)}
+#sheet .x{all:unset;position:absolute;right:14px;top:16px;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;color:#8a909c;cursor:pointer;font-size:18px}
+#sheet .bd{flex:1;min-height:0;overflow-y:auto;padding:4px 16px 12px;display:flex;flex-direction:column;gap:10px;scrollbar-width:none}
+#sheet .bd::-webkit-scrollbar{display:none}
+.promo{all:unset;cursor:pointer;display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;background:linear-gradient(90deg,#FFF3E6,#FFE3CC);font-size:13px;font-weight:700}
+.promo b{color:var(--d-or2)}.promo .go{margin-left:auto;width:20px;height:20px;border-radius:50%;background:var(--d-or);color:#fff;display:grid;place-items:center;font-size:12px}
+.sec{display:flex;justify-content:space-between;align-items:center;font-weight:700;font-size:14px}
+.sec a{font-size:12px;color:var(--d-mut);font-weight:400;text-decoration:none}
+.pays{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.pays button{all:unset;height:36px;border-radius:8px;border:1px solid var(--d-line);display:grid;place-items:center;font-size:12px;font-weight:700;cursor:pointer;box-sizing:border-box}
+.pays button[aria-pressed=true]{border-color:var(--d-or);background:#FFF6F0;color:var(--d-or2)}
+.amt{display:flex;align-items:center;gap:8px;height:44px;border-radius:10px;border:1px solid var(--d-or);padding:0 10px;background:#FFFBF8}
+.amt span.p{font-weight:800;font-size:18px}
+.amt input{flex:1;min-width:0;width:0;padding:0;border:none;outline:none;background:transparent;font:700 18px var(--app-font);color:var(--d-ink)}
+.amt input::placeholder{font-size:14px;font-weight:400;color:#B0B5BE}
+.amt .lspin{flex:none;font-size:11px;font-weight:700;color:var(--d-or2);background:#FFE9DA;border-radius:10px;padding:2px 8px;white-space:nowrap}
+.amt .clr{all:unset;width:18px;height:18px;border-radius:50%;background:#C9CDD4;color:#fff;font-size:11px;display:grid;place-items:center;cursor:pointer}
+.recv{font-size:11.5px;color:var(--d-mut)}.recv b{color:var(--d-or2)}
+.qamt{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.qamt button{all:unset;position:relative;height:36px;border-radius:8px;border:1px solid var(--d-line);text-align:center;line-height:34px;font-size:13.5px;font-weight:600;cursor:pointer;box-sizing:border-box}
+.qamt button[aria-pressed=true]{border-color:var(--d-or);background:#FFF6F0}
+.qamt i{position:absolute;left:-1px;top:-1px;padding:0 5px;border-radius:7px 0 7px 0;font:800 9px/14px var(--app-font);color:#fff;font-style:normal}
+.terms{display:flex;gap:6px;align-items:center;font-size:12px;color:var(--d-mut)}.terms a{color:var(--d-or2)}
+#sheet .ft{flex:none;padding:8px 16px 16px;box-shadow:0 -6px 12px -8px rgba(30,40,60,.25)}
+#submit{all:unset;display:block;width:100%;height:44px;border-radius:22px;background:linear-gradient(90deg,var(--d-or),var(--d-or2));color:#fff;text-align:center;line-height:44px;font-weight:800;font-size:16px;cursor:pointer;box-sizing:border-box}
+#submit[disabled]{opacity:.5;cursor:not-allowed}
+/* 支付页（第三方页面示意） */
+#pay{position:absolute;inset:30px 0 0;z-index:20;background:#F2F4F8;color:var(--d-ink);display:flex;flex-direction:column}
+.gs-tabs{display:flex;gap:4px;padding:6px 6px 0;background:#DADDE3}
+.gs-tabs button{all:unset;flex:1;padding:6px 8px;border-radius:8px 8px 0 0;font-size:11.5px;background:#C6CAD2;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.gs-tabs button.cur{background:#F2F4F8;font-weight:700}
+.appbar{display:flex;align-items:center;gap:10px;padding:10px 12px;background:#fff;font-weight:700}
+.appbar button{all:unset;font-size:22px;cursor:pointer;width:24px}
+.qr{margin:18px auto 8px;width:200px;height:200px;background:#fff;padding:12px;border-radius:12px;box-shadow:0 4px 14px rgba(0,0,0,.08);display:grid;grid-template-columns:repeat(21,1fr)}
+.qr i{background:#111}.qr i.w{background:#fff}
+.payinfo{text-align:center;font-size:13px;color:var(--d-mut);display:grid;gap:4px;padding:0 20px}.payinfo b{font-size:22px;color:var(--d-ink)}
+#toast{z-index:30}
+#payDone{display:none;flex-direction:column;align-items:center;gap:10px;padding:60px 24px;text-align:center}#payDone b{font-size:20px}#payDone span{color:var(--d-mut);font-size:13px}
+#pay.gs-done .qr,#pay.gs-done .payinfo{display:none}#pay.gs-done #payDone{display:flex}
+#doneClose{all:unset;padding:10px 26px;border-radius:20px;background:linear-gradient(90deg,var(--d-or),var(--d-or2));color:#fff;font-weight:800;cursor:pointer}#doneClose[hidden]{display:none}
+#kyc{position:absolute;inset:0;z-index:5;background:rgba(0,0,0,.45);display:grid;place-items:center;padding:20px;border-radius:18px 18px 0 0}#kyc[hidden]{display:none}
+#kyc .dlg{background:#fff;color:var(--d-ink);border-color:var(--d-line)}#kyc p{margin:0;font-size:12.5px;color:var(--d-mut)}
+#kyc .gs-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}#kyc .gs-row button{all:unset;text-align:center;height:38px;line-height:38px;border-radius:19px;cursor:pointer;font-weight:700;border:1px solid var(--d-line)}#kyc #kycGo{background:linear-gradient(90deg,var(--d-or),var(--d-or2));color:#fff;border:0}
+</style>
+</head>
+<body>
+<!-- 前台原型：游戏内半屏充值（依据 Claire《游戏中半屏充值功能需求》）。手机画面中文，打包时按 assets/proto-en.js 显示英文。 -->
+<div class="with-nav">
+<div class="stage">
+  <div class="app" role="region" aria-label="手机画面">
+    <div class="sb"><span>9:41</span><span>●●● 5G</span></div>
+    <div id="game">
+      <img class="bg" src="../../assets/img/game-wukong.png" alt="">
+      <div id="gbal">₱500.00</div>
+      <button type="button" id="float" aria-label="打开快捷侧边栏"><img src="../../assets/img/789bingo-logo.png" alt="789bingo"></button>
+      <div id="mask" class="off"></div>
+      <section id="sheet" class="glow" role="dialog" aria-modal="true" aria-label="充值">
+        <div class="hd"><div class="grab"></div><h3>充值</h3><div class="sub">选择支付方式，立即充值</div><button type="button" class="x" id="close" aria-label="关闭">×</button></div>
+        <div class="bd" id="form">
+          <button type="button" class="promo" id="promo">🎁 <span>新用户首充<br><b>最高可得 7,890P 奖金</b></span><span class="go">›</span></button>
+          <div class="sec">支付方式<a href="#sheet" id="viewAll">查看全部 ›</a></div>
+          <div class="pays" id="pays"></div>
+          <div class="sec">充值金额</div>
+          <div class="amt"><span class="p">₱</span><input id="amount" inputmode="numeric" placeholder="限额 100 ~ 50,000" aria-label="充值金额"><span class="lspin" id="spin">+1 幸运转盘</span><button type="button" class="clr" id="clr" aria-label="清空金额">×</button></div>
+          <div class="recv" id="recv">至少到账 <b>₱0.00</b> ⓘ</div>
+          <div class="qamt" id="qamt"></div>
+          <label class="terms"><input type="checkbox" id="agree" checked> <span>我已阅读并同意</span><a href="#sheet">《充值条款》</a></label>
+        </div>
+        <div class="ft"><button type="button" id="submit">提交</button></div>
+        <div id="kyc" hidden><div class="dlg" role="dialog" aria-modal="true"><h3>请尽快完成账户认证</h3><p>请在 3 天内完成认证（沿用现有提醒，示意）</p><div class="gs-row"><button type="button" id="kycLater" data-cancel>稍后</button><button type="button" id="kycGo">立即认证</button></div></div></div>
+      </section>
+    </div>
+    <div id="pay" hidden>
+      <div class="gs-tabs" id="payTabs"><button type="button" id="tabGame">游戏 · Black Wukong</button><button type="button" class="cur">支付页</button></div>
+      <div class="appbar" id="payBar" hidden><button type="button" id="payBack" aria-label="返回">‹</button><span>支付页</span></div>
+      <div class="qr" id="qr" aria-label="支付二维码（示意）"></div>
+      <div id="payDone"><b id="doneT">支付已完成</b><span id="doneP">正在返回游戏…</span><button type="button" id="doneClose" hidden>关闭此页面</button></div>
+      <div class="payinfo"><span id="payM">请使用 GCash 扫描二维码完成支付</span><span>订单金额</span><b id="payA">₱500.00</b><span>二维码由支付渠道提供（示意）</span></div>
+    </div>
+    <div class="toast" id="toast" role="status" hidden></div>
+  </div>
+
+  <aside class="notes">
+    <h2>游戏内半屏充值</h2>
+    <p class="sub">入口：游戏页侧边栏的「充值」（Deposit）。本需求把原来的全屏充值改为半屏充值：不退出游戏、游戏不刷新，内容沿用现有充值页（依据 Claire《游戏中半屏充值功能需求》）。原型分两页演示，实际是在同一个游戏页面上打开。带淡色光晕的是本需求新增的控件。</p>
+    <h3>模拟场景</h3>
+    <div class="sim">
+      <button type="button" data-go="sheet"><span class="simtag">状态</span>半屏充值已打开</button>
+      <button type="button" data-go="game"><span class="simtag">状态</span>已关闭，回到游戏</button>
+      <button type="button" data-go="pay"><span class="simtag">状态</span>二维码支付页（H5 新标签页 / APP 支付页）</button>
+    </div>
+    <h3>模拟操作</h3>
+    <div class="sim" id="simPanel"></div>
+    <h3>规则批注</h3>
+    <ol>
+      <li><b>打开</b>：点侧边栏「充值」→ 侧边栏收起 → 半屏从底部升起，高度按内容自适应，最高为游戏页面高度的 2/3：内容短时按内容高度，内容长时固定 2/3、在半屏内滚动（小屏手机同样适用）；打开前不做游戏结算；游戏保留在底层不关闭、不刷新，上方加半透明遮罩不能操作；浮标暂时隐藏。<span class="ref">PRD 规则 N14 · F07-01 打开与关闭半屏充值</span></li>
+      <li><b>内容</b>：首充活动、支付方式、充值金额、快捷金额、赠送和幸运转盘标签、限额、条款、提交全部沿用现有充值页，不新增配置；内容在半屏内滚动，提交按钮固定在底部。画面里的支付方式、金额和标签只是示意，以现有充值设置为准（HOT 角标按现状固定在 +200）。<span class="ref">PRD 规则 N15 · F07-02 充值内容与提交</span></li>
+      <li><b>校验</b>：超出限额提示「请输入 100-50,000 之间的金额」（现有文案，数值随渠道变化）；提交中按钮置灰防重复。<span class="ref">PRD 8. 接口与异常 · F07-02</span></li>
+      <li><b>二维码支付</b>：下单成功后半屏收起，打开二维码支付页：H5 新开浏览器标签页，原游戏标签页保持打开；APP 用独立支付页、WebView 或外部浏览器（按支付方式现有的打开方式），原游戏页面保持。H5 支付页被浏览器拦截时半屏保持打开，提示「支付页面打开失败，请重试」。支付页的有效期、提示文案和结果页按目前接入的三方支付流程和规则显示，原型文案只是示意。<span class="ref">PRD 规则 N16 · F07-03 二维码支付与返回原游戏</span></li>
+      <li><b>返回原游戏</b>：支付完成后回到原游戏，不跳大厅、不重新加载：H5 回跳到「支付完成」中间页，自动关闭新标签页回到原游戏标签页，浏览器不允许自动关闭时提示「支付已完成，请返回游戏页面」并给「关闭此页面」按钮；在 TG / Facebook 内置浏览器、小程序或已安装的 PWA 中，支付页在系统浏览器打开，付完款中间页只显示文字、不提供进入平台的入口，玩家切回原 App / PWA 继续游戏（PRD 5.1）；回跳地址不带登录 token 和玩家身份信息（其他参数由技术按当前平台规则处理）；APP 打开支付页付款后要玩家手动切回 APP（现状，-2207 等）。不弹现有的「Payment Information」和「充值返回弹窗」，也不弹充值成功提示；游戏页内不弹到账推送，只进站内信；充值后触发的营销和引导弹窗（首充转盘、6954 充返转盘等）在玩家回到平台页面后才显示，第 4 局强制 KYC 等合规拦截照常在游戏内弹出；到账和余额按现有系统逻辑处理，游戏内余额可能要点侧边栏「刷新余额」才更新（-2304）。</li>
+      <li><b>首充后</b>：新用户在半屏里完成首充后，可以继续当前游戏，游戏页上不弹首充转盘和 PWA / APP 引导；关闭游戏回到平台原生页面后，再按平台规则显示。<span class="ref">PRD 规则 N16 · 3.3 冲突表</span></li>
+      <li><b>KYC 提醒与首充券</b>：未认证玩家提交时沿用现有 KYC 提醒，点「稍后」留在半屏继续提交，点「立即认证」先结算再跳 KYC 页；每次打开半屏重新拉取优惠券资格，首充后不再显示首充券。<span class="ref">PRD 规则 N15 · F07-02</span><span class="ref">PRD 规则 N16 · F07-03</span></li>
+      <li><b>关闭</b>：点右上角 × 或点上方遮罩，立即关闭回到游戏；侧边栏为收起状态，只显示浮标；已填写的金额不保留；自动展开机会不变。<span class="ref">PRD 规则 N14、N8 · F07-01、F03-02</span></li>
+    </ol>
+    <h3>评审待确认</h3>
+    <ol>
+      <li><b>横屏游戏</b>：横屏时 2/3 屏只有约 260 像素，放不下内容；改为右侧滑出面板、全屏面板还是提示转竖屏，待确认。<span class="ref">PRD 待确认 Q11</span></li>
+      <li><b>和在途工单对齐</b>：支付页打开方式要和 QRPH 收银台静态化、Maya 充值跳转等在途工单一起确认。<span class="ref">PRD 待确认 Q13</span></li>
+      </ol>
+    <div class="pager"><a href="游戏快捷侧边栏-游戏页快捷侧边栏.html">← 上一页：游戏页快捷侧边栏</a><span></span></div>
+  </aside>
+</div>
+</div>
+<script>window.NAV_ROOT = "../../";</script>
+<script src="../../assets/nav-data.js"></script>
+<script src="../../assets/nav.js"></script>
+<script src="../../assets/proto-en.js"></script>
+<script src="../../assets/proto.js"></script>
+<script>
+P.init({ defaults: { platform: "H5", small: false, noPromo: false, kycNeed: false, noClose: false, inApp: false, payBlocked: false, orderFail: false, balance: 500 } });
+var $ = function (id) { return document.getElementById(id); };
+/* 示意数据：以现有充值设置为准 */
+var PAYS = ["GCash", "QR Ph", "Maya", "coins.ph", "DitoCash", "银行卡", "USDT", "更多"];
+var AMTS = [[100], [200, "HOT", "#FF3B30"], [300], [500], [1000], [2000], [5000], [10000, "VIP", "#7b3fe4"], [50000]];
+var MIN = 100, MAX = 50000, pay = 0, view = "sheet", busy = false;
+function money(v) { return "₱" + Number(v).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
+PAYS.forEach(function (n, i) { var b = document.createElement("button"); b.type = "button"; b.textContent = n; b.onclick = function () { pay = i; drawPays(); }; $("pays").appendChild(b); });
+function drawPays() { [].forEach.call($("pays").children, function (b, i) { b.setAttribute("aria-pressed", i === pay); }); $("spin").hidden = pay !== 0; $("payM").textContent = "请使用 " + PAYS[pay] + " 扫描二维码完成支付"; }
+AMTS.forEach(function (a) {
+  var b = document.createElement("button"); b.type = "button"; b.dataset.v = a[0]; b.textContent = "+" + a[0].toLocaleString("en-US");
+  if (a[1]) { var i = document.createElement("i"); i.textContent = a[1]; i.style.background = a[2]; b.appendChild(i); }
+  b.onclick = function () { $("amount").value = a[0]; drawAmt(); }; $("qamt").appendChild(b);
+});
+function drawAmt() {
+  var v = $("amount").value.replace(/[^0-9]/g, "").slice(0, 6); $("amount").value = v;
+  [].forEach.call($("qamt").children, function (b) { b.setAttribute("aria-pressed", b.dataset.v === v); });
+  $("recv").innerHTML = "至少到账 <b>" + money(+v || 0) + "</b> ⓘ";
+  $("submit").disabled = busy || !$("agree").checked;
+}
+$("amount").addEventListener("input", drawAmt); $("agree").addEventListener("change", drawAmt);
+$("clr").onclick = function () { $("amount").value = ""; drawAmt(); };
+/* 二维码示意图案 */
+["qr"].forEach(function (id) { var q = $(id); for (var i = 0; i < 441; i++) { var r = Math.floor(i / 21), c = i % 21, f = (r < 7 && c < 7) || (r < 7 && c > 13) || (r > 13 && c < 7); var e = document.createElement("i"); if (f ? ((r % 6 === 0 || c % 6 === 0 || (r % 7 > 1 && r % 7 < 5 && c % 7 > 1 && c % 7 < 5)) ? 0 : 1) : ((r * 7 + c * 13) % 3)) e.className = "w"; q.appendChild(e); } });
+
+function size() { document.querySelector(".app").style.height = P.get("small") ? "670px" : ""; $("promo").hidden = !!P.get("noPromo"); }
+function show(v) {
+  view = v = ({ sheet: 1, game: 1, pay: 1 })[v] ? v : "sheet";
+  var open = v === "sheet";
+  $("sheet").classList.toggle("on", open); $("mask").classList.toggle("off", !open); $("float").classList.toggle("hide", open);
+  $("pay").hidden = v !== "pay";
+  var app = P.get("platform") !== "H5"; $("payTabs").hidden = app; $("payBar").hidden = !app;
+  if (location.hash.slice(1) !== v) history.replaceState(null, "", "#" + v);
+  if (window.self !== window.top) window.parent.postMessage({ type: "proto-view", view: v }, "*");
+}
+function closeSheet() { $("amount").value = ""; drawAmt(); show("game"); }
+$("close").onclick = closeSheet;
+$("mask").onclick = closeSheet;
+$("float").onclick = function () { location.href = "游戏快捷侧边栏-游戏页快捷侧边栏.html"; };
+var kycOk = false;
+$("kycLater").onclick = function () { $("kyc").hidden = true; kycOk = true; $("submit").onclick(); };   /* Later：留在半屏，继续提交 */
+$("kycGo").onclick = function () { $("kyc").hidden = true; closeSheet(); };   /* Verify Now：实际先结算同步再跳 KYC 页，原型只收起半屏示意 */
+$("submit").onclick = function () {
+  if (busy || $("submit").disabled) return;
+  if (P.get("kycNeed") && !kycOk) { $("kyc").hidden = false; return; }   /* N15：未认证玩家沿用现有 KYC 提醒 */
+  var v = +$("amount").value;
+  if (!(v >= MIN && v <= MAX)) { P.toast("请输入 100-50,000 之间的金额"); return; }
+  busy = true; $("submit").textContent = "提交中…"; drawAmt();
+  setTimeout(function () {
+    busy = false; $("submit").textContent = "提交"; drawAmt();
+    if (P.get("orderFail")) { P.toast("下单失败，请稍后重试"); return; }
+    if (P.get("platform") === "H5" && P.get("payBlocked")) { P.toast("支付页面打开失败，请重试"); return; }
+    $("payA").textContent = money(v); show("pay");
+  }, 800);
+};
+function backToGame() { $("amount").value = ""; drawAmt(); $("pay").classList.remove("gs-done"); show("game"); }
+/* N16：H5 支付完成后回跳到「支付完成」中间页，自动关闭新标签页回到原游戏；不能自动关闭时提示玩家关闭此页面 */
+function payDone() {
+  if (view !== "pay" || P.get("platform") !== "H5") { backToGame(); return; }
+  $("pay").classList.add("gs-done");
+  if (P.get("inApp")) { $("doneP").textContent = "支付已完成，请返回游戏页面"; $("doneClose").hidden = true; return; }   /* 5.1：内置浏览器 / 小程序 / PWA 中支付页在系统浏览器打开，只显示文字，不提供按钮和平台入口 */
+  if (P.get("noClose")) { $("doneP").textContent = "支付已完成，请返回游戏页面"; $("doneClose").hidden = false; return; }
+  $("doneP").textContent = "正在返回游戏…"; $("doneClose").hidden = true; setTimeout(backToGame, 1200);
+}
+$("doneClose").onclick = backToGame;
+$("tabGame").onclick = backToGame; $("payBack").onclick = backToGame;
+
+P.panel($("simPanel"), [
+  { title: "切换端", items: [{ type: "select", key: "platform", label: "端", options: [["H5", "H5（新标签页）"], ["iOS", "iOS 原生（独立支付页 / WebView / 外部浏览器）"], ["Flutter", "Flutter 安卓（同上）"]] }] },
+  { title: "半屏高度（按内容自适应，最高 2/3 屏）", items: [
+    { type: "check", key: "small", label: "小屏手机（游戏页面高约 640 像素，内容超出 2/3 时半屏内滚动）" },
+    { type: "check", key: "noPromo", label: "不显示首充活动卡片（内容变短，半屏随之变矮）" }
+  ] },
+  { title: "注入异常", items: [
+    { type: "check", key: "kycNeed", label: "未认证玩家（提交时弹现有 KYC 提醒）" },
+    { type: "check", key: "payBlocked", label: "H5 支付页被浏览器拦截" },
+    { type: "check", key: "orderFail", label: "下单失败（沿用现有提示，示意）" }
+  ] },
+  { title: "支付结果", items: [
+    { type: "button", label: "支付完成（H5 回跳中间页并自动关闭标签页；APP 手动切回）", run: function () { payDone(); } },
+    { type: "check", key: "noClose", label: "浏览器不允许自动关闭标签页" },
+    { type: "check", key: "inApp", label: "在 TG / Facebook 内置浏览器、小程序或已安装的 PWA 中（支付页在系统浏览器打开）" },
+    { type: "button", label: "切回原 App / PWA（原游戏保持）", run: function () { backToGame(); } },
+    { type: "button", label: "取消支付并回到原游戏", run: function () { backToGame(); } }
+  ] },
+  { title: "演示值说明", items: [{ type: "note", text: "限额 100 ~ 50,000、支付方式、快捷金额和首充活动均为示意，实际以现有充值设置为准。支付完成后游戏内不弹任何提示；到账按现有逻辑，原型不改游戏内余额。" }] },
+  { items: [{ type: "reset" }] }
+]);
+window.addEventListener("proto-change", function (e) { if (e.detail.key === "small" || e.detail.key === "noPromo") size(); if (e.detail.key === "platform") show(view); });
+window.addEventListener("hashchange", function () { show(location.hash.slice(1) || "sheet"); });
+document.addEventListener("click", function (e) { var b = e.target.closest(".notes [data-go]"); if (b) { e.preventDefault(); show(b.dataset.go); } });
+$("gbal").textContent = money(P.get("balance"));
+size(); drawPays(); drawAmt();
+setTimeout(function () { show(location.hash.slice(1) || "sheet"); }, 60);
+</script>
+</body>
+</html>

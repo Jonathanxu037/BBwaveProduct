@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>游戏快捷侧边栏-后台游戏快捷侧边栏管理</title>
+<link rel="stylesheet" href="../../assets/style.css">
+<style>
+.bo-tabs span{cursor:pointer}
+.sw{all:unset;display:inline-block;width:40px;height:20px;border-radius:10px;background:#DCDFE6;position:relative;cursor:pointer;vertical-align:middle;transition:background .2s}
+.sw::after{content:"";position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:#fff;transition:left .2s}
+.sw[aria-checked=true]{background:#409EFF}.sw[aria-checked=true]::after{left:22px}
+.sw[disabled]{opacity:.45;cursor:not-allowed}
+.gs-hint{color:#909399;font-size:12px}
+.card{border:1px solid #EBEEF5;border-radius:4px;margin-bottom:14px}
+.card>.ch{display:flex;flex-wrap:wrap;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid #EBEEF5;font-weight:700;background:#FAFAFA}
+.card>.cb{padding:6px 14px 12px}
+.up{width:250px;height:100px;border:1px dashed #C0C4CC;border-radius:4px;display:grid;place-items:center;color:#909399;font-size:12px;background:#FAFAFA center/cover no-repeat;cursor:pointer}
+.gi{width:44px;height:44px;border-radius:8px;border:1px solid #eee;background:#C5CBD6 center/cover}
+.tagst{padding:1px 8px;border-radius:3px;font-size:12px}
+.st-ok{color:#19be6b;background:#e8f8ef}.st-mt{color:#ff9900;background:#fff4e0}.st-off{color:#ed4014;background:#ffecea}
+.slot{font-size:11.5px;color:#409EFF}.slot.gray{color:#bbb}
+.opbar{position:sticky;bottom:0;z-index:5;display:flex;align-items:center;gap:10px;justify-content:flex-end;padding:12px 18px;background:rgba(255,255,255,.97);border-top:1px solid #EBEEF5;box-shadow:0 -4px 12px rgba(0,0,0,.06)}
+.opbar .gs-hint{margin-right:auto}
+.pool{max-height:320px;overflow:auto;border:1px solid #EBEEF5;border-radius:4px}
+.pool label{display:flex;align-items:center;gap:10px;padding:6px 10px;border-bottom:1px solid #F2F2F2;cursor:pointer}
+.pool label.dis{opacity:.55;cursor:not-allowed}
+.bo-dlg.wide{width:min(620px,94vw)}
+</style>
+</head>
+<body>
+<!-- 后台原型：活动配置 › 游戏快捷侧边栏管理。本需求新增页面，控件都加了 glow；新增和不常见字段后的「?」文字取自 PRD 6.6 帮助提示内容。示例数据均为虚构。 -->
+<div class="with-nav">
+<div class="adm-stage">
+  <div class="bo">
+    <div class="bo-top1"><span>当前时间：2026/10/20 14:30:00</span><span class="sp">简体中文</span><span>运营账号A ▾</span></div>
+    <div class="bo-top2"><span>在线人数<b class="bo-n r">12</b></span><span>当日注册<b class="bo-n g">8</b></span><span>当日充值成功<b class="bo-n g">15</b></span><span>提款<b class="bo-n g">0</b></span><span>风控审核<b class="bo-n r">1</b></span></div>
+    <div class="bo-body">
+      <nav class="bo-menu" aria-label="后台菜单">
+        <div class="mt">菜单 ≡</div>
+        <div class="g">用户管理</div><div class="g">财务管理</div><div class="g">充值配置</div>
+        <div class="g open">活动配置</div>
+        <div class="i">活动列表</div><div class="i">活动类别管理</div><div class="i">派奖审核</div><div class="i">活动图素材管理</div>
+        <div class="i on">游戏快捷侧边栏管理</div>
+        <div class="i">流水稽核配置管理</div>
+        <div class="g">系统管理</div>
+      </nav>
+      <div class="bo-main">
+        <div class="bo-crumb">位置 › 活动配置 › <b>游戏快捷侧边栏管理</b></div>
+        <div class="bo-tabs" role="tablist"><span role="tab" tabindex="0" class="on" aria-selected="true">游戏快捷侧边栏管理</span></div>
+        <div class="bo-content">
+          <div class="card glow">
+            <div class="ch">功能配置</div>
+            <div class="cb">
+              <div class="frow"><span class="fl">启用游戏快捷侧边栏<i class="qm" tabindex="0" data-tip="总开关，默认开。关闭后前台游戏页不显示浮标和侧边栏，退出时自动展开也一起失效，也不会恢复旧版 G 图标。保存后新进入游戏的玩家生效。">?</i></span><div class="fctl"><button type="button" class="sw" id="swEn" role="switch" aria-label="启用游戏快捷侧边栏"></button><span class="gs-hint">关闭后前台游戏页不展示浮标及侧边栏</span></div></div>
+              <div class="frow"><span class="fl">启用退出时自动展开<i class="qm" tabindex="0" data-tip="默认开。开启时，玩家每进入一款游戏，第一次点退出会自动展开侧边栏一次；关闭后退出按现有流程。总开关关闭时不能操作。">?</i></span><div class="fctl"><button type="button" class="sw" id="swAu" role="switch" aria-label="启用退出时自动展开"></button><span class="gs-hint">每进入一款游戏，首次点击退出时自动展开一次</span></div></div>
+            </div>
+          </div>
+          <div class="card glow">
+            <div class="ch">Mini Banner 配置<span class="gs-hint" style="font-weight:400">前台只展示 1 张图，不轮播</span></div>
+            <div class="cb">
+              <div class="frow"><span class="fl">是否展示<i class="qm" tabindex="0" data-tip="控制侧边栏里的 Mini Banner 是否显示。开启时必须上传图片并配置跳转目标才能保存。">?</i></span><div class="fctl"><button type="button" class="sw" id="swBn" role="switch" aria-label="是否展示"></button></div></div>
+              <div class="frow"><span class="fl"><span class="req">*</span>跳转方式<i class="qm" tabindex="0" data-tip="二选一：选择活动（跳该活动详情页）或自定义跳转链接（跳填写的地址）。选择活动时，玩家点击前会先完成游戏结算并离开游戏；自定义跳转链接在新标签页（APP 为系统浏览器）打开，不离开游戏、不结算。">?</i></span><div class="fctl"><label><input type="radio" name="bt" value="promo"> 选择活动（跳转活动详情页）</label><label><input type="radio" name="bt" value="link"> 自定义跳转链接</label></div></div>
+              <div class="frow" id="rowPromo"><span class="fl"><span class="req">*</span>选择活动<i class="qm" tabindex="0" data-tip="只能选展示中的活动。活动下架或结束后，前台自动隐藏 Mini Banner，需要重新选择。">?</i></span><div class="fctl"><select class="bo-inp" id="promo" style="width:340px"><option value="">请选择展示中的活动</option></select></div></div>
+              <div class="frow" id="rowLink" hidden><span class="fl"><span class="req">*</span>跳转链接<i class="qm" tabindex="0" data-tip="必须以 http:// 或 https:// 开头，不能有空格；可以填任何域名。玩家点击后在新标签页（APP 为系统浏览器）打开，不离开游戏。">?</i></span><div class="fctl"><input class="bo-inp" id="link" style="width:340px" placeholder="https://"><span class="gs-hint">需以 http(s):// 开头</span></div></div>
+              <div class="frow"><span class="fl"><span class="req">*</span>Mini Banner 图<i class="qm" tabindex="0" data-tip="单独为侧边栏上传的图片，不使用活动原有 Banner；尺寸、格式和大小以设计稿为准。">?</i></span><div class="fctl" style="align-items:flex-start">
+                <label class="up" id="upBox"><input type="file" id="file" accept="image/png,image/jpeg" hidden><span id="upTxt">+ 点击上传图片</span></label>
+                <div class="gs-hint" style="display:grid;gap:6px">单独上传，不使用活动原有 Banner<br>尺寸、格式和大小待设计稿确认<span id="upOps"><label class="bo-btn link" style="cursor:pointer">重新上传<input type="file" id="file2" accept="image/png,image/jpeg" hidden></label><button type="button" class="bo-btn link" id="delImg" style="color:#F56C6C">删除</button></span></div>
+              </div></div>
+            </div>
+          </div>
+          <div class="card glow">
+            <div class="ch">推荐游戏配置（按排序显示）
+              <span style="font-weight:400">展示数量<i class="qm" tabindex="0" data-tip="前台推荐区最多显示几个游戏，1–30 的整数，默认 10。维护中、已下架和玩家正在玩的游戏不计入。">?</i> <input class="bo-inp" id="count" style="width:70px" inputmode="numeric" aria-label="展示数量"></span>
+              <span class="gs-hint" style="font-weight:400">前台 2 列，首屏约 7 个；维护中、已下架的游戏自动不展示</span>
+              <button type="button" class="bo-btn q" id="addG" style="margin-left:auto">添加游戏</button>
+            </div>
+            <div class="cb">
+              <table>
+                <thead><tr><th>排序<i class="qm" tabindex="0" data-tip="按当前排序和展示数量预估的前台位置。维护中、已下架的游戏不显示；玩家正在玩的那款游戏在前台也会被跳过，实际位置可能前移一位。">?</i></th><th>游戏图标</th><th>游戏名称</th><th>游戏类型</th><th>游戏状态<i class="qm" tabindex="0" data-tip="取自游戏入口设置。维护中、已下架的游戏前台不显示，恢复正常后自动按原排序显示。">?</i></th><th>排序调整</th><th>操作</th></tr></thead>
+                <tbody id="rows"></tbody>
+              </table>
+              <div class="bo-page" id="pager" role="navigation" aria-label="推荐游戏分页"></div>
+              <p class="gs-hint" style="margin:8px 0 0">示例数据均为虚构。</p>
+            </div>
+          </div>
+        </div>
+        <div class="opbar"><span class="gs-hint">修改后需点击「保存配置」才会在前台生效</span><button type="button" class="bo-btn" id="reset">重置</button><button type="button" class="bo-btn q" id="save">保存配置<i class="qm" tabindex="0" data-tip="保存配置：提交全部配置，新进入游戏的玩家读取新配置。重置：放弃未保存的修改，恢复为上次保存的配置。">?</i></button></div>
+      </div>
+    </div>
+  </div>
+
+  <aside class="notes adm-notes">
+    <h2>后台游戏快捷侧边栏管理</h2>
+    <p class="sub">活动配置 › 游戏快捷侧边栏管理。本需求新增页面，配置功能开关、Mini Banner 和推荐游戏（带淡色光晕的是本需求新增的控件）。每个站点有自己的管理后台，各自配置，本页面不区分站点。在这里保存后，同一浏览器标签页里的前台原型直接读取新配置。</p>
+    <h3>模拟场景</h3>
+    <div class="sim">
+      <button type="button" id="simAdd"><span class="simtag">弹窗</span>打开「添加推荐游戏」</button>
+      <button type="button" id="simConc"><span class="simtag">并发</span>模拟别人已先保存（再点保存配置）</button>
+      <button type="button" id="simMany"><span class="simtag">数据</span>多页：加入 40 个示例游戏（看分页、删除末页最后一条回上一页）</button>
+      <button type="button" id="simClear"><span class="simtag">数据</span>空列表：清空推荐列表</button>
+    </div>
+    <h3>模拟操作</h3>
+    <div class="sim" id="simPanel"></div>
+    <h3>规则批注</h3>
+    <ol>
+      
+      <li><b>功能配置</b>：两个开关默认开；总开关关闭时「启用退出时自动展开」置灰。<span class="ref">PRD 6.2 · F08-02 功能配置</span></li>
+      <li><b>Mini Banner</b>：是否展示开启时，图片、活动或链接缺一不能保存，分别提示「请上传 Mini Banner 图」「请选择活动」「跳转链接格式不正确，需以 http(s):// 开头」；链接可以填任何域名。活动下拉取「活动图素材管理 › 优惠活动」里正在展示的活动。<span class="ref">PRD 6.3 · F08-03 Mini Banner 配置</span></li>
+      <li><b>展示数量</b>：1–30 的整数，默认 10；不合法时保存提示「展示数量需为 1–30 的整数」。<span class="ref">PRD 6.4 · F08-04 推荐游戏配置</span></li>
+      <li><b>添加游戏</b>：只列平台已配置的游戏，可搜索、多选，已添加的置灰；确定后追加到末尾；右上角 × 等同取消。<span class="ref">PRD 6.4 · F08-04</span></li>
+      <li><b>列表分页</b>：推荐游戏列表和「添加推荐游戏」弹窗都用页码分页，默认每页 20 条（列表可选 10 / 20 / 50 / 100，弹窗可选 10 / 20 / 50）；改每页条数、搜索后回第 1 页；上移、下移、删除后停在当前页，删除后当前页为空时回到上一页；添加后追加到列表末尾、停在当前页并提示所在页；页码输入超出范围取首页或末页；弹窗里的勾选跨页保留。<span class="ref">PRD 6.5 列表分页 · F08-04</span></li>
+      <li><b>位次提示</b>：从上往下数状态正常的游戏，前 N 个为「前台第 1–N 位」，其余正常游戏为「超出展示数量」，维护中和已下架为「—」。<span class="ref">PRD 6.4 · F08-04</span></li>
+      <li><b>菜单权限和操作日志</b>：新增菜单按后台现有角色权限配置，默认分配给运营；每次保存成功记一条操作日志（操作人、时间、修改前后值），在后台现有操作日志里查看。<span class="ref">PRD 6.1 · F08-05</span></li>
+      <li><b>多人同时编辑</b>：保存时校验配置版本，别人已先保存时提示「配置已被他人修改，请刷新后再改」，不保存。<span class="ref">PRD 6.1 · F08-05</span></li>
+      <li><b>保存与重置</b>：保存后新进入游戏的玩家生效；重置恢复为上次保存的配置。<span class="ref">PRD 6.1 · F08-05 保存与重置</span></li>
+    </ol>
+    <h3>评审待确认</h3>
+    <ol>
+      <li><b>Mini Banner 图片规格</b>：尺寸、格式和大小。<span class="ref">PRD 待确认 Q7</span></li>
+      
+      
+    </ol>
+    <div class="pager"><span></span><a href="../front/游戏快捷侧边栏-游戏页快捷侧边栏.html">下一页：游戏页快捷侧边栏（看配置效果）→</a></div>
+  </aside>
+</div>
+</div>
+<script>window.NAV_ROOT = "../../";</script>
+<script src="../../assets/nav-data.js"></script>
+<script src="../../assets/nav.js"></script>
+<script src="../../assets/proto.js"></script>
+<script>
+var IMG = "../../assets/img/";
+var ALL = [
+  ["dragon-tiger", "D Dragon Tiger", "真人", "ok"], ["pok-deng", "D Pok Deng", "真人", "ok"], ["sic-bo", "D Sic Bo", "真人", "ok"],
+  ["fortune-goddess", "Fortune Goddess", "电子", "ok"], ["fortune-gems", "Fortune Gems", "电子", "ok"], ["crazy-time", "Crazy Time", "真人", "maintenance"],
+  ["fortune-bingo", "Fortune Bingo", "电子", "ok"], ["fortune-gems-2", "Fortune Gems 2", "电子", "ok"], ["super-ace-deluxe", "Super Ace Deluxe", "电子", "ok"],
+  ["super-ace-joker", "Super Ace Joker", "电子", "ok"], ["wukong", "Black Wukong", "电子", "ok"], ["money-coming", "Money Coming", "电子", "offline"]
+].map(function (a) { return { id: a[0], n: a[1], t: a[2], st: a[3] }; });
+function G(id) { return ALL.filter(function (g) { return g.id === id; })[0]; }
+function icon(g) { return g.id === "wukong" ? IMG + "game-wukong.png" : (g.st === "ok" && g.id.indexOf("demo-") !== 0) ? IMG + "games/" + g.id + ".png" : ""; }
+var PROMOS = [["friday-jackpot-drop", "Friday Jackpot Drop"], ["loyalty-lucky-spin", "Loyalty Lucky Spin Rewards"], ["level-up-rewards", "Level Up and Get Rewarded"]];
+var DEF_CFG = { enabled: true, autoExpand: true, showBanner: true, bType: "promo", bPromo: "friday-jackpot-drop", bImg: IMG + "banner-1.png", bLink: "", count: 10,
+  rec: ["dragon-tiger", "pok-deng", "sic-bo", "crazy-time", "money-coming", "fortune-goddess", "fortune-gems", "fortune-bingo", "fortune-gems-2", "super-ace-deluxe", "super-ace-joker"] };
+P.init({ defaults: { cfg1: null } });
+var $ = function (id) { return document.getElementById(id); };
+function clone(o) { return JSON.parse(JSON.stringify(o)); }
+function saved() { return clone(P.get("cfg1") || DEF_CFG); }
+var C = saved();
+/* 列表分页（需求包框架规范第 4 节）：PRD 6.5 列表分页。pager(box, st, total, onChange) 画页码条：共几条、每页条数、页码、上一页 / 下一页、前往某页 */
+function pager(box, st, total, onChange, sizes) {
+  var n = Math.max(1, Math.ceil(total / st.size)); st.page = Math.min(Math.max(1, st.page), n);
+  box.innerHTML = '<span>共 <b>' + total + '</b> 条</span><label>每页 <select aria-label="每页条数">' + (sizes || [10, 20, 50, 100]).map(function (s) { return "<option" + (s === st.size ? " selected" : "") + ">" + s + "</option>"; }).join("") + '</select> 条</label><button type="button" data-p="prev" aria-label="上一页">‹</button><span class="gs-nums"></span><button type="button" data-p="next" aria-label="下一页">›</button><label>前往 <input inputmode="numeric" aria-label="前往页码" value="' + st.page + '"> 页</label>';
+  var nums = box.querySelector(".gs-nums");
+  for (var i = 1; i <= n; i++) {
+    if (n > 7 && i > 2 && i < n - 1 && Math.abs(i - st.page) > 1) { if (!nums.lastChild || nums.lastChild.textContent !== "…") nums.appendChild(document.createTextNode("…")); continue; }
+    var b = document.createElement("button"); b.type = "button"; b.textContent = i; b.dataset.p = i; if (i === st.page) b.setAttribute("aria-current", "page"); nums.appendChild(b);
+  }
+  box.querySelector('[data-p="prev"]').disabled = st.page <= 1; box.querySelector('[data-p="next"]').disabled = st.page >= n;
+  box.onclick = function (e) { var b = e.target.closest("button[data-p]"); if (!b || b.disabled) return; st.page = b.dataset.p === "prev" ? st.page - 1 : b.dataset.p === "next" ? st.page + 1 : +b.dataset.p; onChange(); };
+  box.querySelector("select").onchange = function () { st.size = +this.value; st.page = 1; onChange(); };
+  box.querySelector("input").onkeydown = function (e) { if (e.key !== "Enter") return; var v = parseInt(this.value, 10); if (!isNaN(v)) st.page = v; onChange(); };
+}
+var PG = { size: 20, page: 1 };
+function msg(t, err) { var m = document.createElement("div"); m.className = "bo-msg " + (err ? "err" : "ok"); m.setAttribute("role", "status"); m.textContent = t; document.body.appendChild(m); setTimeout(function () { m.remove(); }, 2000); }
+
+function render() {
+  $("swEn").setAttribute("aria-checked", C.enabled); $("swAu").setAttribute("aria-checked", C.autoExpand); $("swAu").disabled = !C.enabled; $("swBn").setAttribute("aria-checked", C.showBanner);
+  document.querySelectorAll("input[name=bt]").forEach(function (r) { r.checked = r.value === C.bType; });
+  $("rowPromo").hidden = C.bType !== "promo"; $("rowLink").hidden = C.bType !== "link";
+  var sel = $("promo"); sel.length = 1; PROMOS.forEach(function (p) { var o = document.createElement("option"); o.value = p[0]; o.textContent = p[1]; sel.appendChild(o); }); sel.value = C.bPromo || "";
+  $("link").value = C.bLink || "";
+  $("upBox").style.backgroundImage = C.bImg ? "url('" + C.bImg + "')" : "none"; $("upTxt").hidden = !!C.bImg; $("upOps").hidden = !C.bImg;
+  $("count").value = C.count;
+  var n = parseInt(C.count, 10) || 0, slot = 0;
+  $("rows").innerHTML = C.rec.length ? "" : '<tr><td colspan="7" style="text-align:center;color:#909399">暂无数据</td></tr>';
+  var pages = Math.max(1, Math.ceil(C.rec.length / PG.size)); if (PG.page > pages) PG.page = pages;
+  var from = (PG.page - 1) * PG.size, to = from + PG.size, SL = {};
+  C.rec.forEach(function (id) { var g = G(id); if (g.st === "ok" && slot < n) { slot++; SL[id] = slot; } });
+  C.rec.forEach(function (id, i) {
+    if (i < from || i >= to) return;
+    var g = G(id), ok = g.st === "ok", shown = !!SL[id];
+    var st = { ok: ["正常", "st-ok", ""], maintenance: ["维护中", "st-mt", "前台不展示"], offline: ["已下架", "st-off", "前台不展示"] }[g.st];
+    var tr = document.createElement("tr");
+    tr.innerHTML = "<td>" + (i + 1) + '<div class="slot' + (shown ? "" : " gray") + '">' + (shown ? "前台第 " + SL[id] + " 位" : ok ? "超出展示数量" : "—") + "</div></td>" +
+      '<td><div class="gi" style="background-image:' + (icon(g) ? "url('" + icon(g) + "')" : "none") + '"></div></td><td>' + g.n + "</td><td>" + g.t + "</td>" +
+      '<td><span class="tagst ' + st[1] + '">' + st[0] + '</span><div class="gs-hint">' + st[2] + "</div></td>" +
+      '<td><button type="button" class="bo-btn" data-mv="-1" data-i="' + i + '"' + (i === 0 ? " disabled" : "") + '>↑</button> <button type="button" class="bo-btn" data-mv="1" data-i="' + i + '"' + (i === C.rec.length - 1 ? " disabled" : "") + ">↓</button></td>" +
+      '<td><button type="button" class="bo-btn link" data-del="' + i + '" style="color:#F56C6C">删除</button></td>';
+    $("rows").appendChild(tr);
+  });
+  pager($("pager"), PG, C.rec.length, render);
+}
+$("swEn").onclick = function () { C.enabled = !C.enabled; render(); };
+$("swAu").onclick = function () { if (!C.enabled) return; C.autoExpand = !C.autoExpand; render(); };
+$("swBn").onclick = function () { C.showBanner = !C.showBanner; render(); };
+document.querySelectorAll("input[name=bt]").forEach(function (r) { r.onchange = function () { C.bType = r.value; render(); }; });
+$("promo").onchange = function () { C.bPromo = this.value; };
+$("link").oninput = function () { C.bLink = this.value; };
+$("count").oninput = function () { C.count = this.value; render(); $("count").focus(); };
+function onFile(e) { var f = e.target.files && e.target.files[0]; if (!f) return; var r = new FileReader(); r.onload = function () { C.bImg = r.result; render(); }; r.readAsDataURL(f); e.target.value = ""; }
+$("file").onchange = onFile; $("file2").onchange = onFile;
+$("delImg").onclick = function () { C.bImg = ""; render(); };
+$("rows").addEventListener("click", function (e) {
+  var b = e.target.closest("button"); if (!b) return;
+  if (b.dataset.mv) { var i = +b.dataset.i, j = i + (+b.dataset.mv); if (j < 0 || j >= C.rec.length) return; var t = C.rec[i]; C.rec[i] = C.rec[j]; C.rec[j] = t; render(); }
+  if (b.dataset.del) { C.rec.splice(+b.dataset.del, 1); render(); }   /* 删除后当前页为空时 render 自动回到上一页 */
+});
+$("save").onclick = function (e) {
+  if (e.target.classList.contains("qm")) return;
+  var cnt = String(C.count).trim();
+  if (!/^\d+$/.test(cnt) || +cnt < 1 || +cnt > 30) return msg("展示数量需为 1–30 的整数", 1);
+  if (C.showBanner) {
+    if (!C.bImg) return msg("请上传 Mini Banner 图", 1);
+    if (C.bType === "promo" && !C.bPromo) return msg("请选择活动", 1);
+    C.bLink = (C.bLink || "").trim();
+    if (C.bType === "link" && !/^https?:\/\/\S+$/.test(C.bLink)) return msg("跳转链接格式不正确，需以 http(s):// 开头", 1);
+  }
+  if (CONC) { CONC = false; return msg("配置已被他人修改，请刷新后再改", 1); }   /* 6.1 多人同时编辑 */
+  C.count = +cnt;
+  
+  try { P.set("cfg1", clone(C)); } catch (x) { return msg("保存失败：图片过大，请压缩后重试", 1); }
+  render(); msg("保存成功");
+};
+$("reset").onclick = function () { C = saved(); render(); msg("已重置为上次保存的配置"); };
+
+/* 添加游戏弹窗 */
+function openAdd() {
+  var picked = [], MP = { size: 20, page: 1 }, mask = document.createElement("div"); mask.className = "bo-mask";
+  mask.innerHTML = '<div class="bo-dlg wide" role="dialog" aria-modal="true"><h4>添加推荐游戏 <span class="gs-hint" style="font-weight:400">来源：平台游戏列表</span></h4>' +
+    '<input class="bo-inp" placeholder="搜索游戏名称" aria-label="搜索游戏名称"><div class="pool"></div><div class="bo-page gs-mpager" role="navigation" aria-label="游戏列表分页"></div>' +
+    '<div class="row2"><span class="gs-hint" style="margin-right:auto">已选 <b>0</b> 个，将追加到列表末尾</span><button type="button" class="bo-btn" data-cancel>取消</button><button type="button" class="bo-btn q">确定</button></div></div>';
+  document.body.appendChild(mask);
+  var q = mask.querySelector("input"), pool = mask.querySelector(".pool");
+  function draw() {
+    var k = q.value.trim().toLowerCase(); pool.innerHTML = "";
+    var list = ALL.filter(function (g) { return !k || g.n.toLowerCase().indexOf(k) >= 0; }).sort(function (a, b) { return a.n.localeCompare(b.n) || a.id.localeCompare(b.id); });
+    pager(mask.querySelector(".gs-mpager"), MP, list.length, draw, [10, 20, 50]);
+    if (!list.length) pool.innerHTML = '<p class="gs-hint" style="padding:16px;text-align:center">没有匹配的游戏</p>';
+    list.slice((MP.page - 1) * MP.size, MP.page * MP.size).forEach(function (g) {
+      var added = C.rec.indexOf(g.id) >= 0, l = document.createElement("label"); if (added) l.className = "dis";
+      l.innerHTML = '<input type="checkbox"' + (added || picked.indexOf(g.id) >= 0 ? " checked" : "") + (added ? " disabled" : "") + '><div class="gi" style="width:36px;height:36px;background-image:' + (icon(g) ? "url('" + icon(g) + "')" : "none") + '"></div><span style="flex:1">' + g.n + '</span><span class="gs-hint">' + g.t + "</span><span class=\"gs-hint\">" + (added ? "已添加" : { ok: "正常", maintenance: "维护中", offline: "已下架" }[g.st]) + "</span>";
+      if (!added) l.querySelector("input").onchange = function () { var i = picked.indexOf(g.id); if (i >= 0) picked.splice(i, 1); else picked.push(g.id); mask.querySelector(".row2 b").textContent = picked.length; };
+      pool.appendChild(l);
+    });
+  }
+  q.oninput = function () { MP.page = 1; draw(); }; draw();   /* 搜索后回到第 1 页；勾选跨页保留 */
+  function close() { mask.remove(); }
+  mask.querySelector("[data-cancel]").onclick = close;
+  mask.querySelector(".bo-btn.q").onclick = function () { C.rec = C.rec.concat(picked); close(); render(); if (picked.length) msg("已添加 " + picked.length + " 个游戏，已追加到列表末尾（第 " + Math.ceil(C.rec.length / PG.size) + " 页）"); };
+  mask.addEventListener("click", function (e) { if (e.target.classList.contains("x-close")) close(); });
+  if (window.NAV && NAV.xclose) NAV.xclose(mask);
+}
+$("addG").onclick = openAdd;
+$("simAdd").onclick = function () { P.note("已打开弹窗", this); openAdd(); };
+$("simConc").onclick = function () { CONC = true; P.note("下一次点「保存配置」时模拟别人已先保存", this); };
+var CONC = false;
+$("simClear").onclick = function () { C.rec = []; PG.page = 1; render(); P.note("推荐列表已清空（未保存）", this); };
+$("simMany").onclick = function () { addDemo(); C.rec = C.rec.concat(DEMO.filter(function (id) { return C.rec.indexOf(id) < 0; })); render(); P.note("已加入 40 个示例游戏，共 " + C.rec.length + " 条（未保存）", this); };
+var DEMO = [];
+function addDemo() { if (DEMO.length) return; for (var i = 1; i <= 40; i++) { var id = "demo-" + (i < 10 ? "0" : "") + i; DEMO.push(id); ALL.push({ id: id, n: "示例游戏 " + (i < 10 ? "0" : "") + i, t: i % 2 ? "电子" : "真人", st: i % 13 === 0 ? "maintenance" : "ok" }); } }
+P.panel($("simPanel"), [
+  { title: "演示值说明", items: [{ type: "note", text: "游戏、活动、图片均为示意数据；Crazy Time 为维护中、Money Coming 为已下架，用来演示位次提示。保存的配置存在当前标签页，前台原型会读取。" }] },
+  { items: [{ type: "reset" }] }
+]);
+if (C.rec.some(function (id) { return /^demo-/.test(id); })) addDemo();
+render();
+if (window.self !== window.top) window.parent.postMessage({ type: "proto-view", view: "default" }, "*");
+</script>
+</body>
+</html>

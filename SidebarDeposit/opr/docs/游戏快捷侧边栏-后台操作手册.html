@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>游戏快捷侧边栏-后台操作手册</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<div class="with-nav">
+  <header class="mh">
+    <div class="k">789BINGO · 后台操作手册 <span class="vp">v1.1</span></div>
+    <h1>游戏快捷侧边栏 · 游戏快捷侧边栏管理操作手册</h1>
+    <p>写给运营和客服：配置游戏页里的浮标、侧边栏、Mini Banner 和推荐游戏。每个站点在自己的管理后台单独配置。</p>
+    <div class="btns"><a class="b1" href="../prototype/admin/游戏快捷侧边栏-后台游戏快捷侧边栏管理.html">打开后台原型 ›</a><span class="link-off" title="当前角色不能查看这个页面">查看 PRD</span></div>
+  </header>
+
+  <div class="mk">
+    <b>重要结论</b>
+    <ul>
+      <li>每个站点有自己的管理后台，在各自后台配置，只对本站点生效（PRD「3.2 本需求规则」N17）。</li>
+      <li>保存后，新进入游戏的玩家才读取新配置；已在游戏中的玩家下次进入游戏时生效（PRD「3.2 本需求规则」N17）。</li>
+      <li>游戏内充值沿用现有充值配置，本页不能配置充值内容（PRD「3.2 本需求规则」N15）。</li>
+    </ul>
+  </div>
+
+  <div class="mbody">
+    <nav class="mtoc" aria-label="手册目录">
+      <a href="#m0">整体操作流程</a>
+      <a href="#m1">01 功能开关</a>
+      <a href="#m2">02 Mini Banner</a>
+      <a href="#m3">03 推荐游戏</a>
+      <a href="#m4">04 保存与重置</a>
+      <a href="#m9">常见问题</a>
+    </nav>
+    <div>
+      <section class="mcard" id="m0">
+        <h2>整体操作流程</h2>
+        <div class="msteps">
+          <div class="mstep"><i>1</i><div>进入本站点后台的「活动配置 › 游戏快捷侧边栏管理」。</div></div>
+          <div class="mstep"><i>2</i><div>确认两个功能开关。</div></div>
+          <div class="mstep"><i>3</i><div>配置 Mini Banner：跳转方式、活动或链接、上传图片。</div></div>
+          <div class="mstep"><i>4</i><div>配置推荐游戏：展示数量、添加游戏、调整排序。</div></div>
+          <div class="mstep"><i>5</i><div>点底部「保存配置」。</div></div>
+        </div>
+      </section>
+
+      <section class="mcard" id="m1">
+        <h2><span class="no2">01</span>功能开关</h2>
+        <h3>菜单路径与权限</h3>
+        <p>活动配置 › 游戏快捷侧边栏管理。按后台现有角色权限配置，默认分配给运营角色；保存配置记操作日志（PRD 6.1）。</p>
+        <h3>字段说明</h3>
+        <table>
+          <tr><th>字段</th><th>含义</th><th>默认值</th></tr>
+          <tr><td>启用游戏快捷侧边栏</td><td>总开关，默认开。关闭后前台游戏页不显示浮标和侧边栏，退出时自动展开也一起失效，也不会恢复旧版 G 图标。保存后新进入游戏的玩家生效。</td><td>开</td></tr>
+          <tr><td>启用退出时自动展开</td><td>默认开。开启时，玩家每进入一款游戏，第一次点退出会自动展开侧边栏一次；关闭后退出按现有流程。总开关关闭时不能操作。</td><td>开</td></tr>
+        </table>
+        <p><span class="warn-2">※ 修改后必须点「保存配置」才生效，离开页面前先保存。</span></p>
+      </section>
+
+      <section class="mcard" id="m2">
+        <h2><span class="no2">02</span>Mini Banner</h2>
+        <h3>字段说明</h3>
+        <table>
+          <tr><th>字段</th><th>含义</th><th>默认值</th></tr>
+          <tr><td>是否展示</td><td>控制侧边栏里的 Mini Banner 是否显示。开启时必须上传图片并配置跳转目标才能保存。</td><td>开</td></tr>
+          <tr><td>跳转方式</td><td>二选一：选择活动（跳该活动详情页）或自定义跳转链接（跳填写的地址）。选择活动时，玩家点击前会先完成游戏结算并离开游戏；自定义跳转链接在新标签页（APP 为系统浏览器）打开，不离开游戏、不结算。</td><td>选择活动</td></tr>
+          <tr><td>选择活动</td><td>只能选展示中的活动。活动下架或结束后，前台自动隐藏 Mini Banner，需要重新选择。</td><td>—</td></tr>
+          <tr><td>跳转链接</td><td>必须以 http:// 或 https:// 开头，不能有空格；可以填任何域名。玩家点击后在新标签页（APP 为系统浏览器）打开，不离开游戏。</td><td>—</td></tr>
+          <tr><td>Mini Banner 图</td><td>单独为侧边栏上传的图片，不使用活动原有 Banner；尺寸、格式和大小以设计稿为准。</td><td>—</td></tr>
+        </table>
+        <h3>操作步骤</h3>
+        <div class="msteps">
+          <div class="mstep"><i>1</i><div>打开「是否展示」，选择跳转方式。</div></div>
+          <div class="mstep"><i>2</i><div>选择活动，或填写以 http(s):// 开头的链接。</div></div>
+          <div class="mstep"><i>3</i><div>点上传框上传图片，可预览、重新上传、删除。</div></div>
+        </div>
+        <p><span class="warn-2">※ 活动下架或结束后前台会自动隐藏 Mini Banner，要及时换成新活动。</span></p>
+      </section>
+
+      <section class="mcard" id="m3">
+        <h2><span class="no2">03</span>推荐游戏</h2>
+        <h3>字段说明</h3>
+        <table>
+          <tr><th>字段</th><th>含义</th><th>默认值</th></tr>
+          <tr><td>展示数量</td><td>前台推荐区最多显示几个游戏，1–30 的整数，默认 10。维护中、已下架和玩家正在玩的游戏不计入。</td><td>10</td></tr>
+          <tr><td>排序（前台位次）</td><td>按当前排序和展示数量预估的前台位置。维护中、已下架的游戏不显示；玩家正在玩的那款游戏在前台也会被跳过，实际位置可能前移一位。</td><td>—</td></tr>
+          <tr><td>游戏状态</td><td>取自游戏入口设置。维护中、已下架的游戏前台不显示，恢复正常后自动按原排序显示。</td><td>—</td></tr>
+        </table>
+        <h3>操作步骤</h3>
+        <div class="msteps">
+          <div class="mstep"><i>1</i><div>填写展示数量。</div></div>
+          <div class="mstep"><i>2</i><div>点「添加游戏」，搜索并勾选游戏，点「确定」追加到列表末尾。</div></div>
+          <div class="mstep"><i>3</i><div>用 ↑ ↓ 调整排序，用「删除」移除游戏；对照「前台第 N 位」检查前台效果。</div></div>
+          <div class="mstep"><i>4</i><div>游戏多时列表分页显示（默认每页 20 条，可在列表下方改为 10 / 50 / 100 条或输入页码跳转）；每页第一行上移会移到上一页末尾，新添加的游戏在最后一页。</div></div>
+        </div>
+      </section>
+
+      <section class="mcard" id="m4">
+        <h2><span class="no2">04</span>保存与重置</h2>
+        <p>保存配置：提交全部配置，新进入游戏的玩家读取新配置。重置：放弃未保存的修改，恢复为上次保存的配置。</p>
+        <h3>保存时的提示</h3>
+        <table>
+          <tr><th>情况</th><th>提示</th></tr>
+          <tr><td>展示数量不是 1–30 的整数</td><td>展示数量需为 1–30 的整数</td></tr>
+          <tr><td>是否展示开启但没上传图片</td><td>请上传 Mini Banner 图</td></tr>
+          <tr><td>跳转方式为选择活动但没选</td><td>请选择活动</td></tr>
+          <tr><td>链接为空或格式不对</td><td>跳转链接格式不正确，需以 http(s):// 开头</td></tr>
+        </table>
+        <p><span class="warn-1">※ 关闭「启用游戏快捷侧边栏」会让本站点所有新进入游戏的玩家看不到侧边栏和游戏内充值入口，也不会恢复旧版 G 图标，请确认后再保存。低于最低支持版本的 APP 仍显示旧版 G 图标，不受这个开关影响。</span></p>
+        <h3>多人同时修改</h3>
+        <p>保存时如果提示「配置已被他人修改，请刷新后再改」，说明别人在你打开页面之后已经保存过配置，你这次没有保存成功，页面上填写的内容还在。处理方法：先把自己要改的内容记下来，刷新页面，看清别人改了什么，再在最新配置上修改并保存。</p>
+        <h3>操作日志</h3>
+        <p>每次「保存配置」成功都会自动记一条操作日志，记录操作人、操作时间（GMT+8）、改了哪些配置项以及修改前后的值（推荐游戏记录增加、删除和排序变化）。在后台现有的操作日志里查看，日志不能修改或删除；保存失败不记录。</p>
+      </section>
+
+      <section class="mcard" id="m9">
+        <h2>常见问题</h2>
+        <dl class="faq">
+          <dt>保存后玩家马上能看到吗？</dt>
+          <dd>新进入游戏的玩家马上生效；正在游戏中的玩家要退出后重新进入游戏才生效。</dd>
+          <dt>为什么前台显示的游戏比展示数量少？</dt>
+          <dd>维护中、已下架和玩家正在玩的游戏会被跳过；可用游戏不够时按实际数量显示。</dd>
+          <dt>游戏内充值的支付方式、金额能在这里改吗？</dt>
+          <dd>不能。游戏内半屏充值完全沿用现有充值配置，请在充值配置里修改。</dd>
+          <dt>Mini Banner 突然不显示了？</dt>
+          <dd>检查是否展示开关、图片是否还在、所选活动是否已下架或结束。</dd>
+        </dl>
+      </section>
+    </div>
+  </div>
+</div>
+<script>window.NAV_ROOT = "../";</script>
+<script src="../assets/nav-data.js"></script>
+<script src="../assets/nav.js"></script>
+</body>
+</html>
