@@ -79,7 +79,7 @@
     <div class="sb"><span>9:41</span><span>●●● 5G</span></div>
     <div id="game">
       <img id="gbg" src="../../assets/img/game-wukong.png" alt="">
-      <div id="gph" hidden><b id="gphName"></b><small>游戏画面（示意）</small></div>
+      <div id="gph" hidden><b id="gphName"></b><small class="ui-reqnote">游戏画面由厂商提供。</small></div>
       <div id="gbal">₱500.00</div>
       <div id="gbar" hidden>
         <button type="button" aria-label="说明">ⓘ</button><button type="button" aria-label="声音">♪</button><button type="button" aria-label="投注记录">☰</button><button type="button" id="gExit" aria-label="退出游戏">⌂</button>
@@ -126,7 +126,7 @@
       <li><b>闲置贴边</b>：15 秒无操作缩进只露 2/3；点击先恢复再展开。<span class="ref">PRD 规则 N3 · F01-03 闲置贴边隐藏</span></li>
       <li><b>侧边栏</b>：跟随浮标所在一侧展开，拖到左侧时贴左侧展开并适配左侧布局，从上到下为品牌标识、收起按钮、Home / 充值 / 刷新余额、Mini Banner、推荐游戏；点外部区域收起（退出确认显示时除外）。<span class="ref">PRD 规则 N4、N5 · F02-01、F02-02</span></li>
       <li><b>Home / 刷新余额</b>：先显示「正在结算游戏余额…」；Home 同步完成后跳首页；刷新余额先做准入校验（不通过按现有方式拦截、不结算、留在当前游戏，可在模拟面板勾选「准入校验不通过」演示），通过后结算并重新加载当前游戏，显示最新余额，自动展开机会不重置。新用户转盘奖励的免费次数（Free Spin）使用中时提示「免费次数使用中，用完后再切换」，不离开。<span class="ref">PRD 规则 N6、N13 · F02-03、F06-01</span></li>
-      <li><b>充值</b>：侧边栏收起，打开半屏充值，不做结算（跳到「游戏内半屏充值」原型页演示，原型分两页，实际游戏不刷新）。<span class="ref">PRD 规则 N14 · F07-01 打开与关闭半屏充值</span></li>
+      <li><b>充值</b>：侧边栏收起，打开充值弹窗，不做结算（跳到「游戏内充值弹窗」原型页演示，原型分两页，实际游戏不刷新）。<span class="ref">PRD 规则 N14 · F07-01 打开与关闭充值弹窗</span></li>
       <li><b>首次退出 / 关闭</b>：第三方游戏厂商提供的退出、关闭或 Home 按钮（原型里的退出按钮只是示意）、安卓 APP 返回键都会触发，浏览器返回不触发；退出确认弹出的同时自动展开；取消退出或点侧边栏收起按钮时，侧边栏和退出确认一起关闭，留在当前游戏；同一游戏再次退出不再展开；刷新页面不重置；平台拦截不到退出按钮的厂商不触发自动展开。<span class="ref">PRD 规则 N7、N8 · F03-01、F03-02</span></li>
       <li><b>加载更多</b>：推荐区首次显示 10 个，滚动到底自动加载下一批 10 个（也可点「加载更多」），加载中显示「加载中…」，全部加载完显示「没有更多了」，加载失败显示「加载失败，点击重试」；最多到后台展示数量，每次展开侧边栏从第一批重新显示。<span class="ref">PRD 4.1 列表分页 · F04-01</span></li>
       <li><b>推荐游戏</b>：2 列 × 3.5 个，只显示图标；过滤维护、下架和当前游戏；连点只处理第一次；点击时先校验：维护中提示「该游戏当前维护中」、已下架提示「该游戏暂不可用」，提示后刷新列表清除这些游戏；准入校验不通过（如需 KYC、余额超阈值须在 PWA 投注）按现有弹窗拦截，不结算、不退出当前游戏；启动失败或超时回原游戏并提示「所选游戏暂时不可用，请换一款试试」。<span class="ref">PRD 规则 N9、N10 · F04-01、F04-02</span></li>
@@ -142,7 +142,7 @@
       
       
     </ol>
-    <div class="pager"><span></span><a href="游戏快捷侧边栏-游戏内半屏充值.html">下一页：游戏内半屏充值 →</a></div>
+    <div class="pager"><span></span><a href="游戏快捷侧边栏-游戏内充值弹窗.html">下一页：游戏内充值弹窗 →</a></div>
   </aside>
 </div>
 </div>
@@ -152,7 +152,7 @@
 <script src="../../assets/proto-en.js"></script>
 <script src="../../assets/proto.js"></script>
 <script>
-/* ===== 共享数据（与后台原型、半屏充值原型一致） ===== */
+/* ===== 共享数据（与后台原型、充值弹窗原型一致） ===== */
 var IMG = "../../assets/img/";
 var GAMES = {
   wukong: { n: "Black Wukong", img: "game-wukong.png" }, "dragon-tiger": { n: "D Dragon Tiger" }, "pok-deng": { n: "D Pok Deng" }, "sic-bo": { n: "D Sic Bo" },
@@ -338,7 +338,7 @@ $("qDep").onclick = function () {
   if (S.busy) return;
   ev("quick_action_click action=deposit"); S.cfm = false; closeSb("deposit");
   P.set("depFrom", "sidebar");
-  setTimeout(function () { location.href = "游戏快捷侧边栏-游戏内半屏充值.html#sheet"; }, 250);
+  setTimeout(function () { location.href = "游戏快捷侧边栏-游戏内充值弹窗.html#sheet"; }, 250);
 };
 $("ban").onclick = function () {
   var c = cfg(), url = c.bType === "link" ? c.bLink : "https://789bingo.com/promo/" + c.bPromo;

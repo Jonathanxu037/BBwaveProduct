@@ -416,13 +416,13 @@ body.embedded .fp-banner{top:0}
 .bo td{white-space:nowrap}
 .bo td.w{white-space:normal;min-width:260px}
 .bo .st-on{color:#52C41A}.bo .st-off{color:#999}
-.qm{display:inline-grid;place-items:center;width:14px;height:14px;border-radius:50%;background:#C0C4CC;color:#fff;font-size:10px;font-weight:700;margin-left:4px;cursor:pointer;position:relative;vertical-align:1px;font-style:normal}
+.qm{display:inline-grid;place-items:center;width:14px;height:14px;border-radius:50%;background:#C0C4CC;color:#fff;font-size:10px;font-weight:700;margin-left:4px;cursor:pointer;position:relative;vertical-align:middle;font-style:normal;flex:none}
 .qm:hover,.qm.on{background:#909399}
 .qm.on::after{content:attr(data-tip);position:absolute;left:18px;top:-6px;z-index:50;width:280px;background:#303133;color:#fff;font-size:12px;font-weight:400;line-height:1.6;padding:8px 10px;border-radius:4px;white-space:normal;text-align:left}
 .fsec{margin:16px 0 6px;font-weight:700;color:#333;display:flex;align-items:center;gap:6px}
 .fsec::before{content:"";width:8px;height:8px;border-radius:50%;background:#409EFF}
-.frow{display:grid;grid-template-columns:150px minmax(0,1fr);gap:10px;align-items:start;padding:7px 0}
-.frow>label,.frow>.fl{color:#606266;padding-top:6px}
+.frow{display:grid;grid-template-columns:150px minmax(0,1fr);gap:10px;align-items:center;padding:7px 0}
+.frow>label,.frow>.fl{color:#606266;display:flex;align-items:center;flex-wrap:nowrap}
 .frow .req{color:#F56C6C;margin-right:2px}
 .fctl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;min-width:0}
 .fctl .lab{color:#333}
@@ -913,3 +913,12 @@ body.embedded .notes-bar{top:8px}
 .bo-page button:disabled{color:#C0C4CC;cursor:not-allowed;background:#F5F7FA}
 .ui-loadmore{display:block;width:100%;margin:12px 0 4px;text-align:center;font-size:12.5px;color:var(--app-muted);background:none;border:0;cursor:pointer;font-family:var(--font)}
 .ui-loadmore[disabled]{cursor:default}
+
+/* 帮助按钮和同行对齐（所有需求通用，需求包框架规范第 4 节「帮助按钮与说明文字」）：「?」紧跟在所说明的内容后面、不另起一行；
+   同一行的文字、「?」、开关、输入框、按钮垂直居中对齐。内容和「?」可能被挤换行时，用 <span class="ui-nw">内容<i class="qm">?</i></span> 包起来 */
+.ui-nw{white-space:nowrap;display:inline-flex;align-items:center}
+th .qm,td .qm,label .qm,.fl .qm,.fsec .qm{vertical-align:middle}
+.bo th,.bo td{vertical-align:middle}
+/* 原型里给评审看的说明文字（不是上线页面的内容）：靠左对齐，开头自动加「※ 此内容仅作为需求说明，上线页面不显示本内容」；不翻译成英文 */
+.ui-reqnote{display:block;text-align:left;font-size:12px;line-height:1.6;color:#8A6D3B;background:#FFFBE6;border:1px dashed #E6C67A;border-radius:4px;padding:4px 8px;margin:6px 0;font-family:var(--font);font-weight:400}
+.ui-reqnote::before{content:"※ 此内容仅作为需求说明，上线页面不显示本内容。";display:block;color:#C00000;font-weight:700}

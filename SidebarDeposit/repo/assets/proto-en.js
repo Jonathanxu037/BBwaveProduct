@@ -51,11 +51,15 @@ window.PROTO_EN = {
   "活动详情页": "Promotion details",
   "跳转链接": "Custom link",
   "重新进入 {g}": "Enter {g} again",
-  /* 游戏内半屏充值 */
+  /* 游戏内充值弹窗 */
   "选择支付方式，立即充值": "Choose your payment method and deposit now",
   "关闭": "Close",
-  "新用户首充": "New User First Deposit",
-  "最高可得 7,890P 奖金": "Get up to 7,890P bonus!",
+  "优惠活动": "Promotions",
+  "最高": "UP TO",
+  "封顶": "Capped At",
+  "新用户首存 · 存款和奖金 3 倍流水": "New User First Deposit · 3x Turnover Of Deposited And Bonus",
+  "每日存送 · 存款和奖金 3 倍流水": "Daily Deposit Bonus · 3x Turnover Of Deposited And Bonus",
+  "继续游戏，精彩不停！": "Keep the game going!",
   "支付方式": "Payment Method",
   "查看全部 ›": "View all ›",
   "银行卡": "Bank Card",

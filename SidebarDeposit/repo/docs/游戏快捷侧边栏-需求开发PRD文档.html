@@ -11,7 +11,7 @@
 <div id="fp-banner" class="fp-banner" hidden><span id="fp-text"></span><button type="button" id="fp-clear">清除标注</button></div>
 <div class="desk"><article class="paper" id="doc">
 
-<h1 class="doc-title">游戏快捷侧边栏 · 游戏内浮标、快捷侧边栏与半屏充值 · 产品开发需求文档（PRD）· v1.1</h1>
+<h1 class="doc-title">游戏快捷侧边栏 · 游戏内浮标、快捷侧边栏与充值弹窗 · 产品开发需求文档（PRD）· v1.1</h1>
 <div class="doc-meta"><span>版本：v1.1</span><span>平台：789Bingo（PH）</span><span>端：H5、iOS 原生、Flutter（安卓）、管理后台</span><span>状态：确认中</span><span>时区：GMT+8</span></div>
 <hr class="doc-rule">
 
@@ -29,7 +29,7 @@
   <li><a href="#c3-4">3.4 依赖的现有后台配置<span class="st mod">修改</span></a></li>
   <li><a href="#c4">4. 前台页面一：游戏页快捷侧边栏<span class="st mod">修改</span></a></li>
   <li><a href="#c4-1">4.1 列表分页<span class="st add">新增</span></a></li>
-  <li><a href="#c5">5. 前台页面二：游戏内半屏充值<span class="st add">新增</span></a></li>
+  <li><a href="#c5">5. 前台页面二：游戏内充值弹窗<span class="st add">新增</span></a></li>
   <li><a href="#c5-1">5.1 运行环境与支付页打开方式<span class="st add">新增</span></a></li>
   <li><a href="#c6-1">6.1 页面结构<span class="st mod">修改</span></a></li>
   <li><a href="#c6-3">6.3 Mini Banner 配置<span class="st mod">修改</span></a></li>
@@ -55,7 +55,7 @@
 <tr><th>类别</th><th>本迭代包含</th><th>顺延至</th></tr>
 <tr data-fp="F01 F02 F03"><td><span class="vmark" data-v="v1.1">H5、iOS、Flutter 游戏页<button class="vtag" data-v="v1.1">v1.1</button></span></td><td class="w">浮标（拖动、吸边、闲置贴边隐藏）、快捷侧边栏（Home、Deposit、Reload、Mini Banner、推荐游戏）、每款游戏首次退出时自动展开侧边栏</td><td>—</td></tr>
 <tr data-fp="F04 F06"><td><span class="vmark" data-v="v1.1">H5、iOS、Flutter 游戏页<button class="vtag" data-v="v1.1">v1.1</button></span></td><td class="w">点推荐游戏直接切换游戏；离开当前游戏前先完成结算与余额同步</td><td>—</td></tr>
-<tr data-fp="F07"><td><span class="vmark" data-v="v1.1">H5、iOS、Flutter 游戏页<button class="vtag" data-v="v1.1">v1.1</button></span></td><td class="w"><span class="vmark" data-v="v1.1">游戏内半屏充值：不退出游戏，在游戏上方打开半屏充值，Submit 后打开二维码支付页（H5 新开浏览器标签页；APP 用独立支付页、WebView 或外部浏览器），支付完回到原游戏<button class="vtag" data-v="v1.1">v1.1</button></span></td><td>—</td></tr>
+<tr data-fp="F07"><td><span class="vmark" data-v="v1.1">H5、iOS、Flutter 游戏页<button class="vtag" data-v="v1.1">v1.1</button></span></td><td class="w"><span class="vmark" data-v="v1.1">游戏内充值弹窗：不退出游戏，在游戏上方打开充值弹窗，Submit 后打开二维码支付页（H5 新开浏览器标签页；APP 用独立支付页、WebView 或外部浏览器），支付完回到原游戏<button class="vtag" data-v="v1.1">v1.1</button></span></td><td>—</td></tr>
 <tr data-fp="F08"><td>管理后台</td><td class="w">「活动配置 › 游戏快捷侧边栏管理」页面：配置功能开关、Mini Banner、推荐游戏</td><td>—</td></tr>
 <tr data-fp="F09"><td>数据</td><td class="w">第 7 章全部埋点事件</td><td>—</td></tr>
 <tr><td><span class="vmark" data-v="v1.1">iOS 原生 / Flutter（安卓）<button class="vtag" data-v="v1.1">v1.1</button></span></td><td class="w"><span class="vmark" data-v="v1.1">和 H5 同期上线（产品 2026-10-20 确认），功能和规则与 H5 一致；APP 的支付页打开方式和付款后切回规则见 N16<button class="vtag" data-v="v1.1">v1.1</button></span></td><td>—</td></tr>
@@ -66,13 +66,13 @@
 <h2 id="c1">1. 项目概述</h2>
 <div class="tbl"><table>
 <tr><th>项目</th><th>说明</th></tr>
-<tr><td>需求描述</td><td class="w">在 H5、iOS、Flutter 三端的游戏页新增可拖动的品牌浮标和快捷侧边栏（<span class="vmark" data-v="v1.1">由现有 G 图标悬浮快捷按钮优化升级而来<button class="vtag" data-v="v1.1">v1.1</button></span>；含 Home、Deposit、Reload、Mini Banner、推荐游戏），每款游戏首次点退出时自动展开侧边栏，点推荐游戏直接切换游戏；<span class="vmark" data-v="v1.1">点 Deposit 时不退出游戏，在游戏上方打开半屏充值，内容沿用现有充值页，支付完回到原游戏<button class="vtag" data-v="v1.1">v1.1</button></span>；管理后台新增「活动配置 › 游戏快捷侧边栏管理」页面，配置开关、Mini Banner 和推荐游戏。</td></tr>
+<tr><td>需求描述</td><td class="w">在 H5、iOS、Flutter 三端的游戏页新增可拖动的品牌浮标和快捷侧边栏（<span class="vmark" data-v="v1.1">由现有 G 图标悬浮快捷按钮优化升级而来<button class="vtag" data-v="v1.1">v1.1</button></span>；含 Home、Deposit、Reload、Mini Banner、推荐游戏），每款游戏首次点退出时自动展开侧边栏，点推荐游戏直接切换游戏；<span class="vmark" data-v="v1.1">点 Deposit 时不退出游戏，在游戏上方打开充值弹窗，内容沿用现有充值页，支付完回到原游戏<button class="vtag" data-v="v1.1">v1.1</button></span>；管理后台新增「活动配置 › 游戏快捷侧边栏管理」页面，配置开关、Mini Banner 和推荐游戏。</td></tr>
 <tr><td>背景与目标</td><td class="w">玩家在游戏里想换游戏或充值时，要先退出到大厅再进入，步骤多，退出后容易流失。目标：① 提升游戏间切换率和推荐后的继续投注；② 降低「退出即流失」的比例；③ 为活动提供游戏内曝光位，把流量导到活动详情页或指定页面；<span class="vmark" data-v="v1.1">④ 实现「游戏中直接充值 → 完成支付 → 回到原游戏继续玩」，减少退出游戏、返回大厅、重新进入游戏和重新加载的步骤（依据 Claire《游戏中半屏充值功能需求》）<button class="vtag" data-v="v1.1">v1.1</button></span>。</td></tr>
 <tr><td>范围</td><td class="w">做：第 0 章所列内容。不做：退出入口和退出二次确认页面的任何修改；新的充值配置；充值到账逻辑的修改；游戏内充值成功弹窗或 Toast。</td></tr>
 <tr><td>多端范围</td><td class="w"><span class="vmark" data-v="v1.1">H5 游戏页、iOS 原生、Flutter（安卓）、管理后台：同期做。<button class="vtag" data-v="v1.1">v1.1</button></span></td></tr>
 <tr><td>后台范围</td><td class="w"><span class="vmark" data-v="v1.1">每个站点有自己的管理后台，本页面在各自后台单独配置，配置只对本站点生效；页面内不区分站点<button class="vtag" data-v="v1.1">v1.1</button></span></td></tr>
 <tr><td>名词说明</td><td class="w"><span class="vmark" data-v="v1.1">本需求的「侧边栏」专指游戏页内的「游戏快捷侧边栏」；789games 首页左上角的汉堡菜单（GAM-10 等单子里也叫「侧边栏」）不在本需求范围。「免费次数（Free Spin）」专指玩家通过新用户转盘获得、带入厂商游戏使用的免费旋转次数；平台上的「Spin」指转盘游戏，本文不用它指代厂商游戏内的其他玩法。涉及砸金蛋、Spin、转盘等活动的问题（含免费次数的来源和处理），一律由技术按当前平台逻辑处理（产品 2026-10-20 确认）。<button class="vtag" data-v="v1.1">v1.1</button></span></td></tr>
-<tr><td>视觉</td><td class="w">浮标、侧边栏、半屏充值各模块的视觉样式、尺寸和动效以设计稿为准；本文档只写功能与交互逻辑。</td></tr>
+<tr><td>视觉</td><td class="w">浮标、侧边栏、充值弹窗各模块的视觉样式、尺寸和动效以设计稿为准；本文档只写功能与交互逻辑。</td></tr>
 <tr><td>时间与时区</td><td class="w">GMT+8</td></tr>
 </table></div>
 
@@ -85,7 +85,7 @@
   <div class="fa">↓</div>
   <div class="fs" data-fp="F02-03 F04-02 F05-02"><div class="no">3</div><div><b>使用快捷功能</b>：点 Home / Reload / Mini Banner（选择活动）/ 推荐游戏 → Reload 和推荐游戏先做准入校验（不通过不结算、留在游戏）→ 完成当前游戏结算与余额同步 → 执行跳转或重新加载；Mini Banner 的自定义链接在新标签页打开，不结算（见 <a href="#c2-2">2.2 离开当前游戏分支</a>）</div></div>
   <div class="fa">↓</div>
-  <div class="fs" data-fp="F07"><div class="no">4</div><div><b>游戏内充值</b>：<span class="vmark" data-v="v1.1">点 Deposit → 侧边栏收起 → 半屏充值盖在游戏上方 → 选支付方式和金额 → Submit → 半屏收起，打开二维码支付页（H5 新标签页 / APP 支付页）→ 完成支付 → 回到原游戏（见 <a href="#c2-4">2.4 半屏充值分支</a>）<button class="vtag" data-v="v1.1">v1.1</button></span></div></div>
+  <div class="fs" data-fp="F07"><div class="no">4</div><div><b>游戏内充值</b>：<span class="vmark" data-v="v1.1">点 Deposit → 侧边栏收起 → 充值弹窗盖在游戏上方 → 选支付方式和金额 → Submit → 弹窗收起，打开二维码支付页（H5 新标签页 / APP 支付页）→ 完成支付 → 回到原游戏（见 <a href="#c2-4">2.4 充值弹窗分支</a>）<button class="vtag" data-v="v1.1">v1.1</button></span></div></div>
   <div class="fa">↓</div>
   <div class="fs key" data-fp="F03-01"><div class="no">5</div><div><b>首次退出</b>：在当前游戏首次点退出 → 平台现有退出确认弹出，同时自动展开侧边栏（见 <a href="#c2-3">2.3 首次退出分支</a>）</div></div>
 </div>
@@ -104,12 +104,12 @@
   <div class="bc br" data-fp="F03-01"><h5>C - 确认退出</h5><p class="s"><b>按平台现有流程退出</b><small>退出前同样先结算同步</small></p></div>
 </div>
 
-<h3 id="c2-4">2.4 半屏充值分支（按端和支付结果）</h3>
-<p class="fnote"><span class="vmark" data-v="v1.1">半屏充值期间游戏保留在底层，不关闭、不刷新、不重新加载；打开半屏充值前不做游戏结算。<button class="vtag" data-v="v1.1">v1.1</button></span></p>
+<h3 id="c2-4">2.4 充值弹窗分支（按端和支付结果）</h3>
+<p class="fnote"><span class="vmark" data-v="v1.1">充值弹窗期间游戏保留在底层，不关闭、不刷新、不重新加载；打开充值弹窗前不做游戏结算。<button class="vtag" data-v="v1.1">v1.1</button></span></p>
 <div class="brs">
-  <div class="bc" data-fp="F07-03"><h5>A - H5</h5><p class="s"><b>Submit 成功创建订单</b><small>新开浏览器标签页显示二维码支付页；半屏收起，原游戏标签页保持打开</small></p><p class="d">↓</p><p class="s"><b>支付完成</b><small>回跳到「支付完成」中间页，自动关闭新标签页，回到原游戏标签页；不能自动关闭时提示玩家关闭此页面，不跳大厅；内置浏览器、小程序、PWA 见 5.1</small></p></div>
-  <div class="bc" data-fp="F07-03"><h5>B - APP</h5><p class="s"><b>Submit 成功创建订单</b><small>按该支付方式现有的打开方式，用独立支付页、WebView 或外部浏览器显示二维码；半屏收起，原游戏页面保持</small></p><p class="d">↓</p><p class="s"><b>支付完成</b><small>需玩家手动切回 APP（现状），原游戏保持，不跳大厅</small></p></div>
-  <div class="bc br" data-fp="F07-01"><h5>C - 随时关闭</h5><p class="s"><b>点 × 或点上方游戏区域</b><small>立即关闭半屏充值，回到当前游戏</small></p></div>
+  <div class="bc" data-fp="F07-03"><h5>A - H5</h5><p class="s"><b>Submit 成功创建订单</b><small>新开浏览器标签页显示二维码支付页；弹窗收起，原游戏标签页保持打开</small></p><p class="d">↓</p><p class="s"><b>支付完成</b><small>回跳到「支付完成」中间页，自动关闭新标签页，回到原游戏标签页；不能自动关闭时提示玩家关闭此页面，不跳大厅；内置浏览器、小程序、PWA 见 5.1</small></p></div>
+  <div class="bc" data-fp="F07-03"><h5>B - APP</h5><p class="s"><b>Submit 成功创建订单</b><small>按该支付方式现有的打开方式，用独立支付页、WebView 或外部浏览器显示二维码；弹窗收起，原游戏页面保持</small></p><p class="d">↓</p><p class="s"><b>支付完成</b><small>需玩家手动切回 APP（现状），原游戏保持，不跳大厅</small></p></div>
+  <div class="bc br" data-fp="F07-01"><h5>C - 随时关闭</h5><p class="s"><b>点 × 或点上方游戏区域</b><small>立即关闭充值弹窗，回到当前游戏</small></p></div>
 </div>
 
 <h3 id="c2-5">2.5 系统时序（后端视角）</h3>
@@ -117,7 +117,7 @@
 <tr><th>触发</th><th>执行方</th><th>动作</th></tr>
 <tr data-fp="F01-01"><td>进入游戏</td><td>前端 → 后端</td><td class="w">读取侧边栏配置和推荐游戏列表；配置读取失败时不显示浮标</td></tr>
 <tr data-fp="F06-01"><td>点推荐游戏 / Home / Reload / Mini Banner（选择活动）/ 确认退出（推荐游戏和 Reload 先做准入校验，不通过不结算）</td><td>后端 ↔ 第三方游戏</td><td class="w">判断当前局是否未结算 → 等待结算 → 按平台现有退出规则同步余额 → 返回结果；目标是新游戏时，再把结算后的余额同步到新游戏供应商并启动</td></tr>
-<tr data-fp="F07-02"><td><span class="vmark" data-v="v1.1">半屏充值 Submit<button class="vtag" data-v="v1.1">v1.1</button></span></td><td>前端 → 后端 → 支付渠道</td><td class="w">沿用现有充值下单接口和校验，返回支付页地址；前端按端打开支付页（H5 新标签页 / APP 支付页）<span class="vmark" data-v="v1.1">；H5 下单时传入游戏内充值专用的回跳地址（「支付完成」中间页），平台其他入口的充值回跳不变<button class="vtag" data-v="v1.1">v1.1</button></span></td></tr>
+<tr data-fp="F07-02"><td><span class="vmark" data-v="v1.1">充值弹窗 Submit<button class="vtag" data-v="v1.1">v1.1</button></span></td><td>前端 → 后端 → 支付渠道</td><td class="w">沿用现有充值下单接口和校验，返回支付页地址；前端按端打开支付页（H5 新标签页 / APP 支付页）<span class="vmark" data-v="v1.1">；H5 下单时传入游戏内充值专用的回跳地址（「支付完成」中间页），平台其他入口的充值回跳不变<button class="vtag" data-v="v1.1">v1.1</button></span></td></tr>
 <tr data-fp="F07-03"><td>支付渠道回调</td><td>支付渠道 → 后端</td><td class="w">沿用现有到账逻辑和站内信通知；不向游戏页推送额外的成功提示</td></tr>
 <tr data-fp="F08-05"><td>后台保存配置</td><td>后台 → 后端</td><td class="w">保存全部配置；之后新进入游戏的玩家读取新配置，已在游戏中的玩家下次进入游戏时生效</td></tr>
 </table></div>
@@ -140,20 +140,20 @@
 <tr><th>编号</th><th>规则</th><th>起因</th><th>功能点</th></tr>
 <tr id="n1" data-fp="F01-01"><td>N1</td><td class="w">后台「启用游戏快捷侧边栏」开启时，游戏页打开后立即显示浮标<span class="vmark" data-v="v1.1">（厂商游戏还在加载时也显示，可以展开侧边栏；加载期间点推荐游戏或 Home 同样按 N13 先结算再离开）；浮标图案为当前站点的品牌 Logo（789Bingo、789games 各用自己的 Logo）<button class="vtag" data-v="v1.1">v1.1</button></span>，<span class="vmark" data-v="v1.1">初始位置在屏幕右侧上方（与屏幕顶部保留安全距离，不贴顶：避开状态栏、刘海和系统安全区，具体距离以设计稿为准；三端一致，iOS 不沿用现有 G 图标的左上角）<button class="vtag" data-v="v1.1">v1.1</button></span>；关闭时不显示浮标和侧边栏，退出自动展开同时失效。读取配置失败时不显示浮标，游戏正常运行，退出按平台现有流程执行。</td><td class="w">给玩家一个游戏内常驻入口；运营可整体关闭</td><td><span class="fp">F01-01</span> 浮标显示与开关</td></tr>
 <tr id="n2" data-fp="F01-02"><td>N2</td><td class="w">浮标可在全屏范围内拖动；按下后移动距离 ≥ 5 像素判定为拖动，不触发展开，&lt; 5 像素按点击处理。松手后按浮标中心离左、右屏幕边哪侧更近，自动贴靠到该侧，高度不变；上下保留安全边距（数值以设计稿为准），不遮挡顶部状态栏和底部操作区。<span class="vmark" data-v="v1.1">浮标位置记忆：同一浏览器（APP 为同一设备）内记住上次吸附的一侧和高度，换游戏、刷新页面后沿用；第一次进入时在屏幕右侧上方（不贴顶，见 N1）。<button class="vtag" data-v="v1.1">v1.1</button></span></td><td class="w">浮标不能长期挡住游戏按钮</td><td><span class="fp">F01-02</span> 拖动与自动吸边</td></tr>
-<tr id="n3" data-fp="F01-03"><td>N3</td><td class="w">浮标连续 15 秒无操作时，向所在一侧屏幕边缩进，只露出 2/3。拖动、点击、侧边栏收起<span class="vmark" data-v="v1.1">、半屏充值关闭<button class="vtag" data-v="v1.1">v1.1</button></span>后重新计时；侧边栏展开期间<span class="vmark" data-v="v1.1">和半屏充值打开期间<button class="vtag" data-v="v1.1">v1.1</button></span>不计时。缩进状态下点击：先恢复到贴边完整显示，再展开侧边栏；缩进状态下也可以直接拖动。</td><td class="w">减少对游戏画面的遮挡</td><td><span class="fp">F01-03</span> 闲置贴边隐藏</td></tr>
+<tr id="n3" data-fp="F01-03"><td>N3</td><td class="w">浮标连续 15 秒无操作时，向所在一侧屏幕边缩进，只露出 2/3。拖动、点击、侧边栏收起<span class="vmark" data-v="v1.1">、充值弹窗关闭<button class="vtag" data-v="v1.1">v1.1</button></span>后重新计时；侧边栏展开期间<span class="vmark" data-v="v1.1">和充值弹窗打开期间<button class="vtag" data-v="v1.1">v1.1</button></span>不计时。缩进状态下点击：先恢复到贴边完整显示，再展开侧边栏；缩进状态下也可以直接拖动。</td><td class="w">减少对游戏画面的遮挡</td><td><span class="fp">F01-03</span> 闲置贴边隐藏</td></tr>
 <tr id="n4" data-fp="F02-01"><td>N4</td><td class="w">侧边栏为窄版纵向面板，跟随浮标所在一侧贴屏幕边展开<span class="vmark" data-v="v1.1">：浮标在右侧时贴右侧展开；浮标拖到左侧时贴左侧展开，布局按左侧适配（收起按钮移到侧边栏右边、图标朝向翻转、圆角和阴影方向对调）<button class="vtag" data-v="v1.1">v1.1</button></span>；纵向以浮标所在高度为起点，超出屏幕时自动上移以完整显示。从上到下：标题栏（当前站点的品牌标识）、收起按钮、快捷功能（Home、Deposit、Reload）、Mini Banner、推荐游戏。</td><td class="w">展开后保留主要游戏画面</td><td><span class="fp">F02-01</span> 侧边栏结构与展开位置</td></tr>
 <tr id="n5" data-fp="F02-02"><td>N5</td><td class="w">展开方式：① 点浮标手动展开；② 每款游戏首次点退出时自动展开（N7）。收起方式：① 点收起按钮；② 点侧边栏外的游戏区域（退出确认显示期间除外）；③ <span class="vmark" data-v="v1.1">点 Deposit 时自动收起<button class="vtag" data-v="v1.1">v1.1</button></span>。展开期间浮标隐藏，收起后浮标回到原位置显示。</td><td class="w">—</td><td><span class="fp">F02-02</span> 展开与收起</td></tr>
-<tr id="n6" data-fp="F02-03"><td>N6</td><td class="w">Home：先完成当前游戏结算与余额同步（N13），再跳转平台首页。<span class="vmark" data-v="v1.1">Reload：先做和 N10 相同的准入校验（不通过 → 按现有拦截方式提示，不结算、留在当前游戏），通过后按 N13 完成结算与余额同步，再重新加载当前这款游戏（不经过大厅），加载完成后游戏内显示最新余额；视为同一款游戏，自动展开机会不重置；加载期间屏蔽重复点击。能否不重新加载、只刷新余额，由研发按厂商确认（Q1）。<button class="vtag" data-v="v1.1">v1.1</button></span><span class="vmark" data-v="v1.1">Deposit：不离开当前游戏、不做结算，直接打开半屏充值（N14）<button class="vtag" data-v="v1.1">v1.1</button></span>。</td><td class="w">保证跳出前余额一致；Home 去向与现状不同，见 3.3</td><td><span class="fp">F02-03</span> 快捷功能 Home / Reload</td></tr>
+<tr id="n6" data-fp="F02-03"><td>N6</td><td class="w">Home：先完成当前游戏结算与余额同步（N13），再跳转平台首页。<span class="vmark" data-v="v1.1">Reload：先做和 N10 相同的准入校验（不通过 → 按现有拦截方式提示，不结算、留在当前游戏），通过后按 N13 完成结算与余额同步，再重新加载当前这款游戏（不经过大厅），加载完成后游戏内显示最新余额；视为同一款游戏，自动展开机会不重置；加载期间屏蔽重复点击。能否不重新加载、只刷新余额，由研发按厂商确认（Q1）。<button class="vtag" data-v="v1.1">v1.1</button></span><span class="vmark" data-v="v1.1">Deposit：不离开当前游戏、不做结算，直接打开充值弹窗（N14）<button class="vtag" data-v="v1.1">v1.1</button></span>。</td><td class="w">保证跳出前余额一致；Home 去向与现状不同，见 3.3</td><td><span class="fp">F02-03</span> 快捷功能 Home / Reload</td></tr>
 <tr id="n7" data-fp="F03-01"><td>N7</td><td class="w"><span class="vmark" data-v="v1.1">游戏内的退出入口由第三方游戏厂商提供，原型里的退出按钮只是示意；<button class="vtag" data-v="v1.1">v1.1</button></span>退出入口和退出二次确认页面全部沿用线上现状，不做任何修改。触发范围（「首次点击退出 / 关闭」）：<span class="vmark" data-v="v1.1">第三方游戏厂商提供的退出、关闭或 Home 按钮（平台能拦截到的）、安卓 APP 返回键（只在 APP 内生效）都算；浏览器返回按钮、直接关闭浏览器标签页，以及 H5 里的安卓返回键（等同浏览器返回）无法拦截，不触发。<button class="vtag" data-v="v1.1">v1.1</button></span>玩家在当前游戏首次触发退出（机会可用）时，按现有流程弹出退出确认，同时自动展开侧边栏，机会标为已使用；侧边栏已手动展开时保持展开并转为「自动展开」状态。之后：点推荐游戏 → 关闭退出确认，退出当前游戏并直接进入所选游戏；取消退出 → 侧边栏同时收起，留在当前游戏；<span class="vmark" data-v="v1.1">点侧边栏收起按钮 → 侧边栏和退出确认一起关闭，留在当前游戏（与取消退出效果相同）<button class="vtag" data-v="v1.1">v1.1</button></span>；确认退出 → 按现有流程退出；同一游戏再次触发退出 → 按现有流程弹出退出确认，不再自动展开。平台拦截不到某厂商的退出、关闭或 Home 按钮时（各厂商能否拦截见 Q1），该厂商的游戏不触发自动展开，按厂商现有行为退出，浮标和手动展开照常；后台关闭「启用退出时自动展开」时，退出按现有流程执行，浮标和手动展开不受影响。</td><td class="w">降低「退出即流失」</td><td><span class="fp">F03-01</span> 首次退出自动展开</td></tr>
-<tr id="n8" data-fp="F03-02"><td>N8</td><td class="w">自动展开机会以「玩家 + 当前游戏」为维度记录，每次进入一款游戏得到 1 次。在当前游戏内刷新页面（含断线重连后重新加载）不影响机会：已使用的不重置，未使用的保留。切换到其他游戏或从大厅重新进入游戏时重置为可用。手动展开后再收起，不消耗、不影响机会。<span class="vmark" data-v="v1.1">打开和关闭半屏充值不影响机会<button class="vtag" data-v="v1.1">v1.1</button></span>。</td><td class="w">每款游戏最多打扰一次</td><td><span class="fp">F03-02</span> 自动展开机会记录与重置</td></tr>
+<tr id="n8" data-fp="F03-02"><td>N8</td><td class="w">自动展开机会以「玩家 + 当前游戏」为维度记录，每次进入一款游戏得到 1 次。在当前游戏内刷新页面（含断线重连后重新加载）不影响机会：已使用的不重置，未使用的保留。切换到其他游戏或从大厅重新进入游戏时重置为可用。手动展开后再收起，不消耗、不影响机会。<span class="vmark" data-v="v1.1">打开和关闭充值弹窗不影响机会<button class="vtag" data-v="v1.1">v1.1</button></span>。</td><td class="w">每款游戏最多打扰一次</td><td><span class="fp">F03-02</span> 自动展开机会记录与重置</td></tr>
 <tr id="n9" data-fp="F04-01"><td>N9</td><td class="w">推荐游戏 2 列，首屏每列 3 个完整图标加第 4 个露出一部分（2 × 3.5），区域可上下滑动；只显示正方形图标，不显示名称、类别、厂商和 Hot / New / Jackpot 标签。数据：按后台排序，过滤<span class="vmark" data-v="v1.1">维护中（厂商级或单款）、已下架、平台或系统未启用的游戏<button class="vtag" data-v="v1.1">v1.1</button></span>和当前正在玩的游戏，取前 N 个（N = 后台展示数量，分批加载见 4.1）；<span class="vmark" data-v="v1.1">玩家个人准入规则（KYC、Casino 屏障、APP 充值解锁 H5、自我限制等）不在列表里过滤，点击时按 N10 校验；在维护白名单里的玩家，维护中的游戏按可进入显示。<button class="vtag" data-v="v1.1">v1.1</button></span>不足 N 个时按实际数量显示，为 0 时显示「暂无可用游戏」。</td><td class="w">—</td><td><span class="fp">F04-01</span> 推荐列表数据规则</td></tr>
 <tr id="n10" data-fp="F04-02"><td>N10</td><td class="w">点推荐游戏图标后锁定点击，只处理第一次有效点击，切换完成或失败前其余点击无效。<span class="vmark" data-v="v1.1">点击时先做两步校验，都在结算之前、不退出当前游戏：① 游戏状态（列表没及时同步时）：维护中 → 提示「该游戏当前维护中」；已下架或已停用 → 提示「该游戏暂不可用」；两种情况提示后都刷新推荐列表，清除维护和下架的游戏（后面依次前移），机会状态不变。② 准入校验：调用和大厅点游戏相同的准入校验（强制 KYC、Casino 屏障、APP 充值解锁 H5、首充后强制 PWA / APP、余额超过设定金额时强制在 PWA 投注、自我限制等）；不通过 → 不结算、不退出当前游戏，按现有拦截方式在当前游戏页上方弹出对应提示，推荐列表保持展开并解锁。两步都通过 →<button class="vtag" data-v="v1.1">v1.1</button></span> 按 N13 结算同步后退出当前游戏，直接进入所选游戏（不经过大厅），新游戏的自动展开机会为可用。新游戏启动失败 → 重新进入原游戏，把结算后的余额同步回原游戏供应商，提示「所选游戏暂时不可用，请换一款试试」，侧边栏保持展开并解锁，原游戏的机会状态不变。<span class="vmark" data-v="v1.1">启动超时同样按启动失败处理，不显示「维护中」。<button class="vtag" data-v="v1.1">v1.1</button></span></td><td class="w">—</td><td><span class="fp">F04-02</span> 点击推荐游戏切换</td></tr>
 <tr id="n11" data-fp="F04-03"><td>N11</td><td class="w">已投注、当前局未结算时触发离开：保持当前游戏画面，显示半透明 loading 蒙层（玩家能看到当前局结算过程和结果），期间屏蔽其他操作和重复点击；当前局结算完成后，再按 N13 同步余额并执行离开。</td><td class="w">避免第三方与平台余额不一致</td><td><span class="fp">F04-03</span> 当前局未结算时切换</td></tr>
 <tr id="n12" data-fp="F05-01 F05-02"><td>N12</td><td class="w">Mini Banner 只显示后台为它单独上传的 1 张图，不轮播，不使用活动原有 Banner。以下情况隐藏整个区域：后台「是否展示」关闭；未上传图片或未配置跳转目标；跳转方式为「选择活动」且活动已下架或已结束；图片加载失败。点击后按后台跳转方式二选一：选择活动 → 先按 N13 结算同步，再进入该活动详情页（站内页面，离开当前游戏）；<span class="vmark" data-v="v1.1">自定义跳转链接 → 不离开当前游戏、不结算，H5 新开浏览器标签页打开该链接，APP 用系统浏览器打开；链接按后台填写的原样打开，不拼接登录 token 和玩家信息<button class="vtag" data-v="v1.1">v1.1</button></span>。</td><td class="w">为活动提供游戏内曝光位</td><td><span class="fp">F05-01</span> 展示与隐藏；<span class="fp">F05-02</span> 点击跳转</td></tr>
 <tr id="n13" data-fp="F06-01"><td>N13</td><td class="w">所有离开当前游戏或需要读取最新余额的操作（点推荐游戏、Home、Reload、Mini Banner 的「选择活动」跳转、自动展开后确认退出，以及平台其他会离开当前游戏的入口），都先按平台现有退出游戏的结算方式完成当前游戏结算、统一第三方与平台的余额，再执行跳出；目标是新游戏时，再把结算后的余额同步到新游戏供应商。处理期间显示「正在结算游戏余额…」，屏蔽侧边栏和游戏内其他离开操作，避免并发触发多次结算。任一环节失败：还没离开当前游戏（结算或同步失败）→ 关闭蒙层并提示「余额同步失败，请稍后重试」，留在当前游戏，不跳出；已离开、新游戏启动失败 → 按 N10 回到原游戏。余额以同步结果为准，不丢失、不重复。<span class="vmark" data-v="v1.1">玩家正在使用新用户转盘奖励的免费次数（Free Spin，见名词说明）时点推荐游戏、Home、Reload 或 Mini Banner（选择活动）：提示「免费次数使用中，用完后再切换」，不结算、不离开（各厂商能否判断免费次数是否用完见 Q1）。<button class="vtag" data-v="v1.1">v1.1</button></span><span class="vmark" data-v="v1.1">Deposit 不离开当前游戏，不在此列<button class="vtag" data-v="v1.1">v1.1</button></span>。</td><td class="w">三方游戏跳转结算机制待研发确认（Q1）</td><td><span class="fp">F06-01</span> 离开前结算与余额同步</td></tr>
-<tr id="n14" data-fp="F07-01"><td>N14</td><td class="w"><span class="vmark" data-v="v1.1">点侧边栏 Deposit → 侧边栏收起 → 半屏充值从屏幕底部升起，盖在游戏上方；高度按内容自适应，最高为游戏页面高度的 2/3：内容不足 2/3 时按内容实际高度显示，超过时固定为 2/3，内容在半屏内上下滚动（小屏手机同样按此规则）。横屏游戏的处理方式待 Q11 确认；退出确认正在显示时一并关闭。游戏保留在底层，不关闭、不刷新、不重新创建游戏页面；上方露出的游戏区域加半透明遮罩，不能操作游戏。浮标在半屏充值打开期间隐藏。关闭：点右上角 × 或点上方遮罩区域，立即关闭并回到当前游戏，侧边栏为收起状态（只显示浮标）。<button class="vtag" data-v="v1.1">v1.1</button></span></td><td class="w">Claire《游戏中半屏充值功能需求》一、二、七</td><td><span class="fp">F07-01</span> 打开与关闭半屏充值</td></tr>
-<tr id="n15" data-fp="F07-02"><td>N15</td><td class="w"><span class="vmark" data-v="v1.1">半屏充值的内容（支付方式及排序、首充等充值活动、充值金额输入框和快捷金额、赠送标签、Hot / VIP 标识、充值限额、充值说明、条款勾选、Submit）全部沿用现有充值页，与平台 Wallet 充值页一致，本需求不新增任何充值配置；内容超出半屏高度时在半屏内上下滚动，Submit 固定在底部。金额校验、下单和支付流程沿用现有充值逻辑。未认证玩家输入金额或提交时，沿用现有 KYC 提醒（Later / Verify Now），弹在半屏上方：点 Later 留在半屏；点 Verify Now 先按 N13 结算同步，再跳到 KYC 页（等同离开游戏）。每次打开半屏都重新拉取充值活动和优惠券资格，首充成功后再次打开不再显示首充券。不含提款功能。<button class="vtag" data-v="v1.1">v1.1</button></span></td><td class="w">Claire 文档二</td><td><span class="fp">F07-02</span> 充值内容与提交</td></tr>
-<tr id="n16" data-fp="F07-03"><td>N16</td><td class="w"><span class="vmark" data-v="v1.1">Submit 下单成功后打开二维码支付页：H5 新开浏览器标签页显示，原游戏标签页保持打开；APP 按该支付方式现有的打开方式，用独立支付页、WebView 或外部浏览器显示，原游戏页面保持。支付页打开后半屏自动收起。H5 支付页被浏览器拦截、没能打开时，半屏保持打开并提示「支付页面打开失败，请重试」。二维码支付页的内容（有效期、提示文案、结果页）按目前接入的三方支付流程和规则显示，原型里的文案只是示意。支付完成后回到原游戏，不跳转大厅、不重新加载游戏：H5 下单时带上游戏内充值专用的回跳地址，支付完成后支付渠道回跳到「支付完成」中间页，中间页自动关闭这个新标签页，回到原游戏标签页；浏览器不允许自动关闭时，中间页显示「支付已完成，请返回游戏页面」和「关闭此页面」按钮，不进入大厅；在 TG、Facebook 等 App 内置浏览器、Maya / GLife 等小程序或已安装的 PWA 里玩游戏时，支付页会在系统浏览器打开，按 5.1 运行环境表处理（-1946、-1981、-2044、-2083）；回跳地址的参数由技术按当前平台规则处理（如现有的来源环境参数 from，6639），不带登录 token 和玩家身份信息（-6595），中间页可复用现有「回跳后自动关闭」的能力，由技术按当前平台逻辑处理；支付页和中间页都不依赖登录态；APP 现状无法自动回到 APP（-2207、-2208、-2301、-2320），需要玩家手动切回，切回时原游戏页面保持。到账沿用现有系统逻辑；游戏内半屏充值不弹现有的「Payment Information」信息弹窗和「充值返回弹窗」，也不新增充值成功弹窗或 Toast；到账推送沿用现有推送策略，游戏页内按 6461 的规则不弹系统推送，只进站内信。首充后的连锁规则和充值后触发的活动弹窗（首充转盘、强制 PWA / APP 引导、APP 充值解锁 H5，以及 6954「返水与充返转盘」等充值后弹出的活动）：玩家回到原游戏后可以继续当前游戏，游戏页上不弹出（只限营销类和引导类弹窗；合规类拦截，如首充用户玩三方游戏第 4 局的强制 KYC、自我限制、PAGCOR 提示，不在此列，按现状在游戏内弹出）；余额超过设定金额时强制在 PWA 投注同样在玩家下次进入游戏时按现有规则执行；玩家关闭游戏、回到平台原生页面后，按平台现有规则显示对应内容和引导。充值期间厂商游戏 Session 自身失效的，按厂商机制重新连接。<button class="vtag" data-v="v1.1">v1.1</button></span></td><td class="w">Claire 文档三、四、五、六</td><td><span class="fp">F07-03</span> 二维码支付与返回原游戏</td></tr>
+<tr id="n14" data-fp="F07-01"><td>N14</td><td class="w"><span class="vmark" data-v="v1.1">点侧边栏 Deposit → 侧边栏收起 → 充值弹窗从屏幕底部升起，盖在游戏上方；高度固定为游戏页面高度的 2/3，不随内容多少变化（产品 2026-10-20 确认，不用半屏）；内容超出时在弹窗内上下滚动（小屏手机同样按此规则）。横屏游戏的处理方式待 Q11 确认；退出确认正在显示时一并关闭。游戏保留在底层，不关闭、不刷新、不重新创建游戏页面；上方露出的游戏区域加半透明遮罩，不能操作游戏。浮标在充值弹窗打开期间隐藏。关闭：点右上角 × 或点上方遮罩区域，立即关闭并回到当前游戏，侧边栏为收起状态（只显示浮标）。<button class="vtag" data-v="v1.1">v1.1</button></span></td><td class="w">Claire《游戏中半屏充值功能需求》一、二、七</td><td><span class="fp">F07-01</span> 打开与关闭充值弹窗</td></tr>
+<tr id="n15" data-fp="F07-02"><td>N15</td><td class="w"><span class="vmark" data-v="v1.1">充值弹窗的内容（支付方式及排序、首充等充值活动、充值金额输入框和快捷金额、赠送标签、Hot / VIP 标识、充值限额、充值说明、条款勾选、Submit）全部沿用现有充值页，与平台 Wallet 充值页一致，本需求不新增任何充值配置；内容超出弹窗高度时在弹窗内上下滚动，Submit 固定在底部。金额校验、下单和支付流程沿用现有充值逻辑。未认证玩家输入金额或提交时，沿用现有 KYC 提醒（Later / Verify Now），显示在充值弹窗上方：点 Later 留在弹窗；点 Verify Now 先按 N13 结算同步，再跳到 KYC 页（等同离开游戏）。每次打开弹窗都重新拉取充值活动和优惠券资格，首充成功后再次打开不再显示首充券。不含提款功能。优惠活动（Promotions）区与 Wallet 充值页同一位置（支付方式下方、充值金额上方），沿用现有逻辑：首存和每日存送活动同时开启时，只显示首存（首存优先于每日存送，产品 2026-10-20 确认为现有逻辑，知识库资料未覆盖）；只有每日存送活动时，显示每日存送，玩家自行选择是否申请（默认选中状态沿用现有充值页，不申请也能正常充值）；都没有存送活动时，整个优惠活动区换成普通标题语「继续游戏，精彩不停！」（英文 Keep the game going!）。没填金额、也没点快捷金额之前，Submit 置灰不能点；输入金额或点快捷金额后可点，清空金额后重新置灰。<button class="vtag" data-v="v1.1">v1.1</button></span></td><td class="w">Claire 文档二</td><td><span class="fp">F07-02</span> 充值内容与提交</td></tr>
+<tr id="n16" data-fp="F07-03"><td>N16</td><td class="w"><span class="vmark" data-v="v1.1">Submit 下单成功后打开二维码支付页：H5 新开浏览器标签页显示，原游戏标签页保持打开；APP 按该支付方式现有的打开方式，用独立支付页、WebView 或外部浏览器显示，原游戏页面保持。支付页打开后弹窗自动收起。H5 支付页被浏览器拦截、没能打开时，弹窗保持打开并提示「支付页面打开失败，请重试」。二维码支付页的内容（有效期、提示文案、结果页）按目前接入的三方支付流程和规则显示，原型里的文案只是示意。支付完成后回到原游戏，不跳转大厅、不重新加载游戏：H5 下单时带上游戏内充值专用的回跳地址，支付完成后支付渠道回跳到「支付完成」中间页，中间页自动关闭这个新标签页，回到原游戏标签页；浏览器不允许自动关闭时，中间页显示「支付已完成，请返回游戏页面」和「关闭此页面」按钮，不进入大厅；在 TG、Facebook 等 App 内置浏览器、Maya / GLife 等小程序或已安装的 PWA 里玩游戏时，支付页会在系统浏览器打开，按 5.1 运行环境表处理（-1946、-1981、-2044、-2083）；回跳地址的参数由技术按当前平台规则处理（如现有的来源环境参数 from，6639），不带登录 token 和玩家身份信息（-6595），中间页可复用现有「回跳后自动关闭」的能力，由技术按当前平台逻辑处理；支付页和中间页都不依赖登录态；APP 现状无法自动回到 APP（-2207、-2208、-2301、-2320），需要玩家手动切回，切回时原游戏页面保持。到账沿用现有系统逻辑；游戏内充值弹窗不弹现有的「Payment Information」信息弹窗和「充值返回弹窗」，也不新增充值成功弹窗或 Toast；到账推送沿用现有推送策略，游戏页内按 6461 的规则不弹系统推送，只进站内信。首充后的连锁规则和充值后触发的活动弹窗（首充转盘、强制 PWA / APP 引导、APP 充值解锁 H5，以及 6954「返水与充返转盘」等充值后弹出的活动）：玩家回到原游戏后可以继续当前游戏，游戏页上不弹出（只限营销类和引导类弹窗；合规类拦截，如首充用户玩三方游戏第 4 局的强制 KYC、自我限制、PAGCOR 提示，不在此列，按现状在游戏内弹出）；余额超过设定金额时强制在 PWA 投注同样在玩家下次进入游戏时按现有规则执行；玩家关闭游戏、回到平台原生页面后，按平台现有规则显示对应内容和引导。充值期间厂商游戏 Session 自身失效的，按厂商机制重新连接。<button class="vtag" data-v="v1.1">v1.1</button></span></td><td class="w">Claire 文档三、四、五、六</td><td><span class="fp">F07-03</span> 二维码支付与返回原游戏</td></tr>
 <tr id="n17" data-fp="F08-05"><td>N17</td><td class="w">保存后，新进入游戏的玩家读取新配置；已在游戏中的玩家下次进入游戏时生效。每个站点有自己的管理后台，各自配置，本页面不区分站点。</td><td class="w">—</td><td><span class="fp">F08-05</span> 保存与重置</td></tr>
 </table></div>
 
@@ -170,11 +170,11 @@
 <tr data-fp="F05-02"><td class="w"><span class="vmark" data-v="v1.1">Mini Banner 的用途<button class="vtag" data-v="v1.1">v1.1</button></span></td><td class="w">点击跳活动详情页或自定义链接（本文 N12）</td><td class="w">「用于游戏推荐或活动宣传」（Claire《游戏快捷侧边栏需求》二.2）</td><td class="w">以本需求为准（产品 2026-10-20 决定，Claire 已确认）：Banner 不提供「跳转指定游戏」，游戏推荐由下方推荐游戏区承担</td></tr>
 <tr data-fp="F03-01"><td class="w"><span class="vmark" data-v="v1.1">关闭自动展开的侧边栏<button class="vtag" data-v="v1.1">v1.1</button></span></td><td class="w">原写「只点收起按钮 → 退出确认保留」</td><td class="w">「主动关闭自动展开的侧边栏：继续停留在当前游戏」（Claire《游戏快捷侧边栏需求》四.3）</td><td class="w">以 Claire 为准（2026-10-20 已改）：收起侧边栏时退出确认一起关闭，留在当前游戏（N7）</td></tr>
 <tr data-fp="F07-03"><td class="w"><span class="vmark" data-v="v1.1">二维码支付的打开方式<button class="vtag" data-v="v1.1">v1.1</button></span></td><td class="w">H5 新开浏览器标签页；APP 用独立支付页、WebView 或外部浏览器（本文 N16）</td><td class="w">「H5：新开浏览器标签页展示二维码；APP：通过独立支付页面 / WebView 或外部浏览器展示二维码」（Claire《游戏中半屏充值功能需求》四）</td><td class="w">不冲突，以 Claire 文档为准（2026-10-20 产品确认改回）</td></tr>
-<tr data-fp="F07-03"><td class="w"><span class="vmark" data-v="v1.1">首充后的连锁规则<button class="vtag" data-v="v1.1">v1.1</button></span></td><td class="w">回到原游戏后玩家可以继续当前游戏，游戏页上不弹出；回到平台原生页面后按平台规则显示（本文 N16）</td><td class="w">首充转盘在充值成功后的原页面弹出（-6173）；首充后强制到 PWA / APP 投注（2513、4364）；H5 首充后要在 APP 充值达标才能继续玩 H5（5912、6018、6217）</td><td class="w">以本需求为准（产品 2026-10-20 决定，Claire 已确认）：游戏内半屏首充后不打断当前游戏；玩家关闭游戏回到平台原生页面后，再按上述现有规则显示和引导</td></tr>
-<tr data-fp="F07-03"><td class="w"><span class="vmark" data-v="v1.1">充值提交后和到账后的弹窗<button class="vtag" data-v="v1.1">v1.1</button></span></td><td class="w">不弹任何充值成功弹窗或 Toast（本文 N16）</td><td class="w">提交后弹「Payment Information」（-1989、-3936）；真实到账后弹「充值返回弹窗」（Confirm / Play Now / Deposit Record，平台知识库「充值返回弹窗」）</td><td class="w">以本需求为准：游戏内半屏充值两个弹窗都不弹（依据 Claire《游戏中半屏充值功能需求》六）；平台其他入口的充值不受影响</td></tr>
+<tr data-fp="F07-03"><td class="w"><span class="vmark" data-v="v1.1">首充后的连锁规则<button class="vtag" data-v="v1.1">v1.1</button></span></td><td class="w">回到原游戏后玩家可以继续当前游戏，游戏页上不弹出；回到平台原生页面后按平台规则显示（本文 N16）</td><td class="w">首充转盘在充值成功后的原页面弹出（-6173）；首充后强制到 PWA / APP 投注（2513、4364）；H5 首充后要在 APP 充值达标才能继续玩 H5（5912、6018、6217）</td><td class="w">以本需求为准（产品 2026-10-20 决定，Claire 已确认）：游戏内充值弹窗首充后不打断当前游戏；玩家关闭游戏回到平台原生页面后，再按上述现有规则显示和引导</td></tr>
+<tr data-fp="F07-03"><td class="w"><span class="vmark" data-v="v1.1">充值提交后和到账后的弹窗<button class="vtag" data-v="v1.1">v1.1</button></span></td><td class="w">不弹任何充值成功弹窗或 Toast（本文 N16）</td><td class="w">提交后弹「Payment Information」（-1989、-3936）；真实到账后弹「充值返回弹窗」（Confirm / Play Now / Deposit Record，平台知识库「充值返回弹窗」）</td><td class="w">以本需求为准：游戏内充值弹窗两个弹窗都不弹（依据 Claire《游戏中半屏充值功能需求》六）；平台其他入口的充值不受影响</td></tr>
 <tr data-fp="F05-02"><td class="w"><span class="vmark" data-v="v1.1">Mini Banner 外链域名<button class="vtag" data-v="v1.1">v1.1</button></span></td><td class="w">自定义跳转链接可以填任何域名（Q10），新标签页 / 系统浏览器打开，不拼接 token（本文 N12）</td><td class="w">平台安全检查清单和 5200 deeplink 方案要求外链走白名单（主版第 7 章检查清单；5200）</td><td class="w">以本需求为准（产品 2026-10-20 确认，Q10）：不限制域名；靠菜单权限、操作日志追溯，链接不带玩家身份信息</td></tr>
-<tr data-fp="F07-03"><td class="w"><span class="vmark" data-v="v1.1">合规类拦截<button class="vtag" data-v="v1.1">v1.1</button></span></td><td class="w">半屏首充后回到原游戏，游戏页上不弹出连锁弹窗（本文 N16）</td><td class="w">首充用户玩三方游戏开第 4 局弹强制 KYC，弹窗不能关闭（-1343、-4261、-4783）</td><td class="w">合规优先：「不弹出」只限营销类和引导类弹窗，强制 KYC、自我限制、PAGCOR 提示等合规拦截按现状在游戏内弹出</td></tr>
-<tr data-fp="F07-03"><td class="w"><span class="vmark" data-v="v1.1">充值后触发的新活动弹窗<button class="vtag" data-v="v1.1">v1.1</button></span></td><td class="w">游戏页上不弹出，玩家回到平台原生页面后再显示（本文 N16）</td><td class="w">P0 新活动 6954「返水与充返转盘」预计 11-13 上线，充值后可能触发转盘弹窗（PRD 在 Wiki，资料未覆盖弹出位置）</td><td class="w">以本需求为准：游戏内半屏充值后触发的活动弹窗一律在玩家回到平台原生页面后显示；6954 开发时同步遵守</td></tr>
+<tr data-fp="F07-03"><td class="w"><span class="vmark" data-v="v1.1">合规类拦截<button class="vtag" data-v="v1.1">v1.1</button></span></td><td class="w">在充值弹窗首充后回到原游戏，游戏页上不弹出连锁弹窗（本文 N16）</td><td class="w">首充用户玩三方游戏开第 4 局弹强制 KYC，弹窗不能关闭（-1343、-4261、-4783）</td><td class="w">合规优先：「不弹出」只限营销类和引导类弹窗，强制 KYC、自我限制、PAGCOR 提示等合规拦截按现状在游戏内弹出</td></tr>
+<tr data-fp="F07-03"><td class="w"><span class="vmark" data-v="v1.1">充值后触发的新活动弹窗<button class="vtag" data-v="v1.1">v1.1</button></span></td><td class="w">游戏页上不弹出，玩家回到平台原生页面后再显示（本文 N16）</td><td class="w">P0 新活动 6954「返水与充返转盘」预计 11-13 上线，充值后可能触发转盘弹窗（PRD 在 Wiki，资料未覆盖弹出位置）</td><td class="w">以本需求为准：游戏内充值弹窗后触发的活动弹窗一律在玩家回到平台原生页面后显示；6954 开发时同步遵守</td></tr>
 <tr data-fp="F07-03"><td class="w"><span class="vmark" data-v="v1.1">内置浏览器和 PWA 中打开支付页<button class="vtag" data-v="v1.1">v1.1</button></span></td><td class="w">H5 新开浏览器标签页显示二维码，付完款回到原游戏（本文 N16）</td><td class="w">TG 内置浏览器跳出后到系统浏览器、无登录态（-1946、-1981 被否决）；装了 PWA 后充值完 TG 里的网站被关闭（-2044）；回跳页 Back 按钮点不了（-2083）</td><td class="w">以本需求为准，按 5.1 运行环境表处理：支付页和中间页不依赖登录态，中间页不提供进入平台的入口，玩家切回原 App / PWA 继续游戏</td></tr>
 </table></div>
 
@@ -199,7 +199,7 @@
 <tr data-fp="F02-01"><td>侧边栏</td><td class="w"><span class="fp">F02-01</span> 结构和位置按 N4；收起按钮在侧边栏靠屏幕内侧的边上，图标朝向跟随左右侧翻转。</td></tr>
 <tr data-fp="F02-02"><td>展开 / 收起</td><td class="w"><span class="fp">F02-02</span> 按 N5；展开、收起都以浮标当前位置为锚点做动效。</td></tr>
 <tr data-fp="F02-03"><td>Home / Reload</td><td class="w"><span class="fp">F02-03</span> 按 N6；结算期间显示「正在结算游戏余额…」。</td></tr>
-<tr data-fp="F07-01"><td>Deposit</td><td class="w"><span class="vmark" data-v="v1.1"><span class="fp">F07-01</span> 点击后侧边栏收起，打开半屏充值（第 5 章）。<button class="vtag" data-v="v1.1">v1.1</button></span></td></tr>
+<tr data-fp="F07-01"><td>Deposit</td><td class="w"><span class="vmark" data-v="v1.1"><span class="fp">F07-01</span> 点击后侧边栏收起，打开充值弹窗（第 5 章）。<button class="vtag" data-v="v1.1">v1.1</button></span></td></tr>
 <tr data-fp="F05-01 F05-02"><td>Mini Banner</td><td class="w"><span class="fp">F05-01</span> <span class="fp">F05-02</span> 按 N12；图片右下角有小箭头提示可点击。</td></tr>
 <tr data-fp="F04-01 F04-02"><td>推荐游戏</td><td class="w"><span class="fp">F04-01</span> <span class="fp">F04-02</span> 按 N9、N10。加载失败时显示「游戏加载失败」和「重试」按钮，Home、Deposit、Reload、Mini Banner 照常显示。切换中图标置灰。</td></tr>
 <tr data-fp="F04-03"><td>未结算蒙层</td><td class="w"><span class="fp">F04-03</span> 按 N11；蒙层文案「本局结算中…」。</td></tr>
@@ -209,22 +209,22 @@
 <div class="tbl"><table>
 <tr><th>列表（所在页面）</th><th>分页方式</th><th>每页条数（默认 / 可选）</th><th>默认排序</th><th>筛选、搜索、操作后停在哪一页</th><th>空列表 / 加载失败</th><th>导出</th></tr>
 <tr data-fp="F04-01"><td class="w"><span class="vmark" data-v="v1.1">推荐游戏（侧边栏推荐区）<button class="vtag" data-v="v1.1">v1.1</button></span></td><td class="w">滚动到底「加载更多」：首次显示 10 个，滚动到推荐区底部自动加载下一批，也可点「加载更多」；加载中显示「加载中…」；全部加载完显示「没有更多了」（总数不超过 10 个时不显示这行）</td><td class="w">每批 10 个，固定；总数最多为后台「展示数量」（1–30）</td><td class="w">后台排序（位置序号唯一，不会重复）；过滤规则见 N9</td><td class="w">每次展开侧边栏从第一批重新显示；切换游戏后重新加载；加载过程中后台改了配置不影响本次，下次进入游戏生效</td><td class="w">为空：「暂无可用游戏」；首批加载失败：「游戏加载失败」+「重试」；加载更多失败：「加载失败，点击重试」，已显示的保留</td><td>不涉及</td></tr>
-<tr><td class="w">半屏充值里的支付方式、快捷金额</td><td class="w">不分页：沿用现有充值页的展示方式，条数由现有充值配置决定，本需求不改</td><td>—</td><td>沿用现有</td><td>—</td><td>沿用现有</td><td>不涉及</td></tr>
+<tr><td class="w">充值弹窗里的支付方式、快捷金额</td><td class="w">不分页：沿用现有充值页的展示方式，条数由现有充值配置决定，本需求不改</td><td>—</td><td>沿用现有</td><td>—</td><td>沿用现有</td><td>不涉及</td></tr>
 </table></div>
-<h2 id="c5">5. 前台页面二：游戏内半屏充值</h2>
-<p><span class="vmark" data-v="v1.1">原型：<a href="../prototype/front/游戏快捷侧边栏-游戏内半屏充值.html">游戏内半屏充值</a>。入口：游戏页侧边栏的 Deposit。依据：Claire《游戏中半屏充值功能需求》。<button class="vtag" data-v="v1.1">v1.1</button></span></p>
+<h2 id="c5">5. 前台页面二：游戏内充值弹窗</h2>
+<p><span class="vmark" data-v="v1.1">原型：<a href="../prototype/front/游戏快捷侧边栏-游戏内充值弹窗.html">游戏内充值弹窗</a>。入口：游戏页侧边栏的 Deposit。依据：Claire《游戏中半屏充值功能需求》。<button class="vtag" data-v="v1.1">v1.1</button></span></p>
 <div class="tbl"><table>
 <tr><th>模块</th><th>功能与交互要求</th></tr>
-<tr data-fp="F07-01"><td>打开</td><td class="w"><span class="vmark" data-v="v1.1"><span class="fp">F07-01</span> 从底部升起，高度按内容自适应、最高 2/3 屏，超出时在半屏内滚动（N14）；横屏待 Q11；上方露出的游戏加半透明遮罩，游戏不关闭、不刷新（N14）。<button class="vtag" data-v="v1.1">v1.1</button></span></td></tr>
+<tr data-fp="F07-01"><td>打开</td><td class="w"><span class="vmark" data-v="v1.1"><span class="fp">F07-01</span> 从底部升起，高度固定为游戏页面的 2/3，不随内容变化，内容超出时在弹窗内滚动（N14）；横屏待 Q11；上方露出的游戏加半透明遮罩，游戏不关闭、不刷新（N14）。<button class="vtag" data-v="v1.1">v1.1</button></span></td></tr>
 <tr data-fp="F07-01"><td>顶部</td><td class="w"><span class="vmark" data-v="v1.1"><span class="fp">F07-01</span> 拖动条（仅示意，不支持下拉关闭）、标题「充值」、副标题「选择支付方式，立即充值」、右上角 × 关闭。<button class="vtag" data-v="v1.1">v1.1</button></span></td></tr>
-<tr data-fp="F07-02"><td>内容区</td><td class="w"><span class="vmark" data-v="v1.1"><span class="fp">F07-02</span> 依次为首充等充值活动入口、支付方式（含「查看全部」）、充值金额输入框（Free Spin 渠道显示「+1 幸运转盘」标签，带清空按钮）、到账预览、快捷金额、条款勾选；全部沿用现有充值页（N15），可在半屏内上下滚动。<button class="vtag" data-v="v1.1">v1.1</button></span></td></tr>
-<tr data-fp="F07-02"><td>Submit</td><td class="w"><span class="vmark" data-v="v1.1"><span class="fp">F07-02</span> 固定在半屏底部；校验和下单沿用现有充值逻辑，金额超出限额时提示「请输入 X-Y 之间的金额」（现有文案）。<button class="vtag" data-v="v1.1">v1.1</button></span></td></tr>
-<tr data-fp="F07-03"><td>二维码支付</td><td class="w"><span class="vmark" data-v="v1.1"><span class="fp">F07-03</span> Submit 后半屏收起，打开二维码支付页：H5 新开浏览器标签页，APP 用独立支付页、WebView 或外部浏览器（N16）；原游戏页面始终保持。<button class="vtag" data-v="v1.1">v1.1</button></span></td></tr>
+<tr data-fp="F07-02"><td>内容区</td><td class="w"><span class="vmark" data-v="v1.1"><span class="fp">F07-02</span> 依次为支付方式（含「查看全部」）、优惠活动（Promotions）券（首存和每日存送都开启时只显示首存券；只有每日存送时显示每日存送券，玩家点券上的圆圈自行选择是否申请；都没有时整个区换成普通标题语「继续游戏，精彩不停！」）、充值金额输入框（Free Spin 渠道显示「+1 幸运转盘」标签，带清空按钮）、到账预览、快捷金额、条款勾选；全部沿用现有充值页（N15），可在弹窗内上下滚动。<button class="vtag" data-v="v1.1">v1.1</button></span></td></tr>
+<tr data-fp="F07-02"><td>Submit</td><td class="w"><span class="vmark" data-v="v1.1"><span class="fp">F07-02</span> 固定在弹窗底部；没填金额、也没点快捷金额之前置灰不能点，输入金额或点快捷金额后可点；校验和下单沿用现有充值逻辑，金额超出限额时提示「请输入 X-Y 之间的金额」（现有文案）。<button class="vtag" data-v="v1.1">v1.1</button></span></td></tr>
+<tr data-fp="F07-03"><td>二维码支付</td><td class="w"><span class="vmark" data-v="v1.1"><span class="fp">F07-03</span> Submit 后弹窗收起，打开二维码支付页：H5 新开浏览器标签页，APP 用独立支付页、WebView 或外部浏览器（N16）；原游戏页面始终保持。<button class="vtag" data-v="v1.1">v1.1</button></span></td></tr>
 <tr data-fp="F07-03"><td>返回原游戏</td><td class="w"><span class="vmark" data-v="v1.1"><span class="fp">F07-03</span> 支付完成后回到原游戏，不跳大厅、不重新加载；不弹充值成功弹窗或 Toast；侧边栏为收起状态，自动展开机会不变。<button class="vtag" data-v="v1.1">v1.1</button></span></td></tr>
 <tr data-fp="F07-01"><td>关闭</td><td class="w"><span class="vmark" data-v="v1.1"><span class="fp">F07-01</span> 点 × 或点上方遮罩随时关闭，立即回到当前游戏，已填写的金额不保留。<button class="vtag" data-v="v1.1">v1.1</button></span></td></tr>
 </table></div>
 <h3 id="c5-1">5.1 运行环境与支付页打开方式</h3>
-<p><span class="vmark" data-v="v1.1">玩家所在的运行环境决定二维码支付页在哪里打开、付完款怎么回到原游戏（N16）。所有环境下：回跳地址不带登录 token 和玩家身份信息，其他参数由技术按当前平台规则处理；支付页和「支付完成」中间页都不依赖登录态；原游戏页面始终保持，半屏在支付页打开后已收起。<button class="vtag" data-v="v1.1">v1.1</button></span></p>
+<p><span class="vmark" data-v="v1.1">玩家所在的运行环境决定二维码支付页在哪里打开、付完款怎么回到原游戏（N16）。所有环境下：回跳地址不带登录 token 和玩家身份信息，其他参数由技术按当前平台规则处理；支付页和「支付完成」中间页都不依赖登录态；原游戏页面始终保持，弹窗在支付页打开后已收起。<button class="vtag" data-v="v1.1">v1.1</button></span></p>
 <div class="tbl"><table>
 <tr><th>运行环境</th><th>支付页在哪里打开</th><th>付完款后</th><th>中间页关闭失败时</th></tr>
 <tr data-fp="F07-03"><td class="w"><span class="vmark" data-v="v1.1">H5：手机系统浏览器（Safari、Chrome 等）<button class="vtag" data-v="v1.1">v1.1</button></span></td><td class="w">同一浏览器新开标签页</td><td class="w">回跳到「支付完成」中间页，自动关闭新标签页，回到原游戏标签页</td><td class="w">显示「支付已完成，请返回游戏页面」和「关闭此页面」按钮，不进大厅</td></tr>
@@ -294,7 +294,7 @@
 <li>侧边栏使用情况：浮标曝光、手动 / 自动展开次数。</li>
 <li>推荐效果：推荐曝光 → 点击 → 切换成功 → 继续投注的转化。</li>
 <li>退出挽留：首次退出自动展开后，选推荐游戏、取消退出、确认退出的比例。</li>
-<li><span class="vmark" data-v="v1.1">游戏内充值：打开半屏充值 → 提交 → 打开支付页 → 订单成功 → 回到原游戏的转化。<button class="vtag" data-v="v1.1">v1.1</button></span></li>
+<li><span class="vmark" data-v="v1.1">游戏内充值：打开充值弹窗 → 提交 → 打开支付页 → 订单成功 → 回到原游戏的转化。<button class="vtag" data-v="v1.1">v1.1</button></span></li>
 </ul>
 <h3 id="c7-2">7.2 公共参数</h3>
 <div class="tbl"><table>
@@ -319,8 +319,8 @@
 <tr data-fp="F09-01"><td>exit_confirm / exit_cancel</td><td class="w">玩家确认 / 取消退出</td><td class="w">sidebarOpen</td><td>H5、iOS、Flutter</td><td><span class="fp">F09-01</span></td></tr>
 <tr data-fp="F09-01"><td>quick_action_click</td><td class="w">点 Home / Deposit / Reload</td><td class="w">action</td><td>H5、iOS、Flutter</td><td><span class="fp">F09-01</span></td></tr>
 <tr data-fp="F09-01"><td>banner_impression / banner_click</td><td class="w">Mini Banner 显示 / 点击</td><td class="w">promoId、targetUrl、linkType = detail / custom</td><td>H5、iOS、Flutter</td><td><span class="fp">F09-01</span></td></tr>
-<tr data-fp="F09-01"><td><span class="vmark" data-v="v1.1">deposit_open<button class="vtag" data-v="v1.1">v1.1</button></span></td><td class="w">半屏充值打开</td><td class="w">sheetHeight（半屏实际高度，像素）、screenHeight（游戏页面高度，像素）、orientation = portrait / landscape</td><td>H5、iOS、Flutter</td><td><span class="fp">F09-01</span></td></tr>
-<tr data-fp="F09-01"><td><span class="vmark" data-v="v1.1">deposit_close<button class="vtag" data-v="v1.1">v1.1</button></span></td><td class="w">玩家关闭半屏充值</td><td class="w">closeBy = button / mask、stayDuration（秒）</td><td>H5、iOS、Flutter</td><td><span class="fp">F09-01</span></td></tr>
+<tr data-fp="F09-01"><td><span class="vmark" data-v="v1.1">deposit_open<button class="vtag" data-v="v1.1">v1.1</button></span></td><td class="w">充值弹窗打开</td><td class="w">sheetHeight（弹窗实际高度，像素）、screenHeight（游戏页面高度，像素）、orientation = portrait / landscape</td><td>H5、iOS、Flutter</td><td><span class="fp">F09-01</span></td></tr>
+<tr data-fp="F09-01"><td><span class="vmark" data-v="v1.1">deposit_close<button class="vtag" data-v="v1.1">v1.1</button></span></td><td class="w">玩家关闭充值弹窗</td><td class="w">closeBy = button / mask、stayDuration（秒）</td><td>H5、iOS、Flutter</td><td><span class="fp">F09-01</span></td></tr>
 <tr data-fp="F09-01"><td><span class="vmark" data-v="v1.1">deposit_submit<button class="vtag" data-v="v1.1">v1.1</button></span></td><td class="w">点 Submit 且下单成功</td><td class="w">orderId、amount、payMethod、promoId</td><td>H5、iOS、Flutter</td><td><span class="fp">F09-01</span></td></tr>
 <tr data-fp="F09-01"><td><span class="vmark" data-v="v1.1">deposit_pay_open<button class="vtag" data-v="v1.1">v1.1</button></span></td><td class="w">尝试打开二维码支付页</td><td class="w">orderId、openType = new_tab / app_page / webview / browser、result = success / fail</td><td>H5、iOS、Flutter</td><td><span class="fp">F09-01</span></td></tr>
 <tr data-fp="F09-01"><td><span class="vmark" data-v="v1.1">deposit_return<button class="vtag" data-v="v1.1">v1.1</button></span></td><td class="w">打开支付页后玩家回到原游戏页面（页面重新可见）</td><td class="w">orderId、awayDuration（秒）</td><td>H5、iOS、Flutter</td><td><span class="fp">F09-01</span></td></tr>
@@ -363,17 +363,17 @@
 <tr data-fp="F04-02"><td class="w"><span class="vmark" data-v="v1.1">点推荐游戏时准入校验不通过（强制 KYC、Casino 屏障、APP 充值解锁 H5、首充后强制 PWA / APP、余额超过设定金额时强制在 PWA 投注、自我限制等）<button class="vtag" data-v="v1.1">v1.1</button></span></td><td class="w">不结算、不退出当前游戏；推荐列表保持展开并解锁</td><td>沿用现有拦截弹窗和引导</td></tr>
 <tr data-fp="F04-02"><td class="w"><span class="vmark" data-v="v1.1">新游戏启动超时<button class="vtag" data-v="v1.1">v1.1</button></span></td><td class="w">按启动失败处理，回到原游戏并同步余额；不显示「维护中」</td><td>「所选游戏暂时不可用，请换一款试试」</td></tr>
 <tr data-fp="F06-01"><td class="w"><span class="vmark" data-v="v1.1">免费次数（新用户转盘奖励的 Free Spin）使用中点推荐游戏、Home、Reload 或 Mini Banner（选择活动）<button class="vtag" data-v="v1.1">v1.1</button></span></td><td class="w">不结算、不离开当前游戏</td><td>「免费次数使用中，用完后再切换」</td></tr>
-<tr data-fp="F07-02"><td class="w"><span class="vmark" data-v="v1.1">未认证玩家在半屏输入金额或提交<button class="vtag" data-v="v1.1">v1.1</button></span></td><td class="w">沿用现有 KYC 提醒，弹在半屏上方；Later 留在半屏；Verify Now 先结算再跳 KYC 页</td><td>沿用现有「Please verify your account promptly」</td></tr>
+<tr data-fp="F07-02"><td class="w"><span class="vmark" data-v="v1.1">未认证玩家在弹窗输入金额或提交<button class="vtag" data-v="v1.1">v1.1</button></span></td><td class="w">沿用现有 KYC 提醒，显示在充值弹窗上方；Later 留在弹窗；Verify Now 先结算再跳 KYC 页</td><td>沿用现有「Please verify your account promptly」</td></tr>
 <tr data-fp="F04-02"><td class="w">新游戏启动失败</td><td class="w">回到原游戏并同步余额；侧边栏保持展开，解除点击锁</td><td>「所选游戏暂时不可用，请换一款试试」</td></tr>
 <tr data-fp="F04-02"><td class="w">连续点多个推荐游戏</td><td class="w">只处理第一次有效点击</td><td>无</td></tr>
 <tr data-fp="F06-01"><td class="w">结算超时或余额同步失败（还没离开当前游戏）</td><td class="w">关闭蒙层，留在当前游戏，不跳出</td><td>「余额同步失败，请稍后重试」</td></tr>
 <tr data-fp="F05-01"><td class="w">Mini Banner 图片加载失败 / 活动已下架</td><td class="w">隐藏 Mini Banner 区域，其余模块正常</td><td>无</td></tr>
-<tr data-fp="F07-02"><td class="w"><span class="vmark" data-v="v1.1">充值页内容加载失败<button class="vtag" data-v="v1.1">v1.1</button></span></td><td class="w">沿用现有充值页的加载失败处理；关闭半屏后游戏不受影响</td><td>沿用现有</td></tr>
+<tr data-fp="F07-02"><td class="w"><span class="vmark" data-v="v1.1">充值页内容加载失败<button class="vtag" data-v="v1.1">v1.1</button></span></td><td class="w">沿用现有充值页的加载失败处理；关闭弹窗后游戏不受影响</td><td>沿用现有</td></tr>
 <tr data-fp="F07-02"><td class="w"><span class="vmark" data-v="v1.1">Submit 校验不通过 / 下单失败 / 重复点击<button class="vtag" data-v="v1.1">v1.1</button></span></td><td class="w">沿用现有充值逻辑；提交中 Submit 置灰防重复</td><td>沿用现有文案，如「请输入 X-Y 之间的金额」</td></tr>
 <tr data-fp="F07-03"><td class="w"><span class="vmark" data-v="v1.1">支付完成后中间页无法自动关闭新标签页（浏览器不允许）<button class="vtag" data-v="v1.1">v1.1</button></span></td><td class="w">中间页保持显示，不进入大厅；玩家点「关闭此页面」或手动切回原游戏标签页</td><td>「支付已完成，请返回游戏页面」+「关闭此页面」</td></tr>
 <tr data-fp="F07-03"><td class="w"><span class="vmark" data-v="v1.1">在 App 内置浏览器、小程序或 PWA 中充值，支付页在系统浏览器打开<button class="vtag" data-v="v1.1">v1.1</button></span></td><td class="w">按 5.1 运行环境表：支付页和中间页不依赖登录态；中间页不提供进入平台的入口；玩家切回原 App / PWA，原游戏保持</td><td>「支付已完成，请返回游戏页面」（不带按钮）</td></tr>
-<tr data-fp="F07-03"><td class="w"><span class="vmark" data-v="v1.1">支付页上二维码过期或支付失败<button class="vtag" data-v="v1.1">v1.1</button></span></td><td class="w">按三方支付页现有处理；玩家回到原游戏后可重新打开半屏充值</td><td>沿用三方支付页现有文案</td></tr>
-<tr data-fp="F07-03"><td class="w"><span class="vmark" data-v="v1.1">H5 支付页被浏览器拦截、没能打开<button class="vtag" data-v="v1.1">v1.1</button></span></td><td class="w">半屏充值保持打开，可重新点 Submit；同一订单是否复用沿用现有下单规则；多次未支付可能触发后台「最大未处理线上充值订单数」或支付层级「当日最大连续未支付笔数」，按现有规则提示</td><td>「支付页面打开失败，请重试」</td></tr>
+<tr data-fp="F07-03"><td class="w"><span class="vmark" data-v="v1.1">支付页上二维码过期或支付失败<button class="vtag" data-v="v1.1">v1.1</button></span></td><td class="w">按三方支付页现有处理；玩家回到原游戏后可重新打开充值弹窗</td><td>沿用三方支付页现有文案</td></tr>
+<tr data-fp="F07-03"><td class="w"><span class="vmark" data-v="v1.1">H5 支付页被浏览器拦截、没能打开<button class="vtag" data-v="v1.1">v1.1</button></span></td><td class="w">充值弹窗保持打开，可重新点 Submit；同一订单是否复用沿用现有下单规则；多次未支付可能触发后台「最大未处理线上充值订单数」或支付层级「当日最大连续未支付笔数」，按现有规则提示</td><td>「支付页面打开失败，请重试」</td></tr>
 <tr data-fp="F07-03"><td class="w"><span class="vmark" data-v="v1.1">支付取消、失败或超时<button class="vtag" data-v="v1.1">v1.1</button></span></td><td class="w">沿用现有订单和支付结果处理；玩家回到原游戏，游戏内不额外提示</td><td>支付页沿用现有；游戏内无</td></tr>
 <tr data-fp="F07-03"><td class="w"><span class="vmark" data-v="v1.1">支付期间厂商游戏 Session 失效<button class="vtag" data-v="v1.1">v1.1</button></span></td><td class="w">平台不主动关闭或重建游戏页面，按厂商机制重新连接</td><td>厂商游戏自身提示（如 "Reconnect..."）</td></tr>
 </table></div>
@@ -383,12 +383,12 @@
 <ol>
 <li data-fp="F01-01"><span class="fp">F01-01</span> 后台总开关开 → 进入游戏屏幕右侧上方显示浮标（iOS 也在右侧，浮标上沿不贴屏幕顶部、不压住状态栏和刘海），厂商游戏加载画面期间也显示且能展开；关 → 不显示浮标和侧边栏，首次退出不自动展开；配置接口失败 → 不显示浮标，游戏正常。</li>
 <li data-fp="F01-02"><span class="fp">F01-02</span> 按下移动 4 像素松手 → 视为点击并展开；移动 5 像素 → 视为拖动不展开；松手位置在屏幕中线左侧 → 吸附左边，右侧 → 吸附右边，高度不变。</li>
-<li data-fp="F01-03"><span class="fp">F01-03</span> 无操作 14 秒浮标不缩进，15 秒缩进只露 2/3；缩进状态点击先恢复再展开；侧边栏或半屏充值打开期间不缩进。</li>
+<li data-fp="F01-03"><span class="fp">F01-03</span> 无操作 14 秒浮标不缩进，15 秒缩进只露 2/3；缩进状态点击先恢复再展开；侧边栏或充值弹窗打开期间不缩进。</li>
 <li data-fp="F02-01"><span class="fp">F02-01</span> 浮标在左 / 右侧时侧边栏贴左 / 右侧展开；浮标贴近屏幕底部时侧边栏自动上移完整显示。</li>
 <li data-fp="F02-02"><span class="fp">F02-02</span> 点收起按钮、点侧边栏外区域、点 Deposit 都会收起；退出确认显示期间点侧边栏外区域不收起。</li>
 <li data-fp="F02-03"><span class="fp">F02-03</span> 点 Home / Reload → 先显示「正在结算游戏余额…」，同步完成后 Home 跳首页、<span class="vmark" data-v="v1.1">Reload 重新加载当前游戏并显示最新余额<button class="vtag" data-v="v1.1">v1.1</button></span>；前后余额一致。</li>
 <li data-fp="F03-01"><span class="fp">F03-01</span> 首次点厂商提供的退出、关闭或 Home 按钮（平台能拦截的厂商），或安卓 APP 返回键 → 退出确认和侧边栏同时出现；取消退出或点侧边栏收起按钮 → 侧边栏和退出确认一起关闭，留在当前游戏；再次点退出 → 只弹退出确认，不再自动展开；点浏览器返回 → 不自动展开。</li>
-<li data-fp="F03-02"><span class="fp">F03-02</span> 手动展开并收起后首次退出仍会自动展开；在当前游戏刷新页面后机会状态不变；切换游戏或从大厅重新进入后可再次触发；打开再关闭半屏充值后机会不变。</li>
+<li data-fp="F03-02"><span class="fp">F03-02</span> 手动展开并收起后首次退出仍会自动展开；在当前游戏刷新页面后机会状态不变；切换游戏或从大厅重新进入后可再次触发；打开再关闭充值弹窗后机会不变。</li>
 <li data-fp="F04-01"><span class="fp">F04-01</span> 推荐区首屏 2 列 × 3.5 个、可滑动、无文字和标签；当前游戏、维护中、已下架的游戏不出现；展示数量为 10、可用游戏 7 个时显示 7 个；为 0 时显示「暂无可用游戏」；前台顺序与后台位次提示一致。</li>
 <li data-fp="F04-01"><span class="vmark" data-v="v1.1"><span class="fp">F04-01</span> 展示数量 30、可用游戏 30 个 → 首次显示 10 个，滚动到底依次加载到 20、30 个，之后显示「没有更多了」；可用游戏 10 个 → 不显示加载更多；加载更多失败 → 显示「加载失败，点击重试」，已显示的不消失。<button class="vtag" data-v="v1.1">v1.1</button></span></li>
 <li data-fp="F08-04"><span class="vmark" data-v="v1.1"><span class="fp">F08-04</span> 推荐游戏列表 45 条、每页 20 条 → 共 3 页；删除第 3 页仅剩的 1 条后回到第 2 页；改每页条数回到第 1 页；前往页码输入 0 / 99 → 取第 1 页 / 末页；添加游戏弹窗搜索后回到第 1 页，跨页勾选的游戏全部追加。<button class="vtag" data-v="v1.1">v1.1</button></span></li>
@@ -398,20 +398,20 @@
 <li data-fp="F02-03"><span class="vmark" data-v="v1.1"><span class="fp">F02-03</span> 回归：点 Home 不会跳到充值页（-2144）；点 Reload → 结算后重新加载当前游戏，加载完显示最新余额，首次退出仍会自动展开（机会未重置）；加载中连点无效。<button class="vtag" data-v="v1.1">v1.1</button></span></li>
 <li data-fp="F04-02"><span class="vmark" data-v="v1.1"><span class="fp">F04-02</span> 首充用户点一款需要 KYC 才能进入的推荐游戏 → 弹现有 KYC / PWA 引导，当前游戏不退出、余额未结算；点到已下架游戏 → 提示「该游戏暂不可用」并刷新列表；新游戏启动超时 → 提示「所选游戏暂时不可用，请换一款试试」，不出现「维护中」。<button class="vtag" data-v="v1.1">v1.1</button></span></li>
 <li data-fp="F06-01"><span class="vmark" data-v="v1.1"><span class="fp">F06-01</span> 新用户转盘奖励的免费次数使用中，点推荐游戏或 Home → 提示「免费次数使用中，用完后再切换」，不离开。<button class="vtag" data-v="v1.1">v1.1</button></span></li>
-<li data-fp="F07-02"><span class="vmark" data-v="v1.1"><span class="fp">F07-02</span> 未认证玩家在半屏提交 → 弹现有 KYC 提醒，点 Later 留在半屏；首充成功后再次打开半屏 → 不再显示首充券。<button class="vtag" data-v="v1.1">v1.1</button></span></li>
-<li data-fp="F07-03"><span class="vmark" data-v="v1.1"><span class="fp">F07-03</span> 半屏充值成功后不弹「Payment Information」和「充值返回弹窗」，游戏页上不弹系统推送；新用户首充成功后可继续当前游戏，关闭游戏回到平台页面后才出现首充转盘或 PWA / APP 引导；APP 打开支付页付款后手动切回 APP，原游戏保持。<button class="vtag" data-v="v1.1">v1.1</button></span></li>
+<li data-fp="F07-02"><span class="vmark" data-v="v1.1"><span class="fp">F07-02</span> 未认证玩家在弹窗提交 → 弹现有 KYC 提醒，点 Later 留在弹窗；首充成功后再次打开弹窗 → 不再显示首充券。<button class="vtag" data-v="v1.1">v1.1</button></span></li>
+<li data-fp="F07-03"><span class="vmark" data-v="v1.1"><span class="fp">F07-03</span> 充值弹窗成功后不弹「Payment Information」和「充值返回弹窗」，游戏页上不弹系统推送；新用户首充成功后可继续当前游戏，关闭游戏回到平台页面后才出现首充转盘或 PWA / APP 引导；APP 打开支付页付款后手动切回 APP，原游戏保持。<button class="vtag" data-v="v1.1">v1.1</button></span></li>
 <li data-fp="F08-05"><span class="vmark" data-v="v1.1"><span class="fp">F08-05</span> 两个账号同时打开配置页，A 先保存后 B 再保存 → B 收到「配置已被他人修改，请刷新后再改」，A 的配置未被覆盖。<button class="vtag" data-v="v1.1">v1.1</button></span></li>
 <li data-fp="F01-01"><span class="vmark" data-v="v1.1"><span class="fp">F01-01</span> 新版本 APP 和 H5 进入游戏 → 只显示本需求的浮标，不再出现 G 图标悬浮按钮。<button class="vtag" data-v="v1.1">v1.1</button></span></li>
 <li data-fp="F08-05"><span class="vmark" data-v="v1.1"><span class="fp">F08-05</span> 保存配置成功 → 操作日志新增一条，含操作人、时间（GMT+8）、修改前后值；保存失败 → 不记录。<button class="vtag" data-v="v1.1">v1.1</button></span></li>
 <li data-fp="F04-03"><span class="fp">F04-03</span> 已投注未结算时点推荐游戏 → 显示「本局结算中…」半透明蒙层，能看到本局结果，结算完成后才切换；蒙层期间其他点击无效。</li>
 <li data-fp="F05-01 F05-02"><span class="fp">F05-01</span> <span class="fp">F05-02</span> Mini Banner 只显示 1 张、不轮播；选择活动 → 结算后进活动详情页；自定义链接 → 新标签页（APP 为系统浏览器）打开，游戏不离开、不结算，地址里没有 token 和玩家信息；是否展示关闭、活动下架、图片加载失败时整块隐藏。</li>
 <li data-fp="F06-01"><span class="fp">F06-01</span> 推荐游戏、Home、Reload、Mini Banner（选择活动）、确认退出都在结算与余额同步完成后执行；结算失败时留在当前游戏并提示；处理中再点其他离开操作无效。</li>
-<li data-fp="F07-01"><span class="vmark" data-v="v1.1"><span class="fp">F07-01</span> 点 Deposit → 侧边栏收起，半屏充值从底部升起，不出现「正在结算游戏余额…」；游戏画面在上方遮罩下保持原状，未重新加载；点 × 或上方遮罩立即关闭，回到游戏且只显示浮标。内容高度低于游戏页面 2/3 时半屏按内容高度显示；内容高于 2/3 时半屏高度等于 2/3，可在半屏内滚动到条款和提交区域。<button class="vtag" data-v="v1.1">v1.1</button></span></li>
-<li data-fp="F07-02"><span class="vmark" data-v="v1.1"><span class="fp">F07-02</span> 半屏内的支付方式、充值活动、快捷金额、赠送标签、限额和说明与 Wallet 充值页一致；输入超出限额的金额提交提示「请输入 X-Y 之间的金额」；绕过前端直接调下单接口同样按现有规则拦截。<button class="vtag" data-v="v1.1">v1.1</button></span></li>
-<li data-fp="F07-03"><span class="vmark" data-v="v1.1"><span class="fp">F07-03</span> H5 Submit 成功 → 半屏收起，新标签页打开二维码支付页，原游戏标签页仍在；支付完成 → 新标签页自动关闭，回到原游戏标签页，原游戏未重新加载；浏览器不允许自动关闭时 → 显示「支付已完成，请返回游戏页面」和「关闭此页面」，不进大厅；没有充值成功弹窗或 Toast，余额按现有到账逻辑更新；支付页被拦截 → 半屏保持打开并提示「支付页面打开失败，请重试」。APP → 用独立支付页、WebView 或外部浏览器打开，付款后手动切回 APP，原游戏保持。<button class="vtag" data-v="v1.1">v1.1</button></span></li>
-<li data-fp="F07-03"><span class="vmark" data-v="v1.1"><span class="fp">F07-03</span> 在 TG 内置浏览器、Facebook 内置浏览器和已安装的 PWA 里分别充值 → 支付页在系统浏览器打开，付完款中间页只显示「支付已完成，请返回游戏页面」，没有进入平台的入口；切回原 App / PWA，原游戏保持、半屏已收起。<button class="vtag" data-v="v1.1">v1.1</button></span></li>
+<li data-fp="F07-01"><span class="vmark" data-v="v1.1"><span class="fp">F07-01</span> 点 Deposit → 侧边栏收起，充值弹窗从底部升起，不出现「正在结算游戏余额…」；游戏画面在上方遮罩下保持原状，未重新加载；点 × 或上方遮罩立即关闭，回到游戏且只显示浮标。无论内容多少（含没有优惠活动时），弹窗高度都等于游戏页面的 2/3；内容超出时可在弹窗内滚动到条款和提交区域。<button class="vtag" data-v="v1.1">v1.1</button></span></li>
+<li data-fp="F07-02"><span class="vmark" data-v="v1.1"><span class="fp">F07-02</span> 打开弹窗未填金额 → Submit 置灰；点 +100 → Submit 可点；清空金额 → 重新置灰。首存和每日存送都开启 → 只显示首存券；只有每日存送 → 优惠活动区显示每日存送券，点券上的圆圈可申请、再点取消，不申请也能提交；都没有存送活动 → 优惠活动区换成「继续游戏，精彩不停！」，没有券。弹窗内的支付方式、充值活动、快捷金额、赠送标签、限额和说明与 Wallet 充值页一致；输入超出限额的金额提交提示「请输入 X-Y 之间的金额」；绕过前端直接调下单接口同样按现有规则拦截。<button class="vtag" data-v="v1.1">v1.1</button></span></li>
+<li data-fp="F07-03"><span class="vmark" data-v="v1.1"><span class="fp">F07-03</span> H5 Submit 成功 → 弹窗收起，新标签页打开二维码支付页，原游戏标签页仍在；支付完成 → 新标签页自动关闭，回到原游戏标签页，原游戏未重新加载；浏览器不允许自动关闭时 → 显示「支付已完成，请返回游戏页面」和「关闭此页面」，不进大厅；没有充值成功弹窗或 Toast，余额按现有到账逻辑更新；支付页被拦截 → 弹窗保持打开并提示「支付页面打开失败，请重试」。APP → 用独立支付页、WebView 或外部浏览器打开，付款后手动切回 APP，原游戏保持。<button class="vtag" data-v="v1.1">v1.1</button></span></li>
+<li data-fp="F07-03"><span class="vmark" data-v="v1.1"><span class="fp">F07-03</span> 在 TG 内置浏览器、Facebook 内置浏览器和已安装的 PWA 里分别充值 → 支付页在系统浏览器打开，付完款中间页只显示「支付已完成，请返回游戏页面」，没有进入平台的入口；切回原 App / PWA，原游戏保持、弹窗已收起。<button class="vtag" data-v="v1.1">v1.1</button></span></li>
 <li data-fp="F07-03"><span class="vmark" data-v="v1.1"><span class="fp">F07-03</span> 抓包核对：支付页地址和回跳到中间页的地址里没有登录 token 和玩家身份信息（其他参数由技术按当前平台规则处理）；充值后触发的营销和引导弹窗（首充转盘、6954 充返转盘等）不在游戏页弹出，回到平台页面后才显示。<button class="vtag" data-v="v1.1">v1.1</button></span></li>
-<li data-fp="F07-03"><span class="vmark" data-v="v1.1"><span class="fp">F07-03</span> 未认证的新玩家在半屏完成首充后继续玩三方游戏到第 4 局 → 强制 KYC 照常在游戏内弹出、不能关闭；首充转盘等营销弹窗不在游戏页弹出。<button class="vtag" data-v="v1.1">v1.1</button></span></li>
+<li data-fp="F07-03"><span class="vmark" data-v="v1.1"><span class="fp">F07-03</span> 未认证的新玩家在充值弹窗里完成首充后继续玩三方游戏到第 4 局 → 强制 KYC 照常在游戏内弹出、不能关闭；首充转盘等营销弹窗不在游戏页弹出。<button class="vtag" data-v="v1.1">v1.1</button></span></li>
 <li data-fp="F02-03"><span class="vmark" data-v="v1.1"><span class="fp">F02-03</span> 首充后余额超过 PWA 投注阈值时在 H5 点 Reload → 按现有拦截方式提示，不结算，留在当前游戏。<button class="vtag" data-v="v1.1">v1.1</button></span></li>
 <li data-fp="F03-01"><span class="vmark" data-v="v1.1"><span class="fp">F03-01</span> 平台拦截不到退出按钮的厂商游戏 → 点退出按厂商现有行为退出，不自动展开；浮标和手动展开正常。<button class="vtag" data-v="v1.1">v1.1</button></span></li>
 <li data-fp="F01-01"><span class="vmark" data-v="v1.1"><span class="fp">F01-01</span> 用低于最低支持版本的 APP 进入游戏 → 仍显示 G 图标；后台关闭总开关不影响老版本的 G 图标；新版本 APP 和 H5 不出现 G 图标。<button class="vtag" data-v="v1.1">v1.1</button></span></li>
@@ -429,7 +429,7 @@
 <tr data-fp="F02 F03"><td class="w">侧边栏展开收起、首次退出自动展开</td><td><span class="fp">F02</span> <span class="fp">F03</span></td><td>✓</td><td>✓</td><td>✓</td><td>—</td></tr>
 <tr data-fp="F04 F06"><td class="w">推荐游戏切换与结算同步</td><td><span class="fp">F04</span> <span class="fp">F06</span></td><td>✓</td><td>✓</td><td>✓</td><td>—</td></tr>
 <tr data-fp="F05"><td class="w">Mini Banner 显示与跳转</td><td><span class="fp">F05</span></td><td>✓</td><td>✓</td><td>✓</td><td>—</td></tr>
-<tr data-fp="F07"><td class="w">半屏充值与二维码支付返回</td><td><span class="fp">F07</span></td><td>✓</td><td>✓</td><td>✓</td><td>—</td></tr>
+<tr data-fp="F07"><td class="w">充值弹窗与二维码支付返回</td><td><span class="fp">F07</span></td><td>✓</td><td>✓</td><td>✓</td><td>—</td></tr>
 <tr data-fp="F08"><td class="w">后台配置、保存与重置</td><td><span class="fp">F08</span></td><td>—</td><td>—</td><td>—</td><td>✓</td></tr>
 </table></div>
 
@@ -437,8 +437,8 @@
 <ul>
 <li>上线前：运营在后台配置推荐游戏、Mini Banner 并保存；核对 3.4 依赖的充值配置为生产值。</li>
 <li>灰度：本需求没有按玩家灰度；上线后先观察首日埋点和订单数据，有问题按回滚处理。</li>
-<li>上线后验证：进入任一游戏检查浮标、推荐列表和半屏充值；核对首日埋点数量与后台订单数量。</li>
-<li>回滚：在后台关闭「启用游戏快捷侧边栏」，新进入游戏的玩家不再显示浮标和侧边栏（半屏充值入口随之消失），游戏和退出按现有流程；已在游戏中的玩家下次进入游戏时生效。<span class="vmark" data-v="v1.1">本需求是对 G 图标的优化升级，回滚时不另外恢复旧版 G 图标（产品 2026-10-20 确认）；低于最低支持版本的 APP 不受总开关影响，仍显示 G 图标（最低版本由技术判断，Q15）。<button class="vtag" data-v="v1.1">v1.1</button></span></li>
+<li>上线后验证：进入任一游戏检查浮标、推荐列表和充值弹窗；核对首日埋点数量与后台订单数量。</li>
+<li>回滚：在后台关闭「启用游戏快捷侧边栏」，新进入游戏的玩家不再显示浮标和侧边栏（充值弹窗入口随之消失），游戏和退出按现有流程；已在游戏中的玩家下次进入游戏时生效。<span class="vmark" data-v="v1.1">本需求是对 G 图标的优化升级，回滚时不另外恢复旧版 G 图标（产品 2026-10-20 确认）；低于最低支持版本的 APP 不受总开关影响，仍显示 G 图标（最低版本由技术判断，Q15）。<button class="vtag" data-v="v1.1">v1.1</button></span></li>
 </ul>
 
 <h2 id="c11">11. 风险与依赖</h2>
@@ -448,10 +448,10 @@
 <tr data-fp="F07-03"><td class="w"><span class="vmark" data-v="v1.1">H5 在 Submit 下单返回后再打开新标签页，Safari 等浏览器可能当作弹窗拦截；支付完成后渠道回跳会在新标签页里打开平台页面，玩家可能留在新标签页继续操作<button class="vtag" data-v="v1.1">v1.1</button></span></td><td>中</td><td class="w">前端在点击 Submit 的同一次操作里先打开空白标签页，下单成功后再写入支付地址；被拦截时按第 8 章提示重试；<span class="vmark" data-v="v1.1">支付完成后回跳到「支付完成」中间页并自动关闭新标签页（N16），不能自动关闭时提示玩家关闭；需确认各支付渠道支持自定义回跳地址（并入 Q13）<button class="vtag" data-v="v1.1">v1.1</button></span></td></tr>
 <tr data-fp="F07-03"><td class="w">充值后切回游戏，厂商客户端不刷新余额或提示重连（-2304）</td><td>中</td><td class="w">接受现状；客服 QA 引导玩家点侧边栏 Reload</td></tr>
 <tr data-fp="F01-01"><td class="w"><span class="vmark" data-v="v1.1">三端上线节奏不一致时，某一端 G 图标没下线或新浮标没上线，玩家看到两个入口或没有入口<button class="vtag" data-v="v1.1">v1.1</button></span></td><td>中</td><td class="w">三端同一版本上线：新浮标上线和 G 图标下线在同一个版本完成；<span class="vmark" data-v="v1.1">低于最低支持版本的 APP 保持现有 G 图标；最低支持版本和是否强更由技术根据实际情况判断（Q15）<button class="vtag" data-v="v1.1">v1.1</button></span></td></tr>
-<tr data-fp="F07-02 F07-03"><td class="w"><span class="vmark" data-v="v1.1">半屏沿用的充值页正在改造，有在途缺陷（充值活动、优惠券、赠送金额显示等）；P0 新活动 6954「返水与充返转盘」预计 11-13 上线，充值后可能触发新的活动弹窗<button class="vtag" data-v="v1.1">v1.1</button></span></td><td>中</td><td class="w">充值页缺陷的修复和回归范围由技术按当前平台情况处理；充值后触发的活动弹窗统一按 N16 在玩家回到平台页面后显示，6954 开发时同步遵守（3.3）</td></tr>
+<tr data-fp="F07-02 F07-03"><td class="w"><span class="vmark" data-v="v1.1">弹窗沿用的充值页正在改造，有在途缺陷（充值活动、优惠券、赠送金额显示等）；P0 新活动 6954「返水与充返转盘」预计 11-13 上线，充值后可能触发新的活动弹窗<button class="vtag" data-v="v1.1">v1.1</button></span></td><td>中</td><td class="w">充值页缺陷的修复和回归范围由技术按当前平台情况处理；充值后触发的活动弹窗统一按 N16 在玩家回到平台页面后显示，6954 开发时同步遵守（3.3）</td></tr>
 <tr data-fp="F05-02"><td class="w">Mini Banner 自定义链接可以填任意外部地址</td><td>中</td><td class="w">产品确认允许任何域名（Q10）；只有有该菜单权限的运营能配置，链接需以 http(s):// 开头，保存记操作日志，可追溯配置人</td></tr>
-<tr data-fp="F07-01"><td class="w"><span class="vmark" data-v="v1.1">横屏游戏中半屏充值高度不足，支付方式和金额显示不全<button class="vtag" data-v="v1.1">v1.1</button></span></td><td>中</td><td class="w">上线前确认横屏方案（Q11）；确认前横屏游戏按方案 ② 占满全屏处理还是暂不提供入口，随 Q11 一并决定</td></tr>
-<tr data-fp="F07-01"><td class="w">真人游戏下注倒计时期间打开半屏充值，玩家可能错过本局下注</td><td>低</td><td class="w">游戏在底层照常进行，属于玩家自主行为；客服 QA 写明口径</td></tr>
+<tr data-fp="F07-01"><td class="w"><span class="vmark" data-v="v1.1">横屏游戏中充值弹窗高度不足，支付方式和金额显示不全<button class="vtag" data-v="v1.1">v1.1</button></span></td><td>中</td><td class="w">上线前确认横屏方案（Q11）；确认前横屏游戏按方案 ② 占满全屏处理还是暂不提供入口，随 Q11 一并决定</td></tr>
+<tr data-fp="F07-01"><td class="w">真人游戏下注倒计时期间打开充值弹窗，玩家可能错过本局下注</td><td>低</td><td class="w">游戏在底层照常进行，属于玩家自主行为；客服 QA 写明口径</td></tr>
 </table></div>
 
 <h2 id="c12">12. 待确认事项</h2>
@@ -461,13 +461,13 @@
 <tr><td>Q2</td><td class="w">Home 去向：平台首页，还是沿用现有「从哪来回哪去」。结论：平台首页</td><td>产品 Joshua</td><td>2026-10-20</td><td>已确认</td></tr>
 <tr><td>Q3</td><td class="w">iOS 原生、Flutter（安卓）是否同期上线侧边栏。结论：同期上线（iOS 浮标初始位置拆到 Q14）</td><td>产品 Joshua</td><td>2026-10-20</td><td>已确认</td></tr>
 <tr><td>Q4</td><td class="w">本需求上线后，线上 G 图标悬浮快捷按钮是否下线。结论：本需求是对 G 图标的优化升级，上线后 G 图标改为本需求的浮标和侧边栏</td><td>产品 Joshua</td><td>2026-10-20</td><td>已确认</td></tr>
-<tr><td>Q5</td><td class="w">半屏充值高度取屏幕的 1/2 还是 2/3（Claire 文档写「半屏或 2/3 屏」）。结论：按内容自适应，最高 2/3 屏，超出时在半屏内滚动（已写入 N14）</td><td>产品 Joshua</td><td>2026-10-20</td><td>已确认</td></tr>
-<tr><td>Q6</td><td class="w">支付页打开后半屏充值是否自动关闭。结论：支付页打开后半屏自动收起（已写入 N16）</td><td>产品 Joshua</td><td>2026-10-20</td><td>已确认</td></tr>
+<tr><td>Q5</td><td class="w">充值弹窗高度取屏幕的 1/2 还是 2/3（Claire 文档写「半屏或 2/3 屏」）。结论：固定 2/3 屏，不随内容变化，超出时在弹窗内滚动（产品 2026-10-20 确认，已写入 N14）</td><td>产品 Joshua</td><td>2026-10-20</td><td>已确认</td></tr>
+<tr><td>Q6</td><td class="w">支付页打开后充值弹窗是否自动关闭。结论：支付页打开后弹窗自动收起（已写入 N16）</td><td>产品 Joshua</td><td>2026-10-20</td><td>已确认</td></tr>
 <tr><td>Q7</td><td class="w">Mini Banner 图片的尺寸、格式和大小</td><td>设计</td><td>2026-10-24</td><td>待确认</td></tr>
 <tr><td>Q8</td><td class="w">7.4 看板指标的告警阈值</td><td>运营</td><td>上线后首周</td><td>待确认</td></tr>
 <tr><td>Q9</td><td class="w">后台菜单权限分配，以及保存配置是否记操作日志。结论：按后台现有角色权限配置；保存配置记操作日志（已写入 6.1）</td><td>产品 Joshua</td><td>2026-10-20</td><td>已确认</td></tr>
 <tr><td>Q10</td><td class="w">Mini Banner 自定义跳转链接是否只允许站内域名。结论：可以用任何域名，只校验以 http(s):// 开头</td><td>产品 Joshua</td><td>2026-10-20</td><td>已确认</td></tr>
-<tr><td>Q11</td><td class="w">横屏游戏中打开半屏充值的处理方式：横屏时游戏页面高度约 390 像素，2/3 屏只有约 260 像素，放不下支付方式和金额。可选方案：① 从屏幕右侧滑出的侧边充值面板（宽度约屏幕的 1/2、占满高度）；② 横屏时改为占满全屏的充值面板，游戏仍保留在底层不刷新；③ 提示玩家转为竖屏后再充值。需同时确认 Claire 文档「游戏保留在底层」的要求在所选方案下是否仍满足</td><td>Claire、设计</td><td>2026-10-24</td><td>待确认</td></tr>
+<tr><td>Q11</td><td class="w">横屏游戏中打开充值弹窗的处理方式：横屏时游戏页面高度约 390 像素，2/3 屏只有约 260 像素，放不下支付方式和金额。可选方案：① 从屏幕右侧滑出的侧边充值面板（宽度约屏幕的 1/2、占满高度）；② 横屏时改为占满全屏的充值面板，游戏仍保留在底层不刷新；③ 提示玩家转为竖屏后再充值。需同时确认 Claire 文档「游戏保留在底层」的要求在所选方案下是否仍满足</td><td>Claire、设计</td><td>2026-10-24</td><td>待确认</td></tr>
 <tr><td>Q12</td><td class="w">侧边栏是否固定在右侧（Claire 文档）还是跟随浮标左右展开。结论：跟随浮标，拖到左侧后适配左侧布局（已写入 N4）</td><td>产品 Joshua</td><td>2026-10-20</td><td>已确认</td></tr>
 <tr><td>Q13</td><td class="w"><span class="vmark" data-v="v1.1">新标签页 / APP 支付页的打开方式，需和 QRPH 收银台静态化（5367、5368、5370）、Maya 充值跳转（6381）及「Maya 充值页渲染」开关等现有和在途方案一起确认（各单当前状态由技术按平台情况处理），避免重复开发；并确认各渠道是否支持自定义回跳地址（H5 支付完成后回跳到「支付完成」中间页）<button class="vtag" data-v="v1.1">v1.1</button></span></td><td>研发、支付</td><td>2026-10-24</td><td>待确认</td></tr>
 <tr><td>Q14</td><td class="w"><span class="vmark" data-v="v1.1">iOS 浮标初始位置：三端统一右上角，还是沿用现有 G 图标在 iOS 上的左上角（5006）。结论：屏幕右侧上方，与顶部保留安全距离、不贴顶（已写入 N1）<button class="vtag" data-v="v1.1">v1.1</button></span></td><td>产品 Joshua</td><td>2026-10-20</td><td>已确认</td></tr>
@@ -481,15 +481,16 @@
 <tr><td><span class="vmark" data-v="v1.1">「支付完成」中间页（不能自动关闭时）<button class="vtag" data-v="v1.1">v1.1</button></span></td><td>支付已完成，请返回游戏页面 / 关闭此页面</td><td>产品 Joshua</td><td>已确认</td></tr>
 <tr><td><span class="vmark" data-v="v1.1">推荐游戏已下架或已停用提示<button class="vtag" data-v="v1.1">v1.1</button></span></td><td>该游戏暂不可用</td><td>产品 Joshua</td><td>已确认</td></tr>
 <tr><td><span class="vmark" data-v="v1.1">免费次数使用中不能切换提示<button class="vtag" data-v="v1.1">v1.1</button></span></td><td>免费次数使用中，用完后再切换</td><td>产品 Joshua</td><td>已确认</td></tr>
-<tr><td>半屏充值标题和副标题</td><td>充值 / 选择支付方式，立即充值</td><td>Claire</td><td>已确认</td></tr>
+<tr><td><span class="vmark" data-v="v1.1">没有存送活动时的标题语<button class="vtag" data-v="v1.1">v1.1</button></span></td><td>继续游戏，精彩不停！ / Keep the game going!</td><td>产品 Joshua</td><td>已确认</td></tr>
+<tr><td>充值弹窗标题和副标题</td><td>充值 / 选择支付方式，立即充值</td><td>Claire</td><td>已确认</td></tr>
 </table></div>
 
 <h2 id="c13">13. 各角色协作 Tips</h2>
 <div class="roles-cards">
-  <div class="rc" style="--c:#C89A3C"><h4>设计</h4><ul><li>先出浮标、侧边栏左右两侧、贴边隐藏的稿子；半屏充值按「内容自适应、最高 2/3 屏」出稿，并出小屏滚动状态和横屏方案（Q11）。</li><li>按 12.1 已确认的文案出中英文案表。</li><li><span class="vmark" data-v="v1.1">按 6947 调整后的浏览器底部工具栏，复核浮标的上下安全边距。<button class="vtag" data-v="v1.1">v1.1</button></span></li><li>同时给出 Mini Banner 图片规格（Q7）。</li></ul></div>
-  <div class="rc" style="--c:#6A2BB8"><h4>前端</h4><ul><li>H5 新标签页：在 Submit 点击事件里同步打开空白标签页，下单成功后再写入地址，避免被拦截；打开成功后收起半屏。</li><li><span class="vmark" data-v="v1.1">「支付完成」中间页用 window.close() 关闭由游戏页打开的标签页；关闭失败时按 5.1 运行环境表显示提示（普通浏览器带「关闭此页面」按钮，内置浏览器 / 小程序 / PWA 只显示文字）；中间页不读取、不要求登录态。<button class="vtag" data-v="v1.1">v1.1</button></span></li><li>半屏充值复用现有充值页组件，不另写一套充值逻辑。</li><li>自动展开机会按「玩家 + 游戏」存本地，刷新不丢。</li></ul></div>
-  <div class="rc" style="--c:#1560A8"><h4>后端</h4><ul><li>先按供应商列出结算与余额同步能力（Q1）。</li><li>结算接口做幂等，同一会话并发请求只结算一次。</li><li><span class="vmark" data-v="v1.1">游戏内半屏充值下单时支持传入专用回跳地址，按渠道确认能否自定义回跳。<button class="vtag" data-v="v1.1">v1.1</button></span></li><li>配置保存后，新进入游戏的读取请求立即拿到新配置（不做长时间缓存）。</li></ul></div>
-  <div class="rc" style="--c:#1B7A4C"><h4>测试</h4><ul><li>重点覆盖未结算局切换、启动失败回滚和前后余额核对；回归 GAM-141（789games 的 YGR 进不了游戏、SA 余额带不进）、6953（Flutter 的 EVO 大厅无法滑动）。</li><li>首充用户在半屏充值后继续玩到第 4 局，强制 KYC 照常弹出；Reload 被准入拦截时不结算。</li><li>半屏充值按 5.1 运行环境表，在 Safari、Chrome、<span class="vmark" data-v="v1.1">TG 内置浏览器、Facebook 内置浏览器、已安装的 PWA、Maya / GLife 小程序、iOS 原生和 Flutter 新版本 APP<button class="vtag" data-v="v1.1">v1.1</button></span>分别测支付页打开和回到原游戏；低于最低版本的 APP 只验证仍显示 G 图标、不受总开关影响；抓包确认回跳地址不带 token。</li><li>回归现有退出确认和 Wallet 充值页。</li><li><span class="vmark" data-v="v1.1">回归历史缺陷：进游戏黑屏只剩浮标（-2145）、点 Home 跳到充值页（-2144）；APP 支付后切回，不被带到聊天室（-4863）。<button class="vtag" data-v="v1.1">v1.1</button></span></li></ul></div>
+  <div class="rc" style="--c:#C89A3C"><h4>设计</h4><ul><li>先出浮标、侧边栏左右两侧、贴边隐藏的稿子；充值弹窗按「固定 2/3 屏」出稿，并出小屏滚动状态和横屏方案（Q11）。</li><li>按 12.1 已确认的文案出中英文案表。</li><li><span class="vmark" data-v="v1.1">按 6947 调整后的浏览器底部工具栏，复核浮标的上下安全边距。<button class="vtag" data-v="v1.1">v1.1</button></span></li><li>同时给出 Mini Banner 图片规格（Q7）。</li></ul></div>
+  <div class="rc" style="--c:#6A2BB8"><h4>前端</h4><ul><li>H5 新标签页：在 Submit 点击事件里同步打开空白标签页，下单成功后再写入地址，避免被拦截；打开成功后收起弹窗。</li><li><span class="vmark" data-v="v1.1">「支付完成」中间页用 window.close() 关闭由游戏页打开的标签页；关闭失败时按 5.1 运行环境表显示提示（普通浏览器带「关闭此页面」按钮，内置浏览器 / 小程序 / PWA 只显示文字）；中间页不读取、不要求登录态。<button class="vtag" data-v="v1.1">v1.1</button></span></li><li>充值弹窗复用现有充值页组件，不另写一套充值逻辑。</li><li>自动展开机会按「玩家 + 游戏」存本地，刷新不丢。</li></ul></div>
+  <div class="rc" style="--c:#1560A8"><h4>后端</h4><ul><li>先按供应商列出结算与余额同步能力（Q1）。</li><li>结算接口做幂等，同一会话并发请求只结算一次。</li><li><span class="vmark" data-v="v1.1">游戏内充值弹窗下单时支持传入专用回跳地址，按渠道确认能否自定义回跳。<button class="vtag" data-v="v1.1">v1.1</button></span></li><li>配置保存后，新进入游戏的读取请求立即拿到新配置（不做长时间缓存）。</li></ul></div>
+  <div class="rc" style="--c:#1B7A4C"><h4>测试</h4><ul><li>重点覆盖未结算局切换、启动失败回滚和前后余额核对；回归 GAM-141（789games 的 YGR 进不了游戏、SA 余额带不进）、6953（Flutter 的 EVO 大厅无法滑动）。</li><li>首充用户在充值弹窗后继续玩到第 4 局，强制 KYC 照常弹出；Reload 被准入拦截时不结算。</li><li>充值弹窗按 5.1 运行环境表，在 Safari、Chrome、<span class="vmark" data-v="v1.1">TG 内置浏览器、Facebook 内置浏览器、已安装的 PWA、Maya / GLife 小程序、iOS 原生和 Flutter 新版本 APP<button class="vtag" data-v="v1.1">v1.1</button></span>分别测支付页打开和回到原游戏；低于最低版本的 APP 只验证仍显示 G 图标、不受总开关影响；抓包确认回跳地址不带 token。</li><li>回归现有退出确认和 Wallet 充值页。</li><li><span class="vmark" data-v="v1.1">回归历史缺陷：进游戏黑屏只剩浮标（-2145）、点 Home 跳到充值页（-2144）；APP 支付后切回，不被带到聊天室（-4863）。<button class="vtag" data-v="v1.1">v1.1</button></span></li></ul></div>
   <div class="rc" style="--c:#B5601A"><h4>运营</h4><ul><li>修改后点「保存配置」才生效，离开页面前先保存。</li><li>活动下架后记得重新配置 Mini Banner。</li></ul></div>
   <div class="rc" style="--c:#8A1020"><h4>客服</h4><ul><li>玩家说充值后游戏余额没变时，引导点侧边栏 Reload；对玩家的回复口径见客服 QA。</li></ul></div>
 </div>
@@ -498,7 +499,7 @@
 <h3 id="appA-1">A.1 通用评审清单（知识库「四、通用需求评审清单」12 项）</h3>
 <div class="tbl"><table>
 <tr><th>项</th><th>结论</th><th>位置</th></tr>
-<tr><td>1. 合规</td><td class="w">涉及：半屏充值保留现有充值页的责任博彩信息和条款勾选；不改 KYC 拦截</td><td>N15</td></tr>
+<tr><td>1. 合规</td><td class="w">涉及：充值弹窗保留现有充值页的责任博彩信息和条款勾选；不改 KYC 拦截</td><td>N15</td></tr>
 <tr><td>2. 资金</td><td class="w">涉及：离开游戏前结算同步，余额不丢失、不重复；充值到账沿用现有</td><td>N13、N16、Q1</td></tr>
 <tr><td>3. 口径</td><td class="w">看板指标口径已写明，按 GMT+8</td><td>7.4</td></tr>
 <tr><td>4. 防刷与风控</td><td class="w">推荐点击锁定、结算期间屏蔽并发离开、Submit 防重复</td><td>N10、N13、第 8 章</td></tr>
@@ -520,7 +521,7 @@
 <tr><td>并发与重复</td><td class="w">推荐连点、结算期间并发离开、Submit 重复点击（N10、N13、第 8 章）</td></tr>
 <tr><td>状态</td><td class="w">刷新不重置机会、配置修改对在线玩家下次生效、支付期间 Session 失效（N8、N17、N16）</td></tr>
 <tr><td>用户与权限</td><td class="w">游戏内玩家均已登录；后台按现有角色权限配置，保存记操作日志（6.1）</td></tr>
-<tr><td>端与版本</td><td class="w">H5 新标签页、APP 支付页打开方式（N16）；小屏按内容自适应、最高 2/3 屏（N14）；横屏游戏（Q11）；<span class="vmark" data-v="v1.1">内置浏览器、小程序、PWA（5.1）；三端同期，低于最低支持版本的 APP 保留 G 图标（第 11 章、Q15）<button class="vtag" data-v="v1.1">v1.1</button></span></td></tr>
+<tr><td>端与版本</td><td class="w">H5 新标签页、APP 支付页打开方式（N16）；弹窗固定 2/3 屏，小屏在弹窗内滚动（N14）；横屏游戏（Q11）；<span class="vmark" data-v="v1.1">内置浏览器、小程序、PWA（5.1）；三端同期，低于最低支持版本的 APP 保留 G 图标（第 11 章、Q15）<button class="vtag" data-v="v1.1">v1.1</button></span></td></tr>
 <tr><td>数据</td><td class="w">订单结果按 orderId 关联（7.5）</td></tr>
 </table></div>
 
@@ -532,7 +533,7 @@
 <tr data-fp="F03-01 F03-02"><td>游戏页快捷侧边栏</td><td><span class="fp">F03</span> 退出自动展开</td><td class="w">游戏菜单 → 退出 → 自动展开；取消、确认、再次退出；机会状态显示在批注区</td><td>真实交互</td></tr>
 <tr data-fp="F04-01 F04-02 F04-03"><td>游戏页快捷侧边栏</td><td><span class="fp">F04</span> 推荐游戏</td><td class="w">切换游戏、维护中游戏、启动失败、未结算蒙层、列表失败重试、空列表；加载更多（多批、加载中、没有更多了、加载失败重试）</td><td>异常用模拟操作面板注入</td></tr>
 <tr data-fp="F05-01 F05-02"><td>游戏页快捷侧边栏</td><td><span class="fp">F05</span> Mini Banner</td><td class="w">点击后结算再跳转；是否展示开关</td><td>跳转为模拟</td></tr>
-<tr data-fp="F07-01 F07-02 F07-03"><td><a href="../prototype/front/游戏快捷侧边栏-游戏内半屏充值.html">游戏内半屏充值</a></td><td><span class="fp">F07</span> 半屏充值</td><td class="w">高度按内容自适应（最高 2/3 屏，可隐藏首充卡片看内容变短）、选支付方式和金额、限额校验、未认证 KYC 提醒、Submit → 半屏收起并打开二维码支付页（H5 新标签页 / APP 支付页示意）、支付页被拦截、点 × 或遮罩关闭</td><td>支付页和到账为模拟；可模拟「支付完成」中间页（自动关闭、不能关闭、内置浏览器 / 小程序 / PWA）</td></tr>
+<tr data-fp="F07-01 F07-02 F07-03"><td><a href="../prototype/front/游戏快捷侧边栏-游戏内充值弹窗.html">游戏内充值弹窗</a></td><td><span class="fp">F07</span> 充值弹窗</td><td class="w">高度固定 2/3 屏（可切换优惠活动三种情况）、选支付方式和金额、限额校验、未认证 KYC 提醒、Submit → 弹窗收起并打开二维码支付页（H5 新标签页 / APP 支付页示意）、支付页被拦截、点 × 或遮罩关闭</td><td>支付页和到账为模拟；可模拟「支付完成」中间页（自动关闭、不能关闭、内置浏览器 / 小程序 / PWA）</td></tr>
 <tr data-fp="F08-02 F08-03 F08-04 F08-05"><td><a href="../prototype/admin/游戏快捷侧边栏-后台游戏快捷侧边栏管理.html">后台游戏快捷侧边栏管理</a></td><td><span class="fp">F08</span> 后台配置</td><td class="w">开关联动、跳转方式切换和校验、上传图片、展示数量校验、添加游戏弹窗、上移下移删除、位次提示、保存与重置；列表和弹窗分页（多页、空列表、删除末页最后一条回上一页、搜索回第 1 页）</td><td>真实交互（数据为虚构）</td></tr>
 </table></div>
 
@@ -556,7 +557,7 @@
     F04: "推荐游戏与游戏切换", "F04-01": "推荐列表数据规则", "F04-02": "点击推荐游戏切换", "F04-03": "当前局未结算时切换",
     F05: "Mini Banner", "F05-01": "展示与隐藏", "F05-02": "点击跳转",
     F06: "离开当前游戏的余额保障", "F06-01": "离开前结算与余额同步",
-    F07: "游戏内半屏充值", "F07-01": "打开与关闭半屏充值", "F07-02": "充值内容与提交", "F07-03": "二维码支付与返回原游戏",
+    F07: "游戏内充值弹窗", "F07-01": "打开与关闭充值弹窗", "F07-02": "充值内容与提交", "F07-03": "二维码支付与返回原游戏",
     F08: "后台游戏快捷侧边栏管理", "F08-02": "功能配置", "F08-03": "Mini Banner 配置", "F08-04": "推荐游戏配置", "F08-05": "保存与重置",
     F09: "数据埋点", "F09-01": "事件上报"
   };

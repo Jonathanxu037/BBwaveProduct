@@ -131,8 +131,8 @@
   var D = window.PROTO_EN || {}, exact = {}, pats = [], missing = {}, bd = null;
   Object.keys(D).forEach(function (k) {
     if (!/\{\w+\}/.test(k)) { exact[k.trim()] = D[k]; return; }
-    var names = [], src = "^" + k.trim().replace(/[.*+?^$()|[\]\\]/g, "\\$&").replace(/\{(\w+)\}/g, function (_, n) { names.push(n); return "(.+?)"; }) + "$";
-    pats.push({ re: new RegExp(src), names: names, v: D[k] });
+    var names = [], pat = "^" + k.trim().replace(/[.*+?^$()|[\]\\]/g, "\\$&").replace(/\{(\w+)\}/g, function (_, n) { names.push(n); return "(.+?)"; }) + "$";
+    pats.push({ re: new RegExp(pat), names: names, v: D[k] });
   });
   var CJK = /[㐀-鿿　-〿！-｠]/;
   /* 返回译文；null 表示不需要翻译（没有中文）；undefined 表示对照表里没有 */
@@ -151,7 +151,7 @@
   function miss(el) { if (preview && el && el.classList) el.classList.add("en-miss"); }
   function walk(n) {
     if (n.nodeType === 3) { var r = tr(n.nodeValue); if (r) n.nodeValue = r; else if (r === undefined) miss(n.parentNode); return; }
-    if (n.nodeType !== 1 || n.tagName === "SCRIPT" || n.tagName === "STYLE") return;
+    if (n.nodeType !== 1 || n.tagName === "SCRIPT" || n.tagName === "STYLE" || (n.classList && n.classList.contains("ui-reqnote"))) return;   /* 需求说明文字不翻译 */
     ATTRS.forEach(function (a) {
       if (a === "value" && !(n.tagName === "BUTTON" || (n.tagName === "INPUT" && /^(button|submit|reset)$/i.test(n.type)))) return;
       var v = n.getAttribute(a); if (!v) return;

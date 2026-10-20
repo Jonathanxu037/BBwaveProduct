@@ -12,7 +12,7 @@ window.NAV_DATA = {
     { title: "原型页面", href: "prototype/front/游戏快捷侧边栏-游戏页快捷侧边栏.html", bar: "#D8242F", children: [
       { title: "前台页面", href: "prototype/front/游戏快捷侧边栏-游戏页快捷侧边栏.html", bar: "#3B82F6", children: [
         { title: "游戏页快捷侧边栏", href: "prototype/front/游戏快捷侧边栏-游戏页快捷侧边栏.html", type: "page" },
-        { title: "游戏内半屏充值", href: "prototype/front/游戏快捷侧边栏-游戏内半屏充值.html", type: "page" }
+        { title: "游戏内充值弹窗", href: "prototype/front/游戏快捷侧边栏-游戏内充值弹窗.html", type: "page" }
       ]},
       { title: "后台页面", href: "prototype/admin/游戏快捷侧边栏-后台游戏快捷侧边栏管理.html", bar: "#8C6EDC", children: [
         { title: "后台游戏快捷侧边栏管理", href: "prototype/admin/游戏快捷侧边栏-后台游戏快捷侧边栏管理.html", type: "admin" }
@@ -27,7 +27,7 @@ window.NAV_DATA = {
         { title: "2. 整体业务流程", href: "docs/游戏快捷侧边栏-需求开发PRD文档.html#c2" },
         { title: "3. 业务规则", href: "docs/游戏快捷侧边栏-需求开发PRD文档.html#c3" },
         { title: "4. 前台页面一：游戏页快捷侧边栏", href: "docs/游戏快捷侧边栏-需求开发PRD文档.html#c4" },
-        { title: "5. 前台页面二：游戏内半屏充值", href: "docs/游戏快捷侧边栏-需求开发PRD文档.html#c5" },
+        { title: "5. 前台页面二：游戏内充值弹窗", href: "docs/游戏快捷侧边栏-需求开发PRD文档.html#c5" },
         { title: "6. 运营后台需求", href: "docs/游戏快捷侧边栏-需求开发PRD文档.html#c6" },
         { title: "7. 数据埋点", href: "docs/游戏快捷侧边栏-需求开发PRD文档.html#c7" },
         { title: "8. 接口与异常", href: "docs/游戏快捷侧边栏-需求开发PRD文档.html#c8" },
