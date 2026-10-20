@@ -9,7 +9,7 @@
 [hidden]{display:none!important}
 :root{--d-or:#FF7A2F;--d-or2:#FF5A1F;--d-ink:#1d1f24;--d-mut:#7a808c;--d-line:#E3E6EB}
 .app{background:#000;color:#fff}
-#game{position:absolute;inset:30px 0 0;overflow:hidden}
+#game{position:absolute;inset:30px 0 0;overflow:hidden;overflow:clip}
 #game img.bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 #gbal{position:absolute;left:8px;bottom:118px;padding:4px 8px;border-radius:6px;background:rgba(0,0,0,.55);font-weight:800;font-size:20px}
 #float{all:unset;position:absolute;right:10px;top:20px;z-index:3;width:46px;height:46px;border-radius:50%;box-sizing:border-box;border:3px solid transparent;background:linear-gradient(#fff,#fff) padding-box,linear-gradient(135deg,#7b3fe4,#00d9a0) border-box;display:grid;place-items:center;cursor:pointer;transition:opacity .2s}
@@ -80,13 +80,13 @@
         <div class="hd"><div class="grab"></div><h3>充值</h3><div class="sub">选择支付方式，立即充值</div><button type="button" class="x" id="close" aria-label="关闭">×</button></div>
         <div class="bd" id="form">
           <button type="button" class="promo" id="promo">🎁 <span>新用户首充<br><b>最高可得 7,890P 奖金</b></span><span class="go">›</span></button>
-          <div class="sec">支付方式<a href="#sheet" id="viewAll">查看全部 ›</a></div>
+          <div class="sec">支付方式<a href="javascript:void(0)" id="viewAll">查看全部 ›</a></div>
           <div class="pays" id="pays"></div>
           <div class="sec">充值金额</div>
           <div class="amt"><span class="p">₱</span><input id="amount" inputmode="numeric" placeholder="限额 100 ~ 50,000" aria-label="充值金额"><span class="lspin" id="spin">+1 幸运转盘</span><button type="button" class="clr" id="clr" aria-label="清空金额">×</button></div>
           <div class="recv" id="recv">至少到账 <b>₱0.00</b> ⓘ</div>
           <div class="qamt" id="qamt"></div>
-          <label class="terms"><input type="checkbox" id="agree" checked> <span>我已阅读并同意</span><a href="#sheet">《充值条款》</a></label>
+          <label class="terms"><input type="checkbox" id="agree" checked> <span>我已阅读并同意</span><a href="javascript:void(0)">《充值条款》</a></label>
         </div>
         <div class="ft"><button type="button" id="submit">提交</button></div>
         <div id="kyc" hidden><div class="dlg" role="dialog" aria-modal="true"><h3>请尽快完成账户认证</h3><p>请在 3 天内完成认证（沿用现有提醒，示意）</p><div class="gs-row"><button type="button" id="kycLater" data-cancel>稍后</button><button type="button" id="kycGo">立即认证</button></div></div></div>
@@ -229,6 +229,15 @@ P.panel($("simPanel"), [
 ]);
 window.addEventListener("proto-change", function (e) { if (e.detail.key === "small" || e.detail.key === "noPromo") size(); if (e.detail.key === "platform") show(view); });
 window.addEventListener("hashchange", function () { show(location.hash.slice(1) || "sheet"); });
+/* 地址里的 #sheet 等锚点会让浏览器滚动游戏层去「定位」同名元素，导致半屏上移、下面露黑；游戏层始终不滚动 */
+(function () {
+  var g = $("game");
+  function keep() { if (g.scrollTop || g.scrollLeft) { g.scrollTop = 0; g.scrollLeft = 0; } }
+  function top() { keep(); if (/^#(sheet|game|pay)$/.test(location.hash)) window.scrollTo(0, 0); }   /* 视图锚点不让整页跳到半屏位置 */
+  g.addEventListener("scroll", keep);
+  top(); window.addEventListener("load", function () { top(); setTimeout(top, 0); requestAnimationFrame(top); });
+  window.addEventListener("hashchange", function () { setTimeout(top, 0); });
+})();
 document.addEventListener("click", function (e) { var b = e.target.closest(".notes [data-go]"); if (b) { e.preventDefault(); show(b.dataset.go); } });
 $("gbal").textContent = money(P.get("balance"));
 size(); drawPays(); drawAmt();

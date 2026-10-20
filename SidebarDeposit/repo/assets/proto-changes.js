@@ -2,7 +2,10 @@
    只记录「页面」类修改：前台、后台页面上看得到的控件、文案、布局、交互。
    逻辑层修改（判定规则、接口、数据口径）不记在这里，只在 PRD 里标注；误写 type: "逻辑" 的条目也不会显示。
    首版 v1.0 不做标注。每新增一个需求版本，把这个版本对原型页面的修改逐条加进来（格式见模板说明）。 */
-window.PROTO_CHANGES = [
+/* 本需求按产品 2026-10-20 要求：运营需求确认页不显示修改的版本痕迹，PROTO_CHANGES 置空。
+   下面 PROTO_CHANGES_RECORD 只作 v1.1 原型修改的留档，页面不读取。 */
+window.PROTO_CHANGES = [];
+var PROTO_CHANGES_RECORD = [
   {
     ver: "v1.1", date: "2026-09-30",
     page: "prototype/front/游戏快捷侧边栏-游戏页快捷侧边栏.html",
