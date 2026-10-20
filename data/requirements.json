@@ -35,6 +35,15 @@
       "version": "v1.0",
       "createdAt": "2026-10-14T06:24:18.397Z",
       "lastUploadAt": null
+    },
+    {
+      "id": 5,
+      "name": "游戏中快捷侧边栏&侧栏充值需求",
+      "owner": "Claire",
+      "folder": "SidebarDeposit",
+      "version": "v1.0",
+      "createdAt": "2026-10-20T06:43:40.737Z",
+      "lastUploadAt": null
     }
   ]
 }
