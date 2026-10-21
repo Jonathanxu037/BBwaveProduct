@@ -1,0 +1,1211 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>VIP会员体系-v1.1-运营需求确认</title>
+<link rel="stylesheet" href="../../assets/style.css">
+</head>
+<body class="oc-page">
+<div class="with-nav">
+<div class="oc">
+
+<header class="ck-head oc-head">
+  <div class="k">OPERATION CONFIRM</div>
+  <h1>VIP会员体系-v1.1-运营需求确认</h1>
+  <div class="d">上方切换查看原型，下方填写意见并「添加」到右侧列表；勾选要提交的意见，点「确认提交」保存为一个版本的运营需求修改意见。<span class="oc-role" id="role"></span></div>
+</header>
+<div class="oc-note" role="note">※ 运营提交的意见（含截图）、产品回复和补充都保存在云端，换电脑、换浏览器都能看到，每分钟自动刷新。产品回复后，这条意见不能再修改或删除，只能补充；封板后只有产品能补充。重新打包上传不会删除或覆盖这些记录。『下载』『复制』只用于留档或贴到 Jira。</div>
+<div class="oc-sealbar" id="sealBar" role="status" hidden></div>
+
+<div class="oc-main">
+<div class="oc-left">
+
+<section class="oc-top" aria-label="原型查看">
+  <div class="oc-bar">
+    <label class="oc-lb" for="pg">原型页面</label>
+    <select id="pg" class="oc-sel"></select>
+    <div class="oc-views" id="views" role="group" aria-label="切换视图"></div>
+    <label class="oc-mkon" title="在原型上标出各版本改过的页面内容"><input type="checkbox" id="mkOn" checked> 修改标注</label>
+    <span class="oc-mkw"><button type="button" class="tb-btn" id="mkList" aria-haspopup="true">修改清单（0）</button><div class="oc-mkpop" id="mkPop" hidden></div></span>
+    <span class="oc-sp"></span>
+    <button type="button" class="tb-btn" id="reload">刷新</button>
+    <a class="tb-btn" id="newwin" target="_blank" rel="noopener">原型新窗口打开 ↗</a>
+  </div>
+  <iframe id="pf" title="原型页面"></iframe>
+</section>
+
+<div class="oc-split" id="split" role="separator" aria-orientation="horizontal" aria-label="拖动调整上下高度" tabindex="0"></div>
+
+<section class="oc-bottom" aria-label="填写意见">
+  <div class="oc-tools" role="toolbar" aria-label="格式">
+    <button type="button" data-cmd="bold" title="加粗"><b>B</b></button>
+    <button type="button" data-cmd="italic" title="斜体"><i>I</i></button>
+    <button type="button" data-cmd="underline" title="下划线"><u>U</u></button>
+    <button type="button" data-cmd="formatBlock" data-arg="H3" title="小标题">标题</button>
+    <button type="button" data-cmd="formatBlock" data-arg="P" title="正文">正文</button>
+    <button type="button" data-cmd="insertOrderedList" title="有序列表">1. 列表</button>
+    <button type="button" data-cmd="insertUnorderedList" title="无序列表">• 列表</button>
+    <button type="button" data-cmd="removeFormat" title="清除格式">清除格式</button>
+    <span class="oc-tsep"></span>
+    <button type="button" id="upBtn" class="oc-up">上传截图</button>
+    <button type="button" id="pasteBtn" class="oc-up" title="把剪贴板里的图片直接贴进来，也可以在任意位置按 Ctrl+V">粘贴截图</button>
+    <button type="button" id="locBtn" title="插入「【页面 › 视图】」，说明意见针对哪里">插入当前位置</button>
+    <input type="file" id="file" accept="image/png,image/jpeg,image/webp,image/gif,image/bmp,.png,.jpg,.jpeg,.webp,.gif,.bmp" multiple hidden>
+  </div>
+  <div class="oc-editing" id="editing" hidden></div>
+  <div class="oc-ed" id="ed" contenteditable="true" role="textbox" aria-multiline="true" aria-label="意见内容" data-ph="在这里填写一条意见：哪里要改、要改成什么样。截图或复制图片后，直接按 Ctrl+V 或点「粘贴截图」就能贴进来；也可以点「上传截图」或把图片拖进来。写完点「添加」，意见会进入右侧列表。"></div>
+  <div class="oc-foot">
+    <span class="oc-st" id="st" role="status"></span>
+    <span class="oc-sp"></span>
+    <label class="oc-lb" for="pri">优先级</label>
+    <select id="pri" class="oc-sel"><option>高</option><option selected>中</option><option>低</option></select>
+    <button type="button" class="tb-btn" id="cancelEdit" hidden>取消修改</button>
+    <button type="button" class="tb-btn" id="clear">清空</button>
+    <button type="button" class="tb-btn oc-pri" id="add">添加</button>
+  </div>
+</section>
+
+</div>
+
+<aside class="oc-side" aria-label="意见列表">
+  <div class="oc-tabs" role="tablist">
+    <button type="button" role="tab" id="tabList" aria-selected="true">意见列表 <span class="n" id="nList">0</span></button>
+    <button type="button" role="tab" id="tabVer" aria-selected="false">已提交版本 <span class="n" id="nVer">0</span></button>
+  </div>
+  <div class="oc-pane" id="paneList" role="tabpanel" aria-labelledby="tabList">
+    <div class="oc-mod" id="modBar" hidden></div>
+    <div class="oc-lhead">
+      <label><input type="checkbox" id="all"> 全选</label>
+      <span class="oc-sp"></span>
+      <span id="selInfo">已选 0 / 共 0 条</span>
+    </div>
+    <div class="oc-list" id="list"></div>
+    <div class="oc-submit">
+      <div class="oc-next" id="nextName"></div>
+      <button type="button" class="oc-go" id="submit" disabled>确认提交</button>
+    </div>
+  </div>
+  <div class="oc-pane" id="paneVer" role="tabpanel" aria-labelledby="tabVer" hidden>
+    <div class="oc-sync" id="syncBar">
+      <span class="oc-sync-t" id="syncTxt">正在读取云端…</span>
+      <button type="button" class="oc-a" id="syncBtn">刷新</button>
+    </div>
+    <div class="oc-lhead">
+      <button type="button" class="oc-a" id="impBtn" title="连不上云端时备用：导入从本页下载的版本文件（含产品回复）" hidden>⇪ 导入版本文件</button>
+      <span class="oc-sp"></span><span>点版本名称查看详情</span>
+      <input type="file" id="impFile" accept=".html,text/html" hidden>
+    </div>
+    <div class="oc-list" id="vers"></div>
+    <div class="oc-submit">
+      <div class="oc-next" id="sealInfo"></div>
+      <button type="button" class="oc-go oc-seal" id="seal" disabled>运营需求封板</button>
+    </div>
+  </div>
+</aside>
+
+</div>
+</div>
+</div>
+<div class="oc-modal" id="vd" role="dialog" aria-modal="true" aria-labelledby="vdTitle" hidden>
+  <div class="oc-mbox">
+    <div class="oc-mhead">
+      <span class="oc-vno" id="vdNo"></span>
+      <div class="oc-mt"><b id="vdTitle"></b><div class="oc-vm" id="vdMeta"></div></div>
+      <button type="button" class="tb-btn" id="vdCopy">复制</button>
+      <button type="button" class="tb-btn" id="vdDl">下载</button>
+      <button type="button" class="tb-btn" id="vdClose" aria-label="关闭">关闭 ×</button>
+    </div>
+    <div class="oc-mbody">
+      <table class="oc-dt">
+        <thead><tr><th class="c-no">序号</th><th class="c-img">截图</th><th>修改意见（运营填写）</th><th class="c-rep">产品回复及补充</th><th class="c-dec">是否修改</th></tr></thead>
+        <tbody id="vdRows"></tbody>
+      </table>
+    </div>
+    <div class="oc-mfoot" id="vdFoot"></div>
+  </div>
+</div>
+<div class="oc-lightbox" id="lb" hidden><img alt="截图大图"></div>
+<script>window.NAV_ROOT = "../../"; window.NAV_AUTO_HIDE = true; /* 默认隐藏目录栏，原型可看全宽 */</script>
+<script src="../../assets/nav-data.js"></script>
+<script src="../../assets/nav.js"></script>
+<script src="../../assets/proto-changes.js"></script>
+<script src="../../assets/oc-store.js"></script>
+<script>
+(function () {
+  var ROOT = "../../", TOPIC = "VIP会员体系-v1.1", VER = "v1.0";
+  var KEY = TOPIC + "功能需求-运营需求确认";   /* 不含版本号：需求升版本后，已提交的意见和产品回复照样保留 */
+  /* 角色由 assets/nav.js 统一识别（访问链接 ?role=pdm / opr / dev）。本页只对产品（pdm）和运营（opr）开放：
+     产品可以填写产品回复和是否修改，运营只能查看；开发和未指定角色时由 nav.js 显示「无权访问」，本页功能不加载。 */
+  var ROLE = window.NAV && NAV.role === "pdm" ? "product" : window.NAV && NAV.role === "opr" ? "ops" : "";
+  if (!ROLE) return;
+  /* 截图：单张原图不超过 10 MB；默认原样保留（不缩放、不重新压缩），只有超大图（宽度超过 3840 像素，或文件超过 5 MB 且宽度超过 2880 像素）
+     才按比例缩到 2880 像素宽（相当于苹果 Retina 屏全屏宽度），高质量插值，PNG 仍存 PNG（无损），JPG/WEBP 质量 0.95 */
+  var MAX_MB = 10, BIG_W = 3840, BIG_MB = 5, FIT_W = 2880;
+  /* 原型的视图（按页面路径）；没有列出的页面只显示整页 */
+  var VIEWS = {
+    "prototype/v1.1/front/VIP会员体系-VIP中心页面.html": [["level", "普通用户"], ["regular-rec", "VIP1 保级失败后的普通用户"], ["regular-rec-ok", "普通用户·已达恢复条件"], ["vip14", "VIP14 当前"], ["vip14-done", "VIP14 本月已保级"], ["vip14-new", "本月刚升级·已保级"], ["init", "存量初始化老用户"], ["edge", "取整边界"], ["multi", "跨多级·升级奖励待领取"], ["kyc", "未完成 KYC"], ["kyc-part", "KYC 部分认证"], ["demoted", "降级玩家"], ["demoted-ok", "降级·已达恢复条件"], ["demoted-mid", "降级·已保级未达恢复"], ["demoted-rv", "降级·上月保级奖励待领取"], ["error", "接口失败"], ["risk", "风控暂停"], ["risk-done", "风控暂停·本月已保级"], ["risk-released", "风控放行后"], ["off", "体系关闭·有生日奖励"], ["off-none", "体系关闭·无生日奖励"], ["oldapp", "老版本 App"], ["logout", "未登录"], ["dual", "普通会员 / VIP 两个页签"], ["me", "个人中心·VIP 玩家"], ["me-reg", "个人中心·无 VIP 等级"]],
+    "prototype/v1.1/front/VIP会员体系-VIP通知页面.html": [["popup-upgrade", "升级弹窗·单级"], ["popup-upgrade14", "升级弹窗·VIP13→VIP14"], ["popup-multi", "升级弹窗·跨多级"], ["popup-offline", "离线补弹"], ["popup-ingame", "游戏中升级不弹"], ["popup-return", "返回大厅后弹出"], ["popup-order", "同时升级只弹 VIP 段"], ["popup-level", "Level 升级弹窗"], ["popup-risk", "风控暂停不弹"], ["popup-released", "风控放行不补弹"], ["popup-oldapp", "老版本 App 不弹"], ["popup-nokyc", "未完成 KYC 不弹"], ["bonus-pending", "生日 待领取"], ["bonus-fail", "生日 领取失败"], ["bonus-claimed", "生日 已领取"], ["bonus-expired", "生日 已过期"], ["bonus-gone", "生日 卡片隐藏"], ["bonus-risk", "生日 风控暂停"], ["bonus-released", "生日 放行后待领取"], ["bonus-nokyc", "生日 未完成 KYC"], ["sms-retention", "保级短信"], ["sms-bday-before", "生日前一天短信"], ["sms-bday-today", "生日当天短信"], ["sms-aud-up", "审核通过·升级奖励到账短信"], ["sms-aud-rv", "审核通过·保级奖励到账短信"], ["sms-aud-bd", "审核通过·生日奖励到账短信"], ["notice-credit", "到账站内信和推送"], ["txn", "Transaction 显示名"]],
+    "prototype/v1.1/admin/VIP会员体系-后台会员等级配置页面.html": [["levels", "会员等级配置"], ["lvshow", "前台显示方式"], ["lvrb", "下注限额与返水"], ["lvcap", "VIP0 沿用级别限制"], ["lvmul", "场馆成长值倍数"], ["rewards", "会员等级奖励配置"], ["stats", "活动奖励统计"]],
+    "prototype/v1.1/admin/VIP会员体系-后台VIP特权配置页面.html": [["vip-level", "VIP等级配置"], ["growmode", "计算方式改为成长值"], ["insert", "新增等级"], ["closelv", "关闭等级"], ["closerv", "关闭等级·复核"], ["preview", "影响预览"], ["pending", "待复核"], ["review", "复核"], ["vip-global", "VIP全局参数"], ["claim", "领取方式"], ["detail", "注册天数 / 强制审核"], ["scope", "VIP 流水计入游戏范围"], ["first", "体系第一次开启"], ["close", "体系关闭"], ["closeaud", "体系关闭·含待审核奖励"], ["reopen", "体系再次开启"], ["merge", "新旧 VIP 活动合并"], ["vip-reward", "VIP奖励配置"], ["prize", "VIP奖品配置"], ["closeprize", "关闭等级·释放预占"], ["vip-rebate", "下注限额与返水"], ["growth", "成长值记录"]],
+    "prototype/v1.1/admin/VIP会员体系-后台VIP会员数据页面.html": [["members", "VIP会员数据"], ["growth", "成长值明细"], ["growthCut", "成长值明细 · 降级扣减"], ["changes", "等级变动记录"], ["init", "存量初始化记录"], ["regroup", "关闭等级后重新归级"]],
+    "prototype/v1.1/admin/VIP会员体系-后台结算与奖励记录页面.html": [["welfare", "会员福利记录"], ["legacy", "旧版福利记录"], ["release", "放行·升级奖励"], ["releaseBday", "放行·生日奖励"], ["void", "作废"], ["reissue", "补发·升级奖励"], ["reissueBday", "补发·生日奖励"], ["renum", "新增等级后重新编号"], ["kycInit", "KYC 定级不发放"], ["settle", "月度结算记录"], ["detail", "结算明细"]]
+  };
+  function $(id) { return document.getElementById(id); }
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+  function z(n) { return ("0" + n).slice(-2); }
+  /* 版本名称、回复和补充的时间一律按 GMT+8 生成（不依赖电脑时区），精确到秒 */
+  function stamp() { return OCStore.stamp(); }
+
+  /* ---------- 上半部分：原型查看 ---------- */
+  var pages = [];
+  (function walk(n, path) {
+    if ((n.type === "page" || n.type === "admin") && n.href.indexOf("prototype/v1.1/") === 0) pages.push({ href: n.href, title: n.title, group: path[path.length - 1] || "" });
+    (n.children || []).forEach(function (c) { walk(c, n.children ? path.concat(n.title) : path); });
+  })(window.NAV_DATA, []);
+  var pg = $("pg"), pf = $("pf"), vbox = $("views"), nw = $("newwin");
+  pages.forEach(function (p, i) { var o = document.createElement("option"); o.value = i; o.textContent = (p.group ? p.group + " › " : "") + p.title; pg.appendChild(o); });
+  var cur = { page: 0, view: "" };
+  function loadPage(i, view) {
+    var p = pages[i]; if (!p) return;
+    cur.page = i; pg.value = i;
+    var vs = VIEWS[p.href] || [];
+    cur.view = view || (vs[0] ? vs[0][0] : "");
+    var url = ROOT + p.href + (cur.view ? "#" + cur.view : "");
+    pf.src = url; nw.href = url;
+    resetMarks();
+    vbox.innerHTML = "";
+    vs.forEach(function (v) {
+      var b = document.createElement("button"); b.type = "button"; b.textContent = v[1]; b.dataset.v = v[0];
+      b.onclick = function () { setView(v[0], true); };
+      vbox.appendChild(b);
+    });
+    markView();
+  }
+  function setView(v, drive) {
+    cur.view = v; markView();
+    var url = ROOT + pages[cur.page].href + "#" + v; nw.href = url;
+    if (drive) { try { pf.contentWindow.location.hash = v; } catch (e) { pf.src = url; } }
+  }
+  function markView() { [].forEach.call(vbox.children, function (b) { b.setAttribute("aria-pressed", b.dataset.v === cur.view); }); }
+  pg.onchange = function () { loadPage(+pg.value); };
+  $("reload").onclick = function () { loadPage(cur.page, cur.view); };
+  window.addEventListener("message", function (e) {
+    if (e.source === pf.contentWindow && e.data && e.data.type === "proto-view") { setView(e.data.view, false); openKey = null; schedule(); }
+  });
+
+  /* ---------- 原型修改标注 ----------
+     数据在 assets/proto-changes.js。只显示「页面」类修改（页面上看得到的控件、文案、布局、交互）；
+     逻辑层修改（判定规则、接口、数据口径）不在这里显示，只在 PRD 里标注。首版 v1.0 不做标注。 */
+  /* 开关：assets/nav-data.js 的 showChanges，默认 false（不显示修改标注，需求包框架规范第 6.1 节）；设为 true 才在原型上标出各版本改过的内容 */
+  var SHOW_CH = !!(window.NAV_DATA && NAV_DATA.showChanges);
+  var CH = !SHOW_CH ? [] : (window.PROTO_CHANGES || []).filter(function (c) { return c && c.page && c.target && c.ver && c.type !== "逻辑"; });
+  function vnum(v) { var m = /(\d+)\.(\d+)/.exec(v || ""); return m ? +m[1] * 1000 + +m[2] : 0; }
+  function vl(v) { return /^v/i.test(v) ? v : "v" + v; }
+  var LATEST = CH.reduce(function (m, c) { return vnum(c.ver) > vnum(m) ? c.ver : m; }, "");
+  var mkOn = true, openKey = null, raf = 0, mo = null;
+  var MK_CSS =
+    "#ocMarks{position:absolute;left:0;top:0;width:0;height:0;z-index:2147483000;pointer-events:none;font-family:'Microsoft YaHei','微软雅黑',sans-serif}" +
+    "#ocMarks .bx{position:absolute;box-sizing:border-box;border:2px solid #FADB14;background:rgba(255,245,102,.22);border-radius:4px}" +
+    "#ocMarks .bx.old{border-color:#E8DDB0;background:rgba(255,251,224,.3)}" +
+    "#ocMarks .tg{position:absolute;pointer-events:auto;cursor:pointer;transform:translate(-100%,-55%);font:800 10.5px/17px 'Microsoft YaHei',sans-serif;padding:0 6px;border-radius:4px;border:0;background:#FADB14;color:#5C3D00;box-shadow:0 1px 4px rgba(0,0,0,.28)}" +
+    "#ocMarks .tg.old{background:#F3EAC2;color:#9A8752}" +
+    "#ocMarks .tg:focus-visible{outline:2px solid #16052F;outline-offset:1px}" +
+    "#ocMarks .pop{position:absolute;pointer-events:auto;box-sizing:border-box;background:#fff;color:#1B1720;border:1px solid #D9D2E4;border-top:3px solid #FADB14;border-radius:8px;box-shadow:0 10px 28px rgba(22,5,47,.24);padding:10px 12px 8px;font-size:12.5px;line-height:1.65;text-align:left}" +
+    "#ocMarks .pop .t{font-weight:700;font-size:13px;color:#16052F;padding-right:18px;margin-bottom:4px}" +
+    "#ocMarks .pop .x{position:absolute;top:4px;right:6px;border:0;background:none;font-size:16px;line-height:1;color:#6A6076;cursor:pointer}" +
+    "#ocMarks .pop .v{font-weight:700;margin-top:6px}#ocMarks .pop .v span{display:inline-block;font-size:10.5px;line-height:17px;padding:0 5px;border-radius:3px;background:#FADB14;color:#5C3D00;margin-right:6px}" +
+    "#ocMarks .pop .v.old span{background:#F3EAC2;color:#9A8752}#ocMarks .pop .v small{font-weight:400;color:#6A6076}" +
+    "#ocMarks .pop .h{margin-top:8px;padding-top:6px;border-top:1px dashed #D9D2E4;color:#6A6076;font-size:12px}" +
+    "#ocMarks .pop ul{margin:2px 0 4px;padding-left:18px}#ocMarks .pop li{margin:1px 0}";
+  function pageChanges() {
+    var href = pages[cur.page] ? pages[cur.page].href : "", g = {};
+    CH.forEach(function (c) { if (c.page === href) (g[c.target] = g[c.target] || []).push(c); });
+    Object.keys(g).forEach(function (k) { g[k].sort(function (a, b) { return vnum(b.ver) - vnum(a.ver); }); });
+    return g;
+  }
+  function schedule() { if (!raf) raf = requestAnimationFrame(renderMarks); }
+  function resetMarks() { openKey = null; $("mkPop").hidden = true; updateMkBtn(); }
+  function frameDoc() { try { return pf.contentDocument; } catch (e) { return null; } }
+  function renderMarks() {
+    raf = 0;
+    var doc = frameDoc(); if (!doc || !doc.body) return;
+    var layer = doc.getElementById("ocMarks");
+    if (!layer) {
+      var st = doc.createElement("style"); st.textContent = MK_CSS; doc.head.appendChild(st);
+      layer = doc.createElement("div"); layer.id = "ocMarks"; doc.body.appendChild(layer);
+    }
+    layer.innerHTML = "";
+    if (!mkOn) return;
+    var g = pageChanges(), win = pf.contentWindow, sx = win.scrollX, sy = win.scrollY;
+    Object.keys(g).forEach(function (sel) {
+      var el; try { el = doc.querySelector(sel); } catch (e) { return; }
+      if (!el) return;
+      var r = el.getBoundingClientRect(); if (!r.width && !r.height) return;   /* 不在当前视图（被隐藏）时不标 */
+      var list = g[sel], old = list[0].ver !== LATEST ? " old" : "";
+      var bx = doc.createElement("div"); bx.className = "bx" + old;
+      bx.style.cssText = "left:" + (r.left + sx - 3) + "px;top:" + (r.top + sy - 3) + "px;width:" + (r.width + 6) + "px;height:" + (r.height + 6) + "px";
+      var tg = doc.createElement("button"); tg.type = "button"; tg.className = "tg" + old; tg.textContent = vl(list[0].ver);
+      tg.title = "点击查看 " + vl(list[0].ver) + " 对这里做了哪些修改";
+      tg.style.cssText = "left:" + (r.right + sx + 3) + "px;top:" + (r.top + sy - 3) + "px";
+      tg.onclick = function (e) { e.preventDefault(); e.stopPropagation(); openKey = openKey === sel ? null : sel; schedule(); };
+      layer.appendChild(bx); layer.appendChild(tg);
+      if (openKey === sel) layer.appendChild(popFor(doc, list, r, sx, sy));
+    });
+  }
+  function popFor(doc, list, r, sx, sy) {
+    var vw = doc.documentElement.clientWidth, w = Math.min(320, vw - 16);
+    var left = Math.max(sx + 8, Math.min(r.right + sx - w, sx + vw - w - 8));
+    var p = doc.createElement("div"); p.className = "pop"; p.setAttribute("role", "dialog");
+    p.style.cssText = "left:" + left + "px;top:" + (r.bottom + sy + 8) + "px;width:" + w + "px";
+    function block(c, older) {
+      return '<div class="v' + (older ? " old" : "") + '"><span>' + esc(vl(c.ver)) + "</span>" + (older ? "" : "本版本修改") + (c.date ? " <small>" + esc(c.date) + "</small>" : "") + "</div>" +
+        "<ul>" + (c.items || []).map(function (t) { return "<li>" + esc(t) + "</li>"; }).join("") + "</ul>";
+    }
+    p.innerHTML = '<button type="button" class="x" aria-label="关闭">×</button><div class="t">' + esc(list[0].title || "页面修改") + "</div>" + block(list[0], false) +
+      (list.length > 1 ? '<div class="h">更早的修改</div>' + list.slice(1).map(function (c) { return block(c, true); }).join("") : "");
+    p.querySelector(".x").onclick = function (e) { e.stopPropagation(); openKey = null; schedule(); };
+    p.onclick = function (e) { e.stopPropagation(); };
+    return p;
+  }
+  /* 原型每次重新加载：挂上监听，原型里的弹层、视图切换、滚动都会触发重新定位 */
+  pf.addEventListener("load", function () {
+    var doc = frameDoc(), win = pf.contentWindow; if (!doc || !doc.body) return;
+    if (mo) mo.disconnect();
+    mo = new win.MutationObserver(function (ms) {
+      var L = doc.getElementById("ocMarks");
+      if (L && ms.every(function (m) { return L.contains(m.target); })) return;
+      schedule();
+    });
+    mo.observe(doc.body, { subtree: true, childList: true, attributes: true, characterData: true });
+    win.addEventListener("resize", schedule);
+    doc.addEventListener("scroll", schedule, true);
+    doc.addEventListener("click", function () { if (openKey) { openKey = null; schedule(); } });
+    schedule();
+  });
+  var mkBtn = $("mkList"), mkPop = $("mkPop");
+  function updateMkBtn() { mkBtn.textContent = "修改清单（" + Object.keys(pageChanges()).length + "）"; }
+  function viewName(v) { var vs = VIEWS[pages[cur.page] ? pages[cur.page].href : ""] || []; var x = vs.filter(function (y) { return y[0] === v; })[0]; return x ? x[1] : ""; }
+  mkBtn.onclick = function (e) {
+    e.stopPropagation();
+    if (!mkPop.hidden) { mkPop.hidden = true; return; }
+    var g = pageChanges(), keys = Object.keys(g);
+    mkPop.innerHTML = keys.length ? keys.map(function (sel) {
+      var c = g[sel][0], vn = viewName(c.view);
+      return '<button type="button" data-sel="' + esc(sel) + '"><span class="vtag' + (c.ver !== LATEST ? " old" : "") + '">' + esc(vl(c.ver)) + "</span>" + esc(c.title || "页面修改") + (vn ? "<small>" + esc(vn) + "</small>" : "") + "</button>";
+    }).join("") : '<div class="oc-mkempty">这个原型页面还没有修改标注。首版 v1.0 不做标注；之后每个版本对页面的修改会列在这里，点一条可跳到对应位置。逻辑层的修改不在这里显示，请看 PRD。</div>';
+    mkPop.hidden = false;
+  };
+  mkPop.onclick = function (e) {
+    var b = e.target.closest("[data-sel]"); if (!b) return;
+    var sel = b.dataset.sel, c = pageChanges()[sel][0];
+    mkPop.hidden = true; mkOn = true; $("mkOn").checked = true;
+    if (c.view && c.view !== cur.view) setView(c.view, true);
+    setTimeout(function () {
+      var doc = frameDoc(), el = null; try { el = doc && doc.querySelector(sel); } catch (x) {}
+      if (el) el.scrollIntoView({ block: "center" });
+      openKey = sel; schedule();
+    }, 250);
+  };
+  document.addEventListener("click", function (e) { if (!mkPop.hidden && !mkPop.contains(e.target) && e.target !== mkBtn) mkPop.hidden = true; });
+  $("mkOn").onchange = function () { mkOn = this.checked; openKey = null; schedule(); };
+  if (!SHOW_CH) { mkOn = false; [".oc-mkon", ".oc-mkw"].forEach(function (s) { var e = document.querySelector(s); if (e) e.style.display = "none"; }); }   /* 关闭时不显示「修改标注」和「修改清单」 */
+  if (pages.length) loadPage(0); else { pg.disabled = true; pf.replaceWith(Object.assign(document.createElement("div"), { className: "oc-empty", textContent: "本需求暂无原型页面" })); }
+  function where() {
+    var p = pages[cur.page], vs = VIEWS[p ? p.href : ""] || [], v = vs.filter(function (x) { return x[0] === cur.view; })[0];
+    return (p ? p.title : "原型") + (v ? " › " + v[1] : "");
+  }
+
+  /* 拖动分隔条调整上下高度 */
+  var left = document.querySelector(".oc-left"), split = $("split");
+  function setTop(px) { var max = left.clientHeight - 170; px = Math.max(160, Math.min(px, max)); left.style.setProperty("--th", px + "px"); }
+  split.addEventListener("pointerdown", function (e) {
+    e.preventDefault(); split.setPointerCapture(e.pointerId); document.body.classList.add("oc-drag");
+    var top = document.querySelector(".oc-top").getBoundingClientRect().top;
+    function mv(ev) { setTop(ev.clientY - top); }
+    function up() { split.removeEventListener("pointermove", mv); split.removeEventListener("pointerup", up); document.body.classList.remove("oc-drag"); }
+    split.addEventListener("pointermove", mv); split.addEventListener("pointerup", up);
+  });
+  split.addEventListener("keydown", function (e) {
+    if (e.key !== "ArrowUp" && e.key !== "ArrowDown") return;
+    e.preventDefault(); setTop(document.querySelector(".oc-top").offsetHeight + (e.key === "ArrowUp" ? -40 : 40));
+  });
+
+  /* ---------- 数据：意见列表和已提交版本，保存在本机（IndexedDB，不可用时退回 localStorage） ---------- */
+  var S = { draft: "", items: [], versions: [], mod: null, seq: 0, sealed: null };
+  var editingId = null, db = null, saveTimer = null;
+  function openDB() {
+    return new Promise(function (res) {
+      try {
+        var r = indexedDB.open(KEY, 1);
+        r.onupgradeneeded = function () { r.result.createObjectStore("kv"); };
+        r.onsuccess = function () { db = r.result; res(); };
+        r.onerror = r.onblocked = function () { res(); };
+      } catch (e) { res(); }
+    });
+  }
+  function readState() {
+    return new Promise(function (res) {
+      if (!db) { try { var s = localStorage.getItem(KEY + "-state"); res(s ? JSON.parse(s) : null); } catch (e) { res(null); } return; }
+      try { var q = db.transaction("kv").objectStore("kv").get("state"); q.onsuccess = function () { res(q.result || null); }; q.onerror = function () { res(null); }; }
+      catch (e) { res(null); }
+    });
+  }
+  function persist() {
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(function () {
+      S.draft = ed.innerHTML;
+      var data = JSON.parse(JSON.stringify(S));
+      var fail = function () { say("本机浏览器空间不足，内容没能保存。请尽快提交并下载版本，以免刷新后丢失。", true); };
+      if (db) {
+        try { var tx = db.transaction("kv", "readwrite"); tx.objectStore("kv").put(data, "state"); tx.onerror = tx.onabort = fail; }
+        catch (e) { fail(); }
+      } else { try { localStorage.setItem(KEY + "-state", JSON.stringify(data)); } catch (e) { fail(); } }
+    }, 400);
+  }
+  function list() { return S.mod ? S.mod.items : S.items; }
+  function verNo(v) { return v.major + "." + v.minor; }
+  function nextMajor() { return S.versions.reduce(function (m, v) { return Math.max(m, v.major); }, 0) + 1; }
+  function nextMinor(major) { return S.versions.reduce(function (m, v) { return v.major === major ? Math.max(m, v.minor) : m; }, 0) + 1; }
+  function vName(at, no) { return at + " " + TOPIC + "运营需求修改意见 v" + no; }
+
+  /* ---------- 下半部分：富文本输入框 ---------- */
+  var ed = $("ed"), st = $("st"), file = $("file");
+  var savedRange = null;
+  function remember() { var s = getSelection(); if (s.rangeCount && ed.contains(s.anchorNode)) savedRange = s.getRangeAt(0).cloneRange(); }
+  function restore() { ed.focus(); if (savedRange) { var s = getSelection(); s.removeAllRanges(); s.addRange(savedRange); } }
+  document.addEventListener("selectionchange", remember);
+  function say(t, warn) { st.textContent = t; st.classList.toggle("warn", !!warn); }
+  function isEmpty() { return !ed.textContent.trim() && !ed.querySelector("img"); }
+  function changed() { ed.classList.toggle("empty", isEmpty()); persist(); }
+  ed.addEventListener("input", changed);
+
+  document.querySelectorAll(".oc-tools [data-cmd]").forEach(function (b) {
+    b.addEventListener("mousedown", function (e) { e.preventDefault(); });
+    b.onclick = function () { restore(); document.execCommand(b.dataset.cmd, false, b.dataset.arg || null); changed(); };
+  });
+  $("upBtn").onclick = function () { remember(); file.click(); };
+  file.onchange = function () { addImages([].slice.call(file.files)); file.value = ""; };
+  $("locBtn").addEventListener("mousedown", function (e) { e.preventDefault(); });
+  $("locBtn").onclick = function () { restore(); document.execCommand("insertText", false, "【" + where() + "】"); changed(); };
+
+  /* 截图：粘贴（Ctrl+V 或「粘贴截图」按钮）、拖入、选择文件 */
+  function clipImages(cd) {
+    var fs = [].slice.call(cd.items || []).filter(function (it) { return it.kind === "file" && /^image\//.test(it.type); })
+      .map(function (it) { return it.getAsFile(); }).filter(Boolean);
+    if (!fs.length) fs = [].slice.call(cd.files || []).filter(function (f) { return /^image\//.test(f.type); });
+    return fs;
+  }
+  /* 粘贴来的网页或文档内容：只留文字格式和内嵌图片，去掉脚本、样式和读不到的本地图片 */
+  function cleanHTML(html) {
+    /* 全程在 DOMParser 生成的离线文档里清理，不放进当前页面，避免清理前就去加载外部图片 */
+    var box = new DOMParser().parseFromString(html, "text/html").body;
+    box.querySelectorAll("script,style,meta,link,iframe,object,embed,form,input,button,svg").forEach(function (n) { n.remove(); });
+    var lost = 0;
+    box.querySelectorAll("img").forEach(function (im) {
+      if (!OCStore.okImg(im.getAttribute("src") || "")) { im.remove(); lost++; return; }
+      im.removeAttribute("width"); im.removeAttribute("height");
+    });
+    box.querySelectorAll("*").forEach(function (n) {
+      [].slice.call(n.attributes).forEach(function (a) { if (!/^(src|alt|href|colspan|rowspan)$/.test(a.name)) n.removeAttribute(a.name); });
+      if (n.hasAttribute("href") && !/^https?:/i.test(n.getAttribute("href"))) n.removeAttribute("href");
+    });
+    return { html: box.innerHTML, lost: lost, text: box.textContent.trim() };
+  }
+  ed.addEventListener("paste", function (e) {
+    if (S.sealed) { e.preventDefault(); return; }
+    var cd = e.clipboardData; if (!cd) return;
+    var fs = clipImages(cd), html = cd.getData("text/html");
+    var c = html ? cleanHTML(html) : null;
+    /* 只有图片（截图、从网页或聊天工具复制的单张图）→ 插图片；带文字的内容 → 按格式插入 */
+    if (fs.length && (!c || !c.text)) { e.preventDefault(); remember(); addImages(fs); return; }
+    if (c) {
+      e.preventDefault(); remember(); restore();
+      document.execCommand("insertHTML", false, c.html); changed();
+      if (fs.length && c.lost) addImages(fs);
+      else if (c.lost) say("内容里有 " + c.lost + " 张图片无法直接读取，已略过。请单独复制这张图片或截图后再粘贴，也可以用「上传截图」。", true);
+    }
+  });
+  /* 焦点不在输入框（比如刚点过原型下拉或按钮）时按 Ctrl+V，图片也贴到输入框末尾 */
+  document.addEventListener("paste", function (e) {
+    if (S.sealed || ed.contains(e.target) || /^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName)) return;
+    var fs = e.clipboardData ? clipImages(e.clipboardData) : [];
+    if (!fs.length) return;
+    e.preventDefault();
+    if (!savedRange) { var r = document.createRange(); r.selectNodeContents(ed); r.collapse(false); savedRange = r; }
+    addImages(fs);
+  });
+  var pasteBtn = $("pasteBtn");
+  pasteBtn.addEventListener("mousedown", function (e) { e.preventDefault(); });
+  pasteBtn.onclick = function () {
+    remember();
+    var tip = "请先点一下输入框，再按 Ctrl+V 粘贴截图";
+    if (!(navigator.clipboard && navigator.clipboard.read)) return say("当前浏览器不支持按钮粘贴，" + tip, true);
+    navigator.clipboard.read().then(function (items) {
+      var jobs = [];
+      items.forEach(function (it) {
+        var t = it.types.filter(function (x) { return /^image\//.test(x); })[0];
+        if (t) jobs.push(it.getType(t).then(function (b) { return new File([b], "截图." + t.split("/")[1], { type: t }); }));
+      });
+      if (!jobs.length) return say("剪贴板里没有图片。请先截图或复制一张图片，再点「粘贴截图」", true);
+      return Promise.all(jobs).then(addImages);
+    }).catch(function () { say("浏览器没有允许读取剪贴板，" + tip, true); });
+  };
+  ed.addEventListener("dragover", function (e) { e.preventDefault(); ed.classList.add("over"); });
+  ed.addEventListener("dragleave", function () { ed.classList.remove("over"); });
+  ed.addEventListener("drop", function (e) {
+    ed.classList.remove("over");
+    var fs = [].slice.call(e.dataTransfer.files || []);
+    if (!fs.length) return;
+    e.preventDefault();
+    if (document.caretRangeFromPoint) { var r = document.caretRangeFromPoint(e.clientX, e.clientY); if (r && ed.contains(r.startContainer)) savedRange = r; }
+    addImages(fs);
+  });
+  /* 识别截图格式：按文件类型，类型为空时按扩展名。苹果截图默认 PNG，Windows 截图是 PNG 或 JPG */
+  var FMT = { "image/png": "png", "image/jpeg": "jpeg", "image/jpg": "jpeg", "image/pjpeg": "jpeg", "image/webp": "webp", "image/gif": "gif", "image/bmp": "bmp", "image/x-ms-bmp": "bmp", "image/x-bmp": "bmp" };
+  var EXT = { png: "png", jpg: "jpeg", jpeg: "jpeg", jfif: "jpeg", webp: "webp", gif: "gif", bmp: "bmp" };
+  function fmtOf(f) {
+    var t = String(f.type || "").toLowerCase(), ext = (/\.([a-z0-9]+)$/i.exec(f.name || "") || [])[1];
+    ext = ext ? ext.toLowerCase() : "";
+    if (FMT[t]) return FMT[t];
+    if (/heic|heif/.test(t) || /^(heic|heif)$/.test(ext)) return "heic";
+    if (!t && EXT[ext]) return EXT[ext];
+    return "";
+  }
+  function addImages(fs) {
+    if (S.sealed) return;
+    var skip = [];
+    var ok = fs.filter(function (f) {
+      var fm = fmtOf(f);
+      if (fm === "heic") { skip.push((f.name || "截图") + "（HEIC 格式浏览器无法显示，请先转成 PNG 或 JPG 再上传）"); return false; }
+      if (!fm) { skip.push((f.name || "文件") + "（格式不支持，只支持 PNG、JPG、WEBP、GIF、BMP，请先转成 PNG 或 JPG 再上传）"); return false; }
+      if (f.size > MAX_MB * 1024 * 1024) { skip.push((f.name || "截图") + "（超过 " + MAX_MB + " MB）"); return false; }
+      return true;
+    });
+    if (skip.length) say("未插入：" + skip.join("、"), true);
+    ok.reduce(function (pr, f) { return pr.then(function () { return toDataURL(f).then(insertImg); }); }, Promise.resolve())
+      .then(function () { if (ok.length) changed(); })
+      .catch(function () { say("有截图无法显示（文件可能已损坏，或不是 PNG、JPG 等常见格式），请先转成 PNG 或 JPG 再上传", true); });
+  }
+  /* 读成 data URL：默认原样保留；BMP 无损转成 PNG（体积小、清晰度不变）；只有超大图才按比例缩小 */
+  function toDataURL(f) {
+    var fm = fmtOf(f);
+    return new Promise(function (res, rej) {
+      var fr = new FileReader();
+      fr.onerror = rej;
+      fr.onload = function () {
+        /* 文件类型为空或写法不标准时，按识别出的格式改正 data URL 的类型 */
+        var src = String(fr.result || "").replace(/^data:[^;,]*;base64,/, "data:image/" + fm + ";base64,");
+        var img = new Image();
+        img.onerror = rej;
+        img.onload = function () {
+          var w = img.naturalWidth, h = img.naturalHeight;
+          var big = fm !== "gif" && w > FIT_W && (w > BIG_W || f.size > BIG_MB * 1024 * 1024);
+          if (!big && fm !== "bmp") return OCStore.okImg(src) ? res(src) : rej(new Error("格式不支持"));
+          var k = big ? FIT_W / w : 1, c = document.createElement("canvas");
+          c.width = Math.round(w * k); c.height = Math.round(h * k);
+          var g = c.getContext("2d"); g.imageSmoothingEnabled = true; g.imageSmoothingQuality = "high";
+          g.drawImage(img, 0, 0, c.width, c.height);
+          var out = fm === "jpeg" ? c.toDataURL("image/jpeg", 0.95) : fm === "webp" ? c.toDataURL("image/webp", 0.95) : c.toDataURL("image/png");
+          OCStore.okImg(out) ? res(out) : rej(new Error("格式不支持"));
+        };
+        img.src = src;
+      };
+      fr.readAsDataURL(f);
+    });
+  }
+  /* 插入截图：用 DOM 创建 img 元素放到光标处，不拼 HTML 字符串 */
+  function insertImg(src) {
+    if (!OCStore.okImg(src)) return;
+    restore();
+    var p = document.createElement("p"); p.appendChild(OCStore.imgEl(src, "截图"));
+    var after = document.createElement("p"); after.appendChild(document.createElement("br"));
+    var s = getSelection(), r = s.rangeCount && ed.contains(s.anchorNode) ? s.getRangeAt(0) : null;
+    if (r) {
+      r.deleteContents();
+      var blk = r.startContainer.nodeType === 1 ? r.startContainer : r.startContainer.parentNode;
+      while (blk && blk !== ed && blk.parentNode !== ed) blk = blk.parentNode;
+      if (blk && blk !== ed) { blk.parentNode.insertBefore(after, blk.nextSibling); blk.parentNode.insertBefore(p, after); }
+      else { r.insertNode(after); r.insertNode(p); }
+    } else { ed.appendChild(p); ed.appendChild(after); }
+    var nr = document.createRange(); nr.setStart(after, 0); nr.collapse(true);
+    s.removeAllRanges(); s.addRange(nr);
+    remember();
+  }
+
+  /* 从输入框取出一条意见：截图单独存，文字保留格式 */
+  function grab() {
+    var box = ed.cloneNode(true);
+    var imgs = [].map.call(box.querySelectorAll("img"), function (i) { var s = i.getAttribute("src") || ""; i.remove(); return s; })
+      .filter(OCStore.okImg);   /* 只保留支持格式的截图（PNG、JPG、WEBP、GIF、BMP） */
+    [].slice.call(box.querySelectorAll("p,div,h3,li,ul,ol")).reverse().forEach(function (n) { if (!n.textContent.trim()) n.remove(); });
+    return { html: box.innerHTML.trim(), text: box.textContent.trim(), imgs: imgs };
+  }
+
+  /* 清空：清掉输入框里的全部内容 */
+  $("clear").onclick = function () { if (S.sealed) return; ed.innerHTML = ""; savedRange = null; changed(); say("输入框已清空"); ed.focus(); };
+
+  /* 添加 / 保存修改 */
+  $("add").onclick = function () {
+    if (S.sealed) return;
+    var g = grab();
+    if (!g.text && !g.imgs.length) { say("请先填写意见内容或添加截图", true); ed.focus(); return; }
+    var pri = $("pri").value;
+    if (editingId) {
+      var it = list().filter(function (x) { return x.id === editingId; })[0];
+      if (it) { it.html = g.html; it.imgs = g.imgs; it.pri = pri; }
+      endEdit(); say("这条意见已修改");
+    } else {
+      list().push({ id: "i" + (++S.seq), html: g.html, imgs: g.imgs, pri: pri, checked: true, at: stamp() });
+      say("已添加到右侧列表，共 " + list().length + " 条");
+    }
+    ed.innerHTML = ""; savedRange = null; $("pri").value = "中";
+    changed(); render(); showTab("list");
+    var last = $("list").lastElementChild; if (last && !editingId) last.scrollIntoView({ block: "nearest" });
+  };
+  function startEdit(id) {
+    var it = list().filter(function (x) { return x.id === id; })[0]; if (!it || S.sealed) return;
+    if (!isEmpty() && !confirm("输入框里还有没添加的内容，修改这条意见会替换掉它。继续吗？")) return;
+    editingId = id;
+    ed.innerHTML = it.html;
+    it.imgs.forEach(function (s) { var p = document.createElement("p"); p.appendChild(OCStore.imgEl(s, "截图")); ed.appendChild(p); });   /* 截图用 DOM 放回 */
+    $("pri").value = it.pri;
+    $("add").textContent = "保存修改"; $("cancelEdit").hidden = false;
+    $("editing").hidden = false; $("editing").textContent = "正在修改第 " + (list().indexOf(it) + 1) + " 条意见，改完点「保存修改」";
+    changed(); render(); ed.focus();
+  }
+  function endEdit() {
+    editingId = null;
+    $("add").textContent = "添加"; $("cancelEdit").hidden = true; $("editing").hidden = true;
+  }
+  $("cancelEdit").onclick = function () { endEdit(); ed.innerHTML = ""; $("pri").value = "中"; changed(); render(); say("已取消修改"); };
+
+  /* ---------- 右侧：意见列表 ---------- */
+  var listEl = $("list"), versEl = $("vers");
+  function render() {
+    var L = list();
+    listEl.innerHTML = L.length ? "" : '<div class="oc-blank">还没有意见。在左下方输入框填写后点「添加」。</div>';
+    L.forEach(function (it, i) {
+      var row = document.createElement("div"), lk = !!it.lock, off = S.sealed || lk;
+      if (lk) it.checked = true;   /* 产品已回复的意见不能删除，也不能取消勾选 */
+      row.className = "oc-row" + (it.id === editingId ? " editing" : "") + (it.checked ? " on" : "") + (lk ? " locked" : "");
+      row.dataset.id = it.id;
+      row.innerHTML =
+        '<input type="checkbox" class="oc-ck" aria-label="选择第 ' + (i + 1) + ' 条"' + (it.checked ? " checked" : "") + (off ? " disabled" : "") + '>' +
+        '<div class="oc-rb">' +
+          '<div class="oc-rh"><b>第 ' + (i + 1) + ' 条</b>' +
+            '<select class="oc-pr p' + it.pri + '" aria-label="优先级"' + (off ? " disabled" : "") + '><option' + (it.pri === "高" ? " selected" : "") + '>高</option><option' + (it.pri === "中" ? " selected" : "") + '>中</option><option' + (it.pri === "低" ? " selected" : "") + '>低</option></select>' +
+            '<span class="oc-sp"></span>' + (lk ? '<span class="oc-lock" title="产品已回复的意见不能修改或删除，可以在版本详情里补充">🔒 产品已回复</span>'
+              : S.sealed ? "" : '<button type="button" class="oc-a" data-act="edit">修改</button><button type="button" class="oc-a del" data-act="del">删除</button>') + '</div>' +
+          '<div class="oc-shots"></div>' +
+          '<div class="oc-txt">' + (it.html || '<span class="oc-noimg">（只有截图，没有文字）</span>') + '</div>' +
+        '</div>';
+      OCStore.thumbs(row.querySelector(".oc-shots"), it.imgs);   /* 截图用 DOM 创建 */
+      listEl.appendChild(row);
+    });
+    var sel = L.filter(function (x) { return x.checked; }).length;
+    $("all").checked = L.length > 0 && sel === L.length; $("all").indeterminate = sel > 0 && sel < L.length; $("all").disabled = !L.length || !!S.sealed;
+    $("selInfo").textContent = "已选 " + sel + " / 共 " + L.length + " 条";
+    $("nList").textContent = L.length; $("nVer").textContent = S.versions.length;
+    var sub = $("submit");
+    sub.disabled = !sel || !!editingId || !!S.sealed;
+    if (S.sealed) {
+      sub.textContent = "已封板，不能再提交";
+      $("nextName").textContent = L.length ? "封板前未提交的 " + L.length + " 条意见只保留在这里，不会进入任何版本" : "运营需求已封板";
+      $("modBar").hidden = true;
+    } else if (S.mod) {
+      var no = S.mod.major + "." + nextMinor(S.mod.major);
+      sub.textContent = "确认修改（保存为 v" + no + "，" + sel + " 条）";
+      $("nextName").textContent = editingId ? "请先保存或取消正在修改的意见" : sel ? "将保存为：<提交时间> " + TOPIC + "运营需求修改意见 v" + no : "请勾选要保留在这个版本里的意见";
+      $("modBar").hidden = false;
+      $("modBar").innerHTML = "正在修改「" + esc(S.mod.from) + "」。只有勾选的意见会保存到新版本 v" + no + "，原版本保留不变。<button type=\"button\" class=\"oc-a\" id=\"modCancel\">放弃修改</button>";
+      $("modCancel").onclick = cancelMod;
+    } else {
+      var nm = nextMajor() + ".0";
+      sub.textContent = "确认提交" + (sel ? "（" + sel + " 条）" : "");
+      $("nextName").textContent = editingId ? "请先保存或取消正在修改的意见" : sel ? "将保存为：<提交时间> " + TOPIC + "运营需求修改意见 v" + nm : "请勾选要提交的意见";
+      $("modBar").hidden = true;
+    }
+    renderVers();
+  }
+  listEl.addEventListener("change", function (e) {
+    var row = e.target.closest(".oc-row"); if (!row) return;
+    var it = list().filter(function (x) { return x.id === row.dataset.id; })[0]; if (!it) return;
+    if (it.lock) return render();
+    if (e.target.classList.contains("oc-ck")) it.checked = e.target.checked;
+    if (e.target.classList.contains("oc-pr")) it.pri = e.target.value;
+    persist(); render();
+  });
+  listEl.addEventListener("click", function (e) {
+    var row = e.target.closest(".oc-row"); if (!row) return;
+    var it = list().filter(function (x) { return x.id === row.dataset.id; })[0]; if (!it) return;
+    var th = e.target.closest(".oc-th"); if (th) return zoom(it.imgs[+th.dataset.img]);
+    var a = e.target.closest("[data-act]"); if (!a) return;
+    if (it.lock) return say("产品已回复这条意见，不能修改或删除；可以在「已提交版本」的详情里补充", true);
+    if (a.dataset.act === "edit") startEdit(it.id);
+    if (a.dataset.act === "del" && confirm("删除第 " + (list().indexOf(it) + 1) + " 条意见吗？")) {
+      list().splice(list().indexOf(it), 1);
+      if (editingId === it.id) { endEdit(); ed.innerHTML = ""; changed(); }
+      persist(); render(); say("已删除");
+    }
+  });
+  $("all").onchange = function () { var on = this.checked; list().forEach(function (x) { x.checked = on || !!x.lock; }); persist(); render(); };
+
+  /* 确认提交：勾选的行保存成一个版本；版本号首次 v1.0，每次提交 +1.0，每次修改 +0.1 */
+  $("submit").onclick = function () {
+    if (!list().some(function (x) { return x.checked; }) || editingId || S.sealed) return;
+    /* 云端模式：提交前先拉一次最新数据，避免多人同时提交时算出相同的版本号；也能及时发现别人已经封板 */
+    if (CLOUD) {
+      var btn = $("submit"); btn.disabled = true; say("正在同步云端…");
+      syncNow(false).then(function () { btn.disabled = false; doSubmit(); }, function () { btn.disabled = false; doSubmit(); });
+    } else doSubmit();
+  };
+  function doSubmit() {
+    var L = list(), rows = L.filter(function (x) { return x.checked; });
+    if (!rows.length || editingId) return;
+    if (S.sealed) return say("运营需求已封板，不能再提交", true);
+    /* 截图格式检查（与云端一致）：产品已回复、原样带过去的意见不检查 */
+    var badN = 0; L.forEach(function (x, n) { if (x.checked && !x.lock && (x.imgs || []).some(function (s) { return !OCStore.okImg(s); })) badN = badN || n + 1; });
+    if (badN) return say("第 " + badN + " 条意见的截图格式不支持：只接受 PNG、JPG、WEBP、GIF、BMP 格式，请先转成 PNG 或 JPG 再上传（点「修改」删掉这张截图后重新添加）", true);
+    /* 修改期间产品回复了原版本里的意见：这些意见恢复成原内容并锁定，请运营确认后再提交 */
+    if (S.mod) {
+      var late = 0;
+      S.mod.items.forEach(function (x) {
+        if (x.lock || !x.src) return;
+        var sv = S.versions.filter(function (y) { return y.name === x.src.name; })[0], sr = sv && sv.rows[x.src.i];
+        if (!sr || !OCStore.replied(sr)) return;
+        x.lock = true; x.checked = true; x.html = sr.html; x.imgs = sr.imgs.slice(); x.pri = sr.pri;
+        x.reply = sr.reply || ""; x.decision = sr.decision || DEC[0]; x.repliedAt = sr.repliedAt || ""; x.notes = (sr.notes || []).slice();
+        late++;
+      });
+      if (late) { persist(); render(); return say("修改期间产品回复了 " + late + " 条意见，这些意见已恢复原内容并锁定（不能修改或删除）。请确认后再点「确认修改」", true); }
+    }
+    var at = stamp(), v;
+    /* 修改版本时，产品已回复的意见原样带到新版本（内容、回复、结论、补充都不变，并记下来源，云端据此从原版本复制）；
+       其他意见按新提交处理，等产品回复 */
+    var copy = rows.map(function (x) {
+      if (x.lock) return { html: x.html, imgs: x.imgs.slice(), pri: x.pri, reply: x.reply || "", decision: x.decision || DEC[0], repliedAt: x.repliedAt || "", notes: (x.notes || []).slice(), src: x.src };
+      return { html: x.html, imgs: x.imgs.slice(), pri: x.pri, reply: "", decision: DEC[0], repliedAt: "", notes: [] };
+    });
+    if (S.mod) {
+      var major = S.mod.major, minor = nextMinor(major);
+      v = { id: "v" + (++S.seq), major: major, minor: minor, at: at, name: vName(at, major + "." + minor), from: S.mod.from, rows: copy };
+      S.mod = null;
+    } else {
+      var mj = nextMajor();
+      v = { id: "v" + (++S.seq), major: mj, minor: 0, at: at, name: vName(at, mj + ".0"), rows: copy };
+      S.items = L.filter(function (x) { return !x.checked; });
+    }
+    S.versions.push(v); openVer = v.id;
+    persist(); render(); showTab("ver");
+    say("已保存为「" + v.name + "」");
+    saveVerFile(v, true);   /* 以文件形式保存：写进共享文件夹；没连接文件夹时自动下载 */
+  };
+
+  /* ---------- 右侧：已提交版本 ---------- */
+  var openVer = null;
+  /* 「是否修改」的取值；第一个是默认值 */
+  var DEC = ["待确认", "确认修改", "部分修改", "不修改"];
+  function sig(r) { return (r.html || "") + "|" + (r.imgs || []).map(function (s) { return s.length + s.slice(-24); }).join(","); }
+  function sortedVers() { return S.versions.slice().sort(function (a, b) { return b.major - a.major || b.minor - a.minor; }); }
+  function replied(v) { return v.rows.filter(OCStore.replied).length; }
+  function stats(v) {
+    var c = {}; DEC.forEach(function (d) { c[d] = 0; });
+    v.rows.forEach(function (r) { c[OCStore.dec(r)]++; });
+    return "共 " + v.rows.length + " 条 · 产品已回复 " + replied(v) + " 条 · " + DEC.slice(1).concat(DEC[0]).map(function (d) { return d + " " + c[d]; }).join(" · ");
+  }
+  var ROLE_NAME = { pdm: "产品", opr: "运营" };
+  /* 补充记录：角色、时间、内容、结论调整 */
+  function notesHTML(r) {
+    var ns = OCStore.sortNotes(r.notes);
+    return ns.length ? '<ol class="oc-notes">' + ns.map(function (n) {
+      return '<li><span class="oc-nr r-' + n.role + '">' + ROLE_NAME[n.role] + "补充</span><span class=\"oc-nt\">" + esc(n.at || "") + "</span>" +
+        (n.decision ? '<span class="oc-dtag d' + n.decision + '">结论调整为「' + n.decision + "」</span>" : "") +
+        "<div>" + esc(n.text).replace(/\n/g, "<br>") + "</div></li>";
+    }).join("") + "</ol>" : "";
+  }
+  /* 导出和复制用的表格（含产品回复、补充和结果） */
+  function verTable(v) {
+    return '<table class="oc-vt"><thead><tr><th>序号</th><th>截图</th><th>修改意见（运营）</th><th>优先级</th><th>产品回复及补充</th><th>是否修改</th></tr></thead><tbody>' +
+      v.rows.map(function (r, i) {
+        var d = OCStore.dec(r);
+        /* 导出文件和复制内容（不是页面显示）：截图地址先校验、再转义，不能跳出 src 属性 */
+        var im = r.imgs.filter(function (s) { return /^data:image\//.test(s); });
+        return "<tr><td>" + (i + 1) + "</td><td>" + (im.length ? im.map(function (s) { return '<img src="' + esc(s) + '" alt="截图">'; }).join("") : "无") + "</td><td>" + (r.html || "（只有截图）") +
+          '</td><td class="p' + r.pri + '">' + r.pri + "</td><td>" + (OCStore.replied(r) ? (esc(r.reply || "").replace(/\n/g, "<br>") || "（只给了结论）") + '<div class="oc-nt">产品回复于 ' + esc(r.repliedAt) + "（GMT+8）</div>" : "—") + notesHTML(r) +
+          '</td><td class="d' + d + '">' + d + (d !== (r.decision || DEC[0]) ? "<br><small>首次回复：" + (r.decision || DEC[0]) + "</small>" : "") + "</td></tr>";
+      }).join("") + "</tbody></table>";
+  }
+  function renderVers() {
+    var V = sortedVers();
+    versEl.innerHTML = V.length ? "" : '<div class="oc-blank">还没有提交过版本。在「意见列表」勾选意见后点「确认提交」。</div>';
+    V.forEach(function (v) {
+      var card = document.createElement("div");
+      card.className = "oc-ver" + (v.id === openVer ? " open" : "");
+      card.dataset.id = v.id;
+      card.innerHTML =
+        '<button type="button" class="oc-vh" data-act="open" title="打开这个版本的详细内容"><span class="oc-vno">v' + verNo(v) + '</span><span class="oc-vn">' + esc(v.name) + '</span></button>' +
+        '<div class="oc-vm">共 ' + v.rows.length + ' 条 · 产品已回复 ' + replied(v) + ' / ' + v.rows.length + (v.from ? " · 由「" + esc(v.from) + "」修改" : "") + '</div>' +
+        '<div class="oc-va"><button type="button" class="oc-a" data-act="open">查看详情</button>' + (S.sealed ? "" : '<button type="button" class="oc-a" data-act="mod">修改</button>') + '<button type="button" class="oc-a" data-act="copy">复制</button><button type="button" class="oc-a" data-act="dl">下载</button></div>';
+      versEl.appendChild(card);
+    });
+    /* 封板记录：显示在最新一版需求修改意见列表的最后 */
+    var lg = OCStore.sealLogEl(S); if (lg && V.length) versEl.appendChild(lg);
+    /* 吸底「运营需求封板」：运营和产品都能封板；封板后只有产品能「撤销封板」 */
+    var latest = V[0], canUnseal = ROLE === "product" && NAV.realRole === "pdm";
+    $("seal").disabled = S.sealed ? !canUnseal || !!S.sealPending : (!V.length || !!S.mod);
+    $("seal").textContent = S.sealed ? (canUnseal ? "撤销封板" : "已封板") : "运营需求封板";
+    $("sealInfo").textContent = S.sealed ? "已于 " + S.sealed.at + "（GMT+8）封板，最终版本 v" + S.sealed.ver + (canUnseal ? "；撤销后运营可以继续提交意见" : "；只有产品可以撤销封板")
+      : !V.length ? "至少提交一个版本后才能封板"
+      : S.mod ? "正在修改版本，请先确认修改或放弃修改，再封板"
+      : "封板后本页不能再添加、修改或提交任何意见；最终版本：v" + verNo(latest);
+    applySeal();
+  }
+  function applySeal() {
+    var on = !!S.sealed;
+    document.body.classList.toggle("oc-sealed", on);
+    ed.contentEditable = on ? "false" : "true";
+    ed.setAttribute("aria-disabled", on);
+    document.querySelectorAll(".oc-tools button, #pri, #add, #clear, #cancelEdit").forEach(function (b) { b.disabled = on; });
+    $("sealBar").hidden = !on;
+    if (on) $("sealBar").textContent = OCStore.sealText(S.sealed);
+  }
+  function myRole() { return OCRemote.auth().role === "pdm" ? "pdm" : "opr"; }
+  /* 封板和撤销都追加一条记录（时间 GMT+8、角色、动作），记录不可删改；云端模式以云端返回的记录为准 */
+  /* 在改 S.sealed 之前调用：旧数据没有记录时，先把本机已有的封板补成一条记录 */
+  function addSealLog(action, ver, name) {
+    var L = Array.isArray(S.sealLog) ? S.sealLog.slice() : OCStore.sealLog(S).slice();
+    L.push({ at: stamp(), role: myRole(), action: action, ver: ver || "", name: name || "", pending: CLOUD });
+    S.sealLog = L;
+  }
+  $("seal").onclick = function () {
+    var V = sortedVers();
+    if (S.sealed) {
+      if (!(ROLE === "product" && NAV.realRole === "pdm") || S.sealPending) return;
+      if (!confirm("撤销封板吗？\n\n撤销后运营可以继续添加、修改和提交意见。封板和撤销封板的记录都会保留，不能删除。")) return;
+      addSealLog("撤销封板", S.sealed.ver, S.sealed.name);
+      S.sealed = null; S.sealPending = "unseal";
+      persist(); render();
+      say("已撤销封板，运营可以继续提交意见");
+      saveSealFile();
+      return;
+    }
+    if (!V.length || S.mod) return;
+    var latest = V[0], left = S.items.length;
+    var msg = "确定封板吗？\n\n封板后本页将不能再添加、修改或提交任何需求修改意见，最终版本为「" + latest.name + "」。" +
+      (left ? "\n\n意见列表里还有 " + left + " 条未提交的意见，封板后它们不会进入任何版本。" : "") + "\n\n封板后只有产品可以撤销封板；封板记录会保留，不能删除。";
+    if (!confirm(msg)) return;
+    if (editingId) endEdit();
+    ed.innerHTML = ""; savedRange = null;
+    addSealLog("封板", verNo(latest), latest.name);
+    S.sealed = { at: stamp(), ver: verNo(latest), name: latest.name, role: myRole() };
+    S.sealPending = "seal";
+    changed(); render();
+    say("运营需求已封板，最终版本 v" + verNo(latest));
+    saveSealFile();
+  };
+  versEl.addEventListener("click", function (e) {
+    var card = e.target.closest(".oc-ver"); if (!card) return;
+    var v = S.versions.filter(function (x) { return x.id === card.dataset.id; })[0]; if (!v) return;
+    var a = e.target.closest("[data-act]"); if (!a) return;
+    if (a.dataset.act === "open") openDetail(v);
+    if (a.dataset.act === "mod") startMod(v);
+    if (a.dataset.act === "copy") copyVer(v);
+    if (a.dataset.act === "dl") dlVer(v);
+  });
+  function startMod(v) {
+    if (S.sealed) return;
+    if (S.mod && !confirm("正在修改「" + S.mod.from + "」，还没保存。放弃它，改为修改「" + v.name + "」吗？")) return;
+    if (editingId) { endEdit(); ed.innerHTML = ""; changed(); }
+    S.mod = { from: v.name, major: v.major, items: v.rows.map(function (r, i) {
+      var lk = OCStore.replied(r);
+      return { id: "i" + (++S.seq), html: r.html, imgs: r.imgs.slice(), pri: r.pri, checked: true, at: v.at, lock: lk,
+        reply: lk ? r.reply || "" : "", decision: lk ? r.decision || DEC[0] : DEC[0], repliedAt: lk ? r.repliedAt || "" : "", notes: lk ? (r.notes || []).slice() : [], src: { name: v.name, i: i } };
+    }) };
+    persist(); render(); showTab("list");
+    var nl = S.mod.items.filter(function (x) { return x.lock; }).length;
+    say("已载入「" + v.name + "」，可以修改、删除或新增意见，改完点「确认修改」" + (nl ? "；其中 " + nl + " 条产品已回复，不能修改或删除" : ""));
+  }
+  function cancelMod() {
+    if (!confirm("放弃这次修改吗？原版本不受影响。")) return;
+    if (editingId) { endEdit(); ed.innerHTML = ""; changed(); }
+    S.mod = null; persist(); render(); say("已放弃修改");
+  }
+  function exportHTML(v) {
+    return '<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>' + esc(v.name) + '</title>' +
+      '<style>body{font-family:"Microsoft YaHei","微软雅黑",sans-serif;max-width:1000px;margin:32px auto;padding:0 16px;line-height:1.7;color:#1B1720;background:#fff}h1{font-size:19px;border-bottom:2px solid #C89A3C;padding-bottom:8px}.m{color:#6A6076;font-size:13px}table{border-collapse:collapse;width:100%;font-size:13px}th,td{border:1px solid #D9D2E4;padding:8px;text-align:left;vertical-align:top}th{background:#F3EFF8;white-space:nowrap}td:first-child,td:last-child,td:nth-child(4){white-space:nowrap;text-align:center}img{max-width:280px;display:block;margin:0 0 6px;border:1px solid #D9D2E4;border-radius:4px}.p高{color:#C00000;font-weight:700}.d确认修改{color:#237804;font-weight:700}.d部分修改{color:#AD6800;font-weight:700}.d不修改{color:#6A6076;font-weight:700}.d待确认{color:#1677FF}</style></head><body>' +
+      "<h1>" + esc(v.name) + '</h1><p class="m">' + stats(v) + (v.from ? " · 由「" + esc(v.from) + "」修改" : "") + "</p>" + verTable(v) +
+      /* 内嵌数据：在「运营需求确认」页点「导入版本文件」可以读回（含产品回复和结果） */
+      '<script type="application/json" id="oc-data">' + JSON.stringify({ kind: "oc-version", topic: TOPIC, version: v }).replace(/</g, "\\u003c") + "<\/script></body></html>";
+  }
+
+  /* ---------- 版本详情：序号、截图、修改意见、产品回复、是否修改 ---------- */
+  var vd = $("vd"), vdRows = $("vdRows"), curV = null;
+  function openDetail(v) {
+    curV = v; openVer = v.id;
+    $("vdNo").textContent = "v" + verNo(v);
+    $("vdTitle").textContent = v.name;
+    var P = ROLE === "product";
+    S.drafts = S.drafts || {};
+    vdRows.innerHTML = v.rows.map(function (r, i) {
+      var d = OCStore.dec(r), done = OCStore.replied(r), dk = v.name + "#" + i, dr = S.drafts[dk] || {}, rep, dec;
+      if (done) {
+        /* 已回复：第一条回复和结论只读，下面是补充记录和补充输入框 */
+        var canNote = P || !S.sealed;
+        rep = '<div class="oc-rtxt">' + (esc(r.reply || "").replace(/\n/g, "<br>") || '<span class="oc-noimg">（只给了结论，没有文字）</span>') + '</div><div class="oc-nt">🔒 产品回复于 ' + esc(r.repliedAt) + "（GMT+8），不能修改，只能补充</div>" + notesHTML(r) +
+          (canNote ? '<div class="oc-add"><textarea class="oc-note" data-r="' + i + '" rows="2" placeholder="补充回复意见（' + (P ? "产品" : "运营") + '），提交后不能修改或删除">' + esc(dr.note || "") + "</textarea>" +
+              (P ? '<select class="oc-ndec" data-r="' + i + '" aria-label="调整结论"><option value="">不调整结论</option>' + DEC.slice(1).map(function (x) { return "<option" + (dr.ndec === x ? " selected" : "") + ">" + x + "</option>"; }).join("") + "</select>" : "") +
+              '<button type="button" class="oc-a" data-act="note" data-r="' + i + '">提交补充</button></div>'
+            : '<div class="oc-nt">运营需求已封板，运营不能再补充；如需补充请联系产品</div>');
+        dec = '<span class="oc-dtag d' + d + '">' + d + "</span>" + (d !== (r.decision || DEC[0]) ? '<div class="oc-nt">首次回复：' + (r.decision || DEC[0]) + "</div>" : "");
+      } else if (P) {
+        /* 未回复：产品填写草稿（只存本机），点「提交回复」后才生效并同步 */
+        var dd = dr.decision || DEC[0];
+        rep = '<textarea class="oc-reply" data-r="' + i + '" rows="3" placeholder="产品侧回复：是否采纳、怎么改、不改的原因。提交后不能修改，只能补充">' + esc(dr.reply || "") + "</textarea>" +
+          '<button type="button" class="oc-a" data-act="reply" data-r="' + i + '">提交回复</button>';
+        dec = '<select class="oc-dec d' + dd + '" data-r="' + i + '" aria-label="第 ' + (i + 1) + ' 条是否修改">' + DEC.map(function (x) { return "<option" + (x === dd ? " selected" : "") + ">" + x + "</option>"; }).join("") + "</select>";
+      } else {
+        rep = '<div class="oc-rtxt"><span class="oc-noimg">产品尚未回复</span></div>';
+        dec = '<span class="oc-dtag d' + d + '">' + d + "</span>";
+      }
+      return "<tr>" +
+        '<td class="c-no">' + (i + 1) + "</td>" +
+        '<td class="c-img"><div class="oc-shots" data-row="' + i + '"></div></td>' +
+        '<td><span class="oc-ptag p' + r.pri + '">优先级 ' + r.pri + '</span><div class="oc-txt">' + (r.html || '<span class="oc-noimg">（只有截图，没有文字）</span>') + "</div></td>" +
+        '<td class="c-rep">' + rep + "</td>" +
+        '<td class="c-dec">' + dec + "</td>" +
+        "</tr>";
+    }).join("");
+    /* 截图用 DOM 创建 img 元素，不拼进 innerHTML */
+    vdRows.querySelectorAll(".oc-shots[data-row]").forEach(function (box) { var i = +box.dataset.row; OCStore.thumbs(box, v.rows[i].imgs, { r: i }); });
+    /* 最新一版：封板记录显示在意见列表的最后 */
+    var old = vd.querySelector(".oc-mbody .oc-seallog"); if (old) old.remove();
+    var lg = sortedVers()[0] === v ? OCStore.sealLogEl(S) : null; if (lg) vd.querySelector(".oc-mbody").appendChild(lg);
+    updMeta();
+    $("vdFoot").textContent = P
+      ? "当前是产品角色：填写回复和「是否修改」后点「提交回复」才生效（未提交的内容只保存在本机）。提交后，这条意见运营不能再修改或删除，产品回复和结论也不能再改，只能「提交补充」；补充时可以调整结论，历史都保留。"
+      : "当前是运营角色：产品回复和「是否修改」由产品填写，运营只能查看。产品回复后，这条意见不能再修改或删除；运营和产品都可以「提交补充」（封板后只有产品能补充），补充提交后不能修改或删除。";
+    vd.hidden = false; document.body.classList.add("oc-modal-on");
+    $("vdClose").focus();
+  }
+  function updMeta() { if (curV) $("vdMeta").textContent = "提交时间 " + (curV.at || "—") + "（GMT+8）· " + stats(curV) + (curV.from ? " · 由「" + curV.from + "」修改" : "") + " · 版本名称、回复和补充的时间均为 GMT+8"; }
+  function closeDetail() { vd.hidden = true; document.body.classList.remove("oc-modal-on"); curV = null; renderVers(); }
+  /* 草稿：未提交的回复和补充只保存在本机，提交后才生效 */
+  function onDraft(e) {
+    var t = e.target; if (!curV || !t.dataset.r) return;
+    S.drafts = S.drafts || {};
+    var k = curV.name + "#" + t.dataset.r, dr = S.drafts[k] = S.drafts[k] || {};
+    if (t.classList.contains("oc-reply")) dr.reply = t.value;
+    if (t.classList.contains("oc-dec")) { dr.decision = t.value; t.className = "oc-dec d" + t.value; }
+    if (t.classList.contains("oc-note")) dr.note = t.value;
+    if (t.classList.contains("oc-ndec")) dr.ndec = t.value;
+    persist();
+  }
+  vdRows.addEventListener("input", onDraft);
+  vdRows.addEventListener("change", onDraft);
+  vdRows.addEventListener("click", function (e) {
+    if (!curV) return;
+    var th = e.target.closest(".oc-th"); if (th) return zoom(curV.rows[+th.dataset.r].imgs[+th.dataset.img]);
+    var a = e.target.closest("[data-act]"); if (!a) return;
+    var v = curV, i = +a.dataset.r, r = v.rows[i], k = v.name + "#" + i, dr = (S.drafts || {})[k] || {};
+    if (a.dataset.act === "reply") submitReply(v, i, r, k, dr);
+    if (a.dataset.act === "note") submitNote(v, i, r, k, dr);
+  });
+  /* 提交产品回复：只能提交一次，提交后不能修改 */
+  function submitReply(v, i, r, k, dr) {
+    if (ROLE !== "product" || OCStore.replied(r)) return;
+    var text = (dr.reply || "").trim(), d = dr.decision || DEC[0];
+    if (!text && d === DEC[0]) return say("请填写回复，或选择「是否修改」后再提交", true);
+    if (!confirm("提交第 " + (i + 1) + " 条的产品回复吗？\n\n是否修改：" + d + "\n\n提交后，这条意见运营不能再修改或删除，产品回复和结论也不能再改，只能补充。")) return;
+    var go = function () {
+      if (OCStore.replied(r)) { openDetail(v); return say("这条意见已有产品回复（可能是其他电脑刚提交的），已显示最新内容；如需补充请用「提交补充」", true); }
+      r.reply = text; r.decision = d; r.repliedAt = stamp(); r.notes = r.notes || [];
+      delete S.drafts[k]; persist(); openDetail(v); renderVers();
+      say("已提交第 " + (i + 1) + " 条的产品回复");
+      saveReply(v, i);
+    };
+    /* 云端模式：先拉一次最新数据，避免两台电脑同时回复同一条 */
+    if (CLOUD) syncNow(false).then(go, go); else go();
+  }
+  /* 第一条回复单独提交到云端；云端已有回复（其他电脑先提交）时返回 409，以云端为准 */
+  function saveReply(v, i) {
+    if (!CLOUD) return saveVerFile(v, false);
+    OCRemote.pushReply(TOPIC, v.name, i, v.rows[i]).then(function () { lastSync = stamp(); syncUI("cloud", "回复已保存到云端"); },
+      function (e) {
+        if (e.status === 409 && e.body && e.body.current) return applyCloudReply(v, i, e.body.current);
+        syncUI("err", "回复保存失败：" + OCRemote.explain(e) + "。问题解决后点「刷新」会自动补传", e);
+      });
+  }
+  /* 用云端的回复、结论和回复时间覆盖本机；本机写的文字放进这条意见的补充草稿，并提示 */
+  function applyCloudReply(v, i, cur) {
+    var r = v.rows[i], mine = String(r.reply || "").trim();
+    var same = mine === String(cur.reply || "").trim() && r.decision === cur.decision;
+    r.reply = String(cur.reply || ""); r.decision = DEC.indexOf(cur.decision) >= 0 ? cur.decision : DEC[0]; r.repliedAt = String(cur.repliedAt || "");
+    if (!same && mine) {
+      S.drafts = S.drafts || {};
+      var dk = v.name + "#" + i, dr = S.drafts[dk] = S.drafts[dk] || {};
+      if ((dr.note || "").indexOf(mine) < 0) dr.note = dr.note ? dr.note + "\n" + mine : mine;
+    }
+    persist(); if (curV === v && !typing()) openDetail(v); renderVers();
+    if (!same) say("第 " + (i + 1) + " 条已有产品回复（其他电脑先提交），已改为显示云端的回复、结论和回复时间；你写的内容已放进这条意见的「补充」输入框，确认后点「提交补充」", true);
+  }
+  /* 提交补充：运营和产品都可以；封板后只有产品可以；只增不改 */
+  function submitNote(v, i, r, k, dr) {
+    var P = ROLE === "product", text = (dr.note || "").trim();
+    if (!OCStore.replied(r)) return;
+    if (!P && S.sealed) return say("运营需求已封板，运营不能再补充；如需补充请联系产品", true);
+    if (!text) return say("请填写补充内容", true);
+    var nd = P && dr.ndec ? dr.ndec : "";
+    if (!confirm("提交这条补充吗？" + (nd ? "\n\n结论将调整为「" + nd + "」（首次回复的结论保留在记录里）。" : "") + "\n\n补充提交后不能修改或删除。")) return;
+    var note = { id: "n" + Date.now().toString(36) + Math.random().toString(36).slice(2, 7), role: OCRemote.auth().role, text: text, at: stamp(), decision: nd };
+    r.notes = OCStore.sortNotes((r.notes || []).concat(note));
+    delete S.drafts[k]; persist(); openDetail(v); renderVers();
+    say("已提交补充");
+    saveNote(v, i, note);
+  }
+  function saveNote(v, i, note) {
+    if (CLOUD) {
+      OCRemote.pushNote(TOPIC, v.name, i, note).then(function () { lastSync = stamp(); syncUI("cloud", "补充已保存到云端"); },
+        function (e) { syncUI("err", "补充保存失败：" + OCRemote.explain(e) + "。问题解决后点「刷新」会自动补传", e); });
+    } else saveVerFile(v, false);
+  }
+  $("vdClose").onclick = closeDetail;
+  vd.addEventListener("click", function (e) { if (e.target === vd) closeDetail(); });
+  $("vdCopy").onclick = function () { if (curV) copyVer(curV); };
+  $("vdDl").onclick = function () { if (curV) dlVer(curV); };
+
+  /* ---------- 导入版本文件：读回下载文件里的内嵌数据，合并产品回复和结果 ---------- */
+  $("impBtn").onclick = function () { $("impFile").click(); };
+  $("impFile").onchange = function () {
+    var f = this.files[0]; this.value = ""; if (!f) return;
+    var fr = new FileReader();
+    fr.onload = function () { importVersion(String(fr.result || "")); };
+    fr.onerror = function () { say("文件读取失败，请重新选择", true); };
+    fr.readAsText(f, "utf-8");
+  };
+  function importVersion(text) {
+    var m = /<script type="application\/json" id="oc-data">([\s\S]*?)<\/script>/.exec(text), data = null;
+    try { data = m && JSON.parse(m[1]); } catch (e) {}
+    var iv = data && data.kind === "oc-version" && data.version;
+    if (!iv || !Array.isArray(iv.rows) || !iv.name) return say("这不是从本页下载的版本文件，无法导入", true);
+    if (data.topic !== TOPIC) return say("这个文件属于「" + data.topic + "」，不是本需求的版本，无法导入", true);
+    var ex = S.versions.filter(function (x) { return x.name === iv.name; })[0];
+    if (!ex && S.sealed) return say("运营需求已封板，不能再导入新的版本；只能导入已有版本的产品回复和补充", true);
+    /* 合并规则与云端一致：已有的回复不被覆盖，补充只增不减，本机内容不会被删除 */
+    var res = OCSync.merge(S, { versions: [iv] });
+    var nv = S.versions.filter(function (x) { return x.name === iv.name; })[0];
+    persist(); render(); showTab("ver"); openDetail(nv); saveVerFile(nv, !ex);
+    say(ex ? "已合并「" + nv.name + "」：更新 " + res.updated + " 处回复或补充（已有内容不会被覆盖）" : "已导入「" + nv.name + "」");
+  }
+
+  /* ---------- 共享文件夹：版本以文件形式保存，换窗口、换浏览器、换电脑也能看到 ----------
+     运营和产品各自连接同一个文件夹（如共享的 OneDrive 文件夹）。提交、修改、封板、产品回复都写成文件；
+     打开页面或点「同步」时读取文件夹里的全部版本文件并合并。需要 Chrome 或 Edge；其他浏览器提交时自动下载版本文件。 */
+  var SH = null, lastSync = "";
+  var CLOUD = OCRemote.enabled();   /* 配置了云端接口时，所有读写都走云端，不用共享文件夹 */
+  /* err：出错时的错误对象。云端为主，「导入版本文件」只在连不上云端（网络断开、服务不可用、次数超限）时作为备用显示 */
+  function syncUI(state, extra, err) {
+    var t = $("syncTxt"), b = $("syncBtn");
+    $("syncBar").className = "oc-sync s-" + state;
+    if (CLOUD) {
+      b.hidden = false; b.textContent = "刷新";
+      if (state === "loading") { t.textContent = "正在读取云端…"; return; }
+      var down = state === "err" && err && (err.status === 0 || err.status === 429 || err.status >= 500);
+      if (state === "err") $("impBtn").hidden = !down;
+      else if (state === "cloud") $("impBtn").hidden = true;
+      t.textContent = state === "err" ? "云端：" + (extra || "出错了") + (down ? "。连不上云端时，可以先用「导入版本文件」读入别人发来的版本文件" : "")
+        : "云端：已同步" + (lastSync ? " · " + lastSync + "（GMT+8）" : "") + (extra ? " · " + extra : "") + " · 每分钟自动刷新";
+      return;
+    }
+    $("impBtn").hidden = false;
+    if (!OCSync.supported) { t.textContent = "当前浏览器不支持共享文件夹（请用 Chrome 或 Edge）；提交时会自动下载版本文件，对方用「导入版本文件」读入"; b.hidden = true; return; }
+    b.hidden = false;
+    if (state === "none") { t.textContent = "共享文件夹：未连接。连接后，提交的版本和产品回复会存成文件，换浏览器也能看到"; b.textContent = "连接文件夹"; }
+    else if (state === "prompt") { t.textContent = "共享文件夹：「" + (SH ? SH.name : "") + "」需要重新授权"; b.textContent = "授权并同步"; }
+    else if (state === "ok") { t.textContent = "共享文件夹：「" + SH.name + "」" + (lastSync ? " · 上次同步 " + lastSync : "") + (extra ? " · " + extra : ""); b.textContent = "同步"; }
+    else { t.textContent = "共享文件夹：" + (extra || "出错了"); b.textContent = "重新连接"; }
+  }
+  function saveVerFile(v, isNew) {
+    if (!v) return;
+    if (CLOUD) {
+      OCRemote.pushVersion(TOPIC, v).then(function () { lastSync = stamp(); syncUI("cloud", isNew ? "已保存到云端" : "回复已保存到云端"); },
+        function (e) {
+          /* 同名不同内容（其他电脑在同一秒提交了同号版本）：先改成本机临时名称，重新同步后改用新版本号再提交 */
+          if (e.status === 409 && e.body && e.body.conflict === "version" && S.versions.indexOf(v) >= 0 && !v.renumber) {
+            v.renumber = v.name; v.name = v.name + "（等待重新编号）";
+            persist(); render();
+            say("云端已有同名的版本「" + v.renumber + "」（其他电脑在同一秒提交），正在重新同步并改用新的版本号提交…", true);
+            return syncNow(false);
+          }
+          syncUI("err", "保存失败：" + OCRemote.explain(e) + "。问题解决后点「刷新」会自动补传", e);
+        });
+      return;
+    }
+    if (SH) {
+      OCSync.writeFile(SH, OCSync.fileName(v), exportHTML(v)).then(function () { syncUI("ok", "已写入「" + OCSync.fileName(v) + "」"); },
+        function (e) { syncUI("err", "写入失败：" + (e && e.message || e) + "。请点「重新连接」"); });
+    } else if (isNew) {
+      dlVer(v);   /* 没有共享文件夹时，提交的版本自动下载成文件 */
+      if (OCSync.supported) say("已下载版本文件。建议在「已提交版本」连接共享文件夹，以后自动保存，换浏览器也能看到");
+    }
+  }
+  /* 封板 / 撤销封板：云端模式把本机待上传的动作（S.sealPending）提交到云端，成功后以云端的状态和记录为准 */
+  function saveSealFile() {
+    if (CLOUD) {
+      var act = S.sealPending; if (!act) return;
+      var ref = act === "seal" ? S.sealed : null;
+      OCRemote.pushSeal(TOPIC, act, ref ? ref.ver : "", ref ? ref.name : "").then(function (j) {
+        if (S.sealPending !== act) return;
+        S.sealPending = null; S.sealed = j.sealed || null; S.sealLog = Array.isArray(j.sealLog) ? j.sealLog : [];
+        persist(); render(); if (curV && !typing()) openDetail(curV);
+        lastSync = stamp(); syncUI("cloud", act === "seal" ? "封板已保存到云端" : "撤销封板已保存到云端");
+        if (j.already) say("云端在此之前已经封板，已显示云端的封板时间和记录", true);
+      }, function (e) {
+        /* 被拒绝（比如不是产品却撤销封板）：放弃本机的动作，以云端为准；网络问题时保留，下次同步自动补传 */
+        if (e.status === 400 || e.status === 403) { S.sealPending = null; S.sealLog = (S.sealLog || []).filter(function (x) { return !x.pending; }); persist(); syncNow(false); }
+        syncUI("err", (act === "seal" ? "封板" : "撤销封板") + "保存失败：" + OCRemote.explain(e), e);
+      });
+      return;
+    }
+    S.sealPending = null; persist(); render();
+    if (SH) OCSync.writeFile(SH, OCSync.SEAL, JSON.stringify({ topic: TOPIC, sealed: S.sealed || null, sealLog: S.sealLog || [] }, null, 2)).catch(function () {});
+  }
+  /* 正在详情里输入时，自动刷新不重画详情，避免打断输入（草稿已存本机） */
+  function typing() { var a = document.activeElement; return !!(a && vd.contains(a) && /^(TEXTAREA|SELECT)$/.test(a.tagName)); }
+  function syncNow(ask) {
+    if (CLOUD) {
+      if (!OCRemote.ready()) { syncUI("cloud", "输入产品密码后自动同步"); return Promise.resolve(); }
+      return OCRemote.pull(TOPIC).then(function (data) {
+        var res = OCSync.merge(S, data, true);   /* 云端为准：第一条回复、封板状态和记录以云端为准 */
+        var remote = {}; data.versions.forEach(function (v) { remote[v.name] = v; });
+        /* 同一秒有同号版本冲突的：按云端最新情况重新编号（新版本 +1.0，修改版本 +0.1），换成新的提交时间和名称 */
+        var renamed = [];
+        S.versions.forEach(function (v) {
+          if (!v.renumber) return;
+          var others = S.versions.filter(function (y) { return y !== v; });
+          if (v.minor === 0) v.major = others.reduce(function (m, y) { return Math.max(m, y.major); }, 0) + 1;
+          else v.minor = others.reduce(function (m, y) { return y.major === v.major ? Math.max(m, y.minor) : m; }, 0) + 1;
+          var old = v.renumber; delete v.renumber;
+          v.at = stamp(); v.name = vName(v.at, verNo(v)); renamed.push(old + "」改为「" + v.name);
+        });
+        if (renamed.length) say("云端已有同名版本（其他电脑在同一秒提交），已重新同步；你的版本「" + renamed.join("；「") + "」，正在重新提交", true);
+        /* 本机有、云端没有的版本补传；本机已回复、云端还没回复的回复补传（只有产品角色会被接受）；本机有、云端没有的补充补传 */
+        S.versions.forEach(function (v) {
+          var r = remote[v.name];
+          if (!r) return saveVerFile(v, true);
+          if (NAV.realRole === "pdm") v.rows.forEach(function (x, i) { if (r.rows[i] && OCStore.replied(x) && !OCStore.replied(r.rows[i])) saveReply(v, i); });
+          v.rows.forEach(function (x, i) {
+            var have = {}; ((r.rows[i] || {}).notes || []).forEach(function (n) { have[n.id] = 1; });
+            (x.notes || []).forEach(function (n) { if (!have[n.id] && r.rows[i] && OCStore.replied(r.rows[i])) OCRemote.pushNote(TOPIC, v.name, i, n).catch(function () {}); });
+          });
+        });
+        if (S.sealPending) saveSealFile();
+        persist(); render(); if (curV && !typing()) openDetail(curV);
+        lastSync = stamp();
+        syncUI("cloud", "共 " + data.versions.length + " 个版本" + (res.added ? "，新增 " + res.added + " 个" : "") + (res.updated ? "，更新 " + res.updated + " 处回复" : ""));
+        if (res.conflicts) say("有 " + res.conflicts + " 条意见的产品回复和本机不同（其他电脑先提交），已以云端为准；本机写的内容已放进对应意见的「补充」输入框", true);
+      }).catch(function (e) { syncUI("err", "读取失败：" + OCRemote.explain(e), e); });
+    }
+    if (!OCSync.supported) return Promise.resolve();
+    return OCSync.dir(KEY, ask).then(function (r) {
+      if (r.state === "prompt" || r.state === "denied") { SH = r.handle; syncUI("prompt"); SH = null; return; }
+      if (!r.handle) { syncUI("none"); return; }
+      SH = r.handle;
+      return OCSync.readAll(SH, TOPIC).then(function (data) {
+        var res = OCSync.merge(S, data);
+        var inFolder = {}; data.versions.forEach(function (v) { inFolder[v.name] = 1; });
+        S.versions.forEach(function (v) { if (!inFolder[v.name]) saveVerFile(v, false); });   /* 本机有、文件夹没有的版本补写进去 */
+        if (S.sealed && !data.sealed) saveSealFile();
+        persist(); render(); if (curV && !typing()) openDetail(curV);
+        lastSync = stamp();
+        syncUI("ok", "读取 " + data.versions.length + " 个版本文件" + (res.added ? "，新增 " + res.added + " 个版本" : "") + (res.updated ? "，更新 " + res.updated + " 处回复" : ""));
+      });
+    }).catch(function (e) { syncUI("err", "读取失败：" + (e && e.message || e)); });
+  }
+  $("syncBtn").onclick = function () {
+    if (CLOUD) return syncNow(false);
+    var cls = $("syncBar").className;
+    if (/s-(none|err)/.test(cls)) {
+      OCSync.connect(KEY).then(function () { return syncNow(false); }).catch(function (e) { if (e && e.name !== "AbortError") syncUI("err", "连接失败：" + e.message); });
+    } else syncNow(true);
+  };
+  function dlVer(v) {
+    var a = document.createElement("a");
+    a.href = URL.createObjectURL(new Blob([exportHTML(v)], { type: "text/html;charset=utf-8" }));
+    a.download = v.name.replace(/:/g, "").replace(/\s+/g, "-") + ".html";
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(function () { URL.revokeObjectURL(a.href); }, 1000);
+    say("已下载 " + a.download);
+  }
+  function copyVer(v) {
+    var html = "<h3>" + esc(v.name) + "</h3><p>" + stats(v) + "</p>" + verTable(v);
+    var box = document.createElement("div"); box.innerHTML = html;
+    var text = box.innerText;
+    var done = function () { say("已复制「" + v.name + "」，可直接粘贴到 Jira 或聊天工具"); };
+    function fallback() {
+      box.style.cssText = "position:fixed;left:-9999px;top:0"; document.body.appendChild(box);
+      var s = getSelection(), r = document.createRange(); r.selectNodeContents(box); s.removeAllRanges(); s.addRange(r);
+      var ok = false; try { ok = document.execCommand("copy"); } catch (e) {}
+      s.removeAllRanges(); box.remove();
+      ok ? done() : say("浏览器不允许自动复制，请改用「下载」", true);
+    }
+    if (window.ClipboardItem && navigator.clipboard && navigator.clipboard.write) {
+      navigator.clipboard.write([new ClipboardItem({ "text/html": new Blob([html], { type: "text/html" }), "text/plain": new Blob([text], { type: "text/plain" }) })]).then(done, fallback);
+    } else fallback();
+  }
+
+  /* 标签切换、大图查看 */
+  function showTab(t) {
+    $("tabList").setAttribute("aria-selected", t === "list"); $("tabVer").setAttribute("aria-selected", t === "ver");
+    $("paneList").hidden = t !== "list"; $("paneVer").hidden = t !== "ver";
+  }
+  $("tabList").onclick = function () { showTab("list"); };
+  $("tabVer").onclick = function () { showTab("ver"); };
+  var lb = $("lb");
+  function zoom(src) { if (!src) return; lb.querySelector("img").src = src; lb.hidden = false; }
+  lb.onclick = function () { lb.hidden = true; };
+  document.addEventListener("keydown", function (e) {
+    if (e.key !== "Escape") return;
+    if (!lb.hidden) { lb.hidden = true; return; }
+    if (!vd.hidden) closeDetail();
+  });
+
+  $("role").textContent = ROLE === "product" ? "当前角色：产品（可填写产品回复）" : "当前角色：运营（产品回复只读）";
+  $("role").className = "oc-role " + ROLE;
+  $("role").title = ROLE === "product" ? "产品角色可以填写产品回复和是否修改" : "运营角色不能修改产品回复和是否修改";
+
+  /* 启动：读取本机保存的内容 */
+  openDB().then(readState).then(function (d) {
+    if (!d) { try { var old = localStorage.getItem(KEY); if (old) { d = { draft: old }; localStorage.removeItem(KEY); } } catch (e) {} }
+    if (d) {
+      S.draft = d.draft || ""; S.items = d.items || []; S.versions = d.versions || []; S.mod = d.mod || null; S.seq = d.seq || 0; S.sealed = d.sealed || null;
+      S.drafts = d.drafts || {}; S.sealLog = d.sealLog; S.sealPending = d.sealPending || null;   /* sealLog 不存在表示 1.2.0 及以前的本机数据 */
+      ed.innerHTML = S.draft;
+      if (S.items.length || S.versions.length || S.draft) say("已恢复本机保存的内容");
+    }
+    ed.classList.toggle("empty", isEmpty());
+    render();
+    if (location.hash === "#versions") showTab("ver");   /* 从「需求修改总结」点「查看全部版本」进来 */
+    var mv = /^#ver=(.+)$/.exec(location.hash);          /* 从入口页「运营需求修改记录」点某个版本进来：直接打开该版本详情 */
+    function openFromHash() {
+      if (!mv) return true;
+      var nm = decodeURIComponent(mv[1]), hit = S.versions.filter(function (x) { return x.name === nm; })[0];
+      showTab("ver");
+      if (hit) { openDetail(hit); mv = null; return true; }
+      return false;
+    }
+    var opened = openFromHash();
+    syncUI(CLOUD ? "loading" : OCSync.supported ? "none" : "na");
+    /* 云端模式：每分钟自动刷新一次，别人提交的意见和产品回复会自动出现（正在编辑回复时不刷新详情） */
+    window.addEventListener("pdm-unlocked", function () { syncNow(false); });
+    if (CLOUD) setInterval(function () { if (!document.hidden && !(curV && document.activeElement && document.activeElement.classList.contains("oc-reply"))) syncNow(false); }, 60000);
+    /* 打开页面时自动从共享文件夹读取（已授权时不弹窗） */
+    syncNow(false).then(function () {
+      if (!opened && !openFromHash()) say(CLOUD ? "云端没有找到这个版本，请点『刷新』（「" + decodeURIComponent(/^#ver=(.+)$/.exec(location.hash)[1]) + "」）"
+        : "没有找到「" + decodeURIComponent(/^#ver=(.+)$/.exec(location.hash)[1]) + "」这个版本；请先连接共享文件夹或导入版本文件", true);
+    });
+  });
+})();
+</script>
+</body>
+</html>
