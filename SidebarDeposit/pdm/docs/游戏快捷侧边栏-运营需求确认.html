@@ -195,7 +195,9 @@
   /* ---------- 原型修改标注 ----------
      数据在 assets/proto-changes.js。只显示「页面」类修改（页面上看得到的控件、文案、布局、交互）；
      逻辑层修改（判定规则、接口、数据口径）不在这里显示，只在 PRD 里标注。首版 v1.0 不做标注。 */
-  var CH = (window.PROTO_CHANGES || []).filter(function (c) { return c && c.page && c.target && c.ver && c.type !== "逻辑"; });
+  /* 开关：assets/nav-data.js 的 showChanges，默认 false（不显示修改标注，需求包框架规范第 6.1 节）；设为 true 才在原型上标出各版本改过的内容 */
+  var SHOW_CH = !!(window.NAV_DATA && NAV_DATA.showChanges);
+  var CH = !SHOW_CH ? [] : (window.PROTO_CHANGES || []).filter(function (c) { return c && c.page && c.target && c.ver && c.type !== "逻辑"; });
   function vnum(v) { var m = /(\d+)\.(\d+)/.exec(v || ""); return m ? +m[1] * 1000 + +m[2] : 0; }
   function vl(v) { return /^v/i.test(v) ? v : "v" + v; }
   var LATEST = CH.reduce(function (m, c) { return vnum(c.ver) > vnum(m) ? c.ver : m; }, "");
@@ -305,6 +307,7 @@
   };
   document.addEventListener("click", function (e) { if (!mkPop.hidden && !mkPop.contains(e.target) && e.target !== mkBtn) mkPop.hidden = true; });
   $("mkOn").onchange = function () { mkOn = this.checked; openKey = null; schedule(); };
+  if (!SHOW_CH) { mkOn = false; [".oc-mkon", ".oc-mkw"].forEach(function (s) { var e = document.querySelector(s); if (e) e.style.display = "none"; }); }   /* 关闭时不显示「修改标注」和「修改清单」 */
   if (pages.length) loadPage(0); else { pg.disabled = true; pf.replaceWith(Object.assign(document.createElement("div"), { className: "oc-empty", textContent: "本需求暂无原型页面" })); }
   function where() {
     var p = pages[cur.page], vs = VIEWS[p ? p.href : ""] || [], v = vs.filter(function (x) { return x[0] === cur.view; })[0];

@@ -390,7 +390,8 @@
    展开后批注框内右上角有吸顶的「隐藏 ›」按钮，滚动时一直可见，点了再收起。只作用于 .stage / .adm-stage 里的批注框。 */
 (function () {
   function start() {
-    var notes = document.querySelector(".stage > .notes, .adm-stage > .notes");
+    if (isPubAdmin()) document.body.classList.add("pub-admin");
+    var notes = document.querySelector(document.body.classList.contains("pub-admin") ? ".stage > .notes" : ".stage > .notes, .adm-stage > .notes");
     if (!notes || notes.querySelector(".notes-bar")) return;
     if (!notes.id) notes.id = "protoNotes";
     var tab = document.createElement("button"); tab.type = "button"; tab.className = "notes-tab"; tab.textContent = "‹ 显示";
@@ -411,3 +412,10 @@
   }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", start); else start();
 })();
+
+/* 发布时精简后台原型（需求包框架规范第 4 节）：发布站点（window.PROTO_PUBLISH）或本地预览加 ?publish=1 时，后台原型页只显示运营操作的页面本身 */
+function isPubAdmin() {
+  if (!document.querySelector(".adm-stage")) return false;
+  var q = /[?&]publish=(1|0)\b/.exec(location.search);
+  return q ? q[1] === "1" : !!window.PROTO_PUBLISH;
+}

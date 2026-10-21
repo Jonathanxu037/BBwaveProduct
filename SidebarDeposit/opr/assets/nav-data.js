@@ -7,6 +7,7 @@ window.NAV_DATA = {
   title: "游戏快捷侧边栏（v1.1）", href: "index.html",
   api: "https://oc-feedback.jonathanxu037.workers.dev", oprKey: "opr-7e295e9a66a7f703410b6d0465a447d00dc311f40eb66150",   /* 云端存储接口和运营写入口令；用 .claude/tools/set_cloud_api.ps1 修改 */
   roles: [],   /* 入口页「需求与原型中心」只有产品能看 */
+  showChanges: false,   /* 运营需求确认页是否显示原型修改标注（版本痕迹）：默认 false 不显示，需要时改成 true（需求包框架规范第 6.1 节） */
   home: { opr: "docs/游戏快捷侧边栏-需求修改总结.html", dev: "docs/游戏快捷侧边栏-需求要点.html", repo: "docs/游戏快捷侧边栏-需求开发PRD文档.html" },   /* 各角色打开后的默认页；产品是入口页 */
   children: [
     { title: "原型页面", href: "prototype/front/游戏快捷侧边栏-游戏页快捷侧边栏.html", bar: "#D8242F", children: [
@@ -49,3 +50,4 @@ window.NAV_DATA = {
   ]
 };
 window.PROTO_LANG = "en";   /* 发布站点的前台原型画面显示英文（assets/proto-en.js，需求包框架规范第 4 节「原型语言」） */
+window.PROTO_PUBLISH = true;   /* 发布站点的后台原型只显示运营操作的页面，规则批注、模拟面板、需求说明不显示（需求包框架规范第 4 节） */

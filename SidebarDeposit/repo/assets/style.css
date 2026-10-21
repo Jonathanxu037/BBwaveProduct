@@ -922,3 +922,8 @@ th .qm,td .qm,label .qm,.fl .qm,.fsec .qm{vertical-align:middle}
 /* 原型里给评审看的说明文字（不是上线页面的内容）：靠左对齐，开头自动加「※ 此内容仅作为需求说明，上线页面不显示本内容」；不翻译成英文 */
 .ui-reqnote{display:block;text-align:left;font-size:12px;line-height:1.6;color:#8A6D3B;background:#FFFBE6;border:1px dashed #E6C67A;border-radius:4px;padding:4px 8px;margin:6px 0;font-family:var(--font);font-weight:400}
 .ui-reqnote::before{content:"※ 此内容仅作为需求说明，上线页面不显示本内容。";display:block;color:#C00000;font-weight:700}
+
+/* 发布站点的后台原型只保留运营操作的页面本身（需求包框架规范第 4 节「发布时精简后台原型」）：规则批注、模拟面板、需求说明块都不显示，后台页面占满宽度。
+   由 assets/nav.js 在发布站点（nav-data.js 有 window.PROTO_PUBLISH = true）给后台原型页的 body 加 pub-admin；本地预览加 ?publish=1 可以看效果 */
+body.pub-admin .adm-stage>.notes,body.pub-admin .ui-reqnote,body.pub-admin .notes-tab{display:none!important}
+body.pub-admin .adm-stage{grid-template-columns:minmax(0,1fr)}
