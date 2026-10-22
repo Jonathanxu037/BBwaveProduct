@@ -16,20 +16,20 @@
 <div class="with-nav">
 <div class="desk"><article class="paper">
 
-<h1 class="doc-title">游戏快捷侧边栏 · 需求要点 · v1.1</h1>
-<div class="doc-meta"><span>版本：v1.1</span><span>端：H5、iOS 原生、Flutter（安卓）、管理后台</span><span>依据：<a href="游戏快捷侧边栏-需求开发PRD文档.html">需求开发 PRD 文档</a></span></div>
+<h1 class="doc-title">游戏快捷侧边栏 · 需求要点 · v1.2</h1>
+<div class="doc-meta"><span>版本：v1.2</span><span>端：H5、iOS 原生、Flutter（安卓）、管理后台</span><span>依据：<a href="游戏快捷侧边栏-需求开发PRD文档.html">需求开发 PRD 文档</a></span></div>
 <hr class="doc-rule">
 
 <h2 id="k1">一句话需求</h2>
-<div class="oneline">在 H5、iOS、Flutter 三端的游戏页新增可拖动的品牌浮标和快捷侧边栏（由现有 G 图标悬浮快捷按钮优化升级而来；含 Home、Deposit、Reload、Mini Banner、推荐游戏），每款游戏首次点退出时自动展开侧边栏，点推荐游戏直接切换游戏；点 Deposit 时不退出游戏，在游戏上方打开充值弹窗，内容沿用现有充值页，支付完回到原游戏；管理后台新增「活动配置 › 游戏快捷侧边栏管理」页面，配置开关、Mini Banner 和推荐游戏。</div>
+<div class="oneline">在 H5、iOS、Flutter 三端的游戏页新增可拖动的小猫浮标（两个站点共用）和快捷侧边栏（由现有 G 图标悬浮快捷按钮优化升级而来；含 Home、Deposit、CS（客服）、Mini Banner、推荐游戏），每款游戏首次点退出时自动展开侧边栏，点推荐游戏直接切换游戏；点 Deposit 时不退出游戏，在游戏上方打开充值弹窗，内容沿用现有充值页，支付完回到原游戏；管理后台新增「活动配置 › 游戏快捷侧边栏管理」页面，配置开关、Mini Banner 和推荐游戏。</div>
 
 <h2 id="k2">业务流程</h2>
 <div class="flow">
-  <div class="fs key"><div class="no">1</div><div><b>进入游戏</b>：右侧上方显示浮标（不贴顶）</div></div>
+  <div class="fs key"><div class="no">1</div><div><b>进入游戏</b>：loading 页小猫开车，随进度开到浮标位置 → 进入游戏页，浮标显示（默认右侧上方，不贴顶）</div></div>
   <div class="fa">↓</div>
   <div class="fs"><div class="no">2</div><div><b>点浮标</b>：侧边栏在浮标一侧展开</div></div>
   <div class="fa">↓</div>
-  <div class="fs"><div class="no">3</div><div><b>Home / Reload / Banner（选择活动）/ 推荐游戏</b>：先结算同步余额 → 再跳转或重新加载</div></div>
+  <div class="fs"><div class="no">3</div><div><b>Home / Banner（选择活动）/ 推荐游戏</b>：先结算同步余额 → 再跳转；点 CS 从底部打开客服对话窗，不结算</div></div>
   <div class="fa">↓</div>
   <div class="fs"><div class="no">4</div><div><b>Deposit</b>：不结算 → 充值弹窗 → Submit → 弹窗收起，打开支付页（H5 新标签页）→ 付完自动关闭标签页，回原游戏</div></div>
   <div class="fa">↓</div>
@@ -38,16 +38,16 @@
 <div class="brs">
   <div class="bc"><h5>A - 首次退出后点推荐游戏</h5><p class="s"><b>直接进入所选游戏</b><small>不经过大厅</small></p></div>
   <div class="bc"><h5>B - 取消退出</h5><p class="s"><b>侧边栏同时收起</b><small>再次退出不再展开</small></p></div>
-  <div class="bc br"><h5>C - 当前局未结算</h5><p class="s"><b>loading 蒙层等结算</b><small>结算完成后再离开</small></p></div>
+  <div class="bc br"><h5>C - 当前局未结算</h5><p class="s"><b>loading（加载）蒙层等结算</b><small>结算完成后再离开</small></p></div>
 </div>
 
 <h2 id="k3">开发功能点</h2>
 <div class="fpcard" id="F01"><h3><span class="code">F01</span>浮标<a href="游戏快捷侧边栏-需求开发PRD文档.html#F01">查看 PRD ›</a></h3><div class="fpgrid">
-  <b>要做什么</b><ul><li>后台总开关开时显示，初始在屏幕右侧上方、不贴顶（三端一致），图案为当前站点的品牌 Logo；厂商游戏加载时也显示；配置读取失败不显示。</li><li>全屏拖动，松手吸附较近一侧，高度不变；记住吸附的一侧和高度，换游戏、刷新后沿用。</li><li>15 秒无操作缩进只露 2/3；点击先恢复再展开。</li></ul>
+  <b>要做什么</b><ul><li>后台总开关开时显示，初始在屏幕右侧上方、不贴顶（三端一致），图案为小猫形象（不带 BIG WIN 文字），完整显示时是向上扬金币和钞票的动图；平台 loading 页结束、进入游戏页后显示，厂商游戏自己的加载画面期间也显示；配置读取失败不显示。</li><li>浮标和侧边栏互相切换：侧边栏展开时不显示浮标，收起后回原位置完整显示；充值弹窗、客服对话窗打开期间浮标贴边显示，点它会关闭弹窗并展开侧边栏。</li><li>全屏拖动（拖动时换成小猫被提起摇尾巴动图），松手吸附较近一侧，高度不变；记住吸附的一侧和高度，换游戏、刷新后沿用。</li><li>3 秒无操作先播放扬金币和钞票的动作约 1.3 秒，再贴边换成小猫探头挥手动图，每 3 秒挥一次手；点击先恢复再展开。</li><li>进入游戏的 loading 页（准入校验通过后才显示）：小猫开车从左侧开进来（只露车头和小猫，周围没有金币和钞票），拉低墨镜、挥手；之后随 loading 进度开向浮标位置，车尾撒金币和钞票，进度 100% 时刚好开到，loading 结束后进入游戏页、显示浮标；动画时长和速率由设计、研发定；总开关关闭、素材加载失败、减少动态效果时不播放。</li><li>横屏由 UI 出适配设计，逻辑同竖屏；小猫和侧边栏跟随节日换肤更换素材；配色和尺寸按设计标准。</li></ul>
   <b>公式</b><div class="formula">拖动 ＝ 移动距离 ≥ 5 像素；吸附左侧 ＝ 浮标中心 x &lt; 屏幕宽 ÷ 2</div>
   <b>涉及端</b><div class="ends"><span>C 端</span><span>后端（配置）</span></div></div></div>
 <div class="fpcard" id="F02"><h3><span class="code">F02</span>快捷侧边栏<a href="游戏快捷侧边栏-需求开发PRD文档.html#F02">查看 PRD ›</a></h3><div class="fpgrid">
-  <b>要做什么</b><ul><li>跟随浮标一侧展开（拖到左侧时适配左侧布局），超出屏幕自动上移。</li><li>收起：收起按钮、点外部（退出确认显示时除外）、点 Deposit。</li><li>Home 跳首页、Reload 结算后重新加载当前游戏（机会不重置），都先结算同步；Reload 先做准入校验，不通过不结算、留在当前游戏。</li></ul>
+  <b>要做什么</b><ul><li>跟随浮标一侧展开（拖到左侧时适配左侧布局），超出屏幕自动上移；没有品牌标题栏，从收起按钮开始，整体按点击手感放大（尺寸以设计稿为准）。</li><li>收起：收起按钮、点外部（退出确认显示时除外）、点 Deposit 或 CS；前两种收起后浮标回原位置，点 Deposit 或 CS 收起后浮标贴边。</li><li>Home 先结算同步，再跳平台首页。</li><li>CS（替换原 Reload）：平台在线客服对话窗从底部弹出，高度固定为游戏页面 1/2，打开的客服和首页客服挂件相同，地址不拼 token；退出确认显示时点 CS 一并关闭退出确认；游戏不退出、不结算、不刷新；× 或遮罩关闭，再次打开沿用对话；加载失败显示「客服暂时无法连接，请稍后再试」和「重试」。</li></ul>
   <b>公式</b><div class="formula">无</div>
   <b>涉及端</b><div class="ends"><span>C 端</span></div></div></div>
 <div class="fpcard" id="F03"><h3><span class="code">F03</span>退出自动展开<a href="游戏快捷侧边栏-需求开发PRD文档.html#F03">查看 PRD ›</a></h3><div class="fpgrid">
@@ -63,11 +63,11 @@
   <b>公式</b><div class="formula">显示 ＝ 是否展示开 且 有图 且 跳转目标有效</div>
   <b>涉及端</b><div class="ends"><span>C 端</span></div></div></div>
 <div class="fpcard" id="F06"><h3><span class="code">F06</span>离开当前游戏的余额保障<a href="游戏快捷侧边栏-需求开发PRD文档.html#F06">查看 PRD ›</a></h3><div class="fpgrid">
-  <b>要做什么</b><ul><li>推荐游戏、Home、Reload、Banner（选择活动）、确认退出都先结算同步。</li><li>处理中屏蔽其他离开操作；新用户转盘的免费次数使用中不结算、不离开；砸金蛋、Spin、转盘等活动相关的处理由技术按当前平台逻辑。</li><li>未离开时失败留在原游戏；新游戏启动失败回原游戏。Deposit 不在此列。</li></ul>
+  <b>要做什么</b><ul><li>推荐游戏、Home、Banner（选择活动）、确认退出都先结算同步。</li><li>处理中屏蔽其他离开操作；新用户转盘的免费次数使用中不结算、不离开；砸金蛋、Spin、转盘等活动相关的处理由技术按当前平台逻辑。</li><li>未离开时失败留在原游戏；新游戏启动失败回原游戏。Deposit、CS 不在此列。</li><li>充值后立刻离开：先离开结算，再到账同步，新游戏显示到账后余额；奖券会话由技术按当前平台逻辑处理。</li></ul>
   <b>公式</b><div class="formula">执行跳出 ＝ 当前局已结算 且 余额同步成功</div>
   <b>涉及端</b><div class="ends"><span>C 端</span><span>后端</span></div></div></div>
 <div class="fpcard" id="F07"><h3><span class="code">F07</span>游戏内充值弹窗<a href="游戏快捷侧边栏-需求开发PRD文档.html#F07">查看 PRD ›</a></h3><div class="fpgrid">
-  <b>要做什么</b><ul><li>点 Deposit：侧边栏收起，弹窗从底部升起，游戏不关闭、不刷新、不结算。</li><li>内容和下单全部复用现有充值页，不新增配置；优惠活动（Promotions）区沿用 Wallet 充值页逻辑：首存和每日存送都开启时只显示首存券，只有每日存送时玩家自行选择是否申请，都没有时显示「继续游戏，精彩不停！」（Keep the game going!）。</li><li>没填金额、也没点快捷金额之前 Submit 置灰。</li><li>Submit 后弹窗收起，打开二维码支付页：H5 新开浏览器标签页，APP 用独立支付页、WebView 或外部浏览器（页面内容按三方支付流程）；H5 付完回跳「支付完成」中间页，自动关闭新标签页回原游戏（不能关闭时提示玩家关闭）；TG / Facebook 内置浏览器、小程序、PWA 中支付页在系统浏览器打开，中间页只显示文字、不给平台入口（PRD 5.1）；回跳地址不带 token；不弹 Payment Information、充值返回弹窗和推送。</li><li>未认证玩家沿用 KYC 提醒；首充后可继续当前游戏，首充转盘、6954 充返转盘等营销和引导弹窗回到平台页面后再显示；第 4 局强制 KYC 等合规拦截照常在游戏内弹出。</li><li>点 × 或上方遮罩随时关闭。</li></ul>
+  <b>要做什么</b><ul><li>点 Deposit：侧边栏收起，弹窗从底部升起，游戏不关闭、不刷新、不结算。</li><li>内容和下单全部复用现有充值页，不新增配置；优惠活动（Promotions）区沿用 Wallet 充值页逻辑：首存和每日存送都开启时只显示首存券，只有每日存送时玩家自行选择是否申请，都没有时显示「继续游戏，精彩不停！」（Keep the game going!）。</li><li>没填金额、也没点快捷金额之前 Submit 置灰。</li><li>Submit 后弹窗收起，打开二维码支付页：H5 新开浏览器标签页，APP 用独立支付页、WebView 或外部浏览器（页面内容按三方支付流程）；H5 付完回跳「支付完成」中间页，自动关闭新标签页回原游戏（不能关闭时提示玩家关闭）；TG / Facebook 内置浏览器、小程序、PWA 中支付页在系统浏览器打开，中间页只显示文字、不给平台入口（PRD 5.1）；回跳地址不带 token；不弹 Payment Information、充值返回弹窗和推送。</li><li>未认证玩家沿用 KYC 提醒；首充后可继续当前游戏，首充转盘、6954 充返转盘等营销和引导弹窗回到平台页面后再显示；第 4 局强制 KYC 等合规拦截照常在游戏内弹出。</li><li>到账后游戏内余额刷新为充值后余额；不支持刷新的厂商到账后自动刷新游戏页面（当前局未结算时等结算后再刷新）。</li><li>点 × 或上方遮罩随时关闭；安卓返回键先关弹窗，不弹退出确认。</li></ul>
   <b>公式</b><div class="formula">弹窗高度 ＝ 游戏页面高度 × 2/3（固定，不随内容变化）；超出部分在弹窗内滚动；横屏待定</div>
   <div></div>
   <div class="sheetdemo"><div class="ph"><div class="g">游戏（不刷新）</div><div class="sh" style="height:66.7%">内容少：仍是 2/3</div></div><div class="ph"><div class="g">游戏（不刷新）</div><div class="sh" style="height:66.7%">内容多：2/3，内部滚动</div></div></div>

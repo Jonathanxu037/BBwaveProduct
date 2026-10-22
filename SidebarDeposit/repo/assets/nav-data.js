@@ -4,7 +4,7 @@
    需求不涉及前台或后台时，删掉对应的三级目录和原型文件；不涉及后台时删掉「后台操作手册」。 */
 window.NAV_DATA = {
   role: "repo",   /* 发布站点的角色：报告 */
-  title: "游戏快捷侧边栏（v1.1）", href: "index.html",
+  title: "游戏快捷侧边栏（v1.2）", href: "index.html",
   roles: [],   /* 入口页「需求与原型中心」只有产品能看 */
   showChanges: false,   /* 运营需求确认页是否显示原型修改标注（版本痕迹）：默认 false 不显示，需要时改成 true（需求包框架规范第 6.1 节） */
   home: { opr: "docs/游戏快捷侧边栏-需求修改总结.html", dev: "docs/游戏快捷侧边栏-需求要点.html", repo: "docs/游戏快捷侧边栏-需求开发PRD文档.html" },   /* 各角色打开后的默认页；产品是入口页 */
@@ -44,7 +44,8 @@ window.NAV_DATA = {
       { title: "后台操作手册", href: "docs/游戏快捷侧边栏-后台操作手册.html", type: "doc", roles: ["opr"] },
       { title: "客服QA", href: "docs/游戏快捷侧边栏-客服QA.html", type: "doc", roles: ["opr"] },
       { title: "需求修改总结", href: "docs/游戏快捷侧边栏-需求修改总结.html", type: "doc", roles: ["opr"] },
-      { title: "运营需求确认", href: "docs/游戏快捷侧边栏-运营需求确认.html", type: "doc", roles: ["opr"] }
+      { title: "运营需求确认", href: "docs/游戏快捷侧边栏-运营需求确认.html", type: "doc", roles: ["opr"] },
+      { title: "文案确认", href: "docs/游戏快捷侧边栏-文案确认.html", type: "doc", roles: ["opr"] }
     ]}
   ]
 };

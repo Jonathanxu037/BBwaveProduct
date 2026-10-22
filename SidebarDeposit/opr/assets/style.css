@@ -927,3 +927,30 @@ th .qm,td .qm,label .qm,.fl .qm,.fsec .qm{vertical-align:middle}
    由 assets/nav.js 在发布站点（nav-data.js 有 window.PROTO_PUBLISH = true）给后台原型页的 body 加 pub-admin；本地预览加 ?publish=1 可以看效果 */
 body.pub-admin .adm-stage>.notes,body.pub-admin .ui-reqnote,body.pub-admin .notes-tab{display:none!important}
 body.pub-admin .adm-stage{grid-template-columns:minmax(0,1fr)}
+
+/* 文案确认页（需求包框架规范第 6.4 节） */
+.cc-tools{display:flex;align-items:center;gap:10px;margin:6px 0 8px;font-size:13px}
+.cc-tools select{font-family:var(--font);font-size:12.5px;padding:3px 6px;border:1px solid var(--line);border-radius:6px;background:var(--paper)}
+.cc-sp{flex:1}
+.cc-hint{color:var(--muted);font-size:12.5px}
+.cc-sub{color:var(--muted);font-size:12px;margin-top:2px}
+.cc-t{table-layout:auto}
+.cc-t .c-no{width:56px;white-space:nowrap}
+.cc-t .c-act{min-width:230px}
+.cc-empty{text-align:center;color:var(--muted);padding:18px}
+.cc-acts{display:flex;gap:14px;align-items:center;margin-bottom:4px}
+.cc-acts label{display:inline-flex;align-items:center;gap:4px;cursor:pointer}
+.cc-t textarea{width:100%;box-sizing:border-box;font-family:var(--font);font-size:12.5px;line-height:1.5;border:1px solid var(--line);border-radius:6px;padding:4px 6px;margin-top:4px;resize:vertical}
+.cc-t select{font-family:var(--font);font-size:12.5px;padding:2px 4px;margin-top:4px}
+.cc-submit,.cc-dl{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:10px 0 14px}
+.cc-submit{justify-content:flex-end}
+.cc-msg{flex:1;font-size:13px;color:#237804}
+.cc-msg.bad{color:#C00000;font-weight:700}
+.cc-btn{font-family:var(--font);font-size:13px;padding:6px 14px;border:1px solid var(--line);border-radius:6px;background:var(--paper);color:var(--fg);cursor:pointer}
+.cc-btn.pri{background:var(--purple);border-color:var(--purple);color:#fff;font-weight:700}
+.cc-btn.sm{padding:2px 8px;font-size:12px}
+.cc-btn:disabled{opacity:.5;cursor:not-allowed}
+.cc-ver h3{font-size:14px;margin:14px 0 6px}
+.cc-ver h3 small{color:var(--muted);font-weight:400;margin-left:6px}
+.cc-tag{display:inline-block;font-size:12px;border-radius:10px;padding:0 8px;background:#F5F5F5;color:#595959}
+.cc-tag.t采纳{background:#F6FFED;color:#237804}.cc-tag.t部分采纳{background:#FFFBE6;color:#AD6800}.cc-tag.t不采纳{background:#FFF1F0;color:#CF1322}

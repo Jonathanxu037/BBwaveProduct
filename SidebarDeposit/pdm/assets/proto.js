@@ -167,19 +167,22 @@
     bd.classList.toggle("ok", !k);
   }
   function report() { var k = Object.keys(missing); if (k.length && window.console) console.warn("前台原型英文化：以下中文在 assets/proto-en.js 里没有英文（共 " + k.length + " 条）：\n" + k.join("\n")); badge(); }
+  /* 每次都从头检查整个手机画面：先清掉旧的漏翻记录和红框，再翻译、重新标出。
+     这样内容改成英文后红框会消失，需求说明块（ui-reqnote）里后来加的文字也不会被算成漏翻 */
+  var apps = [], raf = 0;
+  function scan() {
+    raf = 0; missing = {};
+    [].forEach.call(document.querySelectorAll(".app .en-miss"), function (e) { e.classList.remove("en-miss"); });
+    apps.forEach(function (app) { for (var ch = app.firstChild; ch; ch = ch.nextSibling) walk(ch); });   /* .app 外框本身的 aria-label（如「手机画面」）是原型说明，不翻译 */
+    badge();
+  }
+  function later() { if (!raf) raf = (window.requestAnimationFrame || setTimeout)(scan); }
   function start() {
-    var apps = document.querySelectorAll(".app");
-    [].forEach.call(apps, function (app) {
-      for (var ch = app.firstChild; ch; ch = ch.nextSibling) walk(ch);   /* .app 外框本身的 aria-label（如「手机画面」）是原型说明，不翻译 */
-      new MutationObserver(function (ms) {
-        ms.forEach(function (m) {
-          if (m.type === "childList") [].forEach.call(m.addedNodes, walk);
-          else walk(m.target);
-        });
-        badge();
-      }).observe(app, { childList: true, subtree: true, characterData: true, attributes: true, attributeFilter: ATTRS });
-    });
-    if (apps.length) { document.documentElement.setAttribute("data-proto-lang", "en"); report(); }
+    apps = [].slice.call(document.querySelectorAll(".app"));
+    if (!apps.length) return;
+    scan();
+    apps.forEach(function (app) { new MutationObserver(later).observe(app, { childList: true, subtree: true, characterData: true, attributes: true, attributeFilter: ATTRS }); });
+    document.documentElement.setAttribute("data-proto-lang", "en"); report();
   }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", start); else start();
 })();

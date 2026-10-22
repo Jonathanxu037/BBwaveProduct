@@ -44,7 +44,10 @@
       var u; try { u = new URL(a.getAttribute("href"), location.href); } catch (x) { return; }
       if (u.origin !== location.origin || !/\.html?$|\/$/.test(u.pathname)) return;
       if (u.pathname === location.pathname && u.hash && !u.search) return;   /* 同页锚点不处理 */
-      u.searchParams.set("role", REAL); a.href = u.href;
+      u.searchParams.set("role", REAL);
+      /* 发布模式预览（publish）和原型语言（lang）参数也一起带上，跳到别的页面后保持同样的预览方式 */
+      ["publish", "lang"].forEach(function (k) { var v = new URLSearchParams(location.search).get(k); if (v && !u.searchParams.has(k)) u.searchParams.set(k, v); });
+      a.href = u.href;
     }, true);
   }
   /* 产品入口密码：真实角色是产品、且 nav-data 设了 gate（盐 + SHA-256 哈希，不存明文）时，先输入密码；
@@ -416,6 +419,8 @@
 /* 发布时精简后台原型（需求包框架规范第 4 节）：发布站点（window.PROTO_PUBLISH）或本地预览加 ?publish=1 时，后台原型页只显示运营操作的页面本身 */
 function isPubAdmin() {
   if (!document.querySelector(".adm-stage")) return false;
-  var q = /[?&]publish=(1|0)\b/.exec(location.search);
-  return q ? q[1] === "1" : !!window.PROTO_PUBLISH;
+  /* ?publish=1 / ?publish=0 在当前标签页里记住，页面脚本跳转（如 P.go）丢了参数也保持同样的预览方式 */
+  var q = /[?&]publish=(1|0)\b/.exec(location.search), v = q ? q[1] : null;
+  try { if (q) sessionStorage.setItem("proto-publish", v); else v = sessionStorage.getItem("proto-publish"); } catch (e) {}
+  return v ? v === "1" : !!window.PROTO_PUBLISH;
 }

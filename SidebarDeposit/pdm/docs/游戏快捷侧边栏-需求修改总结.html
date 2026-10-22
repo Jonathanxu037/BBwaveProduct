@@ -29,7 +29,7 @@
 <script>
 (function () {
   /* 与「运营需求确认」页同源：云端优先，读不到云端时用本机缓存（IndexedDB，不可用时退回 localStorage） */
-  var TOPIC = "游戏快捷侧边栏", VER = "v1.1";
+  var TOPIC = "游戏快捷侧边栏", VER = "v1.2";
   var KEY = OCStore.key(TOPIC);
   var DEC = ["确认修改", "部分修改", "不修改", "待确认"];
   function $(id) { return document.getElementById(id); }

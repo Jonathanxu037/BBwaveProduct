@@ -11,7 +11,7 @@
 <div class="desk"><article class="paper qa">
 
 <h1 class="doc-title">游戏快捷侧边栏 · 客服 QA<span class="qa-sub">In-game Quick Sidebar · Customer Service Q&amp;A</span></h1>
-<div class="doc-meta"><span>版本 / Version：v1.1</span><span>适用 / For：客服 Customer Service</span><span>依据 / Based on：PRD、后台操作手册 Admin Manual</span></div>
+<div class="doc-meta"><span>版本 / Version：v1.2</span><span>适用 / For：客服 Customer Service</span><span>依据 / Based on：PRD、后台操作手册 Admin Manual</span></div>
 <div class="qa-lang" role="group" aria-label="语言 Language">
   <button type="button" data-l="both" aria-pressed="true">双语 Bilingual</button>
   <button type="button" data-l="zh" aria-pressed="false">中文</button>
@@ -20,10 +20,10 @@
 <hr class="doc-rule">
 
 <h2 id="q0">适用范围 <span class="en-t">Scope</span></h2>
-<div class="bi"><div class="zh">H5 和 APP（iOS、安卓）的游戏页，从本功能上线起；原来游戏里的 G 图标按钮升级为新的平台 Logo 按钮（789Bingo / 789games）；旧版本 APP 仍显示 G 图标，更新到最新版本后才有新按钮。</div><div class="en">Game pages on H5 and the APP (iOS and Android), from the launch of this feature. The old G button in games is upgraded to the new site logo button (789Bingo / 789games); older app versions still show the G button until the app is updated.</div></div>
+<div class="bi"><div class="zh">H5 和 APP（iOS、安卓）的游戏页，从本功能上线起；原来游戏里的 G 图标按钮升级为新的小猫按钮；旧版本 APP 仍显示 G 图标，更新到最新版本后才有新按钮。</div><div class="en">Game pages on H5 and the APP (iOS and Android), from the launch of this feature. The old G button in games is upgraded to the new cat button; older app versions still show the G button until the app is updated.</div></div>
 
 <h2 id="q1">这次改了什么 <span class="en-t">What changed</span></h2>
-<div class="bi"><div class="zh">玩家在游戏里能看到一个平台 Logo 圆形按钮（789Bingo / 789games），点开是快捷侧边栏：可以回平台首页、充值、刷新余额、看活动、直接换游戏。第一次点退出时侧边栏会自动展开推荐游戏。点「充值」不用退出游戏，会在游戏上方打开充值弹窗，提交后在新页面扫码付款，付完回到原游戏。运营在后台关闭时玩家看不到这个按钮。</div><div class="en">Players see a round site logo button (789Bingo / 789games) in the game. Tapping it opens a quick sidebar to go Home, Deposit, Reload the balance, view a promotion, or switch games directly. The first time a player taps Exit, the sidebar opens automatically with recommended games. Tapping Deposit opens a half-screen deposit panel over the game without leaving it; after submitting, the QR payment opens in a new page, and the player returns to the same game after paying. If Operations turns the feature off, the button is not shown.</div></div>
+<div class="bi"><div class="zh">玩家在游戏里能看到一个小猫按钮，点开是快捷侧边栏：可以回平台首页、充值、联系客服（CS）、看活动、直接换游戏。第一次点退出时侧边栏会自动展开推荐游戏。点「充值」不用退出游戏，会在游戏上方打开充值弹窗，提交后在新页面扫码付款，付完回到原游戏。运营在后台关闭时玩家看不到这个按钮。</div><div class="en">Players see a cat button in the game. Tapping it opens a quick sidebar to go Home, Deposit, contact customer service (CS), view a promotion, or switch games directly. The first time a player taps Exit, the sidebar opens automatically with recommended games. Tapping Deposit opens a deposit panel over the game (2/3 of the screen) without leaving it; after submitting, the QR payment opens in a new page, and the player returns to the same game after paying. If Operations turns the feature off, the button is not shown.</div></div>
 
 <h2 id="q2">客服核查步骤 <span class="en-t">How to check</span></h2>
 <ol class="qa-steps">
@@ -36,12 +36,12 @@
 <section class="qa-card" id="qa1">
   <h3><span class="qa-no">1</span><span class="bi-inline"><span class="zh">我在游戏里充值成功了，为什么游戏里的余额没变？</span><span class="en">I deposited in the game, but my game balance didn't change. Why?</span></span></h3>
   <div class="qa-row"><b>回复玩家<small>Reply</small></b>
-    <div class="bi"><div class="en qa-reply">Your deposit is credited to your account once the payment succeeds. Some games don't refresh the balance on their own—please tap the site logo button and then Reload to see your latest balance. If it still doesn't show, please send us your order number and payment screenshot.<button type="button" class="qa-copy">复制 Copy</button></div>
-    <div class="zh">支付成功后充值会到账到您的账户。部分游戏不会自动刷新余额，请点平台 Logo 按钮再点「刷新余额」查看最新余额。如果仍未显示，请把订单号和支付截图发给我们。</div></div></div>
+    <div class="bi"><div class="en qa-reply">Your deposit is credited to your account once the payment succeeds. Your game balance updates automatically after the deposit is credited, without leaving the game. If it still doesn't show, please send us your order number and payment screenshot.<button type="button" class="qa-copy">复制 Copy</button></div>
+    <div class="zh">支付成功后充值会到账到您的账户。到账后游戏内余额会自动更新，不用退出游戏。如果仍未显示，请把订单号和支付截图发给我们。</div></div></div>
   <div class="qa-row"><b>客服核查<small>Check</small></b>
-    <div class="bi"><div class="zh">查订单是否成功、是否已到账；已到账则引导玩家点刷新余额。</div><div class="en">Check whether the order succeeded and was credited; if credited, guide the player to tap Reload.</div></div></div>
+    <div class="bi"><div class="zh">查订单是否成功、是否已到账；已到账但游戏内余额仍未更新的，记录游戏名称和时间。</div><div class="en">Check whether the order succeeded and was credited; if credited but the game balance still hasn't updated, note the game name and time.</div></div></div>
   <div class="qa-row"><b>转交<small>Escalate</small></b>
-    <div class="bi"><div class="zh">订单成功但未到账，按现有充值问题转交流程处理。</div><div class="en">If the order succeeded but was not credited, follow the existing deposit escalation process.</div></div></div>
+    <div class="bi"><div class="zh">订单成功但未到账，按现有充值问题转交流程处理；已到账但游戏内余额没有更新，转技术。</div><div class="en">If the order succeeded but was not credited, follow the existing deposit escalation process; if credited but the game balance didn't update, escalate to Tech.</div></div></div>
 </section>
 <section class="qa-card" id="qa2">
   <h3><span class="qa-no">2</span><span class="bi-inline"><span class="zh">我点了充值的「提交」，付款页没打开。</span><span class="en">I tapped Submit to deposit, but the payment page didn't open.</span></span></h3>
@@ -77,7 +77,7 @@
   <h3><span class="qa-no">5</span><span class="bi-inline"><span class="zh">我打开充值时游戏还在跑，错过了下注。</span><span class="en">The game kept running while I had the deposit panel open, and I missed a bet.</span></span></h3>
   <div class="qa-row"><b>回复玩家<small>Reply</small></b>
     <div class="bi"><div class="en qa-reply">The game keeps running in the background while the deposit panel is open, so you won't lose your game. For live games, we suggest depositing between rounds.<button type="button" class="qa-copy">复制 Copy</button></div>
-    <div class="zh">充值面板打开时游戏会在后面继续运行，这样您不会丢失游戏进度。真人游戏建议在两局之间充值。</div></div></div>
+    <div class="zh">充值弹窗打开时游戏会在后面继续运行，这样您不会丢失游戏进度。真人游戏建议在两局之间充值。</div></div></div>
   <div class="qa-row"><b>客服核查<small>Check</small></b>
     <div class="bi"><div class="zh">查该局投注记录是否正常。</div><div class="en">Check that the bet record for that round is normal.</div></div></div>
   <div class="qa-row"><b>转交<small>Escalate</small></b>
@@ -107,8 +107,8 @@
 <section class="qa-card" id="qa8">
   <h3><span class="qa-no">8</span><span class="bi-inline"><span class="zh">我在 Telegram / Facebook 里玩游戏，充值付完款后停在一个「支付已完成」的页面，回不去游戏。</span><span class="en">I play inside Telegram / Facebook. After paying, I'm stuck on a "Payment completed" page and can't get back to my game.</span></span></h3>
   <div class="qa-row"><b>回复玩家<small>Reply</small></b>
-    <div class="bi"><div class="en qa-reply">Your payment is done. The payment page opened in your phone's browser, so please switch back to Telegram / Facebook (or the installed PWA) — your game is still open there. If the balance hasn't updated, tap the site logo button and then Reload.<button type="button" class="qa-copy">复制 Copy</button></div>
-    <div class="zh">您已经支付完成。付款页是在手机浏览器里打开的，请切回 Telegram / Facebook（或已安装的 PWA），游戏还开着。如果余额还没更新，请点平台 Logo 按钮再点「刷新余额」。</div></div></div>
+    <div class="bi"><div class="en qa-reply">Your payment is done. The payment page opened in your phone's browser, so please switch back to Telegram / Facebook (or the installed PWA) — your game is still open there. Your balance updates in the game after the deposit is credited.<button type="button" class="qa-copy">复制 Copy</button></div>
+    <div class="zh">您已经支付完成。付款页是在手机浏览器里打开的，请切回 Telegram / Facebook（或已安装的 PWA），游戏还开着。到账后游戏内余额会自动更新。</div></div></div>
   <div class="qa-row"><b>客服核查<small>Check</small></b>
     <div class="bi"><div class="zh">查订单是否成功、是否已到账。提醒玩家不要在手机浏览器里重新登录平台再玩，回到原来的 App 即可。</div><div class="en">Check whether the order succeeded and was credited. Remind the player not to log in again in the phone browser; just return to the original app.</div></div></div>
   <div class="qa-row"><b>转交<small>Escalate</small></b>
@@ -117,8 +117,8 @@
 <section class="qa-card" id="qa9">
   <h3><span class="qa-no">9</span><span class="bi-inline"><span class="zh">为什么我的 APP 里还是旧的 G 图标按钮？</span><span class="en">Why does my app still show the old G button?</span></span></h3>
   <div class="qa-row"><b>回复玩家<small>Reply</small></b>
-    <div class="bi"><div class="en qa-reply">Your app version is older. Please update the app to the latest version to use the new site logo button and in-game deposit.<button type="button" class="qa-copy">复制 Copy</button></div>
-    <div class="zh">您的 App 版本较旧。请更新到最新版本，就能使用新的平台 Logo 按钮和游戏内充值。</div></div></div>
+    <div class="bi"><div class="en qa-reply">Your app version is older. Please update the app to the latest version to use the new cat button and in-game deposit.<button type="button" class="qa-copy">复制 Copy</button></div>
+    <div class="zh">您的 App 版本较旧。请更新到最新版本，就能使用新的小猫按钮和游戏内充值。</div></div></div>
   <div class="qa-row"><b>客服核查<small>Check</small></b>
     <div class="bi"><div class="zh">请玩家提供 App 版本号，对照技术给出的最低支持版本。</div><div class="en">Ask for the app version and compare it with the minimum supported version provided by Tech.</div></div></div>
   <div class="qa-row"><b>转交<small>Escalate</small></b>
@@ -136,14 +136,14 @@
     <div class="bi"><div class="zh">认证已通过仍反复弹出时转技术。</div><div class="en">If it keeps appearing after verification is approved, escalate to Tech.</div></div></div>
 </section>
 <section class="qa-card" id="qa11">
-  <h3><span class="qa-no">11</span><span class="bi-inline"><span class="zh">我点「刷新余额」，却弹出要我去 App 或安装 PWA。</span><span class="en">I tapped Reload, but it asked me to use the app or install the PWA.</span></span></h3>
+  <h3><span class="qa-no">11</span><span class="bi-inline"><span class="zh">游戏里的 CS 按钮是做什么的？点了会退出游戏吗？</span><span class="en">What does the CS button in the game do? Will it take me out of the game?</span></span></h3>
   <div class="qa-row"><b>回复玩家<small>Reply</small></b>
-    <div class="bi"><div class="en qa-reply">Reloading re-enters the game, so the platform checks your access again. Based on your account status, please continue in our app or PWA as prompted. Your current game and balance are not affected.<button type="button" class="qa-copy">复制 Copy</button></div>
-    <div class="zh">刷新余额会重新进入游戏，平台会再次检查进入条件。按您的账户情况，请按提示到 App 或 PWA 继续。您当前的游戏和余额不受影响。</div></div></div>
+    <div class="bi"><div class="en qa-reply">CS opens our live chat at the bottom of the screen so you can talk to us without leaving the game. Your game and balance are not affected; close the chat to keep playing.<button type="button" class="qa-copy">复制 Copy</button></div>
+    <div class="zh">CS 会在屏幕下方打开在线客服对话，不用退出游戏就能联系我们。您的游戏和余额不受影响，关掉对话就能继续玩。</div></div></div>
   <div class="qa-row"><b>客服核查<small>Check</small></b>
-    <div class="bi"><div class="zh">首充后强制 PWA / APP、余额超过设定金额须在 PWA 投注等现有规则都会拦截；被拦截时不结算、玩家留在当前游戏。</div><div class="en">Existing rules such as forced PWA / app after first deposit or PWA-only betting above a set balance can block it; when blocked, nothing is settled and the player stays in the current game.</div></div></div>
+    <div class="bi"><div class="zh">游戏内 CS 和平台在线客服是同一套客服系统，玩家的对话记录可以在客服后台查到。</div><div class="en">In-game CS uses the same live chat system as the platform, so the conversation can be found in the support back office.</div></div></div>
   <div class="qa-row"><b>转交<small>Escalate</small></b>
-    <div class="bi"><div class="zh">玩家不符合这些规则却被拦截时转技术。</div><div class="en">If the player doesn't meet these rules but is still blocked, escalate to Tech.</div></div></div>
+    <div class="bi"><div class="zh">玩家反馈点 CS 后对话窗打不开或一直提示「客服暂时无法连接」时转技术。</div><div class="en">If the player says the chat won't open or keeps showing "Customer service is unavailable", escalate to Tech.</div></div></div>
 </section>
 <section class="qa-card" id="qa12">
   <h3><span class="qa-no">12</span><span class="bi-inline"><span class="zh">游戏里充值时为什么看不到每日存送的券？</span><span class="en">Why can't I see the daily deposit bonus when I deposit in the game?</span></span></h3>
@@ -154,6 +154,16 @@
     <div class="bi"><div class="zh">查玩家是否已首存、后台首存和每日存送活动是否开启。两个活动都没开启时，优惠活动区显示「Keep the game going!」，属正常。</div><div class="en">Check whether the player has made a first deposit and whether the First Deposit and daily deposit bonus promotions are on. If neither is on, "Keep the game going!" is shown in the Promotions section instead, which is normal.</div></div></div>
   <div class="qa-row"><b>转交<small>Escalate</small></b>
     <div class="bi"><div class="zh">活动已开启、玩家符合条件仍不显示时转技术。</div><div class="en">If the promotion is on and the player qualifies but it still doesn't show, escalate to Tech.</div></div></div>
+</section>
+<section class="qa-card" id="qa13">
+  <h3><span class="qa-no">13</span><span class="bi-inline"><span class="zh">游戏里的「刷新余额」按钮去哪了？</span><span class="en">Where is the Refresh balance button in the game?</span></span></h3>
+  <div class="qa-row"><b>回复玩家<small>Reply</small></b>
+    <div class="bi"><div class="en qa-reply">The game sidebar no longer has a Refresh button; it has been replaced by CS (customer service). After your deposit is credited, the balance in the game updates automatically. For some games, the game page reloads automatically to show the new balance. If the balance still hasn't changed, please send us your account and the time of the deposit and we will check it for you.<button type="button" class="qa-copy">复制 Copy</button></div>
+    <div class="zh">游戏侧边栏不再有刷新按钮，原来的位置换成了 CS（在线客服）。充值到账后，游戏里的余额会自动更新；部分游戏会自动刷新游戏页面来显示最新余额。如果余额还是没变，请把您的账号和充值时间发给我们，我们帮您查。</div></div></div>
+  <div class="qa-row"><b>客服核查<small>Check</small></b>
+    <div class="bi"><div class="zh">先查订单是否已到账；已到账但游戏内仍显示旧余额时，按第 1 问处理。</div><div class="en">First check whether the order has been credited. If it has, but the game still shows the old balance, follow Q1.</div></div></div>
+  <div class="qa-row"><b>转交<small>Escalate</small></b>
+    <div class="bi"><div class="zh">已到账、游戏页面也刷新过，余额仍不对时转技术。</div><div class="en">If the deposit is credited and the game page has reloaded but the balance is still wrong, escalate to Tech.</div></div></div>
 </section>
 
 <h2 id="q4">转交与升级 <span class="en-t">Escalation</span></h2>
