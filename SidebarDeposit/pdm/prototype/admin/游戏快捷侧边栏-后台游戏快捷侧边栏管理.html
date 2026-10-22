@@ -66,7 +66,7 @@
               <div class="frow" id="rowLink" hidden><span class="fl"><span class="req">*</span>跳转链接<i class="qm" tabindex="0" data-tip="以 http:// 或 https:// 开头，不能有空格，任何域名都可以。">?</i></span><div class="fctl"><input class="bo-inp" id="link" style="width:340px" placeholder="https://"></div></div>
               <div class="frow"><span class="fl"><span class="req">*</span>Mini Banner 图<i class="qm" tabindex="0" data-tip="侧边栏专用图片，不使用活动原有 Banner；尺寸和格式按设计稿。">?</i></span><div class="fctl" style="align-items:flex-start">
                 <label class="up" id="upBox"><input type="file" id="file" accept="image/png,image/jpeg" hidden><span id="upTxt">+ 点击上传图片</span></label>
-                <div style="display:grid;gap:6px;justify-items:start"><div class="ui-reqnote" style="width:340px">单独上传，不使用活动原有 Banner；尺寸、格式和大小待设计稿确认（Q7）。</div><span id="upOps"><label class="bo-btn link" style="cursor:pointer">重新上传<input type="file" id="file2" accept="image/png,image/jpeg" hidden></label><button type="button" class="bo-btn link" id="delImg" style="color:#F56C6C">删除</button></span></div>
+                <div style="display:grid;gap:6px;justify-items:start"><div class="ui-reqnote" style="width:340px">单独上传，不使用活动原有 Banner；尺寸、格式和大小由设计出图后确定。</div><span id="upOps"><label class="bo-btn link" style="cursor:pointer">重新上传<input type="file" id="file2" accept="image/png,image/jpeg" hidden></label><button type="button" class="bo-btn link" id="delImg" style="color:#F56C6C">删除</button></span></div>
               </div></div>
             </div>
           </div>
@@ -76,9 +76,9 @@
               <button type="button" class="bo-btn q" id="addG" style="margin-left:auto">添加游戏</button>
             </div>
             <div class="cb">
-              <div class="ui-reqnote">前台推荐区 2 列，首屏约 7 个；维护中、已下架的游戏自动不展示。</div>
+              <div class="ui-reqnote">前台推荐区 2 列，首屏约 7 个；维护中、已下架的游戏，以及当前玩家准入条件不满足的游戏（如需 KYC）自动不展示。</div>
               <table>
-                <thead><tr><th><span class="ui-nw">排序<i class="qm" tabindex="0" data-tip="按当前排序预估的前台位置；维护中、已下架的游戏不占位。">?</i></span></th><th>游戏图标</th><th>游戏名称</th><th>游戏类型</th><th><span class="ui-nw">游戏状态<i class="qm" tabindex="0" data-tip="取自游戏入口设置；维护中、已下架的游戏前台不显示。">?</i></span></th><th>排序调整</th><th>操作</th></tr></thead>
+                <thead><tr><th><span class="ui-nw">排序<i class="qm" tabindex="0" data-tip="按当前排序预估的前台位置；维护中、已下架的游戏不占位；前台还会按玩家准入条件过滤，个别玩家看到的位置可能前移。">?</i></span></th><th>游戏图标</th><th>游戏名称</th><th>游戏类型</th><th><span class="ui-nw">游戏状态<i class="qm" tabindex="0" data-tip="取自游戏入口设置；维护中、已下架的游戏前台不显示。">?</i></span></th><th>排序调整</th><th>操作</th></tr></thead>
                 <tbody id="rows"></tbody>
               </table>
               <div class="bo-page" id="pager" role="navigation" aria-label="推荐游戏分页"></div>
@@ -111,16 +111,10 @@
       <li><b>展示数量</b>：1–30 的整数，默认 10；不合法时保存提示「展示数量需为 1–30 的整数」。<span class="ref">PRD 6.4 · F08-04 推荐游戏配置</span></li>
       <li><b>添加游戏</b>：只列平台已配置的游戏，可搜索、多选，已添加的置灰；确定后追加到末尾；右上角 × 等同取消。<span class="ref">PRD 6.4 · F08-04</span></li>
       <li><b>列表分页</b>：推荐游戏列表和「添加推荐游戏」弹窗都用页码分页，默认每页 20 条（列表可选 10 / 20 / 50 / 100，弹窗可选 10 / 20 / 50）；改每页条数、搜索后回第 1 页；上移、下移、删除后停在当前页，删除后当前页为空时回到上一页；添加后追加到列表末尾、停在当前页并提示所在页；页码输入超出范围取首页或末页；弹窗里的勾选跨页保留。<span class="ref">PRD 6.5 列表分页 · F08-04</span></li>
-      <li><b>位次提示</b>：从上往下数状态正常的游戏，前 N 个为「前台第 1–N 位」，其余正常游戏为「超出展示数量」，维护中和已下架为「—」。<span class="ref">PRD 6.4 · F08-04</span></li>
+      <li><b>位次提示</b>：从上往下数状态正常的游戏，前 N 个为「前台第 1–N 位」，其余正常游戏为「超出展示数量」，维护中和已下架为「—」；前台还会按玩家准入条件过滤，个别玩家看到的位置可能前移。<span class="ref">PRD 6.4 · F08-04</span></li>
       <li><b>菜单权限和操作日志</b>：新增菜单按后台现有角色权限配置，默认分配给运营；每次保存成功记一条操作日志（操作人、时间、修改前后值），在后台现有操作日志里查看。<span class="ref">PRD 6.1 · F08-05</span></li>
       <li><b>多人同时编辑</b>：保存时校验配置版本，别人已先保存时提示「配置已被他人修改，请刷新后再改」，不保存。<span class="ref">PRD 6.1 · F08-05</span></li>
       <li><b>保存与重置</b>：保存后新进入游戏的玩家生效；重置恢复为上次保存的配置。<span class="ref">PRD 6.1 · F08-05 保存与重置</span></li>
-    </ol>
-    <h3>评审待确认</h3>
-    <ol>
-      <li><b>Mini Banner 图片规格</b>：尺寸、格式和大小。<span class="ref">PRD 待确认 Q7</span></li>
-      
-      
     </ol>
     <div class="pager"><span></span><a href="../front/游戏快捷侧边栏-游戏页快捷侧边栏.html">下一页：游戏页快捷侧边栏（看配置效果）→</a></div>
   </aside>

@@ -146,8 +146,7 @@
   var MAX_MB = 10, BIG_W = 3840, BIG_MB = 5, FIT_W = 2880;
   /* 原型的视图（按页面路径）；没有列出的页面只显示整页 */
   var VIEWS = {
-    "prototype/front/游戏快捷侧边栏-XX页面.html": [["default", "默认"], ["error", "异常"]],
-    "prototype/admin/游戏快捷侧边栏-后台XX页面.html": [["list", "列表"], ["new", "新建"], ["edit", "编辑"]]
+    "prototype/front/游戏快捷侧边栏-游戏内充值弹窗.html": [["sheet", "弹窗已打开"], ["game", "已关闭，回到游戏"], ["pay", "二维码支付页"]]
   };
   function $(id) { return document.getElementById(id); }
   function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
