@@ -335,5 +335,9 @@ window.PROTO_EN = {
   "（前台显示方式为「会员身份」：Level 升级不弹窗，与现有口径一致）": "(Display mode is Member status: no Level-up pop-up, as today.)（示意）",
 
   /* ===== VIP 规则弹窗：只计 6 大类游戏（用户 2026-10-21，检查问题第二批 Q-21，v1.0）：只新增 ===== */
-  "只有 Slot、Casino、Poker、Bingo、Arcade、Fishing 游戏的有效投注计入 VIP 进度和保级；Perya、ESports 等其他游戏的投注不计入。": "Only valid bets on Slot, Casino, Poker, Bingo, Arcade and Fishing games count toward VIP progress and retention; bets on other games, such as Perya and ESports, do not count.（示意）"
+  "只有 Slot、Casino、Poker、Bingo、Arcade、Fishing 游戏的有效投注计入 VIP 进度和保级；Perya、ESports 等其他游戏的投注不计入。": "Only valid bets on Slot, Casino, Poker, Bingo, Arcade and Fishing games count toward VIP progress and retention; bets on other games, such as Perya and ESports, do not count.（示意）",
+
+  /* ===== VIP通知页面：审核到账短信示例与后台系统预设一致（中文以后台预设为准，用户 2026-10-22）：只新增；英文为示意，待运营定稿 ===== */
+  "恭喜升级到 VIP14！PHP2,000 VIP 升级奖励已到账！登录 789Bingo 查看奖励。": "Congrats on reaching VIP14! PHP2,000 VIP Upgrade Bonus credited! Log in to 789Bingo to check your reward.（示意）",
+  "789Bingo 祝你生日快乐！PHP488 VIP14 生日奖励已到账！登录 789Bingo 查看奖励。": "Happy Birthday from 789Bingo! PHP488 VIP14 Birthday Bonus credited! Log in to 789Bingo to check your reward.（示意）"
 };

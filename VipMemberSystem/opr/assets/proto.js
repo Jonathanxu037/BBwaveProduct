@@ -119,33 +119,6 @@
   };
 })();
 
-/* 本需求（VIP会员体系）：右侧批注栏（说明、模拟场景、模拟操作、规则批注）整体默认收进屏幕右侧，
-   点右边缘的「展开」按钮滑出，再点「收起」或按 Esc 收回（2026-10-13 用户要求）。只改显示方式，不影响模拟功能。 */
-(function () {
-  function setup() {
-    var aside = document.querySelector("aside.notes");
-    if (!aside || document.getElementById("ndBtn")) return;
-    if (!aside.id) aside.id = "pageNotes";
-    document.body.classList.add("nd-on");
-    var btn = document.createElement("button");
-    btn.type = "button"; btn.id = "ndBtn"; btn.className = "nd-btn";
-    btn.setAttribute("aria-controls", aside.id);
-    document.body.appendChild(btn);
-    function set(open) {
-      document.body.classList.toggle("nd-open", open);
-      btn.setAttribute("aria-expanded", open ? "true" : "false");
-      btn.textContent = open ? "收起 ▶" : "◀ 说明与模拟";
-      btn.title = open ? "收起右侧说明与模拟面板" : "展开右侧说明与模拟面板";
-      aside.setAttribute("aria-hidden", open ? "false" : "true");
-      if (open) aside.removeAttribute("inert"); else aside.setAttribute("inert", "");
-    }
-    set(false);
-    btn.addEventListener("click", function () { set(!document.body.classList.contains("nd-open")); });
-    document.addEventListener("keydown", function (e) { if (e.key === "Escape" && document.body.classList.contains("nd-open") && !document.querySelector(".ov:not([hidden]), .mask:not([hidden])")) set(false); });
-  }
-  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", setup); else setup();
-})();
-
 /* 前台原型英文化（所有需求通用，需求包框架规范第 4 节「原型语言」）：只翻译手机画面 .app 里的文字和 placeholder、title、aria-label、alt、按钮 value，
    规则批注、模拟场景、模拟操作不在 .app 里，不翻译。对照表在 assets/proto-en.js（window.PROTO_EN）。
    语言：发布站点由 build_role_sites.ps1 在 nav-data.js 里写 window.PROTO_LANG = "en"；本地预览地址加 ?lang=en / ?lang=zh 切换（当前标签页记住）。
@@ -155,18 +128,18 @@
   try { if (q) sessionStorage.setItem("proto-lang", q[1]); mode = q ? q[1] : sessionStorage.getItem("proto-lang"); } catch (e) { mode = q && q[1]; }
   var preview = !!mode; mode = mode || window.PROTO_LANG || "zh";
   if (mode !== "en") return;
-  var D = window.PROTO_EN || {}, exact = {}, pats = [], missing = {}, bd = null;
+  var D = window.PROTO_EN || {}, exact = {}, pats = [], missing = {}, bd = null, DONE = {};
+  /* 英文里的「（示意）」只是给运营看的标记（文案确认页据此列出待确认文案），画面上不显示 */
+  function clean(s) { return String(s).replace(/\s*[（(]\s*示意\s*[)）]\s*/g, " ").replace(/\s{2,}/g, " ").trim(); }
   Object.keys(D).forEach(function (k) {
     if (!/\{\w+\}/.test(k)) { exact[k.trim()] = D[k]; return; }
-    var names = [], src = "^" + k.trim().replace(/[.*+?^$()|[\]\\]/g, "\\$&").replace(/\{(\w+)\}/g, function (_, n) { names.push(n); return "(.+?)"; }) + "$";
-    pats.push({ re: new RegExp(src), names: names, v: D[k] });
+    var names = [], pat = "^" + k.trim().replace(/[.*+?^$()|[\]\\]/g, "\\$&").replace(/\{(\w+)\}/g, function (_, n) { names.push(n); return "(.+?)"; }) + "$";
+    pats.push({ re: new RegExp(pat), names: names, v: D[k] });
   });
   var CJK = /[㐀-鿿　-〿！-｠]/;
   /* 返回译文；null 表示不需要翻译（没有中文）；undefined 表示对照表里没有 */
   function tr(s) {
-    var t = String(s).trim(); if (!t || !CJK.test(t)) return null;
-    /* 本需求补充（框架同步时再统一）：页面上单独的「（示意）」标记两种语言都保留，不算漏翻 */
-    if (t === "（示意）") return null;
+    var t = String(s).trim(); if (!t || !CJK.test(t) || DONE[t]) return null;   /* 已经换好的译文（可能带中文字符，如品牌名）不再当成漏翻 */
     var out = exact[t];
     if (out == null) for (var i = 0; i < pats.length; i++) {
       var m = pats[i].re.exec(t); if (!m) continue;
@@ -174,20 +147,18 @@
       break;
     }
     if (out == null) { missing[t] = 1; return undefined; }
-    /* 本需求补充：对照表里英文后标的「（示意）」只用于 PRD 附录 C 和未定文案清单，画面上的示意标记由页面自己的 .draft 显示，这里去掉 */
-    out = String(out).replace(/（示意）/g, "");
-    return String(s).replace(t, function () { return out; });
+    out = clean(out); DONE[out] = 1;
+    return String(s).replace(t, out);
   }
   var ATTRS = ["placeholder", "title", "aria-label", "alt", "value"];
   function miss(el) { if (preview && el && el.classList) el.classList.add("en-miss"); }
   function walk(n) {
-    /* 本需求补充：译文和原文相同时不再写回，避免 MutationObserver 反复触发 */
-    if (n.nodeType === 3) { var r = tr(n.nodeValue); if (r && r !== n.nodeValue) n.nodeValue = r; else if (r === undefined) miss(n.parentNode); return; }
+    if (n.nodeType === 3) { var r = tr(n.nodeValue); if (r) n.nodeValue = r; else if (r === undefined) miss(n.parentNode); return; }
     if (n.nodeType !== 1 || n.tagName === "SCRIPT" || n.tagName === "STYLE" || (n.classList && n.classList.contains("ui-reqnote"))) return;   /* 需求说明文字不翻译 */
     ATTRS.forEach(function (a) {
       if (a === "value" && !(n.tagName === "BUTTON" || (n.tagName === "INPUT" && /^(button|submit|reset)$/i.test(n.type)))) return;
       var v = n.getAttribute(a); if (!v) return;
-      var r = tr(v); if (r && r !== v) n.setAttribute(a, r); else if (r === undefined) miss(n);
+      var r = tr(v); if (r) n.setAttribute(a, r); else if (r === undefined) miss(n);
     });
     for (var c = n.firstChild; c; c = c.nextSibling) walk(c);
   }

@@ -154,7 +154,7 @@
       if (n.href) a.href = ROOT + hrefOf(n);
       if (n.bar) row.style.setProperty("--bar", n.bar);
       if (n.type) { var t = document.createElement("span"); t.className = "tg " + n.type; t.textContent = { page: "页面", admin: "后台", doc: "文档" }[n.type]; a.appendChild(t); }
-      var nm = document.createElement("span"); nm.className = "nm"; nm.textContent = n.title; a.appendChild(nm); if (n.desc) { var ds = document.createElement("span"); ds.className = "nd"; ds.textContent = n.desc; a.appendChild(ds); }   /* 目录节点可选的说明小字（多迭代需求包的 plan、各迭代范围等），需求包框架规范第 3 节 */
+      var nm = document.createElement("span"); nm.className = "nm"; nm.textContent = n.title; a.appendChild(nm); if (n.desc) { var ds = document.createElement("span"); ds.className = "nd"; ds.textContent = n.desc; a.appendChild(ds); }   /* 目录节点可选的说明小字（多迭代需求包的 plan、latest、前台全量 + 后台精简等），需求包框架规范第 3 节 */
       if (n.children && !n.type && n.level > 1) { var ct = document.createElement("span"); ct.className = "ct"; ct.textContent = leafCount(n) + " 项"; a.appendChild(ct); }
       a.onclick = function () { if (n.children) expand(el); document.body.classList.remove("nav-open"); };
       if (n === current && !opts.light) a.setAttribute("aria-current", "page");
@@ -349,9 +349,70 @@
   });
 })();
 
-/* 发布模式给后台原型页加 pub-admin（同模板 v5.46）。本包右侧批注栏用 assets/proto.js 自己的滑出面板，不用模板的「‹ 显示」批注框，所以这里只加类名 */
+/* 弹窗右上角关闭图标（所有需求通用，需求包框架规范第 4 节）：原型和通用页面里的 .dlg（前台）、.bo-dlg（后台）、.cfm>div（确认框）
+   和带 data-xclose 的弹窗框，缺「×」时自动补上。点「×」等同点弹窗里的取消按钮（data-cancel，没有时找文字为「取消 / 关闭 / Cancel / Close」的按钮），
+   不提交；没有取消按钮时直接关掉遮罩。取消按钮置灰（提交中）时「×」同步置灰不可点。页面手写了 .x-close 的不重复添加。 */
 (function () {
-  function start() { if (isPubAdmin()) document.body.classList.add("pub-admin"); }
+  var BOX = ".dlg, .bo-dlg, .cfm > div, [data-xclose]";
+  var CANCEL = /^(取消|关闭|cancel|close)$/i;
+  function cancelBtn(box) {
+    var b = box.querySelector("[data-cancel]"); if (b) return b;
+    return [].filter.call(box.querySelectorAll("button, a"), function (x) { return !x.classList.contains("x-close") && CANCEL.test((x.textContent || "").replace(/[\s×✕]/g, "")); })[0] || null;
+  }
+  function overlay(box) { return box.closest(".ov, .bo-mask, .cfm, .oc-modal, [data-xmask]") || box; }
+  function sync(box, x) { var c = cancelBtn(box), off = !!(c && (c.disabled || c.getAttribute("aria-disabled") === "true")); if (x.disabled !== off) x.disabled = off; }
+  function add(box) {
+    if (box.querySelector(":scope > .x-close")) return;
+    var x = document.createElement("button"); x.type = "button"; x.className = "x-close"; x.setAttribute("aria-label", "关闭"); x.title = "关闭"; x.textContent = "×";
+    x.onclick = function (e) {
+      e.preventDefault(); e.stopPropagation(); if (x.disabled) return;
+      var c = cancelBtn(box); if (c) { c.click(); return; }
+      var m = overlay(box); m.hidden = true; if (getComputedStyle(m).display !== "none") m.remove();   /* 页面里固定的弹窗隐藏，脚本临时生成的弹窗移除 */
+    };
+    box.insertBefore(x, box.firstChild); sync(box, x);
+  }
+  function scan(root) {
+    if (!root || !root.querySelectorAll) return;
+    if (root.matches && root.matches(BOX)) add(root);
+    [].forEach.call(root.querySelectorAll(BOX), add);
+  }
+  function start() {
+    scan(document.body);
+    new MutationObserver(function (ms) {
+      ms.forEach(function (m) {
+        if (m.type === "childList") [].forEach.call(m.addedNodes, function (n) { if (n.nodeType === 1 && !n.classList.contains("x-close")) scan(n); });
+        else if (!m.target.classList.contains("x-close")) { var box = m.target.closest && m.target.closest(BOX), x = box && box.querySelector(":scope > .x-close"); if (x) sync(box, x); }
+      });
+    }).observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ["disabled", "aria-disabled"] });
+  }
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", start); else start();
+})();
+
+/* 原型页右侧批注框（模拟场景、模拟操作、规则批注）默认收起（所有需求通用，需求包框架规范第 4 节）：
+   每次打开原型页时批注框都收起，贴在右侧页边只留「‹ 显示」按钮，原型画面占满；点「‹ 显示」展开，
+   展开后批注框内右上角有吸顶的「隐藏 ›」按钮，滚动时一直可见，点了再收起。只作用于 .stage / .adm-stage 里的批注框。 */
+(function () {
+  function start() {
+    if (isPubAdmin()) document.body.classList.add("pub-admin");
+    var notes = document.querySelector(document.body.classList.contains("pub-admin") ? ".stage > .notes" : ".stage > .notes, .adm-stage > .notes");
+    if (!notes || notes.querySelector(".notes-bar")) return;
+    if (!notes.id) notes.id = "protoNotes";
+    var tab = document.createElement("button"); tab.type = "button"; tab.className = "notes-tab"; tab.textContent = "‹ 显示";
+    tab.title = "显示模拟场景、模拟操作和规则批注"; tab.setAttribute("aria-controls", notes.id); tab.setAttribute("aria-expanded", "false");
+    var bar = document.createElement("div"); bar.className = "notes-bar";
+    var hide = document.createElement("button"); hide.type = "button"; hide.className = "notes-hide"; hide.textContent = "隐藏 ›";
+    hide.title = "隐藏批注框，原型画面占满"; hide.setAttribute("aria-controls", notes.id);
+    bar.appendChild(hide); notes.insertBefore(bar, notes.firstChild); document.body.appendChild(tab);
+    function set(open) {
+      document.body.classList.toggle("notes-off", !open);
+      tab.hidden = open; tab.setAttribute("aria-expanded", open ? "true" : "false");
+      if (open) hide.focus(); else tab.focus({ preventScroll: true });
+      window.dispatchEvent(new Event("notestoggle"));
+    }
+    tab.onclick = function () { set(true); };
+    hide.onclick = function () { set(false); };
+    document.body.classList.add("notes-off"); tab.hidden = false;
+  }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", start); else start();
 })();
 

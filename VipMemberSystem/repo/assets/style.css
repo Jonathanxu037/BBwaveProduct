@@ -1,4 +1,4 @@
-/* 需求包 · 全站共用样式（生成内容规范第十章 3.1：视觉按样板网站，冲突处以规范为准；来自 Product Materials\_需求包模板）
+/* 需求包 · 全站共用样式（需求包框架规范第 3.1 节：视觉按样板网站，冲突处以规范为准；来自 Product Materials\_需求包模板）
    外壳：左侧 300px 深紫目录栏 + 46px 白色顶栏；文档页为纸张样式；后台原型仿平台真实后台；操作手册为卡片式。 */
 :root{
   --purple:#16052F; --gold:#C89A3C; --gold-l:#F0D291; --gold-sel:#E8C06A;
@@ -11,7 +11,7 @@
   --v-old:#FFFBE0; --v-old-tag:#F3EAC2; --v-old-tagfg:#9A8752;
   --fp-hit:#FF6EC7; --mark-ink:#1B1720;
   --font:"Microsoft YaHei","微软雅黑","PingFang SC",sans-serif;
-  --app-font:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --app-font:"Microsoft YaHei","微软雅黑","PingFang SC",sans-serif;
   /* App 画面（前台原型）：固定深色，不随主题 */
   --app-bg:#10141c; --app-card:#1a2030; --app-line:#2c3447; --app-fg:#f2f4f8; --app-muted:#8b94a8;
   --app-gold:#f2b632; --app-gold-ink:#2a1d00; --app-err:#ff6b6b; --app-ok:#3ecf8e;
@@ -123,7 +123,9 @@ body.embedded .paper{padding:32px 28px}
 .fp{display:inline-block;font-size:11px;font-weight:700;color:#16052F;background:#F3EFF8;border-radius:4px;padding:0 5px;margin-right:4px;line-height:1.7;vertical-align:1px;white-space:nowrap}
 .linkbtn{all:unset;cursor:pointer;color:var(--link);font-weight:700;text-decoration:underline;font-size:12.5px}
 .chg{list-style:none;padding:0;margin:6px 0 0}
-.chg a{display:flex;gap:6px;align-items:baseline;text-decoration:none;color:var(--fg);padding:2px 0}
+.chg a,.chg .row{display:flex;gap:6px;align-items:baseline;text-decoration:none;color:var(--fg);padding:2px 0}
+.chg .st{margin-left:auto}   /* 涉及章节：左边章节号 + 标题，右边状态标签 */
+.chg .chg-fold{padding-top:4px}
 .st{display:inline-block;font-size:11px;border-radius:3px;padding:0 5px;border:1px solid;line-height:1.6;flex:none}
 .st.add{background:#F6FFED;border-color:#B7EB8F;color:#389E0D}
 .st.mod{background:#E6F4FF;border-color:#91CAFF;color:#1677FF}
@@ -211,7 +213,7 @@ body.embedded .fp-banner{top:0}
 .app{width:100%;max-width:430px;height:820px;max-height:calc(100vh - 94px);min-height:640px;position:relative;overflow:hidden;border-radius:12px;background:var(--app-bg);color:var(--app-fg);font-family:var(--app-font);font-size:14px;line-height:1.45;box-shadow:0 18px 40px -12px rgba(0,0,0,.6)}
 .sb{height:30px;display:flex;justify-content:space-between;align-items:center;padding:0 18px;font-size:12px;font-weight:600;color:var(--app-muted)}
 .view{position:absolute;inset:30px 0 0;overflow-y:auto;padding:12px 20px 22px;display:flex;flex-direction:column;gap:12px;scrollbar-width:none}
-.view::-webkit-scrollbar{display:none}
+.view::-webkit-scrollbar{display:none}   /* 手机画面隐藏滚动条、仍可滚动，和真实手机一致（C61） */
 .topline{display:flex;align-items:center;gap:10px;font-weight:700;font-size:16px}
 .back{all:unset;cursor:pointer;width:28px;height:28px;display:grid;place-items:center;border-radius:50%;background:var(--app-card);color:var(--app-fg);text-decoration:none}
 .logo{font-weight:800;font-size:30px;letter-spacing:-.02em;text-align:center;margin-top:2px}
@@ -240,18 +242,19 @@ body.embedded .fp-banner{top:0}
 .chk{display:flex;gap:8px;font-size:11.5px;color:var(--app-muted);align-items:flex-start}
 .chk input{accent-color:var(--app-gold);margin-top:2px}
 .chk a{color:var(--app-gold)}
-.or{display:flex;align-items:center;gap:10px;color:var(--app-muted);font-size:11.5px}
-.or::before,.or::after{content:"";flex:1;height:1px;background:var(--app-line)}
-.sso{display:flex;justify-content:center;gap:14px}
-.sso button{all:unset;cursor:pointer;display:grid;justify-items:center;gap:4px;font-size:10.5px;color:var(--app-muted);width:58px}
-.sso i{width:44px;height:44px;border-radius:50%;background:var(--app-card);border:1px solid var(--app-line);display:grid;place-items:center;font-style:normal;font-weight:800;font-size:16px;color:var(--app-fg)}
+/* 原型小部件类统一带 ui- 前缀，避免和原型页面自己起的类名重名（需求包框架规范第 4 节「类名」） */
+.ui-or{display:flex;align-items:center;gap:10px;color:var(--app-muted);font-size:11.5px}
+.ui-or::before,.ui-or::after{content:"";flex:1;height:1px;background:var(--app-line)}
+.ui-sso{display:flex;justify-content:center;gap:14px}
+.ui-sso button{all:unset;cursor:pointer;display:grid;justify-items:center;gap:4px;font-size:10.5px;color:var(--app-muted);width:58px}
+.ui-sso i{width:44px;height:44px;border-radius:50%;background:var(--app-card);border:1px solid var(--app-line);display:grid;place-items:center;font-style:normal;font-weight:800;font-size:16px;color:var(--app-fg)}
 .foot{font-size:10.5px;color:var(--app-muted);text-align:center;margin-top:auto}
-.otp{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
-.otp input{all:unset;height:56px;text-align:center;background:var(--app-card);border:1px solid var(--app-line);border-radius:10px;font-size:22px;font-weight:700;color:var(--app-fg);font-family:var(--app-font)}
-.otp input:focus{border-color:var(--app-gold)}
-.hint{font-size:12.5px;color:var(--app-muted)}
-.hint b{color:var(--app-fg)}
-.cnt{font-size:12.5px;color:var(--app-muted);text-align:center;font-variant-numeric:tabular-nums}
+.ui-otp{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.ui-otp input{all:unset;height:56px;text-align:center;background:var(--app-card);border:1px solid var(--app-line);border-radius:10px;font-size:22px;font-weight:700;color:var(--app-fg);font-family:var(--app-font)}
+.ui-otp input:focus{border-color:var(--app-gold)}
+.ui-hint{font-size:12.5px;color:var(--app-muted)}
+.ui-hint b{color:var(--app-fg)}
+.ui-cnt{font-size:12.5px;color:var(--app-muted);text-align:center;font-variant-numeric:tabular-nums}
 .rules{display:grid;gap:4px;font-size:11.5px}
 .rules span{color:var(--app-muted)}
 .rules span.ok{color:var(--app-ok)}
@@ -259,17 +262,17 @@ body.embedded .fp-banner{top:0}
 .dlg{background:var(--app-card);border:1px solid var(--app-line);border-radius:16px;padding:18px;display:grid;gap:12px;width:100%}
 .dlg h3{margin:0;font-size:17px}
 .dlg ul{margin:0;padding-left:18px;font-size:12px;color:var(--app-muted);display:grid;gap:4px}
-.big{font-size:44px;font-weight:800;color:var(--app-gold);text-align:center;line-height:1}
-.cf{display:flex;align-items:center;gap:10px;background:#fff;color:#222;border-radius:6px;padding:12px;font-size:13px}
-.spin{width:20px;height:20px;border:3px solid #ddd;border-top-color:#f38020;border-radius:50%;animation:sp 1s linear infinite}
+.ui-big{font-size:44px;font-weight:800;color:var(--app-gold);text-align:center;line-height:1}
+.ui-cf{display:flex;align-items:center;gap:10px;background:#fff;color:#222;border-radius:6px;padding:12px;font-size:13px}
+.ui-spin{width:20px;height:20px;border:3px solid #ddd;border-top-color:#f38020;border-radius:50%;animation:sp 1s linear infinite}
 @keyframes sp{to{transform:rotate(360deg)}}
-.slider{position:relative;height:44px;border-radius:8px;background:#2a3142;overflow:hidden}
-.slider .track{position:absolute;inset:0;display:grid;place-items:center;font-size:12px;color:var(--app-muted)}
-.slider button{all:unset;cursor:pointer;position:absolute;left:2px;top:2px;width:40px;height:40px;border-radius:6px;background:var(--app-gold);color:var(--app-gold-ink);display:grid;place-items:center;font-weight:800;transition:left .4s}
-.puzzle{height:120px;border-radius:8px;background:linear-gradient(135deg,#3b4a6b,#1f2a40);position:relative}
-.puzzle::after{content:"";position:absolute;left:62%;top:38px;width:40px;height:40px;border-radius:6px;background:rgba(255,255,255,.25);border:2px dashed rgba(255,255,255,.6)}
-.imgcode{display:flex;gap:8px;align-items:center}
-.imgcode .pic{flex:none;width:96px;height:46px;border-radius:8px;background:repeating-linear-gradient(45deg,#e9e3d0,#e9e3d0 6px,#d9d2bb 6px,#d9d2bb 12px);color:#433a1f;display:grid;place-items:center;font-weight:800;font-size:20px;letter-spacing:4px;font-style:italic;cursor:pointer}
+.ui-slider{position:relative;height:44px;border-radius:8px;background:#2a3142;overflow:hidden}
+.ui-slider .track{position:absolute;inset:0;display:grid;place-items:center;font-size:12px;color:var(--app-muted)}
+.ui-slider button{all:unset;cursor:pointer;position:absolute;left:2px;top:2px;width:40px;height:40px;border-radius:6px;background:var(--app-gold);color:var(--app-gold-ink);display:grid;place-items:center;font-weight:800;transition:left .4s}
+.ui-puzzle{height:120px;border-radius:8px;background:linear-gradient(135deg,#3b4a6b,#1f2a40);position:relative}
+.ui-puzzle::after{content:"";position:absolute;left:62%;top:38px;width:40px;height:40px;border-radius:6px;background:rgba(255,255,255,.25);border:2px dashed rgba(255,255,255,.6)}
+.ui-imgcode{display:flex;gap:8px;align-items:center}
+.ui-imgcode .pic{flex:none;width:96px;height:46px;border-radius:8px;background:repeating-linear-gradient(45deg,#e9e3d0,#e9e3d0 6px,#d9d2bb 6px,#d9d2bb 12px);color:#433a1f;display:grid;place-items:center;font-weight:800;font-size:20px;letter-spacing:4px;font-style:italic;cursor:pointer}
 .toast{position:absolute;left:50%;bottom:28px;transform:translateX(-50%);background:#f2f4f8;color:#10141c;padding:9px 14px;border-radius:8px;font-size:12px;font-weight:600;z-index:9;max-width:86%;text-align:center}
 .card-app{background:var(--app-card);border-radius:12px;padding:14px;border:1px solid var(--app-line);display:grid;gap:8px}
 .bal{font-size:24px;font-weight:800;font-variant-numeric:tabular-nums}
@@ -285,7 +288,7 @@ body.embedded .fp-banner{top:0}
 .notes ol{margin:0;padding-left:1.2em;display:grid;gap:7px}
 .notes li{font-size:13px;margin:0}
 .notes h3{font-size:13.5px;margin:14px 0 6px;color:var(--title)}
-.ref{font-size:11.5px;color:var(--muted);margin-left:4px;overflow-wrap:anywhere}
+.ref{font-size:11.5px;color:var(--muted);margin-left:4px;overflow-wrap:anywhere}   /* 出处标签允许换行，避免撑宽批注区（C62） */
 .sim{display:grid;gap:6px}
 .sim button,.sim select{font-family:var(--font);font-size:12.5px;padding:5px 10px;border-radius:6px;border:1px solid var(--line);background:var(--panel-2);color:var(--fg);cursor:pointer;text-align:left}
 .sim button:hover{border-color:var(--gold)}
@@ -354,7 +357,7 @@ body.embedded .fp-banner{top:0}
 .lb.key{background:#FDECEC;color:#B3122E}
 .empty{padding:40px;text-align:center;color:var(--muted)}
 .cfm{position:fixed;inset:0;background:rgba(0,0,0,.4);display:grid;place-items:center;z-index:90}
-.cfm div{background:var(--paper);border-radius:10px;padding:18px 20px;width:min(360px,90vw);display:grid;gap:12px}
+.cfm>div{position:relative;background:var(--paper);border-radius:10px;padding:18px 20px;width:min(360px,90vw);display:grid;gap:12px}
 .cfm p{margin:0}
 .cfm .row2{display:flex;gap:8px;justify-content:flex-end}
 
@@ -469,7 +472,7 @@ body.embedded .fp-banner{top:0}
 .fpgrid{display:grid;grid-template-columns:84px minmax(0,1fr);gap:6px 12px;font-size:14px}
 .fpgrid>b{color:var(--muted);font-weight:700;font-size:13px;padding-top:2px}
 .fpgrid ul{margin:0;padding-left:18px}
-.formula{font-family:Consolas,"Microsoft YaHei",monospace;background:var(--panel);border-radius:6px;padding:6px 10px;font-size:13.5px;line-height:1.7}
+.formula{font-family:var(--font);background:var(--panel);border-radius:6px;padding:6px 10px;font-size:13.5px;line-height:1.7}
 .ends{display:flex;flex-wrap:wrap;gap:6px}
 .ends span{font-size:12px;border-radius:4px;padding:0 8px;background:var(--panel);color:var(--title);border:1px solid var(--line)}
 .dd-demo{display:inline-block;border:1px solid #DCDFE6;border-radius:4px;background:#fff;color:#606266;font-size:13px;min-width:220px;box-shadow:0 2px 8px rgba(0,0,0,.08);margin:6px 0;color-scheme:light}
@@ -680,6 +683,7 @@ textarea.oc-note:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 2p
   .oc-dt td{border:0;padding:4px}
 }.oc-lightbox{position:fixed;inset:0;z-index:100;background:rgba(10,6,20,.82);display:grid;place-items:center;padding:24px;cursor:zoom-out}
 .oc-lightbox[hidden]{display:none}
+.oc-lightbox .x-close{position:fixed;top:14px;right:14px;color:#fff;opacity:.85;background:rgba(0,0,0,.35)}
 .oc-lightbox img{max-width:100%;max-height:100%;border-radius:6px;background:#fff}
 /* 屏幕较窄时，意见列表放到下方 */
 @media (max-width:959px){
@@ -807,7 +811,7 @@ html.gate-lock body > *:not(.pdm-gate){display:none!important}
 .arch-node b{display:block;font-size:14.5px;color:var(--title)}
 .arch-node small{display:block;font-size:12px;color:var(--muted);margin-top:2px}
 .arch-node em{display:block;font-style:normal;font-size:12px;color:var(--fg);margin-top:4px;line-height:1.5}
-.arch-node code{font-family:Consolas,monospace;font-size:11.5px;font-weight:700;margin-left:6px;padding:0 5px;border-radius:4px;background:rgba(255,255,255,.6)}
+.arch-node code{font-family:var(--font);font-size:11.5px;font-weight:700;margin-left:6px;padding:0 5px;border-radius:4px;background:rgba(255,255,255,.6)}
 .arch-node.pkg{background:linear-gradient(135deg,#5A2BA0,#2A0A56);min-width:280px}
 .arch-node.pkg b{color:#fff}.arch-node.pkg small{color:#D9C9F2}
 .arch-v{width:2px;height:18px;background:var(--line)}
@@ -860,185 +864,57 @@ html.gate-lock body > *:not(.pdm-gate){display:none!important}
 .simfb{display:flex;flex-wrap:wrap;align-items:center;gap:4px 6px;font-size:12px;line-height:1.5;color:#6A4A10;background:#FBF6EC;border:1px dashed #C89A3C;border-radius:6px;padding:4px 8px}
 .simfbtag{font-size:10.5px;font-weight:700;color:#fff;background:#C89A3C;border-radius:4px;padding:0 5px}
 .simfbtip{margin-left:auto;font-size:11px;color:#9A8752}
+/* 目录节点说明小字（desc，多迭代需求包用） */
+.nd{font-size:11px;font-weight:400;color:#9C8BB8;margin-left:6px}
 
-/* ===== 本需求：前台原型的 App 画面用真实手机尺寸（390 × 844，iPhone 14 视口）；整页保持正常网页布局：
-   画面在左、批注在右并排，窄于网页宽度时整页左右滚动，不改成手机堆叠排版 ===== */
-.stage{grid-template-columns:390px minmax(360px,1fr);min-width:820px;justify-items:stretch;padding:24px}
-.stage .notes{width:auto;max-width:none}
-.app{width:390px;min-width:390px;max-width:390px;height:844px;max-height:none;min-height:844px;flex:none}
-@media (max-width:1100px){.stage{grid-template-columns:390px minmax(360px,1fr);justify-items:stretch;padding:24px}.stage .notes{width:auto;max-width:none}}
-.with-nav:has(.stage){overflow-x:auto}
-.app .view>*,.app .view>*>*{min-width:0;max-width:100%}  /* 画面内容不超过手机宽度，宽表格只在自己的容器里左右滑动 */
+/* 弹窗右上角关闭图标（所有需求通用，需求包框架规范第 4 节）：点击等同「取消 / 关闭」，不提交；提交中置灰不可点。
+   原型里的 .dlg / .bo-dlg / .cfm 弹窗由 assets/nav.js 自动补上，也可以手写 <button class="x-close" aria-label="关闭">×</button> */
+.x-close{all:unset;box-sizing:border-box;position:absolute;top:8px;right:8px;width:28px;height:28px;display:grid;place-items:center;border-radius:50%;font-size:20px;line-height:1;font-family:var(--font);cursor:pointer;color:inherit;opacity:.6;z-index:2}
+.x-close:hover{opacity:1;background:rgba(127,127,127,.18)}
+.x-close:focus-visible{opacity:1;outline:2px solid currentColor;outline-offset:1px}
+.x-close[disabled],.x-close[aria-disabled="true"]{opacity:.25;cursor:not-allowed;background:none}
+.dlg,.bo-dlg{position:relative}
+.dlg>h3:first-child,.bo-dlg>h4:first-child,.cfm>div>p:first-of-type{padding-right:30px}
+.oc-mhead .x-close{position:static;flex:none}
+/* 原型表格线（所有需求通用，需求包框架规范第 4 节）：原型页面里的表格都有外框和单元格横竖线，1 像素浅灰（深色手机画面里用半透明浅灰，保证看得见） */
+.app table,.notes table{border-collapse:collapse;width:100%}
+.app th,.app td{border:1px solid rgba(255,255,255,.18);padding:6px 8px;text-align:left}
+.notes th,.notes td{border:1px solid #DCDFE6;padding:6px 8px;text-align:left}
+/* 后台原型表格（.bo table）上面已有完整表格线（#EBEEF5） */
 
-/* ===== 本需求：后台原型样式对齐真实运营后台（2026-10-13 用户截图） ===== */
-/* 只作用于后台原型画面（.adm-stage .bo），不改模板原有规则；画面最小宽 1100px，窄于此时在画面内左右滚动 */
-.adm-stage .bo{font-family:"Helvetica Neue",Helvetica,"PingFang SC","Microsoft YaHei",Arial,sans-serif;font-size:14px;color:#606266;border:1px solid #D0D7DE;border-radius:0;overflow-x:auto;overflow-y:visible}
-.adm-stage .bo>*{min-width:1100px}
-/* 顶栏第一行 */
-.adm-stage .bo .bo-top1{background:#1F6BB0;color:#fff;min-height:45px;padding:0 18px;gap:20px;font-size:14px;font-weight:700;flex-wrap:nowrap;white-space:nowrap}
-.adm-stage .bo .bo-time b{color:#FFD700;font-weight:700}
-.adm-stage .bo .bo-fs{font-size:18px;font-weight:400;cursor:pointer}
-/* 顶栏第二行：统计项 */
-.adm-stage .bo .bo-top2{background:#1F6BB0;color:#fff;border-top:1px solid rgba(255,255,255,.2);min-height:44px;padding:4px 18px;gap:6px 22px;font-size:15px;font-weight:700;white-space:nowrap}
-.adm-stage .bo .bo-bell{font-size:16px;font-weight:400}
-.adm-stage .bo .bo-top2 em{font-style:normal;margin-left:2px}
-.adm-stage .bo .bo-top2 em.c-r{color:#FF6B6B}.adm-stage .bo .bo-top2 em.c-y{color:#FFD54F}.adm-stage .bo .bo-top2 em.c-g{color:#4CD964}
-.adm-stage .bo .bo-top2 .bo-n{display:inline-block;min-width:0;border-radius:3px;padding:0 8px;line-height:22px;font-size:14px;font-weight:700;margin-left:4px;color:#fff}
-.adm-stage .bo .bo-top2 .bo-n.r{background:#E53935}.adm-stage .bo .bo-top2 .bo-n.g{background:#2EAD3E}
-.adm-stage .bo .bo-top2 .sa{font-size:15px;font-weight:700;color:#fff}
-.adm-stage .bo .bo-top2 .sa-pop{font-size:13px;font-weight:400;white-space:nowrap}
-.adm-stage .bo .bo-top2 .sa-pop a{color:#409EFF}
-/* 左侧菜单 */
-.adm-stage .bo .bo-body{grid-template-columns:198px minmax(0,1fr)}
-.adm-stage .bo .bo-menu{background:#E8F3FB;font-size:14px;display:block}
-.adm-stage .bo .bo-menu .mt{display:flex;align-items:center;justify-content:center;gap:8px;height:55px;padding:0;background:#3C8DCB;color:#fff;font-size:16px;font-weight:700}
-.adm-stage .bo .bo-menu .g{position:relative;display:flex;align-items:center;gap:8px;height:57px;padding:0 30px 0 16px;background:#D6E9F7;color:#333;font-weight:700;border-bottom:1px solid #C3DAEC;cursor:pointer;user-select:none}
-.adm-stage .bo .bo-menu .g>i{font-style:normal;font-weight:400;color:#4A6378;width:16px;text-align:center}
-.adm-stage .bo .bo-menu .g::after{content:"﹀";position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:12px;font-weight:400;color:#666}
-.adm-stage .bo .bo-menu .g.open::after{content:"︿"}
-.adm-stage .bo .bo-menu .g.me{cursor:default}.adm-stage .bo .bo-menu .g.me::after{content:none}
-.adm-stage .bo .bo-menu .g:focus-visible{outline:2px solid #409EFF;outline-offset:-2px}
-.adm-stage .bo .bo-menu .sub[hidden]{display:none}
-.adm-stage .bo .bo-menu .i{position:relative;display:flex;align-items:center;height:45px;padding:0 16px 0 26px;background:#E8F3FB;color:#333;font-size:14px;font-weight:400;border-bottom:1px solid #DAE9F5;cursor:pointer;text-decoration:none}
-.adm-stage .bo .bo-menu .i::before{content:"▶";font-size:9px;color:#7A8C9C;margin-right:8px}
-.adm-stage .bo .bo-menu .i:hover{color:#409EFF}
-.adm-stage .bo .bo-menu .i.on,.adm-stage .bo .bo-menu a.i.on:hover{background:#3BA4E0;color:#fff;font-weight:700;box-shadow:inset 4px 0 0 #E53935}
-.adm-stage .bo .bo-menu .i.on::before{color:#fff}
-.adm-stage .bo .bo-menu .i.on::after{content:"";position:absolute;right:0;top:50%;margin-top:-8px;border:8px solid transparent;border-right-color:#fff}
-.adm-stage .bo .bo-menu .i.on.glow{box-shadow:inset 4px 0 0 #E53935,inset 0 0 0 1px rgba(255,255,255,.55),0 0 6px 1px rgba(64,158,255,.35)}
-/* 内容区 */
-.adm-stage .bo .bo-main{background:#F0F0F0}
-.adm-stage .bo .bo-hd{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:48px;padding:0 14px;background:#fff;border-bottom:1px solid #E4E7ED}
-.adm-stage .bo .bo-crumb{background:none;border:0;padding:0;color:#606266;font-size:14px}
-.adm-stage .bo .bo-crumb b{color:#303133;font-weight:400}
-.adm-stage .bo .bo-search{box-sizing:border-box;width:250px;height:32px;border:1px solid #DCDFE6;border-radius:4px;padding:0 10px;font-family:inherit;font-size:13px;color:#606266;background:#fff}
-.adm-stage .bo .bo-search::placeholder{color:#C0C4CC}
-.adm-stage .bo .bo-search:focus{outline:0;border-color:#409EFF}
-.adm-stage .bo .bo-open{display:flex;align-items:center;gap:6px;min-height:40px;padding:0 14px;background:#fff;border-bottom:1px solid #E4E7ED;box-shadow:0 1px 3px rgba(0,0,0,.06)}
-.adm-stage .bo .bo-open .ot{display:inline-flex;align-items:center;gap:6px;height:28px;padding:0 10px;border:1px solid #D8DCE5;background:#fff;color:#495060;font-size:12.5px;text-decoration:none;border-radius:2px}
-.adm-stage .bo .bo-open .ot i{font-style:normal;color:#909399}
-.adm-stage .bo .bo-open .ot .x{color:#909399;font-size:12px;margin-left:2px}
-.adm-stage .bo .bo-open .ot:hover,.adm-stage .bo .bo-open .ot.on{color:#409EFF;border-color:#409EFF}
-.adm-stage .bo .bo-open .ot.on i,.adm-stage .bo .bo-open .ot.on .x{color:#409EFF}
-.adm-stage .bo .bo-open .om{margin-left:auto;display:inline-flex;align-items:center;height:28px;padding:0 8px;border:1px solid #D8DCE5;color:#606266;font-size:12px;background:#fff}
-.adm-stage .bo .bo-card{margin:10px;background:#fff;border:1px solid #E4E7ED;min-width:0}
-/* 二级页签（Element border-card 风格） */
-.adm-stage .bo .bo-tabs{display:flex;align-items:stretch;gap:0;padding:0;background:#F5F7FA;border-bottom:1px solid #E4E7ED;flex-wrap:wrap}
-.adm-stage .bo .bo-tabs span{height:40px;line-height:40px;padding:0 20px;font-size:14px;color:#606266;border:0;border-left:1px solid transparent;border-right:1px solid transparent;margin-bottom:-1px}
-.adm-stage .bo .bo-tabs span:hover{color:#409EFF}
-.adm-stage .bo .bo-tabs span.on{background:#fff;color:#409EFF;border-left-color:#DCDFE6;border-right-color:#DCDFE6}
-.adm-stage .bo .bo-tabs span:first-child.on{border-left-color:transparent}
-/* 筛选栏与按钮 */
-.adm-stage .bo .bo-filter{background:#fff;border-bottom:0;padding:14px 10px 4px;gap:10px 10px}
-.adm-stage .bo .flab{color:#606266;font-size:13px}
-.adm-stage .bo .bo-inp{height:32px;border:1px solid #DCDFE6;border-radius:4px;font-family:inherit;font-size:13px;color:#606266;background-color:#fff}
-.adm-stage .bo .bo-inp::placeholder{color:#C0C4CC}
-.adm-stage .bo select.bo-inp{-webkit-appearance:none;appearance:none;padding-right:28px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%23C0C4CC' stroke-width='1.3'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center}
-.adm-stage .bo .bo-btn{height:32px;border-radius:3px;padding:0 15px;font-family:inherit;font-size:12px;color:#606266;background:#fff;border:1px solid #DCDFE6}
-.adm-stage .bo .bo-btn:hover{color:#409EFF;border-color:#C6E2FF;background:#ECF5FF}
-.adm-stage .bo .bo-btn.q,.adm-stage .bo .bo-btn.n{background:#409EFF;border-color:#409EFF;color:#fff}
-.adm-stage .bo .bo-btn.q:hover,.adm-stage .bo .bo-btn.n:hover{background:#66B1FF;border-color:#66B1FF;color:#fff}
-.adm-stage .bo .bo-filter .bo-btn[id$="Export"]{background:#A0CFFF;border-color:#A0CFFF;color:#fff}
-.adm-stage .bo .bo-filter .bo-btn[id$="Export"]:hover{background:#79BBFF;border-color:#79BBFF}
-.adm-stage .bo .bo-filter .bo-btn.n{margin-left:auto}
-.adm-stage .bo .bo-btn.link,.adm-stage .bo .bo-btn.link:hover{background:transparent;border:0;color:#409EFF;padding:0 4px;height:auto}
-/* 表格 */
-.adm-stage .bo .bo-content{margin:6px 10px 10px;padding:10px;background:#fff;border:1px solid #EBEEF5}
-.adm-stage .bo table{font-size:13px}
-.adm-stage .bo th,.adm-stage .bo td{border:1px solid #EBEEF5;padding:8px 10px;height:40px;box-sizing:border-box;text-align:center;color:#606266}
-.adm-stage .bo th{background:#fff;color:#909399;font-weight:700;font-size:13px}
-.adm-stage .bo td.w{text-align:left}
-.adm-stage .bo .empty{color:#909399;text-align:center}
-/* 分页 */
-.adm-stage .bo .bo-content .pager{display:flex;justify-content:flex-end;align-items:center;gap:12px;margin-top:12px;padding:0;border:0;font-size:13px;color:#606266}
-.adm-stage .bo .pager .pgr-sz,.adm-stage .bo .pager .pgr-go{display:inline-flex;align-items:center;height:28px;padding:0 10px;border:1px solid #DCDFE6;border-radius:3px;color:#606266;background:#fff}
-.adm-stage .bo .pager .pgr-go{justify-content:center;min-width:24px;margin-left:6px;padding:0 6px}
-.adm-stage .bo .pager .pgr-nav{color:#C0C4CC;letter-spacing:6px}
-.adm-stage .bo .pager .pgr-nav b{color:#409EFF;letter-spacing:0}
-/* 弹窗按钮统一到 #409EFF 蓝 */
-.bo-mask .bo-dlg .bo-btn.q,.bo-mask .bo-dlg .bo-btn.n{background:#409EFF;border-color:#409EFF;color:#fff}
-.bo-mask .bo-dlg .bo-btn.q:hover,.bo-mask .bo-dlg .bo-btn.n:hover{background:#66B1FF;border-color:#66B1FF}
-.bo-mask .bo-dlg .bo-btn:not(.q):not(.n):not(.link):hover{color:#409EFF;border-color:#C6E2FF;background:#ECF5FF}/* 本需求：库存管理「已分配到活动」总量链接与明细弹窗（列表、编辑弹窗只读框、顶栏库存告急清单共用；示意，待文档同步） */
-.alc-n{color:#409EFF;text-decoration:none;cursor:pointer;font-weight:700}
-.alc-n:hover{text-decoration:underline}
-.alc-over{display:inline-block;margin-left:6px;padding:0 6px;border-radius:3px;font-size:12px;line-height:18px;font-weight:400;color:#F56C6C;border:1px solid #FBC4C4;background:#FEF0F0;vertical-align:middle}
-.alc-tb{width:100%;border-collapse:collapse;font-size:13px;color:#606266}
-.alc-tb th,.alc-tb td{border:1px solid #EBEEF5;padding:8px 10px;height:40px;box-sizing:border-box;text-align:center;white-space:nowrap}
-.alc-tb th{background:#fff;color:#909399;font-weight:700}
-.alc-tb .l{text-align:left}
-.alc-tb tr.alc-sumr td{background:#F5F7FA;font-weight:700;color:#303133}
-.alc-note{font-size:12px;line-height:1.7;color:#909399}
-.alc-note.bad{color:#F56C6C}
+/* 原型页右侧批注框（模拟场景、模拟操作、规则批注）默认收起（所有需求通用，需求包框架规范第 4 节）：
+   收起时贴在右侧页边，只留「‹ 显示」按钮；展开后批注框内有吸顶的「隐藏 ›」按钮。由 assets/nav.js 统一生成 */
+body.notes-off .stage>.notes,body.notes-off .adm-stage>.notes{display:none}
+body.notes-off .stage{grid-template-columns:minmax(0,430px);justify-content:center}
+body.notes-off .adm-stage{grid-template-columns:minmax(0,1fr)}
+.notes-tab{all:unset;box-sizing:border-box;position:fixed;right:0;top:50%;transform:translateY(-50%);z-index:30;cursor:pointer;writing-mode:vertical-rl;letter-spacing:.2em;padding:14px 7px;border-radius:8px 0 0 8px;background:var(--gold);color:#16052F;font-size:13px;font-weight:700;box-shadow:-2px 2px 10px rgba(0,0,0,.3);font-family:var(--font)}
+.notes-tab:hover{background:#E8C06A}
+.notes-tab:focus-visible{outline:2px solid #fff;outline-offset:-4px}
+.notes-tab[hidden]{display:none}
+.notes-bar{position:sticky;top:54px;z-index:3;height:0;display:flex;justify-content:flex-end}
+body.embedded .notes-bar{top:8px}
+.notes-hide{all:unset;box-sizing:border-box;cursor:pointer;margin:-8px -10px 0 0;padding:3px 10px;border:1px solid var(--line);border-radius:14px;background:var(--paper);color:var(--muted);font-size:12px;box-shadow:0 2px 6px rgba(0,0,0,.12);font-family:var(--font)}
+.notes-hide:hover{color:var(--title);border-color:var(--gold)}
+.notes-hide:focus-visible{outline:2px solid var(--gold);outline-offset:1px}
+.notes>h2:first-of-type{padding-right:64px}
+@media print{body.notes-off .stage>.notes,body.notes-off .adm-stage>.notes{display:block}.notes-tab,.notes-bar{display:none!important}}
 
-/* 本需求：后台顶栏统计行始终一行（2026-10-13）：现有统计项放在内层 .bo-stats，放不下时在行内左右滚动（隐藏滚动条），绝不折行；本需求新增的「待派发奖品」「库存告急」留在外层始终可见，库存告急弹出清单不被滚动容器裁切 */
-.adm-stage .bo .bo-top2{flex-wrap:nowrap;white-space:nowrap;height:40px;min-height:40px;box-sizing:border-box;padding:0 14px;gap:14px;font-size:13px;line-height:20px}
-.adm-stage .bo .bo-top2 .bo-stats{display:flex;align-items:center;gap:14px;flex:1 1 auto;min-width:0;height:100%;overflow-x:auto;overflow-y:hidden;scrollbar-width:none;-ms-overflow-style:none}
-.adm-stage .bo .bo-top2 .bo-stats::-webkit-scrollbar{display:none}
-.adm-stage .bo .bo-top2 .bo-stats>span{display:inline-flex;align-items:center;flex:none}
-.adm-stage .bo .bo-top2 em{margin-left:4px}
-.adm-stage .bo .bo-top2 .bo-n{box-sizing:border-box;min-width:20px;height:20px;line-height:20px;padding:0 6px;font-size:12px;margin-left:4px;text-align:center}
-.adm-stage .bo .bo-top2 .bo-n.o{background:#E6A23C}
-.adm-stage .bo .bo-top2 .bo-bell{font-size:14px}
-.adm-stage .bo .bo-top2 .sa-wrap{flex:none;margin-left:0}
-.adm-stage .bo .bo-top2 .sa{font-size:13px;line-height:20px}
-.adm-stage .bo .bo-top2 [hidden]{display:none!important}
-.adm-stage .bo .bo-top2 .pd-wrap{display:inline-flex;align-items:center;flex:none;padding:0 2px}
-.adm-stage .bo .bo-top2 .pd{display:inline-flex;align-items:center;color:#fff;text-decoration:none;cursor:pointer}
-.adm-stage .bo .bo-top2 .pd:hover{text-decoration:underline}
-.adm-stage .bo .bo-top2 .bo-stats.bo-fade{-webkit-mask-image:linear-gradient(to right,#000 calc(100% - 32px),transparent);mask-image:linear-gradient(to right,#000 calc(100% - 32px),transparent)}
-
-/* 本需求：后台画面布局修正（2026-10-13，用户反馈「页面样式怎么乱了」）
-   ① 外层 .adm-stage 改为弹性布局，批注位置与模板原布局一致：视口 > 1280px 时后台画面在左、批注 340px 在右（吸顶）；≤ 1280px 时批注排到画面下方。
-   ② 顶栏两行和左侧菜单始终跟后台画面同宽、一直可见（「待派发奖品」「库存告急」始终在顶栏最右）；
-      面包屑行、已打开页面标签、内容卡片都跟主区同宽：筛选栏放不下时整齐换行；表格、库存汇总卡片行在各自的容器里左右滚动，不裁切、不撑出页面。
-      不让整个画面或 .adm-stage 横向滚动：.adm-stage 设成滚动容器会让右侧批注的吸顶（sticky）失效，且顶栏、搜索框、「新增」按钮会被滚到可视区外。
-   ③ .bo-body 用 flex：菜单固定 198px，主区 flex:1 1 auto、min-width:0，占满剩余宽度，内容不把主区撑宽。 */
-.adm-stage{display:flex;flex-wrap:nowrap;align-items:flex-start;gap:16px}
-.adm-stage>.bo{flex:1 1 0;min-width:0;max-width:100%;overflow:hidden}
-.adm-stage>.adm-notes{flex:0 0 340px;min-width:0}
-@media (max-width:1280px){.adm-stage{flex-wrap:wrap}.adm-stage>.bo{flex:1 1 100%}.adm-stage>.adm-notes{flex:1 1 100%}}
-.adm-stage .bo>*{min-width:0}
-.adm-stage .bo .bo-body{display:flex;align-items:stretch}
-.adm-stage .bo .bo-menu{flex:0 0 198px;width:198px;min-width:198px}
-.adm-stage .bo .bo-main{flex:1 1 auto;min-width:0;overflow:visible}
-.adm-stage .bo .bo-card{min-width:0;overflow:visible}
-@media (max-width:760px){.adm-stage .bo .bo-menu{display:none}}/* 顶栏第二行：统计项（铃铛 → 预算告警）在左、可在行内左右滚动；「待派发奖品」「库存告急」固定在同一行最右 */
-.adm-stage .bo .bo-top2{display:flex;align-items:center;position:relative}
-.adm-stage .bo .bo-top2 .bo-stats{position:static;inset:auto;background:none;padding:0;z-index:auto;place-items:normal}
-.adm-stage .bo .bo-top2 .pd-wrap{margin-left:auto}
-/* 面包屑行：左面包屑、右搜索框（200px），同一行不截断 */
-.adm-stage .bo .bo-hd{flex-wrap:nowrap}
-.adm-stage .bo .bo-crumb{flex:1 1 auto;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.adm-stage .bo .bo-search{flex:0 0 200px;width:200px}
-/* 筛选栏：一行放不下时整齐换行；按钮组（查询 / 重置 / 导出 / 新增）作为一组不拆开，「新增」类按钮靠右 */
-.adm-stage .bo .bo-filter{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
-.adm-stage .bo .bo-filter .flab{white-space:nowrap}
-.adm-stage .bo .bo-fbtns{display:inline-flex;align-items:center;gap:8px;flex:1 0 auto;flex-wrap:nowrap}
-.adm-stage .bo .bo-fbtns .bo-btn{margin:0;white-space:nowrap}
-.adm-stage .bo .bo-filter .bo-fbtns .bo-btn.n{margin-left:auto}
-/* 表格：容器横向滚动，表头一行；只有带说明的长列名（如「已分配到活动」）允许换行 */
-.adm-stage .bo .bo-content{overflow-x:auto}
-.adm-stage .bo th{white-space:nowrap}
-.adm-stage .bo th.th-wrap{white-space:normal;min-width:96px}
-
-/* ===== 本需求：右侧批注栏默认收进屏幕右侧，点右边缘按钮滑出（assets/proto.js 加 body.nd-on / nd-open；2026-10-13 用户要求） ===== */
-body.nd-on aside.notes{position:fixed;top:46px;right:0;bottom:0;width:400px;max-width:calc(100vw - 40px);margin:0;border-radius:10px 0 0 10px;overflow-y:auto;z-index:150;transform:translateX(100%);visibility:hidden;transition:transform .25s ease,visibility 0s linear .25s;box-shadow:-6px 0 18px rgba(0,0,0,.3)}
-body.nd-on.nd-open aside.notes{transform:none;visibility:visible;transition:transform .25s ease,visibility 0s}
-body.nd-on .adm-stage{display:block}
-body.nd-on .adm-stage>.bo{max-width:none}
-body.nd-on .stage{grid-template-columns:390px;justify-content:center;min-width:0}
-.nd-btn{position:fixed;right:0;top:50%;transform:translateY(-50%);z-index:160;writing-mode:vertical-rl;padding:14px 7px;border:0;border-radius:8px 0 0 8px;background:#D8242F;color:#fff;font:700 13px/1.2 "Microsoft YaHei",sans-serif;letter-spacing:2px;cursor:pointer;box-shadow:-2px 2px 8px rgba(0,0,0,.3)}
-.nd-btn:hover{background:#B81C26}
-.nd-btn:focus-visible{outline:2px solid #FFD700;outline-offset:2px}
-body.nd-open .nd-btn{right:min(400px,calc(100vw - 40px))}
-@media (prefers-reduced-motion:reduce){body.nd-on aside.notes,body.nd-on.nd-open aside.notes{transition:none}}
-/* 前台原型英文化：漏翻红框与左下角漏翻条数（同模板） */
+/* 前台原型英文化本地预览（?lang=en）：漏翻的中文红框标出，左下角显示漏翻条数（需求包框架规范第 4 节「原型语言」） */
 .en-miss{outline:2px solid #FF4D4F!important;outline-offset:1px}
 .en-badge{position:fixed;left:12px;bottom:12px;z-index:40;max-width:calc(100vw - 24px);background:#FFF1F0;color:#C00000;border:1px solid #FFA39E;border-radius:6px;padding:6px 10px;font-size:12.5px;font-family:var(--font);box-shadow:0 2px 8px rgba(0,0,0,.15)}
 .en-badge.ok{background:#F6FFED;color:#237804;border-color:#B7EB8F}
-/* 目录节点说明小字（desc，多迭代需求包用；同模板） */
-.nd{font-size:11px;font-weight:400;color:#9C8BB8;margin-left:6px}
-/* 帮助按钮和同行对齐（所有需求通用，需求包框架规范第 4 节「帮助按钮与说明文字」；同模板 v5.45）：「?」紧跟在所说明的内容后面、不另起一行；
+
+/* 列表分页（所有需求通用，需求包框架规范第 4 节「列表分页」）：后台列表用页码分页条 .bo-page，前台 App 列表用「加载更多」 .ui-loadmore */
+.bo-page{display:flex;align-items:center;justify-content:flex-end;flex-wrap:wrap;gap:8px;margin-top:12px;font-size:13px;color:#606266}
+.bo-page select,.bo-page input{font-family:var(--font);height:28px;border:1px solid #DCDFE6;border-radius:3px;padding:0 6px;font-size:13px;color:#333;background:#fff}
+.bo-page input{width:46px;text-align:center}
+.bo-page button{font-family:var(--font);min-width:28px;height:28px;padding:0 6px;border:1px solid #DCDFE6;border-radius:3px;background:#fff;color:#606266;cursor:pointer;font-size:13px}
+.bo-page button[aria-current="page"]{background:#409EFF;border-color:#409EFF;color:#fff;font-weight:700}
+.bo-page button:disabled{color:#C0C4CC;cursor:not-allowed;background:#F5F7FA}
+.ui-loadmore{display:block;width:100%;margin:12px 0 4px;text-align:center;font-size:12.5px;color:var(--app-muted);background:none;border:0;cursor:pointer;font-family:var(--font)}
+.ui-loadmore[disabled]{cursor:default}
+
+/* 帮助按钮和同行对齐（所有需求通用，需求包框架规范第 4 节「帮助按钮与说明文字」）：「?」紧跟在所说明的内容后面、不另起一行；
    同一行的文字、「?」、开关、输入框、按钮垂直居中对齐。内容和「?」可能被挤换行时，用 <span class="ui-nw">内容<i class="qm">?</i></span> 包起来 */
 .ui-nw{white-space:nowrap;display:inline-flex;align-items:center}
 th .qm,td .qm,label .qm,.fl .qm,.fsec .qm{vertical-align:middle}
@@ -1046,12 +922,35 @@ th .qm,td .qm,label .qm,.fl .qm,.fsec .qm{vertical-align:middle}
 /* 原型里给评审看的说明文字（不是上线页面的内容）：靠左对齐，开头自动加「※ 此内容仅作为需求说明，上线页面不显示本内容」；不翻译成英文 */
 .ui-reqnote{display:block;text-align:left;font-size:12px;line-height:1.6;color:#8A6D3B;background:#FFFBE6;border:1px dashed #E6C67A;border-radius:4px;padding:4px 8px;margin:6px 0;font-family:var(--font);font-weight:400}
 .ui-reqnote::before{content:"※ 此内容仅作为需求说明，上线页面不显示本内容。";display:block;color:#C00000;font-weight:700}
-/* 发布站点的后台原型只保留运营操作的页面本身（需求包框架规范第 4 节「发布时精简后台原型」；同模板 v5.46）：规则批注、模拟面板、需求说明块都不显示，后台页面占满宽度。
+
+/* 发布站点的后台原型只保留运营操作的页面本身（需求包框架规范第 4 节「发布时精简后台原型」）：规则批注、模拟面板、需求说明块都不显示，后台页面占满宽度。
    由 assets/nav.js 在发布站点（nav-data.js 有 window.PROTO_PUBLISH = true）给后台原型页的 body 加 pub-admin；本地预览加 ?publish=1 可以看效果 */
 body.pub-admin .adm-stage>.notes,body.pub-admin .ui-reqnote,body.pub-admin .notes-tab{display:none!important}
 body.pub-admin .adm-stage{grid-template-columns:minmax(0,1fr)}
-/* 本需求：右侧批注栏用本包自己的滑出面板（assets/proto.js 的 .nd-btn / aside.notes），发布模式下一并隐藏 */
-body.pub-admin .adm-stage aside.notes,body.pub-admin .nd-btn{display:none!important}
-/* 本需求过渡兼容（2026-10-21 同步模板 v5.46）：后台页尾 VIP-HELPINLINE 的 .vip-req-note 只画左边框，模板 .ui-reqnote 的虚线框会补出另外三边，这里保持页面原样；
-   以后后台页面删掉页内 .vip-req-note 样式、改用模板 .ui-reqnote 样式时，一并删掉本条 */
-.adm-stage .vip-req-note.ui-reqnote,.bo-mask .vip-req-note.ui-reqnote{border:0;border-left:2px solid #DCDFE6;border-radius:0}
+
+/* 文案确认页（需求包框架规范第 6.4 节） */
+.cc-tools{display:flex;align-items:center;gap:10px;margin:6px 0 8px;font-size:13px}
+.cc-tools select{font-family:var(--font);font-size:12.5px;padding:3px 6px;border:1px solid var(--line);border-radius:6px;background:var(--paper)}
+.cc-sp{flex:1}
+.cc-hint{color:var(--muted);font-size:12.5px}
+.cc-sub{color:var(--muted);font-size:12px;margin-top:2px}
+.cc-t{table-layout:auto}
+.cc-t .c-no{width:56px;white-space:nowrap}
+.cc-t .c-act{min-width:230px}
+.cc-empty{text-align:center;color:var(--muted);padding:18px}
+.cc-acts{display:flex;gap:14px;align-items:center;margin-bottom:4px}
+.cc-acts label{display:inline-flex;align-items:center;gap:4px;cursor:pointer}
+.cc-t textarea{width:100%;box-sizing:border-box;font-family:var(--font);font-size:12.5px;line-height:1.5;border:1px solid var(--line);border-radius:6px;padding:4px 6px;margin-top:4px;resize:vertical}
+.cc-t select{font-family:var(--font);font-size:12.5px;padding:2px 4px;margin-top:4px}
+.cc-submit,.cc-dl{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:10px 0 14px}
+.cc-submit{justify-content:flex-end}
+.cc-msg{flex:1;font-size:13px;color:#237804}
+.cc-msg.bad{color:#C00000;font-weight:700}
+.cc-btn{font-family:var(--font);font-size:13px;padding:6px 14px;border:1px solid var(--line);border-radius:6px;background:var(--paper);color:var(--fg);cursor:pointer}
+.cc-btn.pri{background:var(--purple);border-color:var(--purple);color:#fff;font-weight:700}
+.cc-btn.sm{padding:2px 8px;font-size:12px}
+.cc-btn:disabled{opacity:.5;cursor:not-allowed}
+.cc-ver h3{font-size:14px;margin:14px 0 6px}
+.cc-ver h3 small{color:var(--muted);font-weight:400;margin-left:6px}
+.cc-tag{display:inline-block;font-size:12px;border-radius:10px;padding:0 8px;background:#F5F5F5;color:#595959}
+.cc-tag.t采纳{background:#F6FFED;color:#237804}.cc-tag.t部分采纳{background:#FFFBE6;color:#AD6800}.cc-tag.t不采纳{background:#FFF1F0;color:#CF1322}

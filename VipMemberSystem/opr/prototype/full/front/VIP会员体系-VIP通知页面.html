@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>VIP会员体系-完整需求-VIP通知页面</title>
 <link rel="stylesheet" href="../../../assets/style.css">
+<link rel="stylesheet" href="../../../assets/vip.css">
 <style>
 /* 大厅背景（示意） */
 .lobby{display:grid;grid-template-columns:1fr 1fr;gap:10px}
@@ -130,7 +131,7 @@
 
     <!-- ============ 短信（模拟手机短信界面） ============ -->
     <div class="view" id="vSms" hidden>
-      <div class="smsh"><i>7</i><div><b>789Bingo</b><div class="hint" style="font-size:11px">短信</div></div></div>
+      <div class="smsh"><i>7</i><div><b>789Bingo</b><div class="ui-hint" style="font-size:11px">短信</div></div></div>
       <div class="smsd" id="smsDate">11月1日 周日 · 10:00</div>
       <!-- 发送时间说明（用户 2026-10-19）：保级短信在次月 1 日结算及奖励发放成功后触发；21:00–10:00（GMT+8）免打扰时段内完成的顺延到 10:00 发送 -->
       <p class="vip-req-note ui-reqnote" id="smsNote" hidden></p>
@@ -235,7 +236,7 @@
       <!-- 强制审核短信（用户 2026-10-20）：审核中、驳回不发；审核通过、实际到账时发到账短信，文案取后台审核时填写的短信模板（共享状态 smsTpl.up / rv / bd）。data-ast 设审核结果 -->
       <button type="button" data-go="sms-retention" data-cm="rv:auto" data-aud="1" class="glow"><span class="simtag">短信</span>强制审核生效 + 保级奖励自动领取 · 审核中：不发保级短信（驳回也不发）；右侧「领取后审核」切到「通过」→ 到账短信（用户 2026-10-20）</button>
       <button type="button" data-go="sms-retention" data-cm="rv:auto" data-aud="1" data-ast="pass" class="glow"><span class="simtag">短信</span>强制审核生效 + 保级奖励自动领取 · 审核通过：到账时发保级短信，文案取运营审核时填写的短信（未填写时示意用原文十六）（用户 2026-10-20）</button>
-      <button type="button" data-go="sms-aud-up" data-aud="1" data-ast="pass" class="glow"><span class="simtag">短信</span>强制审核生效 · 升级奖励审核通过：到账短信（文案取运营审核时填写的短信，未填写时为示意文案）（用户 2026-10-20）</button>
+      <button type="button" data-go="sms-aud-up" data-aud="1" data-ast="pass" class="glow"><span class="simtag">短信</span>强制审核生效 · 升级奖励审核通过：到账短信（文案取运营审核时填写的短信，没设过模板时为后台系统预设文案，中文以后台预设为准，用户 2026-10-22）（用户 2026-10-20）</button>
       <button type="button" data-go="sms-aud-bd" data-aud="1" data-ast="pass" class="glow"><span class="simtag">短信</span>强制审核生效 · 生日奖励审核通过：到账短信（同上）；生日前一天 / 当天提醒短信不受审核影响，保持原逻辑（用户 2026-10-20）</button>
       <!-- 用户 2026-10-20 已定：生日奖励自动领取 + 强制审核，生日当天不发「已到账」短信，审核通过到账时发到账短信；手动领取的审核通过后也发到账短信 -->
       <button type="button" data-go="sms-bday-before" data-cm="bd:auto" data-aud="1" class="glow"><span class="simtag">短信</span>强制审核生效 + 生日奖励自动领取 · 生日前一天提醒：「明天是你的生日，PHP488 VIP 生日奖励审核通过后到账，登录 789Bingo 查看。」，不写「自动到账」（用户 2026-10-20）</button>
@@ -304,8 +305,8 @@
       <li class="glow"><b>已定（用户 2026-10-19）</b>：短信、APP 推送因免打扰时段顺延到时段结束（默认 10:00）时，顺延期间玩家状态变了（如账号被冻结、生日奖励已领取、VIP 体系关闭），实际发送时按规则 N43、N48、N55 再判断，不满足的不发、不补发。时段结束时集中发送的短信、推送量和通道限流，实现方式由开发评估（PRD 3.5）。<span class="ref">规则 N41、N43、N48、N55</span></li>
       <li><b>原型暂定（PRD 未写明）</b>：<span class="glow">已过期的显示时间按规则 N26 一句话口径：有效期含生日当天共 x 天：例 10-13 生日、15 天，截止 10-27 23:59:59（GMT+8）；10-28 全天显示「已过期」；10-29 00:00 起不再显示生日卡片（用户 2026-10-19）。</span><span class="ref">PRD 第 6 章 F04-02</span></li>
     </ol>
-    <!-- 上一页 / 下一页：按 PRD 2.1 主流程顺序（运营配置 → VIP中心 → 通知 → 结算与奖励记录 → 会员数据；实物领取已移到实体奖品管理需求） -->
-    <div class="pager"><a href="VIP会员体系-VIP中心页面.html">← 上一页：VIP中心页面</a><a href="../admin/VIP会员体系-后台结算与奖励记录页面.html">下一页：后台结算与奖励记录页面 →</a></div>
+    <!-- 上一页 / 下一页：按 PRD 2.1 主流程顺序（运营配置 → VIP中心 → 通知 → 会员福利 → VIP数据报表；实物领取已移到实体奖品管理需求） -->
+    <div class="pager"><a href="VIP会员体系-VIP中心页面.html">← 上一页：VIP中心页面</a><a href="../admin/VIP会员体系-后台会员福利页面.html">下一页：后台会员福利页面 →</a></div>
   </aside>
 </div>
 </div>
@@ -313,6 +314,7 @@
 <script src="../../../assets/nav-data.js"></script>
 <script src="../../../assets/nav.js"></script>
 <script src="../../../assets/proto-en.js"></script>
+<script src="../../../assets/vip.js"></script>
 <script src="../../../assets/proto.js"></script>
 <script>
 /* 模拟操作面板（assets/proto.js）。platform、oldApp、vipOn、kyc、acct、bday、bdayFail 与其他前台原型共用 */
@@ -393,10 +395,10 @@ P.panel(document.getElementById("simPanel"), [
     /* 生日短信领取期限写到分钟「10 月 27 日 23:59（GMT+8）」，与有效期「含生日当天共 x 天、截止 23:59:59」一致（用户 2026-10-17） */
     "sms-bday-before": ["10月12日 周一 · 10:00", "你的 PHP488 VIP 生日奖励明天可领取！请在 10 月 27 日 23:59（GMT+8）前到等级中心领取。使用旧版 App？请更新 App 或登录 789Bingo 网站领取。", "draft", "bday"],
     "sms-bday-today": ["10月13日 周二 · 10:00", "789Bingo 祝你生日快乐！你的 PHP488 VIP 生日奖励已可领取。请在 10 月 27 日 23:59（GMT+8）前到等级中心领取。使用旧版 App？请更新 App 或登录 789Bingo 网站领取。", "draft", "bday"],
-    /* 强制审核生效时审核通过的到账短信（用户 2026-10-20）：第 2 项为运营未填写时的示意文案（保级用原文十六），实际显示 smsTpl 对应类别（见 audSms） */
-    "sms-aud-up": [AUD_T, "PHP2,000 VIP 升级奖励已到账！登录 789Bingo 查看奖励。", "tpl", "aud", AUD_N, "up"],
+    /* 强制审核生效时审核通过的到账短信（用户 2026-10-20）：第 2 项为运营未填写时的后台系统预设文案（与后台会员福利页面 SMS_DEF 一致，中文以后台预设为准，用户 2026-10-22；保级用原文十六），实际显示 smsTpl 对应类别（见 audSms） */
+    "sms-aud-up": [AUD_T, "恭喜升级到 VIP14！PHP2,000 VIP 升级奖励已到账！登录 789Bingo 查看奖励。", "tpl", "aud", AUD_N, "up"],
     "sms-aud-rv": [AUD_T, "PHP1,500 VIP 保级奖励已到账！登录 789Bingo 查看奖励。", "tpl", "aud", AUD_N, "rv"],
-    "sms-aud-bd": [AUD_T, "PHP488 VIP 生日奖励已到账！登录 789Bingo 查看奖励。", "tpl", "aud", AUD_N, "bd"]
+    "sms-aud-bd": [AUD_T, "789Bingo 祝你生日快乐！PHP488 VIP14 生日奖励已到账！登录 789Bingo 查看奖励。", "tpl", "aud", AUD_N, "bd"]
   };
   /* 规则 N48：不发 VIP 短信的账号状态 */
   var NO_SMS = ["frozen", "nobet", "selfex", "risk70", "nophone"];
@@ -604,7 +606,7 @@ P.panel(document.getElementById("simPanel"), [
       $("smsNone").textContent = nkS ? "（未完成 KYC：玩家不参与 VIP 体系，不会收到 VIP 短信）" : early ? "（生日奖励已在 10:00 前领取，不发当天提醒短信）" : offStop ? "（「VIP 体系状态」关闭期间不发 VIP 短信：规则 N43、N40）" : aw || "（当前账号状态或「VIP 体系状态」下，该玩家不会收到这条短信：规则 N48、N43、N40）";
       $("smsBub").textContent = m[1];
       /* tpl：文案由运营在审核时填写（用户 2026-10-20） */
-      if (m[2] && !blocked) vipSms = m[2] === "draft" ? "短信为示例文案（示意 · 待运营定稿）。" : m[2] === "tpl" ? "短信文案由运营在审核时填写（示意）。" : m[2];   /* 原在短信气泡里的小字，移到手机画面外的说明区（用户 2026-10-20） */
+      if (m[2] && !blocked) vipSms = m[2] === "draft" ? "短信为示例文案（示意 · 待运营定稿）。" : m[2] === "tpl" ? "短信文案由运营在审核时填写；没设过模板时为后台系统预设文案（中文以后台预设为准，用户 2026-10-22；英文示意，待运营定稿）。" : m[2];   /* 原在短信气泡里的小字，移到手机画面外的说明区（用户 2026-10-20） */
     }
     if (g === "bonus") {
       var st = view.split("-")[1], released = st === "released";

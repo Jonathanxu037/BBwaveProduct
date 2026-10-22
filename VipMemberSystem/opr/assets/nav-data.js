@@ -19,8 +19,8 @@ window.NAV_DATA = {
             ]},
             { title: "后台页面", href: "prototype/v1.0/admin/VIP会员体系-后台VIP特权配置页面.html", children: [
               { title: "后台VIP特权配置页面", href: "prototype/v1.0/admin/VIP会员体系-后台VIP特权配置页面.html", type: "admin" },
-              { title: "后台VIP会员数据页面", href: "prototype/v1.0/admin/VIP会员体系-后台VIP会员数据页面.html", type: "admin" },
-              { title: "后台结算与奖励记录页面", href: "prototype/v1.0/admin/VIP会员体系-后台结算与奖励记录页面.html", type: "admin" }
+              { title: "后台会员福利页面", href: "prototype/v1.0/admin/VIP会员体系-后台会员福利页面.html", type: "admin" },
+              { title: "后台VIP数据报表页面", href: "prototype/v1.0/admin/VIP会员体系-后台VIP数据报表页面.html", type: "admin" }
             ]}
           ]},
           { title: "需求文档", href: "docs/v1.0/VIP会员体系-需求要点.html", children: [
@@ -32,6 +32,7 @@ window.NAV_DATA = {
             { title: "运营文档", href: "docs/v1.0/VIP会员体系-需求修改总结.html", children: [
               { title: "需求修改总结", href: "docs/v1.0/VIP会员体系-需求修改总结.html", type: "doc", roles: ["opr"] },
               { title: "运营需求确认", href: "docs/v1.0/VIP会员体系-运营需求确认.html", type: "doc", roles: ["opr"] },
+              { title: "文案确认", href: "docs/v1.0/VIP会员体系-文案确认.html", type: "doc", roles: ["opr"] },
               { title: "后台操作手册", href: "docs/v1.0/VIP会员体系-后台操作手册.html", type: "doc", roles: ["opr"] },
               { title: "客服QA", href: "docs/v1.0/VIP会员体系-客服QA.html", type: "doc", roles: ["opr"] }
             ]}
@@ -46,8 +47,8 @@ window.NAV_DATA = {
             { title: "后台页面", href: "prototype/v1.1/admin/VIP会员体系-后台会员等级配置页面.html", children: [
               { title: "后台会员等级配置页面", href: "prototype/v1.1/admin/VIP会员体系-后台会员等级配置页面.html", type: "admin" },
               { title: "后台VIP特权配置页面", href: "prototype/v1.1/admin/VIP会员体系-后台VIP特权配置页面.html", type: "admin" },
-              { title: "后台VIP会员数据页面", href: "prototype/v1.1/admin/VIP会员体系-后台VIP会员数据页面.html", type: "admin" },
-              { title: "后台结算与奖励记录页面", href: "prototype/v1.1/admin/VIP会员体系-后台结算与奖励记录页面.html", type: "admin" }
+              { title: "后台会员福利页面", href: "prototype/v1.1/admin/VIP会员体系-后台会员福利页面.html", type: "admin" },
+              { title: "后台VIP数据报表页面", href: "prototype/v1.1/admin/VIP会员体系-后台VIP数据报表页面.html", type: "admin" }
             ]}
           ]},
           { title: "需求文档", href: "docs/v1.1/VIP会员体系-需求要点.html", children: [
@@ -59,6 +60,7 @@ window.NAV_DATA = {
             { title: "运营文档", href: "docs/v1.1/VIP会员体系-需求修改总结.html", children: [
               { title: "需求修改总结", href: "docs/v1.1/VIP会员体系-需求修改总结.html", type: "doc", roles: ["opr"] },
               { title: "运营需求确认", href: "docs/v1.1/VIP会员体系-运营需求确认.html", type: "doc", roles: ["opr"] },
+              { title: "文案确认", href: "docs/v1.1/VIP会员体系-文案确认.html", type: "doc", roles: ["opr"] },
               { title: "后台操作手册", href: "docs/v1.1/VIP会员体系-后台操作手册.html", type: "doc", roles: ["opr"] },
               { title: "客服QA", href: "docs/v1.1/VIP会员体系-客服QA.html", type: "doc", roles: ["opr"] }
             ]}
@@ -73,8 +75,8 @@ window.NAV_DATA = {
             { title: "后台页面", href: "prototype/full/admin/VIP会员体系-后台会员等级配置页面.html", children: [
               { title: "后台会员等级配置页面", href: "prototype/full/admin/VIP会员体系-后台会员等级配置页面.html", type: "admin" },
               { title: "后台VIP特权配置页面", href: "prototype/full/admin/VIP会员体系-后台VIP特权配置页面.html", type: "admin" },
-              { title: "后台VIP会员数据页面", href: "prototype/full/admin/VIP会员体系-后台VIP会员数据页面.html", type: "admin" },
-              { title: "后台结算与奖励记录页面", href: "prototype/full/admin/VIP会员体系-后台结算与奖励记录页面.html", type: "admin" }
+              { title: "后台会员福利页面", href: "prototype/full/admin/VIP会员体系-后台会员福利页面.html", type: "admin" },
+              { title: "后台VIP数据报表页面", href: "prototype/full/admin/VIP会员体系-后台VIP数据报表页面.html", type: "admin" }
             ]}
           ]},
           { title: "需求文档", href: "docs/full/VIP会员体系-需求要点.html", children: [
@@ -86,6 +88,7 @@ window.NAV_DATA = {
             { title: "运营文档", href: "docs/full/VIP会员体系-需求修改总结.html", children: [
               { title: "需求修改总结", href: "docs/full/VIP会员体系-需求修改总结.html", type: "doc", roles: ["opr"] },
               { title: "运营需求确认", href: "docs/full/VIP会员体系-运营需求确认.html", type: "doc", roles: ["opr"] },
+              { title: "文案确认", href: "docs/full/VIP会员体系-文案确认.html", type: "doc", roles: ["opr"] },
               { title: "后台操作手册", href: "docs/full/VIP会员体系-后台操作手册.html", type: "doc", roles: ["opr"] },
               { title: "客服QA", href: "docs/full/VIP会员体系-客服QA.html", type: "doc", roles: ["opr"] }
             ]}

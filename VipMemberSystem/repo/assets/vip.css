@@ -1,0 +1,177 @@
+/* VIP会员体系 · 本需求专属样式（2026-10-22 从 assets/style.css 移出）。
+   assets/style.css、nav.js、proto.js 按需求包框架规范第 12.2 节整份同步模板，本包特有的样式统一放在本文件，同步模板时不替换、不删除。
+   只给原型页使用：原型页在 style.css 之后、页面自己的 <style> 之前引用本文件，层叠顺序和原来写在 style.css 末尾时一致。 */
+
+/* ===== 本需求：原型小部件旧类名改名后保持原样（需求包框架规范第 4 节「类名」；模板 v5.39 起旧类名 .cnt / .big 改为 ui- 前缀）：
+   后台原型里原来套用模板旧 .cnt / .big 的说明文字和数字改名为 .vip-cnt / .vip-big，这里照搬模板旧样式，页面里的同名覆盖照常生效 ===== */
+.vip-cnt{font-size:12.5px;color:var(--app-muted);text-align:center;font-variant-numeric:tabular-nums}
+.vip-big{font-size:44px;font-weight:800;color:var(--app-gold);text-align:center;line-height:1}
+/* ===== 本需求：前台原型的 App 画面用真实手机尺寸（390 × 844，iPhone 14 视口）；整页保持正常网页布局：
+   画面在左、批注在右并排，窄于网页宽度时整页左右滚动，不改成手机堆叠排版 ===== */
+.stage{grid-template-columns:390px minmax(360px,1fr);min-width:820px;justify-items:stretch;padding:24px}
+.stage .notes{width:auto;max-width:none}
+.app{width:390px;min-width:390px;max-width:390px;height:844px;max-height:none;min-height:844px;flex:none}
+@media (max-width:1100px){.stage{grid-template-columns:390px minmax(360px,1fr);justify-items:stretch;padding:24px}.stage .notes{width:auto;max-width:none}}
+.with-nav:has(.stage){overflow-x:auto}
+.app .view>*,.app .view>*>*{min-width:0;max-width:100%}  /* 画面内容不超过手机宽度，宽表格只在自己的容器里左右滑动 */
+
+/* ===== 本需求：后台原型样式对齐真实运营后台（2026-10-13 用户截图） ===== */
+/* 只作用于后台原型画面（.adm-stage .bo），不改模板原有规则；画面最小宽 1100px，窄于此时在画面内左右滚动 */
+.adm-stage .bo{font-family:"Helvetica Neue",Helvetica,"PingFang SC","Microsoft YaHei",Arial,sans-serif;font-size:14px;color:#606266;border:1px solid #D0D7DE;border-radius:0;overflow-x:auto;overflow-y:visible}
+.adm-stage .bo>*{min-width:1100px}
+/* 顶栏第一行 */
+.adm-stage .bo .bo-top1{background:#1F6BB0;color:#fff;min-height:45px;padding:0 18px;gap:20px;font-size:14px;font-weight:700;flex-wrap:nowrap;white-space:nowrap}
+.adm-stage .bo .bo-time b{color:#FFD700;font-weight:700}
+.adm-stage .bo .bo-fs{font-size:18px;font-weight:400;cursor:pointer}
+/* 顶栏第二行：统计项 */
+.adm-stage .bo .bo-top2{background:#1F6BB0;color:#fff;border-top:1px solid rgba(255,255,255,.2);min-height:44px;padding:4px 18px;gap:6px 22px;font-size:15px;font-weight:700;white-space:nowrap}
+.adm-stage .bo .bo-bell{font-size:16px;font-weight:400}
+.adm-stage .bo .bo-top2 em{font-style:normal;margin-left:2px}
+.adm-stage .bo .bo-top2 em.c-r{color:#FF6B6B}.adm-stage .bo .bo-top2 em.c-y{color:#FFD54F}.adm-stage .bo .bo-top2 em.c-g{color:#4CD964}
+.adm-stage .bo .bo-top2 .bo-n{display:inline-block;min-width:0;border-radius:3px;padding:0 8px;line-height:22px;font-size:14px;font-weight:700;margin-left:4px;color:#fff}
+.adm-stage .bo .bo-top2 .bo-n.r{background:#E53935}.adm-stage .bo .bo-top2 .bo-n.g{background:#2EAD3E}
+.adm-stage .bo .bo-top2 .sa{font-size:15px;font-weight:700;color:#fff}
+.adm-stage .bo .bo-top2 .sa-pop{font-size:13px;font-weight:400;white-space:nowrap}
+.adm-stage .bo .bo-top2 .sa-pop a{color:#409EFF}
+/* 左侧菜单 */
+.adm-stage .bo .bo-body{grid-template-columns:198px minmax(0,1fr)}
+.adm-stage .bo .bo-menu{background:#E8F3FB;font-size:14px;display:block}
+.adm-stage .bo .bo-menu .mt{display:flex;align-items:center;justify-content:center;gap:8px;height:55px;padding:0;background:#3C8DCB;color:#fff;font-size:16px;font-weight:700}
+.adm-stage .bo .bo-menu .g{position:relative;display:flex;align-items:center;gap:8px;height:57px;padding:0 30px 0 16px;background:#D6E9F7;color:#333;font-weight:700;border-bottom:1px solid #C3DAEC;cursor:pointer;user-select:none}
+.adm-stage .bo .bo-menu .g>i{font-style:normal;font-weight:400;color:#4A6378;width:16px;text-align:center}
+.adm-stage .bo .bo-menu .g::after{content:"﹀";position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:12px;font-weight:400;color:#666}
+.adm-stage .bo .bo-menu .g.open::after{content:"︿"}
+.adm-stage .bo .bo-menu .g.me{cursor:default}.adm-stage .bo .bo-menu .g.me::after{content:none}
+.adm-stage .bo .bo-menu .g:focus-visible{outline:2px solid #409EFF;outline-offset:-2px}
+.adm-stage .bo .bo-menu .sub[hidden]{display:none}
+.adm-stage .bo .bo-menu .i{position:relative;display:flex;align-items:center;height:45px;padding:0 16px 0 26px;background:#E8F3FB;color:#333;font-size:14px;font-weight:400;border-bottom:1px solid #DAE9F5;cursor:pointer;text-decoration:none}
+.adm-stage .bo .bo-menu .i::before{content:"▶";font-size:9px;color:#7A8C9C;margin-right:8px}
+.adm-stage .bo .bo-menu .i:hover{color:#409EFF}
+.adm-stage .bo .bo-menu .i.on,.adm-stage .bo .bo-menu a.i.on:hover{background:#3BA4E0;color:#fff;font-weight:700;box-shadow:inset 4px 0 0 #E53935}
+.adm-stage .bo .bo-menu .i.on::before{color:#fff}
+.adm-stage .bo .bo-menu .i.on::after{content:"";position:absolute;right:0;top:50%;margin-top:-8px;border:8px solid transparent;border-right-color:#fff}
+.adm-stage .bo .bo-menu .i.on.glow{box-shadow:inset 4px 0 0 #E53935,inset 0 0 0 1px rgba(255,255,255,.55),0 0 6px 1px rgba(64,158,255,.35)}
+/* 内容区 */
+.adm-stage .bo .bo-main{background:#F0F0F0}
+.adm-stage .bo .bo-hd{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:48px;padding:0 14px;background:#fff;border-bottom:1px solid #E4E7ED}
+.adm-stage .bo .bo-crumb{background:none;border:0;padding:0;color:#606266;font-size:14px}
+.adm-stage .bo .bo-crumb b{color:#303133;font-weight:400}
+.adm-stage .bo .bo-search{box-sizing:border-box;width:250px;height:32px;border:1px solid #DCDFE6;border-radius:4px;padding:0 10px;font-family:inherit;font-size:13px;color:#606266;background:#fff}
+.adm-stage .bo .bo-search::placeholder{color:#C0C4CC}
+.adm-stage .bo .bo-search:focus{outline:0;border-color:#409EFF}
+.adm-stage .bo .bo-open{display:flex;align-items:center;gap:6px;min-height:40px;padding:0 14px;background:#fff;border-bottom:1px solid #E4E7ED;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+.adm-stage .bo .bo-open .ot{display:inline-flex;align-items:center;gap:6px;height:28px;padding:0 10px;border:1px solid #D8DCE5;background:#fff;color:#495060;font-size:12.5px;text-decoration:none;border-radius:2px}
+.adm-stage .bo .bo-open .ot i{font-style:normal;color:#909399}
+.adm-stage .bo .bo-open .ot .x{color:#909399;font-size:12px;margin-left:2px}
+.adm-stage .bo .bo-open .ot:hover,.adm-stage .bo .bo-open .ot.on{color:#409EFF;border-color:#409EFF}
+.adm-stage .bo .bo-open .ot.on i,.adm-stage .bo .bo-open .ot.on .x{color:#409EFF}
+.adm-stage .bo .bo-open .om{margin-left:auto;display:inline-flex;align-items:center;height:28px;padding:0 8px;border:1px solid #D8DCE5;color:#606266;font-size:12px;background:#fff}
+.adm-stage .bo .bo-card{margin:10px;background:#fff;border:1px solid #E4E7ED;min-width:0}
+/* 二级页签（Element border-card 风格） */
+.adm-stage .bo .bo-tabs{display:flex;align-items:stretch;gap:0;padding:0;background:#F5F7FA;border-bottom:1px solid #E4E7ED;flex-wrap:wrap}
+.adm-stage .bo .bo-tabs span{height:40px;line-height:40px;padding:0 20px;font-size:14px;color:#606266;border:0;border-left:1px solid transparent;border-right:1px solid transparent;margin-bottom:-1px}
+.adm-stage .bo .bo-tabs span:hover{color:#409EFF}
+.adm-stage .bo .bo-tabs span.on{background:#fff;color:#409EFF;border-left-color:#DCDFE6;border-right-color:#DCDFE6}
+.adm-stage .bo .bo-tabs span:first-child.on{border-left-color:transparent}
+/* 筛选栏与按钮 */
+.adm-stage .bo .bo-filter{background:#fff;border-bottom:0;padding:14px 10px 4px;gap:10px 10px}
+.adm-stage .bo .flab{color:#606266;font-size:13px}
+.adm-stage .bo .bo-inp{height:32px;border:1px solid #DCDFE6;border-radius:4px;font-family:inherit;font-size:13px;color:#606266;background-color:#fff}
+.adm-stage .bo .bo-inp::placeholder{color:#C0C4CC}
+.adm-stage .bo select.bo-inp{-webkit-appearance:none;appearance:none;padding-right:28px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%23C0C4CC' stroke-width='1.3'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center}
+.adm-stage .bo .bo-btn{height:32px;border-radius:3px;padding:0 15px;font-family:inherit;font-size:12px;color:#606266;background:#fff;border:1px solid #DCDFE6}
+.adm-stage .bo .bo-btn:hover{color:#409EFF;border-color:#C6E2FF;background:#ECF5FF}
+.adm-stage .bo .bo-btn.q,.adm-stage .bo .bo-btn.n{background:#409EFF;border-color:#409EFF;color:#fff}
+.adm-stage .bo .bo-btn.q:hover,.adm-stage .bo .bo-btn.n:hover{background:#66B1FF;border-color:#66B1FF;color:#fff}
+.adm-stage .bo .bo-filter .bo-btn[id$="Export"]{background:#A0CFFF;border-color:#A0CFFF;color:#fff}
+.adm-stage .bo .bo-filter .bo-btn[id$="Export"]:hover{background:#79BBFF;border-color:#79BBFF}
+.adm-stage .bo .bo-filter .bo-btn.n{margin-left:auto}
+.adm-stage .bo .bo-btn.link,.adm-stage .bo .bo-btn.link:hover{background:transparent;border:0;color:#409EFF;padding:0 4px;height:auto}
+/* 表格 */
+.adm-stage .bo .bo-content{margin:6px 10px 10px;padding:10px;background:#fff;border:1px solid #EBEEF5}
+.adm-stage .bo table{font-size:13px}
+.adm-stage .bo th,.adm-stage .bo td{border:1px solid #EBEEF5;padding:8px 10px;height:40px;box-sizing:border-box;text-align:center;color:#606266}
+.adm-stage .bo th{background:#fff;color:#909399;font-weight:700;font-size:13px}
+.adm-stage .bo td.w{text-align:left}
+.adm-stage .bo .empty{color:#909399;text-align:center}
+/* 分页 */
+.adm-stage .bo .bo-content .pager{display:flex;justify-content:flex-end;align-items:center;gap:12px;margin-top:12px;padding:0;border:0;font-size:13px;color:#606266}
+.adm-stage .bo .pager .pgr-sz,.adm-stage .bo .pager .pgr-go{display:inline-flex;align-items:center;height:28px;padding:0 10px;border:1px solid #DCDFE6;border-radius:3px;color:#606266;background:#fff}
+.adm-stage .bo .pager .pgr-go{justify-content:center;min-width:24px;margin-left:6px;padding:0 6px}
+.adm-stage .bo .pager .pgr-nav{color:#C0C4CC;letter-spacing:6px}
+.adm-stage .bo .pager .pgr-nav b{color:#409EFF;letter-spacing:0}
+/* 弹窗按钮统一到 #409EFF 蓝 */
+.bo-mask .bo-dlg .bo-btn.q,.bo-mask .bo-dlg .bo-btn.n{background:#409EFF;border-color:#409EFF;color:#fff}
+.bo-mask .bo-dlg .bo-btn.q:hover,.bo-mask .bo-dlg .bo-btn.n:hover{background:#66B1FF;border-color:#66B1FF}
+.bo-mask .bo-dlg .bo-btn:not(.q):not(.n):not(.link):hover{color:#409EFF;border-color:#C6E2FF;background:#ECF5FF}
+
+/* 本需求：后台顶栏统计行始终一行（2026-10-13）：现有统计项放在内层 .bo-stats，放不下时在行内左右滚动（隐藏滚动条），绝不折行；本需求新增的「待派发奖品」「库存告急」留在外层始终可见，库存告急弹出清单不被滚动容器裁切 */
+.adm-stage .bo .bo-top2{flex-wrap:nowrap;white-space:nowrap;height:40px;min-height:40px;box-sizing:border-box;padding:0 14px;gap:14px;font-size:13px;line-height:20px}
+.adm-stage .bo .bo-top2 .bo-stats{display:flex;align-items:center;gap:14px;flex:1 1 auto;min-width:0;height:100%;overflow-x:auto;overflow-y:hidden;scrollbar-width:none;-ms-overflow-style:none}
+.adm-stage .bo .bo-top2 .bo-stats::-webkit-scrollbar{display:none}
+.adm-stage .bo .bo-top2 .bo-stats>span{display:inline-flex;align-items:center;flex:none}
+.adm-stage .bo .bo-top2 em{margin-left:4px}
+.adm-stage .bo .bo-top2 .bo-n{box-sizing:border-box;min-width:20px;height:20px;line-height:20px;padding:0 6px;font-size:12px;margin-left:4px;text-align:center}
+.adm-stage .bo .bo-top2 .bo-n.o{background:#E6A23C}
+.adm-stage .bo .bo-top2 .bo-bell{font-size:14px}
+.adm-stage .bo .bo-top2 .sa-wrap{flex:none;margin-left:0}
+.adm-stage .bo .bo-top2 .sa{font-size:13px;line-height:20px}
+.adm-stage .bo .bo-top2 [hidden]{display:none!important}
+.adm-stage .bo .bo-top2 .pd-wrap{display:inline-flex;align-items:center;flex:none;padding:0 2px}
+.adm-stage .bo .bo-top2 .pd{display:inline-flex;align-items:center;color:#fff;text-decoration:none;cursor:pointer}
+.adm-stage .bo .bo-top2 .pd:hover{text-decoration:underline}
+.adm-stage .bo .bo-top2 .bo-stats.bo-fade{-webkit-mask-image:linear-gradient(to right,#000 calc(100% - 32px),transparent);mask-image:linear-gradient(to right,#000 calc(100% - 32px),transparent)}
+
+/* 本需求：后台画面布局修正（2026-10-13，用户反馈「页面样式怎么乱了」）
+   ① 外层 .adm-stage 改为弹性布局，批注位置与模板原布局一致：视口 > 1280px 时后台画面在左、批注 340px 在右（吸顶）；≤ 1280px 时批注排到画面下方。
+   ② 顶栏两行和左侧菜单始终跟后台画面同宽、一直可见（「待派发奖品」「库存告急」始终在顶栏最右）；
+      面包屑行、已打开页面标签、内容卡片都跟主区同宽：筛选栏放不下时整齐换行；表格、库存汇总卡片行在各自的容器里左右滚动，不裁切、不撑出页面。
+      不让整个画面或 .adm-stage 横向滚动：.adm-stage 设成滚动容器会让右侧批注的吸顶（sticky）失效，且顶栏、搜索框、「新增」按钮会被滚到可视区外。
+   ③ .bo-body 用 flex：菜单固定 198px，主区 flex:1 1 auto、min-width:0，占满剩余宽度，内容不把主区撑宽。 */
+.adm-stage{display:flex;flex-wrap:nowrap;align-items:flex-start;gap:16px}
+.adm-stage>.bo{flex:1 1 0;min-width:0;max-width:100%;overflow:hidden}
+.adm-stage>.adm-notes{flex:0 0 340px;min-width:0}
+@media (max-width:1280px){.adm-stage{flex-wrap:wrap}.adm-stage>.bo{flex:1 1 100%}.adm-stage>.adm-notes{flex:1 1 100%}}
+.adm-stage .bo>*{min-width:0}
+.adm-stage .bo .bo-body{display:flex;align-items:stretch}
+.adm-stage .bo .bo-menu{flex:0 0 198px;width:198px;min-width:198px}
+.adm-stage .bo .bo-main{flex:1 1 auto;min-width:0;overflow:visible}
+.adm-stage .bo .bo-card{min-width:0;overflow:visible}
+@media (max-width:760px){.adm-stage .bo .bo-menu{display:none}}/* 顶栏第二行：统计项（铃铛 → 预算告警）在左、可在行内左右滚动；「待派发奖品」「库存告急」固定在同一行最右 */
+.adm-stage .bo .bo-top2{display:flex;align-items:center;position:relative}
+.adm-stage .bo .bo-top2 .bo-stats{position:static;inset:auto;background:none;padding:0;z-index:auto;place-items:normal}
+.adm-stage .bo .bo-top2 .pd-wrap{margin-left:auto}
+/* 面包屑行：左面包屑、右搜索框（200px），同一行不截断 */
+.adm-stage .bo .bo-hd{flex-wrap:nowrap}
+.adm-stage .bo .bo-crumb{flex:1 1 auto;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.adm-stage .bo .bo-search{flex:0 0 200px;width:200px}
+/* 筛选栏：一行放不下时整齐换行；按钮组（查询 / 重置 / 导出 / 新增）作为一组不拆开，「新增」类按钮靠右 */
+.adm-stage .bo .bo-filter{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+.adm-stage .bo .bo-filter .flab{white-space:nowrap}
+.adm-stage .bo .bo-fbtns{display:inline-flex;align-items:center;gap:8px;flex:1 0 auto;flex-wrap:nowrap}
+.adm-stage .bo .bo-fbtns .bo-btn{margin:0;white-space:nowrap}
+.adm-stage .bo .bo-filter .bo-fbtns .bo-btn.n{margin-left:auto}
+/* 表格：容器横向滚动，表头一行；只有带说明的长列名（如「已分配到活动」）允许换行 */
+.adm-stage .bo .bo-content{overflow-x:auto}
+.adm-stage .bo th{white-space:nowrap}
+.adm-stage .bo th.th-wrap{white-space:normal;min-width:96px}
+
+/* ===== 本需求：右侧批注栏默认收进屏幕右侧，点右边缘按钮滑出（assets/vip.js 加 body.nd-on / nd-open；2026-10-13 用户要求） ===== */
+body.nd-on aside.notes{position:fixed;top:46px;right:0;bottom:0;width:400px;max-width:calc(100vw - 40px);margin:0;border-radius:10px 0 0 10px;overflow-y:auto;z-index:150;transform:translateX(100%);visibility:hidden;transition:transform .25s ease,visibility 0s linear .25s;box-shadow:-6px 0 18px rgba(0,0,0,.3)}
+body.nd-on.nd-open aside.notes{transform:none;visibility:visible;transition:transform .25s ease,visibility 0s}
+body.nd-on .adm-stage{display:block}
+body.nd-on .adm-stage>.bo{max-width:none}
+body.nd-on .stage{grid-template-columns:390px;justify-content:center;min-width:0}
+.nd-btn{position:fixed;right:0;top:50%;transform:translateY(-50%);z-index:160;writing-mode:vertical-rl;padding:14px 7px;border:0;border-radius:8px 0 0 8px;background:#D8242F;color:#fff;font:700 13px/1.2 "Microsoft YaHei",sans-serif;letter-spacing:2px;cursor:pointer;box-shadow:-2px 2px 8px rgba(0,0,0,.3)}
+.nd-btn:hover{background:#B81C26}
+.nd-btn:focus-visible{outline:2px solid #FFD700;outline-offset:2px}
+body.nd-open .nd-btn{right:min(400px,calc(100vw - 40px))}
+@media (prefers-reduced-motion:reduce){body.nd-on aside.notes,body.nd-on.nd-open aside.notes{transition:none}}
+/* 本需求：右侧批注栏用本包自己的滑出面板，不用模板的「‹ 显示」批注框（assets/vip.js 会移除模板生成的按钮；这里再兜底隐藏） */
+body.nd-on .notes-tab,body.nd-on .notes-bar{display:none!important}
+body.nd-on.notes-off .stage>.notes,body.nd-on.notes-off .adm-stage>.notes{display:block}
+/* 本需求：右侧批注栏用本包自己的滑出面板（assets/vip.js 的 .nd-btn / aside.notes），发布模式下一并隐藏 */
+body.pub-admin .adm-stage aside.notes,body.pub-admin .nd-btn{display:none!important}
+/* 本需求过渡兼容（2026-10-21 同步模板 v5.46）：后台页尾 VIP-HELPINLINE 的 .vip-req-note 只画左边框，模板 .ui-reqnote 的虚线框会补出另外三边，这里保持页面原样；
+   以后后台页面删掉页内 .vip-req-note 样式、改用模板 .ui-reqnote 样式时，一并删掉本条 */
+.adm-stage .vip-req-note.ui-reqnote,.bo-mask .vip-req-note.ui-reqnote{border:0;border-left:2px solid #DCDFE6;border-radius:0}

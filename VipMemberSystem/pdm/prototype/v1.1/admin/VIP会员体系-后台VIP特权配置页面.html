@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>VIP会员体系-v1.1-后台VIP特权配置页面</title>
 <link rel="stylesheet" href="../../../assets/style.css">
+<link rel="stylesheet" href="../../../assets/vip.css">
 <style>
 .bo-tabs{flex-wrap:wrap}.bo-tabs span{cursor:pointer}.bo-tabs span:hover{color:#409EFF}
 .qm{cursor:pointer}.qm:hover::after,.qm:focus::after{content:none}.qm:hover,.qm[aria-expanded=true]{background:#909399}
@@ -33,9 +34,9 @@
 .vip-sw.vip-dis{cursor:not-allowed;opacity:.5}
 .errsum{margin:8px 0 0;padding:8px 12px;background:#FEF0F0;border:1px solid #FDE2E2;border-radius:3px;color:#F56C6C;font-size:12.5px}
 .errsum ul{margin:4px 0 0;padding-left:18px}
-.cnt{font-size:12px;color:#909399}
+.vip-cnt{font-size:12px;color:#909399}
 .cmr{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:0 0 6px}.cml{width:64px;color:#606266}
-.eg2{border-top:1px dashed #DCDFE6;margin-top:4px;padding-top:6px}.eg2>.cnt:first-child{margin-bottom:4px}
+.eg2{border-top:1px dashed #DCDFE6;margin-top:4px;padding-top:6px}.eg2>.vip-cnt:first-child{margin-bottom:4px}
 .scroll{max-height:340px;overflow:auto;max-width:420px}
 .mx{display:inline-block;margin-left:6px;font-size:12px;color:#E6A23C;white-space:normal}
 .btnrow{display:flex;gap:10px;align-items:center;margin:10px 0 4px;flex-wrap:wrap}
@@ -43,7 +44,7 @@
 .pend b{color:#E6A23C}
 .kv{display:grid;grid-template-columns:150px 1fr;gap:4px 10px;font-size:12.5px;background:#FAFBFC;border:1px solid #EBEEF5;border-radius:3px;padding:8px 12px}
 .kv>span:nth-child(odd){color:#909399}
-.big{font-size:15px;font-weight:700;color:#333}
+.vip-big{font-size:15px;font-weight:700;color:#333}
 .need{color:#E6A23C;font-weight:700}.noneed{color:#52C41A;font-weight:700}
 .opt{display:grid;gap:6px;padding:8px 10px;border:1px dashed #DCDFE6;border-radius:3px}
 .opt .rd{align-items:flex-start;line-height:1.6}
@@ -233,18 +234,16 @@ td.vip-pg-st .vip-pg-retry{border:0;background:none;color:#409EFF;cursor:pointer
         <div class="bo-hd"><div class="bo-crumb" id="crumb">位置 › 用户管理 › VIP特权 › <b>VIP特权</b></div><input class="bo-search" placeholder="搜索页面..." aria-label="搜索页面"></div>
         <div class="bo-open"><a class="ot on" href="VIP会员体系-后台VIP特权配置页面.html#vip"><i>✣</i>VIP特权<span class="x">×</span></a><span class="om" aria-hidden="true">▦ ﹀</span></div>
         <div class="bo-card">
-        <div class="bo-tabs" role="tablist">
-          <span role="tab" tabindex="0" class="glow" data-view="vip">VIP特权</span>
-          <span role="tab" tabindex="0" data-view="growth">成长值记录</span>
-          <span role="tab" tabindex="0" class="glow" data-href="VIP会员体系-后台结算与奖励记录页面.html#welfare">会员福利记录</span>
-          <span role="tab" tabindex="0" class="glow" data-href="VIP会员体系-后台VIP会员数据页面.html#members">VIP会员数据</span>
-          <span role="tab" tabindex="0" class="glow" data-href="VIP会员体系-后台VIP会员数据页面.html#changes">等级变动记录</span>
-          <span role="tab" tabindex="0" class="glow" data-href="VIP会员体系-后台结算与奖励记录页面.html#settle">月度结算记录</span>
+        <!-- 顶部页签（用户 2026-10-21）：后台【VIP特权】分为 VIP特权、会员福利、VIP数据报表三个页签，每个页签一个原型文件；当前页高亮，点击跳到对应文件并保留 role / publish / lang 参数 -->
+        <div class="bo-tabs" role="tablist" aria-label="VIP特权页签">
+          <span role="tab" tabindex="0" class="glow on" aria-selected="true" data-view="vip">VIP特权</span>
+          <span role="tab" tabindex="0" class="glow" aria-selected="false" data-href="VIP会员体系-后台会员福利页面.html#welfare">会员福利</span>
+          <span role="tab" tabindex="0" class="glow" aria-selected="false" data-href="VIP会员体系-后台VIP数据报表页面.html#members">VIP数据报表</span>
         </div>
 
         <!-- ============ VIP特权（现有页签，整合新 VIP 等级、VIP 全局参数、VIP 奖励和旧版现有配置；用户 2026-10-17：会员等级与 VIP特权 分开） ============ -->
         <section id="vVip" class="bo-content" hidden>
-          <div class="cnt" style="margin:2px 0 6px">成长值计算方式为该游戏的有效投注额乘上流水倍数（现有说明，管理后台知识库 4.1.6；只用于 Level 段成长值）。</div>
+          <div class="vip-cnt" style="margin:2px 0 6px">成长值计算方式为该游戏的有效投注额乘上流水倍数（现有说明，管理后台知识库 4.1.6；只用于 Level 段成长值）。</div>
           <!-- VIP特权 子页签（用户 2026-10-20）：点击只显示对应模块；未保存的修改在切换页签时保留 -->
           <div class="subtabs glow" role="tablist" id="vSub">
             <button type="button" role="tab" data-st="level">VIP等级配置</button>
@@ -255,22 +254,22 @@ td.vip-pg-st .vip-pg-retry{border:0;background:none;color:#409EFF;cursor:pointer
           <div class="vpane" data-pane="level">
           <div class="blk glow">
             <div class="fsec">VIP 等级配置（当前 <span id="lvCnt">25</span> 级）</div>
-            <div class="calcrow glow"><span class="fl"><span class="req">*</span>计算方式<i class="qm" data-h="计算方式">?</i></span><span class="rdg2" id="calcBox" role="radiogroup" aria-label="计算方式"><span class="rd" data-v="grow" role="radio" tabindex="0"><i></i>成长值</span><span class="rd" data-v="amt" role="radio" tabindex="0"><i></i>累计金额</span></span><span class="cnt vip-live" id="calcHint"></span><span class="cnt vip-req">出处：累计金额方式的升级 / 保级口径为 Claire 方案。</span></div>
+            <div class="calcrow glow"><span class="fl"><span class="req">*</span>计算方式<i class="qm" data-h="计算方式">?</i></span><span class="rdg2" id="calcBox" role="radiogroup" aria-label="计算方式"><span class="rd" data-v="grow" role="radio" tabindex="0"><i></i>成长值</span><span class="rd" data-v="amt" role="radio" tabindex="0"><i></i>累计金额</span></span><span class="vip-cnt vip-live" id="calcHint"></span><span class="vip-cnt vip-req">出处：累计金额方式的升级 / 保级口径为 Claire 方案。</span></div>
             <!-- VIP 成长值规则：只在计算方式 = 成长值时显示，放在等级表之上，先设置规则再配置等级成长值门槛（用户 2026-10-20） -->
             <div class="grb glow" id="grBlk" style="margin:0 0 10px;border:1px dashed #DCDFE6;border-radius:3px">
-              <div class="fsec">VIP 成长值规则<i class="qm" data-h="VIP 成长值规则（单独保存）">?</i><span class="cnt" id="grState" style="margin-left:8px;font-weight:400"></span></div>
+              <div class="fsec">VIP 成长值规则<i class="qm" data-h="VIP 成长值规则（单独保存）">?</i><span class="vip-cnt" id="grState" style="margin-left:8px;font-weight:400"></span></div>
               <div class="pend" id="grTip" hidden></div>
               <div class="frow"><span class="fl"><span class="req">*</span>充值金额与成长值的比例</span><div class="fctl"><span>充值 ₱1 =</span><input class="bo-inp gri" data-g="dep" style="width:90px" placeholder="如 1" aria-label="充值 ₱1 对应的成长值"><span>成长值</span><div class="ferr" hidden></div></div></div>
               <div class="frow"><span class="fl"><span class="req">*</span>投注金额与成长值的比例（按游戏分类）</span><div class="fctl" style="display:block">
                 <div style="overflow-x:auto;max-width:100%"><table class="lv grt"><thead><tr><th>游戏分类<i class="qm" data-h="游戏分类（VIP 成长值）">?</i></th><th>有效投注 ₱1 =</th></tr></thead><tbody id="grBody"></tbody></table></div>
               </div></div>
-              <p class="cnt grf" style="margin:6px 0 0">成长值 = 充值金额 × 充值比例 + Σ（各游戏分类有效投注 × 该分类比例）。<span id="grEx"></span><br><span id="grSum"></span></p>
+              <p class="vip-cnt grf" style="margin:6px 0 0">成长值 = 充值金额 × 充值比例 + Σ（各游戏分类有效投注 × 该分类比例）。<span id="grEx"></span><br><span id="grSum"></span></p>
               <div class="errsum" id="grErr" hidden></div>
-              <div class="btnrow"><button class="bo-btn q" type="button" id="grSave" data-perm="1">保存 VIP 成长值规则</button><span class="cnt vip-live">确认弹窗内填谷歌验证码，保存即生效，没有暂存</span><div class="vip-req-note ui-reqnote"><span>旁边的提示为上线提示（运营可见）；出处：用户 2026-10-20。</span></div></div>
+              <div class="btnrow"><button class="bo-btn q" type="button" id="grSave" data-perm="1">保存 VIP 成长值规则</button><span class="vip-cnt vip-live">确认弹窗内填谷歌验证码，保存即生效，没有暂存</span><div class="vip-req-note ui-reqnote"><span>旁边的提示为上线提示（运营可见）；出处：用户 2026-10-20。</span></div></div>
             </div>
             <div class="pend glow vip-live" id="grNeed" hidden></div>
             <div class="pend" id="rvBox" hidden></div>
-            <div class="lvbar glow"><button class="bo-btn q" type="button" id="lvAdd" data-perm="1">新增VIP等级</button><span class="cnt">点「新增VIP等级」，在弹窗内先填「新增到第几级」（L1 ~ 当前最高 VIP 等级 + 1，填「当前最高等级 + 1」时加在最高级之上；SUPER VIP 只是等级名称，不作为最高等级标识，用户 2026-10-21，v1.1 / full），再填门槛和等级名称，直接保存；插入位置及之后的等级依次顺延、L 号重排，等级数不限制（用户 2026-10-20，原「在最前新增等级」「在此级后新增」删除）。所有等级统一按上方「计算方式」判定，新增等级按所选方式填写门槛。保存后「VIP 奖励配置」「下注限额与返水」「VIP奖品配置」在相同位置自动生成该级条目（未配置），用「修改」补填（用户 2026-10-20）。</span></div>
+            <div class="lvbar glow"><button class="bo-btn q" type="button" id="lvAdd" data-perm="1">新增VIP等级</button><span class="vip-cnt">点「新增VIP等级」，在弹窗内先填「新增到第几级」（L1 ~ 当前最高 VIP 等级 + 1，填「当前最高等级 + 1」时加在最高级之上；SUPER VIP 只是等级名称，不作为最高等级标识，用户 2026-10-21，v1.1 / full），再填门槛和等级名称，直接保存；插入位置及之后的等级依次顺延、L 号重排，等级数不限制（用户 2026-10-20，原「在最前新增等级」「在此级后新增」删除）。所有等级统一按上方「计算方式」判定，新增等级按所选方式填写门槛。保存后「VIP 奖励配置」「下注限额与返水」「VIP奖品配置」在相同位置自动生成该级条目（未配置），用「修改」补填（用户 2026-10-20）。</span></div>
             <div style="overflow-x:auto">
               <table class="lv m-amt" id="vipTbl">
                 <thead><tr>
@@ -302,35 +301,35 @@ td.vip-pg-st .vip-pg-retry{border:0;background:none;color:#409EFF;cursor:pointer
             <div class="frow"><span class="fl">本次关闭的累计方式<i class="qm" data-h="累计方式（本次关闭）">?</i></span><div class="fctl"><span id="closeMode">—</span></div></div>
             <div class="frow glow"><span class="fl">已发放未领取的奖励（本次关闭）<i class="qm" data-h="已发放未领取的奖励（本次关闭）">?</i></span><div class="fctl"><span id="closeKeepT">—</span></div></div>
             <!-- KYC 认证要求（用户 2026-10-21）：VIP 参与资格按它判定；写共享模拟状态 kycReq（full / partial），前台 VIP中心页面、VIP通知页面读取 -->
-            <div class="frow glow"><span class="fl"><span class="req">*</span>KYC 认证要求<i class="qm" data-h="KYC 认证要求">?</i></span><div class="fctl" style="display:block"><div class="rdg2" id="gKyc" role="radiogroup" aria-label="KYC 认证要求"><span class="rd" data-v="full" role="radio" tabindex="0"><i></i>完全认证</span><span class="rd" data-v="partial" role="radio" tabindex="0"><i></i>部分认证</span></div><span class="cnt vip-live">默认「完全认证」</span><div class="vip-req-note ui-reqnote"><span>出处：用户 2026-10-21（PRD 规则 N66、N76，七种 KYC 状态的对照见规则 N66 下表）；修改后的生效口径待确认 Q39。原型：保存后写共享状态，前台 VIP中心页面场景②v（KYC 部分认证）可看两种要求下的定级差异。</span></div></div></div>
-            <div class="frow"><span class="fl"><span class="req">*</span>升级奖励流水倍数<i class="qm" data-h="流水倍数（原文外补充）">?</i></span><div class="fctl"><input class="bo-inp mul" style="width:100px" value="1" aria-label="升级奖励流水倍数"><span class="cnt">倍</span><button type="button" class="vip-tbc ui-reqnote" id="tbcR7" aria-label="待确认：VIP 奖励流水与低额自动清稽核，点击查看">待确认</button><div class="ferr" hidden></div></div></div>
-            <div class="frow"><span class="fl"><span class="req">*</span>保级奖励流水倍数<i class="qm" data-h="流水倍数（原文外补充）">?</i></span><div class="fctl"><input class="bo-inp mul" style="width:100px" value="1" aria-label="保级奖励流水倍数"><span class="cnt">倍</span><div class="ferr" hidden></div></div></div>
-            <div class="frow"><span class="fl"><span class="req">*</span>生日奖励流水倍数<i class="qm" data-h="流水倍数（原文外补充）">?</i></span><div class="fctl"><input class="bo-inp mul" style="width:100px" value="1" aria-label="生日奖励流水倍数"><span class="cnt">倍</span><div class="ferr" hidden></div></div></div>
+            <div class="frow glow"><span class="fl"><span class="req">*</span>KYC 认证要求<i class="qm" data-h="KYC 认证要求">?</i></span><div class="fctl" style="display:block"><div class="rdg2" id="gKyc" role="radiogroup" aria-label="KYC 认证要求"><span class="rd" data-v="full" role="radio" tabindex="0"><i></i>完全认证</span><span class="rd" data-v="partial" role="radio" tabindex="0"><i></i>部分认证</span></div><span class="vip-cnt vip-live">默认「完全认证」</span><div class="vip-req-note ui-reqnote"><span>出处：用户 2026-10-21（PRD 规则 N66、N76，七种 KYC 状态的对照见规则 N66 下表）；修改后的生效口径待确认 Q39。原型：保存后写共享状态，前台 VIP中心页面场景②v（KYC 部分认证）可看两种要求下的定级差异。</span></div></div></div>
+            <div class="frow"><span class="fl"><span class="req">*</span>升级奖励流水倍数<i class="qm" data-h="流水倍数（原文外补充）">?</i></span><div class="fctl"><input class="bo-inp mul" style="width:100px" value="1" aria-label="升级奖励流水倍数"><span class="vip-cnt">倍</span><button type="button" class="vip-tbc ui-reqnote" id="tbcR7" aria-label="待确认：VIP 奖励流水与低额自动清稽核，点击查看">待确认</button><div class="ferr" hidden></div></div></div>
+            <div class="frow"><span class="fl"><span class="req">*</span>保级奖励流水倍数<i class="qm" data-h="流水倍数（原文外补充）">?</i></span><div class="fctl"><input class="bo-inp mul" style="width:100px" value="1" aria-label="保级奖励流水倍数"><span class="vip-cnt">倍</span><div class="ferr" hidden></div></div></div>
+            <div class="frow"><span class="fl"><span class="req">*</span>生日奖励流水倍数<i class="qm" data-h="流水倍数（原文外补充）">?</i></span><div class="fctl"><input class="bo-inp mul" style="width:100px" value="1" aria-label="生日奖励流水倍数"><span class="vip-cnt">倍</span><div class="ferr" hidden></div></div></div>
             <div class="frow"><span class="fl"><span class="req">*</span>VIP 流水计入游戏范围<i class="qm" data-h="VIP 流水计入游戏范围（6 大类）">?</i></span><div class="fctl" style="display:block"><div class="rdg2" id="gScope"><span class="rd" data-v="all" role="radio" tabindex="0"><i></i>全部 6 大类</span><span class="rd" data-v="pick" role="radio" tabindex="0"><i></i>指定游戏类型</span></div><div class="gts" id="gTypes" hidden></div><div class="ferr" id="gScopeE" hidden></div></div></div>
             <!-- 领取方式（用户 2026-10-20）：按奖励类别分别设置；写共享模拟状态 claimMode -->
             <div class="frow glow"><span class="fl"><span class="req">*</span>领取方式<i class="qm" data-h="领取方式（VIP 奖励）">?</i></span><div class="fctl" style="display:block" id="cmWrap">
               <div class="cmr"><span class="cml">升级奖励</span><span class="rdg2" data-cm="up" role="radiogroup" aria-label="升级奖励领取方式"><span class="rd" data-v="auto" role="radio" tabindex="0"><i></i>自动领取（到账）</span><span class="rd" data-v="manual" role="radio" tabindex="0"><i></i>手动领取</span></span></div>
               <div class="cmr"><span class="cml">保级奖励</span><span class="rdg2" data-cm="rv" role="radiogroup" aria-label="保级奖励领取方式"><span class="rd" data-v="auto" role="radio" tabindex="0"><i></i>自动领取（到账）</span><span class="rd" data-v="manual" role="radio" tabindex="0"><i></i>手动领取</span></span></div>
               <div class="cmr"><span class="cml">生日奖励</span><span class="rdg2" data-cm="bd" role="radiogroup" aria-label="生日奖励领取方式"><span class="rd" data-v="auto" role="radio" tabindex="0"><i></i>自动领取（到账）</span><span class="rd" data-v="manual" role="radio" tabindex="0"><i></i>手动领取</span></span></div>
-              <span class="cnt">默认：升级、保级 = 自动领取，生日 = 手动领取（现状）；强制审核生效时先审核再到账（用户 2026-10-20）</span>
+              <span class="vip-cnt">默认：升级、保级 = 自动领取，生日 = 手动领取（现状）；强制审核生效时先审核再到账（用户 2026-10-20）</span>
             </div></div>
-            <div class="frow glow"><span class="fl"><span class="req">*</span>手动领取有效期（天）<i class="qm" data-h="手动领取有效期（天）">?</i></span><div class="fctl"><input class="bo-inp" id="gExp" style="width:100px" value="15" placeholder="1–30" aria-label="手动领取有效期（天）"><span class="cnt">天，对所有「手动领取」的奖励生效（含生日奖励，原「生日奖励有效期」合并为本项）</span><div class="ferr" hidden></div></div></div>
-            <div class="frow"><span class="fl">VIP 奖励月度预算<i class="qm" data-h="VIP 奖励月度预算（原文外补充）">?</i></span><div class="fctl"><span class="cnt">₱</span><input class="bo-inp" id="gBud" style="width:160px" placeholder="选填，不填不限" aria-label="VIP 奖励月度预算"><div class="ferr" hidden></div></div></div>
-            <div class="frow"><span class="fl">复核金额阈值<i class="qm" data-h="复核金额阈值（原文外补充）">?</i></span><div class="fctl"><span class="cnt">₱</span><input class="bo-inp" id="gRv" style="width:160px" placeholder="选填" aria-label="复核金额阈值"><span class="cnt">默认值待运营确认（Q23），原型示例 100,000</span><div class="ferr" hidden></div></div></div>
+            <div class="frow glow"><span class="fl"><span class="req">*</span>手动领取有效期（天）<i class="qm" data-h="手动领取有效期（天）">?</i></span><div class="fctl"><input class="bo-inp" id="gExp" style="width:100px" value="15" placeholder="1–30" aria-label="手动领取有效期（天）"><span class="vip-cnt">天，对所有「手动领取」的奖励生效（含生日奖励，原「生日奖励有效期」合并为本项）</span><div class="ferr" hidden></div></div></div>
+            <div class="frow"><span class="fl">VIP 奖励月度预算<i class="qm" data-h="VIP 奖励月度预算（原文外补充）">?</i></span><div class="fctl"><span class="vip-cnt">₱</span><input class="bo-inp" id="gBud" style="width:160px" placeholder="选填，不填不限" aria-label="VIP 奖励月度预算"><div class="ferr" hidden></div></div></div>
+            <div class="frow"><span class="fl">复核金额阈值<i class="qm" data-h="复核金额阈值（原文外补充）">?</i></span><div class="fctl"><span class="vip-cnt">₱</span><input class="bo-inp" id="gRv" style="width:160px" placeholder="选填" aria-label="复核金额阈值"><span class="vip-cnt">默认值待运营确认（Q23），原型示例 100,000</span><div class="ferr" hidden></div></div></div>
             <div class="frow"><span class="fl"><span class="req">*</span>保级短信模板<i class="qm" data-h="短信模板（VIP）">?</i></span><div class="fctl"><select class="bo-inp sms" style="width:280px" aria-label="保级短信模板"><option value="">请选择</option><option selected>VIP 保级奖励到账</option><option>VIP 生日提醒-前一天</option><option>VIP 生日提醒-当天</option></select><div class="ferr" hidden></div></div></div>
             <div class="frow"><span class="fl"><span class="req">*</span>生日前一天短信模板<i class="qm" data-h="短信模板（VIP）">?</i></span><div class="fctl"><select class="bo-inp sms" style="width:280px" aria-label="生日前一天短信模板"><option value="">请选择</option><option>VIP 保级奖励到账</option><option selected>VIP 生日提醒-前一天</option><option>VIP 生日提醒-当天</option></select><div class="ferr" hidden></div></div></div>
             <div class="frow"><span class="fl"><span class="req">*</span>生日当天短信模板<i class="qm" data-h="短信模板（VIP）">?</i></span><div class="fctl"><select class="bo-inp sms" style="width:280px" aria-label="生日当天短信模板"><option value="">请选择</option><option>VIP 保级奖励到账</option><option>VIP 生日提醒-前一天</option><option selected>VIP 生日提醒-当天</option></select><div class="ferr" hidden></div></div></div><div class="vip-req-note ui-reqnote"><span>以上 3 个短信模板的下拉选项名称和短信文案以运营定稿为准。每个场景只选一个模板，模板正文用条件变量 {ClaimHint}（领取截止时间用 {Deadline}），发送时系统按该笔奖励生成时的领取方式和是否强制审核填入对应句子：保级 — 自动领取填「已到账」句（拼出来即 Claire 原文十六 "PHP{RetentionBonus} VIP Retention Bonus credited! Log in to 789Bingo to check your reward."）、手动领取填「已可领取，请在截止前到等级中心领取」句；生日前一天 — 手动「明天可领取」、自动「明天自动到账」、强制审核 + 自动「审核通过后到账」；生日当天 — 手动「已可领取，请在截止前领取」、自动「已到账」（强制审核时不发，审核通过时发审核短信）。出处：用户 2026-10-21（PRD 8.4、规则 N41、N43）。</span></div>
             <!-- 短信 / 推送免打扰时段（用户 2026-10-19：做成配置项；Claire 原文无此项，属用户追加） -->
-            <div class="frow glow"><span class="fl">短信 / 推送免打扰时段<i class="qm" data-h="短信 / 推送免打扰时段">?</i></span><div class="fctl"><label class="vip-sw"><input type="checkbox" class="vip-swi" id="gDndOn" checked role="switch" aria-checked="true" aria-label="免打扰时段生效"><i></i><span class="vip-sw-t">生效</span></label><input class="bo-inp" id="gDndS" style="width:80px" value="21:00" placeholder="HH:mm" maxlength="5" aria-label="免打扰开始时间"><span class="cnt">至</span><input class="bo-inp" id="gDndE" style="width:80px" value="10:00" placeholder="HH:mm" maxlength="5" aria-label="免打扰结束时间"><span class="cnt">GMT+8，结束时间早于开始时间表示跨天；默认 21:00 至 10:00、生效</span><div class="ferr" id="gDndErr" hidden></div></div></div>
+            <div class="frow glow"><span class="fl">短信 / 推送免打扰时段<i class="qm" data-h="短信 / 推送免打扰时段">?</i></span><div class="fctl"><label class="vip-sw"><input type="checkbox" class="vip-swi" id="gDndOn" checked role="switch" aria-checked="true" aria-label="免打扰时段生效"><i></i><span class="vip-sw-t">生效</span></label><input class="bo-inp" id="gDndS" style="width:80px" value="21:00" placeholder="HH:mm" maxlength="5" aria-label="免打扰开始时间"><span class="vip-cnt">至</span><input class="bo-inp" id="gDndE" style="width:80px" value="10:00" placeholder="HH:mm" maxlength="5" aria-label="免打扰结束时间"><span class="vip-cnt">GMT+8，结束时间早于开始时间表示跨天；默认 21:00 至 10:00、生效</span><div class="ferr" id="gDndErr" hidden></div></div></div>
           </div>
           <div class="errsum" id="rwErr" hidden></div>
-          <div class="btnrow"><button class="bo-btn q" type="button" id="rwSave" data-perm="1">保存 VIP 全局参数</button><span class="cnt glow">只保存本区块的全局参数；奖励金额在「VIP奖励配置」子页签按行「修改」/「批量修改」直接保存（用户 2026-10-20）</span></div>
+          <div class="btnrow"><button class="bo-btn q" type="button" id="rwSave" data-perm="1">保存 VIP 全局参数</button><span class="vip-cnt glow">只保存本区块的全局参数；奖励金额在「VIP奖励配置」子页签按行「修改」/「批量修改」直接保存（用户 2026-10-20）</span></div>
 
           <!-- VIP 活动与福利（新旧合并）：用户 2026-10-19 -->
           <div class="blk glow" id="mgBlk">
-            <div class="fsec">VIP 活动与福利（新旧合并）<i class="qm" data-h="VIP 活动与福利（新旧合并）">?</i><span class="cnt" style="margin-left:8px;font-weight:400">用户 2026-10-19</span></div>
+            <div class="fsec">VIP 活动与福利（新旧合并）<i class="qm" data-h="VIP 活动与福利（新旧合并）">?</i><span class="vip-cnt" style="margin-left:8px;font-weight:400">用户 2026-10-19</span></div>
             <div class="pend vip-live" id="mgTip"></div>
-            <div class="rtbar glow"><button class="bo-btn" type="button" data-rbatch="mg" data-perm="1" disabled>批量修改</button><span class="cnt" data-rcnt="mg">未勾选</span><i class="qm" data-h="单项修改 / 批量修改">?</i><span class="cnt">「注册天数」「强制审核」两行可修改：每行「修改」单项修改，勾选后「批量修改」；弹窗内填谷歌验证码，确定即保存（用户 2026-10-20）</span></div>
+            <div class="rtbar glow"><button class="bo-btn" type="button" data-rbatch="mg" data-perm="1" disabled>批量修改</button><span class="vip-cnt" data-rcnt="mg">未勾选</span><i class="qm" data-h="单项修改 / 批量修改">?</i><span class="vip-cnt">「注册天数」「强制审核」两行可修改：每行「修改」单项修改，勾选后「批量修改」；弹窗内填谷歌验证码，确定即保存（用户 2026-10-20）</span></div>
             <div style="overflow-x:auto">
               <table class="mg" id="mgTbl">
                 <colgroup><col style="width:44px"><col class="c1"><col><col><col><col class="c5"><col style="width:64px"></colgroup>
@@ -338,7 +337,7 @@ td.vip-pg-st .vip-pg-retry{border:0;background:none;color:#409EFF;cursor:pointer
                 <tbody id="mgBody"></tbody>
               </table>
             </div>
-            <p class="cnt" style="margin:6px 0 0">旧版现状取管理后台知识库 4.1.6、10「派奖审核」：旧版【活动配置 › VIP活动】是旧版 VIP 的福利发放器，福利金额矩阵为 VIP 等级 × 晋级礼金 / 每周红包（需求流水）/ 每周红包（金额）/ 生日礼金 / 专属红包 / 专属客服 / 极速出款，细节设定为提现倍数、注册天数、领取时效、强制审核；每周红包进入【派奖审核】。子开关的开启 / 关闭在确认弹窗内填谷歌验证码，写操作日志。</p>
+            <p class="vip-cnt" style="margin:6px 0 0">旧版现状取管理后台知识库 4.1.6、10「派奖审核」：旧版【活动配置 › VIP活动】是旧版 VIP 的福利发放器，福利金额矩阵为 VIP 等级 × 晋级礼金 / 每周红包（需求流水）/ 每周红包（金额）/ 生日礼金 / 专属红包 / 专属客服 / 极速出款，细节设定为提现倍数、注册天数、领取时效、强制审核；每周红包进入【派奖审核】。子开关的开启 / 关闭在确认弹窗内填谷歌验证码，写操作日志。</p>
           </div>
           </div><!-- /vpane global -->
 
@@ -346,8 +345,8 @@ td.vip-pg-st .vip-pg-retry{border:0;background:none;color:#409EFF;cursor:pointer
           <div class="blk glow">
             <div class="fsec">VIP 奖励配置（当前 <span id="vrCnt">25</span> 级，与 VIP 等级配置一一对应）</div>
             <div class="pend ncb glow vip-live" id="vrNc" hidden></div>
-            <div class="cnt glow vip-live" style="margin:0 0 6px">表中没有 VIP0 行：VIP0 只是 VIP 体系的起点标准，不发 VIP 奖励（升级 / 保级 / 生日）；勾选「沿用普通会员级别」时，如需给 VIP0 奖励，请在【会员等级】沿用的 LEVEL n 设置；不勾选时普通会员级别的奖励按【会员等级】配置发放，与 VIP 奖励各自达标都可领取。</div><div class="vip-req-note ui-reqnote"><span>上方提示为上线提示；出处：用户 2026-10-20。</span></div>
-            <div class="rtbar glow"><button class="bo-btn" type="button" data-rbatch="vr" data-perm="1" disabled>批量修改</button><span class="cnt" data-rcnt="vr">未勾选</span><i class="qm" data-h="单项修改 / 批量修改">?</i><span class="cnt">每行「修改」单项修改；勾选后「批量修改」；弹窗内填谷歌验证码，确定即保存并写日志，没有暂存（用户 2026-10-20）</span></div>
+            <div class="vip-cnt glow vip-live" style="margin:0 0 6px">表中没有 VIP0 行：VIP0 只是 VIP 体系的起点标准，不发 VIP 奖励（升级 / 保级 / 生日）；勾选「沿用普通会员级别」时，如需给 VIP0 奖励，请在【会员等级】沿用的 LEVEL n 设置；不勾选时普通会员级别的奖励按【会员等级】配置发放，与 VIP 奖励各自达标都可领取。</div><div class="vip-req-note ui-reqnote"><span>上方提示为上线提示；出处：用户 2026-10-20。</span></div>
+            <div class="rtbar glow"><button class="bo-btn" type="button" data-rbatch="vr" data-perm="1" disabled>批量修改</button><span class="vip-cnt" data-rcnt="vr">未勾选</span><i class="qm" data-h="单项修改 / 批量修改">?</i><span class="vip-cnt">每行「修改」单项修改；勾选后「批量修改」；弹窗内填谷歌验证码，确定即保存并写日志，没有暂存（用户 2026-10-20）</span></div>
             <div style="overflow-x:auto">
               <table class="lv" id="vrTbl">
                 <thead><tr>
@@ -364,26 +363,26 @@ td.vip-pg-st .vip-pg-retry{border:0;background:none;color:#409EFF;cursor:pointer
 
           <!-- VIP奖品配置：用户 2026-10-19（B 版：加全局项） -->
           <div class="blk glow" id="pzBlk">
-            <div class="fsec">VIP奖品配置（当前 <span id="pzCnt">25</span> 级，与 VIP 等级配置一一对应）<i class="qm" data-h="VIP奖品配置">?</i><span class="cnt" style="margin-left:8px;font-weight:400">用户 2026-10-19</span></div>
+            <div class="fsec">VIP奖品配置（当前 <span id="pzCnt">25</span> 级，与 VIP 等级配置一一对应）<i class="qm" data-h="VIP奖品配置">?</i><span class="vip-cnt" style="margin-left:8px;font-weight:400">用户 2026-10-19</span></div>
             <div class="pend">本模块只配置「哪一级 VIP 配什么奖品、从平台库存预占多少活动库存」；玩家领取申请、审核、库存扣减与发货由实体奖品管理需求处理（C-10、C-12–C-14）。<b>待与实体奖品管理需求对齐</b>：实体奖品管理需支持「VIP 作为预占活动库存的来源」。前台 VIP中心本次不显示实物。<span class="glow">关闭某个 VIP 等级（复核通过时）自动释放该级剩余预占，关闭待复核期间不释放；再次开启时校验库存，不足则保持关闭。</span></div>
             <div class="pzg">
-              <div class="cnt">全局项（B 版）<i class="qm" data-h="VIP奖品全局项">?</i></div>
-              <div class="frow"><span class="fl"><span class="req">*</span>是否需要 KYC</span><div class="fctl"><div class="rdg2" id="pzKyc"><span class="rd" data-v="1" role="radio" tabindex="0"><i></i>是</span><span class="rd" data-v="0" role="radio" tabindex="0"><i></i>否</span></div><span class="cnt vip-live">默认「是」；选「是」时按「VIP全局参数 › KYC 认证要求」判定</span><div class="vip-req-note ui-reqnote"><span>旁边的提示为上线提示；出处：Claire 答复 C-11；KYC 口径跟随「KYC 认证要求」：用户 2026-10-21（PRD 规则 N72、N76）。</span></div></div></div>
+              <div class="vip-cnt">全局项（B 版）<i class="qm" data-h="VIP奖品全局项">?</i></div>
+              <div class="frow"><span class="fl"><span class="req">*</span>是否需要 KYC</span><div class="fctl"><div class="rdg2" id="pzKyc"><span class="rd" data-v="1" role="radio" tabindex="0"><i></i>是</span><span class="rd" data-v="0" role="radio" tabindex="0"><i></i>否</span></div><span class="vip-cnt vip-live">默认「是」；选「是」时按「VIP全局参数 › KYC 认证要求」判定</span><div class="vip-req-note ui-reqnote"><span>旁边的提示为上线提示；出处：Claire 答复 C-11；KYC 口径跟随「KYC 认证要求」：用户 2026-10-21（PRD 规则 N72、N76）。</span></div></div></div>
               <div class="frow"><span class="fl"><span class="req">*</span>领取方式</span><div class="fctl"><div class="rdg2" id="pzWay"><span class="rd" data-v="manual" role="radio" tabindex="0"><i></i>手动领取</span><span class="rd" data-v="auto" role="radio" tabindex="0"><i></i>自动领取</span></div></div></div>
-              <div class="frow"><span class="fl">手动领取时间（天）</span><div class="fctl"><input class="bo-inp" id="pzDays" style="width:100px" placeholder="天数待定" aria-label="手动领取时间（天）" inputmode="numeric"><span class="cnt" id="pzDaysT">天，到达等级后在此天数内提交领取，过期作废；天数另定</span><div class="ferr" hidden></div></div></div>
+              <div class="frow"><span class="fl">手动领取时间（天）</span><div class="fctl"><input class="bo-inp" id="pzDays" style="width:100px" placeholder="天数待定" aria-label="手动领取时间（天）" inputmode="numeric"><span class="vip-cnt" id="pzDaysT">天，到达等级后在此天数内提交领取，过期作废；天数另定</span><div class="ferr" hidden></div></div></div>
               <div class="frow"><span class="fl"><span class="req">*</span>发放方式</span><div class="fctl"><div class="rdg2" id="pzIss"><span class="rd" data-v="review" role="radio" tabindex="0"><i></i>审核发放</span><span class="rd" data-v="auto" role="radio" tabindex="0"><i></i>自动发放</span></div></div></div>
               <div class="errsum" id="pzErr" hidden></div>
-              <div class="btnrow"><button class="bo-btn q" type="button" id="pzSave" data-perm="1">保存 VIP奖品全局项</button><span class="cnt glow">只保存全局项（确认弹窗内填谷歌验证码）；各等级的奖品在下方表格按行「修改」/「批量修改」直接保存（用户 2026-10-20）</span></div>
+              <div class="btnrow"><button class="bo-btn q" type="button" id="pzSave" data-perm="1">保存 VIP奖品全局项</button><span class="vip-cnt glow">只保存全局项（确认弹窗内填谷歌验证码）；各等级的奖品在下方表格按行「修改」/「批量修改」直接保存（用户 2026-10-20）</span></div>
             </div>
             <div class="pzwrap">
               <div style="overflow-x:auto">
-                <div class="cnt" style="margin:0 0 4px">平台库存（取自实体奖品管理 · 库存管理，只读；库存与预占数值为示例，运营出方案后填；按已保存的配置计算）<i class="qm" data-h="平台库存（VIP奖品配置）">?</i></div>
+                <div class="vip-cnt" style="margin:0 0 4px">平台库存（取自实体奖品管理 · 库存管理，只读；库存与预占数值为示例，运营出方案后填；按已保存的配置计算）<i class="qm" data-h="平台库存（VIP奖品配置）">?</i></div>
                 <table class="lv" id="pzInv"><thead><tr><th>产品编号</th><th>奖品名称</th><th>剩余库存</th><th>其他活动已占</th><th>本活动预占</th><th>可分配余量</th></tr></thead><tbody id="pzInvBody"></tbody></table>
               </div>
             </div>
             <div class="pend ncb glow vip-live" id="pzNc" hidden style="margin-top:10px"></div>
-            <div class="cnt glow vip-live" style="margin:10px 0 0">表中没有 VIP0 行：VIP0 不发 VIP 奖励（含 VIP 奖品）；勾选「沿用普通会员级别」时，如需给 VIP0 奖励，请在【会员等级】沿用的 LEVEL n 设置；不勾选时普通会员级别的奖励按【会员等级】配置发放，与 VIP 奖励各自达标都可领取。</div><div class="vip-req-note ui-reqnote"><span>上方提示为上线提示；出处：用户 2026-10-20。</span></div>
-            <div class="rtbar glow" style="margin-top:10px"><button class="bo-btn" type="button" data-rbatch="pz" data-perm="1" disabled>批量修改</button><span class="cnt" data-rcnt="pz">未勾选</span><i class="qm" data-h="单项修改 / 批量修改">?</i><span class="cnt">每行「修改」选择 / 更换奖品、改预占数量或改为「不设奖品」；勾选后「批量修改」；弹窗内填谷歌验证码，确定即保存（用户 2026-10-20）</span></div>
+            <div class="vip-cnt glow vip-live" style="margin:10px 0 0">表中没有 VIP0 行：VIP0 不发 VIP 奖励（含 VIP 奖品）；勾选「沿用普通会员级别」时，如需给 VIP0 奖励，请在【会员等级】沿用的 LEVEL n 设置；不勾选时普通会员级别的奖励按【会员等级】配置发放，与 VIP 奖励各自达标都可领取。</div><div class="vip-req-note ui-reqnote"><span>上方提示为上线提示；出处：用户 2026-10-20。</span></div>
+            <div class="rtbar glow" style="margin-top:10px"><button class="bo-btn" type="button" data-rbatch="pz" data-perm="1" disabled>批量修改</button><span class="vip-cnt" data-rcnt="pz">未勾选</span><i class="qm" data-h="单项修改 / 批量修改">?</i><span class="vip-cnt">每行「修改」选择 / 更换奖品、改预占数量或改为「不设奖品」；勾选后「批量修改」；弹窗内填谷歌验证码，确定即保存（用户 2026-10-20）</span></div>
             <div style="overflow-x:auto">
               <table class="lv" id="pzTbl">
                 <thead><tr>
@@ -398,21 +397,21 @@ td.vip-pg-st .vip-pg-retry{border:0;background:none;color:#409EFF;cursor:pointer
                 <tbody id="pzBody"></tbody>
               </table>
             </div>
-            <p class="cnt" style="margin:6px 0 0">奖品、库存、预占和已领取数量为示例，运营出方案后填；默认按 Claire 原文十二在 VIP14、VIP17、VIP20、VIP22、VIP24、SUPER VIP 配置对应奖品，其他等级不设奖品。<span class="glow">新增等级保存后自动增加一行，红字「未配置」，用「修改」选择奖品或「不设奖品」；未配置期间该级没有可领取的奖品、不预占库存（已定，用户 2026-10-20）。</span><span class="glow">已关闭的等级保留奖品配置、行置灰，剩余预占在关闭复核通过时自动释放（显示 0；关闭待复核期间不释放）；再次开启时校验库存：可分配余量 ≥ 原剩余预占 → 开启并恢复预占；不足 → 保持关闭，提示「当前奖品库存不足，请调整库存或更换奖励」；该级未配奖品直接开启。</span></p>
+            <p class="vip-cnt" style="margin:6px 0 0">奖品、库存、预占和已领取数量为示例，运营出方案后填；默认按 Claire 原文十二在 VIP14、VIP17、VIP20、VIP22、VIP24、SUPER VIP 配置对应奖品，其他等级不设奖品。<span class="glow">新增等级保存后自动增加一行，红字「未配置」，用「修改」选择奖品或「不设奖品」；未配置期间该级没有可领取的奖品、不预占库存（已定，用户 2026-10-20）。</span><span class="glow">已关闭的等级保留奖品配置、行置灰，剩余预占在关闭复核通过时自动释放（显示 0；关闭待复核期间不释放）；再次开启时校验库存：可分配余量 ≥ 原剩余预占 → 开启并恢复预占；不足 → 保持关闭，提示「当前奖品库存不足，请调整库存或更换奖励」；该级未配奖品直接开启。</span></p>
           </div>
           </div><!-- /vpane reward -->
 
           <div class="vpane" data-pane="rebate">
           <!-- 下注限额与返水（按 VIP 等级）：用户 2026-10-19，按旧版格式整合进新版 -->
           <div class="blk glow" id="rbBlk">
-            <div class="fsec">下注限额与返水（按 VIP 等级，当前 <span id="rbCnt">25</span> 级）<i class="qm" data-h="下注限额与返水（按 VIP 等级）">?</i><span class="cnt" style="margin-left:8px;font-weight:400">列沿用旧版格式（管理后台知识库 4.1.6），行与 VIP 等级配置一一对应；用户 2026-10-19</span></div>
+            <div class="fsec">下注限额与返水（按 VIP 等级，当前 <span id="rbCnt">25</span> 级）<i class="qm" data-h="下注限额与返水（按 VIP 等级）">?</i><span class="vip-cnt" style="margin-left:8px;font-weight:400">列沿用旧版格式（管理后台知识库 4.1.6），行与 VIP 等级配置一一对应；用户 2026-10-19</span></div>
             <div class="devnote"><b>开发备注</b>：【游戏管理 › 返水设定】（按厂商返点）与本表如何对接由开发评估（等级方案 Q8）。</div>
             <div class="rbtop glow">
-              <span class="cnt vip-live">返水比例必填，填 0 表示该级不返水。</span><div class="vip-req-note ui-reqnote"><span>旁边的提示为上线提示；出处：用户 2026-10-19。</span></div>
+              <span class="vip-cnt vip-live">返水比例必填，填 0 表示该级不返水。</span><div class="vip-req-note ui-reqnote"><span>旁边的提示为上线提示；出处：用户 2026-10-19。</span></div>
             </div>
-            <div class="cnt glow vip-live" style="margin:0 0 6px">表中没有 VIP0 行：VIP0 没有 VIP 下注限额和 VIP 返水，VIP0 的玩家仍算普通用户，下注限额和返水都按普通用户（Level）现有规则；不勾选「沿用普通会员级别」时，普通会员级别返水和 VIP 返水各自配置，玩家两边各自达标都可领。</div><div class="vip-req-note ui-reqnote"><span>上方提示为上线提示；出处：用户 2026-10-20。</span></div>
+            <div class="vip-cnt glow vip-live" style="margin:0 0 6px">表中没有 VIP0 行：VIP0 没有 VIP 下注限额和 VIP 返水，VIP0 的玩家仍算普通用户，下注限额和返水都按普通用户（Level）现有规则；不勾选「沿用普通会员级别」时，普通会员级别返水和 VIP 返水各自配置，玩家两边各自达标都可领。</div><div class="vip-req-note ui-reqnote"><span>上方提示为上线提示；出处：用户 2026-10-20。</span></div>
             <div class="pend ncb glow vip-live" id="rbNc" hidden></div>
-            <div class="rtbar glow"><button class="bo-btn" type="button" data-rbatch="rb" data-perm="1" disabled>批量修改</button><span class="cnt" data-rcnt="rb">未勾选</span><i class="qm" data-h="单项修改 / 批量修改">?</i><span class="cnt">每行「修改」单项修改；勾选后「批量修改」（可「统一填写」某列）；弹窗内填谷歌验证码，确定即保存并写日志，没有暂存（用户 2026-10-20）</span></div>
+            <div class="rtbar glow"><button class="bo-btn" type="button" data-rbatch="rb" data-perm="1" disabled>批量修改</button><span class="vip-cnt" data-rcnt="rb">未勾选</span><i class="qm" data-h="单项修改 / 批量修改">?</i><span class="vip-cnt">每行「修改」单项修改；勾选后「批量修改」（可「统一填写」某列）；弹窗内填谷歌验证码，确定即保存并写日志，没有暂存（用户 2026-10-20）</span></div>
             <div style="overflow-x:auto">
               <table class="lv" id="rbTbl">
                 <thead><tr>
@@ -428,28 +427,9 @@ td.vip-pg-st .vip-pg-retry{border:0;background:none;color:#409EFF;cursor:pointer
                 <tbody id="rbBody"></tbody>
               </table>
             </div>
-            <p class="cnt" style="margin:6px 0 0">示例数值从低到高递增，<b>示例，运营出方案后填</b>（Claire 方案表无此数值）。金额单位 PHP。<span class="glow">新增等级保存后本表自动生成该级条目（红字「未配置」），用「修改」补填；未配置期间该级返水按 0、下注限额按平台默认（已定，用户 2026-10-20）。</span>已关闭的等级保留配置、行置灰。</p>
+            <p class="vip-cnt" style="margin:6px 0 0">示例数值从低到高递增，<b>示例，运营出方案后填</b>（Claire 方案表无此数值）。金额单位 PHP。<span class="glow">新增等级保存后本表自动生成该级条目（红字「未配置」），用「修改」补填；未配置期间该级返水按 0、下注限额按平台默认（已定，用户 2026-10-20）。</span>已关闭的等级保留配置、行置灰。</p>
           </div>
           </div><!-- /vpane rebate -->
-        </section>
-
-        <!-- ============ 成长值记录（现有页签，原样示意，本需求不改；管理后台知识库 4.1.6） ============ -->
-        <section id="vGrowth" hidden>
-          <div class="bo-filter">
-            <span class="flab">会员名</span><input class="bo-inp" id="gAcc" style="width:140px" placeholder="请输入" aria-label="会员名">
-            <span class="bo-fbtns"><button class="bo-btn q" type="button" id="gSearch">查询</button>
-            <button class="bo-btn" type="button" id="gReset">重置</button>
-            <button class="bo-btn" type="button" id="gEdit">修改会员成长值</button></span>
-          </div>
-          <div class="bo-content">
-            <div style="overflow-x:auto">
-            <table>
-              <thead><tr><th>会员名</th><th>分类</th><th>有效投注额</th><th>流水倍数</th><th>成长值变化</th><th>当前成长值</th><th>币种</th><th>新增时间</th><th>操作人</th><th>原因</th></tr></thead>
-              <tbody id="gBody"></tbody>
-            </table>
-            </div>
-            <p style="font-size:12px;color:#909399;margin:10px 0 0">现有页签，原样示意，本需求不改（管理后台知识库 4.1.6）：记录 Level 段成长值的变化（成长值 = 有效投注额 × 场馆成长值倍数），可人工「修改会员成长值」（需填原因）。VIP 段的累计数据和等级变动不在这里，见「VIP会员数据」「等级变动记录」。示例为虚构账号，与会员等级页的 Level 段记录一致；时间口径沿用现有页面。本区块提示文案以运营定稿为准。</p>
-          </div>
         </section>
         </div>
       </div>
@@ -458,7 +438,7 @@ td.vip-pg-st .vip-pg-retry{border:0;background:none;color:#409EFF;cursor:pointer
 
   <aside class="notes adm-notes">
     <h2>VIP会员体系-v1.1-后台VIP特权配置页面</h2>
-    <p class="sub">用户管理 › VIP特权 › VIP特权 / 成长值记录（两个页签在本原型内切换；会员福利记录、VIP会员数据、等级变动记录、月度结算记录在其他后台原型页）。<span class="glow">用户 2026-10-17：会员等级与 VIP特权 分开，旧版 VIP特权 与新 VIP 功能整合。「VIP特权」页签放新 VIP 等级配置（VIP1–SUPER VIP 双门槛、每月保级投注）、VIP 全局参数（含 VIP 体系状态）和 VIP 奖励配置（从【会员等级】移来）；<span class="glow">场馆成长值倍数（Level 段现有功能）已移到【会员等级】页，不在本页显示（用户 2026-10-20）</span>；旧版 VIP0~VIP8 等级表与新 VIP 等级配置合并：等级可新增，可关闭 / 修改设定（用户 2026-10-17）；计算方式（全局单选：成长值 / 累计金额，默认累计金额），用户 2026-10-20。</span><span class="glow"><b>用户 2026-10-20：「VIP特权」页签分 4 个子页签</b>，点击只显示对应模块：VIP等级配置（计算方式、VIP 等级配置表、VIP 成长值规则（计算方式 = 成长值时显示））；VIP全局参数（VIP 体系状态、全局参数、VIP 活动与福利（新旧合并））；VIP奖励配置（VIP 奖励配置、VIP奖品配置）；下注限额与返水。<span class="glow">用户 2026-10-19：新增「VIP 活动与福利（新旧合并）」对照表，旧版 VIP活动与新版共用一个总开关（VIP 体系状态 = 系统参数「新版VIP特权状态」）：下注限额与返水按新 VIP 等级逐级配置；返水比例必填，填 0 表示该级不返水（用户 2026-10-19：不设返水开关）。</span><span class="glow">用户 2026-10-19：VIP 奖励配置之后新增「VIP奖品配置」（按等级选平台库存有余量的奖品并预占活动库存，B 版含全局项）。</span><span class="glow">用户 2026-10-19 待确认清单：关闭等级时按新区间重新归级并显示影响预览、自动释放奖品预占（再次开启校验库存）；VIP 成长值规则改为按场馆配置（用户 2026-10-20 再改为按游戏分类）；等级数不限制；每周红包 / 专属红包本期不做；注册天数 / 强制审核可勾选生效。</span><span class="glow">用户 2026-10-19：关闭等级改为提交复核、复核通过才生效；删除 VIP 全局参数「前台显示成长值数值」开关，前台不显示成长值字样和数值；返水口径已定（用户 2026-10-19）。</span>。</span>带淡色光晕的是本需求新增或修改的内容，其余为现有功能；红色「需确认」标签为 PRD 3.5 需研发评估事项，只显示未定的；<span class="glow">本页 K01–K04 均已定，页面不再显示标签，结论见规则批注「「需确认」标签」（K01、K02 用户 2026-10-20）</span>；<span class="glow">K04 已定：不再单独删除 LEVEL 30 及以上：原「上线前运营先手工删除高等级、开启 VIP 体系时系统兜底删除剩余高等级」两步处理已取消（用户 2026-10-21），改按 VIP0 是否勾选「沿用普通会员级别」处理；VIP0 选「沿用普通会员级别」指定 LEVEL n 时，改为删除 LEVEL n 之后的全部级别（开启 VIP 体系时才删除，开启前保存的只是选择、可以修改；已开启后再改沿用级别须在弹窗内二次确认、再删除一次），被删级别上的玩家按上线存量初始化规则重新判定（用户 2026-10-20）；LEVEL n 默认为当前会员最高等级，默认不删除级别；原「会员最高等级与 VIP 最低等级互相限制」已取消，改为勾选时 VIP 等级的标准须高于 VIP0（沿用的 LEVEL n），不高于的标为「不符合标准」并关闭、提高门槛后才能开启，不勾选时不比较（用户 2026-10-21）；不勾选「沿用普通会员级别」时，会员级别（LEVEL）和 VIP 是两套独立的机制、分别核算：普通会员级别照旧按自己的规则升降和核算，VIP 体系按自己的规则核算，两者互不影响；不删除 LEVEL 30 及以上普通会员级别，也不因 VIP 改变普通会员级别，替代原 K04 在不勾选时的处理（用户 2026-10-21）；勾选 = 普通会员最高级之上一级为 VIP1；不勾选 = 两套独立、奖励可叠加领取（用户 2026-10-21）；原「会员最高等级与 VIP 最低等级互相限制」已取消；改为勾选时 VIP 等级的标准须高于 VIP0（沿用的 LEVEL n），不高于的标为「不符合标准」并关闭、提高门槛后才能开启，不勾选时不比较（用户 2026-10-21）。</span><span class="glow">上线提示去括注、出处挪入说明块（用户 2026-10-20）：上线后显示给运营的提示（页面提示、弹窗提示、确认文案）不再夹带日期、「示意」、C-xx、Qxx、清单 / 轮次编号等需求出处；这些内容挪到紧挨着的说明块（带「※ 此内容仅作为需求说明」标注），上线提示加 vip-live，不会被自动识别成说明块。</span><span class="glow">运营可见文字去「（示意）」、内部编号改写为规则内容（用户 2026-10-21）：短信模板下拉选项、弹出提示和弹窗错误提示去掉「（示意）」，旁边说明块注明文案以运营定稿为准；VIP0「修改设定」弹窗不沿用普通会员级别时的提示，把「仍按原 K04 处理 LEVEL 30 及以上」改写为具体规则（开启 VIP 体系时系统删除剩余的 LEVEL 30 及以上普通会员级别，这些级别上的玩家按存量初始化规则重新判定等级），K04 编号移入相邻说明块（这条提示已按用户 2026-10-21 新规则再次改写：不勾选时两套独立核算、不删除 LEVEL 30 及以上）。</span><span class="glow">用户 2026-10-21：① VIP0 不勾选「沿用普通会员级别」时，会员级别和 VIP 两套独立核算，不删除 LEVEL 30 及以上、也不因 VIP 改变普通会员级别（替代原 K04 在不勾选时的处理）；勾选 = 普通会员最高级之上一级为 VIP1，不勾选 = 两套独立、奖励可叠加领取；② 时间标准统一为 GMT+8（平台业务口径）；③ 去掉体育返水比例（平台已无体育类游戏）。</span></p>
+    <p class="sub">用户管理 › VIP特权 › VIP特权（本页为【VIP特权】三个页签中的「VIP特权」；「会员福利」「VIP数据报表」在其他后台原型页；原「成长值记录」页签已移到「VIP数据报表」，用户 2026-10-21）。<span class="glow">用户 2026-10-17：会员等级与 VIP特权 分开，旧版 VIP特权 与新 VIP 功能整合。「VIP特权」页签放新 VIP 等级配置（VIP1–SUPER VIP 双门槛、每月保级投注）、VIP 全局参数（含 VIP 体系状态）和 VIP 奖励配置（从【会员等级】移来）；<span class="glow">场馆成长值倍数（Level 段现有功能）已移到【会员等级】页，不在本页显示（用户 2026-10-20）</span>；旧版 VIP0~VIP8 等级表与新 VIP 等级配置合并：等级可新增，可关闭 / 修改设定（用户 2026-10-17）；计算方式（全局单选：成长值 / 累计金额，默认累计金额），用户 2026-10-20。</span><span class="glow"><b>用户 2026-10-20：「VIP特权」页签分 4 个子页签</b>，点击只显示对应模块：VIP等级配置（计算方式、VIP 等级配置表、VIP 成长值规则（计算方式 = 成长值时显示））；VIP全局参数（VIP 体系状态、全局参数、VIP 活动与福利（新旧合并））；VIP奖励配置（VIP 奖励配置、VIP奖品配置）；下注限额与返水。<span class="glow">用户 2026-10-19：新增「VIP 活动与福利（新旧合并）」对照表，旧版 VIP活动与新版共用一个总开关（VIP 体系状态 = 系统参数「新版VIP特权状态」）：下注限额与返水按新 VIP 等级逐级配置；返水比例必填，填 0 表示该级不返水（用户 2026-10-19：不设返水开关）。</span><span class="glow">用户 2026-10-19：VIP 奖励配置之后新增「VIP奖品配置」（按等级选平台库存有余量的奖品并预占活动库存，B 版含全局项）。</span><span class="glow">用户 2026-10-19 待确认清单：关闭等级时按新区间重新归级并显示影响预览、自动释放奖品预占（再次开启校验库存）；VIP 成长值规则改为按场馆配置（用户 2026-10-20 再改为按游戏分类）；等级数不限制；每周红包 / 专属红包本期不做；注册天数 / 强制审核可勾选生效。</span><span class="glow">用户 2026-10-19：关闭等级改为提交复核、复核通过才生效；删除 VIP 全局参数「前台显示成长值数值」开关，前台不显示成长值字样和数值；返水口径已定（用户 2026-10-19）。</span>。</span>带淡色光晕的是本需求新增或修改的内容，其余为现有功能；红色「需确认」标签为 PRD 3.5 需研发评估事项，只显示未定的；<span class="glow">本页 K01–K04 均已定，页面不再显示标签，结论见规则批注「「需确认」标签」（K01、K02 用户 2026-10-20）</span>；<span class="glow">K04 已定：不再单独删除 LEVEL 30 及以上：原「上线前运营先手工删除高等级、开启 VIP 体系时系统兜底删除剩余高等级」两步处理已取消（用户 2026-10-21），改按 VIP0 是否勾选「沿用普通会员级别」处理；VIP0 选「沿用普通会员级别」指定 LEVEL n 时，改为删除 LEVEL n 之后的全部级别（开启 VIP 体系时才删除，开启前保存的只是选择、可以修改；已开启后再改沿用级别须在弹窗内二次确认、再删除一次），被删级别上的玩家按上线存量初始化规则重新判定（用户 2026-10-20）；LEVEL n 默认为当前会员最高等级，默认不删除级别；原「会员最高等级与 VIP 最低等级互相限制」已取消，改为勾选时 VIP 等级的标准须高于 VIP0（沿用的 LEVEL n），不高于的标为「不符合标准」并关闭、提高门槛后才能开启，不勾选时不比较（用户 2026-10-21）；不勾选「沿用普通会员级别」时，会员级别（LEVEL）和 VIP 是两套独立的机制、分别核算：普通会员级别照旧按自己的规则升降和核算，VIP 体系按自己的规则核算，两者互不影响；不删除 LEVEL 30 及以上普通会员级别，也不因 VIP 改变普通会员级别，替代原 K04 在不勾选时的处理（用户 2026-10-21）；勾选 = 普通会员最高级之上一级为 VIP1；不勾选 = 两套独立、奖励可叠加领取（用户 2026-10-21）；原「会员最高等级与 VIP 最低等级互相限制」已取消；改为勾选时 VIP 等级的标准须高于 VIP0（沿用的 LEVEL n），不高于的标为「不符合标准」并关闭、提高门槛后才能开启，不勾选时不比较（用户 2026-10-21）。</span><span class="glow">上线提示去括注、出处挪入说明块（用户 2026-10-20）：上线后显示给运营的提示（页面提示、弹窗提示、确认文案）不再夹带日期、「示意」、C-xx、Qxx、清单 / 轮次编号等需求出处；这些内容挪到紧挨着的说明块（带「※ 此内容仅作为需求说明」标注），上线提示加 vip-live，不会被自动识别成说明块。</span><span class="glow">运营可见文字去「（示意）」、内部编号改写为规则内容（用户 2026-10-21）：短信模板下拉选项、弹出提示和弹窗错误提示去掉「（示意）」，旁边说明块注明文案以运营定稿为准；VIP0「修改设定」弹窗不沿用普通会员级别时的提示，把「仍按原 K04 处理 LEVEL 30 及以上」改写为具体规则（开启 VIP 体系时系统删除剩余的 LEVEL 30 及以上普通会员级别，这些级别上的玩家按存量初始化规则重新判定等级），K04 编号移入相邻说明块（这条提示已按用户 2026-10-21 新规则再次改写：不勾选时两套独立核算、不删除 LEVEL 30 及以上）。</span><span class="glow">用户 2026-10-21：① VIP0 不勾选「沿用普通会员级别」时，会员级别和 VIP 两套独立核算，不删除 LEVEL 30 及以上、也不因 VIP 改变普通会员级别（替代原 K04 在不勾选时的处理）；勾选 = 普通会员最高级之上一级为 VIP1，不勾选 = 两套独立、奖励可叠加领取；② 时间标准统一为 GMT+8（平台业务口径）；③ 去掉体育返水比例（平台已无体育类游戏）。</span></p>
     <h3>模拟场景</h3>
     <div class="vip-req-note ui-reqnote vip-req-hd"></div>
     <div class="sim">
@@ -481,7 +461,6 @@ td.vip-pg-st .vip-pg-retry{border:0;background:none;color:#409EFF;cursor:pointer
       <button type="button" class="glow" data-go="merge"><span class="simtag">新旧合并</span>VIP 活动与福利对照表、总开关（每周红包 / 专属红包本期不做）</button>
       <button type="button" class="glow" data-go="rebate"><span class="simtag">返水</span>下注限额与返水按 VIP 等级逐级配置、返水比例必填</button>
       <button type="button" class="glow" data-go="prize"><span class="simtag">VIP奖品</span>VIP奖品配置：按等级选奖品、预占平台活动库存、全局项</button>
-      <button type="button" data-go="growth"><span class="simtag">成长值记录</span>现有页签（Level 段成长值），原样示意</button>
     </div>
     <h3>模拟操作</h3>
     <!-- 由 assets/proto.js 生成；模拟状态在后台原型之间共享，存在 sessionStorage -->
@@ -498,14 +477,15 @@ td.vip-pg-st .vip-pg-retry{border:0;background:none;color:#409EFF;cursor:pointer
     <h3>规则批注</h3>
     <div class="vip-req-note ui-reqnote vip-req-hd"></div>
     <ol>
+      <li class="glow"><b>页面结构：三个页签</b>（用户 2026-10-21）：后台【VIP特权】分为 VIP特权、会员福利、VIP数据报表三个页签（用户 2026-10-21）。① <b>VIP特权</b>（后台VIP特权配置页面）：VIP等级配置、VIP全局参数、VIP奖励配置（含 VIP奖品配置）、下注限额与返水 4 个子页签；② <b>会员福利</b>（后台会员福利页面）：会员福利记录（领取、审核、补发、放行、作废等）；③ <b>VIP数据报表</b>（后台VIP数据报表页面）：VIP会员数据、等级变动记录、月度结算记录、成长值记录 4 个二级页签。原「成长值记录」页签（原在 VIP特权页）和「月度结算记录」页签（原在会员福利记录页）已移到 VIP数据报表，连同弹窗、模拟场景、「?」帮助、批注和模拟数据。面包屑为「用户管理 › VIP特权 › &lt;页签&gt;」，有子页签时再接子页签名；点顶部页签跳到对应页面，保留角色、发布模式和语言参数；旧链接（VIP特权页 #growth，原页面名「后台结算与奖励记录」的 #settle / #detail）自动跳到 VIP数据报表对应页签。以下各条中旧的页签清单以本条为准。<span class="ref">用户 2026-10-21</span></li>
       <li class="glow"><b>帮助按钮同行、同行居中、说明文字靠左并标注</b>（用户 2026-10-20，规范通用）：① 所有「?」帮助按钮紧跟在它说明的内容（表头文字、字段名、区块标题、开关名、按钮等）后面，与文字同一行，不单独换行；② 同一行内的文字、「?」、拨杆、输入框、下拉、按钮、标签在一条水平中线上对齐，表单行的标签与控件第一行按中线对齐；③ 页面主体和弹窗里给评审看的说明性文字（灰色说明、示意 / 示例说明、「用户 2026-10-xx」等）统一靠左，开头标注「※ 此内容仅作为需求说明，上线页面不显示本内容。」，相邻多段合并为一个说明块、只标注一次；上线页面真实显示的提示（输入提示、校验红字、弹窗里给运营看的操作说明和影响说明、当前状态说明、空列表「暂无数据」等）不加标注。规则批注区和模拟面板本身就是需求说明，只在区域标题处标注一次。<span class="ref">用户 2026-10-20 · 规范 v5.45</span></li>
       <li class="glow"><b>「?」帮助精炼版</b>：「?」帮助改为精炼版，HELP2 优先（用户 2026-10-21，规范 v5.46）。每条一两句写清是什么、怎么填；同一个键挂在含义不同的列上的，已拆成各自的键。</li>
       <li class="glow"><b>HELP 同步块已按 PRD 8.8 精炼版整块同步；清理过时批注</b>：本页「?」帮助全部取自 PRD 8.8 精炼版（共 52 条，含用户 2026-10-21 新增的「KYC 认证要求」），HELP2 中与 HELP 相同的条目已清空（用户 2026-10-21）。</li>
       <li class="glow"><b>数据表一行显示</b>：数据表尽量一行显示（用户 2026-10-20）。本页数据表（列表、配置表、弹窗里的表）的表头和单元格不换行，放不下时在表格区域内左右滚动，页面本身不出现横向滚动条；备注、说明、原因等长文字超过约 300px 时单行省略，鼠标悬停显示全文；金额、数字、时间、状态、等级名和操作按钮不省略。原来分两行的「值 + 小字说明」合并为一行，用「·」分隔。有意保留多行：VIP0 下方的「提示」整行说明；「关闭等级 · 影响预览」归级去向表（说明句含人数和金额，省略会截掉金额）；「关闭 VIP 体系 · 已发放未领取的奖励」弹窗的奖励品类说明（含逐条处理规则）。<span class="ref">用户 2026-10-20</span></li>
       <li class="glow"><b>开 / 关统一用拨杆开关</b>：VIP 全局参数里的开 / 关统一用拨杆开关（用户 2026-10-20）。开 = 蓝色底、滑块在右，关 = 灰色底、滑块在左，旁边显示状态文字；可用 Tab 选中后按 Enter 或空格切换；不可操作时浅色置灰。<b>改为拨杆</b>：① VIP 体系状态（开启 / 关闭）：点拨杆仍先弹原确认弹窗并填谷歌验证码，确认后才改变状态，取消则保持原状态；初始化中置灰不可点。② 短信 / 推送免打扰时段「生效」：切换后随「保存 VIP 全局参数」生效，关闭时开始 / 结束时间置灰。③ 细节设定「注册天数」「强制审核」修改 / 批量修改弹窗里的「生效」：随弹窗「确定」（谷歌验证码）保存；本页其他地方写的「勾选生效 / 不勾选」即打开 / 关闭该拨杆。④ 每周红包、专属红包、专属客服、极速出款（本期不做）显示置灰的关闭拨杆。<b>不改（保持单选）</b>：领取方式「自动领取 / 手动领取」、VIP 流水计入游戏范围「全部 6 大类 / 指定游戏类型」——虽是二选一，但不是开 / 关语义。<span class="ref">用户 2026-10-20</span></li>
-      <li class="glow"><b>列表分页</b>（用户 2026-10-20 / 规范 v5.41）：本页列表：VIP 等级配置、VIP 活动与福利、VIP 奖励配置、平台库存、VIP奖品配置、下注限额与返水、成长值记录（各表排序见分页条左侧）。条数固定的小表不分页：「VIP 成长值规则」6 大游戏分类表固定 6 条，不分页；关闭 VIP 体系「已发放未领取的奖励」弹窗按奖励品类固定最多 5 条，不分页（用户 2026-10-20）。配置表同样分页：规范只允许「一两条、条数固定且不会增长」的展示不分页，这些表行数随等级而定、等级可新增，不属于例外；VIP0 起始行固定在表头下不计入分页；「关闭等级 · 影响预览」的归级去向表固定 2 行 + 合计，按例外不分页。勾选只在当前页内有效，表头「全选」= 当前页全部行，勾选后表格上方提示「已选当前页 N 条」；不跨页累计，翻页或改每页条数时清空已勾选并提示；「批量修改」弹窗不分页，列出所选行（最多一页条数），弹窗内滚动，校验出错时滚到第一处出错行；「统一填写」作用于所选全部行（用户 2026-10-20：批量修改范围不超过主列表当前页）。后台页码分页，表格下方显示默认排序、共 N 条、每页条数（默认 20，可选 10 / 20 / 50 / 100）、上一页 / 页码 / 下一页、前往某页（输入 0、负数或超过总页数时取首页或末页）；排序时间相同时按 ID 兜底，翻页不重复、不遗漏。改每页条数、筛选 / 搜索 / 重置后回到第 1 页；编辑后停在当前页；删除后当前页为空时回到上一页；翻页期间有新数据时不插入当前页，重新查询后按排序显示（各表默认排序和本条已定，用户 2026-10-20）；空列表显示「暂无数据」；加载失败显示「加载失败，点击重试」。导出按当前筛选条件导出全部数据，不受分页限制。<span class="ref">生成内容规范第五章第 2 节「列表分页」· 需求包框架规范第 4 节</span></li>
-      <li class="glow"><b>菜单与页签</b>（用户 2026-10-17：会员等级与 VIP特权 分开）：【用户管理 › VIP特权】页签为 VIP特权（改）、成长值记录（现有）、会员福利记录（改：承接 VIP 升级 / 保级 / 生日奖励记录）、VIP会员数据（新）、等级变动记录（新）、月度结算记录（新），左侧菜单「VIP特权」高亮；点页签在本栏目内跳转。<span class="glow"><b>VIP特权子页签</b>（用户 2026-10-20）：分 VIP等级配置、VIP全局参数、VIP奖励配置、下注限额与返水 4 个子页签，点击只显示对应模块；各区块的保存按钮、校验、二次确认、谷歌验证码和日志不变；<span class="glow">「保存 VIP 奖励与全局参数」改为「保存 VIP 全局参数」，只在 VIP全局参数子页签、只保存全局参数；奖励金额、细节设定、下注限额与返水、VIP奖品配置按行「修改」/「批量修改」直接保存（见「表格修改方式」，用户 2026-10-20）</span>；切换子页签不丢全局参数未保存的修改。</span>Level 段的会员等级配置、会员等级奖励配置和 Level 段奖励记录（活动奖励统计）在【用户管理 › 会员等级】（<a class="lnk" href="VIP会员体系-后台会员等级配置页面.html#levels">打开会员等级</a>）。<span class="ref">PRD 8.1 · 管理后台知识库 4.1.5、4.1.6 · 用户 2026-10-17</span></li>
-      <li class="glow"><b>旧版与新版整合</b>（用户 2026-10-17）：现有（管理后台知识库 4.1.6）旧版 VIP特权 页（模块暂留）的内容处理：① 等级表 VIP0~VIP8（成长值最低要求、保级所需成长值、降级保留成长值比例）→ <span class="glow">已定（用户 2026-10-17）：与新 VIP 等级配置合并，计算方式选「成长值」时所有等级使用这组字段（用户 2026-10-20），见「VIP 等级配置：新增等级 / 计算方式 / 关闭与修改设定」</span>；② 场馆名称 × 成长值倍数 → 保留，现有（Level 段成长值在用，修改后次日 03:50 生效（时区以研发确认为准）；<span class="glow">按当前平台的时间规则，不改现网执行时间：沿用平台现有执行时间，次日 03:50，时区以研发确认为准，用户 2026-10-21</span>）；<span class="glow">移到【会员等级】页，不在本页显示（用户 2026-10-20）</span>；③ 单注 / 串关 / 单注冠军最大下注额、充值返水比例、单注最大返水（<span class="glow">体育返水比例已去掉：平台已无体育类游戏，用户 2026-10-21</span>） → <span class="glow">已定（用户 2026-10-19）：按旧版格式改为按新 VIP 等级逐级配置，返水比例必填，填 0 表示该级不返水（用户 2026-10-19：不设返水开关），见「下注限额与返水（按 VIP 等级）」</span>；④ 成长值记录页签 → 保留，现有，不改；⑤ 会员福利记录页签 → 承接本需求 VIP 升级 / 保级 / 生日奖励记录<span class="glow">，与旧版福利记录同表、用「福利类别」区分（见结算与奖励记录页）</span>；⑥ 旧版【活动配置 › VIP活动】（旧版 VIP 的福利发放器）和系统参数「新版VIP特权状态（Enable new version of VIP）」开关 → <span class="glow">已定（用户 2026-10-19）：以 Claire 方案为主体与新版合并、共用一个总开关，见「VIP 活动与福利（新旧合并）」</span>。新 VIP 等级统一写「VIP 等级」。<span class="ref">现有（管理后台知识库 4.1.6）· 用户 2026-10-17</span></li>
+      <li class="glow"><b>列表分页</b>（用户 2026-10-20 / 规范 v5.41）：本页列表：VIP 等级配置、VIP 活动与福利、VIP 奖励配置、平台库存、VIP奖品配置、下注限额与返水（各表排序见分页条左侧；成长值记录已移到 VIP数据报表页，用户 2026-10-21）。条数固定的小表不分页：「VIP 成长值规则」6 大游戏分类表固定 6 条，不分页；关闭 VIP 体系「已发放未领取的奖励」弹窗按奖励品类固定最多 5 条，不分页（用户 2026-10-20）。配置表同样分页：规范只允许「一两条、条数固定且不会增长」的展示不分页，这些表行数随等级而定、等级可新增，不属于例外；VIP0 起始行固定在表头下不计入分页；「关闭等级 · 影响预览」的归级去向表固定 2 行 + 合计，按例外不分页。勾选只在当前页内有效，表头「全选」= 当前页全部行，勾选后表格上方提示「已选当前页 N 条」；不跨页累计，翻页或改每页条数时清空已勾选并提示；「批量修改」弹窗不分页，列出所选行（最多一页条数），弹窗内滚动，校验出错时滚到第一处出错行；「统一填写」作用于所选全部行（用户 2026-10-20：批量修改范围不超过主列表当前页）。后台页码分页，表格下方显示默认排序、共 N 条、每页条数（默认 20，可选 10 / 20 / 50 / 100）、上一页 / 页码 / 下一页、前往某页（输入 0、负数或超过总页数时取首页或末页）；排序时间相同时按 ID 兜底，翻页不重复、不遗漏。改每页条数、筛选 / 搜索 / 重置后回到第 1 页；编辑后停在当前页；删除后当前页为空时回到上一页；翻页期间有新数据时不插入当前页，重新查询后按排序显示（各表默认排序和本条已定，用户 2026-10-20）；空列表显示「暂无数据」；加载失败显示「加载失败，点击重试」。导出按当前筛选条件导出全部数据，不受分页限制。<span class="ref">生成内容规范第五章第 2 节「列表分页」· 需求包框架规范第 4 节</span></li>
+      <li class="glow"><b>菜单与页签</b>（用户 2026-10-17：会员等级与 VIP特权 分开）：【用户管理 › VIP特权】<span class="glow">分为 VIP特权、会员福利、VIP数据报表三个页签（用户 2026-10-21；原为 VIP特权（改）、成长值记录（现有）、会员福利记录（改：承接 VIP 升级 / 保级 / 生日奖励记录）、VIP会员数据（新）、等级变动记录（新）、月度结算记录（新）6 个页签，成长值记录、VIP会员数据、等级变动记录、月度结算记录现为「VIP数据报表」的二级页签），</span>左侧菜单「VIP特权」高亮；点页签在本栏目内跳转。<span class="glow"><b>VIP特权子页签</b>（用户 2026-10-20）：分 VIP等级配置、VIP全局参数、VIP奖励配置、下注限额与返水 4 个子页签，点击只显示对应模块；各区块的保存按钮、校验、二次确认、谷歌验证码和日志不变；<span class="glow">「保存 VIP 奖励与全局参数」改为「保存 VIP 全局参数」，只在 VIP全局参数子页签、只保存全局参数；奖励金额、细节设定、下注限额与返水、VIP奖品配置按行「修改」/「批量修改」直接保存（见「表格修改方式」，用户 2026-10-20）</span>；切换子页签不丢全局参数未保存的修改。</span>Level 段的会员等级配置、会员等级奖励配置和 Level 段奖励记录（活动奖励统计）在【用户管理 › 会员等级】（<a class="lnk" href="VIP会员体系-后台会员等级配置页面.html#levels">打开会员等级</a>）。<span class="ref">PRD 8.1 · 管理后台知识库 4.1.5、4.1.6 · 用户 2026-10-17</span></li>
+      <li class="glow"><b>旧版与新版整合</b>（用户 2026-10-17）：现有（管理后台知识库 4.1.6）旧版 VIP特权 页（模块暂留）的内容处理：① 等级表 VIP0~VIP8（成长值最低要求、保级所需成长值、降级保留成长值比例）→ <span class="glow">已定（用户 2026-10-17）：与新 VIP 等级配置合并，计算方式选「成长值」时所有等级使用这组字段（用户 2026-10-20），见「VIP 等级配置：新增等级 / 计算方式 / 关闭与修改设定」</span>；② 场馆名称 × 成长值倍数 → 保留，现有（Level 段成长值在用，修改后次日 03:50 生效（时区以研发确认为准）；<span class="glow">按当前平台的时间规则，不改现网执行时间：沿用平台现有执行时间，次日 03:50，时区以研发确认为准，用户 2026-10-21</span>）；<span class="glow">移到【会员等级】页，不在本页显示（用户 2026-10-20）</span>；③ 单注 / 串关 / 单注冠军最大下注额、充值返水比例、单注最大返水（<span class="glow">体育返水比例已去掉：平台已无体育类游戏，用户 2026-10-21</span>） → <span class="glow">已定（用户 2026-10-19）：按旧版格式改为按新 VIP 等级逐级配置，返水比例必填，填 0 表示该级不返水（用户 2026-10-19：不设返水开关），见「下注限额与返水（按 VIP 等级）」</span>；④ 成长值记录页签 → 保留，现有，不改<span class="glow">（用户 2026-10-21：移到「VIP数据报表」页签下）</span>；⑤ 会员福利记录页签 → 承接本需求 VIP 升级 / 保级 / 生日奖励记录<span class="glow">，与旧版福利记录同表、用「福利类别」区分（见会员福利页）</span>；⑥ 旧版【活动配置 › VIP活动】（旧版 VIP 的福利发放器）和系统参数「新版VIP特权状态（Enable new version of VIP）」开关 → <span class="glow">已定（用户 2026-10-19）：以 Claire 方案为主体与新版合并、共用一个总开关，见「VIP 活动与福利（新旧合并）」</span>。新 VIP 等级统一写「VIP 等级」。<span class="ref">现有（管理后台知识库 4.1.6）· 用户 2026-10-17</span></li>
       <li class="glow"><b>VIP 活动与福利（新旧合并）· 一个总开关</b>（用户 2026-10-19）：用户原话「需要将当前旧版VIP所有活动都列出来，基于原始需求和Claire的回复为主体，将旧版活动与新版活动看能不能合在一起使用同一个开关」。<b>结论：可以合并为同一个开关；以 Claire 方案为主体；旧版独有项默认停用。</b><br>
         ① <b>对照表</b>：「VIP特权」页签新增区块「VIP 活动与福利（新旧合并）」，逐行列出旧版【活动配置 › VIP活动】全部福利（晋级礼金、每周红包（需求流水 / 金额）、生日礼金、专属红包、专属客服、极速出款）和细节设定（提现倍数、注册天数、领取时效、强制审核），以及新版独有的保级奖励；每行写旧版现状、新版对应（依据）、合并后处理和状态。<br>
         ② <b>总开关</b>：只有一个——现有系统参数「新版VIP特权状态（Enable new version of VIP）」作为「VIP 体系状态」（页面显示「VIP 体系状态」，旁注「= 系统参数『新版VIP特权状态』」）。<b>开启</b>：新版升级 / 保级 / 生日奖励生效；旧版 VIP活动的晋级礼金、生日礼金、每周红包、专属红包全部停止生成，已生成的照常处理完（【派奖审核】里未审核的旧版每周红包照常审核）。<b>关闭</b>：新版不生成新奖励（沿用 VIP 体系状态关闭口径，规则 N40）；旧版 VIP活动不恢复<span class="glow">（已定，用户 2026-10-19）</span>。<br>
@@ -514,7 +494,7 @@ td.vip-pg-st .vip-pg-retry{border:0;background:none;color:#409EFF;cursor:pointer
         ⑤ <b>与规则 N53 的关系</b>：N53 规定新 VIP 不读取、不复用活动配置；本项只是总开关开启时停止旧版 VIP活动中的福利生成，新 VIP 仍不复用旧版规则、报表和账变类型。<span class="ref">用户 2026-10-19 · 管理后台知识库 4.1.6、4.10 派奖审核 · Claire 原文四、七、十、十一、十四 · C-05 · C-06 · C-08 · C-11 · 规则 N40 · N53</span></li>
       <li class="glow"><b>注册天数 / 强制审核（保留，可勾选生效）</b>（用户 2026-10-19）：旧版 VIP活动细节设定的两项都保留，在「VIP 活动与福利（新旧合并）」对应行各有一个「生效」勾选框，默认不勾选、不生效（与 Claire 升级 / 保级奖励自动到账口径一致），<span class="glow">表格只读，用该行「修改」或勾选后「批量修改」→ 弹窗内修改并填谷歌验证码 → 确定即保存、写操作日志（修改前后值）后生效（用户 2026-10-20，原「保存细节设定」按钮删除）</span>，只影响之后新生成的 VIP 奖励。<br>
         ① <b>注册天数</b>：勾选后填 n（正整数，必填，提示「请输入正整数」）：玩家注册满 n 天才可获得 VIP 奖励（升级、保级、生日奖励）。等级判定不受影响；<span class="glow">已定（用户 2026-10-19）：注册未满 n 天期间达到的等级不补发升级奖励（与「KYC 前已达到不补发」一致），这期间生成的奖励记为「不发放（注册未满 n 天）」、占用唯一键，满 n 天后也不补发；满 n 天后新达到的等级、之后的保级和生日奖励正常发放</span>。不勾选时天数输入框置灰、不校验。<br>
-        ② <b>强制审核</b>：勾选后 VIP 奖励（升级、保级奖励到账前，生日奖励玩家领取后）先进入人工审核，审核通过才发放到账，驳回则不发放并记录驳回原因。审核入口示意为现有【派奖审核】，增加福利类别「VIP 升级 / 保级 / 生日奖励」（或由本需求另建审核列表，开发评估后定）；审核中的奖励在会员福利记录显示「待审核」。不勾选则自动到账。<span class="glow"><b>短信（已定，用户 2026-10-20）</b>：强制审核生效时，保级短信在审核通过、实际到账时才发，审核中不发；驳回不发短信。审核操作里填写「短信内容」（审核通过时发给玩家），可勾选「设为短信模板」，按升级 / 保级 / 生日分别保存为该类别的模板，下次审核同类别奖励时默认显示（可修改）；审核弹窗见【结算与奖励记录 › 会员福利记录】待审核记录的「审核」。</span><br>
+        ② <b>强制审核</b>：勾选后 VIP 奖励（升级、保级奖励到账前，生日奖励玩家领取后）先进入人工审核，审核通过才发放到账，驳回则不发放并记录驳回原因。审核入口示意为现有【派奖审核】，增加福利类别「VIP 升级 / 保级 / 生日奖励」（或由本需求另建审核列表，开发评估后定）；审核中的奖励在会员福利记录显示「待审核」。不勾选则自动到账。<span class="glow"><b>短信（已定，用户 2026-10-20）</b>：强制审核生效时，保级短信在审核通过、实际到账时才发，审核中不发；驳回不发短信。审核操作里填写「短信内容」（审核通过时发给玩家），可勾选「设为短信模板」，按升级 / 保级 / 生日分别保存为该类别的模板，下次审核同类别奖励时默认显示（可修改）；审核弹窗见【VIP特权 › 会员福利 › 会员福利记录】待审核记录的「审核」。</span><br>
         ③ 两项都按奖励生成时刻的设定判断；修改后已生成的奖励不受影响。按钮级权限「保存细节设定」，写操作日志。<span class="ref"> · 管理后台知识库 4.1.6、4.10 派奖审核 · C-11</span></li>
       <li class="glow"><b>下注限额与返水（按 VIP 等级）</b>（用户 2026-10-19）：用户原话「依据老版的格式将老板针对返水比例设置整合至新版中，根据每一级进行设置，同时增加各项返水开关」（「老板」应为「老版」）。<br>
         ① <b>表格</b>：原「下注限额与返水（现有，不改）」改为按新 VIP 等级逐级配置；列沿用旧版格式：VIP 等级、单注最大下注额、串关最大下注额、单注冠军最大下注额、充值返水比例(%)、单注最大返水(PHP)（<span class="glow">去掉体育返水比例：平台已无体育类游戏，用户 2026-10-21</span>）。行与 VIP 等级配置一一对应、按等级配置 ID 存储：VIP 等级配置新增等级保存后本表同步插入行并重新编号，<span class="glow">新增行数值为空、红字「未配置」，用「修改」补填；未配置期间该级返水按 0、下注限额按平台默认（已定，用户 2026-10-20）</span>；已关闭的等级行置灰、保留配置。<span class="glow">表格只读，修改方式见「表格修改方式」（用户 2026-10-20）。</span><br>
@@ -532,7 +512,7 @@ td.vip-pg-st .vip-pg-retry{border:0;background:none;color:#409EFF;cursor:pointer
         ④ <b>校验</b>：原表内校验搬到弹窗里，逐字段红字提示：奖励金额必填、≥ 0 的整数；下注限额、单注最大返水为正整数；返水比例必填、0–100、最多 2 位小数，填 0 表示不返水（返水不设开关，原「启用」开关和总开关保持删除）；注册天数勾选生效时 n 为正整数；奖品预占数量为正整数、不少于已领取、不超过「已领取 + 可分配余量」（批量修改时按弹窗内所有行一起计算可分配余量），未配置的行须选择奖品或「不设奖品」。有错误不关弹窗；没有修改提示「没有修改」；谷歌验证码为空提示「请输入谷歌验证码」、000000 提示「谷歌验证码错误」，弹窗不关、内容保留。<br>
         ⑤ 保存立即生效，所有修改直接保存，没有暂存；按钮级权限沿用原保存按钮的权限码（「修改」「批量修改」）。<span class="ref">用户 2026-10-20</span></li>
       <li class="glow"><b>VIP0（起始级别，用户 2026-10-20）</b>：VIP 等级配置表最上面（VIP1 之上）一条「VIP0」，标准跟随计算方式显示（累计金额：累计有效投注、累计充值；成长值：成长值最低要求），只读，用「修改设定」弹窗修改（谷歌验证码，直接保存，写日志；不沿用时显示「—」）。<br>① <b>沿用普通会员级别</b>（勾选）：下拉列出当前普通会员级别 LEVEL 1 ~ 最高级（显示有效投注累计值），选 LEVEL n 作为 VIP0。<span class="glow"><b>默认选普通会员当前最高级，下拉不置灰、不拦截选择（用户 2026-10-21 改）</b>：累计金额方式下，累计有效投注不高于 LEVEL n 有效投注累计值的 VIP 等级标为「不符合标准」并处于关闭状态，不能开启；运营先「修改设定」把这些等级的累计有效投注提高到 LEVEL n 之上（仍须逐级严格递增）后才能开启。选择级别和保存 VIP0 时列出受影响的等级：VIP 体系从未开启时，开启中的不符合标准等级随保存直接关闭（没有玩家）；VIP 体系开启过时，这些等级上可能已有玩家，须先按「关闭」流程（影响预览、复核通过后重新归级）关闭或先提高门槛，否则不能保存。用户原话「默认选择最高，如果选择低于当前vip1的后续需要修改vip1以及后续不符合标准的vip等级的标准后才可以打开对应VIP级别的状态」。原「LEVEL n 须小于 VIP1、不满足的置灰不可选」已取消。</span>此时替代 K04；原「会员最高等级须小于 VIP 最低等级」互相限制已取消，改为 VIP 等级的标准须高于 VIP0（沿用的 LEVEL n），不高于的标为「不符合标准」并关闭、提高门槛后才能开启（用户 2026-10-21）。LEVEL n 默认为当前会员最高等级，默认不删除级别（用户 2026-10-21）。<br>② <b>VIP0 标准</b>：累计金额方式下，累计有效投注自动带入 LEVEL n 的有效投注累计值（只读），累计充值为 0；成长值方式下，VIP0 的成长值标准需要另外填写（VIP 成长值与普通会员 Level 成长值两套互相独立），成长值最低要求必填（已定），须小于 VIP1（严格，不得相等，用户 2026-10-20）。<b>VIP0 不设保级、也不会降级</b>（累计标准，累计值不减），没有每月保级投注、保级所需成长值和降级保留成长值比例（已定，用户 2026-10-20）。<br>③ <b>删除时机</b>：LEVEL n 之后的普通会员级别（LEVEL n+1 ~ 最高级）在<b>开启 VIP 体系时</b>才删除，在这些级别上的玩家按上线存量初始化规则重新判定；开启前保存的只是选择，可以修改。第一次开启 VIP 体系的确认弹窗里，已选沿用时列出「将删除 LEVEL n+1 ~ 最高级」。VIP 体系已开启后再改沿用的级别，在同一弹窗内提示「会再删除一次 LEVEL n' 之后的级别」，须勾选「我已确认」并填谷歌验证码，保存即删除（未勾选提示「请勾选确认删除」）；已删除的级别不再出现在下拉里。<b>VIP 体系处于关闭状态（开启过又关闭）时改沿用级别</b>：只保存选择、不删除，弹窗内提示「重新开启 VIP 体系时删除」；重新开启 VIP 体系时才删除，重新开启确认弹窗里列出将删除的级别（已定，用户 2026-10-20）。<br>④ <b>不勾选 / 取消沿用</b>：起始级别为当前 VIP1 级别的标准（VIP0 不单独设标准，达到 VIP1 标准才成为 VIP），会员级别（LEVEL）和 VIP 是两套独立的机制、分别核算：普通会员级别照旧按自己的规则升降和核算，VIP 体系按自己的规则核算，两者互不影响；不删除 LEVEL 30 及以上普通会员级别，也不因 VIP 改变普通会员级别（用户 2026-10-21，替代原 K04 在不勾选时的处理）；两边都设奖励时，会员各自达标就两边都能领取（例：普通会员 LEVEL 10 奖励 100、VIP2 奖励 10，会员按普通会员规则升到 LEVEL 10、同时按 VIP 规则升到 VIP2，两边共可领 110。勾选的例子：普通会员最高为 LEVEL 30 时，第 31 级就是 VIP1（最高级以【会员等级】实际配置为准，不写死 30）。）原「会员最高等级与 VIP 最低等级互相限制」已取消；改为勾选时 VIP 等级的标准须高于 VIP0（沿用的 LEVEL n），不高于的标为「不符合标准」并关闭、提高门槛后才能开启，不勾选时不比较（用户 2026-10-21）。勾选 = 普通会员最高级之上一级为 VIP1；不勾选 = 两套独立、奖励可叠加领取（用户 2026-10-21）。<b>取消沿用后，已删除的级别不恢复</b>（删除时玩家已按存量初始化规则重新判定；已定，用户 2026-10-20）。<span class="glow"><b>取消沿用后不再有「LEVEL n 之后由 VIP 段接管」的边界</b>：不再随【会员等级】插入 / 删除 ±1，也不再拦截添加到 LEVEL n 之后，能加到哪一级改由「会员最高等级须小于 VIP 最低等级」互相限制控制（VIP 最低开启等级累计充值为 0 时才校验）（用户 2026-10-20）；<b>用户 2026-10-21 改</b>：原互相限制已取消（用户 2026-10-21），取消沿用后会员最高等级不受 VIP 最低等级限制。</span><br>⑤ <b>VIP0 不发 VIP 奖励、没有 VIP 下注限额和 VIP 返水（已定）</b>：VIP0 不发升级 / 保级 / 生日奖励，没有 VIP 下注限额和 VIP 返水；VIP0 的玩家仍算普通用户，下注限额和返水都按普通用户（Level）现有规则；VIP0 只是 VIP 体系的起点标准。VIP0 行下方和修改设定弹窗里提示操作人员「VIP0 不发 VIP 奖励；如需给 VIP0 奖励，请在【会员等级】普通会员对应等级（沿用的 LEVEL n）设置奖励」。VIP 奖励配置、下注限额与返水、VIP奖品配置三张表不出现 VIP0 行，表格说明里写明原因。<br>⑥ <b>前台</b>：前台不出现「VIP0」字样，VIP1 前面那张「普通用户」卡就代表 VIP0（前台页面另行实现）。<br>⑦ <b>VIP1 下调拦截（已定）</b>：沿用 LEVEL n 后，「修改设定」或「新增等级」把 VIP1（最低一级）的累计有效投注改为 ≤ LEVEL n 的有效投注累计值时拦截，提示「VIP1 的累计有效投注须大于 VIP0（LEVEL n）的 x，请先调整 VIP0 沿用的级别」。<br>⑧ <b>会员等级页联动</b>：执行删除后，【会员等级 › 会员等级配置】等级表只到 LEVEL n，表格上方提示「LEVEL n+1 及以上已随 VIP0 沿用删除」；限额与返水、会员等级奖励配置、实体奖品表同步不再显示被删级别。<br>原型：普通会员级别列表取共享状态 lvTop（会员最高等级）和会员等级页演示等级表；执行删除时写共享状态 vip0Use = { on, lv 保留到的 LEVEL, deletedFrom 被删的起始 LEVEL, at 删除时间 }，会员等级配置页读取后只显示到 LEVEL n。<span class="glow">VIP0 沿用 LEVEL n 后，【会员等级】插入到 LEVEL n 及以下时 VIP0 跟随原来那一级，沿用级别自动 +1；删除 LEVEL n 以下的等级时自动 −1；删除的正是沿用的那一级时拦截，提示先到本页更改 VIP0 沿用级别；本页 VIP0 显示同步更新（用户 2026-10-20）。VIP0 还没删除级别时（VIP 体系从未开启、只保存了沿用选择）插入 / 删除同样让沿用级别 ±1（已定，用户 2026-10-20）。原型：会员等级页写回 vip0 / vip0Use，并写共享状态 lvVals（各级有效投注累计值），本页下拉按它显示。</span><span class="ref">用户 2026-10-20</span></li>
-      <li class="glow"><b>L 号与等级名称</b>：VIP 等级配置、VIP 奖励配置、下注限额与返水、VIP奖品配置四张表第一列「VIP 等级」显示级别号 L1–LN（按当前顺位，新增后自动重排；VIP 等级配置表的 VIP0 行显示 L0），紧接着「等级名称」列显示 VIP1…SUPER VIP（可在「修改设定」改名）；修改 / 批量修改弹窗同样显示「L 号 · 等级名称」，名称可改。L 号 = 表格显示的顺位号，插入 / 删除后会变；系统按等级配置 ID 判定（升级奖励唯一键 = 会员 + 等级配置 ID），配置 ID 不随顺位变化（用户 2026-10-20）。表格不显示配置 ID，鼠标悬停 L 号提示「配置 ID：CFG-xx」（如 CFG-26；用户 2026-10-20）。VIP会员数据、结算与奖励记录等显示玩家等级的地方仍显示等级名称（如 VIP14），不改成 L 号。后台各处的新 VIP 等级统一写「VIP 等级」，不再加「新」字后缀（用户 2026-10-20）。<span class="ref">用户 2026-10-20</span></li>
+      <li class="glow"><b>L 号与等级名称</b>：VIP 等级配置、VIP 奖励配置、下注限额与返水、VIP奖品配置四张表第一列「VIP 等级」显示级别号 L1–LN（按当前顺位，新增后自动重排；VIP 等级配置表的 VIP0 行显示 L0），紧接着「等级名称」列显示 VIP1…SUPER VIP（可在「修改设定」改名）；修改 / 批量修改弹窗同样显示「L 号 · 等级名称」，名称可改。L 号 = 表格显示的顺位号，插入 / 删除后会变；系统按等级配置 ID 判定（升级奖励唯一键 = 会员 + 等级配置 ID），配置 ID 不随顺位变化（用户 2026-10-20）。表格不显示配置 ID，鼠标悬停 L 号提示「配置 ID：CFG-xx」（如 CFG-26；用户 2026-10-20）。VIP会员数据、会员福利记录等显示玩家等级的地方仍显示等级名称（如 VIP14），不改成 L 号。后台各处的新 VIP 等级统一写「VIP 等级」，不再加「新」字后缀（用户 2026-10-20）。<span class="ref">用户 2026-10-20</span></li>
       <li class="glow"><b>新增VIP等级（任意位置）</b>：<br>
         ① <b>入口</b>：VIP 等级配置表上方蓝色按钮「新增VIP等级」（后台主按钮样式，与「保存 VIP 成长值规则」等主按钮一致），原「在最前新增等级」按钮和各行「在此级后新增」删除；有待复核时点按钮提示「有待复核的…，复核完成前不能修改 VIP 等级配置」。<br>
         ② <b>弹窗</b>（参照会员等级配置页「添加等级」的交互）：先填「新增到第几级」（正整数，范围 L1 ~ 当前最高 VIP 等级 + 1，填「当前最高等级 + 1」时加在最高级之上、没有等级顺延；范围为用户 2026-10-20 定；<b>SUPER VIP 只是等级名称，不作为最高等级标识（用户 2026-10-21，v1.1 / full）</b>，原「新增最多插在 SUPER VIP 之前、SUPER VIP 自动顺延、始终为最高级」取消，最高等级以当前开启的最高 L 号为准）。填好后当前计算方式（累计金额 / 成长值）的门槛输入框旁显示该位置的上下限：累计有效投注 / 成长值最低要求 / 每月保级投注 / 保级所需成长值 须大于前一级、小于原该级（严格递增，不得相等；保级标准严格递增 用户 2026-10-20）；累计充值可与相邻级相等（不低于前一级、不高于原该级）（用户 2026-10-20）（插到 L1 时下限为 VIP0 沿用 LEVEL n 的累计值，未沿用时无下限；加在当前最高等级之上时没有上限，用户 2026-10-21）；等级名称默认按新顺位生成（如 VIP6），可改，改过后不再随位置自动变化；另一计算方式的门槛选填；弹窗最下方填谷歌验证码。<br>
@@ -569,7 +549,7 @@ td.vip-pg-st .vip-pg-retry{border:0;background:none;color:#409EFF;cursor:pointer
         ② 达到 → 完成保级，保持等级并发保级奖励（含当月有升级的）。<br>
         ③ 当月有升级（新等级立即升级）→ 按升级后的新等级标准考核：达到则保持新等级并发保级奖励（当月升过级的也发，撤销原「当月有升级的达到也不发」）；未达到则次月降 1 级。<br>
         ④ 降级后恢复（结算日当前等级 &lt; 历史最高等级）：上月有效投注达到「当前等级之上的下一个开启等级」的保级投注 → 次月恢复 1 级，<span class="glow">同时照常发结算时当前等级的保级奖励（用户 2026-10-17，依据原文五、七 / C-02，覆盖原「不发」）</span>；只达到当前等级保级投注 → 保持并发当前等级的保级奖励；未达到 → 降 1 级。<span class="glow">VIP1 保级失败后的普通用户上月达到 VIP1 保级投注 → 次月回到 VIP1，不发保级奖励（C-07）。</span><br>
-        <span class="glow">月度结算记录里恢复人数单独统计；降级玩家恢复的同时计入保级成功人数（见结算与奖励记录页，用户 2026-10-17）。</span><span class="ref">规则 N11 · N12 · N13 · N14 · C-02 · C-04 · 用户 2026-10-17</span></li>
+        <span class="glow">月度结算记录里恢复人数单独统计；降级玩家恢复的同时计入保级成功人数（见 VIP数据报表页「月度结算记录」，用户 2026-10-17）。</span><span class="ref">规则 N11 · N12 · N13 · N14 · C-02 · C-04 · 用户 2026-10-17</span></li>
       <li><b>校验</b>：金额为 ≥ 0 的整数；当前计算方式下的门槛列逐级递增<span class="glow">（累计有效投注 / 成长值最低要求严格递增、不得相等；每月保级投注、保级所需成长值也严格递增、不得相等（VIP0 不设保级，不参与；用户 2026-10-20）；累计充值允许相等（可多级为 0）；VIP0 与 VIP1 之间同样严格，用户 2026-10-20）</span><span class="glow">（切换计算方式前新方式的门槛须齐全，不齐全不能切换，见「计算方式」，用户 2026-10-20）</span>；<span class="glow"><b>原互相限制已取消（用户 2026-10-21）：改为勾选「沿用普通会员级别」时，开启中的 VIP 等级的累计有效投注须高于 VIP0（沿用的 LEVEL n），不看累计充值；不高于的标为「不符合标准」，只能关闭，提高门槛后才能开启（用户 2026-10-21 改）；不勾选时不比较。以下原规则留作记录：</b>VIP 最低的已开启等级（默认 VIP1）的累计有效投注必须大于会员最高等级（取【会员等级 › 会员等级配置】的最高级，演示 LEVEL 29 = 560,000）的有效投注累计值，不含等于；关闭 / 重新开启等级导致最低已开启等级变化时按新的最低等级校验（关闭在复核通过时校验，门槛修改复核通过时也再校验一次）；计算方式为成长值时不校验（用户 2026-10-19 定；计算方式改为全局，用户 2026-10-20）；只有最低已开启等级的累计充值为 0 时才校验，不为 0 时不校验（用户 2026-10-19 追加；表格、修改设定、新增等级弹窗、切换计算方式和复核统一按此口径，用户 2026-10-20）；「VIP 已配置」= 至少有一个已开启的 VIP 等级，与 VIP 体系开关状态无关（用户 2026-10-19 定）（原「VIP1 必须大于 LEVEL 29」改写，用户 2026-10-19）</span>；等级名称必填、≤ 20 字符、不能重复。错误时弹窗内字段标红，不能保存（表格只读，已保存数据如因会员最高等级变化而不满足，单元格标红并汇总在表下）；服务端同样校验。提示原文：「等级名称必填」「等级名称不能超过 20 字符」「等级名称不能重复」「请输入 ≥ 0 的整数」「{等级} 的{字段}不能低于 {上一等级}」<span class="glow">「{等级} 的{字段}需大于上一级 Lk {上一等级} 的 {数值}」「{等级} 的{字段}需小于下一级 Lk {下一等级} 的 {数值}」（严格递增字段，用户 2026-10-20）</span><span class="glow"><s>「{最低已开启等级名称} 的累计有效投注必须大于会员最高等级 LEVEL {n} 的有效投注累计值（{数值}）（… 如需更低门槛，请先到【会员等级】调低或删除最高级）」（用户 2026-10-19）</s>（已取消，用户 2026-10-21；改为勾选沿用时「{最低已开启等级名称} 的累计有效投注须高于 VIP0（沿用 LEVEL {n}）的 {数值}；如需更低门槛，请先到「VIP0 修改设定」更换沿用级别」）</span>。<span class="ref">PRD 8.2 · 11.1 · F01-01</span></li>
       <li class="glow"><b>保级标准需小于升级标准，先设升级再设保级</b>（用户 2026-10-19）：<br>
         ① <b>比较口径（每一级各自比较）</b>：计算方式为累计金额时，该级「每月保级投注」必须小于该级「累计有效投注」；保级只考核有效投注（Claire 原文五），所以只和累计有效投注比较，不和累计充值比较。计算方式为成长值时，该级「保级所需成长值（每月）」必须小于该级「成长值最低要求」。等于也不行。<br>
@@ -603,13 +583,12 @@ td.vip-pg-st .vip-pg-retry{border:0;background:none;color:#409EFF;cursor:pointer
         ⑧ <span class="warn-2"><b>待与实体奖品管理需求对齐</b>：实体奖品管理需支持「VIP 作为预占活动库存的来源」（库存管理「已分配到活动」计入 VIP、提供可分配余量查询、回传各等级已领取件数、按本页全局项执行领取 / 审核 / 发货）。</span>前台 VIP中心本次不显示实物（实物图片在实体奖品 v1.1 带入），<span class="glow">已定（用户 2026-10-19）</span>。库存、预占、已领取数值为示例，运营出方案后填（第 15 条）。<span class="ref">用户 2026-10-19 ·Claire 原文十二 · C-10 · C-11 · C-12 · C-13 · C-14 · 实体奖品 v1.1 底稿库存管理 · 管理后台知识库 4.1.5</span></li>
       <li><b>奖励配置生效</b>：奖励金额、流水倍数、VIP 流水计入游戏范围、<span class="glow">领取方式、手动领取有效期</span>、模板保存后立即生效，只影响之后新生成的奖励和短信；保级奖励从下一个自然月生效。保存需要谷歌验证码。<span class="ref">PRD 8.3 · F01-02 · F01-03</span></li>
       <li><b>顶栏</b>：顶栏不再显示「库存告急」「待派发奖品」（实物相关，属于实体奖品管理需求）。顶栏统计行始终一行显示，放不下时在行内左右滚动。<span class="ref">用户 2026-10-16 决定 · 用户 2026-10-17</span></li>
-      <li><b>权限与日志</b>：「保存 VIP 配置」<span class="glow">（按钮已删除，权限码保留，管 VIP 等级配置的修改设定、新增等级、开启、切换计算方式和「保存 VIP 成长值规则」，用户 2026-10-20）</span>「保存会员等级配置」<span class="glow">（由原「保存 Level 段显示与停用」改名，用户 2026-10-19）</span>「复核 VIP 门槛」「开关 VIP 体系状态」「导出存量初始化预览」都是按钮级权限码（服务端校验，授权后需重新登录生效）。日志：VIP 配置保存（含影响预览结果、是否选择不发放差额奖励及 A / B、复核人和复核结果）、VIP 体系状态开关（含累计方式）、VIP 流水计入游戏范围修改、存量初始化都写操作日志：操作人、时间（GMT+8）、对象、修改前后值。<span class="glow">原「VIP 等级奖品对应修改」日志项随该功能删除。</span><span class="glow">新增（用户 2026-10-19 决策第 2、3 项）：「保存下注限额与返水」为按钮级权限，保存写操作日志（修改前后值）；原「开关旧版独有福利（每周红包 / 专属红包）」随两项本期不做删除，改为「保存细节设定」（注册天数 / 强制审核）。</span><span class="glow">新增（用户 2026-10-19）：「保存 VIP奖品配置」为按钮级权限，写操作日志（奖品、预占数量和全局项的修改前后值）。</span><span class="glow">新增（用户 2026-10-19）：关闭等级的「提交复核」沿用等级配置的按钮权限，复核用「复核 VIP 门槛」权限；日志写「提交关闭等级（待复核）」（含影响预览）和「复核关闭等级」（结果通过 / 驳回、提交人、复核时刻试算、释放的奖品预占）。</span>原型日志见下方「模拟操作日志」。<span class="ref">PRD 8.1 · F01</span></li>
+      <li><b>权限与日志</b>：「保存 VIP 配置」<span class="glow">（按钮已删除，权限码保留，管 VIP 等级配置的修改设定、新增等级、开启、切换计算方式和「保存 VIP 成长值规则」，用户 2026-10-20）</span>「保存会员等级配置」<span class="glow">（由原「保存 Level 段显示与停用」改名，用户 2026-10-19）</span>「复核 VIP 门槛」「开关 VIP 体系状态」「导出存量初始化预览」都是按钮级权限码（服务端校验，授权后需重新登录生效）。日志：VIP 配置保存（含影响预览结果、是否选择不发放差额奖励及 A / B、复核人和复核结果）、VIP 体系状态开关（含累计方式）、VIP 流水计入游戏范围修改、存量初始化都写操作日志：操作人、时间（GMT+8）、对象、修改前后值。<span class="glow">原「VIP 等级奖品对应修改」日志项随该功能删除。</span><span class="glow">新增（用户 2026-10-19 决策第 2、3 项）：「保存下注限额与返水」为按钮级权限，保存写操作日志（修改前后值）；原「开关旧版独有福利（每周红包 / 专属红包）」随两项本期不做删除，改为「保存细节设定」（注册天数 / 强制审核）。</span><span class="glow">新增（用户 2026-10-19）：「保存 VIP奖品配置」为按钮级权限，写操作日志（奖品、预占数量和全局项的修改前后值）。</span><span class="glow">新增（用户 2026-10-19）：关闭等级的「提交复核」沿用等级配置的按钮权限，复核用「复核 VIP 门槛」权限；日志写「提交关闭等级（待复核）」（含影响预览）和「复核关闭等级」（结果通过 / 驳回、提交人、复核时刻试算、释放的奖品预占）。</span>原型日志见下方「模拟操作日志」。<span class="glow">本条只列 VIP特权页签的权限（「保存会员等级配置」属于【会员等级】）；会员福利页签的补发、放行 / 作废、审核、导出见会员福利页，重跑失败、月度结算记录等导出见 VIP数据报表页签（用户 2026-10-21 三页签结构）。</span><span class="ref">PRD 8.1 · F01</span></li>
       <li><b>站点隔离</b>：规则 N39：只适用于 789Bingo；VIP 配置、会员数据、结算任务按站点隔离（实现方式待确认 Q19）。<span class="ref">规则 N39 · F01</span></li>
-      <li><b>成长值记录（现有，不改）</b>：现有（管理后台知识库 4.1.6）页签原样示意：会员名、分类、有效投注额、流水倍数、成长值变化、当前成长值、币种、新增时间、操作人、原因；可「修改会员成长值」（人工调整需填原因）。只记录 Level 段成长值；VIP 段累计充值、累计有效投注和等级变动见「VIP会员数据」「等级变动记录」。<span class="glow">已定（用户 2026-10-21）：本期不提供 VIP 累计数据和 VIP 成长值的人工调整入口，「修改会员成长值」只改 Level 成长值，VIP 数据修正走技术工单（PRD 8.7）。</span><span class="ref">管理后台知识库 4.1.6 · PRD 8.7</span></li>
     </ol>
     <h3>评审待确认</h3>
     <ol>
-      <li class="glow">已定（用户 2026-10-17：会员等级与 VIP特权 分开）：① 旧版 VIP0~VIP8 等级表 → 已定：新旧合并（用户 2026-10-17）；② 旧版 VIP活动 / 新版VIP特权状态开关 → <span class="glow">已定：合并、共用一个总开关（用户 2026-10-19）</span>；③ 旧版下注限额与返水 → <span class="glow">已定：按新 VIP 等级逐级配置，不设返水开关，返水比例必填、填 0 表示该级不返水（用户 2026-10-19）</span>；④ 会员福利记录旧版历史记录与「日期讯息」→ <span class="glow">已定：新旧同表、按福利类别区分（见结算与奖励记录页）</span>。<span class="ref">管理后台知识库 4.1.6 · 用户 2026-10-19</span></li>
+      <li class="glow">已定（用户 2026-10-17：会员等级与 VIP特权 分开）：① 旧版 VIP0~VIP8 等级表 → 已定：新旧合并（用户 2026-10-17）；② 旧版 VIP活动 / 新版VIP特权状态开关 → <span class="glow">已定：合并、共用一个总开关（用户 2026-10-19）</span>；③ 旧版下注限额与返水 → <span class="glow">已定：按新 VIP 等级逐级配置，不设返水开关，返水比例必填、填 0 表示该级不返水（用户 2026-10-19）</span>；④ 会员福利记录旧版历史记录与「日期讯息」→ <span class="glow">已定：新旧同表、按福利类别区分（见会员福利页）</span>。<span class="ref">管理后台知识库 4.1.6 · 用户 2026-10-19</span></li>
       <li class="glow">已定（用户 2026-10-19 待确认清单；原决策第 2、3 项衍生待确认）：① 总开关关闭时旧版 VIP活动不恢复（第 7 条）；② 每周红包、专属红包按原文十四 Exclusive VIP Promotions + C-08 本期不做、置灰（第 8 条）；③ 「注册天数」「强制审核」保留，各加「生效」勾选，默认不勾选（第 9 条）；④ 将来开放旧版独有福利时，流水倍数、领取时效统一用新版全局参数（第 10 条）；⑤ VIP 返水与普通会员（Level）返水两套各自独立（第 11 条）<span class="glow">；返水口径：勾选沿用时 VIP 只按 VIP 返水表、普通用户只按 Level 返水表，不勾选时两边各自都领（用户 2026-10-21），会员层级实时返水单独核算、与身份无关，【游戏管理 › 返水设定】与本表如何对接由开发评估</span>；⑥ 返水、限额、库存、预占数值为示例，运营出方案后填（第 12、15 条）。</li>
       <li class="glow">已定（用户 2026-10-19 待确认清单；原衍生待确认）：① VIP奖品全局项保留（第 13 条）；② 手动领取时间天数另定，保留输入框、可留空（第 13 条）；③ 关闭等级自动释放该级预占，再次开启校验库存（第 14 条）；⑤ 前台 VIP中心本次不显示实物（第 16 条）。</li>
       <li class="glow">已定（用户 2026-10-19）：① 关闭某一级须提交复核，复核通过才生效（归级、发奖、释放奖品预占），待复核期间显示「关闭待复核」、仍按开启运行，驳回保持开启；再次开启不另加复核；② 删除「前台显示成长值数值」开关，前台不显示成长值字样和数值，计算方式为成长值时只显示进度条，不显示百分比；③ 返水口径：勾选沿用时 VIP 只按 VIP 返水表、普通用户只按 Level 返水表，不勾选时两边各自都领（用户 2026-10-21），会员层级实时返水单独核算；④ 「注册天数」生效时，注册未满 n 天期间达到的等级不补发升级奖励；⑤ 更换 / 清除奖品时已领取件数按原奖品交给实体奖品管理继续处理，只释放剩余预占；⑥ VIP奖品配置对 C-10 的调整为用户 2026-10-19 决定（第 20 条）。原「仍待确认」三项随之关闭。<span class="ref">用户 2026-10-19、第 20 条</span></li>
@@ -624,7 +603,7 @@ td.vip-pg-st .vip-pg-retry{border:0;background:none;color:#409EFF;cursor:pointer
     </ol>
     <h3>模拟操作日志</h3>
     <ol id="log"><li style="color:#909399">暂无（保存、复核、开关 VIP 体系后显示）</li></ol>
-    <!-- 上一页 / 下一页：按 PRD 2.1 主流程（运营配置：会员等级 → VIP特权 → VIP中心 → 通知 → 结算与奖励记录 → 会员数据；用户 2026-10-17 会员等级与 VIP特权 分开） -->
+    <!-- 上一页 / 下一页：按 PRD 2.1 主流程（运营配置：会员等级 → VIP特权 → VIP中心 → 通知 → 会员福利 → VIP数据报表；用户 2026-10-17 会员等级与 VIP特权 分开） -->
     <div class="pager"><a href="VIP会员体系-后台会员等级配置页面.html">← 上一页：后台会员等级配置页面</a><a href="../front/VIP会员体系-VIP中心页面.html">下一页：VIP中心页面 →</a></div>
   </aside>
 </div>
@@ -632,6 +611,7 @@ td.vip-pg-st .vip-pg-retry{border:0;background:none;color:#409EFF;cursor:pointer
 <script>window.NAV_ROOT = "../../../";</script>
 <script src="../../../assets/nav-data.js"></script>
 <script src="../../../assets/nav.js"></script>
+<script src="../../../assets/vip.js"></script>
 <script src="../../../assets/proto.js"></script>
 <script>
 (function () {
@@ -919,13 +899,13 @@ td.vip-pg-st .vip-pg-retry{border:0;background:none;color:#409EFF;cursor:pointer
       body = rtFs(t, r.id).map(function (f) { return "<div class='frow' style='grid-template-columns:170px 1fr'><span class='fl'>" + (f.opt ? "" : "<span class='req'>*</span>") + f.lab + "</span><div class='fctl' style='display:block'>" + rtWrap(f, r, v0[f.k]) + "</div></div>"; }).join("");
     } else {
       var uf = t.unify ? t.fields.filter(function (f) { return f.kind !== "sel" && f.kind !== "chk"; }) : [];
-      body = (uf.length ? "<div class='rtu'><span>统一填写（可选）</span><select class='bo-inp' id='rtuK' aria-label='统一填写的列'>" + uf.map(function (f) { return "<option value='" + f.k + "'>" + esc(f.lab) + "</option>"; }).join("") + "</select><input class='bo-inp' id='rtuV' aria-label='统一填写的值' placeholder='填一个值'><button type='button' class='bo-btn' id='rtuGo'>应用到所选 " + rs.length + " 行</button><span class='cnt'>填完仍可逐行修改</span></div>" : "") +
+      body = (uf.length ? "<div class='rtu'><span>统一填写（可选）</span><select class='bo-inp' id='rtuK' aria-label='统一填写的列'>" + uf.map(function (f) { return "<option value='" + f.k + "'>" + esc(f.lab) + "</option>"; }).join("") + "</select><input class='bo-inp' id='rtuV' aria-label='统一填写的值' placeholder='填一个值'><button type='button' class='bo-btn' id='rtuGo'>应用到所选 " + rs.length + " 行</button><span class='vip-cnt'>填完仍可逐行修改</span></div>" : "") +
         "<div style='overflow-x:auto'><table class='lv rtb'><thead><tr><th>" + esc(t.rowLab || "VIP 等级 · 等级名称") + "</th>" + t.fields.map(function (f) { return "<th style='white-space:nowrap'>" + esc(f.lab) + "</th>"; }).join("") + "</tr></thead><tbody>" +
         rs.map(function (r) { var v = t.get(r.id); return "<tr><td class='ro' style='white-space:nowrap'" + (r.lv ? " title='配置 ID：" + esc(r.id) + "'" : "") + ">" + (r.lv ? esc(r.lv) + " · " : "") + esc(r.name) + "</td>" + t.fields.map(function (f) { return f.has && !f.has(r.id) ? "<td class='na'>—</td>" : "<td>" + rtWrap(f, r, v[f.k]) + "</td>"; }).join("") + "</tr>"; }).join("") + "</tbody></table></div>";
     }
     return dialog({
       title: batch ? "批量修改 · " + t.name + "（" + rs.length + " 行）" : "修改 · " + t.name + " · " + (rs[0].lv ? rs[0].lv + " " : "") + rs[0].name, width: batch ? 980 : 560, gc: true,
-      body: body + "<div class='cnt'>" + (t.note || "") + "在弹窗最下方填谷歌验证码并点「确定」，校验通过即保存、写操作日志（" + (batch ? "逐行记录修改前后值" : "修改前后值") + "），没有暂存；有错误或验证码为空 / 错误时弹窗不关、内容保留（用户 2026-10-20）。</div>",
+      body: body + "<div class='vip-cnt'>" + (t.note || "") + "在弹窗最下方填谷歌验证码并点「确定」，校验通过即保存、写操作日志（" + (batch ? "逐行记录修改前后值" : "修改前后值") + "），没有暂存；有错误或验证码为空 / 错误时弹窗不关、内容保留（用户 2026-10-20）。</div>",
       onOpen: function (c) {
         function sy(e) { var x = e && e.target; if (t.sync && x && x.dataset && x.dataset.rid) t.sync(c, x.dataset.rid, x.dataset.rk); }
         c.el.addEventListener("input", sy); c.el.addEventListener("change", sy);
@@ -1071,8 +1051,8 @@ td.vip-pg-st .vip-pg-retry{border:0;background:none;color:#409EFF;cursor:pointer
       title: "需确认 · " + d.title, width: 640,
       body: "<div class='kd'>" + (d.q ? "<b>问题</b><span>" + esc(d.q) + "</span>" : "<b>需求内容</b><span>" + esc(d.req) + "</span><b>后台现状</b><span>" + esc(d.now) + "</span>") + "<b>后果</b><span>" + esc(d.risk) + "</span><b>建议</b><span>" + esc(d.adv) + "</span></div>" +
         "<div><span class='req' style='color:#F56C6C'>*</span>处理方案</div><div class='opt' id='kOpt'>" + KOPT.map(function (o) { return "<span class='rd" + (s.opt === o ? " on" : "") + "' data-v='" + o + "' role='radio' tabindex='0'><i></i>" + o + "</span>"; }).join("") + "</div><div class='ferr' id='kOptE' hidden></div>" +
-        "<div><label class='flab' for='kNote'>处理意见<span class='cnt'>（选「不采纳建议，按我的意见」时必填）</span></label><textarea class='bo-inp' id='kNote' rows='3' style='height:auto;width:100%;box-sizing:border-box;padding:6px 10px' placeholder='请输入处理意见'>" + esc(s.note || "") + "</textarea><div class='ferr' id='kNoteE' hidden></div></div>" +
-        "<div class='cnt'>原型中的选择只在页面上演示，不作为需求结论；结论以产品更新后的 PRD 为准。</div>",
+        "<div><label class='flab' for='kNote'>处理意见<span class='vip-cnt'>（选「不采纳建议，按我的意见」时必填）</span></label><textarea class='bo-inp' id='kNote' rows='3' style='height:auto;width:100%;box-sizing:border-box;padding:6px 10px' placeholder='请输入处理意见'>" + esc(s.note || "") + "</textarea><div class='ferr' id='kNoteE' hidden></div></div>" +
+        "<div class='vip-cnt'>原型中的选择只在页面上演示，不作为需求结论；结论以产品更新后的 PRD 为准。</div>",
       onOpen: function (c) { bindRadios(c.el.querySelector("#kOpt"), function () { c.el.querySelector("#kOptE").hidden = true; c.el.querySelector("#kNoteE").hidden = true; }); },
       buttons: [{ text: "取消" }, { text: "确定", cls: "q", key: "ok", onClick: function (c) {
         var o = c.el.querySelector("#kOpt .rd.on"), note = c.el.querySelector("#kNote").value.trim(), e1 = c.el.querySelector("#kOptE"), e2 = c.el.querySelector("#kNoteE");
@@ -1186,16 +1166,16 @@ td.vip-pg-st .vip-pg-retry{border:0;background:none;color:#409EFF;cursor:pointer
     var fld = fs.map(function (k) {
       var ro = !g && (k === "bet" || k === "dep");
       return "<div class='frow' style='grid-template-columns:170px 1fr'><span class='fl'>" + (k === "gMin" ? "<span class='req'>*</span>" : "") + LAB[k][0] + "</span><div class='fctl'>" + (ro
-        ? "<input class='bo-inp' id='v0ro_" + k + "' readonly tabindex='-1' style='width:180px;background:#F5F7FA;color:#606266' aria-label='VIP0 " + LAB[k][0] + "（只读）'><span class='cnt'>" + (k === "bet" ? "自动带入沿用的 LEVEL n 的有效投注累计值，只读" : "固定为 0，只读") + "</span>"
+        ? "<input class='bo-inp' id='v0ro_" + k + "' readonly tabindex='-1' style='width:180px;background:#F5F7FA;color:#606266' aria-label='VIP0 " + LAB[k][0] + "（只读）'><span class='vip-cnt'>" + (k === "bet" ? "自动带入沿用的 LEVEL n 的有效投注累计值，只读" : "固定为 0，只读") + "</span>"
         : "<input class='bo-inp' data-v0='" + k + "' value='" + esc(o[k]) + "' style='width:180px' placeholder='" + LAB[k][1] + "' aria-label='VIP0 " + LAB[k][0] + "'><div class='ferr' hidden></div>") + "</div></div>";
     }).join("");
     return dialog({ title: "修改设定 · VIP0（起始级别）", width: 620, gc: true,
       body: "<div class='frow' style='grid-template-columns:170px 1fr'><span class='fl'>沿用普通会员级别<i class='qm' data-h='沿用普通会员级别'>?</i></span><div class='fctl' style='display:block'><label class='cb'><input type='checkbox' id='v0F'" + (o.follow ? " checked" : "") + ">沿用普通会员级别</label>" +
         "<div id='v0LvBox' style='margin-top:6px'><select class='bo-inp' id='v0Lv' style='width:440px;max-width:100%;height:28px' aria-label='选择普通会员级别作为 VIP0'>" + opts + "</select><div class='ferr' hidden></div>" +
-        "<div class='cnt vip-live' style='margin-top:4px'>默认为当前会员最高等级 LEVEL " + top + "（不删除级别）。累计有效投注不高于所选级别有效投注累计值的 VIP 等级标为「不符合标准」并关闭，须先「修改设定」提高门槛后才能开启</div><div class='vip-req-note ui-reqnote'><span>上方提示为上线提示；出处：用户 2026-10-20；默认当前最高级、上线默认勾选「沿用普通会员级别」为用户 2026-10-21；用户 2026-10-21 改：下拉不再置灰、不再拦截选择，原「须小于 VIP1 / VIP 最低开启等级」改为把不符合标准的 VIP 等级关闭、提高门槛后才能开启。</span></div></div>" +
+        "<div class='vip-cnt vip-live' style='margin-top:4px'>默认为当前会员最高等级 LEVEL " + top + "（不删除级别）。累计有效投注不高于所选级别有效投注累计值的 VIP 等级标为「不符合标准」并关闭，须先「修改设定」提高门槛后才能开启</div><div class='vip-req-note ui-reqnote'><span>上方提示为上线提示；出处：用户 2026-10-20；默认当前最高级、上线默认勾选「沿用普通会员级别」为用户 2026-10-21；用户 2026-10-21 改：下拉不再置灰、不再拦截选择，原「须小于 VIP1 / VIP 最低开启等级」改为把不符合标准的 VIP 等级关闭、提高门槛后才能开启。</span></div></div>" +
         "<div class='pend vip-live' id='v0Tip' style='margin:6px 0 0'></div><div class='vip-req-note ui-reqnote'><span>上方提示为上线提示；出处：用户 2026-10-20 已定。沿用后在开启 VIP 体系时删除 LEVEL n 之后的级别，替代原 K04；LEVEL n 默认为当前会员最高等级，默认不删除级别；原「会员最高等级须小于 VIP 最低等级」互相限制已取消，改为勾选时 VIP 等级的标准须高于 VIP0（沿用的 LEVEL n），不高于的标为「不符合标准」并关闭、提高门槛后才能开启（用户 2026-10-21）。不勾选时两套独立核算（用户 2026-10-21），替代原 K04 在不勾选时的处理：普通会员级别和 VIP 分别核算、互不影响，不删除普通会员级别。例：普通会员 LEVEL 10 奖励 100、VIP2 奖励 10，会员按普通会员规则升到 LEVEL 10、同时按 VIP 规则升到 VIP2，两边共可领 110。勾选的例子：普通会员最高为 LEVEL 30 时，第 31 级就是 VIP1（最高级以【会员等级】实际配置为准，不写死 30）。原「会员最高等级与 VIP 最低等级互相限制」已取消；改为勾选时 VIP 等级的标准须高于 VIP0（沿用的 LEVEL n），不高于的标为「不符合标准」并关闭、提高门槛后才能开启，不勾选时不比较（用户 2026-10-21）。</span></div>" +
         "<div id='v0AckBox' hidden style='margin-top:6px'><label class='cb' style='color:#F56C6C'><input type='checkbox' id='v0Ack'>我已确认：保存后删除 <span id='v0AckR'></span> 的普通会员级别</label><div class='ferr' hidden></div></div></div></div>" +
-        "<div class='eg'><div class='cnt'><b>当前计算方式（" + CALCN[g ? "grow" : "amt"] + "）的标准</b>：" + (g
+        "<div class='eg'><div class='vip-cnt'><b>当前计算方式（" + CALCN[g ? "grow" : "amt"] + "）的标准</b>：" + (g
           ? "勾选「沿用普通会员级别」时需另外填写：VIP 成长值与普通会员（Level）成长值是两套、互相独立，不能沿用 LEVEL n 的成长值；成长值最低要求必填（已定），≥ 0 的整数，须小于 VIP1（严格，不得相等，用户 2026-10-20）"
           : "勾选「沿用普通会员级别」时，累计有效投注自动带入 LEVEL n 的有效投注累计值（只读），累计充值为 0（用户 2026-10-20）") + "；VIP0 不设保级、也不会降级（累计标准，累计值不减），没有保级和降级保留字段（已定，用户 2026-10-20）；不沿用时置灰、不单独设标准</div>" + fld + "</div>" +
         "<div class='pend vip-live' id='v0Rw' style='margin:8px 0 0'></div><div class='vip-req-note ui-reqnote'><span>上方「提示」为上线提示；出处：用户 2026-10-20 已定。</span></div>",
@@ -1306,7 +1286,7 @@ td.vip-pg-st .vip-pg-retry{border:0;background:none;color:#409EFF;cursor:pointer
     var s = grSaved();
     return dialog({ title: "切换计算方式 · 请先设置 VIP 成长值规则", width: 560, gc: true,
       body: "<div class='pend vip-live' style='margin:0'><b>请先完成 VIP 成长值规则</b>：切换为「成长值」前，先设置充值比例和 6 大游戏分类比例（平台已无体育类游戏），保存后再检查各级成长值门槛（先配规则再配门槛）。保存后当前计算方式仍为累计金额，规则暂不生效。</div><div class='vip-req-note ui-reqnote'><span>上方提示为上线提示；出处：用户 2026-10-20。</span></div>" +
-        Object.keys(GRN).map(function (k) { return "<div class='frow' style='grid-template-columns:200px 1fr'><span class='fl'><span class='req'>*</span>" + (k === "dep" ? "充值 ₱1 =" : esc(GRN[k]) + " 有效投注 ₱1 =") + "</span><div class='fctl'><input class='bo-inp' data-gf='" + k + "' style='width:90px' value='" + esc(s[k] || "") + "' placeholder='如 1' aria-label='" + esc(GRN[k]) + "'><span class='cnt'>成长值</span><div class='ferr' hidden></div></div></div>"; }).join(""),
+        Object.keys(GRN).map(function (k) { return "<div class='frow' style='grid-template-columns:200px 1fr'><span class='fl'><span class='req'>*</span>" + (k === "dep" ? "充值 ₱1 =" : esc(GRN[k]) + " 有效投注 ₱1 =") + "</span><div class='fctl'><input class='bo-inp' data-gf='" + k + "' style='width:90px' value='" + esc(s[k] || "") + "' placeholder='如 1' aria-label='" + esc(GRN[k]) + "'><span class='vip-cnt'>成长值</span><div class='ferr' hidden></div></div></div>"; }).join(""),
       buttons: [{ text: "取消" }, { text: "保存规则并继续", cls: "q", key: "ok", perm: 1, onClick: function (c) {
         var val = {}, bad = 0;
         c.el.querySelectorAll("[data-gf]").forEach(function (inp) { var v = inp.value.trim(), m = !v ? "请填写" : !GRRE.test(v) ? "请输入 ≥ 0 的数，最多 2 位小数" : ""; val[inp.dataset.gf] = v; inp.classList.toggle("bad", !!m); var er = inp.parentNode.querySelector(".ferr"); er.hidden = !m; er.textContent = m; if (m) bad++; });
@@ -1399,9 +1379,9 @@ td.vip-pg-st .vip-pg-retry{border:0;background:none;color:#409EFF;cursor:pointer
         (g.hi ? "<tr><td>降级玩家上移到 " + esc(g.hi) + "（当前 &lt; 历史最高，只移到相邻开启等级、不越级）</td><td>" + fmt(g.up) + "</td><td>其中 " + fmt(g.pay) + " 人按配置 ID 判断未领过 " + esc(g.hi) + " 升级奖励（如 " + esc(g.hi) + " 是其越过后才新增的等级，或其历史最高是 " + esc(g.hi) + " 之下已关闭的等级），发放 " + fmt(g.pay) + " × ₱" + fmt(g.hiUp) + " = ₱" + fmt(g.amt) + "；其余 " + fmt(g.up - g.pay) + " 人已领过，不再发（每级终身一次）</td></tr>" : "<tr><td>降级玩家上移</td><td>0</td><td>没有更高的开启等级</td></tr>") +
         "<tr><td><b>合计</b></td><td><b>" + fmt(g.dn + g.up) + "</b></td><td>= 当前在 " + esc(r.name) + " 的 " + fmt(g.cur) + " 人；需发放 ₱" + fmt(g.amt) + "</td></tr>" +
         "</tbody></table>" +
-        (held ? "<div class='pend vip-live' style='margin:0'>复核通过后，该级奖品「" + esc(pzOf(v.p).nm) + "」剩余预占 " + held + " 件自动释放，还回平台库存可分配余量；再次开启时校验库存。</div>" : (v && v.p ? "<div class='cnt'>该级奖品「" + esc(pzOf(v.p).nm) + "」剩余预占为 0，无需释放。</div>" : "")) +
+        (held ? "<div class='pend vip-live' style='margin:0'>复核通过后，该级奖品「" + esc(pzOf(v.p).nm) + "」剩余预占 " + held + " 件自动释放，还回平台库存可分配余量；再次开启时校验库存。</div>" : (v && v.p ? "<div class='vip-cnt'>该级奖品「" + esc(pzOf(v.p).nm) + "」剩余预占为 0，无需释放。</div>" : "")) +
         "<div class='pend glow vip-live' style='margin:0'><b>关闭须复核</b><i class='qm' data-h='待复核 / 复核'>?</i>：在本弹窗填谷歌验证码并点「提交复核」后，该级显示「关闭待复核」，<b>复核通过前仍按开启运行</b>（不归级、不发奖、不释放奖品预占）；另一名有「复核 VIP 门槛」权限的人员通过后才生效，驳回则保持开启。提交人不能复核自己的提交；待复核期间不能修改 VIP 等级配置。</div><div class='vip-req-note ui-reqnote'><span>上方提示为上线提示；出处：关闭须复核为用户 2026-10-19；奖品剩余预占自动释放为。</span></div>" +
-        "<div class='cnt'>人数和金额为示例试算（按点击时刻），复核时按复核时刻重新试算，实际以复核通过时刻为准；归级写等级变动记录（变动类型「重新归级」、触发原因「等级关闭」）。用户 2026-10-19。</div>",
+        "<div class='vip-cnt'>人数和金额为示例试算（按点击时刻），复核时按复核时刻重新试算，实际以复核通过时刻为准；归级写等级变动记录（变动类型「重新归级」、触发原因「等级关闭」）。用户 2026-10-19。</div>",
       buttons: [{ text: "取消" }, { text: "提交复核", cls: "q", key: "ok", perm: 1, onClick: function () {
         return gcode(function () {
           P.set("rv", { kind: "close", id: r.id, nm: r.name, no: r.no, by: P.get("me"), at: "2026-10-13 " + now().slice(11), ch: ["关闭 " + r.name + "（等级 " + r.no + "，配置 ID " + r.id + "）"], g: g, held: held, pnm: held ? pzOf(v.p).nm : "", N: g.pay, X: g.amt });
@@ -1443,8 +1423,8 @@ td.vip-pg-st .vip-pg-retry{border:0;background:none;color:#409EFF;cursor:pointer
         "<span>提交时影响预览</span><span>" + esc(closeHeldText(rv.g, rv.held, rv.pnm)) + "</span></div>" +
         "<div><b>复核时刻重新试算</b>（2026-10-13 " + now().slice(11) + "，GMT+8）</div>" +
         rgCards(g, rv.nm) +
-        (t.held ? "<div class='cnt'>通过后释放「" + esc(rv.pnm || "") + "」剩余预占 " + t.held + " 件。</div>" : "") +
-        "<div class='cnt'>复核时刻的人数与提交时可能不同（原型模拟当前人数 +3）。通过：立即关闭该级并重新归级、发放升级奖励、释放奖品预占；驳回：不生效，该级保持开启（用户 2026-10-19）。</div>",
+        (t.held ? "<div class='vip-cnt'>通过后释放「" + esc(rv.pnm || "") + "」剩余预占 " + t.held + " 件。</div>" : "") +
+        "<div class='vip-cnt'>复核时刻的人数与提交时可能不同（原型模拟当前人数 +3）。通过：立即关闭该级并重新归级、发放升级奖励、释放奖品预占；驳回：不生效，该级保持开启（用户 2026-10-19）。</div>",
       buttons: [{ text: "取消" }, { text: "驳回", perm: 1, onClick: function (c) {
         confirmBox("确认驳回", "确定驳回关闭 " + esc(rv.nm) + "？驳回后该级保持开启。", "确定驳回", function () { c.close(); rejectClose(rv); }); return false;
       } }, { text: "通过", cls: "q", perm: 1, onClick: function (c) {
@@ -1482,11 +1462,11 @@ td.vip-pg-st .vip-pg-retry{border:0;background:none;color:#409EFF;cursor:pointer
     var noteA = "累计金额：累计有效投注和累计充值都达到才升级，按每月保级投注保级（Claire 原文二、三、五）。先填升级标准（累计有效投注）再填保级标准：每月保级投注须小于累计有效投注，否则提示「保级标准需小于升级标准」；每月保级投注还须大于上一级、小于下一级（逐级严格递增，用户 2026-10-20）。";
     var noteG = "成长值按本页「VIP 成长值规则」计算。先填成长值最低要求再填保级所需成长值，后者须小于前者，否则提示「保级标准需小于升级标准」；保级所需成长值还须大于上一级、小于下一级（逐级严格递增，用户 2026-10-20）。";
     return fld("name", true, "等级名称", "≤ 20 字符") +
-      "<div class='frow' style='grid-template-columns:170px 1fr'><span class='fl'>计算方式<i class='qm' data-h='计算方式'>?</i></span><div class='fctl'><span>" + CALCN[calcSaved()] + "</span><span class='cnt'>（全局，在表格上方切换）</span></div></div>" +
-      "<div class='eg'><div class='cnt'><b>当前计算方式（" + CALCN[g ? "grow" : "amt"] + "）的门槛（必填）</b></div>" + cur.map(function (k) { return fld(k, true); }).join("") + "<div class='cnt'>" + (g ? noteG : noteA) + "</div></div>" +
-      "<div class='eg eg2'><div class='cnt vip-live'><b>另一计算方式（" + CALCN[g ? "amt" : "grow"] + "）的门槛（选填）</b>：当前不参与判定；切换计算方式前须各级填齐</div><div class='vip-req-note ui-reqnote'><span>上方提示为上线提示；出处：用户 2026-10-20。</span></div>" + oth.map(function (k) { return fld(k, false); }).join("") + "</div>" +
+      "<div class='frow' style='grid-template-columns:170px 1fr'><span class='fl'>计算方式<i class='qm' data-h='计算方式'>?</i></span><div class='fctl'><span>" + CALCN[calcSaved()] + "</span><span class='vip-cnt'>（全局，在表格上方切换）</span></div></div>" +
+      "<div class='eg'><div class='vip-cnt'><b>当前计算方式（" + CALCN[g ? "grow" : "amt"] + "）的门槛（必填）</b></div>" + cur.map(function (k) { return fld(k, true); }).join("") + "<div class='vip-cnt'>" + (g ? noteG : noteA) + "</div></div>" +
+      "<div class='eg eg2'><div class='vip-cnt vip-live'><b>另一计算方式（" + CALCN[g ? "amt" : "grow"] + "）的门槛（选填）</b>：当前不参与判定；切换计算方式前须各级填齐</div><div class='vip-req-note ui-reqnote'><span>上方提示为上线提示；出处：用户 2026-10-20。</span></div>" + oth.map(function (k) { return fld(k, false); }).join("") + "</div>" +
       (gLock ? "<div class='pend vip-live' style='margin:0'><b>请先设置 VIP 成长值规则</b>：成长值规则未保存（未配置齐），成长值门槛字段置灰、不能保存；" + (g ? "先在等级表上方「VIP 成长值规则」填写并保存" : "点计算方式「成长值」时会先弹出成长值规则设置") + "。</div><div class='vip-req-note ui-reqnote'><span>上方提示为上线提示；出处：用户 2026-10-20。</span></div>" : "") +
-      (isNew ? "<div class='cnt glow vip-live'>奖励、返水、奖品不在本弹窗填写：保存后「VIP 奖励配置」「下注限额与返水」「VIP奖品配置」自动生成该级条目（红字「未配置」），再用各表的「修改」补填；未配置期间该级升级 / 保级 / 生日奖励不发放、返水按 0、下注限额按平台默认，奖品没有可领取、不预占库存。</div><div class='vip-req-note ui-reqnote'><span>上方提示为上线提示；出处：用户 2026-10-20 已定。</span></div>" :
+      (isNew ? "<div class='vip-cnt glow vip-live'>奖励、返水、奖品不在本弹窗填写：保存后「VIP 奖励配置」「下注限额与返水」「VIP奖品配置」自动生成该级条目（红字「未配置」），再用各表的「修改」补填；未配置期间该级升级 / 保级 / 生日奖励不发放、返水按 0、下注限额按平台默认，奖品没有可领取、不预占库存。</div><div class='vip-req-note ui-reqnote'><span>上方提示为上线提示；出处：用户 2026-10-20 已定。</span></div>" :
       "<div class='frow' style='grid-template-columns:170px 1fr'><span class='fl'>状态<i class='qm' data-h='等级状态（开启 / 关闭）'>?</i></span><div class='fctl'><div class='rdg2' id='eOn'><span class='rd" + (r.on ? " on" : "") + "' data-v='1' role='radio' tabindex='0' aria-checked='" + r.on + "'><i></i>开启</span><span class='rd" + (r.on ? "" : " on") + "' data-v='0' role='radio' tabindex='0' aria-checked='" + !r.on + "'><i></i>关闭</span></div><div class='ferr' id='eOnE' hidden></div></div></div>") +
       "<div class='ferr' id='eErr' hidden></div>";
   }
@@ -1544,7 +1524,7 @@ td.vip-pg-st .vip-pg-retry{border:0;background:none;color:#409EFF;cursor:pointer
     var r = vip[i];
     return dialog({
       title: "修改设定 · " + r.name + "（等级 " + r.no + "）", width: 600, gc: true,
-      body: lvForm(r, false) + "<div class='cnt'><span class='glow'>在弹窗最下方填谷歌验证码并点「确定」，验证通过直接保存，该级立即生效并写操作日志，没有暂存；门槛下调（累计有效投注、累计充值、成长值最低要求调低）先弹影响预览，按复核规则需要复核的进入待复核；验证码为空或错误时弹窗不关、内容保留可再改（用户 2026-10-20）。</span><span class='glow'>状态改为「关闭」时单独走影响预览和提交复核，复核通过才生效，不能同时修改其他设定（用户 2026-10-19）。</span></div>",
+      body: lvForm(r, false) + "<div class='vip-cnt'><span class='glow'>在弹窗最下方填谷歌验证码并点「确定」，验证通过直接保存，该级立即生效并写操作日志，没有暂存；门槛下调（累计有效投注、累计充值、成长值最低要求调低）先弹影响预览，按复核规则需要复核的进入待复核；验证码为空或错误时弹窗不关、内容保留可再改（用户 2026-10-20）。</span><span class='glow'>状态改为「关闭」时单独走影响预览和提交复核，复核通过才生效，不能同时修改其他设定（用户 2026-10-19）。</span></div>",
       onOpen: lvFormOpen,
       buttons: [{ text: "取消" }, { text: "确定", cls: "q", key: "ok", onClick: function (c) {
         var ge = c.el.querySelector("#eErr"); ge.hidden = true;
@@ -1601,13 +1581,13 @@ td.vip-pg-st .vip-pg-retry{border:0;background:none;color:#409EFF;cursor:pointer
     var blank = { name: "", bet: "", dep: "", ret: "", gMin: "", gKeep: "", gPct: "", on: true };
     return dialog({
       title: "新增VIP等级", width: 660, gc: true,
-      body: "<div class='frow' style='grid-template-columns:170px 1fr'><span class='fl'><span class='req'>*</span>新增到第几级<i class='qm' data-h='新增到第几级'>?</i></span><div class='fctl'><span>L</span><input class='bo-inp' id='nPos' style='width:90px' inputmode='numeric' placeholder='1–" + N + "' aria-label='新增到第几级'><div class='ferr' hidden></div><span class='cnt vip-live'>范围 L1 ~ L" + N + "（当前最高 VIP 等级 L" + (N - 1) + " + 1）；填 L" + N + " 时加在当前最高等级之上，不顺延</span></div></div>" +
+      body: "<div class='frow' style='grid-template-columns:170px 1fr'><span class='fl'><span class='req'>*</span>新增到第几级<i class='qm' data-h='新增到第几级'>?</i></span><div class='fctl'><span>L</span><input class='bo-inp' id='nPos' style='width:90px' inputmode='numeric' placeholder='1–" + N + "' aria-label='新增到第几级'><div class='ferr' hidden></div><span class='vip-cnt vip-live'>范围 L1 ~ L" + N + "（当前最高 VIP 等级 L" + (N - 1) + " + 1）；填 L" + N + " 时加在当前最高等级之上，不顺延</span></div></div>" +
         "<div class='pend glow vip-live' id='nShift' style='margin:0' hidden></div>" +
-        lvForm(blank, true) + "<div class='cnt'><span class='glow'>新等级放在所填的 L 号，原该级及之后的等级依次顺延（L 号 +1，默认名称 VIPn 随之改为 VIPn+1，自定义名称（如 SUPER VIP）不变），系统按等级配置 ID 判定，配置 ID 不随顺位变化，已发奖励记录不变。当前计算方式的门槛：累计有效投注 / 成长值最低要求 / 每月保级投注 / 保级所需成长值 须大于前一级、小于原该级（严格递增；保级 用户 2026-10-20），累计充值可与相邻级相等（输入框旁显示上下限，用户 2026-10-20）；新增可能使玩家立即升级，按门槛下调处理：点「确定」先逐项校验并校验本弹窗的谷歌验证码，再弹影响预览，确认后直接生效或进入待复核；取消则不新增，没有暂存（用户 2026-10-20）。</span></div>",
+        lvForm(blank, true) + "<div class='vip-cnt'><span class='glow'>新等级放在所填的 L 号，原该级及之后的等级依次顺延（L 号 +1，默认名称 VIPn 随之改为 VIPn+1，自定义名称（如 SUPER VIP）不变），系统按等级配置 ID 判定，配置 ID 不随顺位变化，已发奖励记录不变。当前计算方式的门槛：累计有效投注 / 成长值最低要求 / 每月保级投注 / 保级所需成长值 须大于前一级、小于原该级（严格递增；保级 用户 2026-10-20），累计充值可与相邻级相等（输入框旁显示上下限，用户 2026-10-20）；新增可能使玩家立即升级，按门槛下调处理：点「确定」先逐项校验并校验本弹窗的谷歌验证码，再弹影响预览，确认后直接生效或进入待复核；取消则不新增，没有暂存（用户 2026-10-20）。</span></div>",
       onOpen: function (c) {
         lvFormOpen(c);
         var pi = c.el.querySelector("#nPos"), nm = c.el.querySelector("input[data-e='name']");
-        cur.forEach(function (f) { if (!NBND[f]) return; var inp = c.el.querySelector("input[data-e='" + f + "']"); if (!inp) return; var h = document.createElement("span"); h.className = "cnt nbd"; h.setAttribute("data-nb", f); h.style.whiteSpace = "nowrap"; inp.parentNode.appendChild(h); });
+        cur.forEach(function (f) { if (!NBND[f]) return; var inp = c.el.querySelector("input[data-e='" + f + "']"); if (!inp) return; var h = document.createElement("span"); h.className = "vip-cnt nbd"; h.setAttribute("data-nb", f); h.style.whiteSpace = "nowrap"; inp.parentNode.appendChild(h); });
         nm.addEventListener("input", function () { var v = nm.value.trim(); st.auto = v === "" || v === st.last; });
         function sy() {
           var v = pi.value.trim(), ok = nPosOk(v, N), k = ok ? Number(v) - 1 : -1, rows = ok ? insertRow(clone(vip), k) : null, sh = c.el.querySelector("#nShift");
@@ -1770,7 +1750,7 @@ td.vip-pg-st .vip-pg-retry{border:0;background:none;color:#409EFF;cursor:pointer
   }
   function trialHtml(t, label) {
     return "<div class='kv'><span>" + label + "</span><span>2026-10-13 " + now().slice(11) + "（GMT+8）</span>" +
-      "<span>预计升级人数</span><span class='big'>" + fmt(t.N) + " 人</span><span>预计发放升级奖励</span><span class='big'>₱" + fmt(t.X) + "</span></div>";
+      "<span>预计升级人数</span><span class='vip-big'>" + fmt(t.N) + " 人</span><span>预计发放升级奖励</span><span class='vip-big'>₱" + fmt(t.X) + "</span></div>";
   }
   /* 生效：保存配置，模拟全量重算（只升不降） */
   function applyRows(rows, t, noPay, mode, gr, calc) {
@@ -1799,7 +1779,7 @@ td.vip-pg-st .vip-pg-retry{border:0;background:none;color:#409EFF;cursor:pointer
     dialog({
       title: opt && opt.title || "影响预览", width: 620, gc: !(opt && opt.noGc),
       body: "<div><b>" + (ch.some(function (c) { return c.f === "add" || c.f === "calc"; }) ? "本次修改（含新增等级或计算方式切换）" : "本次门槛下调") + "</b><i class='qm' data-h='影响预览'>?</i><ul style='margin:4px 0 0;padding-left:18px'>" + ch.map(function (c) { return "<li>" + esc(chText(c)) + "</li>"; }).join("") + "</ul></div>" + (ch.some(function (c) { return c.f === "shift"; }) ? "<div class='vip-req-note ui-reqnote'><span>「L 号顺延」一条中已发奖励记录的显示方式，出处：。</span></div>" : "") +
-        trialHtml(t, "试算时刻") + (anyG ? "<div class='cnt'>计算方式为成长值时不参与原型试算（原型虚构会员没有成长值数据，示意）；实际按 VIP 成长值规则试算。</div>" : "") +
+        trialHtml(t, "试算时刻") + (anyG ? "<div class='vip-cnt'>计算方式为成长值时不参与原型试算（原型虚构会员没有成长值数据，示意）；实际按 VIP 成长值规则试算。</div>" : "") +
         "<div>是否需要复核<i class='qm' data-h='待复核 / 复核'>?</i>：" + reviewText(t.X) + "；复核金额阈值<i class='qm' data-h='复核金额阈值（原文外补充）'>?</i> " + thText() + "</div>" +
         "<div class='opt glow'><label class='cb'><input type='checkbox' id='noPay'>不发放差额奖励</label><i class='qm' data-h='不发放差额奖励'>?</i>" +
         "<div id='abBox' hidden><span class='rd' data-v='A' role='radio' tabindex='0'><i></i>A 继续累计：立即升级，这次跨过的等级不发升级奖励</span><span class='rd' data-v='B' role='radio' tabindex='0'><i></i>B 重置初始化：这次不升级，累计从生效时刻起重新累计</span><div class='ferr' id='abErr' hidden></div></div></div>" +
@@ -1854,7 +1834,7 @@ td.vip-pg-st .vip-pg-retry{border:0;background:none;color:#409EFF;cursor:pointer
       title: "复核 VIP 门槛修改", width: 620,
       body: "<div class='kv'><span>提交人</span><span>" + ACC[rv.by] + "</span><span>提交时间</span><span>" + rv.at + "（GMT+8）</span><span>修改内容</span><span>" + esc(rv.ch.join("；")) + "</span>" +
         "<span>提交时试算</span><span>升级 " + fmt(rv.N) + " 人、发放 ₱" + fmt(rv.X) + "</span><span>不发放差额奖励</span><span>" + (rv.noPay ? "是 · " + (rv.mode === "A" ? "A 继续累计" : "B 重置初始化") : "否") + "</span></div>" +
-        trialHtml(t, "复核时刻重新试算") + "<div class='cnt'>复核时刻的累计数据与提交时不同，试算结果可能变化（原型模拟新增达标 " + fmt(t.N - rv.N) + " 人）。</div>",
+        trialHtml(t, "复核时刻重新试算") + "<div class='vip-cnt'>复核时刻的累计数据与提交时不同，试算结果可能变化（原型模拟新增达标 " + fmt(t.N - rv.N) + " 人）。</div>",
       buttons: [{ text: "取消" }, { text: "驳回", perm: 1, onClick: function (c) {
         confirmBox("确认驳回", "确定驳回这次门槛修改？驳回后修改不生效。", "确定驳回", function () {
           c.close(); P.set("rv", null); vip = clone(base()); grCur = clone(grSaved()); calcCur = calcSaved(); renderVip(); renderVr(); renderPending(); toast("已驳回");
@@ -1883,7 +1863,7 @@ td.vip-pg-st .vip-pg-retry{border:0;background:none;color:#409EFF;cursor:pointer
   var grCur = clone(grSaved()), grShown = false;
   document.getElementById("grBody").innerHTML = VEN.map(function (v) {
     return "<tr><td class='ro' style='white-space:nowrap'>" + v[1] + "</td>" +
-      "<td style='white-space:nowrap'><input class='bo-inp gri' style='width:70px' data-g='" + v[0] + "' placeholder='如 1' aria-label='" + v[1] + " 有效投注 ₱1 对应的成长值'> <span class='cnt'>成长值</span><span class='ferr' hidden></span></td></tr>";
+      "<td style='white-space:nowrap'><input class='bo-inp gri' style='width:70px' data-g='" + v[0] + "' placeholder='如 1' aria-label='" + v[1] + " 有效投注 ₱1 对应的成长值'> <span class='vip-cnt'>成长值</span><span class='ferr' hidden></span></td></tr>";
   }).join("");
   var GRRE = /^\d+(\.\d{1,2})?$/;
   /* 同步区块并校验，返回错误列表；留空的错误在第一次点「保存 VIP 成长值规则」后才显示 */
@@ -1976,7 +1956,7 @@ td.vip-pg-st .vip-pg-retry{border:0;background:none;color:#409EFF;cursor:pointer
   function renderScope() {
     document.querySelectorAll("#gScope .rd").forEach(function (r) { var on = r.dataset.v === scope; r.classList.toggle("on", on); r.setAttribute("aria-checked", on); });
     var box = document.getElementById("gTypes"); box.hidden = scope !== "pick";
-    box.innerHTML = GTYPES.map(function (g) { return "<label class='cb'><input type='checkbox' value='" + g + "'" + (gsel.indexOf(g) >= 0 ? " checked" : "") + ">" + g + "</label>"; }).join("") + "<span class='cnt vip-live'>（平台 6 大类：Slot、Casino、Poker、Bingo、Arcade、Fishing；其他游戏不计入）</span><span class='cnt vip-req'>出处：用户 2026-10-20；只计 6 大类：用户 2026-10-21（规则 N77）。</span>";
+    box.innerHTML = GTYPES.map(function (g) { return "<label class='cb'><input type='checkbox' value='" + g + "'" + (gsel.indexOf(g) >= 0 ? " checked" : "") + ">" + g + "</label>"; }).join("") + "<span class='vip-cnt vip-live'>（平台 6 大类：Slot、Casino、Poker、Bingo、Arcade、Fishing；其他游戏不计入）</span><span class='vip-cnt vip-req'>出处：用户 2026-10-20；只计 6 大类：用户 2026-10-21（规则 N77）。</span>";
   }
   bindRadios(document.getElementById("gScope"), function (r) { scope = r.dataset.v; renderScope(); validateRw(); });
   /* ===== KYC 认证要求（用户 2026-10-21，规则 N66、N76）：full 完全认证（默认）/ partial 部分认证；
@@ -2068,8 +2048,8 @@ td.vip-pg-st .vip-pg-retry{border:0;background:none;color:#409EFF;cursor:pointer
     if (dCh) lines.push("短信 / 推送免打扰时段：" + dndText(dOld) + " → " + dndText(dNew) + "（GMT+8，之后触发的短信和推送按新时段顺延）");
    dialog({ title: "保存 VIP 全局参数", width: 580,
       body: "<div>确认保存？保存后立即生效，只影响之后新生成的奖励和短信（保级奖励从下一个自然月生效）。</div>" +
-        (lines.length ? "<ul style='margin:0;padding-left:18px'>" + lines.slice(0, 12).map(function (x) { return "<li>" + esc(x) + "</li>"; }).join("") + (lines.length > 12 ? "<li>…… 共 " + lines.length + " 项</li>" : "") + "</ul>" : "<div class='cnt'>没有识别到 KYC 认证要求、领取方式、有效期、阈值、游戏范围、免打扰的修改；其他参数按页面当前值保存。</div>") +
-        (cmOld.up !== cmNew.up || cmOld.rv !== cmNew.rv || cmOld.bd !== cmNew.bd ? "<div class='cnt vip-live'>领取方式只影响修改后新生成的奖励；已生成的奖励按生成时的方式处理（已到账的不变，待领取的仍可在有效期内领取）。</div><div class='vip-req-note ui-reqnote'><span>上方提示为上线提示；出处：用户 2026-10-20。</span></div>" : ""),
+        (lines.length ? "<ul style='margin:0;padding-left:18px'>" + lines.slice(0, 12).map(function (x) { return "<li>" + esc(x) + "</li>"; }).join("") + (lines.length > 12 ? "<li>…… 共 " + lines.length + " 项</li>" : "") + "</ul>" : "<div class='vip-cnt'>没有识别到 KYC 认证要求、领取方式、有效期、阈值、游戏范围、免打扰的修改；其他参数按页面当前值保存。</div>") +
+        (cmOld.up !== cmNew.up || cmOld.rv !== cmNew.rv || cmOld.bd !== cmNew.bd ? "<div class='vip-cnt vip-live'>领取方式只影响修改后新生成的奖励；已生成的奖励按生成时的方式处理（已到账的不变，待领取的仍可在有效期内领取）。</div><div class='vip-req-note ui-reqnote'><span>上方提示为上线提示；出处：用户 2026-10-20。</span></div>" : ""),
       buttons: [{ text: "取消" }, { text: "确定", cls: "q", key: "ok", perm: 1, onClick: function () {
         return gcode(function () {
           P.set("rvTh", th); P.set("kycReq", kycCur); P.set("gScope", scope); P.set("gTypes", gsel.slice()); P.set("dnd", dNew); P.set("claimMode", cmNew); cmCur = clone(cmNew);
@@ -2261,7 +2241,7 @@ td.vip-pg-st .vip-pg-retry{border:0;background:none;color:#409EFF;cursor:pointer
       var none = !s.value || s.value === "__nc", o = pzCur[id];
       if (none) { q.value = ""; q.disabled = true; q.placeholder = "不设奖品时不填"; }
       else { q.disabled = false; q.placeholder = "正整数"; if (k === "p") q.value = o && o.p === s.value ? String(o.q) : "1"; }
-      var tip = s.closest(".rtc").querySelector(".pzrel"); if (!tip) { tip = document.createElement("div"); tip.className = "cnt pzrel"; s.closest(".rtc").appendChild(tip); }
+      var tip = s.closest(".rtc").querySelector(".pzrel"); if (!tip) { tip = document.createElement("div"); tip.className = "vip-cnt pzrel"; s.closest(".rtc").appendChild(tip); }
       var h = o && o.p && o.p !== s.value ? pzHeld(o) : 0;
       tip.textContent = h ? "保存后释放「" + pzOf(o.p).nm + "」剩余预占 " + h + " 件" + (o.got ? "（已领取 " + o.got + " 件按原奖品由实体奖品管理继续处理）" : "") : "";
     },
@@ -2418,9 +2398,9 @@ td.vip-pg-st .vip-pg-retry{border:0;background:none;color:#409EFF;cursor:pointer
             "</span><div class='ferr' hidden></div></td></tr>";
         }).join("") +
         "</tbody></table>" +
-        (lgSaved().audOn ? "" : "<div class='cnt'>「强制审核」未生效，没有待审核的奖励。</div>") +
-        (cmSaved().up === "manual" && cmSaved().rv === "manual" ? "" : "<div class='cnt vip-live'>领取方式为「自动领取」的" + [cmSaved().up === "manual" ? "" : "升级奖励", cmSaved().rv === "manual" ? "" : "保级奖励"].filter(Boolean).join("、") + "生成即到账，不在本列表；改为手动领取时，待领取的会单独列出。</div><div class='vip-req-note ui-reqnote'><span>上方提示为上线提示；出处：用户 2026-10-20。</span></div>") +
-        "<div class='cnt'>人数、金额（件数）为示例数据，按确认时刻统计。</div>",
+        (lgSaved().audOn ? "" : "<div class='vip-cnt'>「强制审核」未生效，没有待审核的奖励。</div>") +
+        (cmSaved().up === "manual" && cmSaved().rv === "manual" ? "" : "<div class='vip-cnt vip-live'>领取方式为「自动领取」的" + [cmSaved().up === "manual" ? "" : "升级奖励", cmSaved().rv === "manual" ? "" : "保级奖励"].filter(Boolean).join("、") + "生成即到账，不在本列表；改为手动领取时，待领取的会单独列出。</div><div class='vip-req-note ui-reqnote'><span>上方提示为上线提示；出处：用户 2026-10-20。</span></div>") +
+        "<div class='vip-cnt'>人数、金额（件数）为示例数据，按确认时刻统计。</div>",
       onOpen: function (c) {
         c.el.querySelectorAll(".kpb").forEach(function (b) {
           bindRadios(b, function () { b.parentNode.querySelector(".ferr").hidden = true; });
@@ -2445,7 +2425,7 @@ td.vip-pg-st .vip-pg-retry{border:0;background:none;color:#409EFF;cursor:pointer
     dialog({
       title: "确认关闭 VIP 体系", width: 560,
       body: "<div>确定关闭 VIP 体系？</div><div class='kv'><span>累计方式</span><span>" + esc(MODES[m]) + "</span><span>已发放未领取的奖励</span><span>" + lines.map(esc).join("<br>") + "</span></div>" +
-        "<div class='cnt'>在本弹窗填谷歌验证码并确定后生效，写操作日志。旧版【活动配置 › VIP活动】不恢复。</div>",
+        "<div class='vip-cnt'>在本弹窗填谷歌验证码并确定后生效，写操作日志。旧版【活动配置 › VIP活动】不恢复。</div>",
       buttons: [{ text: "上一步", onClick: function () { openKeep(m, sel); } }, { text: "取消" }, { text: "确定关闭", cls: "q", key: "ok", perm: 1, onClick: function () {
         return gcode(function () {
           var ck = {}; KEEP_CAT.forEach(function (c) { ck[c.k] = null; }); cats.forEach(function (c) { ck[c.k] = !!sel[c.k]; });   /* 本次没有列出的品类记 null，显示「无（…）」（用户 2026-10-20） */
@@ -2465,7 +2445,7 @@ td.vip-pg-st .vip-pg-retry{border:0;background:none;color:#409EFF;cursor:pointer
         (pd ? "<div class='glow' style='color:#F56C6C'><b>VIP0 沿用 LEVEL " + pd.lv + "：将删除 " + pd.rng + "（最高级）</b>的普通会员级别（关闭期间保存的选择），在这些级别上的玩家按上线存量初始化规则重新判定，删除后不能恢复。</div>" : "") +
         "<div>" + (m === "3" ? "重新开启后累计从 0 开始，不立即判定。" : "重新开启后按当时的累计数据判定一次升级并发奖。") +
         "<span class='glow'>关闭时选「继续可领取」的奖励保留到原有效期结束，不因重新开启而失效；选「停止领取」的不恢复领取；重新开启后新产生的奖励资格按当时的标准重新计算和核算。</span></div><div class='vip-req-note ui-reqnote'><span>上方提示为上线提示；出处：用户 2026-10-20。</span></div>" +
-        "<div class='cnt'>在本弹窗填谷歌验证码并确定后生效，写操作日志（用户 2026-10-20）。（示意）</div>",
+        "<div class='vip-cnt'>在本弹窗填谷歌验证码并确定后生效，写操作日志（用户 2026-10-20）。（示意）</div>",
       buttons: [{ text: "取消" }, { text: "确定开启", cls: "q", key: "ok", perm: 1, onClick: function () {
         return gcode(function () {
           if (pd) v0Cut(pd.lv);
@@ -2477,27 +2457,15 @@ td.vip-pg-st .vip-pg-retry{border:0;background:none;color:#409EFF;cursor:pointer
   }
   document.getElementById("vipAct").onclick = function () { var st = vipSt(); if (st === "never") openFirst(); else if (st === "on") openClose(); else if (st === "off") openAgain(); };
 
-  /* ===== 成长值记录（现有页签，原样示意；管理后台知识库 4.1.6） ===== */
-  /* 示例为虚构账号，与会员等级页 Level 段记录一致：player_a01 成长值到 38,400 → 升到 LEVEL 20；player_a02 到 3,300 → LEVEL 11；player_a03 人工调整到 9,800 → LEVEL 15 */
-  var GROW = [
-    { acc: "player_a01", cat: "投注", bet: 12000, x: 1, ch: 12000, cur: 38400, t: "2026-10-10 03:50:00", by: "系统", why: "" },
-    { acc: "player_a02", cat: "投注", bet: 600, x: 0.5, ch: 300, cur: 3300, t: "2026-10-05 03:50:00", by: "系统", why: "" },
-    { acc: "player_a03", cat: "人工调整", bet: null, x: null, ch: 500, cur: 9800, t: "2026-09-28 15:12:30", by: "运营账号B", why: "客诉补偿" }
-  ];
-  function renderGrowth() {
-    var a = document.getElementById("gAcc").value.trim().toLowerCase();
-    var list = GROW.filter(function (g) { return !a || g.acc.toLowerCase().indexOf(a) >= 0; });
-    document.getElementById("gBody").innerHTML = list.length ? list.map(function (g) {
-      return "<tr><td>" + g.acc + "</td><td>" + g.cat + "</td><td>" + fmt(g.bet) + "</td><td>" + (g.x === null ? "—" : g.x) + "</td><td>+" + fmt(g.ch) + "</td><td>" + fmt(g.cur) + "</td><td>PHP</td><td>" + g.t + "</td><td>" + g.by + "</td><td>" + (g.why || "—") + "</td></tr>";
-    }).join("") : "<tr><td colspan='10' class='empty'>暂无数据</td></tr>";
-    return list.length;
-  }
-  document.getElementById("gSearch").onclick = renderGrowth;
-  document.getElementById("gReset").onclick = function () { document.getElementById("gAcc").value = ""; renderGrowth(); };
-  document.getElementById("gEdit").onclick = function () { toast("现有功能「修改会员成长值」沿用现状，需填原因", "info"); };
 
+  /* 顶部三个页签（用户 2026-10-21：后台【VIP特权】分为 VIP特权、会员福利、VIP数据报表三个页签）：点页签跳到对应页面，带上当前的角色（role）、发布模式（publish）和语言（lang）参数 */
+  function vipTabUrl(h) {
+    var u = new URL(h, location.href), q = new URLSearchParams(location.search);
+    ["role", "publish", "lang"].forEach(function (k) { var v = q.get(k); if (v && !u.searchParams.has(k)) u.searchParams.set(k, v); });
+    return u.href;
+  }
   /* ===== 视图切换 ===== */
-  var VIEWS = { vip: "VIP特权", "vip-level": "VIP特权", "vip-global": "VIP特权", "vip-reward": "VIP特权", "vip-rebate": "VIP特权", claim: "VIP特权", preview: "VIP特权", pending: "VIP特权", review: "VIP特权", scope: "VIP特权", first: "VIP特权", close: "VIP特权", closeaud: "VIP特权", reopen: "VIP特权", growth: "成长值记录", insert: "VIP特权", growmode: "VIP特权", closelv: "VIP特权", merge: "VIP特权", rebate: "VIP特权", prize: "VIP特权", closeprize: "VIP特权", detail: "VIP特权", closerv: "VIP特权" };
+  var VIEWS = { vip: "VIP特权", "vip-level": "VIP特权", "vip-global": "VIP特权", "vip-reward": "VIP特权", "vip-rebate": "VIP特权", claim: "VIP特权", preview: "VIP特权", pending: "VIP特权", review: "VIP特权", scope: "VIP特权", first: "VIP特权", close: "VIP特权", closeaud: "VIP特权", reopen: "VIP特权", insert: "VIP特权", growmode: "VIP特权", closelv: "VIP特权", merge: "VIP特权", rebate: "VIP特权", prize: "VIP特权", closeprize: "VIP特权", detail: "VIP特权", closerv: "VIP特权" };
   /* VIP特权 子页签（用户 2026-10-20）：各视图 / 场景对应的子页签；vip 保持当前子页签。hash 可用 #vip-level / #vip-global / #vip-reward / #vip-rebate 直达 */
   var SUBS = { level: "VIP等级配置", global: "VIP全局参数", reward: "VIP奖励配置", rebate: "下注限额与返水" };
   var SUBOF = { "vip-level": "level", "vip-global": "global", "vip-reward": "reward", "vip-rebate": "rebate", claim: "global", preview: "level", pending: "level", review: "level", growmode: "level", insert: "level", closelv: "level", closerv: "level", scope: "global", first: "global", close: "global", closeaud: "global", reopen: "global", merge: "global", detail: "global", rebate: "rebate", prize: "reward", closeprize: "reward" };
@@ -2519,11 +2487,11 @@ td.vip-pg-st .vip-pg-retry{border:0;background:none;color:#409EFF;cursor:pointer
   }
   document.getElementById("vSub").addEventListener("click", function (e) { var b = e.target.closest("[data-st]"); if (b) show("vip-" + b.dataset.st); });
   function show(view, run) {
+    if (view === "growth") { location.replace(vipTabUrl("VIP会员体系-后台VIP数据报表页面.html#growlog")); return; }   /* 成长值记录已移到「VIP数据报表」（用户 2026-10-21），旧链接自动跳转 */
     if (!VIEWS[view]) view = "vip";
     closeTip();
-    var tab = VIEWS[view] === "成长值记录" ? "growth" : "vip";
+    var tab = "vip";   /* 原「成长值记录」页签已移到 VIP数据报表页（用户 2026-10-21） */
     document.getElementById("vVip").hidden = tab !== "vip";
-    document.getElementById("vGrowth").hidden = tab !== "growth";
     document.querySelectorAll(".bo-tabs [role=tab]").forEach(function (t) { var on = t.dataset.view === tab; t.classList.toggle("on", on); t.setAttribute("aria-selected", on); });
     if (tab === "vip") setSub(SUBOF[view] || curSub);
     else document.getElementById("crumb").innerHTML = "位置 › 用户管理 › VIP特权 › <b>" + VIEWS[view] + "</b>";
@@ -2562,7 +2530,6 @@ td.vip-pg-st .vip-pg-retry{border:0;background:none;color:#409EFF;cursor:pointer
     else if (view === "reopen") { clearTimeout(initTimer); P.set("vipSt", "off"); P.set("closeMode", "1"); P.set("closeKeep", { bd: true, rv: false, pz: false }); renderStatus(); openAgain(); }
     else if (view === "claim") { cmCur.up = "manual"; renderCm(); document.getElementById("cmWrap").scrollIntoView({ block: "center" }); saveRw(); demo("升级奖励改为「手动领取」后点「保存 VIP 奖励与全局参数」：确认弹窗列出「领取方式：升级奖励 自动 → 手动」，在弹窗内填谷歌验证码确定后生效，写共享状态 claimMode（前台读取）。", document.activeElement); }
     else if (view === "scope") { scope = "pick"; renderScope(); validateRw(); document.getElementById("gScope").scrollIntoView({ block: "center" }); }
-    else if (view === "growth") { document.getElementById("gAcc").value = ""; renderGrowth(); }
     else if (view === "insert") demoInsert();
     else if (view === "growmode") demoGm(true);
     else if (view === "closelv") { if (P.get("rv")) { P.set("rv", null); renderPending(); } demoClose(); }
@@ -2722,7 +2689,7 @@ td.vip-pg-st .vip-pg-retry{border:0;background:none;color:#409EFF;cursor:pointer
   }  window.addEventListener("hashchange", function () { show(location.hash.slice(1), true); });
   document.addEventListener("click", function (e) { var b = e.target.closest("[data-go]"); if (b) { e.preventDefault(); show(b.dataset.go, true); } });
   document.querySelectorAll(".bo-tabs [role=tab]").forEach(function (t) {
-    function go() { if (t.dataset.view) show(t.dataset.view); else location.href = t.dataset.href; }
+    function go() { if (t.dataset.view) show(t.dataset.view); else location.href = vipTabUrl(t.dataset.href); }
     t.onclick = go; t.onkeydown = function (e) { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); go(); } };
   });
   function syncWho() { document.getElementById("who").textContent = ACC[P.get("me")] + " ▾"; }
@@ -2935,7 +2902,7 @@ td.vip-pg-st .vip-pg-retry{border:0;background:none;color:#409EFF;cursor:pointer
         { type: "button", label: "免打扰时段改为 22:00–09:00 → 保存（谷歌验证码 + 日志含改前改后）", run: function () { show("vip-global"); resetDemo(""); document.getElementById("gDndOn").checked = true; dndLock(); document.getElementById("gDndS").value = "22:00"; document.getElementById("gDndE").value = "09:00"; saveRw(); } },
         { type: "button", label: "手动领取有效期填 31 → 点「保存」看「请填写 1–30 的整数」", run: function () { show("vip-global"); resetDemo(""); document.getElementById("gExp").value = "31"; saveRw(); } }
       ] },
-      { title: "演示值说明", items: [{ type: "note", text: "谷歌验证码输入 000000 模拟错误，其他 6 位数字模拟正确。影响预览按 7 组虚构会员试算；复核时刻模拟新增少量达标人数。存量初始化约 3 秒后自动完成。VIP 成长值比例（按游戏分类）和成长值记录为示意。「需确认」的选择只存本页模拟状态，点「清空原型状态」恢复。新增等级默认数值留空；「新增一级并填数后保存」里的数值为示例、非方案表（用户 2026-10-19）；计算方式为全局单选（默认累计金额，用户 2026-10-20），切换为成长值的示例门槛和 VIP 成长值规则的比例为示意；VIP特权 分 4 个子页签，模拟场景会先切到对应子页签再定位；各场景进入时复位游戏范围、全局参数错误提示，预览类演示先清掉上一个演示留下的待复核；原型演示默认「VIP 体系状态」为已开启（示例 2026-07-01 第一次开启，与结算页、会员数据页一致；产品默认值仍为关闭，「第一次开启」场景会先切回从未开启）；计算方式为成长值时不参与影响预览试算。关闭等级的重新归级人数按示例公式试算（当前人数 = max(12, 300 − 11 × 行序)，约 80% 为当前 = 历史最高、按历史累计归入下方开启等级，约 20% 为降级玩家、上移到上方相邻开启等级，上移的约 1/3 未领过该级升级奖励；用户 2026-10-19）。返水、限额、库存、预占数值为示例，运营出方案后填。" }] },
+      { title: "演示值说明", items: [{ type: "note", text: "谷歌验证码输入 000000 模拟错误，其他 6 位数字模拟正确。影响预览按 7 组虚构会员试算；复核时刻模拟新增少量达标人数。存量初始化约 3 秒后自动完成。VIP 成长值比例（按游戏分类）为示意（成长值记录已移到 VIP数据报表页，用户 2026-10-21）。「需确认」的选择只存本页模拟状态，点「清空原型状态」恢复。新增等级默认数值留空；「新增一级并填数后保存」里的数值为示例、非方案表（用户 2026-10-19）；计算方式为全局单选（默认累计金额，用户 2026-10-20），切换为成长值的示例门槛和 VIP 成长值规则的比例为示意；VIP特权 分 4 个子页签，模拟场景会先切到对应子页签再定位；各场景进入时复位游戏范围、全局参数错误提示，预览类演示先清掉上一个演示留下的待复核；原型演示默认「VIP 体系状态」为已开启（示例 2026-07-01 第一次开启，与结算页、会员数据页一致；产品默认值仍为关闭，「第一次开启」场景会先切回从未开启）；计算方式为成长值时不参与影响预览试算。关闭等级的重新归级人数按示例公式试算（当前人数 = max(12, 300 − 11 × 行序)，约 80% 为当前 = 历史最高、按历史累计归入下方开启等级，约 20% 为降级玩家、上移到上方相邻开启等级，上移的约 1/3 未领过该级升级奖励；用户 2026-10-19）。返水、限额、库存、预占数值为示例，运营出方案后填。" }] },
       { items: [{ type: "reset" }] }
     ]);
   }
@@ -2955,7 +2922,7 @@ td.vip-pg-st .vip-pg-retry{border:0;background:none;color:#409EFF;cursor:pointer
   [VRT, RBT, PZT, MGT].forEach(rtBind);   /* 表格单项修改 / 批量修改（用户 2026-10-20） */
   initHelp();
   document.getElementById("gRv").value = P.get("rvTh"); renderDnd(); cmLoad();
-  v0AutoNc(); writeLow(base()); renderVip(); renderVr(); renderScope(); renderStatus(); renderPending(); renderK(); renderGrowth(); syncWho(); applyPerm();
+  v0AutoNc(); writeLow(base()); renderVip(); renderVr(); renderScope(); renderStatus(); renderPending(); renderK(); syncWho(); applyPerm();
   if (vipSt() === "init") startInit(true); /* 刷新页面时仍在「初始化中」：保持，等「续跑完成」 */
   show(location.hash.slice(1) || "vip", true);
 })();
@@ -2986,7 +2953,6 @@ td.vip-pg-st .vip-pg-retry{border:0;background:none;color:#409EFF;cursor:pointer
     { sel: "#pzInvBody", nm: "平台库存", sort: "产品编号升序" },
     { sel: "#pzBody", nm: "VIP奖品配置", sort: "等级号升序（配置 ID 兜底）" },
     { sel: "#rbBody", nm: "下注限额与返水", sort: "等级号升序（配置 ID 兜底）" },
-    { sel: "#gBody", nm: "成长值记录", sort: "新增时间倒序 + 记录 ID 倒序", flt: "#vGrowth .bo-filter" }
   ];
   /* 批量修改弹窗（table.rtb）不分页：所选行最多一页条数，弹窗内滚动（用户 2026-10-20：批量修改范围不超过主列表当前页） */
   var EXEMPT = "table.rgt > tbody, table.rtb > tbody";
@@ -3227,7 +3193,7 @@ td.vip-pg-st .vip-pg-retry{border:0;background:none;color:#409EFF;cursor:pointer
 /* ③ 说明性文字（给评审看的需求说明，上线页面不显示）：靠左、浅色小号，每个说明块开头标注一次；相邻多段合并为一个说明块 */
 .vip-req-note{display:block;flex-basis:100%;box-sizing:border-box;max-width:100%;margin:6px 0;padding:4px 8px;border-left:2px solid #DCDFE6;background:#FAFAFA;color:#909399;font-size:12px;line-height:1.6;text-align:left!important;white-space:normal}
 .vip-req-note>*{text-align:left!important}
-.vip-req-note>.cnt,.vip-req-note>span,.vip-req-note>p,.vip-req-note>div{display:block;margin:2px 0;padding-left:0;padding-right:0}
+.vip-req-note>.vip-cnt,.vip-req-note>span,.vip-req-note>p,.vip-req-note>div{display:block;margin:2px 0;padding-left:0;padding-right:0}
 .vip-req-note>.pend,.vip-req-note>.devnote{margin:2px 0}
 .vip-req-note[hidden]{display:none!important}
 .adm-notes .vip-req-note.vip-req-hd{margin:2px 0 6px;padding:2px 8px}
@@ -3242,12 +3208,12 @@ body.pub-admin tr.vip-req-row{display:none!important}
 /* VIP-HELPINLINE:BEGIN 帮助按钮同行、同行居中、说明文字靠左并标注（用户 2026-10-20，规范通用 v5.45）。
    ① 每个「?」（.qm）和它前面的文字（最后几个字或前一个短的行内元素）包进 span.vip-nw.ui-nw，不换行；父元素为 flex / grid 时整段文字一起包，避免拆成两个弹性项。
    ② 表单行 .frow：量出标签第一行和控件第一行的中线，给偏上的一侧补上边距，两者落在同一中线上（控件多行时标签对齐控件第一行）。
-   ③ 页面主体（.bo-main）和弹窗（.bo-mask）里给评审看的说明性文字（.cnt / .pend / .devnote / p 等，含「用户 2026-」「示意」「示例」「Claire」「PRD」「知识库」「待确认」等需求说明字样）包进 div.vip-req-note.ui-reqnote，
+   ③ 页面主体（.bo-main）和弹窗（.bo-mask）里给评审看的说明性文字（.vip-cnt / .pend / .devnote / p 等，含「用户 2026-」「示意」「示例」「Claire」「PRD」「知识库」「待确认」等需求说明字样）包进 div.vip-req-note.ui-reqnote，
       靠左并在开头标注「※ 此内容仅作为需求说明，上线页面不显示本内容。」；相邻的多段合并成一个说明块。含输入框、按钮、「?」、表格的元素和表格单元格内的文字不处理（上线真实提示）。
       手动指定：class 含 vip-live 的元素一律不标注（上线真实提示），含 vip-req 的一律标注。页面重新渲染后自动再处理 */
 (function () {
   var vipNoteRx = /用户 ?20\d\d-\d\d|示意|待文档同步|示例|演示|虚构|Claire|PRD|知识库|待确认|待定|待运营|运营出方案|开发备注|研发评估|由开发评估|决策第|清单第|第 ?\d+ ?轮|规范 ?v?\d|原型|\bQ\d{1,2}\b|\bC-\d{2}\b|本需求|现状|（原|原「/;
-  var vipCand = ".cnt,.pend,.devnote,p,small,.vip-req,div[style*='909399'],span[style*='909399'],div[style*='#999'],span[style*='#999']";
+  var vipCand = ".vip-cnt,.pend,.devnote,p,small,.vip-req,div[style*='909399'],span[style*='909399'],div[style*='#999'],span[style*='#999']";
   var vipTimer = 0;
   function vipIsInline(e) { var d = getComputedStyle(e).display; return d.indexOf("inline") === 0 || d === "contents"; }
   function vipMakeNw() { var w = document.createElement("span"); w.className = "vip-nw ui-nw"; return w; }
@@ -3330,9 +3296,9 @@ body.pub-admin tr.vip-req-row{display:none!important}
         var e = cs[i];
         if (e.closest(".vip-req-note")) continue;
         /* 输入框后面「单位，说明」写在一起的（如「天，……」）：单位留在输入框旁，说明拆出来 */
-        var um = e.childElementCount === 0 && e.matches("span.cnt") && e.previousElementSibling && e.previousElementSibling.matches("input,select") ? e.textContent.match(/^\s*([^\s，,；;]{1,4})[，,；;]\s*([\s\S]+)$/) : null;
+        var um = e.childElementCount === 0 && e.matches("span.vip-cnt") && e.previousElementSibling && e.previousElementSibling.matches("input,select") ? e.textContent.match(/^\s*([^\s，,；;]{1,4})[，,；;]\s*([\s\S]+)$/) : null;
         if (um && vipNoteRx.test(um[2]) && !e.closest(".vip-live")) {
-          var rest = document.createElement("span"); rest.className = "cnt vip-req"; rest.textContent = um[2];
+          var rest = document.createElement("span"); rest.className = "vip-cnt vip-req"; rest.textContent = um[2];
           e.textContent = um[1]; e.parentNode.insertBefore(rest, e.nextSibling); continue;   /* 拆出的说明随后单独处理 */
         }
         var anc = e.parentElement && e.parentElement.closest(vipCand);

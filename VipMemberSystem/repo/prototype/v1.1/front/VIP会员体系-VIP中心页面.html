@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>VIP会员体系-v1.1-VIP中心页面</title>
 <link rel="stylesheet" href="../../../assets/style.css">
+<link rel="stylesheet" href="../../../assets/vip.css">
 <style>
 /* 本页专用：沿用线上等级中心视觉（深色头部 + 横向刻度 + 米金色等级卡 + 白底奖励表） */
 .lc{padding:0!important;gap:0!important;background:#0f0b16}
@@ -432,7 +433,7 @@ a.me-head{text-decoration:none;cursor:pointer}
     <!-- ============ 规则帮助弹窗（右上角「?」） ============ -->
     <div class="ov" id="hlpDlg" hidden>
       <div class="dlg glow" role="dialog" aria-modal="true" aria-labelledby="hlpT">
-        <button type="button" class="hx" id="hlpX" aria-label="关闭">×</button>
+        <button type="button" class="hx x-close" id="hlpX" aria-label="关闭">×</button>
         <!-- 标题由「等级与 VIP 规则」改为「VIP 规则」（前台不显示 Level 等级，C-03；用户 2026-10-17） -->
         <h3 id="hlpT">VIP 规则</h3>
         <div id="hlpLv"></div>
@@ -444,7 +445,7 @@ a.me-head{text-decoration:none;cursor:pointer}
     <!-- ============ 等级奖励详情弹窗（等级卡「详情」；用户 2026-10-17 新增） ============ -->
     <div class="dov" id="dtlDlg" hidden>
       <div class="dlg glow" role="dialog" aria-modal="true" aria-labelledby="dtlT">
-        <button type="button" class="hx" id="dtlX" aria-label="关闭">×</button>
+        <button type="button" class="hx x-close" id="dtlX" aria-label="关闭">×</button>
         <h3 id="dtlT"><span id="dtlName"></span></h3>
         <table><thead><tr><th>奖金类别</th><th>金额</th><th>状态</th></tr></thead><tbody id="dtlBody"></tbody></table>
         <!-- 原隐藏的「请在生日卡片领取」提示（#dtlTip）已删除：生日奖励在生日卡片和本弹窗都能领取（用户 2026-10-17） -->
@@ -611,7 +612,7 @@ a.me-head{text-decoration:none;cursor:pointer}
       <li class="glow"><b>已定（用户 2026-10-17）</b>：未完成 KYC 的玩家不参与 VIP 体系，进入等级中心时引导去 KYC，不存在「完成 KYC 后补发」（原「暂停发放（未 KYC）、完成 KYC 后自动补发」待确认已关闭）。完成 KYC 时按历史累计定级、KYC 前已达到的等级不发升级奖励，<span class="warn-2">已定（用户 2026-10-17），依据 Claire 原文历史累计和 C-01 存量初始化</span>。<span class="ref">C-01 · C-11 · 规则 N48</span></li>
       <li class="glow"><b>已答复（Claire 2026-10-17）</b>：C-01 存量初始化不发升级奖励（目前老板口径）；C-02 升级与降级后恢复；C-03 只满足一个条件为普通用户、不显示等级；C-04 月中升级当月也考核；<span class="glow">C-05 跨多级时从未达到的新等级全部发放（逐级），Claire 认为实际不会发生；</span>C-06 生日金额由运营配置<span class="glow">（默认值按原文档位示意）</span>；C-07 VIP1 保级失败变为普通用户；C-08 四项 VIP 权益不做；C-09 累计充值只算自行充值；C-11 所有 VIP 奖励要求 KYC；C-10/C-12/C-13/C-14 实物交给实体奖品管理需求；<span class="glow">C-15 短信货币写 PHP（用户 2026-10-17 补 C-05、C-15）</span>。原 Q1、Q2、Q5、Q6、Q8 随之关闭。<span class="ref">Claire 答复 C-01–C-15</span></li>
     </ol>
-    <!-- 上一页 / 下一页：按 PRD 2.1 主流程顺序（运营配置 → VIP中心 → 通知 → 结算与奖励记录 → 会员数据；实物领取已移到实体奖品管理需求） -->
+    <!-- 上一页 / 下一页：按 PRD 2.1 主流程顺序（运营配置 → VIP中心 → 通知 → 会员福利 → VIP数据报表；实物领取已移到实体奖品管理需求） -->
     <div class="pager"><a href="../admin/VIP会员体系-后台会员等级配置页面.html">← 上一页：后台会员等级配置页面</a><a href="VIP会员体系-VIP通知页面.html">下一页：VIP通知页面 →</a></div>
   </aside>
 </div>
@@ -620,6 +621,7 @@ a.me-head{text-decoration:none;cursor:pointer}
 <script src="../../../assets/nav-data.js"></script>
 <script src="../../../assets/nav.js"></script>
 <script src="../../../assets/proto-en.js"></script>
+<script src="../../../assets/vip.js"></script>
 <script src="../../../assets/proto.js"></script>
 <script>
 /* 模拟操作面板（assets/proto.js）。platform、oldApp、kyc、acct、bday、bdayFail 与其他前台原型共用。
