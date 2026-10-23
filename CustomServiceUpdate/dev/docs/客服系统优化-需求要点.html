@@ -142,7 +142,7 @@
     <b>要做什么</b>
     <ul><li>接口失败或超过 5 秒：「暂时无法获取记录，请刷新」+「刷新」</li><li>同一玩家 1 分钟内只能点一次，再点提示「操作太频繁，请 1 分钟后再试」</li></ul>
     <b>公式</b>
-    <div class="formula">可再次点击 ⇔ 当前时间 − 上次成功发送时间 ≥ 60 秒</div>
+    <div class="formula">可再次点击 ⇔ 当前时间 − 上次成功发送时间 ≥ 60 秒（未登录按当前设备的客服会话计时；登录成功后重新计时，登录后自动显示的卡片不算点击）</div>
     <b>涉及端</b>
     <div class="ends"><span>H5</span><span>Android</span><span>iOS</span><span>PWA</span></div>
   </div>
