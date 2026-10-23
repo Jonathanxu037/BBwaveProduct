@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>客服系统优化-客服QA</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body class="qa-page" data-lang="both">
+<div class="with-nav">
+<div class="desk"><article class="paper qa">
+
+<h1 class="doc-title">客服系统优化 · 客服 QA<span class="qa-sub">Customer Service Optimization · Customer Service Q&amp;A</span></h1>
+<div class="doc-meta"><span>版本 / Version：v1.0</span><span>适用 / For：客服 Customer Service</span><span>依据 / Based on：PRD、客服后台使用说明 CS Console Guide</span></div>
+<div class="qa-lang" role="group" aria-label="语言 Language">
+  <button type="button" data-l="both" aria-pressed="true">双语 Bilingual</button>
+  <button type="button" data-l="zh" aria-pressed="false">中文</button>
+  <button type="button" data-l="en" aria-pressed="false">English</button>
+</div>
+<hr class="doc-rule">
+
+<div id="reqTabs"></div>
+
+<!-- ############ 后台列表优化 ############ -->
+<section data-req="a">
+<h2 id="a-q0">适用范围 <span class="en-t">Scope</span></h2>
+<div class="bi"><div class="zh">客服后台「All Conversations（全部会话）」页面的会话列表。上线后生效，上线时间另行通知。玩家端没有变化。</div><div class="en">The conversation list on the "All Conversations" page of the CS console. Effective after release; the release date will be announced separately. Nothing changes on the player side.</div></div>
+
+<h2 id="a-q1">这次改了什么 <span class="en-t">What changed</span></h2>
+<div class="bi"><div class="zh">每条会话用户名后显示身份和等级（VIP、LV、会员、游客），列表按等级从高到低排序，同一等级先来的在前。</div><div class="en">Each conversation shows the player's tier and level (VIP, LV, Member, Guest) after the name, and the list is sorted from the highest level down; within the same level, earlier handoffs come first.</div></div>
+
+<h2 id="a-q2">客服核查步骤 <span class="en-t">How to check</span></h2>
+<ol class="qa-steps">
+  <li class="bi"><div class="zh"><b>看身份和等级</b>：会话列表用户名后的标签；「游客」先核实玩家账号。</div><div class="en"><b>Check tier and level</b>: the tag after the name in the conversation list (All Conversations); for "Guest", verify the player's account first.</div></li>
+</ol>
+
+<h2 id="a-q3">问答 <span class="en-t">Q&amp;A</span></h2>
+<section class="qa-card" id="a-qa1">
+  <h3><span class="qa-no">1</span><span class="bi-inline"><span class="zh">我等了很久都没人回复</span><span class="en">I've been waiting a long time and no one has replied</span></span></h3>
+  <div class="qa-row"><b>回复玩家<small>Reply</small></b>
+    <div class="bi"><div class="en qa-reply">Sorry for the wait. An agent is now handling your request. Please tell us what you need help with and we'll take care of it right away.<button type="button" class="qa-copy">复制 Copy</button></div>
+    <div class="zh">抱歉让你久等了，现在由我为你处理。请告诉我需要什么帮助，我马上为你处理。</div></div></div>
+  <div class="qa-row"><b>客服核查<small>Check</small></b>
+    <div class="bi"><div class="zh">不向玩家解释排序规则；客服主管高峰期关注列表底部的会话，必要时手动分配。</div><div class="en">Do not explain the sorting rules to players; during peak hours supervisors watch the bottom of the list and assign manually when needed.</div></div></div>
+  <div class="qa-row"><b>转交<small>Escalate</small></b>
+    <div class="bi"><div class="zh">不需要转交。</div><div class="en">No escalation needed.</div></div></div>
+</section>
+
+<h2 id="a-q4">转交与升级 <span class="en-t">Escalation</span></h2>
+<div class="tbl"><table class="qa-tbl">
+  <thead><tr><th>情况 <small>Situation</small></th><th>转给 <small>To</small></th></tr></thead>
+  <tbody>
+    <tr><td class="bi"><div class="zh">客服后台等级明显不对，或大量玩家显示「会员」</div><div class="en">Levels in the CS console are clearly wrong, or many players show "Member"</div></td><td class="bi"><div class="zh">技术</div><div class="en">Tech</div></td></tr>
+  </tbody>
+</table></div>
+
+<h2 id="a-q5">资料未覆盖的问题 <span class="en-t">Not covered yet</span></h2>
+<ul class="qa-open">
+  <li class="bi"><div class="zh">暂无。</div><div class="en">None.</div></li>
+</ul>
+</section>
+
+<!-- ############ 自助问题优化 ############ -->
+<section data-req="b">
+<h2 id="q0">适用范围 <span class="en-t">Scope</span></h2>
+<div class="bi"><div class="zh">前台首页右侧悬浮客服按钮进入的客服对话窗里，快捷问题「我的充值没到账，怎么办？」。适用 H5、Android、iOS、PWA。上线后生效，上线时间另行通知。</div><div class="en">The quick question "My deposit is missing. What do I do?" in the chat window opened from the floating support button on the home page. Applies to H5, Android, iOS and PWA. Effective after release; the release date will be announced separately.</div></div>
+
+<h2 id="q1">这次改了什么 <span class="en-t">What changed</span></h2>
+<div class="bi"><div class="zh">玩家点「我的充值没到账，怎么办？」后，不再收到一段文字回复，而是看到最近交易卡片和「查看订单」按钮，可以直接打开订单页；从订单页返回会回到对话。其他快捷问题不变。客服后台会话里只显示玩家点的问题。</div><div class="en">When a player taps "My deposit is missing. What do I do?", instead of a text reply they see their latest transaction card with a "View Orders" button that opens the Orders page; going back returns to the chat. Other quick questions are unchanged. In the CS console the conversation shows only the question the player tapped.</div></div>
+
+<h2 id="q2">客服核查步骤 <span class="en-t">How to check</span></h2>
+<ol class="qa-steps">
+  <li class="bi"><div class="zh"><b>核查充值订单</b>：请玩家在订单页点一行复制订单号发过来，再按现有流程在管理后台查询充值订单状态。</div><div class="en"><b>Check the deposit order</b>: ask the player to tap a row on the Orders page to copy the order number and send it, then check the deposit status in the admin console as usual.</div></li>
+</ol>
+<h2 id="q3">问答 <span class="en-t">Q&amp;A</span></h2>
+<section class="qa-card" id="qa1">
+  <h3><span class="qa-no">1</span><span class="bi-inline"><span class="zh">我点了「充值没到账」，只看到一张卡片，没有回复？</span><span class="en">I tapped "deposit is missing" and only got a card, no reply?</span></span></h3>
+  <div class="qa-row"><b>回复玩家<small>Reply</small></b>
+    <div class="bi"><div class="en qa-reply">The card shows your latest transaction. Tap "View Orders" to see all your deposit records, then tap the order to copy its number and send it here. We'll check it for you right away.<button type="button" class="qa-copy">复制 Copy</button></div>
+    <div class="zh">卡片显示的是你最近的交易。点「查看订单」可以看到全部充值记录，点那笔订单复制订单号发过来，我们马上帮你查。</div></div></div>
+  <div class="qa-row"><b>客服核查<small>Check</small></b>
+    <div class="bi"><div class="zh">收到订单号后按现有流程查充值订单状态。</div><div class="en">Check the deposit order status as usual once you have the order number.</div></div></div>
+  <div class="qa-row"><b>转交<small>Escalate</small></b>
+    <div class="bi"><div class="zh">订单状态异常按现有充值异常流程转交。</div><div class="en">If the order status is abnormal, escalate under the existing deposit-issue process.</div></div></div>
+</section>
+<section class="qa-card" id="qa2">
+  <h3><span class="qa-no">2</span><span class="bi-inline"><span class="zh">卡片显示「暂时无法获取记录」</span><span class="en">The card says it can't load my records</span></span></h3>
+  <div class="qa-row"><b>回复玩家<small>Reply</small></b>
+    <div class="bi"><div class="en qa-reply">Please tap "Refresh" on the card to load it again. You can also tap "View Orders" to see your records directly. If it still doesn't load, send us your deposit amount and time and we'll check for you.<button type="button" class="qa-copy">复制 Copy</button></div>
+    <div class="zh">请点卡片上的「刷新」重新加载，也可以直接点「查看订单」查看记录。如果还是加载不出来，把充值金额和时间发给我们，我们帮你查。</div></div></div>
+  <div class="qa-row"><b>客服核查<small>Check</small></b>
+    <div class="bi"><div class="zh">按玩家给的金额和时间在管理后台查询。</div><div class="en">Look up the order in the admin console by amount and time.</div></div></div>
+  <div class="qa-row"><b>转交<small>Escalate</small></b>
+    <div class="bi"><div class="zh">多名玩家同时反映加载不出来，转技术。</div><div class="en">If several players report the same issue, escalate to Tech.</div></div></div>
+</section>
+<section class="qa-card" id="qa3">
+  <h3><span class="qa-no">3</span><span class="bi-inline"><span class="zh">点问题时提示「操作太频繁」</span><span class="en">It says "Too many requests" when I tap the question</span></span></h3>
+  <div class="qa-row"><b>回复玩家<small>Reply</small></b>
+    <div class="bi"><div class="en qa-reply">This question can be sent once per minute. Please try again in a minute, or tap "View Orders" on the card you already received.<button type="button" class="qa-copy">复制 Copy</button></div>
+    <div class="zh">这个问题 1 分钟内只能发送一次。请 1 分钟后再试，或者直接点已经收到的卡片上的「查看订单」。</div></div></div>
+  <div class="qa-row"><b>客服核查<small>Check</small></b>
+    <div class="bi"><div class="zh">无需核查。</div><div class="en">No check needed.</div></div></div>
+  <div class="qa-row"><b>转交<small>Escalate</small></b>
+    <div class="bi"><div class="zh">不需要转交。</div><div class="en">No escalation needed.</div></div></div>
+</section>
+<section class="qa-card" id="qa4">
+  <h3><span class="qa-no">4</span><span class="bi-inline"><span class="zh">提示我先登录，看不到订单</span><span class="en">It asks me to log in and I can't see my orders</span></span></h3>
+  <div class="qa-row"><b>回复玩家<small>Reply</small></b>
+    <div class="bi"><div class="en qa-reply">Your orders can only be shown after you log in. Please tap "Log In"; after logging in you'll come back to this chat and your latest transaction will appear automatically.<button type="button" class="qa-copy">复制 Copy</button></div>
+    <div class="zh">登录后才能显示你的订单。请点「登录」，登录后会回到这个对话，并自动显示你最近的交易。</div></div></div>
+  <div class="qa-row"><b>客服核查<small>Check</small></b>
+    <div class="bi"><div class="zh">后台显示「游客」时，先核实账号。</div><div class="en">If the console shows "Guest", verify the account first.</div></div></div>
+  <div class="qa-row"><b>转交<small>Escalate</small></b>
+    <div class="bi"><div class="zh">玩家无法登录时，按现有登录问题流程处理。</div><div class="en">If the player cannot log in, follow the existing login-issue process.</div></div></div>
+</section>
+<section class="qa-card" id="qa5">
+  <h3><span class="qa-no">5</span><span class="bi-inline"><span class="zh">我问的是充值，卡片显示的却是提现</span><span class="en">I asked about a deposit but the card shows a withdrawal</span></span></h3>
+  <div class="qa-row"><b>回复玩家<small>Reply</small></b>
+    <div class="bi"><div class="en qa-reply">The card shows your most recent transactions, which can include withdrawals. Tap "View Orders" and open the "Deposits" tab to see your deposit records.<button type="button" class="qa-copy">复制 Copy</button></div>
+    <div class="zh">卡片显示的是你最近的交易，可能包括提现。点「查看订单」，在「充值」页签里可以看到你的充值记录。</div></div></div>
+  <div class="qa-row"><b>客服核查<small>Check</small></b>
+    <div class="bi"><div class="zh">按玩家发来的充值订单号查询。</div><div class="en">Check by the deposit order number the player sends.</div></div></div>
+  <div class="qa-row"><b>转交<small>Escalate</small></b>
+    <div class="bi"><div class="zh">不需要转交。</div><div class="en">No escalation needed.</div></div></div>
+</section>
+<section class="qa-card" id="qa6">
+  <h3><span class="qa-no">6</span><span class="bi-inline"><span class="zh">打开订单页后怎么回到聊天？</span><span class="en">How do I get back to the chat from the Orders page?</span></span></h3>
+  <div class="qa-row"><b>回复玩家<small>Reply</small></b>
+    <div class="bi"><div class="en qa-reply">Tap the back arrow or the "×" at the top and you'll return to this chat; your messages are kept. Tapping "Live Support" also brings you back to this chat with an agent.<button type="button" class="qa-copy">复制 Copy</button></div>
+    <div class="zh">点顶部的返回箭头或「×」就会回到这个对话，聊天记录都在。点「人工客服」也会回到这个对话并转人工。</div></div></div>
+  <div class="qa-row"><b>客服核查<small>Check</small></b>
+    <div class="bi"><div class="zh">无需核查。</div><div class="en">No check needed.</div></div></div>
+  <div class="qa-row"><b>转交<small>Escalate</small></b>
+    <div class="bi"><div class="zh">返回后对话丢失或新开了会话，转技术。</div><div class="en">If the chat is lost or a new conversation is created after going back, escalate to Tech.</div></div></div>
+</section>
+
+<h2 id="q4">转交与升级 <span class="en-t">Escalation</span></h2>
+<div class="tbl"><table class="qa-tbl">
+  <thead><tr><th>情况 <small>Situation</small></th><th>转给 <small>To</small></th></tr></thead>
+  <tbody>
+    <tr><td class="bi"><div class="zh">多名玩家反映卡片或订单页一直加载失败</div><div class="en">Several players report the card or Orders page keeps failing to load</div></td><td class="bi"><div class="zh">技术</div><div class="en">Tech</div></td></tr>
+    <tr><td class="bi"><div class="zh">从订单页返回后对话丢失、出现两条会话</div><div class="en">The chat is lost or duplicated after returning from the Orders page</div></td><td class="bi"><div class="zh">技术</div><div class="en">Tech</div></td></tr>
+  </tbody>
+</table></div>
+
+<h2 id="q5">资料未覆盖的问题 <span class="en-t">Not covered yet</span></h2>
+<ul class="qa-open">
+  <li class="bi"><div class="zh">订单页每页显示多少条记录：沿用平台现行方案。</div><div class="en">Records per page on the Orders list: same as the current platform.</div></li>
+  <li class="bi"><div class="zh">Android、iOS App 的客服窗口：由研发依据平台现行方案处理。</div><div class="en">Chat window in the Android and iOS apps: handled by Tech under the current platform approach.</div></li>
+</ul>
+
+</section>
+</article></div>
+</div>
+<script>window.NAV_ROOT = "../";</script>
+<script src="../assets/nav-data.js"></script>
+<script src="../assets/nav.js"></script>
+<script src="../assets/req-tabs.js"></script>
+<script>
+(function () {
+  /* 语言切换：双语 / 中文 / English，记在本机浏览器 */
+  var KEY = "客服系统优化功能需求-客服QA-lang";
+  function set(l) {
+    document.body.dataset.lang = l;
+    document.querySelectorAll(".qa-lang button").forEach(function (b) { b.setAttribute("aria-pressed", b.dataset.l === l); });
+    try { localStorage.setItem(KEY, l); } catch (e) {}
+  }
+  document.querySelectorAll(".qa-lang button").forEach(function (b) { b.onclick = function () { set(b.dataset.l); }; });
+  try { var s = localStorage.getItem(KEY); if (s) set(s); } catch (e) {}
+  /* 复制英文回复 */
+  document.addEventListener("click", function (e) {
+    var b = e.target.closest(".qa-copy"); if (!b) return;
+    var box = b.parentNode.cloneNode(true); box.querySelector(".qa-copy").remove();
+    var text = box.textContent.trim();
+    function done(ok) { b.textContent = ok ? "已复制 Copied" : "复制失败 Failed"; setTimeout(function () { b.textContent = "复制 Copy"; }, 1500); }
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(function () { done(true); }, function () { done(fallback(text)); });
+    else done(fallback(text));
+  });
+  function fallback(text) {
+    var t = document.createElement("textarea"); t.value = text; t.style.cssText = "position:fixed;left:-9999px"; document.body.appendChild(t); t.select();
+    var ok = false; try { ok = document.execCommand("copy"); } catch (e) {}
+    t.remove(); return ok;
+  }
+})();
+</script>
+</body>
+</html>

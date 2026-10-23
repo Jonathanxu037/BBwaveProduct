@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>客服系统优化-客服后台会话列表</title>
+<link rel="stylesheet" href="../../assets/style.css">
+<style>
+/* 仿客服后台（Chatwoot）真实页面：左侧导航 / 中间会话列表 / 右侧会话区 */
+.cw{display:grid;grid-template-columns:200px 340px minmax(0,1fr);height:760px;background:#fff;border:1px solid #E4E7EC;border-radius:8px;overflow:hidden;font-family:Inter,-apple-system,"Segoe UI",Roboto,"PingFang SC","Microsoft YaHei",sans-serif;color:#1F2937;font-size:14px}
+.cw-side{background:#F9FAFB;border-right:1px solid #E4E7EC;padding:10px 8px;overflow:auto}
+.cw-acc{display:flex;align-items:center;gap:8px;font-weight:600;padding:4px 6px 10px}
+.cw-acc i{width:16px;height:16px;border-radius:50%;border:4px solid #1F6FEB;box-sizing:border-box}
+.cw-search{display:flex;gap:6px;margin-bottom:12px}
+.cw-search span{flex:1;border:1px solid #E4E7EC;border-radius:8px;background:#fff;padding:6px 10px;color:#9CA3AF;font-size:13px}
+.cw-search b{width:30px;border:1px solid #E4E7EC;border-radius:8px;background:#fff;display:grid;place-items:center;font-weight:400;color:#6B7280}
+.cw-nav div{padding:7px 10px;border-radius:8px;color:#374151;font-size:13.5px}
+.cw-nav .on{background:#EEF0F3}
+.cw-nav .sub{padding-left:26px}
+.cw-nav .lb{padding-left:34px;display:flex;align-items:center;gap:8px}
+.cw-nav .lb i{width:8px;height:8px;border-radius:2px}
+.cw-list{border-right:1px solid #E4E7EC;display:flex;flex-direction:column;min-width:0}
+.cw-lh{display:flex;align-items:center;gap:8px;padding:14px 12px 6px}
+.cw-lh h3{font-size:17px;margin:0;font-weight:600}
+.cw-lh .st{font-size:11px;background:#EEF0F3;border-radius:6px;padding:2px 7px;color:#374151}
+.cw-lh .ic{margin-left:auto;display:flex;gap:6px}
+.cw-lh .ic b{width:24px;height:24px;border-radius:6px;background:#EEF0F3;display:grid;place-items:center;font-weight:400;font-size:12px;color:#4B5563}
+.cw-tabs{display:flex;gap:16px;padding:6px 12px 0;border-bottom:1px solid #E4E7EC}
+.cw-tabs button{all:unset;cursor:pointer;padding:6px 2px 8px;color:#4B5563;font-size:14.5px;border-bottom:2px solid transparent}
+.cw-tabs button.on{color:#1F6FEB;border-color:#1F6FEB}
+.cw-tabs em{font-style:normal;font-size:11px;background:#EEF0F3;border-radius:6px;padding:1px 6px;margin-left:4px;color:#4B5563}
+.cw-tabs button.on em{background:#E1ECFE;color:#1F6FEB}
+.cw-items{overflow:auto;flex:1}
+.cw-it{display:flex;gap:10px;padding:12px;border-bottom:1px solid #F0F1F3;cursor:pointer}
+.cw-it:hover,.cw-it.sel{background:#F5F7FA}
+.cw-it.new{animation:cwNew 2.4s ease-out}
+@keyframes cwNew{0%{background:#E1ECFE}100%{background:transparent}}
+.cw-av{width:32px;height:32px;border-radius:8px;background:#D1FAE5;color:#047857;display:grid;place-items:center;font-size:13px;flex:none}
+.cw-bd{min-width:0;flex:1}
+.cw-r1{display:flex;align-items:center;gap:6px}
+.cw-nm{font-weight:600;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.cw-tm{margin-left:auto;font-size:11px;color:#9CA3AF;white-space:nowrap}
+.cw-r2{display:flex;align-items:center;gap:6px;margin-top:3px}
+.cw-msg{font-size:13.5px;color:#374151;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1;min-width:0}
+.cw-un{background:#10A37F;color:#fff;font-size:10.5px;border-radius:10px;min-width:16px;height:16px;display:grid;place-items:center;padding:0 4px;box-sizing:border-box}
+/* 等级标签（本需求新增） */
+.lv{flex:none;font-size:11px;font-weight:600;line-height:16px;padding:0 6px;border-radius:4px;white-space:nowrap}
+.lv.n{background:#EEF2FF;color:#4F46E5}
+.lv.v{background:#FEF3C7;color:#B45309;border:1px solid #F59E0B;line-height:14px}
+.lv.m{background:#ECFDF5;color:#047857}
+.lv.x{background:#F3F4F6;color:#6B7280}
+.cw-end{text-align:center;color:#6B7280;font-size:13px;padding:22px 0}
+.cw-empty{text-align:center;color:#6B7280;font-size:13px;padding:60px 16px}
+.cw-main{display:grid;place-items:center;text-align:center;color:#374151;font-size:14px}
+.cw-main .bub{width:96px;height:96px;border-radius:50%;background:#EEF0F3;margin:0 auto 18px;display:grid;place-items:center;font-size:26px;color:#9CA3AF}
+.cw-main kbd{display:inline-block;border:1px solid #E4E7EC;border-radius:6px;padding:2px 8px;font-size:12px;margin-right:4px;background:#fff}
+.cw-conv{width:100%;height:100%;display:flex;flex-direction:column;text-align:left}
+.cw-conv .hd{display:flex;align-items:center;gap:8px;padding:12px 16px;border-bottom:1px solid #E4E7EC}
+.cw-conv .bd{flex:1;padding:16px;background:#FAFAFB}
+.cw-conv .bd p{max-width:70%;background:#fff;border:1px solid #E4E7EC;border-radius:10px;padding:8px 12px;margin:0 0 10px;font-size:13.5px}
+</style>
+</head>
+<body>
+<!-- 后台原型：仿客服后台（Chatwoot）真实页面；本需求新增的控件加 class="glow" 淡色光晕。示例数据一律虚构。
+     视图用 #unassigned、#vip、#mine、#all、#empty 切换，保留底部「运营需求确认」页同步用的代码。 -->
+<div class="with-nav">
+<div class="adm-stage">
+  <div class="cw">
+    <aside class="cw-side" aria-label="客服后台导航">
+      <div class="cw-acc"><i></i>bbwave</div>
+      <div class="cw-search"><span>Search...</span><b>✎</b></div>
+      <nav class="cw-nav">
+        <div>My Inbox</div>
+        <div>工单</div>
+        <div>Conversations</div>
+        <div class="sub on">All Conversations</div>
+        <div class="sub">Mentions</div>
+        <div class="sub">Participating</div>
+        <div class="sub">Unattended</div>
+        <div class="sub">Channels</div>
+        <div class="lb">789 H5 Chat</div>
+        <div class="sub">Labels</div>
+        <div class="lb"><i style="background:#3B82F6"></i>account_login</div>
+        <div class="lb"><i style="background:#F59E0B"></i>bets_games</div>
+        <div class="lb"><i style="background:#10B981"></i>deposit_with…</div>
+        <div class="lb"><i style="background:#8B5CF6"></i>kyc</div>
+        <div class="lb"><i style="background:#9CA3AF"></i>other</div>
+        <div class="lb"><i style="background:#EC4899"></i>promotions</div>
+        <div>Captain</div>
+        <div>Calls</div>
+        <div>Contacts</div>
+        <div>Reports</div>
+      </nav>
+    </aside>
+
+    <section class="cw-list" aria-label="会话列表">
+      <div class="cw-lh" style="position:relative"><h3>Conversations</h3><span class="st">Open</span><span class="ic"><b>☰</b><b id="sortBtn" class="glow" role="button" tabindex="0" aria-label="排序" style="cursor:pointer">⇅</b><b>⇥</b></span>
+        <div id="sortMenu" hidden style="position:absolute;right:40px;top:44px;z-index:5;background:#fff;border:1px solid #E4E7EC;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,.08);padding:6px;width:210px;font-size:13px">
+          <div style="color:#6B7280;font-size:12px;padding:4px 8px">先按身份和等级排，同一等级内：</div>
+          <label class="glow" style="display:block;padding:5px 8px;cursor:pointer"><input type="radio" name="sk" value="in" checked> 进线时间（先来在前，新增，默认）</label>
+          <label style="display:block;padding:5px 8px;cursor:pointer"><input type="radio" name="sk" value="last"> 最近活动（最新在前）</label>
+          <div style="color:#9CA3AF;font-size:11.5px;padding:2px 8px 4px">…客服后台现有的其他排序选项全部保留，清单以系统为准</div>
+        </div>
+      </div>
+      <div class="cw-tabs" role="tablist">
+        <button type="button" role="tab" data-go="mine">Mine<em id="cMine">0</em></button>
+        <button type="button" role="tab" data-go="unassigned">Unassigned<em id="cUn">0</em></button>
+        <button type="button" role="tab" data-go="all">All<em id="cAll">0</em></button>
+      </div>
+      <div class="cw-items" id="items"></div>
+    </section>
+
+    <section class="cw-main" id="main">
+      <div id="mainEmpty">
+        <div class="bub">···</div>
+        <div>Please select a conversation from left pane</div>
+        <div style="margin-top:22px;font-size:13px"><kbd>⌘</kbd><kbd>K</kbd> to open command menu</div>
+        <div style="margin-top:8px;font-size:13px"><kbd>⌘</kbd><kbd>/</kbd> to view keyboard shortcuts</div>
+      </div>
+    </section>
+  </div>
+
+  <aside class="notes adm-notes">
+    <h2>客服后台会话列表</h2>
+    <p class="sub">客服后台 › Conversations（会话）› 中间会话列表。本需求在会话列表的用户名后显示用户身份和等级，并让三个页签按身份和等级排序（带淡色光晕的是本需求新增的标签）。</p>
+    <h3>模拟场景</h3>
+    <div class="sim">
+      <button type="button" data-go="unassigned"><span class="simtag">Unassigned</span>现阶段：会员等级 › 会员 › 游客</button>
+      <button type="button" data-go="vip"><span class="simtag">Unassigned</span>VIP 上线后：VIP › 会员等级 › 会员 › 游客</button>
+      <button type="button" onclick="document.getElementById('sortBtn').click()"><span class="simtag">排序按钮</span>打开排序按钮，切换同级排序</button>
+      <button type="button" id="simNew"><span class="simtag">Unassigned</span>新会话进线（LV 15 插到对应位置）</button>
+      <button type="button" data-go="mine"><span class="simtag">Mine</span>按等级排序</button>
+      <button type="button" data-go="all"><span class="simtag">All</span>按等级排序</button>
+      <button type="button" data-go="empty"><span class="simtag">Unassigned</span>没有待分配会话</button>
+    </div>
+    <h3>规则批注</h3>
+    <ol>
+      <li><b>适用范围</b>：只改这个页面——左侧「All Conversations（全部会话）」的会话列表，含 Mine（分给我的）、Unassigned（未分配）、All（全部）三个页签。左侧其他列表（提到我的、我参与的、未处理、各渠道、各标签）这版不涉及。VIP 客服和普通客服是同一个后台，VIP 用户的会话同样按本页规则显示和排序。<span class="ref"><a href="../../docs/客服系统优化-需求开发PRD文档.html#n1">后台列表优化 PRD 规则 N1、N3</a> · F01-01 身份和等级标签</span></li>
+      <li><b>等级来源</b>：普通会员等级取新版会员等级（等级中心 Level Center，后台「用户管理 › 会员等级」配置），按实际配置显示，不写死等级上限；不用旧版 VIP 等级（VIP0–VIP8）。</li>
+      <li><b>身份标签</b>（显示在用户名后面，用户名过长时省略用户名，标签完整显示），按顺序取第一个符合的：
+        ① 有 VIP 等级：金色「VIP 3」（VIP 上线后才有）；
+        ② 有普通会员等级：蓝紫色「LV 12」（含 LV 0）；
+        ③ 能识别出平台账号、但没有普通会员等级：绿色「会员」（等级同步失败时沿用这个玩家上次同步成功的等级，只有从来没有同步成功过的才显示「会员」）；
+        ④ 识别不出平台账号：灰色图标「游客」。</li>
+      <li><b>排序</b>：三个页签都按身份和等级排序：VIP（等级高在前）› 普通会员等级（等级高在前）› 会员（没有等级）› 游客；同一档、同一等级按进线时间，先来的排前面。<span class="ref"><a href="../../docs/客服系统优化-需求开发PRD文档.html#n4">后台列表优化 PRD 规则 N4</a> · F01-02 按身份和等级排序</span></li>
+      <li><b>排序按钮（⇅）</b>：会话列表标题右边的排序按钮保留，但只在等级排序的基础上排序：始终先按身份和等级排，客服在按钮里选的方式只决定同一等级内的先后（比如选「最近活动」，同一等级内最近有消息的在前）。菜单保留客服后台现有的全部排序选项，另加一项「进线时间（先来在前）」并设为默认；现有选项按客服后台现行方案保留。</li>
+      <li><b>状态筛选</b>：列表左上角的状态筛选（截图中的「Open」）功能保持平台现状，本需求不改。</li>
+      <li><b>排序在服务端完成</b>：列表滚动加载，排序由客服后台服务端完成，每一批都按排好的顺序返回，不能只对已加载的部分排序。</li>
+      <li><b>新会话进线</b>：和已加载的会话比对等级：比已加载的会话中某一条的等级高，就直接插入列表对应位置；比已加载的都低，就在继续向下加载时出现在对应位置。不固定放在最上面或最下面。</li>
+      <li><b>等级变化时</b>：会话进行中用户等级变化，列表每次刷新都取最新等级，并按新等级重新排序。</li>
+      <li><b>防止列表跳动</b>：鼠标停在会话列表上时暂停重排，移开 2 秒后再按最新顺序刷新；当前打开的会话始终保持选中高亮。</li>
+      <li><b>进线时间</b>：原则上取会话转人工的时间；取消分配、已解决后重新打开等情况，由研发按客服后台现行方案确定。</li>
+      <li><b>等级数据</b>：等级只能以平台的真实数据为准，玩家端不能修改；同步方式和防篡改的具体实现由研发依据平台现行方案确定。</li>
+      <li><b>这版不做</b>：低等级用户等待超时置顶。风险：按等级排序后，高峰期低等级玩家、会员和游客的等待时间可能变长。</li>
+    </ol>
+    <h3>评审待确认</h3>
+    <p style="font-size:13px;margin:0">暂无。</p>
+    <div class="pager"><span></span><span></span></div>
+  </aside>
+</div>
+</div>
+<script>window.NAV_ROOT = "../../";</script>
+<script src="../../assets/nav-data.js"></script>
+<script src="../../assets/nav.js"></script>
+<script src="../../assets/req-tabs.js"></script>
+<script>
+(function () {
+  /* 示例数据均为虚构。lv：会员等级（null = 没有等级）；acct：能识别出平台账号（false = 游客）；vip：VIP 等级（VIP 上线后才有）；inAt：进线时间（分钟前，越大越早）；mine：是否分给我 */
+  var BASE = [
+    { id: 7, nm: "Guest 4f8a21", lv: null, acct: false, vip: null, inAt: 15, last: 6, un: 1, msg: "Hello, can I ask something?" },
+    { id: 8, nm: "Playerc3v5n61290", lv: null, acct: true, vip: null, inAt: 8, last: 3, un: 1, msg: "I cannot log in to my account" },
+    { id: 1, nm: "Player6c5q61428", lv: 3,  vip: null, inAt: 9,  last: 2,  un: 1, msg: "Connecting you to a live agent, please wait…" },
+    { id: 2, nm: "Playerur82m3397", lv: 12, vip: 2,    inAt: 3,  last: 3,  un: 3, msg: "Connecting you to a live agent, please wait…" },
+    { id: 3, nm: "Playerk7d2a90551", lv: 12, vip: null, inAt: 7,  last: 4,  un: 2, msg: "My deposit has not arrived yet" },
+    { id: 4, nm: "Playerm1x9b20837", lv: 0,  vip: null, inAt: 12, last: 5,  un: 1, msg: "How do I complete KYC?" },
+    { id: 5, nm: "Playerq4t7c55102", lv: 25, vip: null, inAt: 1,  last: 1,  un: 1, msg: "Withdrawal still pending" },
+    { id: 6, nm: "Playerz8w3e11764", lv: 6,  vip: 5,    inAt: 5,  last: 4,  un: 2, msg: "Connecting you to a live agent, please wait…" }
+  ];
+  var MINE = [
+    { id: 11, nm: "Playerf2g8h40915", lv: 1,  vip: null, inAt: 30, last: 2,  un: 0, msg: "Thank you!", mine: true },
+    { id: 12, nm: "Playerb9n4p77320", lv: 18, vip: null, inAt: 45, last: 8,  un: 1, msg: "Is the promo still available?", mine: true }
+  ];
+  var extra = null, vipOn = false, sel = null;
+
+  /* 身份标签：VIP 等级 › 普通会员等级 › 会员（有账号、没有等级）› 游客（识别不出账号） */
+  function tag(c) {
+    if (vipOn && c.vip) return '<span class="lv v glow">VIP ' + c.vip + '</span>';
+    if (c.lv != null) return '<span class="lv n glow">LV ' + c.lv + '</span>';
+    if (c.acct !== false) return '<span class="lv m glow">会员</span>';
+    return '<span class="lv x glow">👤 游客</span>';
+  }
+  /* 排序键：VIP（上线后）> 普通会员等级 > 会员（无等级）> 游客；同一档内等级高在前，同级按进线时间先来在前 */
+  function key(c) {
+    if (vipOn && c.vip) return 10000 + c.vip;
+    if (c.lv != null) return 100 + c.lv;
+    return c.acct !== false ? 1 : 0;
+  }
+  var sub = "in";   /* 排序按钮选的同级排序：in 进线时间先来在前（默认）/ last 最近活动最新在前 */
+  function rank(a, b) {
+    var d = key(b) - key(a);
+    return d || (sub === "last" ? a.last - b.last : b.inAt - a.inAt);
+  }
+  function un() { return BASE.concat(extra ? [extra] : []); }
+
+  function render(tab, empty) {
+    var list = tab === "unassigned" ? (empty ? [] : un().slice().sort(rank))
+             : tab === "mine" ? MINE.slice().sort(rank)
+             : (empty ? [] : un()).concat(MINE).sort(rank);
+    document.getElementById("cMine").textContent = MINE.length;
+    document.getElementById("cUn").textContent = empty ? 0 : un().length;
+    document.getElementById("cAll").textContent = (empty ? 0 : un().length) + MINE.length;
+    document.querySelectorAll(".cw-tabs button").forEach(function (b) { b.classList.toggle("on", b.dataset.go === tab); b.setAttribute("aria-selected", b.dataset.go === tab); });
+    var box = document.getElementById("items");
+    if (!list.length) { box.innerHTML = '<div class="cw-empty">There are no active conversations in this group.</div>'; return; }
+    box.innerHTML = list.map(function (c) {
+      return '<div class="cw-it' + (c.isNew ? ' new' : '') + (sel === c.id ? ' sel' : '') + '" data-id="' + c.id + '">' +
+        '<div class="cw-av">P</div><div class="cw-bd">' +
+        '<div class="cw-r1"><span class="cw-nm">' + c.nm + '</span>' + tag(c) + '<span class="cw-tm">' + c.last + 'm • ' + c.inAt + 'm</span></div>' +
+        '<div class="cw-r2"><span class="cw-msg">↩ ' + c.msg + '</span>' + (c.un ? '<span class="cw-un">' + c.un + '</span>' : '') + '</div>' +
+        '</div></div>';
+    }).join("") + '<div class="cw-end">All conversations loaded 🎉</div>';
+  }
+
+  var cur = "unassigned";
+  function show(view) {
+    if (["unassigned", "vip", "mine", "all", "empty"].indexOf(view) < 0) view = "unassigned";
+    vipOn = view === "vip";
+    if (view !== "unassigned") extra = null;
+    var tab = view === "vip" || view === "empty" ? "unassigned" : view;
+    cur = view; render(tab, view === "empty");
+    if (location.hash.slice(1) !== view) history.replaceState(null, "", "#" + view);
+    /* 嵌在「运营需求确认」页时，把当前视图告诉外层，用来同步切换按钮 */
+    if (window.self !== window.top) window.parent.postMessage({ type: "proto-view", view: view }, "*");
+  }
+  window.addEventListener("hashchange", function () { show(location.hash.slice(1) || "unassigned"); });
+  document.addEventListener("click", function (e) {
+    var b = e.target.closest("[data-go]"); if (b) { e.preventDefault(); sel = null; show(b.dataset.go); return; }
+    var it = e.target.closest(".cw-it"); if (it) {
+      var c = un().concat(MINE).filter(function (x) { return x.id === +it.dataset.id; })[0];
+      sel = c.id; render(cur === "vip" || cur === "empty" ? "unassigned" : cur, cur === "empty");
+      document.getElementById("main").innerHTML = '<div class="cw-conv"><div class="hd"><div class="cw-av">P</div><b>' + c.nm + '</b>' + tag(c) + '</div><div class="bd"><p>' + c.msg + '</p></div></div>';
+    }
+  });
+  var menu = document.getElementById("sortMenu");
+  document.getElementById("sortBtn").onclick = function () { menu.hidden = !menu.hidden; };
+  menu.addEventListener("change", function (e) {
+    sub = e.target.value; menu.hidden = true;
+    render(cur === "vip" || cur === "empty" ? "unassigned" : cur, cur === "empty");
+  });
+  document.getElementById("simNew").onclick = function () {
+    if (cur !== "unassigned") show("unassigned");
+    extra = { id: 99, nm: "Playerh5j6k30028", lv: 15, vip: null, inAt: 0, last: 0, un: 1, msg: "Connecting you to a live agent, please wait…", isNew: true };
+    render("unassigned", false);
+    setTimeout(function () { if (extra) extra.isNew = false; }, 2500);
+  };
+  show(location.hash.slice(1) || "unassigned");
+})();
+</script>
+</body>
+</html>

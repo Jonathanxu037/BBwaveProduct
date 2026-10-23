@@ -1,2 +1,109 @@
 <!doctype html>
-<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="prdhub-placeholder" content="1"><title>需求待上传</title></head><body style="margin:0;font-family:'Microsoft YaHei',sans-serif;background:#F6F3EE;color:#1B1720"><div style="max-width:520px;margin:12vh auto;padding:32px 24px;background:#fff;border:1px solid #D9D2E4;border-radius:14px;text-align:center"><div style="font-size:11px;font-weight:700;letter-spacing:.24em;color:#C89A3C">789BINGO</div><h1 style="font-size:20px;color:#16052F;margin:8px 0 6px">客服系统优化</h1><p style="color:#6A6076;line-height:1.7">该需求还没有上传产品角色页面。上传需求包后，这里会显示需求与原型中心。</p><p><a href="../../" style="color:#1677FF">← 返回需求列表</a></p></div></body></html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>客服系统优化-需求与原型中心</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<div class="with-nav">
+<main class="home">
+  <div class="home-head">
+    <div>
+      <h1>需求与原型中心</h1>
+      <p>客服系统优化 · 需求包按访问链接的角色显示可查看的页面</p>
+    </div>
+    <div class="hbtns"><button class="obtn" type="button" id="ex">全部展开</button><button class="obtn" type="button" id="co">全部收起</button></div>
+  </div>
+
+  <section class="reqcard">
+    <div class="reqcard-h"><b>客服系统优化 · 后台列表优化 ／ 自助问题优化 · v1.0</b><small>客服系统优化功能需求</small></div>
+    <div class="reqcard-b">
+      <div>
+        <p style="margin:0 0 6px">本需求包包含两个互不相关的需求，所有文档顶部都可以用标签切换：</p>
+        <p style="margin:0 0 6px"><b>后台列表优化</b>——在客服后台「All Conversations（全部会话）」页面的会话列表中，于每条会话的用户名后新增身份和等级标签（VIP 等级 › 普通会员等级 › 会员 › 游客），三个页签改为按身份和等级从高到低排序，同一等级按进线时间先来在前。</p>
+        <p style="margin:0 0 6px"><b>自助问题优化</b>——在前台首页右侧悬浮客服按钮进入的客服对话窗中，玩家点快捷问题「我的充值没到账，怎么办？」后，不再显示原自动回复，改为显示最近交易卡片和通栏「查看订单」按钮，点击打开订单页，返回时回到对话窗。</p>
+        <div class="facts">
+          <div><b>1</b><span>前台原型页面</span></div>
+          <div><b>1</b><span>后台原型页面</span></div>
+          <div><b>2</b><span>大功能点</span></div>
+          <div><b>8</b><span>子功能点</span></div>
+          <div><b>21</b><span>本需求规则</span></div>
+          <div><b>0</b><span>待确认事项</span></div>
+        </div>
+        <p style="margin:0"><span class="warn-2">※ 两个需求没有业务关联，可以分开开发、分开上线；后台列表优化的排序必须在客服后台服务端完成（后台列表优化 PRD 3.2 规则 N6）。</span></p>
+        <div class="tbl" style="margin-top:12px"><table class="mini">
+          <tr><th>版本号</th><th>时间</th><th>修改人</th><th>概述</th></tr>
+          <tr><td>v1.0</td><td>2026-10-22</td><td>Joshua</td><td>创建客服系统优化 v1.0</td></tr>
+        </table></div>
+      </div>
+      <div class="ltree" id="tree"></div>
+    </div>
+</section>
+
+  <section class="reqcard arch">
+    <div class="reqcard-h"><b>需求文档架构图</b><small>按角色和需求文件展示整体结构：各角色能访问哪些页面、打开后的默认页</small></div>
+    <div class="arch-b" id="arch"></div>
+  </section>
+
+  <section class="reqcard oc-log">
+    <div class="reqcard-h"><b>运营需求修改记录</b><small>按提交时间倒序，最新提交的在最上面</small></div>
+    <div class="reqcard-b oc-log-b">
+      <p class="oc-log-note">※ 运营提交的版本、产品回复和补充都保存在云端，换电脑、换浏览器打开都能看到，每分钟自动刷新；产品输入产品密码后才能读取。重新打包上传不会删除或覆盖这些记录。</p>
+      <div id="ocLogs"></div>
+    </div>
+  </section>
+</main>
+</div>
+<script>window.NAV_ROOT = "";</script>
+<script src="assets/nav-data.js"></script>
+<script src="assets/nav.js"></script>
+<script src="assets/req-tabs.js"></script>
+<script src="assets/oc-store.js"></script>
+<script src="assets/arch.js"></script>
+<script>
+var t = NAV.buildTree(document.getElementById("tree"), { light: true });
+ARCH.render(document.getElementById("arch"));
+document.getElementById("ex").onclick = t.expandAll;
+document.getElementById("co").onclick = t.collapseAll;
+
+/* 运营需求修改记录：云端优先（读不到云端时用本机缓存），数据与「运营需求确认」页同源，按提交时间倒序。
+   两个需求各用一个云端主题（需求包框架规范第 14 节「客服系统优化」例外，规范 v5.69），分两块显示；「查看」先切到对应需求再打开运营需求确认页 */
+[{ k: "a", name: "后台列表优化", topic: "客服系统优化-后台列表优化" }, { k: "b", name: "自助问题优化", topic: "客服系统优化-自助问题优化" }].forEach(function (R) {
+  var CONFIRM = "docs/客服系统优化-运营需求确认.html";
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+  var box = document.createElement("div"); box.className = "oc-log-req";
+  box.innerHTML = '<h3 style="margin:14px 0 6px;font-size:14px">' + esc(R.name) + '</h3><div class="oc-sync"></div>' +
+    '<div class="tbl"><table class="mini oc-log-t"><thead><tr><th>提交时间</th><th>版本</th><th>版本名称</th><th>条数</th><th>产品已回复</th><th>是否修改</th><th></th></tr></thead>' +
+    '<tbody><tr><td colspan="7" class="oc-log-empty">正在读取…</td></tr></tbody></table></div><p class="oc-log-foot"></p>';
+  document.getElementById("ocLogs").appendChild(box);
+  box.addEventListener("click", function (e) { if (e.target.closest("a")) { try { localStorage.setItem("客服系统优化功能需求-req", R.k); } catch (x) {} } });
+  var KEY = OCStore.key(R.topic);
+  function renderLog(S) {
+    var V = OCStore.byTime(S && S.versions), body = box.querySelector("tbody");
+    if (!V.length) {
+      body.innerHTML = '<tr><td colspan="7" class="oc-log-empty">还没有运营提交的需求修改记录。</td></tr>';
+    } else {
+      body.innerHTML = V.map(function (v, i) {
+        var s = OCStore.stats(v), d = s.dec;
+        var href = CONFIRM + "#ver=" + encodeURIComponent(v.name);
+        return "<tr" + (i === 0 ? ' class="latest"' : "") + "><td>" + esc(v.at || "—") + (i === 0 ? ' <span class="oc-new">最新</span>' : "") + "</td>" +
+          "<td><b>v" + v.major + "." + v.minor + "</b></td>" +
+          '<td class="w">' + esc(v.name) + (v.from ? '<div class="oc-log-from">由「' + esc(v.from) + "」修改</div>" : "") + "</td>" +
+          "<td>" + s.total + "</td><td>" + s.replied + " / " + s.total + "</td>" +
+          '<td class="w"><span class="oc-dtag d确认修改">确认修改 ' + d["确认修改"] + '</span> <span class="oc-dtag d部分修改">部分修改 ' + d["部分修改"] + '</span> <span class="oc-dtag d不修改">不修改 ' + d["不修改"] + '</span> <span class="oc-dtag d待确认">待确认 ' + d["待确认"] + "</span></td>" +
+          '<td><a href="' + href + '">查看 ›</a></td></tr>';
+      }).join("");
+    }
+    box.querySelector(".oc-log-foot").textContent = V.length
+      ? "共 " + V.length + " 个版本" + (S.sealed ? "；已于 " + S.sealed.at + "（GMT+8）" + (OCStore.ROLE_NAME[S.sealed.role] ? "由" + OCStore.ROLE_NAME[S.sealed.role] : "") + "封板，最终版本 v" + S.sealed.ver : "；未封板")
+        + (OCStore.sealLog(S).length ? "。封板记录：" + OCStore.sealLog(S).map(OCStore.sealLine).join("；") : "")
+      : "";
+  }
+  OCStore.read(KEY).then(renderLog);
+  OCSync.bar(box.querySelector(".oc-sync"), KEY, R.topic, renderLog);   /* 从共享文件夹读取运营提交的版本文件 */
+});
+</script>
+</body>
+</html>

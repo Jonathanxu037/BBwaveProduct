@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>客服系统优化-客服对话窗查看订单</title>
+<link rel="stylesheet" href="../../assets/style.css">
+<style>
+/* 仿前台客服窗口（Chat with us）：白底窗口、紫青渐变头部 */
+.cs{background:#fff;color:#1F2937;font-family:Inter,-apple-system,"Segoe UI",Roboto,"PingFang SC","Microsoft YaHei",sans-serif;display:flex;flex-direction:column;min-height:640px}
+.cs-top{display:flex;align-items:center;gap:8px;padding:12px 14px;color:#fff;background:linear-gradient(90deg,#7B5CF5,#2BD4A8);font-weight:700;font-size:14px}
+.cs-top .x{margin-left:auto;font-size:20px;cursor:pointer;background:none;border:0;color:#fff}
+.cs-hd{display:flex;align-items:center;gap:10px;padding:10px 14px;color:#fff;background:linear-gradient(90deg,#14B8A6,#7C6CF2)}
+.cs-hd .lg{width:46px;height:30px;border-radius:6px;background:#fff;color:#7C3AED;display:grid;place-items:center;font-weight:800;font-size:11px}
+.cs-hd b{display:block;font-size:15px}.cs-hd small{font-size:11px;opacity:.85}
+.cs-hd .end{margin-left:auto;border:1px solid rgba(255,255,255,.6);border-radius:16px;padding:4px 10px;font-size:12px}
+.cs-body{flex:1;padding:12px 14px;display:flex;flex-direction:column;gap:10px;background:#fff}
+.cs-q h4{margin:0 0 8px;color:#D1D5DB;font-size:15px}
+.cs-tabs{display:flex;gap:8px;overflow:hidden;margin-bottom:6px}
+.cs-tabs span{white-space:nowrap;border:1px solid #E5E7EB;border-radius:18px;padding:6px 12px;font-size:12.5px;font-weight:600}
+.cs-tabs .on{background:linear-gradient(90deg,#14B8A6,#7C6CF2);color:#fff;border-color:transparent}
+.cs-ql div{display:flex;justify-content:space-between;padding:9px 2px;font-size:13px;border-bottom:1px solid #F3F4F6;cursor:pointer}
+.cs-ql div:hover{background:#F9FAFB}
+.me{align-self:flex-end;max-width:80%;background:linear-gradient(90deg,#14B8A6,#7C6CF2);color:#fff;border-radius:14px 14px 4px 14px;padding:8px 12px;font-size:13px}
+.bot{align-self:flex-start;max-width:86%;background:#F3F4F6;border-radius:14px 14px 14px 4px;padding:8px 12px;font-size:13px}
+.card{align-self:stretch;background:#F6F7F9;border-radius:12px;padding:12px}
+.card .t{font-size:12.5px;color:#4B5563;margin-bottom:8px}
+.card .em{font-size:12.5px;color:#9CA3AF;margin-bottom:12px}
+.card .rec{font-size:12.5px;margin-bottom:12px;line-height:1.7}
+.blk{display:block;width:100%;border:0;border-radius:20px;background:#111;color:#fff;font-weight:700;font-size:14px;padding:10px 0;cursor:pointer}
+.cs-foot{display:flex;align-items:center;gap:8px;padding:10px 12px;border-top:1px solid #F3F4F6}
+.cs-foot .in{flex:1;border:1px solid #E5E7EB;border-radius:20px;padding:8px 12px;color:#9CA3AF;font-size:13px}
+.cs-foot .sd{width:32px;height:32px;border-radius:50%;background:#C7E9F3;color:#fff;display:grid;place-items:center}
+.agent{align-self:flex-end;border:1px solid #E5E7EB;border-radius:18px;padding:5px 12px;font-size:12.5px;font-weight:600;margin-top:auto}
+.od-hd{display:flex;align-items:center;gap:10px;padding:12px 14px;border-bottom:1px solid #F3F4F6;font-weight:700}
+.od-hd button{background:none;border:0;font-size:20px;cursor:pointer;padding:0 4px}
+.od-tabs{display:flex;gap:8px;padding:14px 14px 6px}
+.od-tabs span{flex:1;text-align:center;border:1px solid #E5E7EB;border-radius:18px;padding:7px 0;font-size:13px;font-weight:700;cursor:pointer}
+.od-tabs .on{background:linear-gradient(90deg,#14B8A6,#7C6CF2);color:#fff;border-color:transparent}
+.od-tip{text-align:center;font-size:11.5px;color:#9CA3AF}
+.od-em{text-align:center;color:#9CA3AF;font-size:13px;margin-top:50px}
+.live{position:absolute;right:14px;bottom:16px;border-radius:22px;padding:9px 16px;color:#fff;font-weight:700;font-size:13px;background:linear-gradient(90deg,#14B8A6,#7C6CF2)}
+</style>
+</head>
+<body>
+<!-- 前台原型：左边是手机画面，右边是批注。手机画面仿现有客服窗口；本需求新增的控件加 class="glow" 淡色光晕。
+     状态用 #chat、#nodata、#data、#orders、#guest 切换，保留底部同步代码。示例数据一律虚构。 -->
+<div class="with-nav">
+<div class="stage">
+  <div class="app" role="region" aria-label="手机画面" style="position:relative">
+    <div class="sb"><span>9:41</span><span>●●● 5G</span></div>
+
+    <!-- ============ 客服对话窗 ============ -->
+    <div class="view cs" id="vChat">
+      <div class="cs-top">💬 联系我们<button class="x" type="button" data-act="closeAll" aria-label="关闭">×</button></div>
+      <div class="cs-hd"><span class="lg">789 BINGO</span><span><b>在线客服</b><small>在线 · 实时</small></span><span class="end">结束对话</span></div>
+      <div class="cs-body" id="chatBody">
+        <div class="cs-q">
+          <h4>需要什么帮助？</h4>
+          <div class="cs-tabs"><span class="on">热门问题</span><span>充值与提现</span><span>账号</span></div>
+          <div class="cs-ql">
+            <div data-act="askPwd">我忘记了登录密码，怎么办？<span>›</span></div>
+            <div data-act="askDep" class="glow">我的充值没到账，怎么办？<span>›</span></div>
+            <div data-act="askWd">我的提现延迟了，要多久？<span>›</span></div>
+          </div>
+        </div>
+        <div id="thread" style="display:flex;flex-direction:column;gap:10px"></div>
+        <div class="agent">🎧 转人工</div>
+      </div>
+      <div class="cs-foot"><span>🖼</span><span class="in">输入消息</span><span class="sd">➤</span></div>
+    </div>
+
+    <!-- ============ 订单页（从对话里打开） ============ -->
+    <div class="view cs" id="vOrders" hidden>
+      <div class="cs-top">💬 联系我们<button class="x glow" type="button" data-act="backChat" aria-label="关闭，回到对话窗">×</button></div>
+      <div class="od-hd"><button type="button" class="glow" data-act="backChat" aria-label="返回对话窗">‹</button>订单</div>
+      <div class="od-tabs"><span class="on" data-tab="dep">充值 (0)</span><span data-tab="wd">提现 (0)</span></div>
+      <div class="od-tip">最近 0 条记录 · 点一行可复制订单号</div>
+      <div class="od-em">暂无记录</div>
+      <p class="ui-reqnote" style="margin:16px 14px">充值、提现记录列表按页加载，滑到底部加载下一页，每页条数沿用平台现有规则。</p>
+      <div class="live glow" data-act="agent" role="button" tabindex="0" style="cursor:pointer">🎧 人工客服</div>
+    </div>
+    <div class="toast" id="toast" role="status" hidden></div>
+  </div>
+
+  <aside class="notes">
+    <h2>客服对话窗查看订单</h2>
+    <p class="sub">入口：首页右侧悬浮客服按钮 → 点平台自带客服（猫头像）→ 帮助中心 → 点「人工客服」进入对话窗。本需求只改对话窗里「我的充值没到账，怎么办？」这一个快捷问题：点击后显示最近交易卡片，玩家可以直接打开订单页查看（带淡色光晕的是本需求改动的控件）。</p>
+    <h3>模拟场景</h3>
+    <div class="sim">
+      <button type="button" data-go="chat"><span class="simtag">对话窗</span>进入对话窗（未点问题）</button>
+      <button type="button" data-go="nodata"><span class="simtag">已登录</span>点「充值没到账」：没有记录</button>
+      <button type="button" data-go="data"><span class="simtag">已登录</span>点「充值没到账」：有记录</button>
+      <button type="button" data-go="fail"><span class="simtag">已登录</span>点「充值没到账」：取数失败</button>
+      <button type="button" data-go="orders"><span class="simtag">订单页</span>点「查看订单」后</button>
+      <button type="button" data-go="guest"><span class="simtag">未登录</span>点「充值没到账」</button>
+    </div>
+    <h3>规则批注</h3>
+    <ol>
+      <li><b>适用范围</b>：只改首页右侧悬浮客服按钮进入的客服窗口（底部导航「Chat」是聊天室入口，不是客服入口，不涉及）。H5、Android、iOS、PWA 所有端都生效；App 如果用的是原生客服窗口，由研发依据平台现行方案处理。快捷问题里只改「我的充值没到账，怎么办？」，「我的提现延迟了，要多久？」等其他问题保持现有自动回复。<span class="ref"><span class="link-off" title="当前角色不能查看这个页面">自助问题优化 PRD 规则 N11</span> · F02-01 充值没到账显示最近交易卡片</span></li>
+      <li><b>识别这个问题</b>：按这个快捷问题的固定编号识别，不按文字识别：所有语言版本、所有出现这个问题的分类页签（如「热门问题」「充值与提现」）都按本规则处理；运营修改问题文字不影响；问题被删除后不再显示。配置位置和编号方式由研发依据平台现行方案确定。</li>
+      <li><b>点击后显示</b>：对话框里先显示玩家点的问题，再显示「最近一笔充值 / 提现」卡片，不再显示原来的自动回复文字。卡片和帮助中心首页的「最近交易」卡片一样，但去掉「联系客服」按钮，只留「查看订单」，改为通栏黑色按钮。</li>
+      <li><b>卡片内容</b>：显示几笔、显示哪些信息，都按平台现有规则（和帮助中心「最近交易」卡片一致），不限定只显示一笔；没有记录时显示「暂无充值或提现记录」。卡片显示点击那一刻的数据，之后不自动刷新，要看最新状态点「查看订单」。</li>
+      <li><b>取数失败</b>：接口失败或超过 5 秒没返回时，卡片里显示「暂时无法获取记录，请刷新」和「刷新」按钮，点「刷新」重新取数据；「查看订单」按钮照常显示。订单页本身取数失败按平台现有处理。</li>
+      <li><b>点击频率</b>：每点一次，在对话里新加一组「问题 + 卡片」；这个问题 1 分钟内只能点一次，1 分钟内再点不发送，提示「操作太频繁，请 1 分钟后再试」。登录后自动显示的卡片不算点击；未登录时按当前设备的客服会话计算。</li>
+      <li><b>查看订单</b>：点「查看订单」打开订单页，页面内容和默认页签都沿用平台现有规则。充值、提现两个记录列表按页加载（滑到底部加载下一页），每页条数沿用平台现有规则。<span class="ref"><span class="link-off" title="当前角色不能查看这个页面">自助问题优化 PRD 规则 N17</span> · F02-02 从对话打开订单页</span></li>
+      <li><b>返回</b>：从对话里打开的订单页，点左上角「‹」或右上角「×」都回到刚才的客服对话窗（聊天记录保留）。要关掉整个客服窗口，回到对话窗后按对话窗现有方式关闭。从帮助中心首页进入的订单页，返回和关闭保持现状，不改。</li>
+      <li><b>订单页「人工客服」</b>：从对话里打开的订单页，点右下角「人工客服」回到刚才的对话窗并转人工（等同在对话窗点「转人工」），不新开会话；从帮助中心首页进入的订单页保持现状。</li>
+      <li><b>复制订单号</b>：保持现状，玩家在订单页点一行复制订单号，回到对话窗后自己粘贴发送。</li>
+      <li><b>未登录</b>：拉取不到订单数据，不显示卡片，提示先登录，并给「登录」按钮（跳转平台现有登录页）。登录成功后回到客服对话窗，保留刚才的对话，并自动显示最近交易卡片，玩家点「查看订单」直接查看。海外 IP 访问时按平台现有的海外 IP 处理方案。</li>
+      <li><b>客服后台</b>：客服后台会话里只显示玩家点的问题，原来的自动回复不再出现，不加备注。</li>
+    </ol>
+    <h3>评审待确认</h3>
+    <ol>
+      <li><b>暂无</b>：待确认事项已于 2026-10-23 全部关闭，由研发依据平台现行方案开发；新增提示文案参考自助问题优化 PRD 9.1 未定文案清单。</li>
+    </ol>
+    <div class="pager"><span></span><span></span></div>
+  </aside>
+</div>
+</div>
+<script>window.NAV_ROOT = "../../";</script>
+<script src="../../assets/nav-data.js"></script>
+<script src="../../assets/nav.js"></script>
+<script src="../../assets/req-tabs.js"></script>
+<script src="../../assets/proto-en.js"></script>
+<script src="../../assets/proto.js"></script>
+<script>
+(function () {
+  var state = { login: true, rec: false, fail: false };
+  var lastAsk = 0;   /* 上次点「充值没到账」的时间，1 分钟内只能点一次 */
+  var thread = document.getElementById("thread");
+  function toast(t) { var el = document.getElementById("toast"); el.textContent = t; el.hidden = false; clearTimeout(el._t); el._t = setTimeout(function () { el.hidden = true; }, 1800); }
+  function ask(q) { thread.insertAdjacentHTML("beforeend", '<div class="me">' + q + '</div>'); }
+  function cardInner() {
+    if (state.fail) return '<div class="em">暂时无法获取记录，请刷新</div><button class="blk" type="button" data-act="refresh" style="background:#fff;color:#111;border:1px solid #D1D5DB;margin-bottom:8px">刷新</button>';
+    if (state.rec) return '<div class="rec">充值 ₱500.00 · 处理中<br><span style="color:#9CA3AF">2026-10-22 14:05 · 订单号 D2026102214051234</span></div><p class="ui-reqnote">显示几笔、显示哪些信息按平台现有规则，和帮助中心「最近交易」卡片一致；这里的数据是虚构示例。</p>';
+    return '<div class="em">暂无充值或提现记录</div>';
+  }
+  function card() {
+    thread.insertAdjacentHTML("beforeend", '<div class="card glow"><div class="t">🧾 最近一笔充值 / 提现</div><div class="ci">' + cardInner() + '</div><button class="blk" type="button" data-act="orders">查看订单</button></div>');
+  }
+  function depositReply() {
+    ask("我的充值没到账，怎么办？");
+    if (!state.login) {
+      thread.insertAdjacentHTML("beforeend", '<div class="bot glow">请先登录，再查看订单。<br><button class="blk" type="button" data-act="login" style="margin-top:8px">登录</button></div>');
+      return;
+    }
+    card();
+  }
+  function showView(v) {
+    document.getElementById("vChat").hidden = v === "orders";
+    document.getElementById("vOrders").hidden = v !== "orders";
+  }
+  var VIEWS = ["chat", "nodata", "data", "fail", "orders", "guest"];
+  function show(view) {
+    if (VIEWS.indexOf(view) < 0) view = "chat";
+    if (view !== "orders") {
+      thread.innerHTML = ""; lastAsk = 0;
+      state.login = view !== "guest"; state.rec = view === "data"; state.fail = view === "fail";
+      if (view !== "chat") { depositReply(); lastAsk = Date.now(); }
+    } else if (!thread.innerHTML) { state.login = true; depositReply(); }
+    showView(view);
+    if (location.hash.slice(1) !== view) history.replaceState(null, "", "#" + view);
+    /* 嵌在「运营需求确认」页时，把当前状态告诉外层，用来同步切换按钮 */
+    if (window.self !== window.top) window.parent.postMessage({ type: "proto-view", view: view }, "*");
+  }
+  window.addEventListener("hashchange", function () { show(location.hash.slice(1) || "chat"); });
+  document.addEventListener("click", function (e) {
+    var b = e.target.closest("[data-go]"); if (b) { e.preventDefault(); show(b.dataset.go); return; }
+    var a = e.target.closest("[data-act]"); if (!a) return;
+    var act = a.dataset.act;
+    if (act === "askDep") {
+      if (Date.now() - lastAsk < 60000) { toast("操作太频繁，请 1 分钟后再试"); return; }
+      lastAsk = Date.now(); depositReply();
+    }
+    else if (act === "refresh") {
+      state.fail = false; state.rec = true;
+      a.closest(".card").querySelector(".ci").innerHTML = cardInner(); toast("已重新获取记录");
+    }
+    else if (act === "agent") { showView("chat"); thread.insertAdjacentHTML("beforeend", '<div class="bot">正在为你转接人工客服…（回到原对话转人工，不新开会话）</div>'); }
+    else if (act === "askWd") { ask("我的提现延迟了，要多久？"); thread.insertAdjacentHTML("beforeend", '<div class="bot">（现有自动回复，本需求不改）</div>'); }
+    else if (act === "askPwd") { ask("我忘记了登录密码，怎么办？"); thread.insertAdjacentHTML("beforeend", '<div class="bot">（现有自动回复，本需求不改）</div>'); }
+    else if (act === "orders") { showView("orders"); history.replaceState(null, "", "#orders"); }
+    else if (act === "backChat") { showView("chat"); history.replaceState(null, "", "#" + (state.login ? (state.rec ? "data" : state.fail ? "fail" : "nodata") : "guest")); }
+    else if (act === "closeAll") toast("关闭整个客服窗口（现有方式，不变）");
+    else if (act === "login") {
+      /* 模拟：跳转平台现有登录页，登录成功后回到对话窗，保留对话并自动显示卡片 */
+      a.disabled = true; state.login = true; card(); toast("登录成功，已回到客服对话窗");
+    }
+  });
+  document.querySelectorAll(".od-tabs span").forEach(function (t) { t.onclick = function () { document.querySelectorAll(".od-tabs span").forEach(function (x) { x.classList.toggle("on", x === t); }); }; });
+  show(location.hash.slice(1) || "chat");
+})();
+</script>
+</body>
+</html>

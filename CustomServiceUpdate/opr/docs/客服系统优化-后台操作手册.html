@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>客服系统优化-后台操作手册</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<div class="with-nav">
+  <header class="mh">
+    <div class="k">789BINGO · 客服后台使用说明 <span class="vp">v1.0</span></div>
+    <h1>客服系统优化 · 客服后台使用说明</h1>
+    <p>写给客服和客服主管。本需求包含两个需求，用下方标签切换；两个需求都不新增运营后台配置。</p>
+  </header>
+  <div id="reqTabs" style="margin:16px 0 0"></div>
+
+  <section data-req="a">
+  <p style="margin:0 0 12px;font-size:13.5px"><a href="../prototype/admin/客服系统优化-客服后台会话列表.html#unassigned">打开客服后台原型 ›</a>　｜　<span class="link-off" title="当前角色不能查看这个页面">查看后台列表优化 PRD</span></p>
+  <div class="mk">
+    <b>重要结论</b>
+    <ul>
+      <li>列表最上面是等级最高的玩家，从上往下接待即可；同一等级按进线时间先来在前（PRD 3.2 规则 N4）。</li>
+      <li>排序按钮只改变同一等级内的先后，不会打乱等级顺序（PRD 3.2 规则 N5）。</li>
+      <li>「游客」是识别不出平台账号的联系人，接待时先核实账号（PRD 3.2 规则 N3）。</li>
+    </ul>
+  </div>
+
+  <div class="mbody">
+    <nav class="mtoc" aria-label="手册目录">
+      <a href="#m1">01 身份和等级标签</a>
+      <a href="#m2">02 排序与排序按钮</a>
+      <a href="#m9">常见问题</a>
+    </nav>
+    <div>
+      <section class="mcard" id="m1">
+        <h2><span class="no2">01</span>身份和等级标签</h2>
+        <h3>位置与范围</h3>
+        <p>客服后台左侧「Conversations › All Conversations（全部会话）」，中间会话列表的 Mine（分给我的）、Unassigned（未分配）、All（全部）三个页签；每条会话用户名后面。左侧其他列表不变。所有客服账号都能看到，不需要额外权限。</p>
+        <h3>标签说明</h3>
+        <table>
+          <tr><th>标签</th><th>含义</th><th>排序位置</th></tr>
+          <tr><td>金色「VIP 3」</td><td>有 VIP 等级的玩家，显示 VIP 当前等级（VIP 会员体系上线后才出现）</td><td>最前，VIP 等级高的在前</td></tr>
+          <tr><td>蓝紫色「LV 12」</td><td>普通会员等级（等级中心 Level Center），含 LV 0 新用户</td><td>VIP 之后，等级高的在前</td></tr>
+          <tr><td>绿色「会员」</td><td>有平台账号、但还没有会员等级</td><td>所有有等级的玩家之后</td></tr>
+          <tr><td>灰色图标「游客」</td><td>识别不出平台账号（未登录进线）</td><td>最后</td></tr>
+        </table>
+      </section>
+
+      <section class="mcard" id="m2">
+        <h2><span class="no2">02</span>排序与排序按钮</h2>
+        <h3>默认顺序</h3>
+        <p>VIP › 会员等级 › 会员 › 游客；同一等级按进线时间（转人工的时间）先来在前。新会话进来会插到对应位置，不一定在最上面。</p>
+        <h3>操作步骤</h3>
+        <div class="msteps">
+          <div class="mstep"><i>1</i><div>点会话列表标题右边的排序按钮「⇅」。</div></div>
+          <div class="mstep"><i>2</i><div>选择同一等级内的排序方式：默认「进线时间（先来在前）」，也可以选客服后台原有的其他方式（如最近活动）。</div></div>
+          <div class="mstep"><i>3</i><div>列表重新加载：等级顺序不变，只有同一等级内的先后按所选方式变化。</div></div>
+        </div>
+        <h3>列表跳动</h3>
+        <p>鼠标停在列表上时列表不会重排，移开 2 秒后才按最新顺序刷新，避免点错会话。</p>
+      </section>
+
+      <section class="mcard" id="m9">
+        <h2>常见问题</h2>
+        <dl class="faq">
+          <dt>为什么有的高等级玩家显示「会员」？</dt>
+          <dd>等级从来没有同步成功过时显示「会员」；同步失败但以前同步过的，会沿用上次的等级。持续出现请转技术排查。</dd>
+          <dt>低等级玩家等了很久怎么办？</dt>
+          <dd>本版不做超时置顶。高峰期请客服主管关注列表底部的会话，必要时手动分配。</dd>
+          <dt>状态筛选（Open 等）变了吗？</dt>
+          <dd>没有，保持原样。</dd>
+        </dl>
+      </section>
+    </div>
+  </div>
+  </section>
+
+  <section data-req="b">
+  <p style="margin:0 0 12px;font-size:13.5px"><a href="../prototype/front/客服系统优化-客服对话窗查看订单.html#chat">打开前台原型 ›</a>　｜　<span class="link-off" title="当前角色不能查看这个页面">查看自助问题优化 PRD</span></p>
+  <div class="mk">
+    <b>重要结论</b>
+    <ul>
+      <li>自助问题优化改的是前台客服对话窗，客服后台没有新增功能和配置（PRD 自助问题优化 0. 本迭代范围）。</li>
+      <li>玩家点「我的充值没到账，怎么办？」后，客服后台会话里只显示这个问题，没有自动回复，也没有备注（PRD 自助问题优化 3.2 规则 N20）。</li>
+    </ul>
+  </div>
+  <div class="mbody">
+    <nav class="mtoc" aria-label="手册目录">
+      <a href="#mb1">01 会话里看到什么</a>
+      <a href="#mb9">常见问题</a>
+    </nav>
+    <div>
+      <section class="mcard" id="mb1">
+        <h2><span class="no2">01</span>会话里看到什么</h2>
+        <p>玩家端：对话里显示问题和最近交易卡片，卡片上有「查看订单」按钮，玩家可以打开订单页查看充值、提现记录，点一行复制订单号。<br>客服后台：会话里只有玩家点的这个问题。玩家已经看过自己的最近交易，可以直接请玩家把订单号发过来，再按现有流程核查。</p>
+        <p>玩家在订单页点「人工客服」，会回到原来的对话转人工，客服后台不会新增一条会话。</p>
+      </section>
+      <section class="mcard" id="mb9">
+        <h2>常见问题</h2>
+        <dl class="faq">
+          <dt>会话里为什么只有问题，没有回复？</dt>
+          <dd>原来的自动回复已改为玩家端的最近交易卡片，后台不再显示自动回复。</dd>
+          <dt>玩家说点问题提示「操作太频繁」？</dt>
+          <dd>这个问题 1 分钟内只能点一次，请玩家 1 分钟后再试，或直接点已收到卡片上的「查看订单」。</dd>
+        </dl>
+      </section>
+    </div>
+  </div>
+  </section>
+</div>
+<script>window.NAV_ROOT = "../";</script>
+<script src="../assets/nav-data.js"></script>
+<script src="../assets/nav.js"></script>
+<script src="../assets/req-tabs.js"></script>
+</body>
+</html>
