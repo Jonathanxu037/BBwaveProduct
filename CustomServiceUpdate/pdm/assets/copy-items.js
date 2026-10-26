@@ -11,6 +11,7 @@ window.COPY_ITEMS = [
   { id: "T03", lang: "前台英文", use: "提示", page: "客服对话窗查看订单", place: "最近交易卡片取数失败", zh: "暂时无法获取记录，请刷新", en: "Unable to load records. Please refresh.（示意）", note: "新增文案，研发依据平台现行方案定稿；运营有意见可在此提出" },
   { id: "T04", lang: "前台英文", use: "按钮", page: "客服对话窗查看订单", place: "取数失败时的刷新按钮", zh: "刷新", en: "Refresh（示意）", note: "新增文案，研发依据平台现行方案定稿；运营有意见可在此提出" },
   { id: "T05", lang: "前台英文", use: "提示", page: "客服对话窗查看订单", place: "1 分钟内重复点「充值没到账」", zh: "操作太频繁，请 1 分钟后再试", en: "Too many requests. Please try again in 1 minute.（示意）", note: "新增文案，研发依据平台现行方案定稿；运营有意见可在此提出" },
+  { id: "T09", lang: "前台英文", use: "提示", page: "客服对话窗查看订单", place: "订单页记录全部加载完", zh: "没有更多了", en: "No more records（示意）", note: "新增文案，研发依据平台现行方案定稿；运营有意见可在此提出" },
   { id: "T06", lang: "后台英文", use: "标签", page: "客服后台会话列表", place: "身份标签：有账号无等级", zh: "会员", en: "Member（示意）", note: "新增文案，研发依据平台现行方案定稿；运营有意见可在此提出" },
   { id: "T07", lang: "后台英文", use: "标签", page: "客服后台会话列表", place: "身份标签：识别不出账号", zh: "游客", en: "Guest（示意）", note: "新增文案，研发依据平台现行方案定稿；运营有意见可在此提出" },
   { id: "T08", lang: "后台英文", use: "菜单", page: "客服后台会话列表", place: "排序按钮新增选项", zh: "进线时间（先来在前）", en: "Handoff time (oldest first)（示意）", note: "新增文案，研发依据平台现行方案定稿；运营有意见可在此提出" }

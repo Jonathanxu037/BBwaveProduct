@@ -39,7 +39,7 @@
     <b>要做什么</b>
     <ul><li>All Conversations 页面三个页签的每条会话，用户名后加标签；用户名过长时省略用户名，标签完整显示</li><li>同步失败沿用上次成功的等级</li></ul>
     <b>公式</b>
-    <div class="formula">标签 = 有 VIP 等级 ?「VIP n」（金色）: 有会员等级 ?「LV n」（蓝紫色，含 LV 0）: 能识别账号 ?「会员」（绿色）:「游客」（灰色图标）</div>
+    <div class="formula">标签 = VIP 用户 ?「VIP + 等级号」（金色）: 普通用户 ?「LV + 等级号」（蓝紫色，含 LV 0）: 能识别账号 ?「会员」（绿色）:「游客」（灰色图标）</div>
     <b>涉及端</b>
     <div class="ends"><span>客服后台</span></div>
   </div>
@@ -50,7 +50,7 @@
     <b>要做什么</b>
     <ul><li>Mine、Unassigned、All 三个页签都按身份和等级排序，排序在服务端完成</li><li>新会话按等级插入已加载列表的对应位置；比已加载的都低时在向下加载时出现</li><li>不做低等级超时置顶</li></ul>
     <b>公式</b>
-    <div class="formula">排序键 = VIP（等级降序）› 会员等级（等级降序）› 会员 › 游客 › 同级按排序按钮所选 › 会话 ID 兜底</div>
+    <div class="formula">排序键 = VIP（等级号降序）› 会员等级（等级号降序）› 会员 › 游客 › 同级按排序按钮所选 › 会话 ID 兜底</div>
     <b>涉及端</b>
     <div class="ends"><span>客服后台</span></div>
   </div>

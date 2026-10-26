@@ -74,9 +74,10 @@
     <div class="view cs" id="vOrders" hidden>
       <div class="cs-top">💬 联系我们<button class="x glow" type="button" data-act="backChat" aria-label="关闭，回到对话窗">×</button></div>
       <div class="od-hd"><button type="button" class="glow" data-act="backChat" aria-label="返回对话窗">‹</button>订单</div>
-      <div class="od-tabs"><span class="on" data-tab="dep">充值 (0)</span><span data-tab="wd">提现 (0)</span></div>
-      <div class="od-tip">最近 0 条记录 · 点一行可复制订单号</div>
-      <div class="od-em">暂无记录</div>
+      <div class="od-tabs"><span class="on" data-tab="dep" id="odDep">充值 (0)</span><span data-tab="wd">提现 (0)</span></div>
+      <div class="od-tip" id="odTip">最近 0 条记录 · 点一行可复制订单号</div>
+      <div class="od-em" id="odEm">暂无记录</div>
+      <div class="od-row" id="odRow" hidden style="margin:12px 14px;padding:10px 12px;border:1px solid #F3F4F6;border-radius:10px;font-size:12.5px;line-height:1.7;cursor:pointer" data-act="copy"><span>充值 ₱500.00 · 处理中</span><br><span style="color:#9CA3AF">2026-10-22 14:05 · 订单号 D2026102214051234</span></div>
       <p class="ui-reqnote" style="margin:16px 14px">充值、提现记录列表按页加载，滑到底部加载下一页，每页条数沿用平台现有规则。</p>
       <div class="live glow" data-act="agent" role="button" tabindex="0" style="cursor:pointer">🎧 人工客服</div>
     </div>
@@ -147,7 +148,17 @@
     }
     card();
   }
+  /* 订单页按场景显示：从「有记录」进来时显示卡片里的同一笔示例记录，否则为空 */
+  var odTab = "dep";
+  function renderOrders() {
+    var has = state.rec && odTab === "dep";
+    document.getElementById("odDep").textContent = state.rec ? "充值 (1)" : "充值 (0)";
+    document.getElementById("odTip").textContent = has ? "最近 1 条记录 · 点一行可复制订单号" : "最近 0 条记录 · 点一行可复制订单号";
+    document.getElementById("odEm").hidden = has;
+    document.getElementById("odRow").hidden = !has;
+  }
   function showView(v) {
+    if (v === "orders") { odTab = "dep"; document.querySelectorAll(".od-tabs span").forEach(function (x) { x.classList.toggle("on", x.dataset.tab === "dep"); }); renderOrders(); }
     document.getElementById("vChat").hidden = v === "orders";
     document.getElementById("vOrders").hidden = v !== "orders";
   }
@@ -183,12 +194,13 @@
     else if (act === "orders") { showView("orders"); history.replaceState(null, "", "#orders"); }
     else if (act === "backChat") { showView("chat"); history.replaceState(null, "", "#" + (state.login ? (state.rec ? "data" : state.fail ? "fail" : "nodata") : "guest")); }
     else if (act === "closeAll") toast("关闭整个客服窗口（现有方式，不变）");
+    else if (act === "copy") toast("已复制订单号");
     else if (act === "login") {
       /* 模拟：跳转平台现有登录页，登录成功后回到对话窗，保留对话并自动显示卡片 */
       a.disabled = true; state.login = true; lastAsk = 0; card(); toast("登录成功，已回到客服对话窗");   /* 登录成功后重新计时，自动显示的卡片不算点击 */
     }
   });
-  document.querySelectorAll(".od-tabs span").forEach(function (t) { t.onclick = function () { document.querySelectorAll(".od-tabs span").forEach(function (x) { x.classList.toggle("on", x === t); }); }; });
+  document.querySelectorAll(".od-tabs span").forEach(function (t) { t.onclick = function () { document.querySelectorAll(".od-tabs span").forEach(function (x) { x.classList.toggle("on", x === t); }); odTab = t.dataset.tab; renderOrders(); }; });
   show(location.hash.slice(1) || "chat");
 })();
 </script>

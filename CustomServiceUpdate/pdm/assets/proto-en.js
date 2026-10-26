@@ -29,6 +29,9 @@ window.PROTO_EN = {
   "提现 (0)": "Withdrawals (0)",
   "最近 0 条记录 · 点一行可复制订单号": "Latest 0 records · tap a row to copy its order number",
   "暂无记录": "No records yet",
+  "充值 (1)": "Deposits (1)",
+  "最近 1 条记录 · 点一行可复制订单号": "Latest 1 record · tap a row to copy its order number",
+  "没有更多了": "No more records",
   "🎧 人工客服": "🎧 Live Support",
   /* 自助问题优化新增文案（研发依据平台现行方案定稿，PRD 9.1） */
   "请先登录，再查看订单。": "Please log in to view your orders.",
@@ -44,6 +47,7 @@ window.PROTO_EN = {
   "（现有自动回复，本需求不改）": "(Existing auto-reply, unchanged)",
   "正在为你转接人工客服…（回到原对话转人工，不新开会话）": "Connecting you to a live agent… (in the same chat, no new conversation)",
   "已重新获取记录": "Records reloaded",
+  "已复制订单号": "Order number copied",
   "登录成功，已回到客服对话窗": "Logged in. Back to the chat.",
   "关闭整个客服窗口（现有方式，不变）": "Close the whole chat window (existing behavior, unchanged)",
   "跳转到平台现有登录页": "Go to the existing login page"
