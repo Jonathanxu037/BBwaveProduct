@@ -78,7 +78,8 @@
 
 <h2 id="c0">0. 本迭代范围</h2>
 <p>本章写本迭代做什么、不做什么；与其他章节冲突时以本章为准。</p>
-<div class="tbl"><table>
+<div class="tbl"><table class="fixw">
+<colgroup><col style="width:18%"><col style="width:72%"><col style="width:10%"></colgroup>
 <tr><th>类别</th><th>本迭代包含</th><th>顺延至</th></tr>
 <tr data-fp="F01 F02 F03"><td><span class="vmark" data-v="v1.1">H5、iOS、Flutter 游戏页<button class="vtag" data-v="v1.1">v1.1</button></span></td><td class="w">浮标（拖动、吸边、闲置贴边）<span class="vmark" data-v="v1.2">、进入游戏 loading（加载）页的小猫开车动画<button class="vtag" data-v="v1.2">v1.2</button></span>、快捷侧边栏（Home、Deposit、CS、Mini Banner、推荐游戏）、每款游戏首次退出时自动展开侧边栏</td><td>—</td></tr>
 <tr data-fp="F04 F06"><td><span class="vmark" data-v="v1.1">H5、iOS、Flutter 游戏页<button class="vtag" data-v="v1.1">v1.1</button></span></td><td class="w">点推荐游戏直接切换游戏；离开当前游戏前先完成结算与余额同步</td><td>—</td></tr>
@@ -141,7 +142,9 @@
 </div>
 
 <h3 id="c2-5">2.5 系统时序（后端视角）</h3>
-<div class="tbl"><table>
+<style>.tbl table.fixw{table-layout:fixed;width:100%}.tbl table.fixw th,.tbl table.fixw td{white-space:normal !important;overflow-wrap:anywhere;word-break:normal}.tbl table.fixw td *{white-space:normal}.tbl table.fixw .vtag{white-space:nowrap}.tbl table.fixw .fp{max-width:100%;white-space:normal;overflow-wrap:anywhere}</style>
+<div class="tbl"><table class="fixw">
+<colgroup><col style="width:24%"><col style="width:14%"><col style="width:62%"></colgroup>
 <tr><th>触发</th><th>执行方</th><th>动作</th></tr>
 <tr data-fp="F04-01"><td><span class="vmark" data-v="v1.2">展开侧边栏<button class="vtag" data-v="v1.2">v1.2</button></span></td><td>前端 → 后端</td><td class="w">按本次进入游戏时读取的排序和展示数量，再按当前的游戏状态和玩家准入状态过滤后返回推荐列表（N9、N17）<span class="vmark" data-v="v1.2">；后台总开关已关闭时返回「功能已关闭」，前端收起侧边栏、隐藏浮标<button class="vtag" data-v="v1.2">v1.2</button></span></td></tr>
 <tr data-fp="F01-01"><td>进入游戏</td><td>前端 → 后端</td><td class="w">读取侧边栏配置和推荐游戏列表；配置读取失败时不显示浮标</td></tr>
@@ -155,7 +158,8 @@
 
 <h2 id="c3">3. 业务规则</h2>
 <h3 id="c3-1">3.1 现状（不改动，仅作依据）</h3>
-<div class="tbl"><table>
+<div class="tbl"><table class="fixw">
+<colgroup><col style="width:22%"><col style="width:53%"><col style="width:25%"></colgroup>
 <tr><th>规则</th><th>说明</th><th>依据</th></tr>
 <tr><td>现有游戏内悬浮快捷按钮</td><td class="w">入口为 G 图标（卡通浮标），默认折叠贴边、可拖拽；展开后是 Home、Deposit、Reload 三项；安卓在右上角，iOS 在左上角，iOS 的 Home 放在最左</td><td>-2145、-2232、-2295、5006；平台知识库「游戏内快捷键」</td></tr>
 <tr><td>现有 Home 去向</td><td class="w">Home「从哪来回哪去」；从游戏返回时回到进入前的位置；浏览器返回需调用离开游戏接口</td><td>2657、4462；平台知识库「游戏内快捷键」</td></tr>
@@ -167,7 +171,8 @@
 </table></div>
 
 <h3 id="c3-2">3.2 本需求规则</h3>
-<div class="tbl"><table>
+<div class="tbl"><table class="fixw">
+<colgroup><col style="width:9%"><col style="width:63%"><col style="width:14%"><col style="width:14%"></colgroup>
 <tr><th>编号</th><th>规则</th><th>起因</th><th>功能点</th></tr>
 <tr id="n1" data-brief="后台开启后，平台 loading 页结束、进入游戏页时显示小猫浮标；loading 期间和试玩模式不显示；动图内容由设计确定。" data-fp="F01-01"><td>N1</td><td class="w">后台「启用游戏快捷侧边栏」开启时，<span class="vmark" data-v="v1.2">平台 loading 页结束、进入游戏页后显示浮标：平台 loading 页期间播放 N19 的小猫开车动画，不显示浮标；厂商游戏自己的加载画面期间照常显示、可以展开侧边栏，此时点推荐游戏或 Home 同样按 N13 先结算再离开；浮标为小猫形象，完整显示、拖动、贴边三种状态各用一套动图（见 N2、N3；789Bingo、789games 两个站点共用）；动图内容和动效由设计统一确定（产品 2026-10-26 确认）<button class="vtag" data-v="v1.2">v1.2</button></span>，<span class="vmark" data-v="v1.1">初始位置在屏幕右侧上方（与屏幕顶部保留安全距离，不贴顶：避开状态栏、刘海和系统安全区，具体距离以设计稿为准；三端一致，iOS 不沿用现有 G 图标的左上角）<button class="vtag" data-v="v1.1">v1.1</button></span>；关闭时不显示浮标和侧边栏，退出自动展开同时失效。读取配置失败时不显示浮标，游戏正常运行，退出按平台现有流程执行。<span class="vmark" data-v="v1.2">试玩模式（游客试玩）下不显示浮标和侧边栏，也不触发退出自动展开。<button class="vtag" data-v="v1.2">v1.2</button></span></td><td class="w">给玩家一个游戏内常驻入口；运营可整体关闭</td><td><span class="fp">F01-01</span> 浮标显示与开关</td></tr>
 <tr id="n2" data-brief="浮标可在全屏拖动；按下后移动 5 像素及以上算拖动、不展开侧边栏，松手后吸附到较近一侧。" data-fp="F01-02"><td>N2</td><td class="w">浮标可在全屏范围内拖动；按下后移动距离 ≥ 5 像素判定为拖动，不触发展开；<span class="vmark" data-v="v1.2">拖动期间浮标换成拖动状态的动图，松手后恢复<button class="vtag" data-v="v1.2">v1.2</button></span>，&lt; 5 像素按点击处理。松手后按浮标中心离左、右屏幕边哪侧更近，自动贴靠到该侧，高度不变；上下保留安全边距（数值以设计稿为准），不遮挡顶部状态栏和底部操作区。<span class="vmark" data-v="v1.1">浮标位置记忆：同一浏览器（APP 为同一设备）内记住上次吸附的一侧和高度，换游戏、刷新页面后沿用；第一次进入时在屏幕右侧上方（不贴顶，见 N1）。<button class="vtag" data-v="v1.1">v1.1</button></span><span class="vmark" data-v="v1.2">游戏中旋转屏幕后，按新屏幕高度把浮标限制在上下安全边距以内（记住的高度超出时取最近的可用位置），吸附的一侧不变。<button class="vtag" data-v="v1.2">v1.2</button></span></td><td class="w">浮标不能长期挡住游戏按钮</td><td><span class="fp">F01-02</span> 拖动与自动吸边</td></tr>
@@ -193,7 +198,8 @@
 
 <h3 id="c3-3">3.3 与知识库的冲突与取舍</h3>
 <p>已比对 <code>789平台现状知识库.md</code>、<code>jira单共享知识库-产品侧.md</code>、<code>789Bingo平台知识库.md</code>、<code>789Bingo管理后台知识库.md</code>、<code>Nustar_789Bingo_分析与竞品报告.md</code>。</p>
-<div class="tbl"><table>
+<div class="tbl"><table class="fixw">
+<colgroup><col style="width:14%"><col style="width:28%"><col style="width:28%"><col style="width:30%"></colgroup>
 <tr><th>冲突点</th><th>说法 A（出处）</th><th>说法 B（出处）</th><th>以哪个为准</th></tr>
 <tr data-fp="F01-01"><td class="w">游戏内快捷入口重复</td><td class="w"><span class="vmark" data-v="v1.2">本需求新增小猫形象浮标和侧边栏，含 Home、Deposit、CS（本文 N1、N4）<button class="vtag" data-v="v1.2">v1.2</button></span></td><td class="w">线上已有 G 图标悬浮快捷按钮，展开为 Home、Deposit、Reload（-2145、-2295；平台知识库「游戏内快捷键」）</td><td class="w"><span class="vmark" data-v="v1.1">以本需求为准（产品 2026-10-20 确认）：本需求是对 G 图标悬浮快捷按钮的优化升级，上线时三端同步把 G 图标换成本需求的浮标和侧边栏，不是另加一个入口<button class="vtag" data-v="v1.1">v1.1</button></span></td></tr>
 <tr data-fp="F02-03"><td class="w">Home 的去向</td><td class="w">跳转平台首页（本文 N6）</td><td class="w">现有 Home「从哪来回哪去」，回到进入游戏前的位置（2657；平台知识库「游戏内快捷键」）</td><td class="w"><span class="vmark" data-v="v1.1">以本需求为准（产品 2026-10-20 确认）：Home 跳转平台首页<button class="vtag" data-v="v1.1">v1.1</button></span></td></tr>
@@ -215,7 +221,8 @@
 </table></div>
 
 <h3 id="c3-4">3.4 依赖的现有后台配置</h3>
-<div class="tbl"><table>
+<div class="tbl"><table class="fixw">
+<colgroup><col style="width:20%"><col style="width:30%"><col style="width:28%"><col style="width:22%"></colgroup>
 <tr><th>配置项</th><th>菜单位置</th><th>测试环境值</th><th>关联功能点</th></tr>
 <tr><td>充值快捷选择金额</td><td class="w">系统管理 › 系统参数 › 充值提款</td><td>20,50,100,500,1000,2000,5000,10000,20000,499</td><td><span class="fp">F07-02</span> 充值内容与提交</td></tr>
 <tr><td>支付方式及限额</td><td class="w">充值配置（在线支付配置、用户支付层级）<span class="vmark" data-v="v1.2">；支付渠道动态配置（备用渠道）；排序以各端 Wallet 充值页实际使用的排序为准（PWA 是否单独排序由技术确认）<button class="vtag" data-v="v1.2">v1.2</button></span></td><td>资料未覆盖，以测试环境为准</td><td><span class="fp">F07-02</span> 充值内容与提交</td></tr>
@@ -250,7 +257,8 @@
 <tr data-fp="F03-01"><td>首次退出</td><td class="w"><span class="fp">F03-01</span> 按 N7；退出确认弹窗沿用线上现状（原型里只作示意）。</td></tr>
 </table></div>
 <h3 id="c4-1">4.1 列表分页</h3>
-<div class="tbl"><table>
+<div class="tbl"><table class="fixw">
+<colgroup><col style="width:14%"><col style="width:14%"><col style="width:12%"><col style="width:10%"><col style="width:22%"><col style="width:18%"><col style="width:10%"></colgroup>
 <tr><th>列表（所在页面）</th><th>分页方式</th><th>每页条数（默认 / 可选）</th><th>默认排序</th><th>筛选、搜索、操作后停在哪一页</th><th>空列表 / 加载失败</th><th>导出</th></tr>
 <tr data-fp="F04-01"><td class="w"><span class="vmark" data-v="v1.1">推荐游戏（侧边栏推荐区）<button class="vtag" data-v="v1.1">v1.1</button></span></td><td class="w">滚动到底「加载更多」：首次显示 10 个，滚动到推荐区底部自动加载下一批，也可点「加载更多」；加载中显示「加载中…」；全部加载完显示「没有更多了」（总数不超过 10 个时不显示这行）</td><td class="w">每批 10 个，固定；总数最多为后台「展示数量」（1–30）</td><td class="w">后台排序（位置序号唯一，不会重复）；过滤规则见 N9</td><td class="w">每次展开侧边栏从第一批重新显示；切换游戏后重新加载；加载过程中后台改了配置不影响本次，下次进入游戏生效<span class="vmark" data-v="v1.2">（排序和展示数量以本次进入游戏时读取的为准，展开时只按当前游戏状态和玩家准入重新过滤；总开关关闭例外，见 N17）<button class="vtag" data-v="v1.2">v1.2</button></span></td><td class="w">为空：「暂无可用游戏」；首批加载失败：「游戏加载失败」+「重试」；加载更多失败：「加载失败，点击重试」，已显示的保留</td><td>不涉及</td></tr>
 <tr><td class="w">充值弹窗里的支付方式、快捷金额</td><td class="w">不分页：沿用现有充值页的展示方式，条数由现有充值配置决定，本需求不改</td><td>—</td><td>沿用现有</td><td>—</td><td>沿用现有</td><td>不涉及</td></tr>
@@ -269,7 +277,8 @@
 </table></div>
 <h3 id="c5-1">5.1 运行环境与支付页打开方式</h3>
 <p><span class="vmark" data-v="v1.1">玩家所在的运行环境决定二维码支付页在哪里打开、付完款怎么回到原游戏。各环境通用的规则（回跳地址不带登录 token 和玩家身份信息、支付页和中间页不依赖登录态、原游戏页面始终保持）见 N16。<button class="vtag" data-v="v1.1">v1.1</button></span></p>
-<div class="tbl"><table>
+<div class="tbl"><table class="fixw">
+<colgroup><col style="width:16%"><col style="width:20%"><col style="width:36%"><col style="width:28%"></colgroup>
 <tr><th>运行环境</th><th>支付页在哪里打开</th><th>付完款后</th><th>中间页关闭失败时</th></tr>
 <tr data-fp="F07-03"><td class="w"><span class="vmark" data-v="v1.1">H5：手机系统浏览器（Safari、Chrome 等）<button class="vtag" data-v="v1.1">v1.1</button></span></td><td class="w">同一浏览器新开标签页</td><td class="w">回跳到「支付完成」中间页，自动关闭新标签页，回到原游戏标签页</td><td class="w">显示<span class="vmark" data-v="v1.2">「请返回游戏页面，到账后余额会自动更新」<button class="vtag" data-v="v1.2">v1.2</button></span>和「关闭此页面」按钮，不进大厅</td></tr>
 <tr data-fp="F07-03"><td class="w"><span class="vmark" data-v="v1.1">H5：TG、Facebook 等 App 内置浏览器；Maya、GLife 等小程序（小程序内的实际行为由技术按当前平台规则处理）；已安装的 PWA（独立窗口）<button class="vtag" data-v="v1.1">v1.1</button></span></td><td class="w">由系统打开手机系统浏览器（无平台登录态）</td><td class="w">回跳到中间页；中间页不是由游戏页打开的，自动关闭通常不生效。玩家切回原 App 或 PWA，原游戏保持；原游戏页被关闭（-2044）等情况由技术按当前平台规则处理</td><td class="w">只显示文字<span class="vmark" data-v="v1.2">「请返回游戏页面，到账后余额会自动更新」<button class="vtag" data-v="v1.2">v1.2</button></span>，不显示「关闭此页面」按钮（在这些环境里同样无效），也不提供进入平台的入口（避免在系统浏览器里打开第二个未登录的平台页面）</td></tr>
@@ -312,7 +321,8 @@
 <tr data-fp="F08-04"><td>位次提示规则</td><td class="w"><span class="fp">F08-04</span> 前台严格按后台排序显示，自动跳过不可进入的游戏；位次提示按同一规则计算<span class="vmark" data-v="v1.2">（只按游戏状态计算；前台还会排除玩家正在玩的游戏，并按每个玩家的准入条件过滤，实际看到的位置可能前移）<button class="vtag" data-v="v1.2">v1.2</button></span>：从上往下数状态为「正常」的游戏，前 N 个依次为「前台第 1–N 位」，之后的正常游戏为「超出展示数量」，维护中和已下架<span class="vmark" data-v="v1.2">、不支持切换<button class="vtag" data-v="v1.2">v1.2</button></span>为「—」。</td></tr>
 </table></div>
 <h3 id="c6-5">6.5 列表分页</h3>
-<div class="tbl"><table>
+<div class="tbl"><table class="fixw">
+<colgroup><col style="width:14%"><col style="width:14%"><col style="width:12%"><col style="width:10%"><col style="width:22%"><col style="width:18%"><col style="width:10%"></colgroup>
 <tr><th>列表（所在页面）</th><th>分页方式</th><th>每页条数（默认 / 可选）</th><th>默认排序</th><th>筛选、搜索、操作后停在哪一页</th><th>空列表 / 加载失败</th><th>导出</th></tr>
 <tr data-fp="F08-04"><td class="w"><span class="vmark" data-v="v1.1">推荐游戏列表（游戏快捷侧边栏管理页）<button class="vtag" data-v="v1.1">v1.1</button></span></td><td class="w">页码分页：共几条、每页条数、页码、上一页 / 下一页、前往某页</td><td class="w">默认 20；可选 10 / 20 / 50 / 100（资料未覆盖平台现有后台的默认条数，按规范建议值）</td><td class="w">按排序位置升序（位置唯一）</td><td class="w">改每页条数回到第 1 页；上移、下移、删除后停在当前页；删除后当前页为空时回到上一页；添加游戏后追加到列表末尾，停在当前页并提示「已追加到列表末尾（第 N 页）」；位次提示按全部列表计算，不受分页影响；前往页码输入 0、负数或大于总页数时取首页或末页；上移、下移可以跨页（本页第一行上移到上一页末尾）</td><td class="w">为空：「暂无数据」，允许保存；加载失败：「加载失败，请刷新重试」</td><td>不提供导出</td></tr>
 <tr data-fp="F08-04"><td class="w"><span class="vmark" data-v="v1.1">添加推荐游戏弹窗的游戏列表<button class="vtag" data-v="v1.1">v1.1</button></span></td><td class="w">页码分页（同上）</td><td class="w">默认 20；可选 10 / 20 / 50</td><td class="w">按游戏名称 A–Z，名称相同按游戏 ID 升序</td><td class="w">搜索后回到第 1 页；勾选状态跨页保留，「已选 N 个」按全部页统计；重新打开弹窗时回到第 1 页、清空勾选</td><td class="w">搜索没有结果：「没有匹配的游戏」；加载失败：「加载失败，请重试」并提供重试</td><td>不涉及</td></tr>
@@ -353,7 +363,8 @@
 <tr><td><span class="vmark" data-v="v1.2">siteId<button class="vtag" data-v="v1.2">v1.2</button></span></td><td class="w">站点标识</td><td class="w">789Bingo / 789games，报表按站点分开统计</td></tr>
 </table></div>
 <h3 id="c7-3">7.3 事件清单</h3>
-<div class="tbl"><table>
+<div class="tbl"><table class="fixw">
+<colgroup><col style="width:22%"><col style="width:23%"><col style="width:33%"><col style="width:10%"><col style="width:12%"></colgroup>
 <tr><th>事件名</th><th>触发时机</th><th>事件参数</th><th>端</th><th>功能点</th></tr>
 <tr data-fp="F09-01"><td>sidebar_float_impression</td><td class="w">进入游戏且浮标显示</td><td class="w">—</td><td>H5、iOS、Flutter</td><td><span class="fp">F09-01</span></td></tr>
 <tr data-fp="F09-01"><td>sidebar_open</td><td class="w">侧边栏展开</td><td class="w">mode = manual / auto</td><td>H5、iOS、Flutter</td><td><span class="fp">F09-01</span></td></tr>
@@ -404,7 +415,8 @@
 </ul>
 
 <h2 id="c8">8. 接口与异常</h2>
-<div class="tbl"><table>
+<div class="tbl"><table class="fixw">
+<colgroup><col style="width:28%"><col style="width:47%"><col style="width:25%"></colgroup>
 <tr><th>场景</th><th>处理方式</th><th>用户提示</th></tr>
 <tr data-fp="F01-01"><td class="w">侧边栏配置接口失败</td><td class="w">不显示浮标，游戏正常运行，退出按现有流程</td><td>无</td></tr>
 <tr data-fp="F02-02"><td class="w"><span class="vmark" data-v="v1.2">合规类拦截（强制 KYC、自我限制、PAGCOR 提示）在游戏页弹出<button class="vtag" data-v="v1.2">v1.2</button></span></td><td class="w"><span class="vmark" data-v="v1.2">合规类拦截显示在最上层；期间浮标和侧边栏隐藏、不能点击，充值弹窗、客服对话窗也被盖住；关闭后恢复原来的状态（N20）<button class="vtag" data-v="v1.2">v1.2</button></span></td><td>沿用现有合规弹窗</td></tr>
@@ -547,7 +559,8 @@
 <h2 id="c12">12. 待确认事项</h2>
 <p><span class="vmark" data-v="v1.2">目前没有待确认事项：原来的待确认事项都已确认，结论已写进正文对应的规则（2026-10-22）。<button class="vtag" data-v="v1.2">v1.2</button></span></p>
 <h3 id="c12-1">12.1 文案确认清单</h3>
-<div class="tbl"><table>
+<div class="tbl"><table class="fixw">
+<colgroup><col style="width:32%"><col style="width:40%"><col style="width:16%"><col style="width:12%"></colgroup>
 <tr><th>文案位置</th><th>示意文案</th><th>负责人</th><th>状态</th></tr>
 <tr><td>结算或余额同步失败提示</td><td>余额同步失败，请稍后重试</td><td>产品 Joshua</td><td>已确认</td></tr>
 <tr><td><span class="vmark" data-v="v1.2">客服对话窗加载失败<button class="vtag" data-v="v1.2">v1.2</button></span></td><td>客服暂时无法连接，请稍后再试 / 重试</td><td>产品 Joshua</td><td>已确认</td></tr>
@@ -607,7 +620,8 @@
 </table></div>
 
 <h2 id="appB">附录 B 原型对照表</h2>
-<div class="tbl"><table>
+<div class="tbl"><table class="fixw">
+<colgroup><col style="width:22%"><col style="width:10%"><col style="width:45%"><col style="width:23%"></colgroup>
 <tr><th>原型页面</th><th>功能点</th><th>可演示的交互</th><th>是否模拟</th></tr>
 <tr data-fp="F01-01 F01-02 F01-03 F01-04"><td><a href="../prototype/front/游戏快捷侧边栏-游戏页快捷侧边栏.html">游戏页快捷侧边栏</a></td><td><span class="fp">F01</span> 浮标</td><td class="w">拖动吸边、3 秒闲置贴边、贴边状态点击恢复后展开；后台总开关关闭；<span class="vmark" data-v="v1.2">进入游戏 loading 开车动画（动画为示意，加载快 / 慢可切换；素材加载失败、减少动态效果时不播放）；弹窗打开时点贴边浮标关闭弹窗并展开侧边栏<button class="vtag" data-v="v1.2">v1.2</button></span></td><td>真实交互；开关用模拟操作面板</td></tr>
 <tr data-fp="F02-01 F02-02 F02-03"><td>游戏页快捷侧边栏</td><td><span class="fp">F02</span> 侧边栏</td><td class="w">左右侧展开、收起按钮、点外部收起、Home 结算提示、CS 客服对话窗<span class="vmark" data-v="v1.2">（含客服加载失败后重试、后台「在线客服悬浮按钮开关」关闭时不显示 CS）<button class="vtag" data-v="v1.2">v1.2</button></span></td><td>真实交互；跳首页为模拟</td></tr>
