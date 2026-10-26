@@ -964,3 +964,8 @@ body.pub-admin .adm-stage{grid-template-columns:minmax(0,1fr)}
 .ref-pop p{margin:0 0 4px}
 .ref-pop a{font-size:12px}
 @media print{.ref-btn{border:0;background:none;padding:0;color:inherit;font-weight:inherit}.ref-pop{display:none}}
+/* PRD 表格自动列宽（生成内容规范第五章第 2 节「表格排版」）：带 data-fit 的表铺满正文宽度、单元格允许换行，列宽由 PRD 页面脚本计算 */
+.paper table[data-fit]{table-layout:fixed;width:100%;min-width:0}
+.paper table[data-fit] th,.paper table[data-fit] td{white-space:normal!important;word-break:break-word;overflow-wrap:anywhere;font-size:12px;line-height:1.5;padding:5px 6px;vertical-align:top}
+.paper table[data-fit] th{text-align:left}
+.paper .cell-sub{color:#8a8f98;font-size:11px}
