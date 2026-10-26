@@ -1,0 +1,402 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>用户提款风控规则升级-后台每日提款限制设置</title>
+<link rel="stylesheet" href="../../assets/style.css">
+<style>
+.bo-tabs span{cursor:pointer}.bo-tabs span:hover{color:#409EFF}
+.wr-card{border:1px solid #EBEEF5;border-radius:4px;padding:14px 16px;margin-bottom:16px}
+.wr-card h5{margin:0 0 10px;font-size:14px;color:#333}
+.wr-card .frow{grid-template-columns:230px minmax(0,1fr)}
+.wr-sw{position:relative;display:inline-block;width:40px;height:20px;border-radius:10px;background:#DCDFE6;cursor:pointer;border:0;padding:0;flex:none}
+.wr-sw::after{content:"";position:absolute;left:2px;top:2px;width:16px;height:16px;border-radius:50%;background:#fff;transition:left .15s}
+.wr-sw[aria-checked="true"]{background:#409EFF}.wr-sw[aria-checked="true"]::after{left:22px}
+.wr-sw:disabled{cursor:not-allowed;opacity:.5}
+.wr-swl{font-size:12px;color:#909399;margin-left:6px}
+.wr-num{width:76px;height:28px;text-align:center}
+.wr-num.bad{border-color:#F56C6C}
+.wr-rt td{white-space:normal;line-height:1.9}
+.wr-rt td.c{white-space:nowrap;text-align:center}
+.wr-en{font-family:Consolas,monospace;font-size:12px;color:#606266}
+.wr-p2 td{color:#C0C4CC;background:#FAFAFA}
+.wr-lv{font-size:12px}
+.wr-lv.all{color:#E6A23C}
+/* 「查看需求方案」骑在所属单元格 / 区块的上边框上（右上角），只压住边框和内边距，不遮挡文字和控件，也不占页面空间 */
+.wr-orig{position:absolute;top:0;right:4px;transform:translateY(-50%);z-index:6;margin:0;display:inline-block;border:1px solid rgba(10,186,181,.35);background:rgba(232,248,247,.96);color:#0A9E9A;border-radius:8px;padding:0 5px;font-size:10px;line-height:13px;box-shadow:0 1px 4px rgba(0,0,0,.08);opacity:.85;transition:opacity .15s;cursor:pointer;font-family:var(--font);white-space:nowrap}
+:is(th,td,div,h4,h5,span,section,label,p):has(> .wr-orig){position:relative}
+.wr-orig:hover,.wr-orig:focus-visible{opacity:1}
+/* 弹窗标题里的按钮跟在标题文字后面，避开右上角的 × */
+.bo-dlg h4 > .wr-orig{position:relative;top:auto;right:auto;transform:none;margin-left:8px}
+
+.wr-orig:hover{background:rgba(10,186,181,.85);border-color:transparent;color:#fff}
+.wr-od dt{font-size:12px;color:#909399;margin-top:8px}
+.wr-od dd{margin:2px 0 0;white-space:pre-wrap;line-height:1.7}
+.wr-od dd.q{background:rgba(129,216,208,.12);border-left:3px solid rgba(10,186,181,.6);padding:6px 10px}
+.wr-lvcnt{display:block;font-size:11px;color:#909399}
+.wr-lvlist{border:1px solid #EBEEF5;border-radius:4px;max-height:320px;overflow:auto}
+.wr-lvlist label{display:flex;align-items:center;gap:8px;padding:8px 12px;border-bottom:1px solid #F2F6FC;cursor:pointer}
+.wr-lvlist label:last-child{border-bottom:0}
+.wr-lvlist label.dis{color:#C0C4CC;cursor:not-allowed;background:#FAFAFA}
+.wr-lvlist .v{color:#909399;font-size:12px}
+.wr-lvlist .why{margin-left:auto;font-size:12px}
+.wr-all{display:flex;align-items:center;gap:8px;padding:8px 12px;background:#F5F7FA;border:1px solid #EBEEF5;border-radius:4px;font-weight:700;cursor:pointer}
+.wr-tx{width:100%;min-height:72px;font-family:var(--font);font-size:13px;border:1px solid #DCDFE6;border-radius:3px;padding:6px 10px;color:#333}
+.ui-reqnote.wr-dn{display:inline-block;margin:2px 0;padding:1px 6px;font-size:11.5px}
+.ui-reqnote.wr-dn::before{content:"※ 需求说明，上线不显示：";display:inline;font-weight:700}
+</style>
+</head>
+<body>
+<div class="with-nav">
+<div class="adm-stage">
+  <div class="bo">
+    <div class="bo-top1"><span>当前时间：2026/10/22 13:57:46 -04:00</span><span class="sp">简体中文</span><span>运营账号A ▾</span></div>
+    <div class="bo-top2"><span>在线人数<b class="bo-n r">6</b></span><span>当日注册<b class="bo-n g">0</b></span><span>当日充值成功<b class="bo-n g">0</b></span><span>提款<b class="bo-n g">0</b></span><span>风控审核<b class="bo-n r" id="topCnt">10</b></span></div>
+    <div class="bo-body">
+      <nav class="bo-menu" aria-label="后台菜单">
+        <div class="mt">菜单 ≡</div>
+        <div class="g">用户管理</div><div class="g">财务管理</div>
+        <div class="g open">提现管理</div>
+        <div class="i on">提现出款设置</div><div class="i">提现风控审核</div><div class="i">即时流水稽核查询</div><div class="i">稽核变更记录</div><div class="i">风控预警</div>
+        <div class="g">充值配置</div><div class="g">系统管理</div>
+      </nav>
+      <div class="bo-main">
+        <div class="bo-crumb" id="crumb">位置 › 提现管理 › <b>提现出款设置</b></div>
+        <div class="bo-tabs" role="tablist">
+          <span role="tab" tabindex="0" data-tab="split">大额提现拆单设置</span>
+          <span role="tab" tabindex="0" data-tab="first">首次提款出款设置</span>
+          <span role="tab" tabindex="0" data-tab="daily" class="on" aria-selected="true">每日提款限制设置</span>
+          <span role="tab" tabindex="0" data-tab="white">白名单用户配置</span>
+        </div>
+
+        <section id="vOther" class="bo-content" hidden>
+          <p class="ui-reqnote" id="otherNote">现有页面，本需求不改动。</p>
+        </section>
+
+        <section id="vDaily" class="bo-content">
+          <!-- 每日提款限制设置：原有三项和本需求新增规则合并成一个列表 -->
+          <div class="wr-card">
+            <h5>每日提款限制设置<i class="qm" tabindex="0" data-tip="会员提现时按这里的规则检查，命中任意一条就转入提现风控审核。哪些层级豁免在支付层级配置里设置。">?</i></h5>
+            <table class="wr-rt">
+              <thead><tr><th style="width:62px">开关</th><th style="width:150px">规则</th><th>触发条件</th><th style="width:96px"><span class="ui-nw">适用层级<i class="qm" tabindex="0" data-tip="点「配置层级」勾选这条规则对哪些支付层级的会员生效，点确认后立即生效。支付层级配置里设为豁免的层级不能勾选；单笔大额提现、当日提现次数、当日累计提现金额、资料变更风控、静默账号风控、异常返奖率风控六条除外，豁免层级也可勾选并默认勾选。">?</i></span><button type="button" class="wr-orig" data-orig="lv" aria-label="适用层级：查看需求方案">查看需求方案</button></th></tr></thead>
+              <tbody id="ruleBody"></tbody>
+            </table>
+            <p class="ui-reqnote">前三行是原有配置（单笔金额、每日笔数、每日累计金额），并入列表后含义不变，命中后照常进入人工审核并弹窗；每日笔数和累计金额原来没有开关，本需求加上。新增 7 条规则发布时开关默认关闭，VIP 迁移完成后由运营逐条开启。其余是本需求新增规则，命中后不弹窗，会员端只显示 Under review。当日类规则按 GMT+8 自然日（当天 00:00 到本次申请时间）统计，含本次申请；其他规则的统计区间「自上一笔成功提现以来」：从该会员上一笔提现成功的时间算到本次申请时间，没有成功提现记录时从注册时间算起。充值只算成功充值；有效投注沿用现有有效流水口径（只算已结算）。每条规则通过「配置层级」单独选择适用的支付层级。灰色三条依赖第三方风控对接，对接成功后作为第二期开放。</p>
+          </div>
+
+          <!-- 现有：弹窗提示（原有三项命中时显示） -->
+          <div class="wr-card">
+            <h5>弹窗提示</h5>
+            <div class="frow"><span class="fl">弹窗提示标题：</span><div class="fctl"><input class="bo-inp" style="width:320px" value="Under Manual Review" aria-label="弹窗提示标题"> <span class="ui-reqnote wr-dn">会员端触发风控时的弹窗标题（英文）</span></div></div>
+            <div class="frow"><span class="fl">弹窗提示内容：</span><div class="fctl"><textarea class="wr-tx" style="width:320px" aria-label="弹窗提示内容">Your withdrawal request has been submitted and is under manual review. Funds will be processed once the review is completed.</textarea> <span class="ui-reqnote wr-dn">弹窗正文，不建议写具体限额数值</span></div></div>
+            <p class="ui-reqnote">现有配置，不改：只在单笔大额提现、当日提现次数、当日累计提现金额三条命中时弹出。</p>
+          </div>
+
+          <div style="display:flex;gap:10px;align-items:center">
+            <button class="bo-btn q" type="button" id="save">保存</button>
+            <button class="bo-btn glow" type="button" id="btnLog">配置修改记录</button><button type="button" class="wr-orig" data-orig="log" aria-label="配置修改记录：查看需求方案">查看需求方案</button>
+            <span class="ferr" id="saveErr" style="width:auto" hidden></span>
+          </div>
+          <p class="ui-reqnote">保存后，只对之后提交的提现生效；已提交的提现按提交时的配置判断，审核页显示提交时的数值。</p>
+        </section>
+      </div>
+    </div>
+  </div>
+
+  <!-- 配置层级 -->
+  <div class="bo-mask" id="dlgLv" hidden>
+    <div class="bo-dlg" style="width:min(560px,94vw)" role="dialog" aria-modal="true" aria-labelledby="lvTitle">
+      <h4 id="lvTitle">配置适用层级</h4>
+      <p style="margin:0;font-size:12px;color:#606266">勾选的支付层级会员提现时检查本规则。灰色层级在支付层级配置里设为「豁免」，不能勾选；要勾选请先到 <a href="用户提款风控规则升级-后台支付层级配置.html" style="color:#409EFF">支付层级配置</a> 把该层级改为「执行」。单笔大额提现、当日提现次数、当日累计提现金额、资料变更风控、静默账号风控、异常返奖率风控六条对豁免层级也检查，豁免层级可以勾选。</p>
+      <label class="wr-all"><input type="checkbox" id="lvAll"> 全选 <span class="v" id="lvAllNote" style="font-weight:400;color:#909399"></span></label>
+      <div class="wr-lvlist" id="lvList"></div>
+      <span class="ferr" id="lvErr" hidden>请至少勾选一个层级；不需要这条规则时请关闭开关</span>
+      <div class="row2"><button class="bo-btn" type="button" data-cancel>取消</button><button class="bo-btn q" type="button" id="lvOk">确认</button></div>
+    </div>
+  </div>
+
+  <!-- 查看需求方案 -->
+  <div class="bo-mask" id="dlgOrig" hidden>
+    <div class="bo-dlg" style="width:min(620px,94vw)" role="dialog" aria-modal="true" aria-labelledby="odTitle">
+      <h4 id="odTitle">需求方案</h4>
+      <dl class="wr-od" style="margin:0">
+        <dt>原需求中的位置</dt><dd id="odLoc"></dd>
+        <dt>原需求原文</dt><dd class="q" id="odText"></dd>
+        <dt>为何新增 / 调整，依据是什么</dt><dd id="odDiff"></dd>
+      </dl>
+      <p class="wr-sub" style="margin:0;font-size:12px;color:#909399">原需求：SharePoint「提现风控方案.docx」2026-10-22 版本（作者 Xyan）。原文照录，含原文的繁体字和格式。</p>
+      <div class="row2"><button class="bo-btn" type="button" data-cancel>关闭</button></div>
+    </div>
+  </div>
+
+  <!-- 配置修改记录 -->
+  <div class="bo-mask" id="dlgLog" hidden>
+    <div class="bo-dlg" style="width:min(760px,94vw)" role="dialog" aria-modal="true" aria-labelledby="lgTitle">
+      <h4 id="lgTitle">配置修改记录</h4>
+      <table><thead><tr><th>修改时间</th><th>配置项</th><th>修改前</th><th>修改后</th><th>操作人</th></tr></thead><tbody id="logBody"></tbody></table>
+      <div class="bo-page" role="navigation" aria-label="分页"><span>共 <b id="logTotal">0</b> 条</span><button type="button" disabled aria-label="上一页">‹</button><span><button type="button" aria-current="page">1</button></span><button type="button" disabled aria-label="下一页">›</button></div>
+      <div class="row2"><button class="bo-btn" type="button" data-cancel>关闭</button></div>
+    </div>
+  </div>
+
+  <aside class="notes adm-notes">
+    <h2>后台每日提款限制设置</h2>
+    <p class="sub">提现管理 › 提现出款设置 › 每日提款限制设置。原有的单笔金额、每日笔数、每日累计金额三项和本需求新增的规则合并成一个列表（开关 / 规则 / 触发条件 / 适用层级），每条规则可通过「配置层级」单独勾选适用的支付层级，新增 7 条规则（另 3 条第二期），给每日笔数和累计金额加开关，并加「配置修改记录」；弹窗提示保持现状（带淡色光晕的是本需求新增的控件）。命中后的规则名称和触发原因在【提现风控审核】的「查看命中详情」里显示，本页不显示。</p>
+    <h3>模拟场景</h3>
+    <div class="sim">
+      <button type="button" data-scene="default"><span class="simtag">配置</span>默认配置</button>
+      <button type="button" data-scene="bad"><span class="simtag">配置</span>填错数值，保存被拦</button>
+      <button type="button" data-scene="log"><span class="simtag">配置</span>查看配置修改记录</button>
+    </div>
+    <h3>模拟操作</h3>
+    <div class="sim" id="simPanel"></div>
+    <h3>规则批注</h3>
+    <ol>
+      <li><b>命中后处理</b>：命中任意一条（含现有三项）→ 直接进入【提现风控审核】，顶栏「风控审核」+1，不受风控配置里「未触发时自动通过」影响；和风控配置原有条件同时命中时只生成一条待审核记录，原因合并显示。</li>
+      <li><b>会员端</b>：新规则命中不弹窗，订单只显示现有的 Under review；现有三项保留原弹窗。</li>
+      <li><b>适用层级（配置层级）</b>：每条规则点「配置层级」弹窗，列出当前全部支付层级，勾选这条规则对哪些层级的会员生效。支付层级配置里设为「豁免」的层级置灰、不可勾选，要勾选须先在支付层级配置把该层级改为「执行」。例外（资料变更风控等三条按原始需求第五节「包含VIP層級都需查驗」、确认表 C01；原有三项保持现状对所有层级生效，10-26 确认）：单笔大额提现、当日提现次数、当日累计提现金额、资料变更风控、静默账号风控、异常返奖率风控六条，豁免层级也可以勾选，并标「豁免层级（本规则仍检查）」。弹窗有「全选」：只全选或取消可勾选的层级，部分勾选时显示半选；全选后仍可单独勾选或取消。至少勾选一个层级，否则提示「请至少勾选一个层级；不需要这条规则时请关闭开关」。点「确认」立即生效并写入配置修改记录，不需要再点页面底部的保存；点「取消」或 × 不改动。列表显示「已选 N / 总数 个层级」。</li>
+      <li><b>默认和联动</b>：没配置过的规则默认勾选全部「执行」层级；单笔大额提现、当日提现次数、当日累计提现金额、资料变更风控、静默账号风控、异常返奖率风控六条默认勾选全部层级（含豁免层级）。某层级之后被改为「豁免」时，在其他规则里不再生效、弹窗里置灰，在这六条里仍按勾选生效；改回「执行」后自动加入所有规则的适用层级，运营可再到各规则里取消。新建的层级自动加入所有规则的适用层级（10-26 确认）。层级按提交提现时判断。</li>
+      <li><b>充提差风控</b>：按 GMT+8 自然日（当天 00:00 到本次申请时间）统计。当日提现总额 = 当日已成功 + 审核中 / 处理中 + 本次正在申请的金额（不含已驳回、失败、会员取消），> 当日成功充值 × 倍数即命中；只在当日有成功充值时判断。</li>
+      <li><b>无充值提现风控</b>：从充提差风控里拆出来单独一行、单独开关。当日（GMT+8，当天 00:00 到本次申请时间）没有任何成功充值记录，且本次申请金额 ≥ 门槛金额即命中；门槛可配置，默认 ₱1,000。关闭这一行后，当日无充值的提现不再因此转人工。</li>
+      <li><b>当日低投注风控</b>：按 GMT+8 自然日（当天 00:00 到本次申请时间）统计：当日有效投注 < 当日成功充值 × 倍数即命中。有效投注沿用现有口径（只算已结算的有效流水，按结算时间计入当天）。当日没有成功充值时不判断，由无充值提现风控处理。审核页另附前一日和近 7 日充值、投注供参考，不参与判断。</li>
+      <li><b>拆分提现风控</b>：分钟数为滑动窗口；有效申请 = 提交成功且未被会员取消；大额拆单产生的子订单不算多笔；累计金额阈值取上面的「单笔提款金额指定值」。</li>
+      <li><b>资料变更风控</b>：修改提现账号、收款人或提现方式（含新增绑定、客服后台代改；不含注册后第一次绑定）后的小时数内，每一笔提现都命中。</li>
+      <li><b>静默账号风控</b>：本次登录距上次登录超过天数，且本次登录后到提现申请之间没有成功充值。</li>
+      <li><b>异常返奖率风控</b>：自上一笔成功提现以来，派彩 ÷ 有效投注 > 倍数，全部游戏；有效投注达到门槛金额才判断，为 0 时不判断。</li>
+      <li><b>校验</b>：倍数 0.1–999（最多 1 位小数）；金额、次数、分钟、小时、天数为正整数；开关打开的规则数值必填。不合法时输入框标红、提示原因，整页不保存。</li>
+      <li><b>计算异常</b>：某条规则计算失败或超时，按命中处理，命中详情里的规则名称显示「规则计算异常」，触发原因写明是哪条规则计算失败或超时。</li>
+      <li><b>配置修改记录</b>：每次保存按配置项写一条（时间、配置项、修改前、修改后、操作人），不可改、不可删。</li>
+    </ol>
+    <h3>评审待确认</h3>
+    <ol>
+      <li><b>后台英文用词</b>：后台切换 English 时显示的规则名称和提示（assets/admin-en-dict.js）由产品拟定，待运营确认。</li>
+      <li><b>默认值</b>：倍数 10 / 5、无充值提现风控的门槛 ₱1,000、异常返奖率风控的最低有效投注 ₱1,000 等为初始值，上线前用近 30 天数据回测后再定。</li>
+    </ol>
+    <div class="pager"><a href="用户提款风控规则升级-后台支付层级配置.html">← 上一页：后台支付层级配置</a><a href="用户提款风控规则升级-后台提现风控审核.html">下一页：后台提现风控审核 →</a></div>
+  </aside>
+</div>
+</div>
+<script>window.NAV_ROOT = "../../";</script>
+<script src="../../assets/nav-data.js"></script>
+<script src="../../assets/nav.js"></script>
+<script src="../../assets/proto.js"></script>
+<script src="../../assets/admin-en-dict.js"></script>
+<script src="../../assets/admin-en.js"></script>
+<script>
+(function () {
+  var $ = function (id) { return document.getElementById(id); };
+  /* 弹窗「取消 / 关闭」和右上角 ×（nav.js 联动到取消按钮）：关闭弹窗，不保存；Esc 同样关闭最上层弹窗 */
+  document.addEventListener("click", function (e) { var c = e.target.closest("[data-cancel]"); if (c) { var m = c.closest(".bo-mask"); if (m) m.hidden = true; } });
+  document.addEventListener("keydown", function (e) { if (e.key !== "Escape") return; var open = [].filter.call(document.querySelectorAll(".bo-mask"), function (m) { return !m.hidden; }); if (open.length) open[open.length - 1].hidden = true; });
+  /* 规则：f 为可配置项 [key, 默认值, 类型(m 倍数 / i 正整数)]；cond 用 {key} 拼触发条件和输入框。
+     old = 原有配置（单笔金额、每日笔数、每日累计金额），并入列表后含义不变；newSw = 原来没有开关、本需求新增开关 */
+  var RULES = [
+    { k: "single", n: "单笔大额提现", old: true, all: true, f: [["single", 10000, "i"]],
+      cond: "单笔提款金额 > {single} PHP" },
+    { k: "count", n: "当日提现次数", old: true, newSw: true, all: true, f: [["count", 10, "i"]],
+      cond: "当日提现笔数（含本次申请）> {count} 笔" },
+    { k: "sum", n: "当日累计提现金额", old: true, newSw: true, all: true, f: [["sum", 50000, "i"]],
+      cond: "当日累计提款金额（含本次申请）> {sum} PHP" },
+    { k: "r04", n: "充提差风控", all: false, f: [["r04m", 10, "m"]],
+      cond: "当日有成功充值时，当日提现总额（含本次申请）> 当日成功充值 × {r04m} 倍" },
+    { k: "r04z", n: "无充值提现风控", all: false, f: [["r04x", 1000, "i"]],
+      cond: "当日没有成功充值记录，且本次申请金额 ≥ {r04x} PHP" },
+    { k: "r05", n: "当日低投注风控", all: false, f: [["r05m", 5, "m"]],
+      cond: "当日有效投注 < 当日成功充值 × {r05m} 倍（当日没有成功充值时不判断）" },
+    { k: "r09", n: "拆分提现风控", all: false, f: [["r09t", 30, "i"], ["r09c", 3, "i"]],
+      cond: "{r09t} 分钟内有效提现申请 ≥ {r09c} 笔，且累计金额 > 单笔大额提现的金额" },
+    { k: "r10", n: "资料变更风控", all: true, f: [["r10h", 72, "i"]],
+      cond: "修改提现账号、收款人或提现方式后 {r10h} 小时内的每一笔提现" },
+    { k: "r11", n: "静默账号风控", all: true, f: [["r11d", 15, "i"]],
+      cond: "超过 {r11d} 天未登录，本次登录后没有成功充值就申请提现" },
+    { k: "r12", n: "异常返奖率风控", all: true, f: [["r12m", 5, "m"], ["r12b", 1000, "i"]],
+      cond: "自上一笔成功提现以来，派彩 ÷ 有效投注 > {r12m} 倍（有效投注 ≥ {r12b} PHP 才判断）" }
+  ];
+  /* 查看需求方案：loc 原需求中的位置编号，text 原文照录（2026-10-22 版本），diff 本需求的调整及依据 */
+  var ORIG = {
+    single: { loc: "二、现有规则 · R02 大额提现", text: "单笔提现金额 > 10,000 PHP (运营可配置)。", diff: "无调整，沿用后台现有「平台用户单笔提款金额大于指定值」。" },
+    count: { loc: "二、现有规则 · R01 当日提现次数", text: "含本次申请，当日提现次数 > 10 次 (运营可配置)。", diff: "沿用后台现有「每日提款笔数上限」；本需求加了开关（确认表 C30：每条规则单独开关）。" },
+    sum: { loc: "原需求中没有这一条", text: "—", diff: "这是后台现有的「每日累计提款金额上限」。Xyan 在确认表 C07 回复「R09 替代」；Joshua 第三轮 N5 定为保留现有配置，R09 只作补充。本需求加了开关。" },
+    r03: { loc: "二、现有规则 · R03 首次提现占比", text: "首次提现，且真人游戏投注额 ÷ 总投注额 ≥ 80% (运营可配置)。", diff: "沿用现有首提风控配置和 Casino 有效流水口径，不在本页重复配置（确认表 C05、C06）。" },
+    r04: { loc: "三、新增资金及账号关联规则 · R04 充值提现差异；四、统计口径", text: "R04：当日總提现额 > 当日成功充值额 × 10。转人工审核。\n\n第四节：R04、R05 的初始倍数分别为 10 倍和 5 倍，均可配置。……充值金额大于 0 时，提现金额超过充值金额的 10 倍触发 R04；……等于对应倍数均不触发。", diff: "改名「充提差风控」；当日提现总额 = 当日已成功 + 审核中 / 处理中 + 本次申请，不含驳回、失败、取消（Joshua 10-22 确认）；倍数可配置（确认表 C14）。当日无充值的情况拆到下一行。" },
+    r04z: { loc: "四、统计口径", text: "当日成功充值金额为 0 时，提现申请直接转人工审核。", diff: "加了本次申请金额门槛，默认 1,000 PHP、可配置（确认表 C15、第二轮 N11）；从充提差风控拆成独立一行、单独开关（Joshua 10-22）。" },
+    r05: { loc: "三、新增资金及账号关联规则 · R05 投注倍数偏低；四、统计口径", text: "R05：当天的有效投注额， 不足当天成功充值金额的x5 (运营可配置) 时， 转人工审核\n\n第四节：有效投注额不足充值金额的 5 倍触发 R05，等于对应倍数均不触发。R05 审核页同时展示前一日及近 7 日的充值和投注数据。", diff: "按原文当日统计（当天 00:00 到本次申请时间）。Joshua 10-22 改回当日：取代确认表 C16、第二轮 N3 定的「自上一笔成功提现以来」，原因是无充值提现风控和当日口径的充提差风控已覆盖当初担心的跨日充值漏洞，误伤由审核页的前一日及近 7 日数据辅助人工判断；需知会 Xyan。改名「当日低投注风控」；有效投注沿用现有有效流水口径（C18）；当日没有充值时不判断。" },
+    r09: { loc: "三、新增资金及账号关联规则 · R09 疑似拆分提现", text: "30 分钟内有效申请 ≥ 3 笔 (运营可配置)，3笔累计金额 > 大额提款阈值。转人工审核.", diff: "大额阈值取单笔大额提现的金额；有效申请 = 提交成功且未被会员取消；30 分钟滑动窗口；拆单子订单不计（确认表 C25）。" },
+    r10: { loc: "五、新增行为及资料变更规则 · R10 修改资料后首次提现", text: "修改提现账号、收款人或支付渠道后，72 小时内首次成功提交提现申请。转人工。", diff: "72 小时内每一笔都检查（原文只查首次）；含新增绑定和客服后台代改，不含注册后首次绑定（确认表 C26）；所有层级都执行（C01）。" },
+    r11: { loc: "五、新增行为及资料变更规则 · R11 长期未活跃后提现", text: "连续 30 或 60 天无登录、无投注，恢复活跃后 72 小时内提现，且伴随新设备、关键提现资料变更或大额提现之一。转人工审核", diff: "Xyan 确认表 C28 改为：超过 15 天未登录，重新登录后没有任何充值就申请提现；天数可配置，原条件删除（第二轮 N6）。所有层级都执行（C01）。" },
+    r12: { loc: "五、新增行为及资料变更规则 · R12 异常高胜率提现", text: "胜率或派彩回报率RTP高於500% (运营可配置)，提现时转人工审核。", diff: "Xyan 确认表 C29 改为派彩 ÷ 有效投注 > 5 倍（可配置）；统计自上一笔成功提现以来、全部游戏、有效投注 ≥ 1,000 PHP 才判断（第二轮 N7）。所有层级都执行（C01）。" },
+    r06: { loc: "三、新增资金及账号关联规则 · R06 同设备多账号", text: "30 天内同一稳定设备关联账号 ≥ 3 个 (运营可配置)，且至少 3个账号领取奖励或申请提现。转人工审核。", diff: "放到第二期，第三方风控对接成功后开发；定义按第三方能提供的设备数据再定（第二轮 N1、N2）。" },
+    r07: { loc: "三、新增资金及账号关联规则 · R07 同 IP 多账号", text: "7 天内同 IP 账号 ≥ 5 个 (运营可配置)，同时存在共用设备、共用提现账号或集中领取同一活动奖励之一。转人工审核。", diff: "放到第二期（第二轮 N1）；「集中领取」定义为 24 小时内同 IP ≥ 3 个账号领同一活动，投注站 IP 加白名单（确认表 C21）。" },
+    lv: { loc: "一、适用范围；三、标题「（Tier VIP 豁免）」；五、标题「(包含VIP層級都需查驗)」；六、审核流程第 2 步", text: "一：新用户默认层级为 default layer。Tier VIP 豁免本方案部分规则\n三：新增资金及账号关联规则（Tier VIP 豁免）\n五：新增行为及资料变更规则(包含VIP層級都需查驗)\n六-2：执行规则：Tier VIP 層級豁免；其他用户执行風控规则，", diff: "原文第五节和第六节矛盾，确认表 C01 定为：R01–R09 Tier VIP 豁免，R10–R12（资料变更风控、静默账号风控、异常返奖率风控）所有层级都执行。豁免按支付层级配置里的「提款风控规则」开关判断（第三轮 N12）。Joshua 10-22 进一步要求：每条规则通过「配置层级」弹窗单独勾选适用的支付层级，豁免层级置灰不可勾选（单笔大额提现、当日提现次数、当日累计提现金额、资料变更风控、静默账号风控、异常返奖率风控六条除外，豁免层级也可勾选并默认勾选；资料变更风控、静默账号风控、异常返奖率风控按原文第五节「包含VIP層級都需查驗」和确认表 C01；原有三项保持现状，对所有层级检查（10-26 确认）），弹窗有全选，以点「确认」时勾选的层级为准。" },
+    log: { loc: "六、审核流程第 1 步", text: "接收申请：校验读取用户层级、交易数据及规则版本。", diff: "原文要求读取「规则版本」。第三轮 N10 定为：每笔命中记录当时的阈值快照，配置修改留日志，所以新增配置修改记录，记录不可改、不可删。" },
+    r08: { loc: "三、新增资金及账号关联规则 · R08 关联风险账号", text: "90 天内与已确认风险账号设备或提现账号；仅 IP 相同须补充独立关联证据。优先人工审核。", diff: "放到第二期（C32）；句子补全为「共用设备或提现账号」，风险账号优先用第三方回传，「仅 IP 相同」作为审核要求（第三轮 C22–C24）。" }
+  };
+  function origTag(key, name) { var b = document.createElement("button"); b.type = "button"; b.className = "wr-orig"; b.dataset.orig = key; b.textContent = "查看需求方案"; b.setAttribute("aria-label", name + "：查看需求方案"); return b; }
+  document.addEventListener("click", function (e) {
+    var b = e.target.closest("[data-orig]"); if (!b) return;
+    var o = ORIG[b.dataset.orig]; if (!o) return;
+    $("odTitle").textContent = "需求方案 · " + b.getAttribute("aria-label").split("：")[0];
+    $("odLoc").textContent = o.loc; $("odText").textContent = o.text; $("odDiff").textContent = o.diff; $("dlgOrig").hidden = false;
+  });
+  var P2K = ["r06", "r07", "r08"];
+  var P2 = [["同设备多账号", "同一设备关联多个账号且领奖或提现"], ["同 IP 多账号", "24 小时内同 IP ≥ 3 个账号领同一活动（投注站 IP 白名单除外）"], ["关联风险账号", "90 天内与已确认风险账号共用设备或提现账号"]];
+  var DEF = { single: 10000, count: 10, sum: 50000, sw_single: true, sw_count: true, sw_sum: true };
+  RULES.forEach(function (r) { DEF["sw_" + r.k] = !!r.old;   /* 新增 7 条发布时默认关闭，VIP 迁移完成后由运营逐条开启（10-26 确认） */ r.f.forEach(function (f) { DEF[f[0]] = f[1]; }); });
+  P.init({ defaults: { cfg: null, cfgLog: null } });
+  function cfg() { return P.get("cfg") || JSON.parse(JSON.stringify(DEF)); }
+  var LOG0 = [["2026-10-21 10:12:03", "当日提现次数 · 数值", "8", "10", "运营账号A"]];
+  function logs() { return P.get("cfgLog") || LOG0.slice(); }
+  function msg(t, bad) { var m = document.createElement("div"); m.className = "bo-msg " + (bad ? "err" : "ok"); m.textContent = t; m.setAttribute("role", "status"); document.body.appendChild(m); setTimeout(function () { m.remove(); }, 1800); }
+  function fill(s, c) { return s.replace(/\{(\w+)\}/g, function (_, k) { return c[k]; }); }
+
+  /* 支付层级：与【支付层级配置】原型共用模拟状态（同一标签页内），没有改动时用同一份演示数据。rk = ex 为豁免 */
+  var LAYER0 = [{ v: 0, n: "Default layer", rk: "run" }, { v: 2, n: "Tier 1", rk: "run" }, { v: 3, n: "Tier 2", rk: "run" }, { v: 6, n: "Tier VIP", rk: "ex" }, { v: 20, n: "内部测试层级", rk: "run" }];
+  function layers() { var r = P.get("rows"); return (r && r.length ? r : LAYER0).map(function (x) { return { v: x.v, n: x.n, rk: x.rk }; }); }
+  /* 规则勾选的层级：没配置过时默认勾选全部「执行」层级；豁免层级即使之前勾过也不生效 */
+  /* 按原始需求第五节「包含VIP層級都需查驗」：资料变更风控、静默账号风控、异常返奖率风控（r.all）对豁免层级也可勾选、默认勾选；其他规则豁免层级置灰 */
+  function exLocked(r, x) { return x.rk === "ex" && !r.all; }
+  function pickedLv(r, c) { var s = c["lv_" + r.k]; return s ? s.slice() : layers().filter(function (x) { return !exLocked(r, x); }).map(function (x) { return x.v; }); }
+  function effLv(r, c) { var lock = {}; layers().forEach(function (x) { if (exLocked(r, x)) lock[x.v] = 1; }); return pickedLv(r, c).filter(function (v) { return !lock[v] && layers().some(function (x) { return x.v === v; }); }); }
+  var lvRule = null;
+  function openLv(k) {
+    var c = collect(), r = RULES.filter(function (x) { return x.k === k; })[0]; lvRule = r;
+    $("lvTitle").textContent = "配置适用层级 · " + r.n;
+    var sel = {}; effLv(r, c).forEach(function (v) { sel[v] = 1; });
+    var box = $("lvList"); box.textContent = "";
+    layers().forEach(function (x) {
+      var lab = document.createElement("label"), cb = document.createElement("input"); cb.type = "checkbox"; cb.value = x.v; cb.checked = !!sel[x.v];
+      if (exLocked(r, x)) { cb.disabled = true; cb.checked = false; lab.className = "dis"; }
+      lab.appendChild(cb); lab.appendChild(document.createTextNode(x.n));
+      var v = document.createElement("span"); v.className = "v"; v.textContent = "分层值 " + x.v; lab.appendChild(v);
+      if (x.rk === "ex") { var w = document.createElement("span"); w.className = "why"; w.textContent = exLocked(r, x) ? "豁免，不可勾选" : "豁免层级（本规则仍检查）"; if (!exLocked(r, x)) w.style.color = "#E6A23C"; lab.appendChild(w); }
+      box.appendChild(lab);
+    });
+    $("lvErr").hidden = true; syncAll(); $("dlgLv").hidden = false;
+  }
+  /* 全选只作用于可勾选的层级；部分勾选时显示半选状态 */
+  function syncAll() {
+    var en = [].filter.call($("lvList").querySelectorAll("input"), function (i) { return !i.disabled; }), on = en.filter(function (i) { return i.checked; }).length;
+    $("lvAll").checked = en.length > 0 && on === en.length; $("lvAll").indeterminate = on > 0 && on < en.length; $("lvAll").disabled = !en.length;
+    $("lvAllNote").textContent = "已选 " + on + " / " + en.length + " 个可勾选层级";
+  }
+  $("lvAll").onchange = function () { var on = this.checked; $("lvList").querySelectorAll("input").forEach(function (i) { if (!i.disabled) i.checked = on; }); $("lvErr").hidden = true; syncAll(); };
+  $("lvList").addEventListener("change", function () { $("lvErr").hidden = true; syncAll(); });
+  $("lvOk").onclick = function () {
+    var vals = [].filter.call($("lvList").querySelectorAll("input"), function (i) { return i.checked && !i.disabled; }).map(function (i) { return +i.value; });
+    if (!vals.length) { $("lvErr").hidden = false; return; }
+    /* 确认即生效：写入已保存配置和修改记录，不需要再点页面底部的保存 */
+    var saved = cfg(), before = effLv(lvRule, saved), name = function (arr) { return layers().filter(function (x) { return arr.indexOf(x.v) >= 0; }).map(function (x) { return x.n; }).join("、") || "无"; };
+    saved["lv_" + lvRule.k] = vals; P.set("cfg", saved);
+    var d = P.get("draft"); if (d) { d["lv_" + lvRule.k] = vals; P.set("draft", d); }
+    if (name(before) !== name(vals)) { var L = logs(); L.unshift(["2026-10-22 14:20:00", lvRule.n + " · 适用层级", name(before), name(vals), "运营账号A"]); P.set("cfgLog", L); }
+    $("dlgLv").hidden = true; draw(d || saved); msg("已保存适用层级");
+  };
+  document.addEventListener("click", function (e) { var b = e.target.closest("[data-lv]"); if (b) openLv(b.dataset.lv); });
+  function swBtn(key, on, aria) { var b = document.createElement("button"); b.type = "button"; b.className = "wr-sw"; b.setAttribute("role", "switch"); b.dataset.sw = key; b.setAttribute("aria-checked", on); b.setAttribute("aria-label", aria); return b; }
+  function draw(c) {
+    c = c || cfg();
+    var tb = $("ruleBody"); tb.textContent = "";
+    RULES.forEach(function (r, ri) {
+      var tr = document.createElement("tr"), td = document.createElement("td"); td.className = "c";
+      var sw = swBtn(r.k, !!c["sw_" + r.k], r.n + "开关"); if (!r.old || r.newSw) sw.classList.add("glow"); td.appendChild(sw); tr.appendChild(td);
+      td = document.createElement("td"); if (r.old) td.appendChild(document.createTextNode(r.n)); else { var nm = document.createElement("span"); nm.className = "glow"; nm.style.padding = "0 4px"; nm.textContent = r.n; td.appendChild(nm); } if (!r.old) td.appendChild(origTag(r.k, r.n)); /* 平台现有功能（单笔金额、每日笔数、每日累计金额）不显示「查看需求方案」 */ tr.appendChild(td);
+      td = document.createElement("td");
+      r.cond.split(/(\{\w+\})/).forEach(function (part) {
+        var m = /^\{(\w+)\}$/.exec(part);
+        if (m) { var inp = document.createElement("input"); inp.className = "bo-inp wr-num"; inp.dataset.f = m[1]; inp.value = c[m[1]]; inp.setAttribute("aria-label", r.n + "数值"); inp.inputMode = "decimal"; td.appendChild(inp); }
+        else td.appendChild(document.createTextNode(part));
+      });
+      var er = document.createElement("span"); er.className = "ferr"; er.hidden = true; er.dataset.rerr = r.k; td.appendChild(er);
+      tr.appendChild(td);
+      /* 适用层级：「配置层级」按钮 + 已选数量；豁免层级不计入 */
+      td = document.createElement("td"); td.className = "c";
+      var eff = effLv(r, c), L = layers();
+      var lb = document.createElement("button"); lb.type = "button"; lb.className = "bo-btn link glow"; lb.textContent = "配置层级"; lb.dataset.lv = r.k; lb.setAttribute("aria-label", r.n + "：配置层级"); td.appendChild(lb);
+      var cnt = document.createElement("span"); cnt.className = "wr-lvcnt"; cnt.textContent = "已选 " + eff.length + " / " + L.length + " 个层级"; td.appendChild(cnt);
+      tr.appendChild(td);
+      if (!c["sw_" + r.k]) tr.style.opacity = ".6";
+      tb.appendChild(tr);
+    });
+    P2.forEach(function (x, pi) {
+      var tr = document.createElement("tr"); tr.className = "wr-p2";
+      var td = document.createElement("td"); td.className = "c"; var b = swBtn("p2", false, x[0] + "开关"); b.disabled = true; td.appendChild(b); tr.appendChild(td);
+      [x[0], x[1], "—"].forEach(function (t, i) { td = document.createElement("td"); td.textContent = t; if (i === 2) td.className = "c"; if (i === 0) td.appendChild(origTag(P2K[pi], x[0])); if (i === 1) { var dn = document.createElement("span"); dn.className = "ui-reqnote wr-dn"; dn.textContent = "第二期：第三方风控对接成功后开放，第一期上线不显示这一行。"; td.appendChild(document.createElement("br")); td.appendChild(dn); } tr.appendChild(td); });
+      tb.appendChild(tr);
+    });
+    var lb = $("logBody"); lb.textContent = ""; logs().forEach(function (x) { var tr = document.createElement("tr"); x.forEach(function (v) { var td = document.createElement("td"); td.textContent = v; tr.appendChild(td); }); lb.appendChild(tr); });
+    $("logTotal").textContent = logs().length;
+  }
+  /* 开关 */
+  document.addEventListener("click", function (e) {
+    var b = e.target.closest(".wr-sw"); if (!b || b.disabled) return;
+    var c = collect(); c["sw_" + b.dataset.sw] = b.getAttribute("aria-checked") !== "true"; P.set("draft", c); draw(c);
+  });
+  function collect() {
+    var c = cfg(), d = P.get("draft"); if (d) c = d;
+    c = JSON.parse(JSON.stringify(c));
+    document.querySelectorAll("[data-f]").forEach(function (i) { c[i.dataset.f] = i.value.trim(); });
+    document.querySelectorAll(".wr-sw[data-sw]").forEach(function (b) { if (b.dataset.sw !== "p2") c["sw_" + b.dataset.sw] = b.getAttribute("aria-checked") === "true"; });
+    return c;
+  }
+  function typeOf(key) { var t = "i"; RULES.forEach(function (r) { r.f.forEach(function (f) { if (f[0] === key) t = f[2]; }); }); return t; }
+  function valid(v, t) { return t === "m" ? (/^\d{1,3}(\.\d)?$/.test(v) && +v >= 0.1 && +v <= 999) : /^[1-9]\d*$/.test(v); }
+  var LABEL = { single: "单笔提款金额指定值", count: "每日提款笔数上限", sum: "每日累计提款金额上限" };
+  $("save").onclick = function () {
+    var c = collect(), bad = 0;
+    document.querySelectorAll(".bad").forEach(function (x) { x.classList.remove("bad"); });
+    document.querySelectorAll(".ferr").forEach(function (x) { if (x.id !== "saveErr") x.hidden = true; });
+    RULES.forEach(function (r) {
+      if (!c["sw_" + r.k]) return;
+      r.f.forEach(function (f) {
+        if (!valid(String(c[f[0]]), f[2])) { bad++; var inp = document.querySelector('[data-f="' + f[0] + '"]'); inp.classList.add("bad"); var e = document.querySelector('[data-rerr="' + r.k + '"]'); e.textContent = f[2] === "m" ? "倍数请输入 0.1–999，最多 1 位小数" : "请输入正整数"; e.hidden = false; }
+      });
+    });
+    if (bad) { $("saveErr").textContent = "有 " + bad + " 处填写不正确，未保存"; $("saveErr").hidden = false; return; }
+    $("saveErr").hidden = true;
+    var old = cfg(), L = logs(), t = "2026-10-22 14:10:00";
+    Object.keys(c).forEach(function (k) {
+      if (k.indexOf("lv_") === 0) return;   /* 适用层级在弹窗确认时已保存并记录 */
+      if (String(old[k]) === String(c[k])) return;
+      var name = LABEL[k]; RULES.forEach(function (r) { if (k === "sw_" + r.k) name = r.n + " · 开关"; r.f.forEach(function (f) { if (f[0] === k) name = r.n + " · 数值"; }); });
+      if (!name && k.indexOf("sw_") === 0) name = LABEL[k.slice(3)] + " · 开关";
+      var fmt = function (v) { return v === true ? "开" : v === false ? "关" : v; };
+      L.unshift([t, name || k, fmt(old[k]), fmt(c[k]), "运营账号A"]);
+    });
+    P.set("cfg", c); P.set("draft", null); P.set("cfgLog", L); draw(c); msg("保存成功");
+  };
+  $("btnLog").onclick = function () { $("dlgLog").hidden = false; };
+
+  document.querySelectorAll("[data-tab]").forEach(function (t) {
+    t.onclick = function () {
+      document.querySelectorAll("[data-tab]").forEach(function (x) { x.classList.toggle("on", x === t); x.setAttribute("aria-selected", x === t); });
+      var daily = t.dataset.tab === "daily"; $("vDaily").hidden = !daily; $("vOther").hidden = daily;
+      $("otherNote").textContent = t.dataset.tab === "first" ? "现有页面，本需求不改动。首次提现 Casino 投注占比（Casino 有效流水 ÷ 总有效流水 ≥ 配置值，总流水为 0 按 0%）沿用这里的现有配置。" : "现有页面，本需求不改动。";
+    };
+  });
+  document.addEventListener("click", function (e) {
+    var s = e.target.closest("[data-scene]"); if (!s) return;
+    document.querySelector('[data-tab="daily"]').click();
+    if (s.dataset.scene === "default") { P.set("cfg", null); P.set("draft", null); draw(); }
+    if (s.dataset.scene === "bad") { var c = cfg(); c.r04m = "0"; c.r10h = "1.5"; P.set("draft", c); draw(c); $("save").click(); }
+    if (s.dataset.scene === "log") $("btnLog").click();
+  });
+
+  P.panel($("simPanel"), [
+    { title: "演示值说明", items: [{ type: "note", text: "所有默认值均为演示值：单笔 10,000、每日 10 笔、累计 50,000、倍数 10 / 5、无充值提现风控门槛 1,000 PHP、异常返奖率风控最低有效投注 1,000 PHP。" }] },
+    { items: [{ type: "reset" }] }
+  ]);
+  window.addEventListener("proto-change", function (e) { if (e.detail.key === "*") draw(); });
+  draw(P.get("draft") || cfg());
+})();
+</script>
+<script>
+/* 顶栏「风控审核」：三个后台原型页共用同一个待审核数（提现风控审核页写入 riskCnt），没有演示改动时为示例的 11 笔 */
+(function () {
+  var b = document.getElementById("topCnt"); if (!b) return;
+  function f() { var n = P.get("riskCnt"); if (n == null) n = 11; b.textContent = n; b.className = "bo-n " + (n ? "r" : "g"); }
+  f(); window.addEventListener("proto-change", f);
+})();
+</script>
+</body>
+</html>

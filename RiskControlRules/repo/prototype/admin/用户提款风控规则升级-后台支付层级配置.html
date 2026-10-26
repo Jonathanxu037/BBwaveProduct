@@ -1,0 +1,413 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>用户提款风控规则升级-后台支付层级配置</title>
+<link rel="stylesheet" href="../../assets/style.css">
+<style>
+.bo-tabs span{cursor:pointer}.bo-tabs span:hover{color:#409EFF}
+.wr-ops .bo-btn.link{margin-right:6px}
+.wr-ex{color:#E6A23C}.wr-run{color:#409EFF}
+.wr-st{display:inline-block;border:1px solid #E1F3D8;background:#F0F9EB;color:#67C23A;border-radius:3px;padding:0 6px;font-size:12px}
+.wr-st.off{border-color:#FDE2E2;background:#FEF0F0;color:#F56C6C}
+.wr-dlg{width:min(620px,94vw);max-height:86vh;overflow:auto}
+.wr-dlg .frow{grid-template-columns:170px minmax(0,1fr)}
+/* 「查看需求方案」骑在所属单元格 / 区块的上边框上（右上角），只压住边框和内边距，不遮挡文字和控件，也不占页面空间 */
+.wr-orig{position:absolute;top:0;right:4px;transform:translateY(-50%);z-index:6;margin:0;display:inline-block;border:1px solid rgba(10,186,181,.35);background:rgba(232,248,247,.96);color:#0A9E9A;border-radius:8px;padding:0 5px;font-size:10px;line-height:13px;box-shadow:0 1px 4px rgba(0,0,0,.08);opacity:.85;transition:opacity .15s;cursor:pointer;font-family:var(--font);white-space:nowrap;font-weight:400}
+:is(th,td,div,h4,h5,span,section,label,p):has(> .wr-orig){position:relative}
+.wr-orig:hover,.wr-orig:focus-visible{opacity:1}
+/* 弹窗标题里的按钮跟在标题文字后面，避开右上角的 × */
+.bo-dlg h4 > .wr-orig{position:relative;top:auto;right:auto;transform:none;margin-left:8px}
+
+.wr-orig:hover{background:rgba(10,186,181,.85);border-color:transparent;color:#fff}
+.wr-od dt{font-size:12px;color:#909399;margin-top:8px}
+.wr-od dd{margin:2px 0 0;white-space:pre-wrap;line-height:1.7}
+.wr-od dd.q{background:rgba(129,216,208,.12);border-left:3px solid rgba(10,186,181,.6);padding:6px 10px}
+.wr-ed{width:min(940px,96vw)}
+.wr-ed h4{font-size:17px;font-weight:400;margin-bottom:12px}
+.wr-ed .frow{grid-template-columns:190px minmax(0,1fr)}
+.wr-ed .frow>label,.wr-ed .frow>.fl{justify-content:flex-end}
+.wr-ed .wr-w{width:min(505px,100%)}
+.wr-ed .rd{cursor:pointer}
+.wr-warn{background:#FDF6EC;border:1px solid #FAECD8;color:#E6A23C;border-radius:4px;padding:8px 10px;font-size:12px}
+.ui-reqnote.wr-dn{display:inline-block;margin:2px 0;padding:1px 6px;font-size:11.5px}
+.ui-reqnote.wr-dn::before{content:"※ 需求说明，上线不显示：";display:inline;font-weight:700}
+</style>
+</head>
+<body>
+<div class="with-nav">
+<div class="adm-stage">
+  <div class="bo">
+    <div class="bo-top1"><span>当前时间：2026/10/22 13:57:00 -04:00</span><span class="sp">简体中文</span><span>运营账号A ▾</span></div>
+    <div class="bo-top2"><span>在线人数<b class="bo-n r">6</b></span><span>当日注册<b class="bo-n g">0</b></span><span>当日充值成功<b class="bo-n g">0</b></span><span>提款<b class="bo-n g">0</b></span><span>风控审核<b class="bo-n r" id="topCnt">10</b></span></div>
+    <div class="bo-body">
+      <nav class="bo-menu" aria-label="后台菜单">
+        <div class="mt">菜单 ≡</div>
+        <div class="g">用户管理</div><div class="g">财务管理</div><div class="g">提现管理</div>
+        <div class="g open">充值配置</div>
+        <div class="i on">支付层级配置</div><div class="i">充值方式配置</div><div class="i">在线支付配置</div><div class="i">提款方式配置</div>
+        <div class="g">系统管理</div>
+      </nav>
+      <div class="bo-main">
+        <div class="bo-crumb" id="crumb">位置 › 充值配置 › <b>支付层级配置</b></div>
+        <div class="bo-tabs" role="tablist">
+          <span role="tab" tabindex="0" data-go="list" id="tabList" class="on" aria-selected="true">支付层级配置</span>
+          <span role="tab" tabindex="0" data-go="log" id="tabLog" class="glow" aria-selected="false">提款风控规则修改记录</span>
+        </div>
+
+        <!-- ============ 列表 ============ -->
+        <section id="vList">
+          <div class="bo-filter"><button class="bo-btn q" type="button" id="btnNew">新增</button></div>
+          <div class="bo-content">
+            <table id="tbl">
+              <thead><tr>
+                <th>分层值</th><th>分层名称</th><th>每笔最高充值</th><th>当日最高充值金额</th><th>每笔最高提款</th><th>当日最高提款金额</th>
+                <th>当日最大连续未支付笔数</th><th>充值返利最大次数</th><th>提款稽核流水比例</th><th>稽核不通过手续费比例</th><th>提款稽核状态</th>
+                <th class="glow"><span class="ui-nw">提款风控规则<i class="qm" tabindex="0" data-tip="执行：该层级可以在每日提款限制设置的各条规则里被勾选，勾选了就检查；从豁免改回执行时，自动加入所有规则的适用层级。豁免：该层级在大部分规则里不能勾选、不检查；单笔大额提现、当日提现次数、当日累计提现金额、资料变更风控、静默账号风控、异常返奖率风控六条仍按勾选检查。新建层级默认执行，并自动加入所有规则的适用层级。">?</i></span><button type="button" class="wr-orig" data-orig="rk" aria-label="提款风控规则：查看需求方案">查看需求方案</button></th>
+                <th>状态</th><th>操作</th>
+              </tr></thead>
+              <tbody id="tbody"></tbody>
+            </table>
+            <div class="bo-page" id="pager" role="navigation" aria-label="分页">
+              <span>共 <b id="pgTotal">0</b> 条</span>
+              <label>每页 <select id="pgSize" aria-label="每页条数"><option>10</option><option selected>20</option><option>50</option><option>100</option></select> 条</label>
+              <button type="button" id="pgPrev" aria-label="上一页">‹</button>
+              <span id="pgNums"></span>
+              <button type="button" id="pgNext" aria-label="下一页">›</button>
+              <label>前往 <input id="pgGo" inputmode="numeric" aria-label="前往页码" value="1"> 页</label>
+            </div>
+            <p class="ui-reqnote">层级自带的「每笔最高提款」「当日最高提款金额」保持现状：提现超出时直接拦截，在提款风控规则之前判断。提款风控规则的阈值统一在【提现管理 › 提现出款设置 › 每日提款限制设置】配置，不按层级分别设置。</p>
+            <p class="ui-reqnote">示例数据均为虚构。</p>
+          </div>
+        </section>
+
+        <!-- ============ 修改记录 ============ -->
+        <section id="vLog" hidden>
+          <div class="bo-filter">
+            <input class="bo-inp" style="width:150px" placeholder="分层名称" aria-label="分层名称">
+            <input class="bo-inp" style="width:150px" placeholder="操作人" aria-label="操作人">
+            <input class="bo-inp" style="width:260px" value="2026-10-01 00:00:00 ~ 2026-10-22 23:59:59" aria-label="修改时间">
+            <button class="bo-btn q" type="button">搜索</button>
+            <button type="button" class="wr-orig" data-orig="rkLog" aria-label="提款风控规则修改记录：查看需求方案">查看需求方案</button>
+          </div>
+          <div class="bo-content">
+            <table>
+              <thead><tr><th>修改时间</th><th>分层值</th><th>分层名称</th><th>修改前</th><th>修改后</th><th><span class="ui-nw">影响会员数<i class="qm" tabindex="0" data-tip="保存这次修改时，该层级里的会员人数。">?</i></span></th><th>操作人</th></tr></thead>
+              <tbody id="logBody"></tbody>
+            </table>
+            <div class="bo-page" role="navigation" aria-label="分页"><span>共 <b id="logTotal">0</b> 条</span><label>每页 <select aria-label="每页条数"><option selected>20</option><option>50</option></select> 条</label><button type="button" disabled aria-label="上一页">‹</button><span><button type="button" aria-current="page">1</button></span><button type="button" disabled aria-label="下一页">›</button></div>
+            <p class="ui-reqnote">只记录「提款风控规则」这一项的修改（新增层级时的初始值也记一条）；记录不能编辑、不能删除。</p>
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
+
+  <!-- 新增 / 编辑弹窗 -->
+  <div class="bo-mask" id="dlgEdit" hidden>
+    <div class="bo-dlg wr-dlg wr-ed" role="dialog" aria-modal="true" aria-labelledby="edTitle">
+      <h4 id="edTitle">添加支付层级</h4>
+      <div class="frow"><label for="edName"><span class="req">*</span>分层名称:</label><div class="fctl"><input class="bo-inp wr-w" id="edName"><span class="ferr" id="edErr" hidden></span></div></div>
+      <div class="frow"><label for="edVal"><span class="req">*</span>分层值:</label><div class="fctl"><input class="bo-inp wr-w" id="edVal" inputmode="numeric"><span class="ferr" id="edValErr" hidden></span></div></div>
+      <div class="frow"><label for="edRc">每笔最高充值:</label><div class="fctl"><input class="bo-inp wr-w" id="edRc" inputmode="decimal"></div></div>
+      <div class="frow"><label for="edRcDay">当日最高充值金额:</label><div class="fctl"><input class="bo-inp wr-w" id="edRcDay" inputmode="decimal"></div></div>
+      <div class="frow"><label for="edWd">每笔最高提款:</label><div class="fctl"><input class="bo-inp wr-w" id="edWd" inputmode="decimal"></div></div>
+      <div class="frow"><label for="edWdDay">当日最高提款金额:</label><div class="fctl"><input class="bo-inp wr-w" id="edWdDay" inputmode="decimal"></div></div>
+      <div class="frow"><label for="edNp">当日最大连续未支付笔数:</label><div class="fctl"><input class="bo-inp wr-w" id="edNp" inputmode="numeric"></div></div>
+      <div class="frow"><span class="fl">提款稽核状态:</span><div class="fctl" role="radiogroup" aria-label="提款稽核状态"><label class="rd" data-as="1" tabindex="0"><i></i>正常</label><label class="rd" data-as="0" tabindex="0"><i></i>停用</label></div></div>
+      <div class="frow"><span class="fl">状态:</span><div class="fctl" role="radiogroup" aria-label="状态"><label class="rd" data-st="1" tabindex="0"><i></i>正常</label><label class="rd" data-st="0" tabindex="0"><i></i>停用</label></div></div>
+      <div class="frow"><span class="fl"><span class="ui-nw">提款风控规则<i class="qm" tabindex="0" data-tip="执行：该层级可以在每日提款限制设置的各条规则里被勾选，勾选了就检查；从豁免改回执行时，自动加入所有规则的适用层级。豁免：该层级在大部分规则里不能勾选、不检查；单笔大额提现、当日提现次数、当日累计提现金额、资料变更风控、静默账号风控、异常返奖率风控六条仍按勾选检查。新建层级默认执行，并自动加入所有规则的适用层级。">?</i></span>:</span>
+        <div class="fctl"><span class="glow" style="padding:2px 6px;display:inline-flex;align-items:center" role="radiogroup" aria-label="提款风控规则">
+          <label class="rd" data-rk="run" tabindex="0"><i></i>执行</label>
+          <label class="rd" data-rk="ex" tabindex="0"><i></i>豁免</label>
+        </span><button type="button" class="wr-orig" data-orig="rk" aria-label="提款风控规则：查看需求方案">查看需求方案</button></div>
+      </div>
+      <p class="ui-reqnote">弹窗沿用现有「添加支付层级 / 编辑支付层级」的全部字段和顺序，本需求只在最后加「提款风控规则」一行。现有字段的校验和保存逻辑不变；原型只演示分层名称、分层值必填和不能重复。</p>
+      <div class="row2"><button class="bo-btn" type="button" data-cancel>取 消</button><button class="bo-btn q" type="button" id="edSave">确 定</button></div>
+    </div>
+  </div>
+
+  <!-- 修改提款风控规则二次确认 -->
+  <div class="bo-mask" id="dlgCfm" hidden>
+    <div class="bo-dlg" role="dialog" aria-modal="true" aria-labelledby="cfTitle">
+      <h4 id="cfTitle">确认修改提款风控规则</h4>
+      <p id="cfText" style="margin:0;line-height:1.8"></p>
+      <div class="row2"><button class="bo-btn" type="button" data-cancel>取消</button><button class="bo-btn q" type="button" id="cfOk">确定</button></div>
+    </div>
+  </div>
+
+  <!-- 谷歌验证（只在修改 Default layer 的提款风控规则时出现） -->
+  <div class="bo-mask" id="dlgGa" hidden>
+    <div class="bo-dlg" role="dialog" aria-modal="true" aria-labelledby="gaTitle">
+      <h4 id="gaTitle">谷歌验证</h4>
+      <p id="gaText" style="margin:0;line-height:1.8"></p>
+      <div class="frow" style="grid-template-columns:110px minmax(0,1fr)"><label for="gaCode"><span class="req">*</span>谷歌验证码</label><div class="fctl"><input class="bo-inp glow" id="gaCode" style="width:160px;letter-spacing:4px" maxlength="6" inputmode="numeric" autocomplete="one-time-code" placeholder="6 位数字"><span class="ferr" id="gaErr" hidden></span></div></div>
+      <div class="row2"><button class="bo-btn" type="button" data-cancel>取消</button><button class="bo-btn q" type="button" id="gaOk">确定</button></div>
+    </div>
+  </div>
+
+  <!-- 条件转移弹窗 -->
+  <div class="bo-mask" id="dlgMove" hidden>
+    <div class="bo-dlg wr-dlg" role="dialog" aria-modal="true" aria-labelledby="mvTitle">
+      <h4 id="mvTitle">条件转移</h4>
+      <div class="frow"><span class="fl">转出层级</span><div class="fctl"><span class="lab" id="mvFrom">Default layer</span></div></div>
+      <div class="frow"><label for="mvTo"><span class="req">*</span>转入层级</label><div class="fctl"><select class="bo-inp" id="mvTo" style="width:200px"></select></div></div>
+      <div class="frow glow" style="padding:8px 6px"><label for="mvVip">VIP 等级 ≥<i class="qm" tabindex="0" data-tip="只转移 VIP 等级大于或等于这个值的会员（含本级）。不填表示不按 VIP 等级筛选。">?</i></label><div class="fctl"><input class="bo-inp" id="mvVip" style="width:120px" value="30" inputmode="numeric"> 级<button type="button" class="wr-orig" data-orig="mv" aria-label="条件转移 · VIP 等级：查看需求方案">查看需求方案</button><span class="ferr" id="mvErr" hidden></span></div></div>
+      <p class="ui-reqnote">用于上线时把存量 VIP 等级 ≥ 30 级的会员一次性转到 Tier VIP：日期由运营决定，运营在这里执行，执行记录留日志。「VIP 等级」取哪个字段由技术确定；如果现有条件转移不支持按 VIP 等级筛选，改由技术按运营给的名单批量转移、运营复核。其余现有转移条件保持现状，原型省略。</p>
+      <div class="wr-warn" id="mvPreview">符合条件的会员：<b>128</b> 人。转移后这些会员的充值渠道、提款稽核流水比例、提款上限和提款风控规则都按转入层级的配置执行。<br><span class="ui-reqnote wr-dn">128 人是演示值。</span></div>
+      <div class="row2"><button class="bo-btn" type="button" data-cancel>取消</button><button class="bo-btn q" type="button" id="mvOk">确定转移</button></div>
+    </div>
+  </div>
+
+  <!-- 查看需求方案（放在其他弹窗之后，从弹窗里点开时显示在最上层） -->
+  <div class="bo-mask" id="dlgOrig" hidden>
+    <div class="bo-dlg" style="width:min(620px,94vw)" role="dialog" aria-modal="true" aria-labelledby="odTitle">
+      <h4 id="odTitle">需求方案</h4>
+      <dl class="wr-od" style="margin:0"><dt>原需求中的位置</dt><dd id="odLoc"></dd><dt>原需求原文</dt><dd class="q" id="odText"></dd><dt>为何新增 / 调整，依据是什么</dt><dd id="odDiff"></dd></dl>
+      <p style="margin:0;font-size:12px;color:#909399">原需求：SharePoint「提现风控方案.docx」2026-10-22 版本（作者 Xyan）。原文照录，含原文的繁体字和格式。</p>
+      <div class="row2"><button class="bo-btn" type="button" data-cancel>关闭</button></div>
+    </div>
+  </div>
+
+  <aside class="notes adm-notes">
+    <h2>后台支付层级配置</h2>
+    <p class="sub">充值配置 › 支付层级配置。本需求在现有页面上加「提款风控规则」一列（执行 / 豁免）和「提款风控规则修改记录」标签页，条件转移增加「VIP 等级 ≥」条件（带淡色光晕的是本需求新增的控件）。</p>
+    <h3>模拟场景</h3>
+    <div class="sim">
+      <button type="button" data-go="list"><span class="simtag">列表</span>层级列表</button>
+      <button type="button" data-scene="editVip"><span class="simtag">编辑</span>编辑 Tier VIP（豁免）</button>
+      <button type="button" data-scene="editDef"><span class="simtag">编辑</span>编辑 Default layer（执行 → 改豁免，需谷歌验证）</button>
+      <button type="button" data-scene="new"><span class="simtag">新增</span>新增层级（默认执行）</button>
+      <button type="button" data-scene="move"><span class="simtag">条件转移</span>Default layer → Tier VIP</button>
+      <button type="button" data-go="log"><span class="simtag">修改记录</span>提款风控规则修改记录</button>
+      <button type="button" data-scene="logEmpty"><span class="simtag">修改记录</span>空列表</button>
+    </div>
+    <h3>模拟操作</h3>
+    <div class="sim" id="simPanel"></div>
+    <h3>规则批注</h3>
+    <ol>
+      <li><b>提款风控规则开关</b>：每个层级一个开关。「执行」= 该层级可以在【每日提款限制设置】各条规则的「配置层级」里被勾选，勾选了的规则才检查；从「豁免」改回「执行」时，自动加入所有规则的适用层级（之前在某条规则里取消过的也加回），运营可再到各规则里取消。「豁免」= 该层级在大部分规则的「配置层级」里置灰、不可勾选、不检查；单笔大额提现、当日提现次数、当日累计提现金额、资料变更风控、静默账号风控、异常返奖率风控六条仍可勾选并默认勾选（资料变更风控、静默账号风控、异常返奖率风控按原文第五节「包含VIP層級都需查驗」和确认表 C01；原有三项保持现状，对所有层级检查（10-26 确认））。Tier VIP 设为豁免；其他层级和新建层级默认「执行」。新建层级自动加入【每日提款限制设置】所有规则的适用层级（Joshua 10-26 确认），运营可再到各规则里取消。</li>
+      <li><b>判断时点</b>：按会员提交提现时所在的层级判断，并把层级记录在订单上；之后再调层级，不影响已提交的订单。</li>
+      <li><b>Default layer 改动要谷歌验证</b>：Default layer（分层值 0，新会员默认层级）的提款风控规则默认「执行」。把它改成「豁免」或改回「执行」时，点确定后弹出「谷歌验证」（不再弹普通二次确认），写明影响的会员人数和修改前后；输入 6 位谷歌验证码，验证通过才保存，修改记录里注明「已通过谷歌验证」。未输入提示「请输入谷歌验证码」，不是 6 位数字提示「请输入 6 位数字验证码」，错误提示「谷歌验证码错误，请重新输入」，都不关弹窗；点取消或 × 不保存，编辑弹窗保留。只改 Default layer 的其他字段、不改提款风控规则时不需要验证。其他层级改提款风控规则不需要谷歌验证，走下一条的二次确认。</li>
+      <li><b>修改要二次确认并留记录</b>：执行 ↔ 豁免改动时弹确认框，写明影响的会员人数；确定后写入「提款风控规则修改记录」（时间、层级、修改前后、影响会员数、操作人），记录不可改、不可删。</li>
+      <li><b>阈值不按层级设</b>：各规则的阈值统一在【每日提款限制设置】配置；层级自带的每笔 / 当日最高提款保持现状，超出直接拦截，先于风控规则判断。</li>
+      <li><b>条件转移</b>：新增「VIP 等级 ≥」条件（含本级），用于上线时把存量 VIP 等级 ≥ 30 级的会员转到 Tier VIP；转移后会员的充值渠道、稽核比例、提款上限和提款风控规则都按新层级执行（已确认接受）。</li>
+      <li><b>新会员</b>：注册后默认 Default layer；之后由运营在【用户管理 › 会员 › 编辑用户】或【提现风控审核】的「更换用户层级」手动调到 Tier VIP。这两处都是现有功能，权限和操作日志沿用现状，本需求不改。</li>
+      <li><b>新增 / 编辑弹窗</b>：沿用现有「添加支付层级 / 编辑支付层级」弹窗的全部字段和顺序（分层名称、分层值、每笔 / 当日最高充值、每笔 / 当日最高提款、当日最大连续未支付笔数、提款稽核状态、状态），只在最后加「提款风控规则」：新增默认「执行」，编辑时回显当前值。</li>
+      <li><b>校验</b>：分层名称、分层值必填且不能和现有层级重复，分层值为整数（现有规则）；条件转移的 VIP 等级只能填正整数。</li>
+    </ol>
+    <h3>评审待确认</h3>
+    <ol>
+      <li><b>VIP 等级字段</b>：条件转移用哪个字段（会员等级 Lv 还是 VIP 等级）由技术确定。</li>
+      <li><b>条件转移能力</b>：现有条件转移的筛选条件资料未覆盖，能否加 VIP 等级由技术评估。</li>
+    </ol>
+    <div class="pager"><span></span><a href="用户提款风控规则升级-后台每日提款限制设置.html">下一页：后台每日提款限制设置 →</a></div>
+  </aside>
+</div>
+</div>
+<script>window.NAV_ROOT = "../../";</script>
+<script src="../../assets/nav-data.js"></script>
+<script src="../../assets/nav.js"></script>
+<script src="../../assets/proto.js"></script>
+<script src="../../assets/admin-en-dict.js"></script>
+<script src="../../assets/admin-en.js"></script>
+<script>
+(function () {
+  var $ = function (id) { return document.getElementById(id); };
+  /* 弹窗「取消 / 关闭」和右上角 ×（nav.js 联动到取消按钮）：关闭弹窗，不保存；Esc 同样关闭最上层弹窗 */
+  document.addEventListener("click", function (e) { var c = e.target.closest("[data-cancel]"); if (c) { var m = c.closest(".bo-mask"); if (m) m.hidden = true; } });
+  document.addEventListener("keydown", function (e) { if (e.key !== "Escape") return; var open = [].filter.call(document.querySelectorAll(".bo-mask"), function (m) { return !m.hidden; }); if (open.length) open[open.length - 1].hidden = true; });
+  /* 查看需求方案：loc 原需求中的位置编号，text 原文照录（2026-10-22 版本），diff 为何新增 / 调整及依据 */
+  var ORIG = {
+    rk: { loc: "一、适用范围；六、审核流程第 2 步", text: "一：新用户默认层级为 default layer。Tier VIP 豁免本方案部分规则\n六-2：执行规则：Tier VIP 層級豁免；其他用户执行風控规则，", diff: "原需求按「Tier VIP」层级豁免。已确认 Tier VIP 是支付层级配置里人工设置的层级，新用户默认 Default layer（确认表 A01–A04）。Joshua 第三轮 N12 要求把支付层级配置和风控规则关联、修改现有模块：每个层级加「提款风控规则」开关，豁免名单由运营配置，不在代码里写死层级名。Joshua 10-22 进一步定为：每条规则在每日提款限制设置里单独勾选适用层级，豁免层级在其他规则里置灰不可勾选；单笔大额提现、当日提现次数、当日累计提现金额、资料变更风控、静默账号风控、异常返奖率风控六条豁免层级仍可勾选并默认勾选（资料变更风控、静默账号风控、异常返奖率风控按原文第五节「包含VIP層級都需查驗」和确认表 C01；原有三项保持现状，对所有层级检查（10-26 确认））。改成豁免会让整个层级的会员少检查多条规则，所以加二次确认并写修改记录。Joshua 10-22：Default layer 是新会员默认层级、默认「执行」，修改它的提款风控规则必须通过谷歌验证，其他层级不需要。" },
+    rkLog: { loc: "六、审核流程第 1 步", text: "接收申请：校验读取用户层级、交易数据及规则版本。", diff: "第三轮 N12、N10：提款风控规则开关的修改要留日志，便于追查某段时间哪些层级被豁免。记录不可改、不可删。" },
+    mv: { loc: "原需求中没有这一条", text: "—", diff: "Xyan 确认表 C02：风控系统上线时，把现有 VIP 等级高于 30 级的玩家统一调到 Tier VIP。Joshua N4、N4b：包含 30 级；迁移日期由运营决定、运营执行、留日志；用现有「条件转移」执行，所以加「VIP 等级 ≥」条件。VIP 等级取哪个字段由技术确定；条件转移不支持按 VIP 等级筛选时，改由技术按运营名单批量执行。" }
+  };
+  document.addEventListener("click", function (e) {
+    var b = e.target.closest("[data-orig]"); if (!b) return;
+    var o = ORIG[b.dataset.orig]; if (!o) return;
+    $("odTitle").textContent = "需求方案 · " + b.getAttribute("aria-label").split("：")[0];
+    $("odLoc").textContent = o.loc; $("odText").textContent = o.text; $("odDiff").textContent = o.diff; $("dlgOrig").hidden = false;
+  });
+  var BASE = [
+    { v: 0, n: "Default layer", rc: "", rcd: "", wd: "", wdd: "", np: "", au: 0, fee: 0, as: "1", rk: "run", on: true, mem: 18420 },
+    { v: 2, n: "Tier 1", rc: "", rcd: "", wd: "50000", wdd: "100000", np: "", au: 80, fee: 80, as: "1", rk: "run", on: true, mem: 2310 },
+    { v: 3, n: "Tier 2", rc: "0", rcd: "0", wd: "", wdd: "", np: "", au: 50, fee: 55, as: "1", rk: "run", on: false, mem: 0 },
+    { v: 6, n: "Tier VIP", rc: "", rcd: "", wd: "", wdd: "200000", np: "", au: 20, fee: 0, as: "1", rk: "ex", on: true, mem: 128 },
+    { v: 20, n: "内部测试层级", rc: "100000", rcd: "1000000", wd: "", wdd: "", np: "10", au: 0, fee: 0, as: "0", rk: "run", on: true, mem: 12 }
+  ];
+  var LOG0 = [
+    ["2026-10-20 15:02:11", 6, "Tier VIP", "执行", "豁免", 120, "运营账号A"],
+    ["2026-10-20 15:00:40", 6, "Tier VIP", "—（新增层级）", "执行", 0, "运营账号A"]
+  ];
+  P.init({ defaults: { rows: null, log: null } });
+  function rows() {
+    var r = P.get("rows") || JSON.parse(JSON.stringify(BASE));
+    r.forEach(function (x) { ["rc", "rcd", "np"].forEach(function (k) { if (x[k] == null) x[k] = ""; }); if (x.as == null) x.as = "1"; });
+    return r;
+  }
+  function logs() { return P.get("layLog") || LOG0.slice(); }
+  function msg(t, bad) { var m = document.createElement("div"); m.className = "bo-msg " + (bad ? "err" : "ok"); m.textContent = t; m.setAttribute("role", "status"); document.body.appendChild(m); setTimeout(function () { m.remove(); }, 1800); }
+  function now() { var d = new Date(2026, 9, 22, 14, 5, 0); return "2026-10-22 14:05:00"; }
+
+  var PG = { size: 20, page: 1 };
+  function draw() {
+    var r = rows(), tb = $("tbody"); tb.textContent = "";
+    var n = Math.max(1, Math.ceil(r.length / PG.size)); PG.page = Math.min(Math.max(1, PG.page), n);
+    r.slice((PG.page - 1) * PG.size, PG.page * PG.size).forEach(function (x, i) {
+      var tr = document.createElement("tr");
+      [x.v, x.n, x.rc, x.rcd, x.wd, x.wdd, x.np, "", x.au, x.fee, x.as === "0" ? "停用" : "正常"].forEach(function (c) { var td = document.createElement("td"); td.textContent = c; tr.appendChild(td); });
+      var td = document.createElement("td"); td.className = x.rk === "ex" ? "wr-ex" : "wr-run"; td.textContent = x.rk === "ex" ? "豁免" : "执行"; tr.appendChild(td);
+      td = document.createElement("td"); var s = document.createElement("span"); s.className = "wr-st" + (x.on ? "" : " off"); s.textContent = x.on ? "正常" : "关闭"; td.appendChild(s); tr.appendChild(td);
+      td = document.createElement("td"); td.className = "wr-ops";
+      [["编辑", "edit"], ["删除", "del"], ["全部转移", "all"], ["条件转移", "move"]].forEach(function (b) { var bt = document.createElement("button"); bt.type = "button"; bt.className = "bo-btn link"; bt.textContent = b[0]; bt.dataset.act = b[1]; bt.dataset.idx = r.indexOf(x); td.appendChild(bt); });
+      tr.appendChild(td); tb.appendChild(tr);
+    });
+    $("pgTotal").textContent = r.length;
+    var box = $("pgNums"); box.textContent = "";
+    for (var i = 1; i <= n; i++) { var b = document.createElement("button"); b.type = "button"; b.textContent = i; if (i === PG.page) b.setAttribute("aria-current", "page"); b.onclick = (function (k) { return function () { PG.page = k; draw(); }; })(i); box.appendChild(b); }
+    $("pgPrev").disabled = PG.page <= 1; $("pgNext").disabled = PG.page >= n; $("pgGo").value = PG.page;
+    var lb = $("logBody"); lb.textContent = ""; var L = P.get("logEmpty") ? [] : logs();
+    if (!L.length) { var tr0 = document.createElement("tr"), td0 = document.createElement("td"); td0.colSpan = 7; td0.style.textAlign = "center"; td0.style.color = "#909399"; td0.textContent = "暂无数据"; tr0.appendChild(td0); lb.appendChild(tr0); }
+    L.forEach(function (x) { var tr = document.createElement("tr"); x.forEach(function (c) { var td = document.createElement("td"); td.textContent = c; tr.appendChild(td); }); lb.appendChild(tr); });
+    $("logTotal").textContent = L.length;
+  }
+  $("pgPrev").onclick = function () { PG.page--; draw(); };
+  $("pgNext").onclick = function () { PG.page++; draw(); };
+  $("pgSize").onchange = function () { PG.size = +this.value; PG.page = 1; draw(); };
+  $("pgGo").onkeydown = function (e) { if (e.key === "Enter") { var v = parseInt(this.value, 10); if (!isNaN(v)) PG.page = v; draw(); } };
+
+  function show(view) {
+    if (view !== "log") view = "list";
+    $("vList").hidden = view !== "list"; $("vLog").hidden = view !== "log";
+    $("tabList").classList.toggle("on", view === "list"); $("tabLog").classList.toggle("on", view === "log");
+    $("tabList").setAttribute("aria-selected", view === "list"); $("tabLog").setAttribute("aria-selected", view === "log");
+    $("crumb").innerHTML = "位置 › 充值配置 › <b>" + (view === "log" ? "提款风控规则修改记录" : "支付层级配置") + "</b>";
+    if (location.hash.slice(1) !== view) history.replaceState(null, "", "#" + view);
+    if (window.self !== window.top) window.parent.postMessage({ type: "proto-view", view: view }, "*");
+  }
+  window.addEventListener("hashchange", function () { show(location.hash.slice(1)); });
+
+  /* 编辑 / 新增 */
+  var cur = -1, pick = { rk: "run", as: "0", st: "1" };
+  /* 三组单选：data-rk 提款风控规则（本需求新增）、data-as 提款稽核状态、data-st 状态（现有） */
+  function setRadio(attr, k) { pick[attr] = k; document.querySelectorAll("[data-" + attr + "]").forEach(function (l) { l.classList.toggle("on", l.dataset[attr] === k); l.setAttribute("aria-checked", l.dataset[attr] === k); }); }
+  function setRk(k) { setRadio("rk", k); }
+  ["rk", "as", "st"].forEach(function (attr) {
+    document.querySelectorAll("[data-" + attr + "]").forEach(function (l) { l.setAttribute("role", "radio"); l.onclick = function () { setRadio(attr, l.dataset[attr]); }; l.onkeydown = function (e) { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); setRadio(attr, l.dataset[attr]); } }; });
+  });
+  function openEdit(idx) {
+    var r = rows(), x = idx >= 0 ? r[idx] : { v: "", n: "", rc: "", rcd: "", wd: "", wdd: "", np: "", as: "0", on: true, rk: "run" };
+    cur = idx; $("edTitle").textContent = idx >= 0 ? "编辑支付层级" : "添加支付层级";
+    $("edName").value = x.n; $("edVal").value = x.v; $("edRc").value = x.rc; $("edRcDay").value = x.rcd; $("edWd").value = x.wd; $("edWdDay").value = x.wdd; $("edNp").value = x.np;
+    $("edErr").hidden = true; $("edValErr").hidden = true;
+    setRadio("as", x.as); setRadio("st", x.on ? "1" : "0"); setRk(x.rk);
+    $("dlgEdit").hidden = false;
+  }
+  function commit() {
+    var r = rows(), name = $("edName").value.trim(), before = cur >= 0 ? r[cur].rk : null;
+    var x = cur >= 0 ? r[cur] : { fee: 0, au: 0, mem: 0 };
+    x.n = name; x.v = +$("edVal").value.trim(); x.rc = $("edRc").value.trim(); x.rcd = $("edRcDay").value.trim(); x.wd = $("edWd").value.trim(); x.wdd = $("edWdDay").value.trim(); x.np = $("edNp").value.trim();
+    x.as = pick.as; x.on = pick.st === "1"; x.rk = pick.rk;
+    if (cur < 0) r.push(x);
+    var L = logs(); var lab = function (k) { return k === "ex" ? "豁免" : "执行"; };
+    if (cur < 0) L.unshift([now(), x.v, x.n, "—（新增层级）", lab(x.rk), 0, "运营账号A"]);
+    else if (before !== x.rk) L.unshift([now(), x.v, x.n, lab(before), lab(x.rk) + (gaBy ? "（已通过谷歌验证）" : ""), x.mem, "运营账号A"]);
+    /* 新建层级、从豁免改回执行：自动加入每日提款限制设置里所有规则的适用层级（与每日提款限制设置原型共用模拟状态） */
+    if ((before === "ex" && x.rk === "run") || cur < 0) ["cfg", "draft"].forEach(function (key) { var c = P.get(key); if (!c) return; Object.keys(c).forEach(function (k) { if (k.indexOf("lv_") === 0 && c[k].indexOf(x.v) < 0) c[k].push(x.v); }); P.set(key, c); });
+    P.set("rows", r); P.set("layLog", L); P.set("logEmpty", false);
+    $("dlgEdit").hidden = true; $("dlgCfm").hidden = true; msg("保存成功"); draw();
+  }
+  $("edSave").onclick = function () {
+    var name = $("edName").value.trim(), val = $("edVal").value.trim(), r = rows(), bad = false;
+    $("edErr").hidden = true; $("edValErr").hidden = true;
+    if (!name) { $("edErr").textContent = "请输入分层名称"; $("edErr").hidden = false; bad = true; }
+    else if (r.some(function (x, i) { return i !== cur && x.n === name; })) { $("edErr").textContent = "分层名称已存在"; $("edErr").hidden = false; bad = true; }
+    if (!val) { $("edValErr").textContent = "请输入分层值"; $("edValErr").hidden = false; bad = true; }
+    else if (!/^\d+$/.test(val)) { $("edValErr").textContent = "分层值请输入整数"; $("edValErr").hidden = false; bad = true; }
+    else if (r.some(function (x, i) { return i !== cur && String(x.v) === val; })) { $("edValErr").textContent = "分层值已存在"; $("edValErr").hidden = false; bad = true; }
+    if (bad) return;
+    var pickRk = pick.rk, before = cur >= 0 ? r[cur].rk : null;
+    /* Default layer（分层值 0，新会员默认层级）改提款风控规则：必须先通过谷歌验证，验证通过即保存；其他层级走普通二次确认 */
+    if (cur >= 0 && before !== pickRk && String(r[cur].v) === "0") {
+      $("gaText").textContent = "「" + name + "」是新会员默认层级（" + r[cur].mem + " 位会员），修改提款风控规则需要谷歌验证。将从「" + (before === "ex" ? "豁免" : "执行") + "」改为「" + (pickRk === "ex" ? "豁免" : "执行") + "」，已提交的提现订单不受影响。";
+      $("gaCode").value = ""; $("gaErr").hidden = true; $("dlgGa").hidden = false; $("gaCode").focus(); return;
+    }
+    if (cur >= 0 && before !== pickRk) {
+      var mem = r[cur].mem;
+      $("cfText").textContent = pickRk === "ex"
+        ? "将「" + name + "」改为「豁免」后，该层级 " + mem + " 位会员提现时只在单笔大额提现、当日提现次数、当日累计提现金额、资料变更风控、静默账号风控、异常返奖率风控六条里按勾选检查，其他规则不再检查。已提交的提现订单不受影响。确定修改？"
+        : "将「" + name + "」改为「执行」后，该层级自动加入所有规则的适用层级，" + mem + " 位会员提现时按开启的提款风控规则检查。已提交的提现订单不受影响。确定修改？";
+      $("dlgCfm").hidden = false; return;
+    }
+    commit();
+  };
+  $("cfOk").onclick = commit;
+  /* 谷歌验证：演示验证码 123456；空、不是 6 位数字、错误分别提示，不关弹窗 */
+  var GA_CODE = "123456", gaBy = false;
+  $("gaCode").oninput = function () { this.value = this.value.replace(/\D/g, "").slice(0, 6); $("gaErr").hidden = true; };
+  $("gaCode").onkeydown = function (e) { if (e.key === "Enter") $("gaOk").click(); };
+  $("gaOk").onclick = function () {
+    var v = $("gaCode").value, e = $("gaErr");
+    if (!v) { e.textContent = "请输入谷歌验证码"; e.hidden = false; return; }
+    if (!/^\d{6}$/.test(v)) { e.textContent = "请输入 6 位数字验证码"; e.hidden = false; return; }
+    if (v !== GA_CODE) { e.textContent = "谷歌验证码错误，请重新输入"; e.hidden = false; $("gaCode").select(); return; }
+    $("dlgGa").hidden = true; gaBy = true; commit(); gaBy = false;
+  };
+  $("btnNew").onclick = function () { openEdit(-1); };
+
+  /* 条件转移 */
+  function openMove(idx) {
+    var r = rows(); $("mvFrom").textContent = r[idx].n; var sel = $("mvTo"); sel.textContent = "";
+    r.forEach(function (x, i) { if (i !== idx) { var o = document.createElement("option"); o.value = i; o.textContent = x.n; if (x.n === "Tier VIP") o.selected = true; sel.appendChild(o); } });
+    $("mvErr").hidden = true; $("dlgMove").hidden = false; $("dlgMove").dataset.from = idx;
+  }
+  $("mvVip").oninput = function () { var v = this.value.trim(), ok = v === "" || /^[1-9]\d*$/.test(v); $("mvErr").hidden = ok; $("mvErr").textContent = "请输入正整数"; $("mvPreview").firstChild.nodeValue = "符合条件的会员："; $("mvPreview").querySelector("b").textContent = ok ? (v === "" ? 18420 : Math.max(0, 128 - (+v - 30) * 4)) : "—"; };
+  $("mvOk").onclick = function () {
+    if (!$("mvErr").hidden) return;
+    var r = rows(), from = +$("dlgMove").dataset.from, to = +$("mvTo").value, cnt = +$("mvPreview").querySelector("b").textContent || 0;
+    cnt = Math.min(cnt, r[from].mem); r[from].mem -= cnt; r[to].mem += cnt; P.set("rows", r);
+    $("dlgMove").hidden = true; msg("转移成功，共转移 " + cnt + " 人"); draw();
+  };
+
+  document.addEventListener("click", function (e) {
+    var a = e.target.closest("[data-act]");
+    if (a) {
+      var i = +a.dataset.idx;
+      if (a.dataset.act === "edit") openEdit(i);
+      else if (a.dataset.act === "move") openMove(i);
+      /* 删除、全部转移：现有功能，本需求不改动，原型不演示 */
+      return;
+    }
+    var g = e.target.closest("[data-go]"); if (g) { e.preventDefault(); show(g.dataset.go); return; }
+    var s = e.target.closest("[data-scene]");
+    if (s) {
+      var sc = s.dataset.scene, r = rows();
+      show(sc === "logEmpty" ? "log" : "list");
+      if (sc === "editVip") openEdit(r.findIndex(function (x) { return x.n === "Tier VIP"; }));
+      if (sc === "editDef") { openEdit(0); setRk("ex"); }
+      if (sc === "new") openEdit(-1);
+      if (sc === "move") { openMove(0); $("mvVip").value = "30"; $("mvVip").oninput(); }
+      if (sc === "logEmpty") { P.set("logEmpty", true); draw(); }
+    }
+  });
+
+  P.panel($("simPanel"), [
+    { title: "演示值说明", items: [{ type: "note", text: "演示谷歌验证码：123456（其他 6 位数字按错误处理）。层级会员人数、条件转移人数都是演示值；VIP 等级 30 级对应 128 人（示例）。" }] },
+    { items: [{ type: "reset" }] }
+  ]);
+  window.addEventListener("proto-change", function (e) { if (e.detail.key === "*") { P.set("logEmpty", false); } draw(); });
+  draw(); show(location.hash.slice(1));
+})();
+</script>
+<script>
+/* 顶栏「风控审核」：三个后台原型页共用同一个待审核数（提现风控审核页写入 riskCnt），没有演示改动时为示例的 11 笔 */
+(function () {
+  var b = document.getElementById("topCnt"); if (!b) return;
+  function f() { var n = P.get("riskCnt"); if (n == null) n = 11; b.textContent = n; b.className = "bo-n " + (n ? "r" : "g"); }
+  f(); window.addEventListener("proto-change", f);
+})();
+</script>
+</body>
+</html>

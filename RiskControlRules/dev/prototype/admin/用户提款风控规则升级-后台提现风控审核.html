@@ -1,0 +1,547 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>用户提款风控规则升级-后台提现风控审核</title>
+<link rel="stylesheet" href="../../assets/style.css">
+<style>
+.wr-pri{display:inline-block;border-radius:3px;padding:0 8px;font-size:12px;color:#fff;font-weight:700}
+.wr-pri.h{background:#F56C6C}.wr-pri.m{background:#E6A23C}.wr-pri.l{background:#909399}.wr-pri.n{background:#C0C4CC}
+.wr-why{white-space:normal!important;min-width:250px;line-height:1.7}
+.wr-why div{font-family:Consolas,monospace;font-size:12px;color:#606266}
+.wr-why div.old{font-family:var(--font);color:#909399}
+.wr-ui{white-space:normal!important;min-width:170px;line-height:1.6;font-size:12px}
+.wr-c{text-align:center!important;line-height:1.6;font-size:12px}
+.wr-l{line-height:1.6;font-size:12px;white-space:nowrap}
+.wr-kv{display:grid;grid-template-columns:auto auto;column-gap:14px;min-width:360px}
+.wr-kv span{white-space:nowrap}
+.wr-tbl td{padding:6px 8px!important}
+.wr-tbl th.wr-pcol,.wr-tbl td.wr-pcol{width:44px;min-width:44px;padding:6px 4px!important;text-align:center}
+.wr-nar{white-space:normal!important;min-width:70px;max-width:80px;word-break:break-all}
+.wr-red{color:#F56C6C!important}
+.wr-uname{color:#1F3BFF;cursor:pointer}
+.wr-ic{color:#1F3BFF;font-size:11px}
+.wr-ub{all:unset;color:#1F3BFF;cursor:pointer}
+.wr-ub:hover{text-decoration:underline}
+.wr-ib{all:unset;cursor:pointer;display:inline-flex;align-items:center;margin-left:4px;vertical-align:middle;padding:1px}
+.wr-ub:focus-visible,.wr-ib:focus-visible{outline:2px solid #409EFF;outline-offset:1px}
+.wr-alink{color:#409EFF}
+.wr-au{width:min(960px,96vw);max-height:90vh;overflow:auto;padding:22px 24px}
+.wr-au h4{font-size:18px;font-weight:400;margin-bottom:14px}
+.wr-au .frow{grid-template-columns:130px minmax(0,1fr);align-items:start;padding:10px 0}
+.wr-au .frow>.fl{justify-content:flex-end;text-align:right;line-height:1.6}
+.wr-au .fctl{color:#606266;line-height:1.6}
+.wr-au .ro{width:142px;height:28px;border:1px solid #E4E7ED;border-radius:3px;background:#F5F7FA}
+.wr-au .tb{border:1px solid #EBEEF5;border-radius:4px;padding:10px;margin-top:6px}
+.wr-au table{border-collapse:collapse;width:100%;font-size:12.5px}
+.wr-au th,.wr-au td{border:1px solid #EBEEF5;padding:10px 8px;text-align:center;color:#909399}
+.wr-au td{color:#606266}
+.wr-au th{color:#909399;font-weight:700}
+.wr-ly{width:min(950px,96vw);padding:22px 24px}
+.wr-ly h4{font-size:18px;font-weight:400;margin-bottom:22px}
+.wr-ly .frow{grid-template-columns:150px minmax(0,1fr)}
+.wr-ly .frow>label,.wr-ly .frow>.fl{justify-content:flex-end}
+.wr-ly .row2{margin-top:18px}
+.wr-fd{width:min(960px,96vw);max-height:90vh;overflow:auto;padding:22px 24px}
+.wr-fd h4{font-size:18px;font-weight:400;margin-bottom:8px}
+.wr-ftab{display:flex;align-items:center;gap:0}
+.wr-ftab button{font-family:var(--font);height:32px;padding:0 15px;border:1px solid #DCDFE6;background:#fff;color:#606266;font-size:13px;cursor:pointer}
+.wr-ftab button:first-child{border-radius:3px 0 0 3px}.wr-ftab button:nth-child(2){border-radius:0 3px 3px 0;border-left:0}
+.wr-ftab button[aria-selected="true"]{background:#409EFF;border-color:#409EFF;color:#fff}
+.wr-ftab .wr-ftip{color:#F56C6C;font-size:10px;margin-left:10px}
+.wr-fgrid{display:grid;grid-template-columns:180px 1fr 180px 1fr;column-gap:16px;row-gap:9px;font-size:13px;color:#606266;margin-top:6px}
+.wr-fgrid .k{text-align:right;color:#606266}.wr-fgrid .v{color:#606266;word-break:break-all}
+.wr-fd table{border-collapse:collapse;width:100%;font-size:12.5px}
+.wr-fd th,.wr-fd td{border:1px solid #EBEEF5;padding:10px 8px;text-align:center;color:#909399}
+.wr-fd th{background:#fff;color:#909399;font-weight:700}
+.wr-sort{color:#C0C4CC;font-size:11px}
+.wr-lay{color:#409EFF;font-size:11px;margin-left:2px}
+.wr-dt{width:min(1040px,96vw);max-height:88vh;overflow:auto}
+.wr-dt table{margin-top:6px;border-collapse:collapse;width:100%;font-size:12.5px}
+.wr-dt th,.wr-dt td{white-space:normal;vertical-align:top;line-height:1.7;border:1px solid #EBEEF5;padding:6px 8px;text-align:left;color:#606266}
+.wr-dt th{background:#FAFAFA;color:#303133;font-weight:700}
+.wr-dt .hd th{width:110px;background:#F5F7FA}
+.wr-dt .mt th{text-align:center;white-space:nowrap}
+.wr-dt .mt td.c{text-align:center;white-space:nowrap}
+.wr-src{display:inline-block;font-size:11px;border-radius:3px;padding:0 6px;white-space:nowrap}
+.wr-src.n{background:#ECF5FF;color:#409EFF}.wr-src.o{background:#F4F4F5;color:#909399}
+.wr-sub{font-size:12px;color:#909399}
+/* 「查看需求方案」骑在所属单元格 / 区块的上边框上（右上角），只压住边框和内边距，不遮挡文字和控件，也不占页面空间 */
+.wr-orig{position:absolute;top:0;right:4px;transform:translateY(-50%);z-index:6;margin:0;display:inline-block;border:1px solid rgba(10,186,181,.35);background:rgba(232,248,247,.96);color:#0A9E9A;border-radius:8px;padding:0 5px;font-size:10px;line-height:13px;box-shadow:0 1px 4px rgba(0,0,0,.08);opacity:.85;transition:opacity .15s;cursor:pointer;font-family:var(--font);white-space:nowrap;font-weight:400}
+:is(th,td,div,h4,h5,span,section,label,p):has(> .wr-orig){position:relative}
+.wr-orig:hover,.wr-orig:focus-visible{opacity:1}
+/* 弹窗标题里的按钮跟在标题文字后面，避开右上角的 × */
+.bo-dlg h4 > .wr-orig{position:relative;top:auto;right:auto;transform:none;margin-left:8px}
+
+.wr-orig:hover{background:rgba(10,186,181,.85);border-color:transparent;color:#fff}
+.wr-od dt{font-size:12px;color:#909399;margin-top:8px}
+.wr-od dd{margin:2px 0 0;white-space:pre-wrap;line-height:1.7}
+.wr-od dd.q{background:rgba(129,216,208,.12);border-left:3px solid rgba(10,186,181,.6);padding:6px 10px}
+@keyframes wrFlash{0%,100%{transform:scale(1)}30%{transform:scale(1.5);box-shadow:0 0 0 4px rgba(255,255,255,.6)}}
+.wr-flash{animation:wrFlash .5s ease 3}
+.wr-auto{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:#606266}
+.ui-reqnote.wr-dn{display:inline-block;margin:2px 0;padding:1px 6px;font-size:11.5px}
+.ui-reqnote.wr-dn::before{content:"※ 需求说明，上线不显示：";display:inline;font-weight:700}
+</style>
+</head>
+<body>
+<div class="with-nav">
+<div class="adm-stage">
+  <div class="bo">
+    <div class="bo-top1"><span>当前时间：2026/10/22 13:58:12 -04:00</span><span class="sp">简体中文</span><span>运营账号A ▾</span></div>
+    <div class="bo-top2"><span>在线人数<b class="bo-n r">5</b></span><span>当日注册<b class="bo-n g">0</b></span><span>当日充值成功<b class="bo-n g">0</b></span><span>提款<b class="bo-n g">0</b></span><span>风控审核<b class="bo-n g" id="topCnt">0</b></span><span>风控超时(&gt;30分)<b class="bo-n r">1</b></span></div>
+    <div class="bo-body">
+      <nav class="bo-menu" aria-label="后台菜单">
+        <div class="mt">菜单 ≡</div>
+        <div class="g">用户管理</div><div class="g">财务管理</div>
+        <div class="g open">提现管理</div>
+        <div class="i">提现出款设置</div><div class="i on">提现风控审核</div><div class="i">即时流水稽核查询</div><div class="i">稽核变更记录</div><div class="i">风控预警</div>
+        <div class="g">充值配置</div><div class="g">系统管理</div>
+      </nav>
+      <div class="bo-main">
+        <div class="bo-crumb">位置 › 提现管理 › <b>提现风控审核</b></div>
+        <div class="bo-filter">
+          <input class="bo-inp" style="width:290px" value="2026-10-22 00:00:00 ~ 2026-10-22 23:59:59" aria-label="订单日期">
+          <select class="bo-inp" id="fSt" aria-label="审核状态"><option value="wait">待审核</option><option value="all">全部</option><option value="pass">已通过</option><option value="rej">已驳回</option></select>
+          <select class="bo-inp" aria-label="出款方式"><option>出款方式</option></select>
+          <input class="bo-inp" style="width:130px" placeholder="会员名" aria-label="会员名">
+          <input class="bo-inp" style="width:100px" placeholder="最小金额" aria-label="最小金额">
+          <input class="bo-inp" style="width:100px" placeholder="最大金额" aria-label="最大金额">
+          <select class="bo-inp" aria-label="支付层级"><option>支付层级</option><option>Default layer</option><option>Tier VIP</option></select>
+          <select class="bo-inp" aria-label="订单类型"><option>订单类型</option></select>
+          <label class="wr-auto"><input type="checkbox" checked> 过滤测试用户</label>
+          <button class="bo-btn q" type="button" id="btnSearch">搜索</button>
+          <span class="wr-auto"><input class="bo-inp" style="width:56px" value="30" aria-label="自动刷新秒数"> 秒自动刷新</span>
+          <button type="button" class="wr-orig" data-orig="flow" aria-label="命中后进入本页：查看需求方案">命中后进入本页 · 查看需求方案</button>
+        </div>
+        <div class="bo-content">
+          <div style="display:flex;justify-content:flex-end;gap:10px;align-items:center;margin-bottom:8px"><span class="wr-sub">总额：<b style="color:#F56C6C" id="sumAmt">0.00</b>(PHP)</span><button class="bo-btn q" type="button">查询总计</button><button class="bo-btn" type="button">导出</button></div>
+          <table class="wr-tbl">
+            <thead><tr>
+              <th class="glow wr-pcol"><span class="ui-nw">优先级<i class="qm" tabindex="0" data-tip="按命中规则里最高的一级显示，列表默认按高、中、低排序，同级按下单时间先后。风控配置原有条件也分级：黑名单、NDRP 名单、余额不一致、风控预警风险记录为高，其他为低。没有命中任何条件、因「未触发时自动通过」关闭而进入审核的订单显示「—」，排在最后。">?</i></span><button type="button" class="wr-orig" data-orig="pri" aria-label="优先级：查看需求方案">查看需求方案</button></th>
+              <th>订单日期 <span class="wr-sort">⇅</span></th><th>订单号</th><th>订单状态</th><th>用户信息<button type="button" class="wr-orig" data-orig="lay" aria-label="提交时层级：查看需求方案">查看需求方案</button></th><th>提款金额/ 手续费(PHP) <span class="wr-sort">⇅</span></th><th>实际出款金额</th><th>收款账户信息</th><th>用户资金情况</th><th>用户7日输赢</th><th>ip地址/ip区域</th><th>提现终端</th><th>出款方式</th><th>稽核明细</th>
+              <th><span class="ui-nw">触发风控条件<i class="qm" tabindex="0" data-tip="点「查看命中详情」查看这笔提现命中了哪些规则、为什么命中，以及提交时的统计数据和阈值。">?</i></span><button type="button" class="wr-orig" data-orig="why" aria-label="触发风控条件：查看需求方案">查看需求方案</button></th>
+              <th>审核备注</th><th>订单类型</th><th>处理时间</th><th>操作时间</th><th>操作人</th><th>操作</th>
+            </tr></thead>
+            <tbody id="tbody"></tbody>
+          </table>
+          <div class="bo-page" role="navigation" aria-label="分页">
+            <span>共 <b id="pgTotal">0</b> 条</span>
+            <label>每页 <select id="pgSize" aria-label="每页条数"><option value="2">2</option><option value="10">10</option><option value="20" selected>20</option><option value="50">50</option></select> 条</label>
+            <button type="button" id="pgPrev" aria-label="上一页">‹</button><span id="pgNums"></span><button type="button" id="pgNext" aria-label="下一页">›</button>
+            <label>前往 <input id="pgGo" inputmode="numeric" aria-label="前往页码" value="1"> 页</label>
+          </div>
+          <p class="ui-reqnote">本需求只改：新增「优先级」列和默认排序；「触发风控条件」只放「查看命中详情」按钮，命中的规则和原因在弹窗里说明（跟随后台语言显示中文或英文）；「用户信息」显示提交时的会员层级。其余列、筛选和通过 / 驳回流程保持现状。</p>
+          <p class="ui-reqnote">示例数据均为虚构。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 命中详情 -->
+  <div class="bo-mask" id="dlgDt" hidden>
+    <div class="bo-dlg wr-dt" role="dialog" aria-modal="true" aria-labelledby="dtTitle">
+      <h4 id="dtTitle" style="display:flex;align-items:center">命中详情<button type="button" class="wr-orig" data-orig="dt" aria-label="命中详情：查看需求方案">查看需求方案</button></h4>
+      <div class="wr-sub" id="dtHead"></div>
+      <div id="dtBody"></div>
+      <div class="row2"><button class="bo-btn" type="button" data-cancel>关闭</button></div>
+    </div>
+  </div>
+  <!-- 用户资金情况（现有功能，按线上弹窗还原） -->
+  <div class="bo-mask" id="dlgFund" hidden>
+    <div class="bo-dlg wr-fd" role="dialog" aria-modal="true" aria-labelledby="fdTitle">
+      <h4 id="fdTitle">用户资金情况</h4>
+      <div class="wr-ftab" role="tablist">
+        <button type="button" role="tab" data-ftab="24h" aria-selected="true">24小时资金详情</button>
+        <button type="button" role="tab" data-ftab="last" aria-selected="false">上次提款成功后</button>
+        <span class="wr-ftip">提款成功查询时间至多一周</span>
+      </div>
+      <div class="wr-fgrid" id="fdGrid"></div>
+      <div style="font-size:13px;color:#606266;margin-top:4px">三方投注明细：</div>
+      <div style="border:1px solid #EBEEF5;border-radius:4px;padding:10px"><table><thead><tr><th>平台名称</th><th>注单量</th><th>有效投注金额</th></tr></thead><tbody id="fdThird"></tbody></table></div>
+    </div>
+  </div>
+  <!-- 稽核明细（现有功能，按线上弹窗还原） -->
+  <div class="bo-mask" id="dlgAud" hidden>
+    <div class="bo-dlg wr-au" role="dialog" aria-modal="true" aria-labelledby="auTitle">
+      <h4 id="auTitle">稽核明细</h4>
+      <div class="frow"><span class="fl">稽核实际扣除金额(PHP)</span><div class="fctl"><span class="ro" id="auDeduct" aria-label="稽核实际扣除金额"></span></div></div>
+      <div class="frow"><span class="fl">实际出款金额</span><div class="fctl" id="auPay"></div></div>
+      <div class="frow"><span class="fl">稽核手续费检核通过</span><div class="fctl" id="auFee"></div></div>
+      <div class="frow"><span class="fl">稽核操作记录</span><div class="fctl" id="auLog"></div></div>
+      <div class="frow"><span class="fl">稽核明细</span><div class="fctl"></div></div>
+      <div class="tb"><table><thead><tr><th>创建时间</th><th>类别名称</th><th>交易单号</th><th>充值金额</th><th>要求打码量</th><th>已完成打码量</th><th>通过/不通过</th><th>扣除金额</th><th>操作</th></tr></thead><tbody id="auBody"></tbody></table></div>
+      <div class="row2"><button class="bo-btn" type="button" data-cancel>取消</button></div>
+    </div>
+  </div>
+  <!-- 更换用户层级（现有功能，按线上弹窗还原） -->
+  <div class="bo-mask" id="dlgLay" hidden>
+    <div class="bo-dlg wr-ly" role="dialog" aria-modal="true" aria-labelledby="lyTitle">
+      <h4 id="lyTitle">更换用户层级</h4>
+      <div class="frow"><span class="fl">账号:</span><div class="fctl"><span id="lyUser" style="color:#606266"></span></div></div>
+      <div class="frow"><label for="lyTo"><span class="req">*</span>迁移至:</label><div class="fctl"><select class="bo-inp" id="lyTo" style="width:min(535px,100%)"></select></div></div>
+      <div class="row2"><button class="bo-btn" type="button" data-cancel>取 消</button><button class="bo-btn q" type="button" id="lyOk">确 定</button></div>
+    </div>
+  </div>
+  <!-- 驳回 -->
+  <div class="bo-mask" id="dlgRej" hidden>
+    <div class="bo-dlg" role="dialog" aria-modal="true" aria-labelledby="rjTitle">
+      <h4 id="rjTitle">驳回提现</h4>
+      <div class="frow" style="grid-template-columns:80px minmax(0,1fr)"><label for="rjWhy"><span class="req">*</span>驳回原因</label><div class="fctl"><textarea class="bo-inp" id="rjWhy" style="width:100%;height:70px;padding:6px 10px" placeholder="会员会在站内信里看到这段原因"></textarea><span class="ferr" id="rjErr" hidden>请填写驳回原因</span></div></div>
+      <p class="ui-reqnote">沿用现有驳回流程：提现金额退回会员余额，按「提款驳回提醒」发站内信。</p>
+      <div class="row2"><button class="bo-btn" type="button" data-cancel>取消</button><button class="bo-btn q" type="button" id="rjOk">确定驳回</button></div>
+    </div>
+  </div>
+  <!-- 通过确认 -->
+  <div class="bo-mask" id="dlgOk" hidden>
+    <div class="bo-dlg" role="dialog" aria-modal="true" aria-labelledby="okTitle">
+      <h4 id="okTitle">确认通过</h4>
+      <p style="margin:0" id="okText"></p>
+      <div class="row2"><button class="bo-btn" type="button" data-cancel>取消</button><button class="bo-btn q" type="button" id="okOk">确定</button></div>
+    </div>
+  </div>
+
+  <!-- 查看需求方案（放在其他弹窗之后，从弹窗里点开时显示在最上层） -->
+  <div class="bo-mask" id="dlgOrig" hidden>
+    <div class="bo-dlg" style="width:min(620px,94vw)" role="dialog" aria-modal="true" aria-labelledby="odTitle">
+      <h4 id="odTitle">需求方案</h4>
+      <dl class="wr-od" style="margin:0"><dt>原需求中的位置</dt><dd id="odLoc"></dd><dt>原需求原文</dt><dd class="q" id="odText"></dd><dt>为何新增 / 调整，依据是什么</dt><dd id="odDiff"></dd></dl>
+      <p style="margin:0;font-size:12px;color:#909399">原需求：SharePoint「提现风控方案.docx」2026-10-22 版本（作者 Xyan）。原文照录，含原文的繁体字和格式。</p>
+      <div class="row2"><button class="bo-btn" type="button" data-cancel>关闭</button></div>
+    </div>
+  </div>
+
+  <aside class="notes adm-notes">
+    <h2>后台提现风控审核</h2>
+    <p class="sub">提现管理 › 提现风控审核。命中提款风控规则的提现都进入这里人工审核；本需求新增「优先级」列、命中详情，合并新旧命中原因（带淡色光晕的是本需求新增的控件）。</p>
+    <h3>模拟场景</h3>
+    <div class="sim">
+      <button type="button" data-scene="multi"><span class="simtag">列表</span>多条待审核（含多页）</button>
+      <button type="button" data-scene="empty"><span class="simtag">列表</span>空列表</button>
+      <button type="button" data-scene="dt1"><span class="simtag">详情</span>充提差风控 + 投注偏低</button>
+      <button type="button" data-scene="dt2"><span class="simtag">详情</span>Tier VIP · 静默账号风控</button>
+    </div>
+    <h3>模拟操作</h3>
+    <div class="sim" id="simPanel"></div>
+    <h3>规则批注</h3>
+    <ol>
+      <li><b>进入方式</b>：会员提交提现时命中任意一条提款风控规则 → 订单直接进入本页待审核，同时后台页头的「风控审核」计数 +1（所有后台页面的页头都同步显示，新进来时数字闪一下提醒）；不受「未触发时自动通过」影响。审核通过或驳回后 −1。</li>
+      <li><b>触发风控条件列</b>：每笔订单只显示「查看命中详情」按钮，不在列表里直接列原因。同一笔同时命中提款风控规则和风控配置原有条件时，只有一条记录，原因都在弹窗里列出。</li>
+      <li><b>后台语言</b>：顶栏语言下拉切换「简体中文 / English」，整个后台画面（列表、弹窗、提示）都跟着切换，包括命中详情里的规则名称、触发原因、统计区间、实际值和阈值；三个后台原型页共用当前选择。中英对照见 assets/admin-en-dict.js。</li>
+      <li><b>命中详情弹窗（表格排版，跟随后台语言）</b>：上方「订单信息表」：订单号、会员名、提交时层级、提现金额、订单日期、共命中几条。下方「命中规则表」每条命中一行，列为：序号、优先级（颜色）、命中规则（规则名称）、类型（提款风控规则 / 原有风控条件）、触发原因（一句话说明，实际数值对比阈值）、统计区间、实际值、阈值。命中当日低投注风控时，表下另附「前一日及近 7 日充值和投注」表。数值取提交时的配置，之后改配置不影响；不显示规则编号；原有风控条件的统计区间、实际值、阈值沿用现有风控配置的展示（原型里用需求说明样式标注，上线不显示这段说明）。</li>
+      <li><b>会员名（现有功能，按线上还原）</b>：会员名为蓝色，后面依次是条状图图标和复制按钮。点会员名或条状图图标，打开「用户资金情况」弹窗：两个标签页「24小时资金详情」「上次提款成功后」（旁边红字提示「提款成功查询时间至多一周」），两列显示账号、名称、当前登录时间、当前IP信息、账户余额、上次充值金额、充值次数 / 金额、提款次数 / 金额、投注总金额、输赢总金额、退水总金额、未结算金额、活动金额、红包金额、后台加钱 / 扣钱、三方投注总额、备注、上次提款成功时间，下方是三方投注明细表（平台名称、注单量、有效投注金额，没有数据时显示 No Data）。点复制按钮把会员名复制到剪贴板，提示「复制成功」。</li>
+      <li><b>稽核明细（现有功能，按线上还原）</b>：点「稽核明细」打开弹窗：稽核实际扣除金额(PHP)、实际出款金额、稽核手续费检核通过、稽核操作记录，下方稽核明细表（创建时间、类别名称、交易单号、充值金额、要求打码量、已完成打码量、通过/不通过、扣除金额、操作，没有记录时显示 No Data），右下角「取消」关闭。</li>
+      <li><b>列表其余各列</b>：订单日期、订单号、订单状态、用户信息（会员名、会员层级、真实姓名、名 / 中间名 / 姓、余额、近 7 天有效投注、提款次数、币种）、提款金额 / 手续费、实际出款金额、收款账户信息、用户资金情况、用户 7 日输赢、IP 区域、提现终端、出款方式、稽核明细、审核备注、订单类型、处理时间、操作时间、操作人，按线上现有显示方式，本需求不改；「会员层级」显示提交时的层级。</li>
+      <li><b>优先级</b>：高 = 拆分提现风控、资料变更风控（第二期加关联风险账号）；中 = 充提差风控、无充值提现风控、当日低投注风控、静默账号风控、异常返奖率风控、规则计算异常（第二期加同设备、同 IP）；低 = 单笔大额提现、当日提现次数、当日累计提现金额。风控配置原有条件也分级（10-26 确认）：用户 IP 在黑名单、真实姓名在黑名单、在 NDRP 名单、余额与资金明细余额不一致、在风控预警中有待处理或已确认风险记录为高；其他原有条件（如用户首次提款、提款 IP 与其他用户重复、7 天总输赢）为低。没有命中任何条件、因【风控配置】「未触发时自动通过」关闭而进入审核的订单显示「—」，排在最后（10-26 确认）。一笔取最高的一级；只用于排序和颜色，不影响审核权限。</li>
+      <li><b>命中详情</b>：逐条列出统计区间、实际值和当时的阈值；当日低投注风控另外列出前一日和近 7 日的充值、投注。</li>
+      <li><b>用户信息</b>：显示提交提现时的会员层级（记录在订单上）。需要把会员调到 Tier VIP 时，直接点「会员层级」后面的蓝色铅笔，在「更换用户层级」弹窗（账号、*迁移至下拉，取消 / 确定）里选择层级，提示「修改成功」；也可在【用户管理 › 会员 › 编辑用户】修改。这两处都是现有功能，本需求不改。调整后，列表在「（提交时）」后追加「当前 X」；这笔已提交的订单仍按提交时的层级判断，之后提交的提现按新层级检查。</li>
+      <li><b>通过 / 驳回</b>：沿用现有流程。驳回必须填原因，金额退回余额，发站内信；会员端订单从 Under review 变为对应状态。</li>
+      <li><b>空列表</b>：没有待审核订单时显示「暂无数据」。</li>
+    </ol>
+    <h3>评审待确认</h3>
+    <ol>
+      <li><b>第二期</b>：同设备、同 IP、关联风险账号的命中详情（关联账号列表等）在第三方风控对接成功后再做。</li>
+    </ol>
+    <div class="pager"><a href="用户提款风控规则升级-后台每日提款限制设置.html">← 上一页：后台每日提款限制设置</a><span></span></div>
+  </aside>
+</div>
+</div>
+<script>window.NAV_ROOT = "../../";</script>
+<script src="../../assets/nav-data.js"></script>
+<script src="../../assets/nav.js"></script>
+<script src="../../assets/proto.js"></script>
+<script src="../../assets/admin-en-dict.js"></script>
+<script src="../../assets/admin-en.js"></script>
+<script>
+(function () {
+  var $ = function (id) { return document.getElementById(id); };
+  /* 弹窗「取消 / 关闭」和右上角 ×（nav.js 联动到取消按钮）：关闭弹窗，不保存；Esc 同样关闭最上层弹窗 */
+  document.addEventListener("click", function (e) { var c = e.target.closest("[data-cancel]"); if (c) { var m = c.closest(".bo-mask"); if (m) m.hidden = true; } });
+  document.addEventListener("keydown", function (e) { if (e.key !== "Escape") return; var open = [].filter.call(document.querySelectorAll(".bo-mask"), function (m) { return !m.hidden; }); if (open.length) open[open.length - 1].hidden = true; });
+  /* 查看需求方案：loc 原需求中的位置编号，text 原文照录（2026-10-22 版本），diff 为何新增 / 调整及依据 */
+  var ORIG = {
+    flow: { loc: "开头说明；二、R01 至 R03 的处理；六、审核流程第 3 步", text: "开头：新增规则命中后按觸發风控项進行備注並風控條件進入人工審核處理。\n二：R01 至 R03 沿用现有处理方式；已进入人工审核的，合并命中原因。\n六-3：人工審核：核查后放行或駁回提款申請，", diff: "确认表 A08：普通用户命中任意一条就直接进入本页，顶栏「风控审核」+1，不受「未触发时自动通过」影响，不新开审核页；和原有条件同时命中只生成一条记录。通过、驳回沿用现有流程（第三轮 N9）。" },
+    pri: { loc: "六、审核流程 · 优先级表", text: "高：R08 风险账号关联、R09 疑似拆分提现 R10 修改提现资料\n中：R04 提现充值差异、R05 投注不足、R06 同设备多账号、R07 同 IP 组合异常、R11 长期未活跃后异常提现、R12 异常盈利\n低：R01 提现次数、R02 大额提现、R03 真人投注占比", diff: "原文只给了分级，没写用途。确认表 C31：只用于审核列表排序和颜色标记，同一笔取命中规则里最高的一级。新拆出的「无充值提现风控」和「规则计算异常」按中级（本需求补充）；风控配置原有条件分级：黑名单、NDRP 名单、余额不一致、风控预警风险记录为高，其他为低；没有命中任何条件的订单显示「—」排最后（10-26 确认）。" },
+    why: { loc: "开头说明；二、R01 至 R03 的处理；六、审核流程第 3 步英文备注表", text: "开头：……新增规则命中后按觸發风控项進行備注……\n二：已进入人工审核的，合并命中原因。\n六-3 英文备注表：R01 Daily withdrawals exceed 10times；R02 Withdrawal amount more than 10000；R03 First withdrawal: live casino bet ratio ≥ 80%；R04 Total Withdraw exceeds 10x today's deposits；R05 Today's turnover below 5x deposits；…；R12 Withdrawal high winnings rate", diff: "Joshua 10-22 改为：列表这一列只放「查看命中详情」按钮，弹窗里用中文写清命中了哪条规则、因为什么命中（取代确认表 C10「只显示英文」）。原定：确认表 C10：只显示英文风控原因，不显示 R01–R12 编号；C33：英文只在后台显示，会员端只显示 Under review，数值按命中时的配置动态生成；A08：和原有条件同时命中时合并在一条记录里显示。" },
+    dt: { loc: "四、统计口径（末句）", text: "R05 审核页同时展示前一日及近 7 日的充值和投注数据。", diff: "原文只要求当日低投注风控展示前一日及近 7 日数据。确认表 C34 提出审核人需要命中依据才能判断；第三轮 N10 定为记录命中时的阈值快照。所以每条规则都在命中详情里列统计区间、实际值和当时的阈值；同设备、同 IP、关联风险账号的依据（关联账号列表）放第二期（C34、第二轮 N1）。" },
+    lay: { loc: "六、审核流程第 1 步", text: "接收申请：校验读取用户层级、交易数据及规则版本。", diff: "确认表 C04：按提交提现时的会员层级判断，并记录在订单上；审核页显示这个层级，之后再调层级不影响已提交的订单。需要调到 Tier VIP 时在【会员 › 编辑用户】操作（第三轮 N8）。" }
+  };
+  document.addEventListener("click", function (e) {
+    var b = e.target.closest("[data-orig]"); if (!b) return;
+    var o = ORIG[b.dataset.orig]; if (!o) return;
+    $("odTitle").textContent = "需求方案 · " + b.getAttribute("aria-label").split("：")[0];
+    $("odLoc").textContent = o.loc; $("odText").textContent = o.text; $("odDiff").textContent = o.diff; $("dlgOrig").hidden = false;
+  });
+  var PRI = { h: ["高", 0], m: ["中", 1], l: ["低", 2], n: ["—", 3] };
+  /* 订单：列表各列按线上【提现风控审核】的显示方式；why 为命中的规则：en 规则（内部标识），p 优先级，rg 统计区间，act 实际值，thr 阈值（均为提交时的数值），old 为原有风控条件 */
+  var BASE = [
+    { id: "W20261022000101", t: "2026-10-22 13:20:11", u: "player_a01", nm: ["Juan", "N/A", "Dela Cruz"], lay: "Default layer", amt: 9500, bank: "GCash", card: "*****4321", term: "H5", way: "eWallet",
+      why: [{ en: "Multiple withdrawals total more than 10000", p: "h", rg: "13:00:05 – 13:20:11（30 分钟滑动窗口）", act: "3 笔有效申请：3,000 / 3,500 / 9,500，累计 16,000", thr: "≥ 3 笔且累计 > 10,000" },
+             { en: "Withdrawal after withdrawal account changed", p: "h", rg: "资料修改后 72 小时内", act: "2026-10-21 20:14 新增 GCash 收款账号，17 小时后申请提现", thr: "修改后 72 小时内的每一笔" }] },
+    { id: "W20261022000088", t: "2026-10-22 12:41:37", u: "player_b02", nm: ["Maria", "Santos", "Reyes"], lay: "Default layer", amt: 30000, bank: "Maya", card: "*****8654", term: "iOS", way: "eWallet",
+      why: [{ en: "Total withdrawal exceeds 10x today's deposits", p: "m", rg: "2026-10-22 00:00 – 12:41（当日，GMT+8）", act: "当日提现总额 35,000（当日已成功 5,000 + 本次 30,000）；当日成功充值 3,000", thr: "当日成功充值 × 10 = 30,000" },
+             { en: "Turnover below 5x deposits", p: "m", rg: "2026-10-22 00:00 – 12:41（当日，GMT+8）", act: "当日有效投注 8,200；当日成功充值 3,000", thr: "当日成功充值 × 5 = 15,000", r05: true },
+             { old: "用户提款 IP 与其他用户的提款 IP 重复" }] },
+    { id: "W20261022000075", t: "2026-10-22 11:05:42", u: "player_c03", nm: ["Jose", "N/A", "Garcia"], lay: "Tier VIP", amt: 4000, bank: "GCash", card: "*****2118", term: "Android", way: "eWallet",
+      why: [{ en: "Withdrawal after 15+ days inactive without deposit", p: "m", rg: "上次登录 2026-09-30 18:22 – 本次登录 2026-10-22 10:58", act: "间隔 21 天；本次登录后成功充值 0 笔", thr: "超过 15 天未登录且登录后无充值", dn: "Tier VIP 是豁免层级，这条规则仍检查（原始需求第五节）" }] },
+    { id: "W20261022000070", t: "2026-10-22 10:48:20", u: "player_g07", nm: ["Ana", "N/A", "Lopez"], lay: "Default layer", amt: 2500, bank: "GCash", card: "*****5736", term: "Android", way: "eWallet",
+      why: [{ en: "No deposit today", p: "m", rg: "2026-10-22 00:00 – 10:48（当日，GMT+8）", act: "当日成功充值 0 笔；本次申请 2,500", thr: "当日无充值且本次申请 ≥ 1,000" }] },
+    { id: "W20261022000063", t: "2026-10-22 10:30:09", u: "player_d04", nm: ["Mark", "N/A", "Tan"], lay: "Default layer", amt: 1200, bank: "GCash", card: "*****0907", term: "H5", way: "eWallet",
+      why: [{ en: "Rule check error", p: "m", rg: "—", act: "异常返奖率风控规则计算超时", thr: "计算失败或超时按命中处理" }] },
+    { id: "W20261022000058", t: "2026-10-22 09:40:18", u: "player_h08", nm: ["Paolo", "N/A", "Cruz"], lay: "Default layer", amt: 6000, bank: "GCash", card: "*****1480", term: "iOS", way: "eWallet",
+      why: [{ en: "Payout exceeds 5x turnover", p: "m", rg: "2026-10-20 16:30（上一笔成功提现）– 2026-10-22 09:40", act: "派彩 12,600 ÷ 有效投注 2,100 = 6.0 倍", thr: "> 5 倍（有效投注 ≥ 1,000 才判断）" }] },
+    { id: "W20261022000051", t: "2026-10-22 09:12:55", u: "player_e05", nm: ["Liza", "N/A", "Ramos"], lay: "Tier 1", amt: 800, bank: "Maya", card: "*****3240", term: "iOS", way: "eWallet",
+      why: [{ en: "Daily withdrawals exceed 10 times", p: "l", rg: "2026-10-22 00:00 – 09:12（当日，GMT+8）", act: "当日第 11 笔（含本次）", thr: "> 10 笔" }] },
+    { id: "W20261022000046", t: "2026-10-22 09:05:41", u: "player_i09", nm: ["Carlo", "N/A", "Mendoza"], lay: "Tier 1", amt: 15000, bank: "Maya", card: "*****7293", term: "H5", way: "eWallet",
+      why: [{ en: "Withdrawal amount more than 10000", p: "l", rg: "本次申请", act: "15,000", thr: "> 10,000" }] },
+    { id: "W20261022000044", t: "2026-10-22 08:58:07", u: "player_j10", nm: ["Rosa", "N/A", "Villanueva"], lay: "Default layer", amt: 9000, bank: "GCash", card: "*****6615", term: "Android", way: "eWallet",
+      why: [{ en: "Daily withdrawal total exceeds 50000", p: "l", rg: "2026-10-22 00:00 – 08:58（当日，GMT+8）", act: "当日累计提款 54,000（当日已成功 45,000 + 本次 9,000）", thr: "> 50,000" }] },
+    { id: "W20261022000040", t: "2026-10-22 08:47:30", u: "player_f06", nm: ["Ben", "N/A", "Aquino"], lay: "Default layer", amt: 2600, bank: "GCash", card: "*****5552", term: "H5", way: "eWallet",
+      why: [{ old: "用户首次提款" }] },
+    { id: "W20261022000036", t: "2026-10-22 08:30:12", u: "player_k11", nm: ["Nina", "N/A", "Flores"], lay: "Default layer", amt: 3200, bank: "GCash", card: "*****8821", term: "Android", way: "eWallet",
+      why: [{ old: "用户 IP 在黑名单中" }] }
+  ];
+  /* 线上列表其余各列的示例数据（虚构，按订单号固定生成） */
+  function fin(r) {
+    var k = parseInt(r.id.slice(-3), 10) || 1, dep = 2000 + k * 37;
+    return { bal: (r.amt * 0.3 + k * 11).toFixed(2), bet7: (k * 63).toLocaleString() + ".00", wdc: k % 7, lastDep: dep.toLocaleString() + ".00", lastDepT: "2026-10-2" + (k % 2 + 1) + " 0" + (k % 9) + ":18:37",
+      lastBn: (k % 50 + 0.89).toFixed(2), lastBnT: "2026-10-21 0" + (k % 9) + ":18:02", totDep: (dep * 6).toLocaleString() + ".00", totWd: (dep * 4).toLocaleString() + ".00",
+      win: ((k % 2 ? 1 : -1) * k * 21).toLocaleString() + ".00", sport: "0.00", third: ((k % 2 ? 1 : -1) * k * 21).toLocaleString() + ".00", note: String(43545660 + k) };
+  }
+  P.init({ defaults: { orders: null, ordEmpty: false } });
+  function rows() {
+    if (P.get("ordEmpty")) return [];
+    var R = P.get("orders") || JSON.parse(JSON.stringify(BASE));
+    /* 旧版本模拟状态里的订单缺少新字段时，按示例数据补齐，避免页面报错 */
+    R.forEach(function (r) { var b = BASE.filter(function (x) { return x.id === r.id; })[0];
+      if (!r.nm) r.nm = b ? b.nm : ["Leo", "N/A", "Bautista"]; if (!r.bank) { r.bank = b ? b.bank : "GCash"; r.card = b ? b.card : "*****0000"; r.way = "eWallet"; }
+      if (b) r.why = b.why; });
+    return R;
+  }
+  /* 风控配置原有条件的优先级（10-26 确认）：黑名单、NDRP 名单、余额不一致、风控预警风险记录为高，其他为低 */
+  var OLD_HIGH = /黑名单|NDRP|余额与资金明细|风控预警/;
+  function wp(w) { return w.p || (w.old ? (OLD_HIGH.test(w.old) ? "h" : "l") : "n"); }
+  function pri(r) { var best = "n"; r.why.forEach(function (w) { var p = wp(w); if (PRI[p][1] < PRI[best][1]) best = p; }); return best; }
+  function msg(t) { var m = document.createElement("div"); m.className = "bo-msg ok"; m.textContent = t; m.setAttribute("role", "status"); document.body.appendChild(m); setTimeout(function () { m.remove(); }, 1800); }
+  function td(tr, text, cls) { var c = document.createElement("td"); if (cls) c.className = cls; if (text != null) c.textContent = text; tr.appendChild(c); return c; }
+
+  var PG = { size: 20, page: 1 };
+  function draw() {
+    var R = rows().filter(function (r) { return !r.done; });
+    R.sort(function (a, b) { return PRI[pri(a)][1] - PRI[pri(b)][1] || (a.t < b.t ? -1 : 1); });
+    /* 顶栏「风控审核」= 当前待审核笔数；比上次多时闪一下（命中规则的新提现进入本页即 +1），并写入共用状态供其他后台页面显示 */
+    var prev = P.get("riskCnt"); $("topCnt").textContent = R.length; $("topCnt").className = "bo-n " + (R.length ? "r" : "g");
+    if (prev != null && R.length > prev) window.wrFlashUntil = Date.now() + 1600;
+    if (window.wrFlashUntil > Date.now()) { $("topCnt").classList.add("wr-flash"); setTimeout(function () { $("topCnt").classList.remove("wr-flash"); }, window.wrFlashUntil - Date.now()); }
+    if (prev !== R.length) P.set("riskCnt", R.length);
+    var n = Math.max(1, Math.ceil(R.length / PG.size)); PG.page = Math.min(Math.max(1, PG.page), n);
+    var tb = $("tbody"); tb.textContent = "";
+    if (!R.length) { var tr0 = document.createElement("tr"); var c0 = td(tr0, "No Data"); c0.colSpan = 21; c0.style.textAlign = "center"; c0.style.color = "#909399"; c0.style.padding = "60px"; tb.appendChild(tr0); }
+    /* 多行单元格：按线上样式逐行写「标签：值」 */
+    function lines(cell, arr) { arr.forEach(function (x, i) { if (i) cell.appendChild(document.createElement("br")); if (typeof x === "string") cell.appendChild(document.createTextNode(x)); else cell.appendChild(x); }); }
+    function span(text, cls) { var s = document.createElement("span"); s.className = cls; s.textContent = text; return s; }
+    R.slice((PG.page - 1) * PG.size, PG.page * PG.size).forEach(function (r) {
+      var tr = document.createElement("tr"), p = pri(r), f = fin(r);
+      var c = td(tr, null, "wr-c wr-pcol"); var s = document.createElement("span"); s.className = "wr-pri " + p; s.textContent = PRI[p][0]; c.appendChild(s);
+      c = td(tr, null, "wr-c"); lines(c, [r.t.slice(0, 10), r.t.slice(11)]);
+      c = td(tr, null, "wr-c"); lines(c, [r.id.slice(0, 11), r.id.slice(11) + "7590462" + r.id.slice(-3)]);
+      td(tr, "待审核", "wr-c");
+      c = td(tr, null, "wr-ui");
+      /* 会员名（现有功能，按线上还原）：点会员名或后面的条状图图标打开「用户资金情况」弹窗；两个小方块是复制按钮，点击把会员名复制到剪贴板 */
+      var link = document.createElement("button"); link.type = "button"; link.className = "wr-uname wr-ub"; link.textContent = r.u; link.dataset.fund = r.id; link.setAttribute("aria-label", "查看 " + r.u + " 的用户资金情况");
+      var bar = document.createElement("button"); bar.type = "button"; bar.className = "wr-ib"; bar.dataset.fund = r.id; bar.title = "用户资金情况"; bar.setAttribute("aria-label", "查看 " + r.u + " 的用户资金情况");
+      bar.innerHTML = '<svg width="11" height="11" viewBox="0 0 11 11" aria-hidden="true"><rect x="1" y="5" width="2" height="5" fill="#1F3BFF"/><rect x="4.5" y="2" width="2" height="8" fill="#1F3BFF"/><rect x="8" y="4" width="2" height="6" fill="#1F3BFF"/></svg>';
+      var cp = document.createElement("button"); cp.type = "button"; cp.className = "wr-ib"; cp.dataset.copy = r.u; cp.title = "复制会员名"; cp.setAttribute("aria-label", "复制会员名 " + r.u);
+      cp.innerHTML = '<svg width="11" height="11" viewBox="0 0 11 11" aria-hidden="true"><rect x="3.5" y="0.5" width="7" height="7" fill="none" stroke="#1F3BFF"/><rect x="0.5" y="3.5" width="7" height="7" fill="#fff" stroke="#1F3BFF"/></svg>';
+      /* 会员层级：显示提交时的层级；后面的蓝色铅笔（现有功能）打开「更换用户层级」弹窗。改过层级后，追加显示会员当前层级 */
+      var layL = document.createElement("span"); layL.appendChild(document.createTextNode("会员层级：" + r.lay + " "));
+      var pen = document.createElement("button"); pen.type = "button"; pen.className = "wr-ib"; pen.dataset.lay = r.id; pen.title = "更换用户层级"; pen.setAttribute("aria-label", "更换 " + r.u + " 的用户层级");
+      pen.innerHTML = '<svg width="11" height="11" viewBox="0 0 12 12" aria-hidden="true"><path d="M8.6 1.2l2.2 2.2-6.7 6.7-2.8.6.6-2.8z" fill="none" stroke="#1F3BFF" stroke-width="1.1"/><path d="M7.4 2.4l2.2 2.2" stroke="#1F3BFF" stroke-width="1.1"/></svg>';
+      layL.appendChild(pen); layL.appendChild(span("（提交时）", "wr-lay glow"));
+      var curL = (P.get("curLay") || {})[r.u]; if (curL && curL !== r.lay) layL.appendChild(span(" · 当前 " + curL, "wr-lay"));
+      var uLine = document.createElement("span"); uLine.appendChild(link); uLine.appendChild(bar); uLine.appendChild(cp);
+      /* 用户信息：字段和线上一致，两列排布，压低行高 */
+      var kv = document.createElement("div"); kv.className = "wr-kv";
+      var nmItem = document.createElement("span"); nmItem.appendChild(document.createTextNode("会员名：")); nmItem.appendChild(uLine);
+      [nmItem, layL, "真实姓名：" + r.nm[0] + " " + r.nm[2], "名：" + r.nm[0], "中间名：" + r.nm[1], "姓：" + r.nm[2], "余额：" + f.bal, "提款次数：" + f.wdc, "有效投注金额：" + f.bet7 + "(最近7天)", "币种：PHP"].forEach(function (x) { var d = document.createElement("span"); if (typeof x === "string") d.textContent = x; else d.appendChild(x); kv.appendChild(d); });
+      c.appendChild(kv);
+      c = td(tr, null, "wr-c wr-red"); lines(c, [r.amt + "(PHP)", r.amt.toFixed(2) + "(PHP)"]);
+      c = td(tr, null, "wr-c wr-red"); lines(c, [r.amt + "(PHP)", r.amt.toFixed(2) + "(PHP)"]);
+      c = td(tr, null, "wr-ui"); lines(c, ["银行名称：" + r.bank, "银行卡号：" + r.card, "地址："]);
+      /* 用户资金情况、7 日输赢：每项「标签：值」一行，不拆成多行 */
+      c = td(tr, null, "wr-l"); lines(c, ["最后一次存款：" + f.lastDep + "（" + f.lastDepT.slice(5, 16) + "）", "最后一次领取奖金：" + f.lastBn + "（" + f.lastBnT.slice(5, 16) + "）", "用户总存款：" + f.totDep, "用户总提款：" + f.totWd]);
+      c = td(tr, null, "wr-l"); lines(c, ["总输赢：" + f.win, "体育输赢：" + f.sport, "三方游戏输赢：" + f.third]);
+      td(tr, "菲律宾", "wr-c"); td(tr, r.term, "wr-c"); td(tr, r.way, "wr-c");
+      /* 稽核明细（现有功能，按线上还原）：点击打开「稽核明细」弹窗 */
+      c = td(tr, null, "wr-c"); var au = document.createElement("button"); au.type = "button"; au.className = "wr-ub wr-alink"; au.textContent = "稽核明细"; au.dataset.aud = r.id; au.setAttribute("aria-label", "查看订单 " + r.id + " 的稽核明细"); c.appendChild(au);
+      /* 触发风控条件：只放「查看命中详情」按钮，命中了哪些规则、为什么命中都在弹窗里说明 */
+      c = td(tr, null, "wr-c"); var b = document.createElement("button"); b.type = "button"; b.className = "bo-btn link glow"; b.textContent = "查看命中详情"; b.dataset.dt = r.id; b.setAttribute("aria-label", "查看订单 " + r.id + " 的命中详情"); c.appendChild(b);
+      td(tr, f.note, "wr-c"); td(tr, "普通提现", "wr-c"); td(tr, "—", "wr-c"); td(tr, "—", "wr-c"); td(tr, "—", "wr-c");
+      c = td(tr, null, "wr-c");
+      [["通过", "ok"], ["驳回", "rej"]].forEach(function (x) { var b = document.createElement("button"); b.type = "button"; b.className = "bo-btn link"; b.textContent = x[0]; b.dataset[x[1]] = r.id; c.appendChild(b); });
+      tb.appendChild(tr);
+    });
+    $("pgTotal").textContent = R.length; $("sumAmt").textContent = R.reduce(function (s, r) { return s + r.amt; }, 0).toLocaleString() + ".00";
+    var box = $("pgNums"); box.textContent = "";
+    for (var i = 1; i <= n; i++) { var bt = document.createElement("button"); bt.type = "button"; bt.textContent = i; if (i === PG.page) bt.setAttribute("aria-current", "page"); bt.onclick = (function (k) { return function () { PG.page = k; draw(); }; })(i); box.appendChild(bt); }
+    $("pgPrev").disabled = PG.page <= 1; $("pgNext").disabled = PG.page >= n; $("pgGo").value = PG.page;
+  }
+  $("pgPrev").onclick = function () { PG.page--; draw(); };
+  $("pgNext").onclick = function () { PG.page++; draw(); };
+  $("pgSize").onchange = function () { PG.size = +this.value; PG.page = 1; draw(); };
+  $("pgGo").onkeydown = function (e) { if (e.key === "Enter") { var v = parseInt(this.value, 10); if (!isNaN(v)) PG.page = v; draw(); } };
+  $("btnSearch").onclick = function () { PG.page = 1; draw(); };
+
+  function find(id) { return rows().filter(function (r) { return r.id === id; })[0]; }
+  /* 命中规则的中文名称（按规则）和触发原因（按订单） */
+  var CN = { "Multiple withdrawals total more than 10000": "拆分提现风控", "Withdrawal after withdrawal account changed": "资料变更风控", "Total withdrawal exceeds 10x today's deposits": "充提差风控",
+    "Turnover below 5x deposits": "当日低投注风控", "Withdrawal after 15+ days inactive without deposit": "静默账号风控", "No deposit today": "无充值提现风控", "Rule check error": "规则计算异常",
+    "Daily withdrawals exceed 10 times": "当日提现次数", "Payout exceeds 5x turnover": "异常返奖率风控", "Withdrawal amount more than 10000": "单笔大额提现", "Daily withdrawal total exceeds 50000": "当日累计提现金额" };
+  var CAUSE = {
+    "W20261022000101|0": "30 分钟内提交了 3 笔有效提现申请，累计 16,000 PHP，超过单笔大额提现金额 10,000 PHP。",
+    "W20261022000101|1": "2026-10-21 20:14 新增了 GCash 收款账号，17 小时后申请提现，仍在修改后 72 小时内。",
+    "W20261022000088|0": "当日提现总额 35,000 PHP（当日已成功 5,000 + 本次 30,000），超过当日成功充值 3,000 PHP 的 10 倍（30,000）。",
+    "W20261022000088|1": "当日有效投注 8,200 PHP，低于当日成功充值 3,000 PHP 的 5 倍（15,000）。",
+    "W20261022000088|2": "同时命中后台【风控配置】原有条件：该会员的提款 IP 与其他会员的提款 IP 重复。",
+    "W20261022000075|0": "距上次登录 21 天，超过 15 天；本次登录后没有任何成功充值就申请提现。",
+    "W20261022000070|0": "当日没有任何成功充值记录，本次申请 2,500 PHP，达到 1,000 PHP 门槛。",
+    "W20261022000063|0": "异常返奖率风控规则计算超时，系统按命中处理，需要人工核对该会员的派彩和投注。",
+    "W20261022000058|0": "自上一笔成功提现以来，派彩 12,600 PHP ÷ 有效投注 2,100 PHP = 6.0 倍，超过 5 倍。",
+    "W20261022000051|0": "这是当日第 11 笔提现（含本次），超过每日 10 笔上限。",
+    "W20261022000046|0": "本次申请 15,000 PHP，超过单笔 10,000 PHP。",
+    "W20261022000044|0": "当日累计提款 54,000 PHP（当日已成功 45,000 + 本次 9,000），超过每日 50,000 PHP 上限。",
+    "W20261022000040|0": "命中后台【风控配置】原有条件：该会员为首次提款。",
+    "W20261022000036|0": "命中后台【风控配置】原有条件：该会员的提现 IP 在 IP 黑名单中。"
+  };
+  /* 命中详情弹窗：上方订单信息表，下方命中规则明细表（每条规则一行），当日低投注风控另附前一日 / 近 7 日数据表 */
+  function cell(tag, text, cls) { var c = document.createElement(tag); if (cls) c.className = cls; if (text instanceof Node) c.appendChild(text); else c.textContent = text; return c; }
+  function openDt(id) {
+    var r = find(id); if (!r) return;
+    var body = $("dtBody"); body.textContent = ""; $("dtHead").textContent = "";
+    var hd = document.createElement("table"); hd.className = "hd";
+    [["订单号", r.id, "会员名", r.u], ["提交时层级", r.lay, "提现金额", r.amt.toLocaleString() + " PHP"], ["订单日期", r.t, "共命中", r.why.length + " 条"]].forEach(function (x) {
+      var tr = document.createElement("tr"); tr.appendChild(cell("th", x[0])); tr.appendChild(cell("td", x[1])); tr.appendChild(cell("th", x[2])); tr.appendChild(cell("td", x[3])); hd.appendChild(tr);
+    });
+    body.appendChild(hd);
+    var mt = document.createElement("table"); mt.className = "mt";
+    var hr = document.createElement("tr"); ["序号", "优先级", "命中规则", "类型", "触发原因", "统计区间", "实际值", "阈值"].forEach(function (h) { hr.appendChild(cell("th", h)); }); mt.appendChild(hr);
+    var r05 = null;
+    r.why.forEach(function (w, wi) {
+      var tr = document.createElement("tr");
+      tr.appendChild(cell("td", String(wi + 1), "c"));
+      tr.appendChild(cell("td", cell("span", PRI[wp(w)][0], "wr-pri " + wp(w)), "c"));
+      var nmC = cell("td", w.en ? (w.cn || CN[w.en] || w.en) : w.old);
+      /* 给研发 / 评审看的说明用需求说明样式（上线不显示），不和画面上显示的内容混在一起 */
+      if (w.dn) { nmC.appendChild(document.createElement("br")); nmC.appendChild(cell("span", w.dn, "ui-reqnote wr-dn")); }
+      tr.appendChild(nmC);
+      tr.appendChild(cell("td", cell("span", w.en ? "提款风控规则" : "原有风控条件", "wr-src " + (w.en ? "n" : "o")), "c"));
+      tr.appendChild(cell("td", w.cause || CAUSE[r.id + "|" + wi] || "—"));
+      if (w.en) { tr.appendChild(cell("td", w.rg)); tr.appendChild(cell("td", w.act)); tr.appendChild(cell("td", w.thr)); }
+      else { var oc = cell("td", cell("span", "原有风控条件的统计区间、实际值、阈值沿用现有风控配置的展示，本需求不改。", "ui-reqnote wr-dn")); oc.colSpan = 3; tr.appendChild(oc); }
+      mt.appendChild(tr); if (w.r05) r05 = w;
+    });
+    body.appendChild(mt);
+    if (r05) {
+      var cap = document.createElement("p"); cap.className = "wr-sub"; cap.style.margin = "10px 0 0"; cap.textContent = "当日低投注风控 · 前一日及近 7 日充值和投注："; body.appendChild(cap);
+      var t2 = document.createElement("table"); t2.className = "mt";
+      [["时间段", "成功充值（PHP）", "有效投注（PHP）", "投注 ÷ 充值"], ["前一日（10-21）", "1,000", "2,400", "2.4 倍"], ["近 7 日（10-16 – 10-22）", "6,500", "21,300", "3.3 倍"]].forEach(function (x, i) {
+        var tr = document.createElement("tr"); x.forEach(function (v) { tr.appendChild(cell(i ? "td" : "th", v, i ? "c" : "")); }); t2.appendChild(tr);
+      });
+      body.appendChild(t2);
+    }
+    $("dlgDt").hidden = false;
+  }
+  /* 用户资金情况弹窗（现有功能）：两个标签页「24小时资金详情」「上次提款成功后」，字段两列排布，下方三方投注明细表；示例数据按订单固定生成 */
+  var fundId = null, fundTab = "24h";
+  function fundRows(r, tab) {
+    var k = parseInt(r.id.slice(-3), 10) || 1, m = tab === "24h" ? 1 : 3, f = fin(r), d = function (n) { return n.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }); };
+    var dep = (k % 3) * 1000 * m, wd = tab === "24h" ? r.amt : r.amt + 2000;
+    return [["账号", r.u, "名称", r.nm[0] + " " + r.nm[2]], ["当前登录时间", r.t, "当前IP信息", "203.0.113." + (k % 200)],
+      ["账户余额", f.bal, "上次充值金额", d(dep ? 1000 : 0)], ["充值次数", String((k % 3) * m), "充值金额", d(dep)],
+      ["提款次数", String(tab === "24h" ? 1 : 2), "提款金额", d(wd)], ["投注总金额：", d(k * 21 * m), "输赢总金额：", d((k % 2 ? 1 : -1) * k * 9 * m)],
+      ["退水总金额：", d(k * 0.3 * m), "未结算金额：", d(0)], ["活动金额：", d((k % 4) * 50), "红包金额：", d(0)],
+      ["后台加钱：", d(0), "后台扣钱：", d(0)], ["三方投注总额：", d(k * 18 * m), "备注：", "—"], ["上次提款成功时间：", tab === "24h" ? "-" : "2026-10-19 09:02:11", "", ""]];
+  }
+  function drawFund() {
+    var r = find(fundId); if (!r) return;
+    document.querySelectorAll("[data-ftab]").forEach(function (b) { b.setAttribute("aria-selected", b.dataset.ftab === fundTab); });
+    var g = $("fdGrid"); g.textContent = "";
+    fundRows(r, fundTab).forEach(function (row) { row.forEach(function (x, i) { var s = document.createElement("div"); s.className = i % 2 ? "v" : "k"; s.textContent = i % 2 ? x : (x ? x.replace(/：?$/, "：").replace("：：", "：") : ""); g.appendChild(s); }); });
+    var k = parseInt(r.id.slice(-3), 10) || 1, tb = $("fdThird"); tb.textContent = "";
+    var rows3 = k % 3 === 0 ? [] : [["JILI", 12 * k % 97 + 3, (k * 14).toLocaleString() + ".00"], ["PG", 7 * k % 53 + 2, (k * 4).toLocaleString() + ".00"]];
+    if (!rows3.length) { var e0 = document.createElement("tr"), c0 = document.createElement("td"); c0.colSpan = 3; c0.textContent = "No Data"; c0.style.padding = "22px"; e0.appendChild(c0); tb.appendChild(e0); }
+    rows3.forEach(function (x) { var tr = document.createElement("tr"); x.forEach(function (v) { var c = document.createElement("td"); c.textContent = v; tr.appendChild(c); }); tb.appendChild(tr); });
+  }
+  function copyText(t) {
+    var done = function () { msg("复制成功：" + t); };
+    if (navigator.clipboard && window.isSecureContext) { navigator.clipboard.writeText(t).then(done, fallback); } else fallback();
+    function fallback() { var a = document.createElement("textarea"); a.value = t; a.style.position = "fixed"; a.style.opacity = "0"; document.body.appendChild(a); a.select(); try { document.execCommand("copy"); done(); } catch (e) {} a.remove(); }
+  }
+  /* 更换用户层级（现有功能）：迁移至下拉列出【支付层级配置】里状态正常的层级（与支付层级配置原型同步），默认选中会员当前层级 */
+  var LAYER0 = [{ v: 0, n: "Default layer", on: true }, { v: 2, n: "Tier 1", on: true }, { v: 3, n: "Tier 2", on: false }, { v: 6, n: "Tier VIP", on: true }, { v: 20, n: "内部测试层级", on: true }];
+  function layers() { var l = P.get("rows"); return (l && l.length ? l : LAYER0).map(function (x) { return { n: x.n, on: x.on !== false }; }); }
+  var layUser = null;
+  function openLay(id) {
+    var r = find(id); if (!r) return; layUser = r.u;
+    var cur = (P.get("curLay") || {})[r.u] || r.lay, sel = $("lyTo"); sel.textContent = "";
+    layers().forEach(function (l) { if (!l.on && l.n !== cur) return; var o = document.createElement("option"); o.value = l.n; o.textContent = l.n; sel.appendChild(o); });
+    sel.value = cur; $("lyUser").textContent = r.u; $("dlgLay").hidden = false;
+  }
+  $("lyOk").onclick = function () {
+    var m = P.get("curLay") || {}; m[layUser] = $("lyTo").value; P.set("curLay", m);
+    $("dlgLay").hidden = true; draw(); msg("修改成功");
+  };
+  /* 稽核明细弹窗（现有功能）：示例数据按订单固定生成，部分订单没有稽核记录（显示 No Data） */
+  function openAud(id) {
+    var r = find(id); if (!r) return; var k = parseInt(r.id.slice(-3), 10) || 1;
+    $("auDeduct").textContent = ""; $("auPay").textContent = r.amt + "(PHP) / " + r.amt + "(PHP)"; $("auFee").textContent = "通过"; $("auLog").textContent = "withdrawCheck pass by system";
+    var rows = k % 5 === 0 ? [] : [["2026-10-21 0" + (k % 9) + ":12:40", "充值", "R2026102100" + (100 + k), (1000 * (k % 4 + 1)).toLocaleString() + ".00", (1000 * (k % 4 + 1)).toLocaleString() + ".00", (1000 * (k % 4 + 1)).toLocaleString() + ".00", "通过", "0.00", "—"]];
+    if (k % 2 && rows.length) rows.push(["2026-10-21 1" + (k % 9) + ":05:11", "每日首充", "A2026102100" + (200 + k), "0.00", "300.00", "300.00", "通过", "0.00", "—"]);
+    var tb = $("auBody"); tb.textContent = "";
+    if (!rows.length) { var e0 = document.createElement("tr"), c0 = document.createElement("td"); c0.colSpan = 9; c0.textContent = "No Data"; c0.style.color = "#909399"; c0.style.padding = "22px"; e0.appendChild(c0); tb.appendChild(e0); }
+    rows.forEach(function (x) { var tr = document.createElement("tr"); x.forEach(function (v) { var c = document.createElement("td"); c.textContent = v; tr.appendChild(c); }); tb.appendChild(tr); });
+    $("dlgAud").hidden = false;
+  }
+  document.addEventListener("click", function (e) {
+    var ab = e.target.closest("[data-aud]"); if (ab) { openAud(ab.dataset.aud); return; }
+    var lb = e.target.closest("[data-lay]"); if (lb) { openLay(lb.dataset.lay); return; }
+    var f = e.target.closest("[data-fund]"); if (f) { fundId = f.dataset.fund; fundTab = "24h"; drawFund(); $("dlgFund").hidden = false; return; }
+    var cpb = e.target.closest("[data-copy]"); if (cpb) { copyText(cpb.dataset.copy); return; }
+    var ft = e.target.closest("[data-ftab]"); if (ft) { fundTab = ft.dataset.ftab; drawFund(); }
+  });
+  var curId = null;
+  document.addEventListener("click", function (e) {
+    var t = e.target;
+    if (t.dataset && t.dataset.dt) { openDt(t.dataset.dt); return; }
+    if (t.dataset && t.dataset.ok) { curId = t.dataset.ok; $("okText").textContent = "确认通过订单 " + curId + "？通过后进入提款记录待出款。"; $("dlgOk").hidden = false; return; }
+    if (t.dataset && t.dataset.rej) { curId = t.dataset.rej; $("rjWhy").value = ""; $("rjErr").hidden = true; $("dlgRej").hidden = false; return; }
+    var s = t.closest("[data-scene]"); if (!s) return;
+    var sc = s.dataset.scene;
+    if (sc === "multi") { P.set("ordEmpty", false); P.set("orders", null); PG.size = 2; $("pgSize").value = "2"; PG.page = 1; draw(); }
+    if (sc === "empty") { P.set("ordEmpty", true); draw(); }
+    if (sc === "dt1") { P.set("ordEmpty", false); draw(); openDt("W20261022000088"); }
+    if (sc === "dt2") { P.set("ordEmpty", false); draw(); openDt("W20261022000075"); }
+  });
+  function finish(text) { var R = rows(); R.forEach(function (r) { if (r.id === curId) r.done = true; }); P.set("orders", R); draw(); msg(text); }
+  $("okOk").onclick = function () { $("dlgOk").hidden = true; finish("审核通过"); };
+  $("rjOk").onclick = function () { if (!$("rjWhy").value.trim()) { $("rjErr").hidden = false; return; } $("dlgRej").hidden = true; finish("已驳回，金额已退回会员余额"); };
+
+  var seq = 120;
+  P.panel($("simPanel"), [
+    { title: "会员提交提现", items: [
+      { type: "button", label: "模拟会员提交一笔命中「资料变更风控」的提现（列表多一条，顶栏风控审核 +1）", run: function () {
+        var R = rows(); seq++; R.push({ id: "W20261022000" + seq, t: "2026-10-22 14:0" + (seq % 10) + ":00", u: "player_n" + seq, nm: ["Leo", "N/A", "Bautista"], lay: "Default layer", amt: 5000, bank: "GCash", card: "*****0000", term: "H5", way: "eWallet",
+          why: [{ en: "Withdrawal after withdrawal account changed", p: "h", cause: "2026-10-22 13:40 修改了收款人，1 小时后申请提现，仍在修改后 72 小时内。", rg: "资料修改后 72 小时内", act: "2026-10-22 13:40 修改收款人，1 小时后申请提现", thr: "修改后 72 小时内的每一笔" }] });
+        P.set("ordEmpty", false); P.set("orders", R); draw(); } },
+      { type: "button", label: "模拟 Tier VIP 会员提交一笔只命中「充提差风控」的提现", run: function () { msg("Tier VIP 豁免充提差风控：这笔提现不检查该规则，不进入本页，列表和顶栏计数不变"); } }
+    ]},
+    { title: "演示值说明", items: [{ type: "note", text: "第二个按钮演示豁免：Tier VIP 不检查充提差风控，提现不进入本页，列表和顶栏计数都不变。所有订单、会员、IP 均为虚构。" }] },
+    { items: [{ type: "reset" }] }
+  ]);
+  window.addEventListener("proto-change", function () { draw(); });
+  draw();
+})();
+</script>
+</body>
+</html>

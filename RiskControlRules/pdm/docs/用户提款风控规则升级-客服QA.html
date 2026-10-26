@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>用户提款风控规则升级-客服QA</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body class="qa-page" data-lang="both">
+<div class="with-nav">
+<div class="desk"><article class="paper qa">
+
+<h1 class="doc-title">用户提款风控规则升级 · 客服 QA<span class="qa-sub">Withdrawal Risk Control Upgrade · Customer Service Q&amp;A</span></h1>
+<div class="doc-meta"><span>版本 / Version：v1.0</span><span>适用 / For：客服 Customer Service</span><span>依据 / Based on：PRD、后台操作手册 Admin Manual</span></div>
+<div class="qa-lang" role="group" aria-label="语言 Language">
+  <button type="button" data-l="both" aria-pressed="true">双语 Bilingual</button>
+  <button type="button" data-l="zh" aria-pressed="false">中文</button>
+  <button type="button" data-l="en" aria-pressed="false">English</button>
+</div>
+<hr class="doc-rule">
+
+<h2 id="q0">适用范围 <span class="en-t">Scope</span></h2>
+<div class="bi"><div class="zh">所有端（H5、PC、iOS、Android）的会员提现。上线日期待排期。</div><div class="en">Member withdrawals on all channels (H5, PC, iOS, Android). Launch date to be scheduled.</div></div>
+
+<h2 id="q1">这次改了什么 <span class="en-t">What changed</span></h2>
+<div class="bi"><div class="zh">平台增加了提现风控检查。会员提交提现时，如果命中任意一条检查规则，这笔提现会转入人工审核，会员端订单显示 Under review，审核完成后通过出款或驳回。会员界面和提交方式没有变化；新规则命中时不弹窗，原有的单笔、笔数、累计金额限额命中时照常弹窗。<b>对会员不说明具体规则名称和阈值。</b></div><div class="en">The platform has added risk checks on withdrawals. If a withdrawal matches any check, it goes to manual review and shows Under review until it is approved for payout or rejected. The member interface and how to submit are unchanged. No popup is shown for the new checks; the existing single-amount, daily-count and daily-total limits still show their popup. <b>Do not tell members the specific rule names or thresholds.</b></div></div>
+
+<h2 id="q2">客服核查步骤 <span class="en-t">How to check</span></h2>
+<ol class="qa-steps">
+  <li class="bi"><div class="zh"><b>订单是否在风控审核</b>：【提现管理 › 提现风控审核】按会员名搜索，审核状态选「待审核」。</div><div class="en"><b>Is the order under risk review</b>: 提现管理 › 提现风控审核 (Withdrawal Management › Withdrawal Risk Review), search by username with status 待审核 (Pending Review).</div></li>
+  <li class="bi"><div class="zh"><b>为什么进入审核</b>：点「查看命中详情」看命中的规则和原因，只用于内部判断，不告诉会员。</div><div class="en"><b>Why it is under review</b>: click 查看命中详情 (View Trigger Details). For internal use only; do not share with the member.</div></li>
+  <li class="bi"><div class="zh"><b>审核结果</b>：审核状态「已通过」看【财务管理 › 提款记录】出款进度；「已驳回」看驳回原因，金额已退回余额。</div><div class="en"><b>Review result</b>: if 已通过 (Approved), check payout progress in 财务管理 › 提款记录 (Finance › Withdrawal Records); if 已驳回 (Rejected), check the reason — the amount has been returned to the balance.</div></li>
+</ol>
+
+<h2 id="q3">问答 <span class="en-t">Q&amp;A</span></h2>
+<section class="qa-card" id="qa1">
+  <h3><span class="qa-no">1</span><span class="bi-inline"><span class="zh">我的提现为什么一直显示 Under review？</span><span class="en">Why does my withdrawal keep showing Under review?</span></span></h3>
+  <div class="qa-row"><b>回复玩家<small>Reply</small></b>
+    <div class="bi"><div class="en qa-reply">Your withdrawal is being reviewed by our team as part of our routine security checks. Once the review is complete, it will be processed right away. Thank you for your patience.<button type="button" class="qa-copy">复制 Copy</button></div>
+    <div class="zh">您的提现正在按平台例行安全检查进行人工审核，审核完成后会立即处理，感谢耐心等待。</div></div></div>
+  <div class="qa-row"><b>客服核查<small>Check</small></b>
+    <div class="bi"><div class="zh">在提现风控审核确认订单为「待审核」；不说明命中了哪条规则。</div><div class="en">Confirm the order is Pending Review in Withdrawal Risk Review; do not say which rule was triggered.</div></div></div>
+  <div class="qa-row"><b>转交<small>Escalate</small></b>
+    <div class="bi"><div class="zh">等待超过 30 分钟（后台显示风控超时）时转风控审核人员催办。</div><div class="en">If it has waited more than 30 minutes (shown as risk review overdue), escalate to the risk review team.</div></div></div>
+</section>
+<section class="qa-card" id="qa2">
+  <h3><span class="qa-no">2</span><span class="bi-inline"><span class="zh">为什么我的提现要审核，别人的不用？</span><span class="en">Why does my withdrawal need review when others don't?</span></span></h3>
+  <div class="qa-row"><b>回复玩家<small>Reply</small></b>
+    <div class="bi"><div class="en qa-reply">Withdrawals are checked automatically for account and fund security, and some are selected for a manual review. This does not mean there is a problem with your account. We will process it as soon as the review is done.<button type="button" class="qa-copy">复制 Copy</button></div>
+    <div class="zh">为保障账户和资金安全，系统会自动检查提现，部分提现会转人工审核，并不代表账户有问题，审核完成后会尽快处理。</div></div></div>
+  <div class="qa-row"><b>客服核查<small>Check</small></b>
+    <div class="bi"><div class="zh">不比较其他会员，不透露规则和阈值。</div><div class="en">Do not compare with other members or reveal rules and thresholds.</div></div></div>
+  <div class="qa-row"><b>转交<small>Escalate</small></b>
+    <div class="bi"><div class="zh">会员投诉或要求说明原因时转风控审核主管。</div><div class="en">If the member complains or insists on a reason, escalate to the risk review supervisor.</div></div></div>
+</section>
+<section class="qa-card" id="qa3">
+  <h3><span class="qa-no">3</span><span class="bi-inline"><span class="zh">我的提现被驳回了，钱去哪了？</span><span class="en">My withdrawal was rejected. Where is my money?</span></span></h3>
+  <div class="qa-row"><b>回复玩家<small>Reply</small></b>
+    <div class="bi"><div class="en qa-reply">The amount of the rejected withdrawal has been returned to your account balance. Please check the reason in your inbox message. You may submit a new withdrawal request.<button type="button" class="qa-copy">复制 Copy</button></div>
+    <div class="zh">被驳回的提现金额已退回您的账户余额，原因请查看站内信，您可以重新申请提现。</div></div></div>
+  <div class="qa-row"><b>客服核查<small>Check</small></b>
+    <div class="bi"><div class="zh">在提现风控审核查看驳回原因，在资金明细确认已退回余额。</div><div class="en">Check the rejection reason in Withdrawal Risk Review and confirm the refund in Funds Details.</div></div></div>
+  <div class="qa-row"><b>转交<small>Escalate</small></b>
+    <div class="bi"><div class="zh">资金明细里没有退回记录时转技术。</div><div class="en">If no refund appears in Funds Details, escalate to tech.</div></div></div>
+</section>
+
+<h2 id="q4">转交与升级 <span class="en-t">Escalation</span></h2>
+<div class="tbl"><table class="qa-tbl">
+  <thead><tr><th>情况 <small>Situation</small></th><th>转给 <small>To</small></th></tr></thead>
+  <tbody>
+  <tr><td class="bi"><div class="zh">待审核超过 30 分钟</div><div class="en">Pending review over 30 minutes</div></td><td class="bi"><div class="zh">风控审核人员</div><div class="en">Risk review team</div></td></tr>
+  <tr><td class="bi"><div class="zh">会员投诉审核或要求说明原因</div><div class="en">Member complains or asks for the reason</div></td><td class="bi"><div class="zh">风控审核主管</div><div class="en">Risk review supervisor</div></td></tr>
+  <tr><td class="bi"><div class="zh">驳回后余额没有退回</div><div class="en">Balance not refunded after rejection</div></td><td class="bi"><div class="zh">技术</div><div class="en">Tech</div></td></tr>
+  </tbody>
+</table></div>
+
+<h2 id="q5">资料未覆盖的问题 <span class="en-t">Not covered yet</span></h2>
+<ul class="qa-open">
+  <li class="bi"><div class="zh">风控审核的承诺处理时长：资料未覆盖，统一转运营确认后再对会员承诺时间。</div><div class="en">Committed review time: not covered yet. Confirm with operations before promising a time to members.</div></li>
+  <li class="bi"><div class="zh">会员能否取消审核中的提现：沿用现状，资料未覆盖，转运营确认。</div><div class="en">Whether a member can cancel a withdrawal under review: follows current behavior, not documented. Confirm with operations.</div></li>
+</ul>
+</article></div>
+</div>
+<script>window.NAV_ROOT = "../";</script>
+<script src="../assets/nav-data.js"></script>
+<script src="../assets/nav.js"></script>
+<script>
+(function () {
+  /* 语言切换：双语 / 中文 / English，记在本机浏览器 */
+  var KEY = "用户提款风控规则升级功能需求-客服QA-lang";
+  function set(l) {
+    document.body.dataset.lang = l;
+    document.querySelectorAll(".qa-lang button").forEach(function (b) { b.setAttribute("aria-pressed", b.dataset.l === l); });
+    try { localStorage.setItem(KEY, l); } catch (e) {}
+  }
+  document.querySelectorAll(".qa-lang button").forEach(function (b) { b.onclick = function () { set(b.dataset.l); }; });
+  try { var s = localStorage.getItem(KEY); if (s) set(s); } catch (e) {}
+  /* 复制英文回复 */
+  document.addEventListener("click", function (e) {
+    var b = e.target.closest(".qa-copy"); if (!b) return;
+    var box = b.parentNode.cloneNode(true); box.querySelector(".qa-copy").remove();
+    var text = box.textContent.trim();
+    function done(ok) { b.textContent = ok ? "已复制 Copied" : "复制失败 Failed"; setTimeout(function () { b.textContent = "复制 Copy"; }, 1500); }
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(function () { done(true); }, function () { done(fallback(text)); });
+    else done(fallback(text));
+  });
+  function fallback(text) {
+    var t = document.createElement("textarea"); t.value = text; t.style.cssText = "position:fixed;left:-9999px"; document.body.appendChild(t); t.select();
+    var ok = false; try { ok = document.execCommand("copy"); } catch (e) {}
+    t.remove(); return ok;
+  }
+})();
+</script>
+</body>
+</html>

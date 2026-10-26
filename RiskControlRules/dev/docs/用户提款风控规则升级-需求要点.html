@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>用户提款风控规则升级-需求要点</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<div class="with-nav">
+<div class="desk"><article class="paper">
+
+<h1 class="doc-title">用户提款风控规则升级 · 需求要点 · v1.0</h1>
+<div class="doc-meta"><span>版本：v1.0</span><span>端：管理后台、后端</span><span>依据：<a href="用户提款风控规则升级-需求开发PRD文档.html">需求开发 PRD 文档</a></span></div>
+<hr class="doc-rule">
+
+<h2 id="k1">一句话需求</h2>
+<div class="oneline">在管理后台【提现管理 › 提现出款设置 › 每日提款限制设置】把原有三项限额和新增的 7 条提款风控规则合并成一个规则列表（每条可开关、可调数值、可选适用支付层级），在【充值配置 › 支付层级配置】给每个层级加「提款风控规则」执行 / 豁免开关；会员提交提现时命中任一规则，订单转入【提现管理 › 提现风控审核】人工审核，审核页新增优先级列和命中详情弹窗。会员端显示、审核通过和驳回流程不变。</div>
+
+<h2 id="k2">业务流程</h2>
+<div class="flow">
+  <div class="fs key"><div class="no">1</div><div><b>提交提现</b>：会员提交 → 现有前置校验 → 层级提现上限（超出直接拦截）</div></div>
+  <div class="fa">↓</div>
+  <div class="fs key"><div class="no">2</div><div><b>风控判定</b>：记录提交时层级 → 判定开关开启且适用该层级的规则 → 同时判定【风控配置】原有条件</div></div>
+  <div class="fa">↓</div>
+  <div class="fs"><div class="no">3</div><div><b>人工审核</b>：点「查看命中详情」→ 通过：出款；驳回：退回余额并发站内信</div></div>
+</div>
+<div class="brs">
+  <div class="bc"><h5>A - 都没命中</h5><p class="s"><b>走现有流程</b><small>按「未触发时自动通过」开关处理</small></p></div>
+  <div class="bc br"><h5>B - 命中新增规则</h5><p class="s"><b>进入提现风控审核</b><small>顶栏「风控审核」+1；会员端 Under review，不弹窗</small></p></div>
+  <div class="bc br"><h5>C - 命中原有三项</h5><p class="s"><b>进入提现风控审核并弹窗</b><small>弹窗沿用现有配置</small></p></div>
+</div>
+
+<h2 id="k3">开发功能点</h2>
+
+<div class="fpcard" id="F01-01">
+  <h3><span class="code">F01-01</span>规则列表与开关<a href="用户提款风控规则升级-需求开发PRD文档.html#F01-01">查看 PRD ›</a></h3>
+  <div class="fpgrid">
+    <b>要做什么</b>
+    <ul><li>原有三项（单笔大额提现、当日提现次数、当日累计提现金额）并入规则列表，口径不变。</li><li>当日提现次数、当日累计提现金额新增开关，默认开启。</li><li>第二期三条显示为灰色占位，第一期上线不显示。</li></ul>
+    <b>公式</b>
+    <div class="formula">单笔 &gt; 10,000 PHP；当日笔数（含本次）&gt; 10；当日累计（含本次）&gt; 50,000 PHP（均为默认值）</div>
+    <b>涉及端</b>
+    <div class="ends"><span>后台前端</span><span>后端</span></div>
+  </div>
+</div>
+
+<div class="fpcard" id="F01-02">
+  <h3><span class="code">F01-02</span>新增规则配置<a href="用户提款风控规则升级-需求开发PRD文档.html#F01-02">查看 PRD ›</a></h3>
+  <div class="fpgrid">
+    <b>要做什么</b>
+    <ul><li>新增 7 条规则，每条有开关和数值输入框；发布时开关默认关闭。</li><li>当日 = GMT+8 当天 00:00 至本次申请时间；有效投注只算已结算。</li><li>成功充值只算会员经支付通道成功的充值；代理代充、后台人工加款、活动奖励不计入，由审核人员人工判断。</li></ul>
+    <b>公式</b>
+    <div class="formula">充提差风控：当日有成功充值 且 当日提现总额（已成功 + 审核中 / 处理中 + 本次）&gt; 当日成功充值 × 10<br>
+无充值提现风控：当日成功充值 = 0 且 本次申请 ≥ 1,000 PHP<br>
+当日低投注风控：当日有成功充值 且 当日有效投注 &lt; 当日成功充值 × 5<br>
+拆分提现风控：30 分钟内有效申请 ≥ 3 笔 且 累计 &gt; 单笔大额提现的指定值<br>
+资料变更风控：申请时间 − 最近一次修改提现账号 / 收款人 / 提现方式的生效时间 ≤ 72 小时（后台代改按审核通过时间）<br>
+静默账号风控：本次登录 − 上次登录 &gt; 15 天 且 登录后无成功充值（没有上次登录记录时不判断）<br>
+异常返奖率风控：有效投注 ≥ 1,000 PHP 且 派彩（含本金）÷ 有效投注 &gt; 5（自上一笔成功提现以来）</div>
+    <b>涉及端</b>
+    <div class="ends"><span>后台前端</span><span>后端</span></div>
+  </div>
+</div>
+
+<div class="fpcard" id="F01-03">
+  <h3><span class="code">F01-03</span>配置适用层级<a href="用户提款风控规则升级-需求开发PRD文档.html#F01-03">查看 PRD ›</a></h3>
+  <div class="fpgrid">
+    <b>要做什么</b>
+    <ul><li>每条规则点「配置层级」勾选支付会员层级，点「确认」立即生效并写记录。</li><li>豁免层级置灰不可勾选；单笔大额提现、当日提现次数、当日累计提现金额、资料变更风控、静默账号风控、异常返奖率风控六条可勾选、默认勾选。</li><li>至少勾选一个层级；「全选」只作用于可勾选层级。</li></ul>
+    <b>公式</b>
+    <div class="formula">规则生效 ＝ 开关开启 且 提交时层级 ∈ 已勾选层级 且（层级为「执行」或 规则 ∈ 六条例外）</div>
+    <b>涉及端</b>
+    <div class="ends"><span>后台前端</span><span>后端</span></div>
+  </div>
+</div>
+
+<div class="fpcard" id="F01-04">
+  <h3><span class="code">F01-04</span>校验与保存<a href="用户提款风控规则升级-需求开发PRD文档.html#F01-04">查看 PRD ›</a></h3>
+  <div class="fpgrid">
+    <b>要做什么</b>
+    <ul><li>开关开启的规则数值必填并校验，不合法时标红、整页不保存。</li><li>后端同样校验。</li></ul>
+    <b>公式</b>
+    <div class="formula">倍数 ∈ [0.1, 999]，最多 1 位小数；金额、笔数、分钟、小时、天数为正整数</div>
+    <b>涉及端</b>
+    <div class="ends"><span>后台前端</span><span>后端</span></div>
+  </div>
+</div>
+
+<div class="fpcard" id="F01-05">
+  <h3><span class="code">F01-05</span>配置修改记录<a href="用户提款风控规则升级-需求开发PRD文档.html#F01-05">查看 PRD ›</a></h3>
+  <div class="fpgrid">
+    <b>要做什么</b>
+    <ul><li>每次保存按配置项各写一条：修改时间、配置项、修改前、修改后、操作人。</li><li>记录不能编辑、不能删除。</li></ul>
+    <b>公式</b>
+    <div class="formula">无</div>
+    <b>涉及端</b>
+    <div class="ends"><span>后台前端</span><span>后端</span></div>
+  </div>
+</div>
+
+<div class="fpcard" id="F02-01">
+  <h3><span class="code">F02-01</span>执行 / 豁免<a href="用户提款风控规则升级-需求开发PRD文档.html#F02-01">查看 PRD ›</a></h3>
+  <div class="fpgrid">
+    <b>要做什么</b>
+    <ul><li>支付层级列表和新增 / 编辑弹窗加「提款风控规则」：执行 / 豁免。</li><li>新增层级默认「执行」，并自动加入所有规则的适用层级；编辑时回显当前值。</li><li>从「豁免」改回「执行」时，自动加入所有规则的适用层级。</li></ul>
+    <b>公式</b>
+    <div class="formula">无</div>
+    <b>涉及端</b>
+    <div class="ends"><span>后台前端</span><span>后端</span></div>
+  </div>
+</div>
+
+<div class="fpcard" id="F02-02">
+  <h3><span class="code">F02-02</span>修改确认与谷歌验证<a href="用户提款风控规则升级-需求开发PRD文档.html#F02-02">查看 PRD ›</a></h3>
+  <div class="fpgrid">
+    <b>要做什么</b>
+    <ul><li>执行 ↔ 豁免改动时弹确认框，写明会员人数和影响。</li><li>Default layer 改动改为谷歌验证，6 位验证码通过才保存。</li></ul>
+    <b>公式</b>
+    <div class="formula">需要谷歌验证 ＝ 分层值 = 0 且 提款风控规则有改动</div>
+    <b>涉及端</b>
+    <div class="ends"><span>后台前端</span><span>后端</span></div>
+  </div>
+</div>
+
+<div class="fpcard" id="F02-03">
+  <h3><span class="code">F02-03</span>提款风控规则修改记录<a href="用户提款风控规则升级-需求开发PRD文档.html#F02-03">查看 PRD ›</a></h3>
+  <div class="fpgrid">
+    <b>要做什么</b>
+    <ul><li>新增标签页，按分层名称、操作人、修改时间筛选。</li><li>列：修改时间、分层值、分层名称、修改前、修改后、影响会员数、操作人；不能编辑、删除。</li></ul>
+    <b>公式</b>
+    <div class="formula">无</div>
+    <b>涉及端</b>
+    <div class="ends"><span>后台前端</span><span>后端</span></div>
+  </div>
+</div>
+
+<div class="fpcard" id="F02-04">
+  <h3><span class="code">F02-04</span>条件转移按 VIP 等级<a href="用户提款风控规则升级-需求开发PRD文档.html#F02-04">查看 PRD ›</a></h3>
+  <div class="fpgrid">
+    <b>要做什么</b>
+    <ul><li>条件转移弹窗加「VIP 等级 ≥」输入框，显示符合条件的人数。</li><li>只能填正整数；不填不按 VIP 等级筛选。</li></ul>
+    <b>公式</b>
+    <div class="formula">转移对象 ＝ 转出层级会员 且 VIP 等级 ≥ 填写值</div>
+    <b>涉及端</b>
+    <div class="ends"><span>后台前端</span><span>后端</span></div>
+  </div>
+</div>
+
+<div class="fpcard" id="F03-01">
+  <h3><span class="code">F03-01</span>命中进入审核<a href="用户提款风控规则升级-需求开发PRD文档.html#F03-01">查看 PRD ›</a></h3>
+  <div class="fpgrid">
+    <b>要做什么</b>
+    <ul><li>命中任一规则，订单进入提现风控审核，不受「未触发时自动通过」影响。</li><li>顶栏「风控审核」= 待审核笔数，新进来时闪动；订单离开待审核状态（通过、驳回、取消、系统处理）即 −1。</li><li>与原有条件同时命中只生成一条记录。</li></ul>
+    <b>公式</b>
+    <div class="formula">进入审核 ＝ 命中新增规则 或 命中原有三项 或 命中【风控配置】原有条件</div>
+    <b>涉及端</b>
+    <div class="ends"><span>后台前端</span><span>后端</span></div>
+  </div>
+</div>
+
+<div class="fpcard" id="F03-02">
+  <h3><span class="code">F03-02</span>优先级与排序<a href="用户提款风控规则升级-需求开发PRD文档.html#F03-02">查看 PRD ›</a></h3>
+  <div class="fpgrid">
+    <b>要做什么</b>
+    <ul><li>列表第一列显示「高 / 中 / 低 / —」彩色标签；「—」= 没有命中任何条件、因自动通过关闭进入审核。</li><li>默认按高 → 中 → 低 → 「—」排序，同级按订单日期正序。</li></ul>
+    <b>公式</b>
+    <div class="formula">高：拆分提现风控、资料变更风控；原有条件里的 IP 黑名单、姓名黑名单、NDRP 名单、余额不一致、风控预警风险记录<br>中：充提差风控、无充值提现风控、当日低投注风控、静默账号风控、异常返奖率风控、规则计算异常<br>低：单笔大额提现、当日提现次数、当日累计提现金额；其他原有条件<br>订单优先级 ＝ 命中规则中最高的一级</div>
+    <b>涉及端</b>
+    <div class="ends"><span>后台前端</span><span>后端</span></div>
+  </div>
+</div>
+
+<div class="fpcard" id="F03-03">
+  <h3><span class="code">F03-03</span>命中详情弹窗<a href="用户提款风控规则升级-需求开发PRD文档.html#F03-03">查看 PRD ›</a></h3>
+  <div class="fpgrid">
+    <b>要做什么</b>
+    <ul><li>「触发风控条件」列只放「查看命中详情」按钮。</li><li>弹窗：订单信息表 + 命中规则表（序号、优先级、命中规则、类型、触发原因、统计区间、实际值、阈值）。</li><li>命中当日低投注风控时附前一日和近 7 日充值、投注表。</li><li>内容跟随后台语言显示中文或英文，同一页面只显示一种语言。</li></ul>
+    <b>公式</b>
+    <div class="formula">无</div>
+    <b>涉及端</b>
+    <div class="ends"><span>后台前端</span><span>后端</span></div>
+  </div>
+</div>
+
+<div class="fpcard" id="F03-04">
+  <h3><span class="code">F03-04</span>提交时层级<a href="用户提款风控规则升级-需求开发PRD文档.html#F03-04">查看 PRD ›</a></h3>
+  <div class="fpgrid">
+    <b>要做什么</b>
+    <ul><li>用户信息的会员层级显示提交时的层级，标「（提交时）」。</li><li>之后层级被改过时追加「· 当前 X」。</li></ul>
+    <b>公式</b>
+    <div class="formula">无</div>
+    <b>涉及端</b>
+    <div class="ends"><span>后台前端</span><span>后端</span></div>
+  </div>
+</div>
+
+<div class="fpcard" id="F04-01">
+  <h3><span class="code">F04-01</span>提现风控判定<a href="用户提款风控规则升级-需求开发PRD文档.html#F04-01">查看 PRD ›</a></h3>
+  <div class="fpgrid">
+    <b>要做什么</b>
+    <ul><li>提现落库时记录提交时的支付会员层级。</li><li>在层级提款上限之后，逐条判定生效的规则。</li><li>并发提交按落库顺序计算。</li></ul>
+    <b>公式</b>
+    <div class="formula">「&gt;」「&lt;」不含等于；「≥」含等于；当日按 GMT+8 申请时间计</div>
+    <b>涉及端</b>
+    <div class="ends"><span>后端</span></div>
+  </div>
+</div>
+
+<div class="fpcard" id="F04-02">
+  <h3><span class="code">F04-02</span>命中记录与快照<a href="用户提款风控规则升级-需求开发PRD文档.html#F04-02">查看 PRD ›</a></h3>
+  <div class="fpgrid">
+    <b>要做什么</b>
+    <ul><li>每条命中记录统计区间、实际值和提交时的阈值；之后改配置不影响。</li><li>规则名称和触发原因以英文保存，另存结构化数值；中文后台用模板显示。</li><li>单条规则计算失败或超时，按命中记「规则计算异常」（优先级中），其他规则照常计算；配置读取失败或判定服务不可用时同样转人工。</li></ul>
+    <b>公式</b>
+    <div class="formula">无</div>
+    <b>涉及端</b>
+    <div class="ends"><span>后端</span></div>
+  </div>
+</div>
+
+</article></div>
+</div>
+<script>window.NAV_ROOT = "../";</script>
+<script src="../assets/nav-data.js"></script>
+<script src="../assets/nav.js"></script>
+</body>
+</html>

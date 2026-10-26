@@ -1,0 +1,296 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>用户提款风控规则升级-开发自查清单</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<div class="with-nav">
+  <header class="ck-head" id="ckhead">
+    <div class="ck-top">
+      <div>
+        <div class="k">789BINGO · 功能自查</div>
+        <h1>用户提款风控规则升级 · 开发自查清单 · <span id="hdVer">v1.0</span></h1>
+        <div class="d">勾选状态保存在本机浏览器，按角色分别保存；换电脑或换浏览器后看不到，留档请导出 CSV。</div>
+      </div>
+      <div class="ck-total"><b id="tp">0%</b><span id="tn">0 / 0 项</span><div class="pbar"><i id="tb" style="width:0"></i></div></div>
+    </div>
+    <div class="filters">
+      <div class="fgroup" data-g="role"><span class="gl">角色</span></div>
+      <div class="fgroup" data-g="type"><span class="gl">类型</span></div>
+      <div class="fgroup" data-g="state"><span class="gl">状态</span></div>
+      <div class="fgroup"><button class="pill" type="button" id="exall">全部展开</button><button class="pill" type="button" id="coall">全部收起</button><button class="pill" type="button" id="csv">导出 CSV</button><button class="pill" type="button" id="prt">打印</button></div>
+      <button class="clearbtn" type="button" id="clear">清空勾选</button>
+    </div>
+  </header>
+  <div class="split" id="split">
+    <div class="ck-left" id="list"></div>
+    <div class="divider" id="divider" role="separator" aria-label="拖动调整宽度"></div>
+    <div class="ck-right">
+      <div class="rhead">PRD 需求文档 <button type="button" id="up" aria-label="上一处标注">↑</button><button type="button" id="dn" aria-label="下一处标注">↓</button><span class="cnt2" id="hitn"></span></div>
+      <iframe id="prd" src="用户提款风控规则升级-需求开发PRD文档.html" title="PRD 需求文档"></iframe>
+    </div>
+  </div>
+</div>
+
+<script>
+/* 顶栏右侧「在新标签页打开」。左侧目录栏默认始终显示，方便跳到其他页面；
+   需要更宽的两栏时，点目录栏右上角「隐藏」，再点顶栏「展开目录」恢复（需求包框架规范第 3.1.5 节） */
+window.NAV_NEWWIN_TEXT = "在新标签页打开";
+window.addEventListener("navtoggle", function () { setTimeout(fitHead, 0); });
+</script>
+<script>window.NAV_ROOT = "../";</script>
+<script src="../assets/nav-data.js"></script>
+<script src="../assets/nav.js"></script>
+<script>
+/* 自查项：[类型, 适用角色, 关键, 检查什么, 预期结果, 新增或修改的版本]。新自查项只追加在各组末尾，保证已有编号不变。
+   类型 fn 功能 / bd 边界值 / ex 异常 / un 非常规；角色 d 设计 / f 前端 / b 后端 / q 测试。功能点名称与 PRD 保持一致。 */
+var DATA = [
+{ c: "F01", n: "每日提款限制设置", s: [
+  { c: "F01-01", n: "规则列表与开关", i: [
+    ["fn", "fq", 1, "打开【提现管理 › 提现出款设置 › 每日提款限制设置】", "列表依次为单笔大额提现、当日提现次数、当日累计提现金额和 7 条新增规则；第二期三条不显示"],
+    ["fn", "fbq", 1, "关闭某条规则的开关并保存，提交一笔满足该规则条件的提现", "该规则不判定，这一行半透明显示"],
+    ["fn", "bq", 1, "发布后首次打开页面", "新增 7 条规则开关为关闭；原有三项开关和数值与上线前一致"],
+    ["bd", "bq", 1, "上线前后对比单笔大额提现、当日提现次数、当日累计提现金额的开关和数值", "与上线前完全一致，不被重置为默认值"],
+    ["fn", "dfq", 0, "后台切换 English 后查看规则列表", "规则名称、触发条件、按钮、提示全部为英文，同一页面没有中英混排"]
+  ]},
+  { c: "F01-02", n: "新增规则配置", i: [
+    ["bd", "bq", 1, "充提差风控（10 倍）：当日成功充值 3,000，当日提现总额 30,000 / 30,001", "30,000 不命中；30,001 命中；已驳回、失败、会员取消的提现不计入"],
+    ["bd", "bq", 1, "无充值提现风控（1,000 PHP）：当日无支付通道充值，申请 999 / 1,000", "999 不命中；1,000 命中"],
+    ["bd", "bq", 1, "当日低投注风控（5 倍）：当日成功充值 3,000，有效投注 15,000 / 14,999", "15,000 不命中；14,999 命中；未结算注单不计入；当日无成功充值不判断"],
+    ["bd", "bq", 1, "拆分提现风控（30 分钟、3 笔、单笔大额 10,000）：3 笔累计 10,000 / 10,001；第 1 笔在 31 分钟前", "10,000 不命中；10,001 命中；31 分钟前的不计入；会员取消的和拆单子订单不计入"],
+    ["bd", "bq", 1, "资料变更风控（72 小时）：修改后 72 小时整 / 72 小时 1 秒提现；注册后第一次绑定后提现", "72 小时整命中；72 小时 1 秒不命中；第一次绑定不命中"],
+    ["un", "bq", 0, "客服后台改收款人，提交申请 80 小时后才审核通过，通过后 1 小时提现", "命中（按审核通过时间计时）"],
+    ["bd", "bq", 1, "静默账号风控（15 天）：间隔 15 天整 / 15 天 1 秒且登录后未充值；登录后有一笔成功充值", "15 天整不命中；15 天 1 秒命中；有充值不命中"],
+    ["un", "bq", 0, "注册后第一次登录就提现；只有 token 续期、没有新的登录记录", "都不命中静默账号风控"],
+    ["bd", "bq", 1, "异常返奖率风控（5 倍、门槛 1,000）：有效投注 999；有效投注 1,000 时派彩（含本金）5,000 / 5,001", "999 不判断；5,000 不命中；5,001 命中"],
+    ["bd", "bq", 1, "23:59:59 和 00:00:00（GMT+8）各提交一笔", "前一笔计入当天，后一笔计入次日；当日类规则次日从 0 统计"],
+    ["un", "bq", 0, "当日只有代理代充或后台人工加款，没有支付通道充值", "规则按「当日没有成功充值」判断"]
+  ]},
+  { c: "F01-03", n: "配置适用层级", i: [
+    ["fn", "fq", 1, "打开充提差风控的「配置层级」弹窗", "豁免层级置灰不可勾选，标「豁免，不可勾选」"],
+    ["fn", "fq", 1, "打开单笔大额提现 / 当日提现次数 / 当日累计提现金额 / 资料变更风控 / 静默账号风控 / 异常返奖率风控的弹窗", "豁免层级可勾选、默认勾选，标「豁免层级（本规则仍检查）」"],
+    ["bd", "fbq", 1, "取消全部可勾选层级后点确认", "提示「请至少勾选一个层级；不需要这条规则时请关闭开关」，不保存"],
+    ["fn", "fbq", 0, "勾选后点确认，不点页面保存，刷新页面", "勾选仍在；修改记录多一条「规则名称 · 适用层级」"],
+    ["ex", "fbq", 0, "确认时接口失败", "提示「保存失败，请重试」，弹窗不关，保留勾选"],
+    ["un", "bq", 0, "弹窗打开期间该层级在支付层级配置被改为豁免，再点确认", "豁免层级的勾选不生效（六条例外规则除外）"]
+  ]},
+  { c: "F01-04", n: "校验与保存", i: [
+    ["bd", "fbq", 1, "倍数填 0.1、999、0、0.05、1000、1.55", "0.1、999 可保存；其余提示「倍数请输入 0.1–999，最多 1 位小数」"],
+    ["bd", "fbq", 1, "金额 / 笔数 / 分钟 / 小时 / 天数填 0、1.5、空", "提示「请输入正整数」；开关关闭的规则不校验"],
+    ["ex", "bq", 1, "绕过前端直接调保存接口提交非法数值", "后端拒绝保存"]
+  ]},
+  { c: "F01-05", n: "配置修改记录", i: [
+    ["fn", "fbq", 0, "修改两项后保存，打开配置修改记录", "每项各一条：修改时间、配置项、修改前、修改后、操作人；开关显示「开 / 关」"],
+    ["ex", "bq", 1, "尝试通过接口编辑或删除记录", "不允许"],
+    ["bd", "fbq", 0, "记录超过一页、刚好一页、为空", "按修改时间倒序分页，默认 20 条；为空显示「暂无数据」"]
+  ]}
+]},
+{ c: "F02", n: "支付层级配置", s: [
+  { c: "F02-01", n: "执行 / 豁免", i: [
+    ["fn", "fbq", 1, "新增层级", "「提款风控规则」默认「执行」；列表新增该列；新层级自动加入每日提款限制设置所有规则的适用层级"],
+    ["fn", "fbq", 1, "把 Tier 1 改为豁免，再改回执行", "改回后所有规则的适用层级里 Tier 1 都已勾选，会员提现照常检查"]
+  ]},
+  { c: "F02-02", n: "修改确认与谷歌验证", i: [
+    ["fn", "fq", 1, "普通层级执行 ↔ 豁免", "弹确认框，文案写明会员人数和影响；确认后保存并写记录"],
+    ["bd", "fbq", 1, "Default layer 改提款风控规则：不输入 / 输入 12345 / 输入错误码 / 输入正确码", "分别提示「请输入谷歌验证码」「请输入 6 位数字验证码」「谷歌验证码错误，请重新输入」，不关弹窗；正确码保存，记录注明「（已通过谷歌验证）」"],
+    ["fn", "fq", 0, "只改 Default layer 的分层名称", "不弹谷歌验证"],
+    ["ex", "fbq", 0, "保存接口失败", "提示「保存失败，请重试」，编辑弹窗不关"]
+  ]},
+  { c: "F02-03", n: "提款风控规则修改记录", i: [
+    ["fn", "fbq", 0, "按分层名称、操作人、修改时间筛选", "结果正确，改筛选后回到第 1 页"],
+    ["ex", "bq", 1, "尝试编辑或删除记录", "不允许"]
+  ]},
+  { c: "F02-04", n: "条件转移按 VIP 等级", i: [
+    ["bd", "fbq", 1, "VIP 等级填 30 / 0 / -1 / abc / 空", "30 只转移 ≥ 30 级（含 30）；0、-1、abc 提示「请输入正整数」；空表示不按 VIP 等级筛选"]
+  ]}
+]},
+{ c: "F03", n: "提现风控审核", s: [
+  { c: "F03-01", n: "命中进入审核", i: [
+    ["fn", "fbq", 1, "提交一笔命中新增规则的提现", "进入提现风控审核，顶栏「风控审核」+1 并闪动；会员端显示 Under review，不弹窗"],
+    ["fn", "fbq", 1, "开启「未触发时自动通过」后提交命中规则的提现", "仍进入审核"],
+    ["fn", "bq", 0, "同一笔同时命中充提差风控和风控配置原有条件", "只有一条记录，命中详情列两条"],
+    ["fn", "fbq", 0, "通过、驳回、会员取消、系统处理一笔待审核订单", "顶栏计数都 −1"],
+    ["un", "fq", 0, "H5、PC、iOS、Flutter 各提交一笔命中新增规则 / 原有三项的提现", "新增规则不弹窗；原有三项照常弹窗"]
+  ]},
+  { c: "F03-02", n: "优先级与排序", i: [
+    ["fn", "fbq", 1, "同时命中高、中优先级规则；只命中风控配置原有条件「用户 IP 在黑名单」；只命中「用户首次提款」", "依次显示「高」「高」「低」；列表按高 → 中 → 低排序，同级按订单日期正序"],
+    ["un", "fbq", 0, "关闭风控配置「未触发时自动通过」，提交一笔没有命中任何条件的提现", "进入审核，优先级显示「—」，排在最后"],
+    ["bd", "fbq", 0, "待审核超过一页、刚好一页、为空；改每页条数；翻到末页后通过最后一条", "分页正确；当前页为空时回到上一页；为空显示 No Data"]
+  ]},
+  { c: "F03-03", n: "命中详情弹窗", i: [
+    ["fn", "fq", 1, "点「查看命中详情」", "订单信息表和命中规则表正确；命中当日低投注风控时附前一日和近 7 日表"],
+    ["fn", "bq", 1, "提交后把倍数从 10 改为 20，再看这笔的命中详情", "阈值仍显示 10"],
+    ["fn", "bq", 1, "查数据库里的命中记录", "规则名称和触发原因为英文，另有规则标识、统计区间、实际值、阈值的结构化字段"],
+    ["fn", "dfbq", 1, "后台语言分别选简体中文和 English，查看三张后台页面（列表、弹窗、提示、命中详情、导出）", "所有显示内容都跟随后台语言选择显示同一语种，不出现中英混排；数值一致"],
+    ["ex", "fbq", 0, "命中详情读取失败", "提示「加载失败，请重试」并可重试"]
+  ]},
+  { c: "F03-04", n: "提交时层级", i: [
+    ["fn", "fbq", 0, "订单提交后把会员从 Default layer 改到 Tier VIP", "用户信息显示「Default layer（提交时）· 当前 Tier VIP」，这笔仍按提交时层级判断"]
+  ]}
+]},
+{ c: "F04", n: "提现风控判定（后端）", s: [
+  { c: "F04-01", n: "提现风控判定", i: [
+    ["fn", "bq", 1, "规则开关关闭，或会员层级不在适用层级里", "该规则不判定"],
+    ["fn", "bq", 1, "Tier VIP（豁免）会员提交只满足充提差风控 / 只满足资料变更风控的提现", "前者不进入审核；后者进入审核"],
+    ["ex", "bq", 1, "同一会员并发提交两笔", "按落库顺序计算当日总额、笔数和拆分窗口"]
+  ]},
+  { c: "F04-02", n: "命中记录与快照", i: [
+    ["ex", "bq", 1, "模拟某条规则计算超时", "进入审核，命中「规则计算异常」，优先级中，其他规则照常计算"],
+    ["ex", "bq", 1, "模拟规则配置读取失败或判定服务不可用", "会员提交成功、显示 Under review；订单进入审核，触发原因「风控判定服务不可用」"]
+  ]}
+]}
+];
+/* VER：文档版本号（如 v1.3，和 PRD 需求版本管理表一致），不是迭代名。
+   ITER：多迭代需求包的迭代名（如 "v1.0"、"完整需求"，需求包框架规范第 3 节），单版本需求留空。
+   勾选状态按「需求 + 迭代 + 文档版本」分开保存；升版本后第一次打开时，自动找本机保存过的、版本号比 VER 小的最近一版，
+   沿用其中没有改动的自查项的勾选（本版新增或修改的项，即 it.v === VER 的项，清空重查）。不需要手工填写上一版本。 */
+var VER = "v1.0", ITER = "", BASE = "用户提款风控规则升级功能需求-" + (ITER ? ITER + "-" : ""), KEY = BASE + VER + "-checklist";
+document.getElementById("hdVer").textContent = VER;   /* 标题版本号跟着 VER 显示，升版本只改 VER */
+var PREV = (function () {
+  function vn(v) { var m = /^v(\d+)\.(\d+)$/.exec(v || ""); return m ? (+m[1]) * 1000 + (+m[2]) : -1; }
+  var best = "", bestN = -1, cur = vn(VER);
+  try { for (var i = 0; i < localStorage.length; i++) { var k = localStorage.key(i); if (k.indexOf(BASE) !== 0 || !/-checklist$/.test(k)) continue;
+    var v = k.slice(BASE.length, -"-checklist".length), n = vn(v); if (n >= 0 && n < cur && n > bestN) { best = k; bestN = n; } } } catch (e) {}
+  return best;
+})();
+var RN = { d: "设计", f: "前端", b: "后端", q: "测试" }, TN = { fn: "功能", bd: "边界值", ex: "异常", un: "非常规" };
+var F = { role: "all", type: "all", state: "all" };
+var store = {};
+try { store = JSON.parse(localStorage.getItem(KEY) || "null"); } catch (e) { store = null; }
+try { var sv = JSON.parse(localStorage.getItem(KEY + "-filters") || "{}"); if (sv.role) F = sv; } catch (e) {}
+/* 新版本首次打开：沿用上一版未改动自查项的勾选；本版新增或修改的自查项清空 */
+var MIGRATE = store === null; if (MIGRATE) store = {};
+function save() { try { localStorage.setItem(KEY, JSON.stringify(store)); localStorage.setItem(KEY + "-filters", JSON.stringify(F)); } catch (e) {} }
+function done(it, role) {
+  var rs = role === "all" ? it.r.split("") : [role];
+  return rs.every(function (r) { return store[r + ":" + it.id]; });
+}
+function setDone(it, on) { (F.role === "all" ? it.r.split("") : [F.role]).forEach(function (r) { if (on) store[r + ":" + it.id] = 1; else delete store[r + ":" + it.id]; }); }
+/* 展开数据 */
+var ITEMS = [];
+DATA.forEach(function (fp) { fp.s.forEach(function (s) { s.i.forEach(function (x, k) {
+  var it = { id: s.c + "-" + (k + 1), fp: fp, sub: s, t: x[0], r: x[1], key: !!x[2], q: x[3], e: x[4], v: x[5] || "" }; ITEMS.push(it); s.items = (s.items || []).concat(it);
+}); }); });
+function inRole(it) { return F.role === "all" || it.r.indexOf(F.role) >= 0; }
+function visible(it) {
+  if (!inRole(it)) return false;
+  if (F.type === "fn" && it.t !== "fn") return false;
+  if (F.type === "bd" && it.t !== "bd") return false;
+  if (F.type === "ex" && it.t !== "ex" && it.t !== "un") return false;
+  var d = done(it, F.role);
+  if (F.state === "todo" && d) return false;
+  if (F.state === "done" && !d) return false;
+  if (F.state === "key" && !it.key) return false;
+  return true;
+}
+function stat(list) { var n = list.length, c = list.filter(function (it) { return done(it, F.role); }).length; return { n: n, c: c, p: n ? Math.round(c * 100 / n) : 0 }; }
+var closed = {};
+function render() {
+  var html = "";
+  DATA.forEach(function (fp) {
+    var all = []; fp.s.forEach(function (s) { all = all.concat(s.items.filter(inRole)); });
+    var vis = all.filter(visible); if (!vis.length) return;
+    var st = stat(all), tag = st.c === 0 ? '<span class="stt">未开始</span>' : st.c === st.n ? '<span class="stt done">已完成</span>' : '<span class="stt ing">进行中</span>';
+    html += '<section class="fpc' + (closed[fp.c] ? " closed" : "") + '" data-fp="' + fp.c + '"><div class="fpc-h">' +
+      '<button class="tri" type="button" data-tog="' + fp.c + '" aria-label="展开或收起">▼</button><span class="code">' + fp.c + '</span><span class="nm">' + fp.n + "</span>" + tag +
+      '<span class="mbar"><i style="width:' + st.p + '%"></i></span><span class="num">' + st.c + " / " + st.n + "</span>" +
+      '<button class="selall" type="button" data-sel="' + fp.c + '">全选本组</button><button class="gopr" type="button" data-pr="' + fp.c + '">查看 PRD ›</button></div><div class="fpc-b">';
+    fp.s.forEach(function (s) {
+      var sv = s.items.filter(visible); if (!sv.length) return;
+      var ss = stat(s.items.filter(inRole));
+      html += '<div class="sub-h"><span class="code2">' + s.c + '</span><span class="nm">' + s.n + '</span><span class="mbar"><i style="width:' + ss.p + '%"></i></span><span class="num">' + ss.c + " / " + ss.n + '</span><button class="gopr" type="button" data-pr="' + s.c + '">查看 PRD ›</button></div><ul class="items">';
+      sv.forEach(function (it) {
+        var d = done(it, F.role);
+        html += '<li class="' + (d ? "done" : "") + (it.v ? " vmark" + (it.v === VER ? "" : " old") : "") + '"><input type="checkbox" data-id="' + it.id + '"' + (d ? " checked" : "") + ' aria-label="' + it.q.replace(/"/g, "&quot;") + '"><div><span class="tx">' + it.q +
+          '<span class="tags"><span class="lb t-' + it.t + '">' + TN[it.t] + "</span>" + it.r.split("").map(function (r) { return '<span class="lb r-' + r + '">' + RN[r] + "</span>"; }).join("") + (it.key ? '<span class="lb key">关键</span>' : "") +
+          (it.v ? '<sup class="vtag' + (it.v === VER ? "" : " old") + '" title="' + it.v + '">' + it.v + "</sup>" : "") +
+          '</span></span><span class="ex">预期：' + it.e + "</span></div></li>";
+      });
+      html += "</ul>";
+    });
+    html += "</div></section>";
+  });
+  document.getElementById("list").innerHTML = html || '<div class="empty">当前筛选下没有检查项</div>';
+  var t = stat(ITEMS.filter(inRole));
+  document.getElementById("tp").textContent = t.p + "%";
+  document.getElementById("tn").textContent = t.c + " / " + t.n + " 项";
+  document.getElementById("tb").style.width = t.p + "%";
+}
+var byId = {}; ITEMS.forEach(function (it) { byId[it.id] = it; });
+if (MIGRATE && PREV) { try { var old = JSON.parse(localStorage.getItem(PREV) || "{}"); Object.keys(old).forEach(function (k) { var it = byId[k.split(":")[1]]; if (it && it.v !== VER) store[k] = old[k]; }); } catch (e) {} save(); }
+var list = document.getElementById("list");
+list.addEventListener("change", function (e) { var id = e.target.dataset.id; if (!id) return; setDone(byId[id], e.target.checked); save(); render(); });
+list.addEventListener("click", function (e) {
+  var b = e.target.closest("button"); if (!b) return;
+  if (b.dataset.tog) { closed[b.dataset.tog] = !closed[b.dataset.tog]; b.closest(".fpc").classList.toggle("closed"); }
+  if (b.dataset.sel) {
+    var its = ITEMS.filter(function (it) { return it.fp.c === b.dataset.sel && visible(it); });
+    var allOn = its.every(function (it) { return done(it, F.role); });
+    its.forEach(function (it) { setDone(it, !allOn); }); save(); render();
+  }
+  if (b.dataset.pr) showPRD(b.dataset.pr);
+});
+/* 查看 PRD：宽屏在右栏定位并标荧光粉；窄屏在新页面打开 */
+var frame = document.getElementById("prd"), ready = false, pending = null;
+frame.addEventListener("load", function () { ready = true; if (pending) { frame.contentWindow.postMessage({ type: "prd-show", code: pending }, "*"); pending = null; } });
+function showPRD(code) {
+  if (window.matchMedia("(max-width:699px)").matches) { window.open("用户提款风控规则升级-需求开发PRD文档.html#" + code, "_blank"); return; }
+  if (!ready) { pending = code; return; }   /* PRD 还没加载完：加载完成后再定位 */
+  frame.contentWindow.postMessage({ type: "prd-show", code: code }, "*");
+}
+document.getElementById("up").onclick = function () { frame.contentWindow.postMessage({ type: "prd-step", dir: -1 }, "*"); };
+document.getElementById("dn").onclick = function () { frame.contentWindow.postMessage({ type: "prd-step", dir: 1 }, "*"); };
+window.addEventListener("message", function (e) {
+  var d = e.data || {}; if (d.type !== "prd-hits") return;
+  document.getElementById("hitn").textContent = d.total ? "第 " + (d.pos + 1) + " / " + d.total + " 处标注" : "";
+});
+/* 筛选 */
+var GROUPS = { role: [["all", "全部"], ["d", "设计"], ["f", "前端"], ["b", "后端"], ["q", "测试"]], type: [["all", "全部"], ["fn", "功能"], ["bd", "边界值"], ["ex", "异常与非常规操作"]], state: [["all", "全部"], ["todo", "未完成"], ["done", "已完成"], ["key", "仅关键项"]] };
+Object.keys(GROUPS).forEach(function (g) {
+  var box = document.querySelector('[data-g="' + g + '"]');
+  GROUPS[g].forEach(function (o) {
+    var b = document.createElement("button"); b.type = "button"; b.className = "pill"; b.textContent = o[1]; b.setAttribute("aria-pressed", F[g] === o[0]);
+    b.onclick = function () { F[g] = o[0]; box.querySelectorAll(".pill").forEach(function (x) { x.setAttribute("aria-pressed", x === b); }); save(); render(); };
+    box.appendChild(b);
+  });
+});
+document.getElementById("exall").onclick = function () { closed = {}; render(); };
+document.getElementById("coall").onclick = function () { DATA.forEach(function (fp) { closed[fp.c] = true; }); render(); };
+document.getElementById("prt").onclick = function () { window.print(); };
+document.getElementById("clear").onclick = function () {
+  var m = document.createElement("div"); m.className = "cfm";
+  m.innerHTML = '<div role="dialog" aria-modal="true"><p><b>清空勾选</b></p><p>将清空本需求 ' + VER + ' 在本浏览器里所有角色的勾选，不能撤销。</p><div class="row2"><button class="obtn" type="button" data-x="0">取消</button><button class="obtn" type="button" data-x="1" style="border-color:#C00000;color:#C00000">确认清空</button></div></div>';
+  m.onclick = function (e) { var x = e.target.dataset.x; if (x === undefined) return; if (x === "1") { store = {}; save(); render(); } m.remove(); };
+  document.body.appendChild(m);
+};
+document.getElementById("csv").onclick = function () {
+  var rows = [["大功能点", "子功能点", "编号", "类型", "适用角色", "关键", "检查什么", "预期结果", "设计", "前端", "后端", "测试"]];
+  ITEMS.forEach(function (it) {
+    rows.push([it.fp.c + " " + it.fp.n, it.sub.c + " " + it.sub.n, it.id, TN[it.t], it.r.split("").map(function (r) { return RN[r]; }).join("/"), it.key ? "是" : "",
+      it.q, it.e].concat(["d", "f", "b", "q"].map(function (r) { return it.r.indexOf(r) < 0 ? "—" : store[r + ":" + it.id] ? "已勾" : "未勾"; })));
+  });
+  var csv = "﻿" + rows.map(function (r) { return r.map(function (c) { return '"' + String(c).replace(/"/g, '""') + '"'; }).join(","); }).join("\r\n");
+  var a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([csv], { type: "text/csv;charset=utf-8" })); a.download = "用户提款风控规则升级-开发自查清单-" + VER + ".csv";
+  document.body.appendChild(a); a.click(); a.remove();
+};
+/* 分隔条拖动 */
+(function () {
+  var split = document.getElementById("split"), dv = document.getElementById("divider"), drag = false;
+  dv.addEventListener("mousedown", function (e) { drag = true; frame.style.pointerEvents = "none"; e.preventDefault(); });
+  window.addEventListener("mouseup", function () { drag = false; frame.style.pointerEvents = ""; });
+  window.addEventListener("mousemove", function (e) {
+    if (!drag) return;
+    var r = split.getBoundingClientRect(), p = Math.min(70, Math.max(25, (e.clientX - r.left) * 100 / r.width));
+    split.style.setProperty("--lw", p + "%");
+  });
+})();
+/* 分栏高度 = 视口 - 顶栏 - 头图 */
+function fitHead() { document.getElementById("split").style.setProperty("--headh", document.getElementById("ckhead").offsetHeight + "px"); }
+window.addEventListener("resize", fitHead);
+render(); setTimeout(fitHead, 0);
+</script>
+</body>
+</html>

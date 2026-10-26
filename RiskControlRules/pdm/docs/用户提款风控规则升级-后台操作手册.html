@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>用户提款风控规则升级-后台操作手册</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<div class="with-nav">
+  <header class="mh">
+    <div class="k">789BINGO · 后台操作手册 <span class="vp">v1.0</span></div>
+    <h1>用户提款风控规则升级 · 提现风控规则操作手册</h1>
+    <p>写给运营和客服：怎么配置提现风控规则、哪些支付会员层级豁免，以及怎么在提现风控审核里查看命中原因。</p>
+    <div class="btns"><a class="b1" href="../prototype/admin/用户提款风控规则升级-后台每日提款限制设置.html">打开后台原型 ›</a><a class="b2" href="用户提款风控规则升级-需求开发PRD文档.html">查看 PRD ›</a></div>
+  </header>
+
+  <div class="mk">
+    <b>重要结论</b>
+    <ul>
+      <li>会员提现命中任意一条规则，订单就进入【提现管理 › 提现风控审核】人工审核，不受「未触发时自动通过」影响；会员只看到 Under review（详见 PRD「3.2 本需求规则」）。</li>
+      <li>规则的阈值全平台统一，在【每日提款限制设置】配置；支付会员层级只决定这条规则检不检查（详见 PRD「4.1」「4.2」）。</li>
+      <li>设为「豁免」的层级只在单笔大额提现、当日提现次数、当日累计提现金额、资料变更风控、静默账号风控、异常返奖率风控六条里按勾选检查，其他规则都不检查（详见 PRD「3.2」）。</li>
+      <li>改配置只对之后提交的提现生效；已提交的订单按提交时的层级和数值判断。</li>
+    </ul>
+  </div>
+
+  <div class="mbody">
+    <nav class="mtoc" aria-label="手册目录">
+      <a href="#m1">01 配置提现风控规则</a>
+      <a href="#m2">02 设置层级执行 / 豁免</a>
+      <a href="#m3">03 条件转移 VIP 会员</a>
+      <a href="#m4">04 审核命中风控的提现</a>
+      <a href="#m9">常见问题</a>
+    </nav>
+    <div>
+      <section class="mcard" id="m1">
+        <h2><span class="no2">01</span>配置提现风控规则</h2>
+        <h3>菜单路径与权限</h3>
+        <p>【提现管理 › 提现出款设置 › 每日提款限制设置】。沿用该页面现有的后台权限。</p>
+        <h3>字段说明</h3>
+        <table>
+          <tr><th>字段</th><th>含义</th><th>默认值</th></tr>
+          <tr><td>开关</td><td>打开才检查这条规则</td><td>新增 7 条发布时关闭，VIP 迁移完成后逐条开启；原有三项沿用现网</td></tr>
+          <tr><td>单笔大额提现</td><td>单笔提现金额 &gt; 指定值</td><td>沿用现网（新环境 10,000 PHP）</td></tr>
+          <tr><td>当日提现次数</td><td>当日提现笔数（含本次）&gt; 上限</td><td>沿用现网（新环境 10 笔）</td></tr>
+          <tr><td>当日累计提现金额</td><td>当日累计提现金额（含本次）&gt; 上限</td><td>沿用现网（新环境 50,000 PHP）</td></tr>
+          <tr><td>充提差风控</td><td>当日有成功充值时，当日提现总额 &gt; 当日成功充值 × 倍数</td><td>10 倍</td></tr>
+          <tr><td>无充值提现风控</td><td>当日没有成功充值，且本次申请 ≥ 门槛</td><td>1,000 PHP</td></tr>
+          <tr><td>当日低投注风控</td><td>当日有效投注 &lt; 当日成功充值 × 倍数（当日没有成功充值时不判断）</td><td>5 倍</td></tr>
+          <tr><td>拆分提现风控</td><td>N 分钟内有效申请 ≥ M 笔，且累计 &gt; 单笔大额提现的金额</td><td>30 分钟、3 笔</td></tr>
+          <tr><td>资料变更风控</td><td>修改提现账号、收款人或提现方式后 N 小时内的每一笔提现</td><td>72 小时</td></tr>
+          <tr><td>静默账号风控</td><td>超过 N 天未登录，登录后没有成功充值就提现</td><td>15 天</td></tr>
+          <tr><td>异常返奖率风控</td><td>自上一笔成功提现以来，派彩（含本金）÷ 有效投注 &gt; 倍数；有效投注达到门槛才判断</td><td>5 倍、1,000 PHP</td></tr>
+          <tr><td>适用层级</td><td>点「配置层级」勾选这条规则对哪些支付层级的会员生效，点确认后立即生效。支付层级配置里设为豁免的层级不能勾选；单笔大额提现、当日提现次数、当日累计提现金额、资料变更风控、静默账号风控、异常返奖率风控六条除外，豁免层级也可勾选并默认勾选。</td><td>全部「执行」层级；六条例外含豁免层级</td></tr>
+        </table>
+        <h3>操作步骤</h3>
+        <div class="msteps">
+          <div class="mstep"><i>1</i><div>改数值或开关 → 点页面底部「保存」。填错时输入框标红，整页不保存。</div></div>
+          <div class="mstep"><i>2</i><div>选层级：点规则行的「配置层级」→ 勾选层级 → 点「确认」，立即生效，不用再点「保存」。</div></div>
+          <div class="mstep"><i>3</i><div>查记录：点「配置修改记录」，查看每一项的修改时间、修改前后和操作人。</div></div>
+        </div>
+      </section>
+
+      <section class="mcard" id="m2">
+        <h2><span class="no2">02</span>设置层级执行 / 豁免</h2>
+        <h3>菜单路径与权限</h3>
+        <p>【充值配置 › 支付层级配置】。沿用该页面现有的后台权限；修改 Default layer 时需要谷歌验证。</p>
+        <h3>字段说明</h3>
+        <table>
+          <tr><th>字段</th><th>含义</th><th>默认值</th></tr>
+          <tr><td>提款风控规则</td><td>执行：该层级可以在每日提款限制设置的各条规则里被勾选，勾选了就检查；从豁免改回执行时，自动加入所有规则的适用层级。豁免：该层级在大部分规则里不能勾选、不检查；单笔大额提现、当日提现次数、当日累计提现金额、资料变更风控、静默账号风控、异常返奖率风控六条仍按勾选检查。新建层级默认执行，并自动加入所有规则的适用层级。</td><td>执行（VIP 层级由运营设为豁免）</td></tr>
+          <tr><td>影响会员数</td><td>保存这次修改时，该层级里的会员人数。</td><td>—</td></tr>
+        </table>
+        <h3>操作步骤</h3>
+        <div class="msteps">
+          <div class="mstep"><i>1</i><div>点层级的「编辑」→ 在最后一行选「执行」或「豁免」→ 点「确定」。</div></div>
+          <div class="mstep"><i>2</i><div>普通层级：确认框写明影响的会员人数，点「确定」保存。</div></div>
+          <div class="mstep"><i>3</i><div>Default layer：弹出「谷歌验证」，输入 6 位验证码，验证通过才保存。</div></div>
+          <div class="mstep"><i>4</i><div>在「提款风控规则修改记录」标签页查看修改记录，记录不能编辑或删除。</div></div>
+        </div>
+      </section>
+
+      <section class="mcard" id="m3">
+        <h2><span class="no2">03</span>条件转移 VIP 会员</h2>
+        <h3>菜单路径与权限</h3>
+        <p>【充值配置 › 支付层级配置】层级行的「条件转移」。沿用现有权限。</p>
+        <h3>操作步骤</h3>
+        <div class="msteps">
+          <div class="mstep"><i>1</i><div>在转出层级（如 Default layer）点「条件转移」→ 选转入层级（如 Tier VIP）。</div></div>
+          <div class="mstep"><i>2</i><div>填「VIP 等级 ≥」（含本级），如 30；不填表示不按 VIP 等级筛选。页面显示符合条件的人数。</div></div>
+          <div class="mstep"><i>3</i><div>点「确定转移」。转移后这些会员的充值渠道、稽核比例、提现上限和提现风控规则都按转入层级执行。</div></div>
+        </div>
+      </section>
+
+      <section class="mcard" id="m4">
+        <h2><span class="no2">04</span>审核命中风控的提现</h2>
+        <h3>菜单路径与权限</h3>
+        <p>【提现管理 › 提现风控审核】。沿用现有审核权限和锁定方式。</p>
+        <h3>操作步骤</h3>
+        <div class="msteps">
+          <div class="mstep"><i>1</i><div>列表默认按优先级（高 → 中 → 低）排序，先处理「高」。风控配置原有条件里的黑名单、NDRP 名单、余额不一致、风控预警风险记录也算「高」；显示「—」的是没有命中任何条件、因自动通过关闭进入审核的订单。</div></div>
+          <div class="mstep"><i>2</i><div>点「查看命中详情」：看命中的规则、触发原因、统计区间、实际值和提交时的阈值；命中当日低投注风控时再看前一日和近 7 日数据。</div></div>
+          <div class="mstep"><i>3</i><div>需要时点会员名查看用户资金情况、点「稽核明细」查看流水。代理代充、后台人工加款不计入规则，请结合资金明细判断。</div></div>
+          <div class="mstep"><i>4</i><div>点「通过」或「驳回」。驳回必须填原因，金额退回会员余额并发站内信。</div></div>
+        </div>
+      </section>
+
+      <section class="mcard" id="m9">
+        <h2>常见问题</h2>
+        <dl class="faq">
+          <dt>新建的层级会被检查吗？</dt>
+          <dd>会。新建层级默认「执行」，并自动加入所有规则的适用层级；不需要时到各规则的「配置层级」里取消。</dd>
+          <dt>VIP 会员为什么也被拦下了？</dt>
+          <dd>单笔大额提现、当日提现次数、当日累计提现金额、资料变更风控、静默账号风控、异常返奖率风控六条对豁免层级也检查。如果不需要，可在这几条的「配置层级」里取消 VIP 层级。</dd>
+          <dt>改了阈值，之前的订单为什么还显示旧数值？</dt>
+          <dd>命中详情显示的是提交时的阈值，改配置只影响之后提交的提现。</dd>
+          <dt>看到「规则计算异常」怎么办？</dt>
+          <dd>表示某条规则当时没有算出结果，系统按命中处理。请按触发原因里写的规则人工核对，必要时转技术排查。</dd>
+        </dl>
+      </section>
+    </div>
+  </div>
+</div>
+<script>window.NAV_ROOT = "../";</script>
+<script src="../assets/nav-data.js"></script>
+<script src="../assets/nav.js"></script>
+</body>
+</html>
