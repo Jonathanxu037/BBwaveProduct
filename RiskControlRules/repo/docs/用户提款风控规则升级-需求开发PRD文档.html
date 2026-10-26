@@ -191,15 +191,30 @@
 </table></div>
 
 <h3 id="c4-4">4.4 列表分页</h3>
-<div class="tbl"><table>
-<tr><th>列表（所在页面）</th><th>分页方式</th><th>每页条数（默认 / 可选）</th><th>默认排序</th><th>筛选、搜索、操作后停在哪一页</th><th>空列表 / 加载失败</th><th>导出</th></tr>
-<tr data-fp="F01-01"><td class="w">规则列表（每日提款限制设置）</td><td colspan="6" class="w">固定 10 条规则（另 3 条第二期占位），不分页</td></tr>
-<tr data-fp="F01-05"><td class="w">配置修改记录（每日提款限制设置弹窗）</td><td>页码分页</td><td>20 / 10、20、50、100</td><td class="w">修改时间倒序，时间相同按记录 ID 倒序</td><td class="w">打开弹窗回到第 1 页</td><td class="w">空列表显示「暂无数据」；加载失败提示「加载失败，请重试」并保留重试按钮</td><td>不涉及</td></tr>
-<tr data-fp="F02-01"><td class="w">支付层级列表（支付层级配置）</td><td>页码分页</td><td>沿用现有（原型 20 / 10、20、50、100）</td><td class="w">沿用现有</td><td class="w">编辑后停在当前页；删除后当前页为空时回到上一页</td><td class="w">沿用现有</td><td>不涉及</td></tr>
-<tr data-fp="F02-03"><td class="w">提款风控规则修改记录（支付层级配置）</td><td>页码分页</td><td>20 / 10、20、50、100</td><td class="w">修改时间倒序，时间相同按记录 ID 倒序</td><td class="w">改筛选或搜索回到第 1 页</td><td class="w">空列表显示「暂无数据」；加载失败提示「加载失败，请重试」</td><td>不涉及</td></tr>
-<tr data-fp="F03-02"><td class="w">待审核列表（提现风控审核）</td><td>页码分页</td><td>20 / 10、20、50（原型里的 2 条只用于演示多页）</td><td class="w">优先级高 → 中 → 低 → 「—」；同级按订单日期正序；时间相同按订单号正序</td><td class="w">改筛选或搜索回到第 1 页；通过或驳回后停在当前页，当前页为空时回到上一页；自动刷新时停在当前页；页码输入 0、负数或超出总页数时取第 1 页或最后一页</td><td class="w">空列表显示「No Data」（现有）；加载失败沿用现有</td><td class="w">沿用现有导出，新增「优先级」「命中规则」两列；「命中规则」写英文规则名称，多条用「; 」分隔，与待处理订单的风控触发原因一致；导出全部符合筛选条件的数据</td></tr>
-<tr data-fp="F03-03"><td class="w">命中规则表（命中详情弹窗）</td><td colspan="6" class="w">一笔订单命中条数有限（第一期最多 10 条规则加原有条件），不分页，按优先级高到低、同级按规则列表顺序排列</td></tr>
-</table></div>
+<style>
+/* 列表分页表：固定列宽，表头和单元格都允许换行，不出现水平滚动条 */
+.pg-tbl{table-layout:fixed;width:100%;min-width:0}
+.pg-tbl th,.pg-tbl td{white-space:normal!important;word-break:break-word;overflow-wrap:anywhere;font-size:12px;line-height:1.5;padding:5px 6px;vertical-align:top}
+.pg-tbl th{text-align:left}
+.pg-tbl .pg-pg{color:#8a8f98;font-size:11px}
+.pg-notes{margin:6px 0 0;padding-left:18px;font-size:13px;line-height:1.6}
+.pg-notes li{margin:2px 0}
+</style>
+<div class="tbl"><table class="pg-tbl" data-fit>
+<colgroup><col style="width:19%"><col style="width:7%"><col style="width:12%"><col style="width:17%"><col style="width:21%"><col style="width:13%"><col style="width:11%"></colgroup>
+<tr><th>列表（所在页面）</th><th>分页方式</th><th>数量/页</th><th>默认排序</th><th>操作结果页</th><th>空列表</th><th>导出</th></tr>
+<tr data-fp="F01-05"><td>配置修改记录<br><span class="pg-pg cell-sub">每日提款限制设置</span></td><td>页码</td><td>20 / 10、20、50、100</td><td>修改时间倒序</td><td>打开时回第 1 页</td><td>暂无数据</td><td>无</td></tr>
+<tr data-fp="F02-01"><td>支付层级列表<br><span class="pg-pg cell-sub">支付层级配置</span></td><td>页码</td><td>沿用现有</td><td>沿用现有</td><td>编辑后停当前页；删光回上一页</td><td>沿用现有</td><td>无</td></tr>
+<tr data-fp="F02-03"><td>提款风控规则修改记录<br><span class="pg-pg cell-sub">支付层级配置</span></td><td>页码</td><td>20 / 10、20、50、100</td><td>修改时间倒序</td><td>筛选后回第 1 页</td><td>暂无数据</td><td>无</td></tr>
+<tr data-fp="F03-02"><td>待审核列表<br><span class="pg-pg cell-sub">提现风控审核</span></td><td>页码</td><td>20 / 10、20、50</td><td>高 → 中 → 低 → 「—」，同级按订单日期</td><td>筛选后回第 1 页；处理或刷新后停当前页，删光回上一页</td><td>No Data</td><td>见下</td></tr></table></div>
+<ul class="pg-notes">
+<li data-fp="F01-05 F02-03 F03-02"><b>表头说明</b>：「数量/页」写默认每页条数 / 可选条数；「操作结果页」指筛选、搜索、编辑、删除、审核处理后停在哪一页。</li>
+<li data-fp="F01-05 F02-03 F03-02"><b>排序和页码</b>：待审核列表同级按订单日期正序；时间相同时，修改记录按记录 ID 倒序，待审核列表按订单号正序。「删光回上一页」指当前页最后一条被删除或处理后当前页为空，回到上一页；页码输入 0、负数或超出总页数时取第 1 页或最后一页。待审核列表的空列表「No Data」和加载失败提示都沿用现有。</li>
+<li data-fp="F03-02"><b>待审核列表导出</b>：导出全部符合筛选条件的数据，新增「优先级」「命中规则」两列；「命中规则」写英文规则名称，多条用「; 」分隔，与待处理订单的风控触发原因一致。原型里的「2 条 / 页」只用于演示多页。</li>
+<li data-fp="F01-01 F03-03"><b>不分页</b>：规则列表（每日提款限制设置）固定 10 条规则，另 3 条第二期占位；命中规则表（命中详情弹窗）一笔订单最多 10 条规则加原有条件，按优先级高到低、同级按规则列表顺序排列。</li>
+<li data-fp="F02-01"><b>支付层级列表</b>：每页条数、排序、空列表沿用现有；原型按 20 条 / 页，可选 10、20、50、100。</li>
+<li data-fp="F01-05 F02-03"><b>空列表和加载失败</b>：两类修改记录为空时显示「暂无数据」；加载失败提示「加载失败，请重试」并保留「重试」按钮。</li>
+</ul>
 
 <h3 id="c4-5">4.5 帮助提示内容</h3>
 <p>后台原型里「?」图标的说明文字取自本表。</p>
@@ -546,7 +561,58 @@
     document.addEventListener("click", function (e) { if (pop && !pop.contains(e.target)) close(); });
     document.addEventListener("keydown", function (e) { if (e.key === "Escape") close(); });
   })();
-  /* 荧光粉：只在网址以 #功能点编号 结尾时出现（来自开发自查清单） */
+  /* 表格自动列宽（生成内容规范第五章第 2 节「表格排版」，参考「用户提款风控规则升级」需求包）：带 data-fit 的表，
+     表格宽度等于正文宽度、不出现水平滚动；从有富余的列把宽度挪给撑高行的列，直到整张表的高度不能再降低。单元格允许换行，不会溢出或重叠。
+     没写 <colgroup> 时自动补上。打开页面、窗口大小变化、目录栏展开收起、字体加载完成后各算一次 */
+  (function () {
+    function cols(tbl) {
+      var cs = tbl.querySelectorAll("col"); if (cs.length) return cs;
+      var first = tbl.rows[0]; if (!first) return cs;
+      var n = 0; [].forEach.call(first.cells, function (c) { n += c.colSpan || 1; });
+      var g = document.createElement("colgroup"); for (var i = 0; i < n; i++) g.appendChild(document.createElement("col"));
+      tbl.insertBefore(g, tbl.firstChild); return tbl.querySelectorAll("col");
+    }
+    function fit(tbl, force) {
+      var cl = cols(tbl); if (!cl.length) return;
+      var n = cl.length, W = tbl.parentNode.clientWidth; if (!W) return;
+      /* 宽度和上次计算时一样就不重算（列宽已经设好），避免窗口事件、切换标签时卡顿（2026-10-26，来源「客服系统待回复列表优化」实测） */
+      if (!force && tbl._fitW === W) return;
+      tbl._fitW = W;
+      var MIN = 44, STEP = Math.max(4, Math.round(W / 120));
+      var rows = [].slice.call(tbl.rows), len = [];
+      for (var c = 0; c < n; c++) { var m = 1; rows.forEach(function (r) { var cell = r.cells[c]; if (cell && cell.colSpan === 1) m = Math.max(m, cell.textContent.trim().length); }); len.push(Math.sqrt(m)); }
+      /* 每列下限：不会折行的元素（功能点标签 .fp、.nw、code、nobr）不能被挤出单元格（2026-10-26，来源「实体奖品管理」） */
+      var mn = []; for (var k = 0; k < n; k++) mn.push(MIN);
+      rows.forEach(function (r) { for (var k = 0; k < r.cells.length && k < n; k++) { var cell = r.cells[k]; if (cell.colSpan !== 1) continue; [].forEach.call(cell.querySelectorAll(".fp,.nw,.ui-nw,code,nobr"), function (e) { mn[k] = Math.max(mn[k], e.offsetWidth + 18); }); } });
+      var sum = len.reduce(function (a, b) { return a + b; }, 0), w = len.map(function (l, i) { return Math.max(mn[i], Math.floor(W * l / sum)); });
+      var cells = [].slice.call(tbl.querySelectorAll("th,td")), rg = document.createRange();
+      /* 评分 = 表格总高度为主，各单元格文字高度之和为辅：先压最高的行，同高时也让其他格子少折行 */
+      function apply() { var s = w.reduce(function (a, b) { return a + b; }, 0); for (var i = 0; i < n; i++) cl[i].style.width = (w[i] / s * 100).toFixed(3) + "%"; var t = 0; cells.forEach(function (x) { rg.selectNodeContents(x); t += rg.getBoundingClientRect().height; }); return tbl.offsetHeight * 1000 + t; }
+      var best = apply(), guard = 0, improved = true;
+      while (improved && guard++ < 150) {
+        improved = false; var move = null;
+        /* 每轮同时试 1、2、4、8 倍步长，取评分下降最多的一次：一格要少折一行常要挪 20px 以上，只试单步会停在原处（2026-10-26，来源「用户提款风控规则升级」） */
+        [1, 2, 4, 8].forEach(function (k) {
+          var d = STEP * k;
+          for (var to = 0; to < n; to++) for (var from = 0; from < n; from++) {
+            if (to === from || w[from] - d < mn[from]) continue;
+            w[from] -= d; w[to] += d; var h = apply();
+            if (h < best - 0.5) { best = h; move = [from, to, d]; }
+            w[from] += d; w[to] -= d;
+          }
+        });
+        if (move) { w[move[0]] -= move[2]; w[move[1]] += move[2]; improved = true; }
+        apply();
+      }
+    }
+    function fitAll(force) { doc.querySelectorAll("table[data-fit]").forEach(function (t) { fit(t, force === true); }); }
+    var tm = 0; function later() { clearTimeout(tm); tm = setTimeout(fitAll, 150); }
+    window.addEventListener("resize", later); window.addEventListener("navtoggle", later);
+    /* 打开页面只算一次：等页面和字体都加载完（字体会改变文字宽度），不在脚本执行、字体就绪、load 时各算一遍 */
+    var loaded = document.readyState === "complete" ? Promise.resolve() : new Promise(function (r) { window.addEventListener("load", r); });
+    Promise.all([loaded, document.fonts && document.fonts.ready ? document.fonts.ready : null]).then(function () { fitAll(true); });
+  })();
+ /* 荧光粉：只在网址以 #功能点编号 结尾时出现（来自开发自查清单） */
   var banner = document.getElementById("fp-banner"), hits = [], pos = -1;
   function report() { try { if (parent !== window) parent.postMessage({ type: "prd-hits", total: hits.length, pos: pos }, "*"); } catch (e) {} }
   function clearHit() { doc.querySelectorAll(".fp-hit,.fp-cur").forEach(function (e) { e.classList.remove("fp-hit", "fp-cur"); }); hits = []; pos = -1; banner.hidden = true; }
