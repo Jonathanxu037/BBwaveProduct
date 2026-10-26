@@ -18,7 +18,8 @@
 .up{width:250px;height:100px;border:1px dashed #C0C4CC;border-radius:4px;display:grid;place-items:center;color:#909399;font-size:12px;background:#FAFAFA center/cover no-repeat;cursor:pointer}
 .gi{width:44px;height:44px;border-radius:8px;border:1px solid #eee;background:#C5CBD6 center/cover}
 .tagst{padding:1px 8px;border-radius:3px;font-size:12px}
-.st-ok{color:#19be6b;background:#e8f8ef}.st-mt{color:#ff9900;background:#fff4e0}.st-off{color:#ed4014;background:#ffecea}
+.st-ok{color:#19be6b;background:#e8f8ef}.st-mt{color:#ff9900;background:#fff4e0}.st-off{color:#ed4014;background:#ffecea}.st-ns{color:#909399;background:#f0f2f5}
+.gs-err{color:#F56C6C;font-size:12px;margin-top:4px}
 .slot{font-size:11.5px;color:#409EFF}.slot.gray{color:#bbb}
 .opbar{position:sticky;bottom:0;z-index:5;display:flex;align-items:center;gap:10px;justify-content:flex-end;padding:12px 18px;background:rgba(255,255,255,.97);border-top:1px solid #EBEEF5;box-shadow:0 -4px 12px rgba(0,0,0,.06)}
 .opbar .gs-hint{margin-right:auto}
@@ -61,8 +62,8 @@
             <div class="cb">
               <div class="ui-reqnote">前台只展示 1 张图，不轮播。</div>
               <div class="frow"><span class="fl">是否展示<i class="qm" tabindex="0" data-tip="控制侧边栏是否显示 Mini Banner，默认开；开启时须上传图片并设置跳转。">?</i></span><div class="fctl"><button type="button" class="sw" id="swBn" role="switch" aria-label="是否展示"></button></div></div>
-              <div class="frow"><span class="fl"><span class="req">*</span>跳转方式<i class="qm" tabindex="0" data-tip="选择活动：结算后进活动详情页；自定义跳转链接：新标签页打开，不离开游戏。">?</i></span><div class="fctl"><label><input type="radio" name="bt" value="promo"> 选择活动（跳转活动详情页）</label><label><input type="radio" name="bt" value="link"> 自定义跳转链接</label></div></div>
-              <div class="frow" id="rowPromo"><span class="fl"><span class="req">*</span>选择活动<i class="qm" tabindex="0" data-tip="只能选活动中心正在展示的活动；活动下架或结束后 Banner 自动隐藏。">?</i></span><div class="fctl"><select class="bo-inp" id="promo" style="width:340px"><option value="">请选择展示中的活动</option></select></div></div>
+              <div class="frow"><span class="fl"><span class="req">*</span>跳转方式<i class="qm" tabindex="0" data-tip="选择活动：结算后进活动详情页；自定义跳转链接：新标签页（APP 为系统浏览器）打开，不离开游戏。">?</i></span><div class="fctl"><label><input type="radio" name="bt" value="promo"> 选择活动（跳转活动详情页）</label><label><input type="radio" name="bt" value="link"> 自定义跳转链接</label></div></div>
+              <div class="frow" id="rowPromo"><span class="fl"><span class="req">*</span>选择活动<i class="qm" tabindex="0" data-tip="只能选活动中心正在展示的活动；活动下架或结束后 Banner 自动隐藏。">?</i></span><div class="fctl" style="flex-direction:column;align-items:flex-start"><select class="bo-inp" id="promo" style="width:340px"><option value="">请选择展示中的活动</option></select><div class="gs-err" id="promoEndTip" hidden>所选活动已结束，前台不展示</div></div></div>
               <div class="frow" id="rowLink" hidden><span class="fl"><span class="req">*</span>跳转链接<i class="qm" tabindex="0" data-tip="以 http:// 或 https:// 开头，不能有空格，任何域名都可以。">?</i></span><div class="fctl"><input class="bo-inp" id="link" style="width:340px" placeholder="https://"></div></div>
               <div class="frow"><span class="fl"><span class="req">*</span>Mini Banner 图<i class="qm" tabindex="0" data-tip="侧边栏专用图片，不使用活动原有 Banner；尺寸和格式按设计稿。">?</i></span><div class="fctl" style="align-items:flex-start">
                 <label class="up" id="upBox"><input type="file" id="file" accept="image/png,image/jpeg" hidden><span id="upTxt">+ 点击上传图片</span></label>
@@ -76,9 +77,9 @@
               <button type="button" class="bo-btn q" id="addG" style="margin-left:auto">添加游戏</button>
             </div>
             <div class="cb">
-              <div class="ui-reqnote">前台推荐区 2 列，首屏约 7 个；维护中、已下架的游戏，以及当前玩家准入条件不满足的游戏（如需 KYC）自动不展示。</div>
+              <div class="ui-reqnote">前台推荐区 2 列，首屏约 7 个；维护中、已下架（含已停用）、所属供应商不支持切换的游戏，玩家正在玩的游戏，以及当前玩家准入条件不满足的游戏（如需 KYC）自动不展示。</div>
               <table>
-                <thead><tr><th><span class="ui-nw">排序<i class="qm" tabindex="0" data-tip="按当前排序预估的前台位置；维护中、已下架的游戏不占位；前台还会按玩家准入条件过滤，个别玩家看到的位置可能前移。">?</i></span></th><th>游戏图标</th><th>游戏名称</th><th>游戏类型</th><th><span class="ui-nw">游戏状态<i class="qm" tabindex="0" data-tip="取自游戏入口设置；维护中、已下架的游戏前台不显示。">?</i></span></th><th>排序调整</th><th>操作</th></tr></thead>
+                <thead><tr><th><span class="ui-nw">排序<i class="qm" tabindex="0" data-tip="按当前排序预估的前台位置，只按游戏状态计算；维护中、已下架、不支持切换的游戏不占位，记为「—」；前台还会排除玩家正在玩的游戏，并按每个玩家的准入条件过滤，实际看到的位置可能前移。">?</i></span></th><th>游戏图标</th><th>游戏名称</th><th>游戏类型</th><th><span class="ui-nw">游戏状态<i class="qm" tabindex="0" data-tip="取自游戏入口设置；已停用（平台或系统未启用）显示为已下架。维护中、已下架的游戏前台不显示；不支持切换：所属供应商不支持未结算判断（供应商名单由研发维护），前台不展示。">?</i></span></th><th>排序调整</th><th>操作</th></tr></thead>
                 <tbody id="rows"></tbody>
               </table>
               <div class="bo-page" id="pager" role="navigation" aria-label="推荐游戏分页"></div>
@@ -106,12 +107,13 @@
     <h3>规则批注</h3>
     <ol>
       
-      <li><b>功能配置</b>：两个开关默认开；总开关关闭时「启用退出时自动展开」置灰。<span class="ref">PRD 6.2 · F08-02 功能配置</span></li>
-      <li><b>Mini Banner</b>：是否展示开启时，图片、活动或链接缺一不能保存，分别提示「请上传 Mini Banner 图」「请选择活动」「跳转链接格式不正确，需以 http(s):// 开头」；链接可以填任何域名。活动下拉取「活动图素材管理 › 优惠活动」里正在展示的活动。<span class="ref">PRD 6.3 · F08-03 Mini Banner 配置</span></li>
+      <li><b>功能配置</b>：两个开关默认开；总开关关闭时「启用退出时自动展开」置灰。总开关关闭时保存不校验 Mini Banner 和推荐游戏的各项（含展示数量），保证紧急关闭不被其他校验挡住。<span class="ref">PRD 6.2 · F08-02 功能配置</span><span class="ref">PRD 6.3 · F08-03 保存校验</span></li>
+      <li><b>Mini Banner</b>：是否展示开启时，图片、活动或链接缺一不能保存，分别提示「请上传 Mini Banner 图」「请选择活动」；链接为空提示「请填写跳转链接」，格式不对提示「跳转链接格式不正确，需以 http(s):// 开头」；链接可以填任何域名。活动下拉取「活动图素材管理 › 优惠活动」里正在展示的活动。已选活动下架或结束时，下拉框显示「（已结束）活动名」，下方红字提示「所选活动已结束，前台不展示」（前台隐藏 Mini Banner）；只有「是否展示」开启且没改选其他活动时，保存才提示「所选活动已结束，请重新选择」（模拟面板可勾选演示）。自定义跳转链接在前台用新标签页（APP 为系统浏览器）打开，不离开游戏。<span class="ref">PRD 6.3 · F08-03 Mini Banner 配置</span></li>
       <li><b>展示数量</b>：1–30 的整数，默认 10；不合法时保存提示「展示数量需为 1–30 的整数」。<span class="ref">PRD 6.4 · F08-04 推荐游戏配置</span></li>
       <li><b>添加游戏</b>：只列平台已配置的游戏，可搜索、多选，已添加的置灰；确定后追加到末尾；右上角 × 等同取消。<span class="ref">PRD 6.4 · F08-04</span></li>
       <li><b>列表分页</b>：推荐游戏列表和「添加推荐游戏」弹窗都用页码分页，默认每页 20 条（列表可选 10 / 20 / 50 / 100，弹窗可选 10 / 20 / 50）；改每页条数、搜索后回第 1 页；上移、下移、删除后停在当前页，删除后当前页为空时回到上一页；添加后追加到列表末尾、停在当前页并提示所在页；页码输入超出范围取首页或末页；弹窗里的勾选跨页保留。<span class="ref">PRD 6.5 列表分页 · F08-04</span></li>
-      <li><b>位次提示</b>：从上往下数状态正常的游戏，前 N 个为「前台第 1–N 位」，其余正常游戏为「超出展示数量」，维护中和已下架为「—」；前台还会按玩家准入条件过滤，个别玩家看到的位置可能前移。<span class="ref">PRD 6.4 · F08-04</span></li>
+      <li><b>游戏状态</b>：取自游戏入口设置，有「正常」「维护中」「已下架」「不支持切换」四种；已停用（平台或系统未启用）的游戏显示为「已下架」；「不支持切换」指所属供应商不支持未结算判断（供应商名单由研发维护），下方注明「前台不展示」，示例里的 Lucky Fishing 即此状态。<span class="ref">PRD 6.4 · F08-04 推荐游戏列表</span></li>
+      <li><b>位次提示</b>：只按游戏状态计算，从上往下数状态正常的游戏，前 N 个为「前台第 1–N 位」，其余正常游戏为「超出展示数量」，维护中、已下架和不支持切换为「—」；前台还会排除玩家正在玩的游戏，并按每个玩家的准入条件过滤，实际看到的位置可能前移。<span class="ref">PRD 6.4 · F08-04 推荐游戏列表</span></li>
       <li><b>菜单权限和操作日志</b>：新增菜单按后台现有角色权限配置，默认分配给运营；每次保存成功记一条操作日志（操作人、时间、修改前后值），在后台现有操作日志里查看。<span class="ref">PRD 6.1 · F08-05</span></li>
       <li><b>多人同时编辑</b>：保存时校验配置版本，别人已先保存时提示「配置已被他人修改，请刷新后再改」，不保存。<span class="ref">PRD 6.1 · F08-05</span></li>
       <li><b>保存与重置</b>：保存后新进入游戏的玩家生效；重置恢复为上次保存的配置。<span class="ref">PRD 6.1 · F08-05 保存与重置</span></li>
@@ -130,14 +132,18 @@ var ALL = [
   ["dragon-tiger", "D Dragon Tiger", "真人", "ok"], ["pok-deng", "D Pok Deng", "真人", "ok"], ["sic-bo", "D Sic Bo", "真人", "ok"],
   ["fortune-goddess", "Fortune Goddess", "电子", "ok"], ["fortune-gems", "Fortune Gems", "电子", "ok"], ["crazy-time", "Crazy Time", "真人", "maintenance"],
   ["fortune-bingo", "Fortune Bingo", "电子", "ok"], ["fortune-gems-2", "Fortune Gems 2", "电子", "ok"], ["super-ace-deluxe", "Super Ace Deluxe", "电子", "ok"],
-  ["super-ace-joker", "Super Ace Joker", "电子", "ok"], ["wukong", "Black Wukong", "电子", "ok"], ["money-coming", "Money Coming", "电子", "offline"]
+  ["super-ace-joker", "Super Ace Joker", "电子", "ok"], ["wukong", "Black Wukong", "电子", "ok"], ["money-coming", "Money Coming", "电子", "offline"],
+  ["lucky-fishing", "Lucky Fishing", "捕鱼", "nosettle"]   /* 所属供应商不支持未结算判断：前台不展示 */
 ].map(function (a) { return { id: a[0], n: a[1], t: a[2], st: a[3] }; });
 function G(id) { return ALL.filter(function (g) { return g.id === id; })[0]; }
 function icon(g) { return g.id === "wukong" ? IMG + "game-wukong.png" : (g.st === "ok" && g.id.indexOf("demo-") !== 0) ? IMG + "games/" + g.id + ".png" : ""; }
 var PROMOS = [["friday-jackpot-drop", "Friday Jackpot Drop"], ["loyalty-lucky-spin", "Loyalty Lucky Spin Rewards"], ["level-up-rewards", "Level Up and Get Rewarded"]];
 var DEF_CFG = { enabled: true, autoExpand: true, showBanner: true, bType: "promo", bPromo: "friday-jackpot-drop", bImg: IMG + "banner-1.png", bLink: "", count: 10,
-  rec: ["dragon-tiger", "pok-deng", "sic-bo", "crazy-time", "money-coming", "fortune-goddess", "fortune-gems", "fortune-bingo", "fortune-gems-2", "super-ace-deluxe", "super-ace-joker"] };
-P.init({ defaults: { cfg1: null } });
+  rec: ["dragon-tiger", "pok-deng", "sic-bo", "crazy-time", "money-coming", "fortune-goddess", "lucky-fishing", "fortune-gems", "fortune-bingo", "fortune-gems-2", "super-ace-deluxe", "super-ace-joker"] };
+P.init({ defaults: { cfg1: null, promoEnded: false } });
+var ST = { ok: ["正常", "st-ok", ""], maintenance: ["维护中", "st-mt", "前台不展示"], offline: ["已下架", "st-off", "前台不展示"], nosettle: ["不支持切换", "st-ns", "前台不展示"] };
+/* 已选活动是否已下架或结束（模拟：promoEnded 记的是已结束的活动 ID） */
+function ended(id) { return !!id && P.get("promoEnded") === id; }
 var $ = function (id) { return document.getElementById(id); };
 function clone(o) { return JSON.parse(JSON.stringify(o)); }
 function saved() { return clone(P.get("cfg1") || DEF_CFG); }
@@ -163,7 +169,9 @@ function render() {
   $("swEn").setAttribute("aria-checked", C.enabled); $("swAu").setAttribute("aria-checked", C.autoExpand); $("swAu").disabled = !C.enabled; $("swBn").setAttribute("aria-checked", C.showBanner);
   document.querySelectorAll("input[name=bt]").forEach(function (r) { r.checked = r.value === C.bType; });
   $("rowPromo").hidden = C.bType !== "promo"; $("rowLink").hidden = C.bType !== "link";
-  var sel = $("promo"); sel.length = 1; PROMOS.forEach(function (p) { var o = document.createElement("option"); o.value = p[0]; o.textContent = p[1]; sel.appendChild(o); }); sel.value = C.bPromo || "";
+  /* 下拉只列正在展示的活动；已选活动下架或结束时保留为「（已结束）活动名」并红字提示，前台不展示 */
+  var sel = $("promo"); sel.length = 1; PROMOS.forEach(function (p) { var end = ended(p[0]); if (end && C.bPromo !== p[0]) return; var o = document.createElement("option"); o.value = p[0]; o.textContent = (end ? "（已结束）" : "") + p[1]; sel.appendChild(o); }); sel.value = C.bPromo || "";
+  $("promoEndTip").hidden = !ended(C.bPromo);
   $("link").value = C.bLink || "";
   $("upBox").style.backgroundImage = C.bImg ? "url('" + C.bImg + "')" : "none"; $("upTxt").hidden = !!C.bImg; $("upOps").hidden = !C.bImg;
   $("count").value = C.count;
@@ -175,7 +183,7 @@ function render() {
   C.rec.forEach(function (id, i) {
     if (i < from || i >= to) return;
     var g = G(id), ok = g.st === "ok", shown = !!SL[id];
-    var st = { ok: ["正常", "st-ok", ""], maintenance: ["维护中", "st-mt", "前台不展示"], offline: ["已下架", "st-off", "前台不展示"] }[g.st];
+    var st = ST[g.st];
     var tr = document.createElement("tr");
     tr.innerHTML = "<td>" + (i + 1) + '<div class="slot' + (shown ? "" : " gray") + '">' + (shown ? "前台第 " + SL[id] + " 位" : ok ? "超出展示数量" : "—") + "</div></td>" +
       '<td><div class="gi" style="background-image:' + (icon(g) ? "url('" + icon(g) + "')" : "none") + '"></div></td><td>' + g.n + "</td><td>" + g.t + "</td>" +
@@ -190,7 +198,7 @@ $("swEn").onclick = function () { C.enabled = !C.enabled; render(); };
 $("swAu").onclick = function () { if (!C.enabled) return; C.autoExpand = !C.autoExpand; render(); };
 $("swBn").onclick = function () { C.showBanner = !C.showBanner; render(); };
 document.querySelectorAll("input[name=bt]").forEach(function (r) { r.onchange = function () { C.bType = r.value; render(); }; });
-$("promo").onchange = function () { C.bPromo = this.value; };
+$("promo").onchange = function () { C.bPromo = this.value; render(); };
 $("link").oninput = function () { C.bLink = this.value; };
 $("count").oninput = function () { C.count = this.value; render(); $("count").focus(); };
 function onFile(e) { var f = e.target.files && e.target.files[0]; if (!f) return; var r = new FileReader(); r.onload = function () { C.bImg = r.result; render(); }; r.readAsDataURL(f); e.target.value = ""; }
@@ -203,16 +211,21 @@ $("rows").addEventListener("click", function (e) {
 });
 $("save").onclick = function (e) {
   if (e.target.classList.contains("qm")) return;
-  var cnt = String(C.count).trim();
-  if (!/^\d+$/.test(cnt) || +cnt < 1 || +cnt > 30) return msg("展示数量需为 1–30 的整数", 1);
-  if (C.showBanner) {
-    if (!C.bImg) return msg("请上传 Mini Banner 图", 1);
-    if (C.bType === "promo" && !C.bPromo) return msg("请选择活动", 1);
-    C.bLink = (C.bLink || "").trim();
-    if (C.bType === "link" && !/^https?:\/\/\S+$/.test(C.bLink)) return msg("跳转链接格式不正确，需以 http(s):// 开头", 1);
+  var cnt = String(C.count).trim(), cntOk = /^\d+$/.test(cnt) && +cnt >= 1 && +cnt <= 30;
+  /* 6.3 保存校验：总开关关闭时不校验 Mini Banner 和推荐游戏的各项，保证紧急关闭不被挡住 */
+  if (C.enabled) {
+    if (!cntOk) return msg("展示数量需为 1–30 的整数", 1);
+    if (C.showBanner) {
+      if (!C.bImg) return msg("请上传 Mini Banner 图", 1);
+      if (C.bType === "promo" && !C.bPromo) return msg("请选择活动", 1);
+      if (C.bType === "promo" && ended(C.bPromo)) return msg("所选活动已结束，请重新选择", 1);
+      C.bLink = (C.bLink || "").trim();
+      if (C.bType === "link" && !C.bLink) return msg("请填写跳转链接", 1);
+      if (C.bType === "link" && !/^https?:\/\/\S+$/.test(C.bLink)) return msg("跳转链接格式不正确，需以 http(s):// 开头", 1);
+    }
   }
   if (CONC) { CONC = false; return msg("配置已被他人修改，请刷新后再改", 1); }   /* 6.1 多人同时编辑 */
-  C.count = +cnt;
+  C.count = cntOk ? +cnt : saved().count;   /* 总开关关闭时展示数量不合法：沿用上次保存的值 */
   
   try { P.set("cfg1", clone(C)); } catch (x) { return msg("保存失败：图片过大，请压缩后重试", 1); }
   render(); msg("保存成功");
@@ -234,7 +247,7 @@ function openAdd() {
     if (!list.length) pool.innerHTML = '<p class="gs-hint" style="padding:16px;text-align:center">没有匹配的游戏</p>';
     list.slice((MP.page - 1) * MP.size, MP.page * MP.size).forEach(function (g) {
       var added = C.rec.indexOf(g.id) >= 0, l = document.createElement("label"); if (added) l.className = "dis";
-      l.innerHTML = '<input type="checkbox"' + (added || picked.indexOf(g.id) >= 0 ? " checked" : "") + (added ? " disabled" : "") + '><div class="gi" style="width:36px;height:36px;background-image:' + (icon(g) ? "url('" + icon(g) + "')" : "none") + '"></div><span style="flex:1">' + g.n + '</span><span class="gs-hint">' + g.t + "</span><span class=\"gs-hint\">" + (added ? "已添加" : { ok: "正常", maintenance: "维护中", offline: "已下架" }[g.st]) + "</span>";
+      l.innerHTML = '<input type="checkbox"' + (added || picked.indexOf(g.id) >= 0 ? " checked" : "") + (added ? " disabled" : "") + '><div class="gi" style="width:36px;height:36px;background-image:' + (icon(g) ? "url('" + icon(g) + "')" : "none") + '"></div><span style="flex:1">' + g.n + '</span><span class="gs-hint">' + g.t + "</span><span class=\"gs-hint\">" + (added ? "已添加" : ST[g.st][0] + (ST[g.st][2] ? "（" + ST[g.st][2] + "）" : "")) + "</span>";
       if (!added) l.querySelector("input").onchange = function () { var i = picked.indexOf(g.id); if (i >= 0) picked.splice(i, 1); else picked.push(g.id); mask.querySelector(".row2 b").textContent = picked.length; };
       pool.appendChild(l);
     });
@@ -255,7 +268,10 @@ $("simMany").onclick = function () { addDemo(); C.rec = C.rec.concat(DEMO.filter
 var DEMO = [];
 function addDemo() { if (DEMO.length) return; for (var i = 1; i <= 40; i++) { var id = "demo-" + (i < 10 ? "0" : "") + i; DEMO.push(id); ALL.push({ id: id, n: "示例游戏 " + (i < 10 ? "0" : "") + i, t: i % 2 ? "电子" : "真人", st: i % 13 === 0 ? "maintenance" : "ok" }); } }
 P.panel($("simPanel"), [
-  { title: "演示值说明", items: [{ type: "note", text: "游戏、活动、图片均为示意数据；Crazy Time 为维护中、Money Coming 为已下架，用来演示位次提示。保存的配置存在当前标签页，前台原型会读取。" }] },
+  { title: "活动状态", items: [
+    { type: "check", key: "_pe", label: "已选活动「Friday Jackpot Drop」已结束（下架）", change: function (v) { P.set("promoEnded", v ? "friday-jackpot-drop" : false); render(); } }
+  ] },
+  { title: "演示值说明", items: [{ type: "note", text: "游戏、活动、图片均为示意数据；Crazy Time 为维护中、Money Coming 为已下架、Lucky Fishing 为不支持切换，用来演示位次提示。保存的配置存在当前标签页，前台原型会读取。" }] },
   { items: [{ type: "reset" }] }
 ]);
 if (C.rec.some(function (id) { return /^demo-/.test(id); })) addDemo();

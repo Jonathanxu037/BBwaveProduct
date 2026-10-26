@@ -216,7 +216,7 @@
     /* 目录栏 */
     var aside = document.createElement("aside");
     aside.className = "sidenav"; aside.setAttribute("aria-label", "目录");
-    aside.innerHTML = '<div class="sn-brand"><div class="k">789BINGO</div><div class="t">' + (BRAND[ROLE] || "需求中心") + '</div></div>' +
+    aside.innerHTML = '<div class="sn-brand"><div class="k">789BINGO</div><div class="t"></div></div>' +
       '<div class="sn-tools"><input type="search" placeholder="搜索当前需求下的页" aria-label="搜索目录"><button type="button" data-a="all">全部展开</button><button type="button" data-a="reset">恢复默认</button></div>' +
       '<div class="sn-tree"></div>';
     var treeBox = aside.querySelector(".sn-tree");
@@ -225,6 +225,9 @@
     aside.querySelector("input").addEventListener("input", function () { empty.hidden = tree.filter(this.value) !== false; });
     aside.querySelector('[data-a="all"]').onclick = function () { tree.expandAll(); };
     aside.querySelector('[data-a="reset"]').onclick = function () { aside.querySelector("input").value = ""; tree.filter(""); empty.hidden = true; tree.reset(); };
+    /* 目录栏标题显示需求标题（2026-10-23 用户要求，所有需求通用，需求包框架规范第 3.2 节）：取 nav-data 的 brand；没写时取根节点标题去掉「（v版本号）」；都没有时退回按角色的名称 */
+    var reqTitle = String(DATA.brand || DATA.title || "").replace(/\s*[（(]v?\d+(\.\d+)*[)）]\s*$/, "").trim();
+    aside.querySelector(".sn-brand .t").textContent = reqTitle || BRAND[ROLE] || "需求中心";
     var mask = document.createElement("div"); mask.className = "navmask";
     mask.onclick = function () { document.body.classList.remove("nav-open"); };
     /* 目录栏右上角「隐藏」；隐藏后顶栏左侧只留「展开目录」按钮 */

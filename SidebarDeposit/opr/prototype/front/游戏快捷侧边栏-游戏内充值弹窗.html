@@ -66,7 +66,11 @@
 .qr i{background:#111}.qr i.w{background:#fff}
 .payinfo{text-align:center;font-size:13px;color:var(--d-mut);display:grid;gap:4px;padding:0 20px}.payinfo b{font-size:22px;color:var(--d-ink)}
 #toast{z-index:30}
-#payDone{display:none;flex-direction:column;align-items:center;gap:10px;padding:60px 24px;text-align:center}#payDone b{font-size:20px}#payDone span{color:var(--d-mut);font-size:13px}
+#payDone{display:none;flex-direction:column;align-items:center;gap:14px;padding:60px 24px;text-align:center}#payDone span{color:var(--d-ink);font-size:15px;font-weight:700;line-height:1.5}
+#kycSettle{position:absolute;inset:30px 0 0;z-index:25;background:rgba(6,4,20,.5);display:grid;place-items:center}#kycSettle div{padding:14px 18px;border-radius:14px;background:rgba(20,14,48,.95);color:#fff;font-size:13px;font-weight:700}
+#kycScr{position:absolute;inset:30px 0 0;z-index:26;background:#0d1426;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:30px;text-align:center}#kycScr h4{margin:0;font-size:20px}
+#kycSettle[hidden],#kycScr[hidden]{display:none}
+#kycScr button{all:unset;padding:11px 20px;border-radius:22px;background:linear-gradient(90deg,var(--d-or),var(--d-or2));cursor:pointer;font-weight:700}
 #pay.gs-done .qr,#pay.gs-done .payinfo{display:none}#pay.gs-done #payDone{display:flex}
 #doneClose{all:unset;padding:10px 26px;border-radius:20px;background:linear-gradient(90deg,var(--d-or),var(--d-or2));color:#fff;font-weight:800;cursor:pointer}#doneClose[hidden]{display:none}
 #kyc{position:absolute;inset:0;z-index:5;background:rgba(0,0,0,.45);display:grid;place-items:center;padding:20px;border-radius:18px 18px 0 0}#kyc[hidden]{display:none}
@@ -99,16 +103,18 @@
           <label class="terms"><input type="checkbox" id="agree" checked> <span>我已阅读并同意</span><a href="javascript:void(0)">《充值条款》</a></label>
         </div>
         <div class="ft"><button type="button" id="submit">提交</button></div>
-        <div id="kyc" hidden><div class="dlg" role="dialog" aria-modal="true"><h3>请尽快完成账户认证</h3><p>请在 3 天内完成认证（沿用现有提醒，示意）</p><div class="gs-row"><button type="button" id="kycLater" data-cancel>稍后</button><button type="button" id="kycGo">立即认证</button></div></div></div>
+        <div id="kyc" hidden><div class="dlg" role="dialog" aria-modal="true"><h3 id="kycT">请尽快完成账户认证</h3><p id="kycP">请在 3 天内完成认证（沿用现有提醒，示意）</p><div class="gs-row"><button type="button" id="kycLater" data-cancel>稍后</button><button type="button" id="kycGo">立即认证</button></div></div></div>
       </section>
     </div>
     <div id="pay" hidden>
       <div class="gs-tabs" id="payTabs"><button type="button" id="tabGame">游戏 · Black Wukong</button><button type="button" class="cur">支付页</button></div>
       <div class="appbar" id="payBar" hidden><button type="button" id="payBack" aria-label="返回">‹</button><span>支付页</span></div>
       <div class="qr" id="qr" aria-label="支付二维码（示意）"></div>
-      <div id="payDone"><b id="doneT">支付已完成</b><span id="doneP">正在返回游戏…</span><button type="button" id="doneClose" hidden>关闭此页面</button></div>
+      <div id="payDone"><span id="doneP">正在返回游戏…</span><button type="button" id="doneClose" hidden>关闭此页面</button></div>
       <div class="payinfo"><span id="payM">请使用 GCash 扫描二维码完成支付</span><span>订单金额</span><b id="payA">₱500.00</b><span class="ui-reqnote">二维码由支付渠道提供，页面内容按目前接入的三方支付流程显示。</span></div>
     </div>
+    <div id="kycSettle" hidden><div>正在结算游戏余额…</div></div>
+    <div id="kycScr" hidden><h4>身份认证页</h4><p class="ui-reqnote">原型示意：实际跳到平台现有 KYC 页，已离开当前游戏。</p><button type="button" id="kycBack">重新进入 Black Wukong</button></div>
     <div class="toast" id="toast" role="status" hidden></div>
   </div>
 
@@ -125,13 +131,13 @@
     <div class="sim" id="simPanel"></div>
     <h3>规则批注</h3>
     <ol>
-      <li><b>打开</b>：点侧边栏「充值」→ 侧边栏收起 → 充值弹窗从底部升起，高度固定为游戏页面高度的 2/3，不随内容变化，内容超出时在弹窗内滚动（小屏手机同样适用）；打开前不做游戏结算；游戏保留在底层不关闭、不刷新，上方加半透明遮罩不能操作；浮标贴到所在一侧的屏幕边，显示小猫探头挥手动图（仍然显示，不消失）。横屏时逻辑和竖屏一致（从底部升起、高度固定为游戏页面的 2/3、内容超出在弹窗内滚动、游戏保留在底层），具体布局由 UI 出横屏适配设计。<span class="ref">PRD 规则 N14 · F07-01 打开与关闭充值弹窗</span></li>
+      <li><b>打开</b>：点侧边栏「充值」→ 侧边栏收起 → 充值弹窗从底部升起，高度固定为游戏页面高度的 2/3，不随内容变化，内容超出时在弹窗内滚动（小屏手机同样适用）；打开前不做游戏结算；游戏保留在底层不关闭、不刷新，上方加半透明遮罩不能操作；浮标贴到所在一侧的屏幕边，显示贴边状态的动图（仍然显示，不消失）。横屏时逻辑和竖屏一致（从底部升起、高度固定为游戏页面的 2/3、内容超出在弹窗内滚动、游戏保留在底层），具体布局由 UI 出横屏适配设计。<span class="ref">PRD 规则 N14 · F07-01 打开与关闭充值弹窗</span></li>
       <li><b>内容</b>：支付方式、优惠活动（Promotions）券、充值金额、快捷金额、赠送和幸运转盘标签、限额、条款、提交全部沿用现有充值页，不新增配置；内容在弹窗内滚动，提交按钮固定在底部。优惠活动（Promotions）区和 Wallet 充值页同一位置、同一逻辑：首存和每日存送同时开启时只显示首存券；只有每日存送时显示每日存送券，玩家点券上的圆圈自行选择是否申请，再点取消，不申请也能充值；都没有存送活动时整个区换成普通标题语「继续游戏，精彩不停！」（英文 Keep the game going!），可在模拟面板切换。画面里的支付方式、金额和标签只是示意，以现有充值设置为准（HOT 角标按现状固定在 +200）。<span class="ref">PRD 规则 N15 · F07-02 充值内容与提交</span></li>
-      <li><b>校验</b>：没填金额、也没点快捷金额之前，提交按钮置灰不能点；点了快捷金额或输入金额后可点，清空金额后重新置灰。超出限额提示「请输入 100-50,000 之间的金额」（现有文案，数值随渠道变化）；提交中按钮置灰防重复。<span class="ref">PRD 8. 接口与异常 · F07-02</span></li>
+      <li><b>校验</b>：没填金额、也没点快捷金额之前，提交按钮置灰不能点；点了快捷金额或输入金额后可点，清空金额后重新置灰。超出限额提示「请输入 100-50,000 之间的金额」（现有文案，数值随渠道变化）；提交中按钮置灰防重复。<span class="ref">PRD 规则 N15 · F07-02 充值内容与提交</span><span class="ref">PRD 8. 接口与异常 · F07-02</span></li>
       <li><b>二维码支付</b>：下单成功后弹窗收起，打开二维码支付页：H5 新开浏览器标签页，原游戏标签页保持打开；APP 用独立支付页、WebView 或外部浏览器（按支付方式现有的打开方式），原游戏页面保持。H5 支付页被浏览器拦截时弹窗保持打开，提示「支付页面打开失败，请重试」。支付页的有效期、提示文案和结果页按目前接入的三方支付流程和规则显示，原型文案只是示意。<span class="ref">PRD 规则 N16 · F07-03 二维码支付与返回原游戏</span></li>
-      <li><b>返回原游戏</b>：支付完成后回到原游戏，不跳大厅、不重新加载：H5 回跳到「支付完成」中间页，自动关闭新标签页回到原游戏标签页，浏览器不允许自动关闭时提示「支付已完成，请返回游戏页面」并给「关闭此页面」按钮；在 TG / Facebook 内置浏览器、小程序或已安装的 PWA 中，支付页在系统浏览器打开，付完款中间页只显示文字、不提供进入平台的入口，玩家切回原 App / PWA 继续游戏（PRD 5.1）；回跳地址不带登录 token 和玩家身份信息（其他参数由技术按当前平台规则处理）；APP 打开支付页付款后要玩家手动切回 APP（现状，-2207 等）。不弹现有的「Payment Information」和「充值返回弹窗」，也不弹充值成功提示；游戏页内不弹到账推送，只进站内信；充值后触发的营销和引导弹窗（首充转盘、6954 充返转盘等）在玩家回到平台页面后才显示，第 4 局强制 KYC 等合规拦截照常在游戏内弹出；到账判定和入账按现有系统逻辑处理；到账后平台通知厂商把游戏内显示的余额刷新为充值后余额，不退出游戏；不支持刷新的厂商到账后自动刷新游戏页面（当前局未结算时等结算后再刷新）；玩家充值后立刻离开当前游戏时，先离开结算再到账同步。<span class="ref">PRD 规则 N16、N13 · F07-03 二维码支付与返回原游戏</span></li>
+      <li><b>返回原游戏</b>：支付完成后回到原游戏，不跳大厅、不重新加载：H5 回跳到「支付完成」中间页，自动关闭新标签页回到原游戏标签页，浏览器不允许自动关闭时提示「请返回游戏页面，到账后余额会自动更新」并给「关闭此页面」按钮（中间页不知道订单结果，支付失败、取消或二维码过期后渠道也可能回跳到这里，所以文案保持中性，不写「支付已完成」）；在 TG / Facebook 内置浏览器、小程序或已安装的 PWA 中，支付页在系统浏览器打开，付完款中间页只显示文字、不提供进入平台的入口，玩家切回原 App / PWA 继续游戏（PRD 5.1）；回跳地址不带登录 token 和玩家身份信息（其他参数由技术按当前平台规则处理）；APP 打开支付页付款后要玩家手动切回 APP（现状，-2207 等）。不弹现有的「Payment Information」和「充值返回弹窗」，也不弹充值成功提示；游戏页内不弹到账推送，只进站内信；充值后触发的营销和引导弹窗（首充转盘、6954 充返转盘等）在玩家回到平台页面后才显示，达到后台「新用户强制 KYC 设置」投注笔数上限后的强制 KYC 等合规拦截照常在游戏内弹出；到账判定和入账按现有系统逻辑处理；到账后平台通知厂商把游戏内显示的余额刷新为充值后余额，不退出游戏；不支持刷新的厂商到账后自动刷新游戏页面（当前局未结算时等结算后再刷新；刷新前充值弹窗或客服对话窗正打开时，等玩家关闭后再刷新；只重新加载当前游戏，不重新做准入校验和各类引导，不播放小猫开车 loading 动画（显示现有 loading 页），不影响自动展开机会）；玩家充值后立刻离开当前游戏时，先离开结算再到账同步。<span class="ref">PRD 规则 N16、N13 · F07-03 二维码支付与返回原游戏</span></li>
       <li><b>首充后</b>：新用户在充值弹窗里完成首充后，可以继续当前游戏，游戏页上不弹首充转盘和 PWA / APP 引导；关闭游戏回到平台原生页面后，再按平台规则显示。<span class="ref">PRD 规则 N16 · 3.3 冲突表</span></li>
-      <li><b>KYC 提醒与首充券</b>：未认证玩家提交时沿用现有 KYC 提醒，点「稍后」留在弹窗继续提交，点「立即认证」先结算再跳 KYC 页；每次打开弹窗重新拉取优惠券资格，首充后不再显示首充券。<span class="ref">PRD 规则 N15 · F07-02</span><span class="ref">PRD 规则 N16 · F07-03</span></li>
+      <li><b>KYC 提醒与首存券</b>：未认证或 KYC 审核中的玩家输入金额或提交时，按现有充值 KYC 规则处理（受后台「系统参数 › 充值提款 › 实名验证」和 3 天规则控制），提醒显示在充值弹窗上方：现有规则允许「稍后」时，点「稍后」或右上角 × 只关闭提醒、留在弹窗，不自动提交，由玩家自己再点提交（这次打开弹窗内不再重复提醒）；现有规则阻断时（如注册满 72 小时仍未认证、充值要求实名）只显示「立即认证」，不能提交；KYC 审核中只显示「KYC 审核中」提示，不能提交（三种情况模拟面板可切换）。点「立即认证」先显示「正在结算游戏余额…」，结算同步后跳到 KYC 页，等同离开游戏（原型用「身份认证页」示意）。每次打开弹窗重新拉取优惠券资格，首充后不再显示首存券。<span class="ref">PRD 规则 N15 · F07-02 充值内容与提交</span></li>
       <li><b>关闭</b>：点右上角 × 或点上方遮罩，立即关闭回到游戏；侧边栏为收起状态，浮标回到原位置完整显示；已填写的金额不保留；自动展开机会不变。弹窗打开期间浮标贴边显示（沿用游戏页记住的一侧和高度），点贴边的浮标 → 弹窗关闭、侧边栏展开。<span class="ref">PRD 规则 N14、N5、N8 · F07-01、F03-02</span></li>
     </ol>
     <div class="pager"><a href="游戏快捷侧边栏-游戏页快捷侧边栏.html">← 上一页：游戏页快捷侧边栏</a><span></span></div>
@@ -144,7 +150,7 @@
 <script src="../../assets/proto-en.js"></script>
 <script src="../../assets/proto.js"></script>
 <script>
-P.init({ defaults: { platform: "H5", small: false, promoMode: "both", kycNeed: false, noClose: false, inApp: false, payBlocked: false, orderFail: false, balance: 500 } });
+P.init({ defaults: { platform: "H5", small: false, promoMode: "both", kycMode: "none", noClose: false, inApp: false, payBlocked: false, orderFail: false, balance: 500 } });
 var $ = function (id) { return document.getElementById(id); };
 /* 示意数据：以现有充值设置为准 */
 var PAYS = ["GCash", "QR Ph", "Maya", "coins.ph", "DitoCash", "银行卡", "USDT", "更多"];
@@ -156,7 +162,7 @@ function drawPays() { [].forEach.call($("pays").children, function (b, i) { b.se
 AMTS.forEach(function (a) {
   var b = document.createElement("button"); b.type = "button"; b.dataset.v = a[0]; b.textContent = "+" + a[0].toLocaleString("en-US");
   if (a[1]) { var i = document.createElement("i"); i.textContent = a[1]; i.style.background = a[2]; b.appendChild(i); }
-  b.onclick = function () { $("amount").value = a[0]; drawAmt(); }; $("qamt").appendChild(b);
+  b.onclick = function () { $("amount").value = a[0]; drawAmt(); kycCheck(); }; $("qamt").appendChild(b);
 });
 function drawAmt() {
   var v = $("amount").value.replace(/[^0-9]/g, "").slice(0, 6); $("amount").value = v;
@@ -164,7 +170,7 @@ function drawAmt() {
   $("recv").innerHTML = "至少到账 <b>" + money(+v || 0) + "</b> ⓘ";
   $("submit").disabled = busy || !$("agree").checked || !v;   /* N15：没填金额、也没点快捷金额时 Submit 置灰 */
 }
-$("amount").addEventListener("input", drawAmt); $("agree").addEventListener("change", drawAmt);
+$("amount").addEventListener("input", function () { drawAmt(); if ($("amount").value) kycCheck(); }); $("agree").addEventListener("change", drawAmt);
 $("clr").onclick = function () { $("amount").value = ""; drawAmt(); };
 /* 二维码示意图案 */
 ["qr"].forEach(function (id) { var q = $(id); for (var i = 0; i < 441; i++) { var r = Math.floor(i / 21), c = i % 21, f = (r < 7 && c < 7) || (r < 7 && c > 13) || (r > 13 && c < 7); var e = document.createElement("i"); if (f ? ((r % 6 === 0 || c % 6 === 0 || (r % 7 > 1 && r % 7 < 5 && c % 7 > 1 && c % 7 < 5)) ? 0 : 1) : ((r * 7 + c * 13) % 3)) e.className = "w"; q.appendChild(e); } });
@@ -190,19 +196,47 @@ function show(v) {
   if (location.hash.slice(1) !== v) history.replaceState(null, "", "#" + v);
   if (window.self !== window.top) window.parent.postMessage({ type: "proto-view", view: v }, "*");
 }
-function closeSheet() { $("amount").value = ""; drawAmt(); show("game"); }
+function closeSheet() { $("amount").value = ""; drawAmt(); $("kyc").hidden = true; kycSeen = false; show("game"); }
 $("close").onclick = closeSheet;
 $("mask").onclick = closeSheet;
 /* N5：弹窗打开时点贴边的浮标 → 弹窗关闭、侧边栏展开；其余时候点浮标回到游戏页展开侧边栏（原型分两页演示） */
 $("float").onclick = function () { if (view === "sheet") closeSheet(); setTimeout(function () { location.href = "游戏快捷侧边栏-游戏页快捷侧边栏.html#sb"; }, 200); };
 /* N2：浮标沿用游戏页记住的一侧和高度 */
 (function () { var fp = P.get("floatPos"); if (fp) { $("float").classList.toggle("L", !!fp.L); if (fp.fy) $("float").style.top = fp.fy + "px"; } })();
-var kycOk = false;
-$("kycLater").onclick = function () { $("kyc").hidden = true; kycOk = true; $("submit").onclick(); };   /* Later：留在弹窗，继续提交 */
-$("kycGo").onclick = function () { $("kyc").hidden = true; closeSheet(); };   /* Verify Now：实际先结算同步再跳 KYC 页，原型只收起弹窗示意 */
+/* N15：未认证或审核中的玩家输入金额或提交时，按现有充值 KYC 规则处理（受「系统参数 › 充值提款 › 实名验证」和 3 天规则控制）。
+   remind：允许稍后，点「稍后」或 × 只关闭提醒、留在弹窗，不自动提交；本次打开弹窗内不再重复提醒。
+   block：现有规则阻断，只显示「立即认证」，不能提交。review：KYC 审核中，只显示审核中提示，不能提交。 */
+var kycSeen = false;
+var KYC_TXT = {
+  remind: ["请尽快完成账户认证", "请在 3 天内完成认证（沿用现有提醒，示意）", "稍后", true],
+  block: ["请先完成账户认证", "完成认证后才能充值（沿用现有提醒，示意）", "", true],
+  review: ["KYC 审核中", "您的认证资料正在审核中，审核通过后才能充值（沿用现有提示，示意）", "知道了", false]
+};
+function kycShow() {
+  var t = KYC_TXT[P.get("kycMode")]; if (!t) return;
+  $("kycT").textContent = t[0]; $("kycP").textContent = t[1];
+  $("kycLater").textContent = t[2] || "稍后"; $("kycLater").style.display = t[2] ? "" : "none"; $("kycGo").style.display = t[3] ? "" : "none";   /* 阻断时隐藏「稍后」，右上角 × 仍可关闭提醒 */
+  $("kyc").querySelector(".gs-row").style.gridTemplateColumns = (t[2] && t[3]) ? "1fr 1fr" : "1fr";
+  $("kyc").hidden = false; kycSeen = true;
+}
+/* 返回 true = 这次被 KYC 提醒拦下（不继续） */
+function kycCheck(onSubmit) {
+  var m = P.get("kycMode");
+  if (!KYC_TXT[m]) return false;
+  if (m === "remind") { if (kycSeen) return false; kycShow(); return true; }
+  if (onSubmit || !kycSeen) kycShow();   /* 阻断、审核中：每次提交都拦下 */
+  return true;
+}
+$("kycLater").onclick = function () { $("kyc").hidden = true; };   /* 稍后 / 知道了 / ×：只关闭提醒、留在弹窗，由玩家自己再点提交 */
+/* Verify Now：先结算同步（显示「正在结算游戏余额…」），再跳 KYC 页，等同离开游戏 */
+$("kycGo").onclick = function () {
+  $("kyc").hidden = true; $("kycSettle").hidden = false;
+  setTimeout(function () { $("kycSettle").hidden = true; $("amount").value = ""; drawAmt(); kycSeen = false; show("game"); $("kycScr").hidden = false; }, 1200);
+};
+$("kycBack").onclick = function () { $("kycScr").hidden = true; show("game"); };
 $("submit").onclick = function () {
   if (busy || $("submit").disabled) return;
-  if (P.get("kycNeed") && !kycOk) { $("kyc").hidden = false; return; }   /* N15：未认证玩家沿用现有 KYC 提醒 */
+  if (kycCheck(true)) return;
   var v = +$("amount").value;
   if (!(v >= MIN && v <= MAX)) { P.toast("请输入 100-50,000 之间的金额"); return; }
   busy = true; $("submit").textContent = "提交中…"; drawAmt();
@@ -222,8 +256,9 @@ function backToGame(paid) {
 function payDone() {
   if (view !== "pay" || P.get("platform") !== "H5") { backToGame(true); return; }
   $("pay").classList.add("gs-done");
-  if (P.get("inApp")) { $("doneP").textContent = "支付已完成，请返回游戏页面"; $("doneClose").hidden = true; return; }   /* 5.1：内置浏览器 / 小程序 / PWA 中支付页在系统浏览器打开，只显示文字，不提供按钮和平台入口 */
-  if (P.get("noClose")) { $("doneP").textContent = "支付已完成，请返回游戏页面"; $("doneClose").hidden = false; return; }
+  /* 中间页不依赖登录态、不知道订单结果（支付失败、取消或二维码过期后渠道也可能回跳到这里），文案保持中性 */
+  if (P.get("inApp")) { $("doneP").textContent = "请返回游戏页面，到账后余额会自动更新"; $("doneClose").hidden = true; return; }   /* 5.1：内置浏览器 / 小程序 / PWA 中支付页在系统浏览器打开，只显示文字，不提供按钮和平台入口 */
+  if (P.get("noClose")) { $("doneP").textContent = "请返回游戏页面，到账后余额会自动更新"; $("doneClose").hidden = false; return; }
   $("doneP").textContent = "正在返回游戏…"; $("doneClose").hidden = true; setTimeout(function () { backToGame(true); }, 1200);
 }
 $("doneClose").onclick = function () { backToGame(true); };
@@ -238,7 +273,7 @@ P.panel($("simPanel"), [
     { type: "select", key: "promoMode", label: "当前开启的存送活动", options: [["both", "首存和每日存送都开启（只显示首存）"], ["daily", "只有每日存送（玩家自行选择是否申请）"], ["none", "都没有（优惠活动区换成普通标题语）"]] }
   ] },
   { title: "注入异常", items: [
-    { type: "check", key: "kycNeed", label: "未认证玩家（提交时弹现有 KYC 提醒）" },
+    { type: "select", key: "kycMode", label: "玩家 KYC 状态（输入金额或提交时按现有充值 KYC 规则）", options: [["none", "已认证（不提醒）"], ["remind", "未认证，现有规则允许稍后（稍后 / × 只关闭提醒）"], ["block", "未认证，现有规则阻断（如满 72 小时、充值要求实名；只显示立即认证）"], ["review", "KYC 审核中（只显示审核中，不能提交）"]] },
     { type: "check", key: "payBlocked", label: "H5 支付页被浏览器拦截" },
     { type: "check", key: "orderFail", label: "下单失败（沿用现有提示，示意）" }
   ] },
@@ -252,7 +287,7 @@ P.panel($("simPanel"), [
   { title: "演示值说明", items: [{ type: "note", text: "限额 100 ~ 50,000、支付方式、快捷金额、首存和每日存送活动内容均为示意，实际以现有充值设置为准。支付完成后游戏内不弹任何提示；到账后游戏内余额刷新为充值后余额（原型在回到游戏后把余额加上充值金额并闪一下示意；不支持刷新余额的厂商实际是到账后自动刷新游戏页面）。" }] },
   { items: [{ type: "reset" }] }
 ]);
-window.addEventListener("proto-change", function (e) { if (e.detail.key === "small" || e.detail.key === "promoMode") size(); if (e.detail.key === "platform") show(view); });
+window.addEventListener("proto-change", function (e) { if (e.detail.key === "kycMode" || e.detail.key === "*") { kycSeen = false; $("kyc").hidden = true; } if (e.detail.key === "small" || e.detail.key === "promoMode") size(); if (e.detail.key === "platform") show(view); });
 window.addEventListener("hashchange", function () { show(location.hash.slice(1) || "sheet"); });
 /* 地址里的 #sheet 等锚点会让浏览器滚动游戏层去「定位」同名元素，导致弹窗上移、下面露黑；游戏层始终不滚动 */
 (function () {

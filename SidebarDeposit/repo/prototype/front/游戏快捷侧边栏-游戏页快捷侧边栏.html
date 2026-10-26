@@ -58,13 +58,18 @@
 #cfm .gs-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
 #cfm .gs-row button{all:unset;height:42px;border-radius:21px;cursor:pointer;font-weight:800;text-align:center;line-height:42px}
 #cfmKeep{background:linear-gradient(90deg,var(--g-purple),var(--g-green))}#cfmExit{border:1px solid rgba(255,255,255,.4);line-height:40px!important}
-#settle{position:absolute;inset:0;z-index:20;background:rgba(6,4,20,.5);display:grid;place-items:center}
+/* N20 游戏页浮层层级（从上到下）：合规类拦截 > 结算蒙层 > KYC 提醒 / 准入拦截提示 > 充值弹窗 / 客服对话窗 > 退出确认 > 侧边栏 > 浮标 */
+#comply{position:absolute;inset:30px 0 0;z-index:40;background:rgba(0,0,0,.6);display:grid;place-items:center;padding:24px}
+#comply .cbox{background:#1c1440;border:1px solid #a47bff;border-radius:16px;padding:18px;display:grid;gap:12px;width:100%;color:#fff}
+#comply h3{margin:0;font-size:17px}#comply p{margin:0;font-size:13px;color:#d6d0f0}
+#comply button{all:unset;text-align:center;height:38px;line-height:38px;border-radius:19px;cursor:pointer;font-weight:700;background:linear-gradient(90deg,var(--g-purple),var(--g-green))}
+#settle{position:absolute;inset:0;z-index:30;background:rgba(6,4,20,.5);display:grid;place-items:center}
 #settle div{padding:14px 18px;border-radius:14px;background:rgba(20,14,48,.95);border:1px solid rgba(164,123,255,.45);font-size:13px;font-weight:700}
 .scr{position:absolute;inset:30px 0 0;z-index:25;background:#0d1426;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:30px;text-align:center}
 .scr h4{margin:0;font-size:20px}.scr p{margin:0;font-size:13px;color:#9aa6c8;word-break:break-all}
 .scr button{all:unset;padding:11px 20px;border-radius:22px;background:linear-gradient(90deg,var(--g-purple),var(--g-green));cursor:pointer;font-weight:700}
 .scr .gi{width:72px;height:72px;border-radius:16px;background:#333 center/cover}
-#gate{position:absolute;inset:30px 0 0;z-index:22;background:rgba(0,0,0,.55);display:grid;place-items:center;padding:24px}
+#gate{position:absolute;inset:30px 0 0;z-index:24;background:rgba(0,0,0,.55);display:grid;place-items:center;padding:24px}
 #gate .dlg{background:#1c1440;border-color:#a47bff;color:#fff}#gate p{margin:0;font-size:13px;color:#d6d0f0}
 #gate .gs-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}#gate .gs-row button{all:unset;text-align:center;height:38px;line-height:38px;border-radius:19px;cursor:pointer;font-weight:700;border:1px solid rgba(255,255,255,.4)}#gate #gateGo{background:linear-gradient(90deg,var(--g-purple),var(--g-green));border:0}
 #csMask{position:absolute;inset:0;z-index:21;background:rgba(4,2,14,.45)}
@@ -92,7 +97,7 @@
 #sLoad{transition:background-color .5s}#sLoad.lc-on{justify-content:flex-end;padding-bottom:70px}
 .ldbar{width:62%;height:6px;border-radius:3px;background:rgba(255,255,255,.15);overflow:hidden}.ldbar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--g-purple),var(--g-green))}.ldpct{font-size:12px;color:#9aa6c8;margin-top:-8px}
 #float.over{z-index:22}
-#toast{top:45%;bottom:auto;background:rgba(20,20,24,.95);color:#fff;border:1px solid rgba(255,255,255,.15)}
+#toast{z-index:50;top:45%;bottom:auto;background:rgba(20,20,24,.95);color:#fff;border:1px solid rgba(255,255,255,.15)}
 .st-box{font-size:12.5px;display:grid;gap:4px;background:#F7F8FA;border:1px solid #E4E7ED;border-radius:6px;padding:8px 10px}
 .st-box div{display:flex;justify-content:space-between;gap:8px}
 #evlog{font:11.5px/1.5 Consolas,monospace;background:#F7F8FA;border:1px solid #E4E7ED;border-radius:6px;padding:6px 8px;max-height:150px;overflow:auto}
@@ -128,6 +133,7 @@
     <div class="scr" id="sLoad" hidden><div id="lcar" class="glow" hidden><div id="lcMove"><div id="lcFlip"><div id="lcBob"><img src="../../assets/img/loading-car.png" alt="" draggable="false"><img id="lcPaw" src="../../assets/img/loading-paw.png" alt="" draggable="false"><img id="lcGls" src="../../assets/img/loading-glasses.png" alt="" draggable="false"></div></div></div><div id="lcFx"></div></div><div class="gi" id="sLoadI"></div><h4 id="sLoadT"></h4><div class="ldbar"><i id="ldBarI"></i></div><span class="ldpct" id="ldPct">0%</span></div>
     <div class="scr" id="sLobby" hidden><h4 id="sLobbyT">已退出到大厅</h4><p id="sLobbyP"></p><button type="button" id="reenter"></button></div>
     <div id="gate" hidden><div class="dlg" role="dialog" aria-modal="true"><h3>提醒</h3><p>根据 PAGCOR 规定，请先完成身份认证后再进入该游戏。</p><div class="gs-row"><button type="button" id="gateNo" data-cancel>取消</button><button type="button" id="gateGo">立即认证</button></div></div></div>
+    <div id="comply" hidden><div class="cbox" role="alertdialog" aria-modal="true"><h3>提醒</h3><p>根据 PAGCOR 规定，请先完成身份认证后再继续游戏。</p><button type="button" id="complyGo">立即认证</button></div></div>
     <div class="toast" id="toast" role="status" hidden></div>
   </div>
 
@@ -139,9 +145,11 @@
     <h3>模拟场景</h3>
     <div class="sim">
       <button type="button" id="simExit"><span class="simtag">操作</span>模拟点游戏菜单里的「退出」</button>
-      <button type="button" id="simClose"><span class="simtag">操作</span>模拟点厂商关闭 / Home 按钮 / 安卓 APP 返回键</button>
+      <button type="button" id="simClose"><span class="simtag">操作</span>模拟点厂商关闭 / Home 按钮</button>
+      <button type="button" id="simAppBack"><span class="simtag">操作</span>模拟按安卓 APP 返回键（先关弹窗、再收侧边栏，都没开时才触发退出）</button>
+      <button type="button" id="simComply"><span class="simtag">操作</span>模拟弹出合规类拦截（强制 KYC / 自我限制 / PAGCOR）</button>
       <button type="button" id="simBack"><span class="simtag">操作</span>模拟点浏览器返回（不触发自动展开）</button>
-      <button type="button" id="simTuck"><span class="simtag">操作</span>让浮标立即进入闲置贴边状态（跳过 3 秒，含撒金币动画）</button><button type="button" id="simBurst"><span class="simtag">操作</span>从头播放一次扬金币和钞票动图</button>
+      <button type="button" id="simTuck"><span class="simtag">操作</span>让浮标立即进入闲置贴边状态（跳过 3 秒）</button><button type="button" id="simBurst"><span class="simtag">操作</span>从头播放一次完整显示状态的动图（示意）</button>
     </div>
     <h3>模拟操作</h3>
     <div class="sim" id="simPanel"></div>
@@ -149,17 +157,18 @@
     <div id="evlog">—</div>
     <h3>规则批注</h3>
     <ol>
-      <li><b>浮标</b>：后台总开关开启时进入游戏显示在屏幕右侧上方（三端一致，与顶部保留安全距离、不贴顶），图案为小猫形象（不带 BIG WIN 文字），完整显示时是小猫向上扬金币和钞票动图（约 2 秒循环），拖动时换成小猫被提起摇尾巴动图；关闭或配置接口失败时不显示。<span class="ref">PRD 规则 N1 · F01-01 浮标显示与开关</span></li>
+      <li><b>浮标</b>：后台总开关开启时进入游戏显示在屏幕右侧上方（三端一致，与顶部保留安全距离、不贴顶），图案为小猫形象（不带 BIG WIN 文字），完整显示、拖动、贴边三种状态各用一套动图（原型里的动图为示意，内容和动效由设计统一确定）；关闭或配置接口失败时不显示。<span class="ref">PRD 规则 N1 · F01-01 浮标显示与开关</span></li>
       <li><b>拖动吸边</b>：移动 ≥ 5 像素算拖动，松手吸附到较近一侧，高度不变；记住吸附的一侧和高度，换游戏、刷新后沿用。<span class="ref">PRD 规则 N2 · F01-02 拖动与自动吸边</span></li>
-      <li><b>闲置贴边</b>：3 秒无操作先播放扬金币和钞票的动作约 1.3 秒，再贴边换成小猫探头挥手动图（只露约 58 像素，每 3 秒挥一次手）；点击先恢复再展开（仅原型演示用：鼠标移入贴边的小猫会恢复完整显示，方便看撒钱动图，不是需求）。浮标和侧边栏互相切换：侧边栏展开时不显示浮标；充值弹窗、客服对话窗打开时浮标贴边，点它关闭弹窗并展开侧边栏。正式素材和动画由设计按参考图出，原型里的动画为示意。<span class="ref">PRD 规则 N3、N5 · F01-03 闲置贴边</span></li>
-      <li><b>进入游戏 loading 动画</b>：准入校验通过后显示 loading 页，小猫的位置跟随进度条：开着紫色跑车从左侧开进来，只露出车头和小猫（周围没有金币和钞票）；抬爪把墨镜拉低、在脸旁挥手；戴回墨镜后开向浮标位置，车尾撒出金币和钞票；进度 100% 时刚好开到浮标位置，loading 结束进入游戏页、显示浮标。（仅原型演示用：打开这个原型页和每次刷新浏览器时都会先播放一遍，不是需求。）浮标在左侧时先掉头；各段时长和速率由设计、研发定。总开关关闭、配置读取失败、素材加载失败、手机开启「减少动态效果」时不播放（后两种可在模拟面板勾选）；启动失败时动画停止，回到原游戏不再播放。正式素材和动画由设计按参考图出，原型里的动画为示意。<span class="ref">PRD 规则 N19 · F01-04 进入游戏 loading 动画</span></li>
-      <li><b>侧边栏</b>：跟随浮标所在一侧展开，拖到左侧时贴左侧展开并适配左侧布局，从上到下为收起按钮、Home / 充值 / CS（客服）、Mini Banner、推荐游戏；点外部区域收起（退出确认显示时除外）。<span class="ref">PRD 规则 N4、N5 · F02-01、F02-02</span></li>
-      <li><b>Home</b>：先显示「正在结算游戏余额…」，同步完成后跳首页。<b>CS（客服，替换原刷新余额）</b>：侧边栏收起，平台在线客服对话窗从底部弹出，高度固定为游戏页面的 1/2，打开的客服和首页客服挂件相同（欢迎语按平台现有规则显示），游戏不退出、不结算、不刷新；退出确认显示时点 CS 一并关闭退出确认；可点选语言、问题类型、常见问题、转人工客服，也可以输入发送；点 × 或上方遮罩关闭，再次打开沿用之前的对话；客服加载失败时窗内显示「客服暂时无法连接，请稍后再试」和「重试」（模拟面板可勾选演示）。充值到账后游戏内余额按 PRD N16 实时刷新，侧边栏不再提供刷新余额。新用户转盘奖励的免费次数（Free Spin）使用中时提示「免费次数使用中，用完后再切换」，不离开。<span class="ref">PRD 规则 N6、N18、N13 · F02-03、F06-01</span></li>
+      <li><b>闲置贴边</b>：3 秒无操作贴到屏幕边、只露出一部分，换成贴边状态的动图；贴边前的动效播放期间浮标照常可点、可拖动，拖动、点击后重新计时 3 秒；点击先恢复再展开（仅原型演示用：鼠标移入贴边的小猫会恢复完整显示，方便看动图，不是需求）。浮标和侧边栏互相切换：侧边栏展开时不显示浮标；充值弹窗、客服对话窗打开时浮标贴边，点它关闭弹窗并展开侧边栏。动图内容、过渡动效和露出宽度由设计统一确定，原型里的动画为示意。<span class="ref">PRD 规则 N3、N5 · F01-03 闲置贴边</span></li>
+      <li><b>进入游戏 loading 动画</b>：准入校验通过后显示 loading 页并播放小猫开车动画，loading 完成即进入游戏页、显示浮标，不因动画延长加载时间。（仅原型演示用：打开这个原型页和每次刷新浏览器时都会先播放一遍，不是需求。）动画的内容、分段、时长和与进度的对应关系由设计统一确定，原型里的动画为示意。总开关关闭、配置读取失败、素材加载失败、手机开启「减少动态效果」时不播放（后两种可在模拟面板勾选）；启动失败时动画停止，回到原游戏不再播放。<span class="ref">PRD 规则 N19 · F01-04 进入游戏 loading 动画</span></li>
+      <li><b>侧边栏</b>：跟随浮标所在一侧展开，拖到左侧时贴左侧展开并适配左侧布局，从上到下为收起按钮、Home / 充值 / CS（客服）、Mini Banner、推荐游戏；点外部区域收起（退出确认显示时除外）。<span class="ref">PRD 规则 N4 · F02-01 侧边栏结构与展开位置</span><span class="ref">PRD 规则 N5 · F02-02 展开与收起</span></li>
+      <li><b>游戏页浮层层级</b>：从上到下依次为合规类拦截（强制 KYC、自我限制、PAGCOR 提示）＞ 结算蒙层 ＞ KYC 提醒 / 准入拦截提示 ＞ 充值弹窗 / 客服对话窗 ＞ 退出确认 ＞ 侧边栏 ＞ 浮标。合规类拦截显示期间，浮标和侧边栏隐藏、不可点，拦截关闭后恢复原来的状态（模拟场景可点「模拟弹出合规类拦截」演示）；中奖弹幕不遮挡浮标。充值弹窗、客服对话窗打开期间贴边的浮标显示在遮罩上方（见第 3 条）。<span class="ref">PRD 规则 N20 · F02-02 游戏页浮层层级</span></li>
+      <li><b>Home</b>：先显示「正在结算游戏余额…」，同步完成后跳首页。<b>CS（客服，替换原刷新余额）</b>：侧边栏收起，平台在线客服对话窗从底部弹出，高度固定为游戏页面的 1/2，打开的客服和首页客服挂件相同（欢迎语按平台现有规则显示），游戏不退出、不结算、不刷新；退出确认显示时点 CS 一并关闭退出确认；可点选语言、问题类型、常见问题、转人工客服，也可以输入发送；点 × 或上方遮罩关闭，再次打开沿用之前的对话；客服加载失败时窗内显示「客服暂时无法连接，请稍后再试」和「重试」（模拟面板可勾选演示）；后台「在线客服悬浮按钮开关」关闭时侧边栏不显示 CS（模拟面板可勾选演示）。充值到账后游戏内余额按 PRD N16 实时刷新，侧边栏不再提供刷新余额。新用户转盘奖励的免费次数（Free Spin）使用中时提示「免费次数使用中，用完后再切换」，不离开。<span class="ref">PRD 规则 N6、N18、N13 · F02-03、F06-01</span></li>
       <li><b>充值</b>：侧边栏收起，打开充值弹窗，不做结算（跳到「游戏内充值弹窗」原型页演示，原型分两页，实际游戏不刷新）。<span class="ref">PRD 规则 N14 · F07-01 打开与关闭充值弹窗</span></li>
-      <li><b>首次退出 / 关闭</b>：第三方游戏厂商提供的退出、关闭或 Home 按钮（原型里的退出按钮只是示意）、安卓 APP 返回键都会触发，浏览器返回不触发；退出确认弹出的同时自动展开；取消退出或点侧边栏收起按钮时，侧边栏和退出确认一起关闭，留在当前游戏；同一游戏再次退出不再展开；刷新页面不重置；平台拦截不到退出按钮的厂商不触发自动展开。<span class="ref">PRD 规则 N7、N8 · F03-01、F03-02</span></li>
+      <li><b>首次退出 / 关闭</b>：第三方游戏厂商提供的退出、关闭或 Home 按钮（原型里的退出按钮只是示意）、安卓 APP 返回键都会触发，浏览器返回不触发；退出确认弹出的同时自动展开；取消退出或点侧边栏收起按钮时，侧边栏和退出确认一起关闭，留在当前游戏；同一游戏再次退出不再展开；刷新页面不重置；平台拦截不到退出按钮的厂商不触发自动展开。安卓 APP 返回键先关闭当前浮层，不弹退出确认、不消耗自动展开机会：客服对话窗（或充值弹窗）打开时先关闭弹窗；侧边栏展开时先收起侧边栏（退出确认同时显示时一并关闭）；都没打开时才按退出处理；loading 页期间按现有 loading 页的返回键行为处理。弹窗打开时游戏菜单被遮罩挡住，点不到厂商的退出、关闭或 Home 按钮。<span class="ref">PRD 规则 N7 · F03-01 首次退出自动展开</span><span class="ref">PRD 规则 N8 · F03-02 自动展开机会记录与重置</span></li>
       <li><b>加载更多</b>：推荐区首次显示 10 个，滚动到底自动加载下一批 10 个（也可点「加载更多」），加载中显示「加载中…」，全部加载完显示「没有更多了」，加载失败显示「加载失败，点击重试」；最多到后台展示数量，每次展开侧边栏从第一批重新显示。<span class="ref">PRD 4.1 列表分页 · F04-01</span></li>
-      <li><b>推荐游戏</b>：2 列 × 3.5 个，只显示图标；过滤维护、下架和当前游戏，并按当前玩家过滤掉进不去的游戏（如需 KYC，模拟面板可勾选演示）；连点只处理第一次；点击时先校验：维护中提示「该游戏当前维护中」、已下架提示「该游戏暂不可用」，提示后刷新列表清除这些游戏；列表没及时同步、点到准入校验不通过的游戏（如需 KYC、余额超阈值须在 PWA 投注）时按现有弹窗拦截，不结算、不退出当前游戏；启动失败或超时回原游戏并提示「所选游戏暂时不可用，请换一款试试」。<span class="ref">PRD 规则 N9、N10 · F04-01、F04-02</span></li>
-      <li><b>未结算</b>：显示「本局结算中…」半透明蒙层，结算后再离开。<span class="ref">PRD 规则 N11 · F04-03 当前局未结算时切换</span></li>
+      <li><b>推荐游戏</b>：2 列 × 3.5 个，只显示图标；过滤维护、下架（含已停用）、所属供应商不支持未结算判断的游戏和当前游戏，并按当前玩家过滤掉进不去的游戏（如需 KYC，模拟面板可勾选演示）；维护白名单内的玩家，维护中的游戏按可进入显示，点击时也按可进入处理，不提示、不清除（模拟面板可勾选演示）；连点只处理第一次；点击时先校验：维护中提示「该游戏当前维护中」、已下架或已停用提示「该游戏暂不可用」，提示后刷新列表清除这些游戏，列表解锁；列表没及时同步、点到准入校验不通过的游戏（如需 KYC、余额超阈值须在 PWA 投注）时按现有弹窗拦截，不结算、不退出当前游戏，列表解锁；免费次数使用中、结算或同步失败时提示后留在当前游戏，列表解锁、可再点。新游戏启动失败或超时 → 回原游戏并提示「所选游戏暂时不可用，请换一款试试」；重新进入原游戏也失败（原游戏维护或下架、启动失败或超时、余额同步回原供应商失败）→ 不再重试，跳转平台首页，提示「游戏暂时不可用，余额已保留在账户中」，余额以平台钱包为准，不丢失、不重复；重新进入原游戏不重新做准入校验、不播放 loading 动画（模拟面板可勾选演示）。<span class="ref">PRD 规则 N9 · F04-01 推荐列表数据规则</span><span class="ref">PRD 规则 N10 · F04-02 点击推荐游戏切换</span></li>
+      <li><b>未结算</b>：已投注、当前局未结算时触发离开，显示「本局结算中…」半透明蒙层，结算后再离开；需要玩家操作才能结束的局（如 Pok Deng 补牌、21 点要牌或停牌、老虎机奖励小游戏里的选择，由研发按厂商列出）不显示蒙层、不屏蔽操作，提示「请先完成本局，再切换」，取消这次离开；等待结算超过平台现有退出结算超时（时长由技术在提测说明写明）→ 关闭蒙层，提示「本局尚未结束，请完成后再试」，留在当前游戏，自动展开机会不变（两种情况模拟面板可勾选演示）。<span class="ref">PRD 规则 N11 · F04-03 当前局未结算时切换</span></li>
       <li><b>Mini Banner</b>：只显示 1 张，不轮播；选择活动：先结算再跳活动详情页；自定义链接：新标签页（APP 为系统浏览器）打开，不离开游戏、不结算。<span class="ref">PRD 规则 N12 · F05-01、F05-02</span></li>
       <li><b>加载期间</b>：平台 loading 页期间不显示浮标；loading 结束、进入游戏页后显示；厂商游戏自己的加载画面期间照常显示，可以展开侧边栏。<span class="ref">PRD 规则 N1、N19 · F01-01</span></li>
       <li><b>按钮配色和尺寸</b>：原型里的颜色和尺寸只是示意，具体配色和所有尺寸由设计按自己的标准决定；横屏游戏由 UI 出适配设计，逻辑和竖屏一致；小猫浮标、loading 动画和侧边栏跟随节日换肤更换素材。</li>
@@ -180,19 +189,20 @@ var IMG = "../../assets/img/";
 var GAMES = {
   wukong: { n: "Black Wukong", img: "game-wukong.png" }, "dragon-tiger": { n: "D Dragon Tiger" }, "pok-deng": { n: "D Pok Deng" }, "sic-bo": { n: "D Sic Bo" },
   "crazy-time": { n: "Crazy Time", st: "maintenance" }, "fortune-goddess": { n: "Fortune Goddess" }, "fortune-gems": { n: "Fortune Gems" }, "fortune-bingo": { n: "Fortune Bingo" },
-  "fortune-gems-2": { n: "Fortune Gems 2" }, "super-ace-deluxe": { n: "Super Ace Deluxe" }, "super-ace-joker": { n: "Super Ace Joker" }, "money-coming": { n: "Money Coming", st: "offline" }
+  "fortune-gems-2": { n: "Fortune Gems 2" }, "super-ace-deluxe": { n: "Super Ace Deluxe" }, "super-ace-joker": { n: "Super Ace Joker" }, "money-coming": { n: "Money Coming", st: "offline" },
+  "lucky-fishing": { n: "Lucky Fishing", st: "nosettle" }   /* 所属供应商不支持未结算判断：前台推荐区始终不展示（列表未同步时也不混入） */
 };
 function gImg(id) { var g = GAMES[id]; return g.img ? IMG + g.img : (g.st || id.indexOf("demo-") === 0 ? "" : IMG + "games/" + id + ".png"); }
 var DEF_CFG = { enabled: true, autoExpand: true, showBanner: true, bType: "promo", bPromo: "friday-jackpot-drop", bImg: IMG + "banner-1.png", bLink: "", count: 10,
-  rec: ["dragon-tiger", "pok-deng", "sic-bo", "crazy-time", "money-coming", "fortune-goddess", "fortune-gems", "fortune-bingo", "fortune-gems-2", "super-ace-deluxe", "super-ace-joker"] };
-P.init({ defaults: { loadFast: false, loadSlow: false, lcAssetFail: false, reduceMotion: false, recEmpty: false, recMany: false, moreFail: false, cfg1: null, game: "wukong", balance: 500, used: {}, cfgFail: false, listErr: false, unsettled: false, unsynced: false, syncFail: false, nextFail: false } });
+  rec: ["dragon-tiger", "pok-deng", "sic-bo", "crazy-time", "money-coming", "fortune-goddess", "lucky-fishing", "fortune-gems", "fortune-bingo", "fortune-gems-2", "super-ace-deluxe", "super-ace-joker"] };
+P.init({ defaults: { loadFast: false, loadSlow: false, lcAssetFail: false, reduceMotion: false, recEmpty: false, recMany: false, moreFail: false, cfg1: null, game: "wukong", balance: 500, used: {}, cfgFail: false, listErr: false, unsettled: false, needAction: false, settleTimeout: false, unsynced: false, syncFail: false, nextFail: false, backFail: false, whitelist: false } });
 function cfg() { return P.get("cfg1") || DEF_CFG; }
 function setCfg(k, v) { var c = JSON.parse(JSON.stringify(cfg())); c[k] = v; P.set("cfg1", c); }
 
 /* ===== 页面状态 ===== */
 var $ = function (id) { return document.getElementById(id); };
-var S = { shown: 10, open: false, cs: false, mode: null, fx: 0, fy: 56, tucked: false, lock: false, busy: false, cfm: false, refreshed: false, retryOk: false, closedAfterAuto: false, screen: "game" };
-var FS = 60, M = 8, TW = 58, idleT = null, waveT = null, lastVis = false, log = [];
+var S = { shown: 10, open: false, cs: false, comply: false, mode: null, fx: 0, fy: 56, tucked: false, lock: false, busy: false, cfm: false, refreshed: false, retryOk: false, closedAfterAuto: false, screen: "game" };
+var FS = 60, M = 8, TW = 58, idleT = null, tuckT = null, waveT = null, lastVis = false, log = [];
 function W() { return $("game").clientWidth; } function H() { return $("game").clientHeight; }
 function ev(name) { log.unshift(new Date().toTimeString().slice(0, 8) + "  " + name); log = log.slice(0, 10); $("evlog").textContent = log.join("\n"); }
 function enabled() { return !P.get("cfgFail") && cfg().enabled !== false; }
@@ -204,9 +214,12 @@ function money(v) { return "₱" + Number(v).toLocaleString("en-US", { minimumFr
 function recList() {
   var c = cfg(), unsync = P.get("unsynced") && !S.refreshed;
   if (P.get("recEmpty")) return [];
-  if (P.get("recMany")) { var base = (c.rec || []).filter(function (id) { return GAMES[id] && !GAMES[id].st && id !== P.get("game"); }); for (var i = 1; i <= 30; i++) { var did = "demo-" + i; GAMES[did] = GAMES[did] || { n: "Demo " + i }; base.push(did); } return base.slice(0, 30); }
-  return (c.rec || []).filter(function (id) { var g = GAMES[id]; return g && id !== P.get("game") && (unsync ? true : !g.st) && !(P.get("kycFilter") && id === "fortune-bingo"); }).slice(0, c.count || 10);   /* 玩家进不去的游戏（示意：Fortune Bingo 需要 KYC）不出现在推荐区 */
+  if (P.get("recMany")) { var base = (c.rec || []).filter(function (id) { return GAMES[id] && canShow(GAMES[id], false) && id !== P.get("game"); }); for (var i = 1; i <= 30; i++) { var did = "demo-" + i; GAMES[did] = GAMES[did] || { n: "Demo " + i }; base.push(did); } return base.slice(0, 30); }
+  return (c.rec || []).filter(function (id) { var g = GAMES[id]; return g && id !== P.get("game") && canShow(g, unsync) && !(P.get("kycFilter") && id === "fortune-bingo"); }).slice(0, c.count || 10);   /* 玩家进不去的游戏（示意：Fortune Bingo 需要 KYC）不出现在推荐区 */
 }
+/* N9：维护中、已下架（含已停用）不展示；维护白名单内的玩家，维护中的游戏按可进入显示；所属供应商不支持未结算判断的游戏始终不展示 */
+function playable(g) { return !g.st || (g.st === "maintenance" && P.get("whitelist")); }
+function canShow(g, unsync) { if (g.st === "nosettle") return false; return unsync ? true : playable(g); }
 
 /* ===== 渲染 ===== */
 function render() {
@@ -215,7 +228,8 @@ function render() {
   $("gph").style.background = img ? "url('" + img + "') center/cover" : "#333"; $("gphName").textContent = g.n;
   $("gbal").textContent = money(P.get("balance"));
   var on = enabled();
-  $("float").hidden = !on || S.screen !== "game";
+  $("float").hidden = !on || S.screen !== "game" || S.comply;   /* N20：合规类拦截显示期间浮标和侧边栏隐藏、不可点，关闭后恢复 */
+  $("comply").hidden = !S.comply;
   $("float").classList.toggle("hide", !!S.open);
   $("float").classList.toggle("over", !!S.cs);   /* N5：客服对话窗打开期间贴边的浮标在遮罩上方，点它关闭弹窗并展开侧边栏 */   /* N5：浮标和侧边栏互相切换，侧边栏展开时不显示浮标，收起后才显示；客服对话窗打开期间浮标贴边显示 */
   var L = S.fx + FS / 2 < W() / 2;
@@ -225,16 +239,16 @@ function render() {
   $("float").style.left = x + "px"; $("float").style.top = S.fy + "px";
   /* 侧边栏 */
   $("qCs").hidden = !!P.get("csSwitchOff");   /* 在线客服悬浮按钮开关关闭时，侧边栏不显示 CS */
-  var sb = $("sb"); sb.hidden = !on; sb.className = (L ? "L" : "R") + " glow";
+  var sb = $("sb"); sb.hidden = !on || S.comply; sb.className = (L ? "L" : "R") + " glow";
   $("sbClose").textContent = L ? "‹" : "›";
   var h = sb.offsetHeight || 420, top = Math.max(10, Math.min(H() - h - 10, S.fy - 10));
   sb.style.top = top + "px";
   var cx = (L ? S.fx + FS / 2 : S.fx + FS / 2 - (W() - sb.offsetWidth)), cy = S.fy + FS / 2 - top;
   sb.style.clipPath = "circle(" + (S.open ? 1100 : 0) + "px at " + cx + "px " + cy + "px)";
   sb.style.pointerEvents = S.open ? "auto" : "none";
-  $("outside").hidden = !S.open;
-  /* Banner */
-  var c = cfg(), showBan = c.showBanner !== false && c.bImg && (c.bType === "link" ? !!c.bLink : !!c.bPromo);
+  $("outside").hidden = !S.open || S.comply;
+  /* Banner：所选活动已下架或结束时隐藏（后台原型可模拟） */
+  var c = cfg(), showBan = c.showBanner !== false && c.bImg && (c.bType === "link" ? !!c.bLink : !!c.bPromo && P.get("promoEnded") !== c.bPromo);
   $("ban").hidden = !showBan; if (showBan) $("ban").style.backgroundImage = "url('" + c.bImg + "')";
   /* 推荐 */
   var wrap = $("recWrap");
@@ -268,17 +282,19 @@ function render() {
   $("stBox").innerHTML = "<div><span>当前游戏</span><b>" + g.n + "</b></div>" +
     "<div><span>退出自动展开机会</span><b>" + (!autoOn() ? "未启用" : used() ? "已使用" : "可用") + "</b></div>" +
     "<div><span>侧边栏</span><b>" + (S.open ? (S.mode === "auto" ? "已展开（自动）" : "已展开（手动）") : "已收起") + "</b></div>" +
-    "<div><span>浮标</span><b>" + (!on || S.open ? "不显示" : (S.tucked || S.cs) ? "小猫探头（贴边）" : "完整显示") + "</b></div>";
+    "<div><span>浮标</span><b>" + (!on || S.open || S.comply ? "不显示" : (S.tucked || S.cs) ? "贴边" : "完整显示") + "</b></div>";
   /* 浮标每次显示（进入游戏、侧边栏或弹窗关闭后、从贴边恢复）时播放一次撒金币和钞票 */
-  var vis = on && S.screen === "game" && !S.open && !S.cs && !S.tucked;
+  var vis = on && S.screen === "game" && !S.open && !S.cs && !S.tucked && !S.comply;
   if (vis && !lastVis) setTimeout(burst, 380);
   lastVis = vis;
 }
 
 /* ===== 闲置贴边 ===== */
-function armIdle() { clearTimeout(idleT); idleT = setTimeout(autoTuck, 3000); }
+/* N3：拖动、点击后重新计时；贴边前的动效期间按下浮标、展开侧边栏、打开客服对话窗时取消这次贴边 */
+function clearIdle() { clearTimeout(idleT); clearTimeout(tuckT); idleT = tuckT = null; }
+function armIdle() { clearIdle(); idleT = setTimeout(autoTuck, 3000); }
 /* N3：自动贴边前先播放小猫扬起金币和钞票的动画，播完再贴边 */
-function autoTuck() { if (S.open || S.cs || S.tucked || S.screen !== "game") return; burst(); setTimeout(function () { if (!S.open && !S.cs && S.screen === "game") { S.tucked = true; ev("float_tuck"); render(); } }, 1300); }
+function autoTuck() { if (S.open || S.cs || S.tucked || S.comply || S.screen !== "game") return; burst(); clearTimeout(tuckT); tuckT = setTimeout(function () { tuckT = null; if (!S.open && !S.cs && S.screen === "game") { S.tucked = true; ev("float_tuck side=" + (S.fx + FS / 2 < W() / 2 ? "left" : "right")); render(); } }, 1300); }
 /* 小猫向上扬金币和钞票：动图 cat-float-toss.gif 每 2 秒循环一次；浮标每次显示时、每次自动贴边前从头播放 */
 function burst() {
   var f = $("float"); if (f.hidden || f.classList.contains("hide")) return;
@@ -294,21 +310,27 @@ function loadMore() {
   setTimeout(function () { S.moreLoading = false; if (P.get("moreFail")) { S.moreErr = true; P.set("moreFail", false); } else S.shown = Math.min(list.length, S.shown + BATCH); render(); }, 600);
 }
 function openSb(mode) { var sbEl = $("sb"); sbEl.classList.add("opening"); setTimeout(function () { sbEl.classList.remove("opening"); }, 400);   /* 展开动画期间不响应点击，避免点浮标的同一下落到侧边栏按钮上 */
-  S.shown = BATCH; S.moreErr = false; S.open = true; S.mode = mode; S.tucked = false; clearTimeout(idleT); ev("sidebar_open mode=" + mode); if (recList().length) ev("rec_impression ×" + Math.min(7, recList().length)); render(); }
+  S.shown = BATCH; S.moreErr = false; S.open = true; S.mode = mode; S.tucked = false; clearIdle(); ev("sidebar_open mode=" + mode); if (recList().length) ev("rec_impression ×" + Math.min(7, recList().length)); render(); }
 function closeSb(by) { if (!S.open) return; var auto = S.mode === "auto"; S.open = false; S.mode = null; if (auto) S.closedAfterAuto = true; ev("sidebar_close closeBy=" + by); armIdle(); render(); }
 
 /* ===== 离开当前游戏前结算（N13 / N11） ===== */
-function leave(fn, isExit) {
+/* 没离开当前游戏就中止（免费次数、需要玩家操作的局、结算超时、结算或同步失败）：留在当前游戏，推荐列表解锁、可再点（N10） */
+function abortLeave(msg) { S.busy = false; S.lock = false; P.toast(msg); render(); }
+function leave(fn, isExit, action) {
   if (S.busy) return;
-  if (P.get("freeSpin") && !isExit) { P.toast("免费次数使用中，用完后再切换"); return; }   /* N13：免费次数使用中不结算、不离开 */
+  if (P.get("freeSpin") && !isExit) { ev("freespin_block action=" + (action || "rec")); abortLeave("免费次数使用中，用完后再切换"); return; }   /* N13：免费次数使用中不结算、不离开 */
+  /* N11：需要玩家操作才能结束的局，不显示蒙层、不屏蔽操作，取消这次离开 */
+  if (P.get("needAction")) { abortLeave("请先完成本局，再切换"); return; }
   S.busy = true;
-  var unsettled = P.get("unsettled");
+  var unsettled = P.get("unsettled") || P.get("settleTimeout");
   $("settleT").textContent = unsettled ? "本局结算中…" : "正在结算游戏余额…"; $("settle").hidden = false;
   setTimeout(function () {
+    /* N11：等待本局结算超过平台现有退出结算超时 → 关闭蒙层，留在当前游戏，自动展开机会不变 */
+    if (P.get("settleTimeout")) { $("settle").hidden = true; abortLeave("本局尚未结束，请完成后再试"); return; }
     if (unsettled) $("settleT").textContent = "正在结算游戏余额…";
     setTimeout(function () {
       $("settle").hidden = true; S.busy = false;
-      if (P.get("syncFail")) { P.toast("余额同步失败，请稍后重试"); return; }
+      if (P.get("syncFail")) { abortLeave("余额同步失败，请稍后重试"); return; }
       fn();
     }, 700);
   }, unsettled ? 1600 : 0);
@@ -319,14 +341,14 @@ function leave(fn, isExit) {
   var f = $("float"), sx, sy, ox, oy, moved, wasTucked, down = false;
   f.addEventListener("pointerdown", function (e) {
     if (S.cs) { csClose("float"); openSb("manual"); return; }   /* N5：弹窗打开时点贴边的浮标 → 弹窗关闭、侧边栏展开 */
-    down = true; clearTimeout(idleT); wasTucked = S.tucked; moved = false;
+    down = true; clearIdle(); wasTucked = S.tucked; moved = false;
     if (S.tucked) { S.tucked = false; render(); }
     sx = e.clientX; sy = e.clientY; ox = S.fx; oy = S.fy; f.setPointerCapture(e.pointerId);
   });
   /* 仅原型演示用（不是需求）：鼠标移入贴边的小猫 → 恢复完整显示（扬金币和钞票动图）；移出后重新计时 3 秒再贴边 */
   f.addEventListener("pointerenter", function (e) {
     if (e.pointerType !== "mouse") return;
-    clearTimeout(idleT);
+    clearIdle();
     if (S.tucked && !S.open && !S.cs) { S.tucked = false; render(); }
   });
   f.addEventListener("pointerleave", function (e) { if (e.pointerType === "mouse" && !down && !S.open && !S.cs) armIdle(); });
@@ -363,19 +385,42 @@ function exitTap() {
 }
 $("gmenu").onclick = function () { $("gbar").hidden = !$("gbar").hidden; };
 $("gExit").onclick = exitTap;
-$("simExit").onclick = function () { P.note("已模拟：点退出", this); exitTap(); };
-$("simClose").onclick = function () { P.note("已模拟：厂商关闭 / Home 按钮或安卓 APP 返回键", this); exitTap(); };
+/* 弹窗或拦截打开时，游戏菜单和厂商按钮被遮罩挡住，点不到 */
+function menuBlocked(btn) {
+  var why = S.comply ? "合规类拦截显示中" : S.cs ? "客服对话窗打开中" : !$("gate").hidden ? "准入拦截提示显示中" : S.busy ? "正在结算" : S.screen !== "game" ? "当前不在游戏页" : "";
+  if (why) P.note(why + "：弹窗打开时游戏菜单被遮罩挡住，点不到厂商的退出、关闭或 Home 按钮，不执行", btn);
+  return !!why;
+}
+$("simExit").onclick = function () { if (menuBlocked(this)) return; P.note("已模拟：点退出", this); exitTap(); };
+$("simClose").onclick = function () { if (menuBlocked(this)) return; P.note("已模拟：厂商关闭 / Home 按钮", this); exitTap(); };
+/* N7：安卓 APP 返回键先关闭当前浮层（不弹退出确认、不消耗自动展开机会），都没打开时才按退出处理 */
+$("simAppBack").onclick = function () {
+  if (S.screen === "loading") { P.note("loading 页期间按现有 loading 页的返回键行为处理", this); return; }
+  if (S.screen !== "game") { P.note("当前不在游戏页，按平台页面现有返回键行为处理", this); return; }
+  if (S.comply) { P.note("合规类拦截按现有规则处理返回键（原型不关闭）", this); return; }
+  if (S.busy) { P.note("正在结算，期间屏蔽其他操作", this); return; }
+  if (!$("gate").hidden) { $("gate").hidden = true; P.note("返回键：先关闭准入拦截提示，留在当前游戏", this); return; }
+  if (S.cs) { csClose("back"); P.note("返回键：先关闭客服对话窗，不弹退出确认、不消耗自动展开机会", this); return; }
+  if (S.open) { if (S.cfm) { S.cfm = false; ev("exit_cancel sidebarOpen=true"); } closeSb("back"); P.note("返回键：先收起侧边栏，不弹退出确认、不消耗自动展开机会", this); return; }
+  if (S.cfm) { S.cfm = false; ev("exit_cancel sidebarOpen=false"); render(); P.note("返回键：退出确认显示时按现有行为关闭退出确认（示意）", this); return; }
+  P.note("返回键：没有打开的浮层，按退出处理", this); exitTap();
+};
+/* N20：合规类拦截（强制 KYC、自我限制、PAGCOR 提示）在最上层，显示期间浮标和侧边栏隐藏、不可点，关闭后恢复 */
+$("simComply").onclick = function () { if (S.screen !== "game") { P.note("当前不在游戏页", this); return; } clearIdle(); S.comply = true; render(); P.note("合规类拦截显示在最上层，浮标和侧边栏隐藏、不可点；点「立即认证」关闭（示意）后恢复", this); };
+$("complyGo").onclick = function () { S.comply = false; armIdle(); render(); };   /* 原型示意：实际按现有合规拦截流程处理，关闭后浮标和侧边栏恢复原来的状态 */
 $("simBack").onclick = function () { P.note("浏览器返回无法拦截，按浏览器行为离开页面，不自动展开（原型不实际离开）", this); };
-$("simTuck").onclick = function () { if (S.open || S.cs) { P.note(S.open ? "侧边栏展开期间不显示浮标，收起后才显示" : "客服对话窗打开期间浮标已贴边显示，关闭后回到原位置", this); return; } clearTimeout(idleT); autoTuck(); P.note("先播放小猫撒金币和钞票，再贴边换成小猫探头挥手动图，每 3 秒挥一次手", this); };
-$("cfmKeep").onclick = function () { S.cfm = false; ev("exit_cancel"); if (S.open && S.mode === "auto") closeSb("exit_cancel"); else render(); };
+$("simTuck").onclick = function () { if (S.open || S.cs || S.comply) { P.note(S.open ? "侧边栏展开期间不显示浮标，收起后才显示" : S.comply ? "合规类拦截显示期间浮标隐藏" : "客服对话窗打开期间浮标已贴边显示，关闭后回到原位置", this); return; } clearIdle(); autoTuck(); P.note("浮标贴到屏幕边，换成贴边状态的动图（示意）", this); };
+$("cfmKeep").onclick = function () { S.cfm = false; ev("exit_cancel sidebarOpen=" + !!S.open); if (S.open && S.mode === "auto") closeSb("exit_cancel"); else render(); };
 $("cfmExit").onclick = function () {
   leave(function () { S.cfm = false; S.open = false; S.mode = null; S.screen = "lobby"; ev("exit_confirm"); showScr("已退出到大厅", ""); }, true);   /* 确认退出按现有退出流程，不检查免费次数 */
 };
 $("outside").onclick = function () { if (S.cfm) return; closeSb("outside"); };
-$("sbClose").onclick = function () { if (S.cfm && S.mode === "auto") { S.cfm = false; ev("exit_cancel"); } closeSb("button"); };
+$("sbClose").onclick = function () { if (S.cfm && S.mode === "auto") { S.cfm = false; ev("exit_cancel sidebarOpen=true"); } closeSb("button"); };
+/* 退出确认显示时点 CS 或 Deposit：一并关闭退出确认，记 exit_cancel */
+function dropCfm() { if (!S.cfm) return; S.cfm = false; ev("exit_cancel sidebarOpen=true"); }
 
 /* ===== 快捷功能 ===== */
-$("qHome").onclick = function () { ev("quick_action_click action=home"); leave(function () { S.open = false; S.screen = "home"; showScr("平台首页", ""); }); };
+$("qHome").onclick = function () { ev("quick_action_click action=home"); leave(function () { S.open = false; S.screen = "home"; showScr("平台首页", ""); }, false, "home"); };
 /* ===== CS 客服对话窗（N18）：从底部弹出，高度固定为游戏页面的 1/2，不退出、不结算 ===== */
 function csMsg(who, txt) { var d = document.createElement("div"); d.className = "cs-msg " + who; d.textContent = txt; $("csBody").appendChild(d); $("csBody").scrollTop = $("csBody").scrollHeight; return d; }
 function csChips(list, fn) { var w = document.createElement("div"); w.className = "cs-chips"; list.forEach(function (t) { var b = document.createElement("button"); b.type = "button"; b.textContent = t; b.onclick = function () { w.remove(); csMsg("me", t); setTimeout(function () { fn(t); }, 300); }; w.appendChild(b); }); $("csBody").appendChild(w); $("csBody").scrollTop = $("csBody").scrollHeight; }
@@ -398,11 +443,11 @@ function csStart() {
   });
   ev("cs_open result=success");
 }
-function csOpen() { S.cs = true; $("csMask").hidden = false; $("cs").hidden = false; if (!$("csBody").children.length || P.get("csFail")) csStart(); render(); }
+function csOpen() { clearIdle(); S.cs = true; $("csMask").hidden = false; $("cs").hidden = false; if (!$("csBody").children.length || P.get("csFail")) csStart(); render(); }
 function csClose(by) { if (!S.cs) return; S.cs = false; $("csMask").hidden = true; $("cs").hidden = true; ev("cs_close closeBy=" + by); armIdle(); render(); }
 $("qCs").onclick = function () {
   if (S.busy) return;
-  ev("quick_action_click action=cs"); S.cfm = false; closeSb("cs");
+  ev("quick_action_click action=cs"); dropCfm(); closeSb("cs"); clearIdle();
   setTimeout(csOpen, 200);   /* 不离开游戏、不结算；再次打开沿用之前的对话 */
 };
 $("csX").onclick = function () { csClose("button"); };
@@ -410,7 +455,7 @@ $("csMask").onclick = function () { csClose("mask"); };
 $("csSend").onclick = function () { var v = $("csIn").value.trim(); if (!v) return; csMsg("me", v); $("csIn").value = ""; setTimeout(function () { csMsg("bot", "已收到您的问题，客服正在处理，请稍候…"); }, 400); };
 $("qDep").onclick = function () {
   if (S.busy) return;
-  ev("quick_action_click action=deposit"); S.cfm = false; closeSb("deposit");
+  ev("quick_action_click action=deposit"); dropCfm(); closeSb("deposit");
   P.set("depFrom", "sidebar");
   setTimeout(function () { location.href = "游戏快捷侧边栏-游戏内充值弹窗.html#sheet"; }, 250);
 };
@@ -418,7 +463,7 @@ $("ban").onclick = function () {
   var c = cfg(), url = c.bType === "link" ? c.bLink : "https://789bingo.com/promo/" + c.bPromo;
   ev("banner_click linkType=" + (c.bType === "link" ? "custom" : "detail"));
   if (c.bType === "link") { P.toast("已在新标签页打开跳转链接"); return; }   /* N12：自定义链接新标签页（APP 为系统浏览器）打开，不离开游戏、不结算 */
-  leave(function () { S.open = false; S.cfm = false; S.screen = "promo"; showScr(c.bType === "link" ? "跳转链接" : "活动详情页", url); });
+  leave(function () { S.open = false; S.cfm = false; S.screen = "promo"; showScr(c.bType === "link" ? "跳转链接" : "活动详情页", url); }, false, "banner");
 };
 
 /* ===== 推荐游戏 ===== */
@@ -428,16 +473,21 @@ $("recWrap").addEventListener("click", function (e) {
   var b = e.target.closest("button[data-id]"); if (!b || S.lock || S.busy) return;
   var id = b.dataset.id, g = GAMES[id];
   ev("rec_click toGameId=" + id + " mode=" + (S.mode || "manual"));
-  if (g.st) { S.refreshed = true; P.toast(g.st === "offline" ? "该游戏暂不可用" : "该游戏当前维护中"); render(); return; }   /* N10 ①：提示后刷新列表，清除维护和下架的游戏 */
-  if (P.get("gateFail")) { $("gate").hidden = false; return; }   /* N10 ②：准入校验不通过，不结算、不退出当前游戏 */
+  /* N10 ①：维护中或已下架（含已停用）→ 提示后刷新列表，清除这些游戏；维护白名单内的玩家点维护中的游戏按可进入处理，不提示、不清除 */
+  if (!playable(g)) { var off = g.st !== "maintenance"; ev("switch_blocked toGameId=" + id + " reason=" + (off ? "offline" : "maintenance")); S.refreshed = true; P.toast(off ? "该游戏暂不可用" : "该游戏当前维护中"); render(); return; }
+  if (P.get("gateFail")) { ev("switch_blocked toGameId=" + id + " reason=kyc"); $("gate").hidden = false; return; }   /* N10 ②：准入校验不通过，不结算、不退出当前游戏，列表不锁 */
   S.lock = true; render();
   leave(function () {
-    var back = P.get("game"), fail = P.get("nextFail");
+    var fail = P.get("nextFail");
     loadGame(id, fail, function () {
-      P.set("nextFail", false); S.screen = "game"; S.open = true; S.lock = false; ev("game_switch_result result=fail"); render();
+      P.set("nextFail", false); S.lock = false;
+      /* N10：重新进入原游戏也失败（原游戏维护或下架、启动失败或超时、余额同步回原供应商失败）→ 不再重试，跳平台首页；余额以平台钱包为准 */
+      if (P.get("backFail")) { S.open = false; S.screen = "home"; ev("game_switch_result result=fail errorCode=back_to_origin_fail"); showScr("平台首页", ""); P.toast("游戏暂时不可用，余额已保留在账户中"); return; }
+      /* 回原游戏：不重新做准入校验、不播放 loading 动画，侧边栏保持展开并解锁，原游戏的机会状态不变 */
+      S.screen = "game"; S.open = true; ev("game_switch_result result=fail"); render();
       P.toast("所选游戏暂时不可用，请换一款试试");
     }, true);
-  });
+  }, false, "rec");
 });
 
 /* ===== 屏幕 ===== */
@@ -448,7 +498,7 @@ $("reenter").onclick = function () { loadGame(P.get("game"), false, null, false)
 /* 推荐游戏切换、从大厅进入共用。小猫的位置跟随 loading 进度：进度 100% 时刚好开到浮标位置，随后进入游戏页、显示浮标。
    演示用的加载进度由下面模拟；各段动画占进度的多少由设计和研发定，这里只是示意 */
 function loadGame(id, fail, onFail, isSwitch, isReload) {
-  var g = GAMES[id]; clearTimeout(idleT); S.cfm = false; S.open = false; S.cs = false; S.screen = "loading";
+  var g = GAMES[id]; clearIdle(); S.cfm = false; S.open = false; S.cs = false; S.screen = "loading";
   $("csMask").hidden = true; $("cs").hidden = true;
   $("sLoadT").textContent = "正在加载 " + g.n + "…"; var im = gImg(id); $("sLoadI").style.backgroundImage = im ? "url('" + im + "')" : "";
   render(); lcStart();
@@ -528,15 +578,17 @@ P.panel($("simPanel"), [
   ] },
   { title: "进入游戏 loading 动画（N19）", items: [
     { type: "button", label: "从大厅进入当前游戏（播放 loading 开车动画）", run: function () { if (S.screen !== "loading") loadGame(P.get("game"), false, null, false); } },
-    { type: "check", key: "loadFast", label: "游戏加载较快（约 1.5 秒）：小猫跟随进度更快开到浮标" },
-    { type: "check", key: "loadSlow", label: "游戏加载较慢（约 7 秒，进度在 60% 后变慢）：小猫跟随进度慢慢开" },
+    { type: "check", key: "loadFast", label: "游戏加载较快（约 1.5 秒）" },
+    { type: "check", key: "loadSlow", label: "游戏加载较慢（约 7 秒，进度在 60% 后变慢）" },
     { type: "check", key: "lcAssetFail", label: "动画素材加载失败（不播放，只显示现有 loading 页）" },
     { type: "check", key: "reduceMotion", label: "手机开启了「减少动态效果」（不播放）" },
-    { type: "note", text: "默认加载时长约 4 秒，演示用。小猫位置跟随进度条，进度 100% 时开到浮标位置。点推荐游戏切换时也会播放；总开关关闭、配置读取失败时不播放。" }
+    { type: "note", text: "默认加载时长约 4 秒，演示用；动画为示意。点推荐游戏切换时也会播放；总开关关闭、配置读取失败时不播放。" }
   ] },
   { title: "注入异常", items: [
     { type: "check", key: "cfgFail", label: "侧边栏配置接口失败" },
     { type: "check", key: "unsettled", label: "当前局已投注、未结算" },
+    { type: "check", key: "needAction", label: "当前局需要玩家操作才能结束（如 Pok Deng 补牌、21 点要牌或停牌、老虎机奖励小游戏里的选择）：提示后取消离开" },
+    { type: "check", key: "settleTimeout", label: "当前局结算超时（超过平台现有退出结算超时）：关闭蒙层，留在当前游戏" },
     { type: "check", key: "syncFail", label: "结算 / 余额同步失败" },
     { type: "check", key: "kycFilter", label: "当前玩家未完成 KYC（需要 KYC 的 Fortune Bingo 不出现在推荐区）" },
     { type: "check", key: "gateFail", label: "列表没及时同步，点推荐游戏时准入校验不通过（如需先完成 KYC）" },
@@ -544,8 +596,11 @@ P.panel($("simPanel"), [
     { type: "check", key: "csSwitchOff", label: "后台关闭「在线客服悬浮按钮开关」（侧边栏不显示 CS）" },
     { type: "check", key: "freeSpin", label: "当前游戏在使用新用户转盘的免费次数" },
     { type: "check", key: "unsynced", label: "推荐列表未同步（混入维护中的 Crazy Time 和已下架的 Money Coming）" },
+    { type: "check", key: "whitelist", label: "当前玩家在维护白名单内（维护中的 Crazy Time 按可进入显示，点击也按可进入处理）" },
     { type: "check", key: "listErr", label: "推荐列表加载失败" },
-    { type: "button", label: "下一次切换时新游戏启动失败", run: function () { P.set("nextFail", true); } }
+    { type: "button", label: "下一次切换时新游戏启动失败", run: function () { P.set("nextFail", true); } },
+    { type: "check", key: "backFail", label: "新游戏启动失败后，重新进入原游戏也失败（跳平台首页，提示余额已保留）" },
+    { type: "note", text: "后台推荐列表里的 Lucky Fishing 所属供应商不支持未结算判断，前台推荐区始终不展示。" }
   ] },
   { title: "演示值说明", items: [{ type: "note", text: "演示余额 ₱500.00；游戏、活动、图片均为示意数据；跳转首页、活动页只显示示意画面，不真实跳转。在当前游戏刷新页面，自动展开机会保持不变（演示 N8）。" }] },
   { items: [{ type: "reset" }] }
@@ -562,7 +617,7 @@ document.querySelectorAll("#simPanel input[type=checkbox]").forEach(function (cb
 (function () { var c = cfg(); P.get("_en") === undefined; ["_en", "_au", "_bn"].forEach(function (k, i) { var v = [c.enabled, c.autoExpand, c.showBanner][i] !== false; var box = [].filter.call(document.querySelectorAll("#simPanel label"), function (l) { return l.textContent.indexOf(["启用游戏快捷侧边栏", "启用退出时自动展开", "Mini Banner 是否展示"][i]) >= 0; })[0]; if (box) box.querySelector("input").checked = v; }); })();
 var FP = P.get("floatPos"); S.fx = FP && FP.L ? M : W() - FS - M; if (FP) S.fy = FP.fy;
 $("gateNo").onclick = function () { $("gate").hidden = true; };
-$("gateGo").onclick = function () { $("gate").hidden = true; leave(function () { S.open = false; S.screen = "home"; showScr("身份认证页", ""); }); };
+$("gateGo").onclick = function () { $("gate").hidden = true; leave(function () { S.open = false; S.screen = "home"; showScr("身份认证页", ""); }, false, "rec"); };
 if (P.get("depBack")) { P.set("depBack", false); }
 /* 从充值弹窗页点贴边的浮标回来（#sb）：弹窗已关闭，展开侧边栏（N5） */
 var fromDep = location.hash === "#sb";

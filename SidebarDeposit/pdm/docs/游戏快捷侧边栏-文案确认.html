@@ -52,23 +52,53 @@
   /* 文案确认（需求包框架规范第 6.4 节）：运营逐条确认或修改待定文案，提交到云端主题「<需求主题>-文案确认」（多迭代需求包为「<需求主题>-<迭代标签>-文案确认」）；
      产品可标记是否采纳并下载文档。复用运营需求确认的云端接口：每次提交是一个「版本」，每条文案是版本里的一行，产品的采纳结论用「回复」记录。
      页面提示一律显示在页面里，不用 alert / confirm（右侧预览面板不显示这类弹框）。 */
-  var TOPIC = "游戏快捷侧边栏-文案确认";
+  /* DOC：需求主题（脚本里只在这里写一次，下载文件名和文档标题都读它）；ITER：多迭代需求包的迭代标签（如 "v1.0"、"完整需求"，和运营需求确认的云端主题标签一致），单版本留空。
+     云端主题 = DOC + "-" + ITER + "-文案确认"（单版本为 DOC + "-文案确认"），定好后不改名。 */
+  var DOC = "游戏快捷侧边栏", ITER = "";
+  var TOPIC = DOC + (ITER ? "-" + ITER : "") + "-文案确认";
   var DRAFT = "copy-draft-" + TOPIC;
   var ADOPT = { "确认修改": "采纳", "部分修改": "部分采纳", "不修改": "不采纳", "待确认": "待产品确认" };
   var PDM = !!(window.NAV && NAV.realRole === "pdm");
   function $(id) { return document.getElementById(id); }
+  /* 本页只对产品（pdm）和运营（opr）开放；其他角色由 nav.js 显示「无权访问」，本页功能不加载（和运营需求确认页一致） */
+  if (!(window.NAV && (NAV.role === "pdm" || NAV.role === "opr")) || !$("ccRows")) return;
   function esc(s) { return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
   function msg(t, bad) { var m = $("ccMsg"); m.textContent = t || ""; m.classList.toggle("bad", !!bad); }
 
   /* 待确认文案：copy-items.js 的条目 + proto-en.js 里英文带「示意」的条目 */
-  var ITEMS = (window.COPY_ITEMS || []).filter(function (x) { return x && x.id; }).map(function (x) {
-    return { id: String(x.id), page: x.page || "", place: x.place || "", zh: x.zh || "", en: x.en || "", note: x.note || "" };
+  /* 多迭代需求包：copy-items.js 每条可写 iter（所属迭代，和 ITER 写法一致；"full" 等同「完整需求」），本页只显示本迭代的条目和没写 iter 的公共条目 */
+  function inIter(x) { if (!ITER || !x.iter) return true; var i = String(x.iter); return i === ITER || (i === "full" && ITER === "完整需求"); }
+  var ITEMS = (window.COPY_ITEMS || []).filter(function (x) { return x && x.id && inIter(x); }).map(function (x) {
+    return { id: String(x.id), page: x.page || "", place: x.place || "", zh: x.zh || "", en: x.en || "", note: [x.lang, x.use, x.note].filter(Boolean).join("；") };
   });
+  /* E 类编号按中文原文算出（FNV-1a 哈希，6 位），对照表增删其他条目时编号不变，云端已提交的结果不会对到别的文案上 */
+  function eid(s) { var h = 0x811c9dc5; for (var i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 0x01000193) >>> 0; } return "E-" + ("00000" + h.toString(36)).slice(-6); }
   var EN = window.PROTO_EN || {}, n = 0;
   Object.keys(EN).forEach(function (k) {
     if (!/示意/.test(String(EN[k]))) return;
-    n++; ITEMS.push({ id: "E" + (n < 10 ? "0" : "") + n, page: "前台原型", place: "英文对照表", zh: k, en: EN[k], note: "英文是示意，未定稿" });
+    n++; ITEMS.push({ id: eid(k), page: "前台原型", place: "英文对照表", zh: k, en: EN[k], note: "英文是示意，未定稿" });
   });
+  /* 多迭代需求包：proto-en.js 各迭代共用，「示意」英文只列本迭代前台原型里真正出现的那些——读取目录数据里本迭代 prototype/<迭代文件夹>/front/ 下的页面比对；
+     单版本需求、读不到页面（如直接双击打开本地文件）时全部列出。E 编号按中文原文算出，各迭代同一条文案编号相同、对照表增删不影响 */
+  /* 原文在本迭代页面里是否出现：带变量的（如「剩余 {n} 次」）页面上显示的是代入后的文字，只比对变量两边的固定文字（2 个字以上的片段都要出现）；拆不出可比对的片段时保留 */
+  function seen(zh, all) {
+    if (!/\{\w+\}/.test(zh)) return all.indexOf(zh) >= 0;
+    var parts = zh.split(/\{\w+\}/).map(function (s) { return s.trim(); }).filter(function (s) { return s.length >= 2; });
+    return !parts.length || parts.every(function (s) { return all.indexOf(s) >= 0; });
+  }
+  function iterFilter() {
+    if (!ITER || !window.fetch) return Promise.resolve(false);
+    var folder = (/\/docs\/([^\/]+)\/[^\/]*$/.exec(decodeURIComponent(location.pathname)) || [])[1]; if (!folder) return Promise.resolve(false);
+    var hrefs = [];
+    (function walk(nd) { if (!nd) return; if (nd.href && nd.href.indexOf("prototype/" + folder + "/front/") === 0) { var h = nd.href.split("#")[0]; if (hrefs.indexOf(h) < 0) hrefs.push(h); } (nd.children || []).forEach(walk); })(window.NAV_DATA);
+    if (!hrefs.length) return Promise.resolve(false);
+    return Promise.all(hrefs.map(function (h) { return fetch((window.NAV_ROOT || "") + h, { cache: "no-store" }).then(function (r) { return r.ok ? r.text() : ""; }, function () { return ""; }); }))
+      .then(function (texts) {
+        var all = texts.join("\n"); if (!all) return false;
+        ITEMS = ITEMS.filter(function (it) { return !/^E-/.test(it.id) || seen(it.zh, all); });
+        return true;
+      });
+  }
 
   var draft = {}; try { draft = JSON.parse(localStorage.getItem(DRAFT) || "{}") || {}; } catch (e) { draft = {}; }
   function saveDraft() { try { localStorage.setItem(DRAFT, JSON.stringify(draft)); } catch (e) {} }
@@ -176,9 +206,9 @@
   $("ccDlHtml").onclick = function () {
     var L = latest(); if (!L.length) { msg("还没有提交记录，没有可下载的内容。", true); return; }
     var rows = L.map(function (x) { var d = x.d; return "<tr><td>" + esc(d.id) + "</td><td>" + esc(d.page + " › " + d.place) + "</td><td>" + esc(d.zh) + "<br>" + esc(d.en) + "</td><td>" + (d.act === "确认" ? "确认原文案" : esc([d.nzh && "中文：" + d.nzh, d.nen && "英文：" + d.nen].filter(Boolean).join("；"))) + "</td><td>" + esc(d.memo) + "</td><td>" + esc(adoption(x.r)) + "</td><td>" + esc(x.v.at) + "</td></tr>"; }).join("");
-    save("游戏快捷侧边栏-文案确认-" + stampName() + ".html", "text/html;charset=utf-8",
-      '<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><title>游戏快捷侧边栏-文案确认</title><style>body{font-family:"Microsoft YaHei","微软雅黑",sans-serif;margin:24px;color:#222}table{border-collapse:collapse;width:100%;font-size:13px}th,td{border:1px solid #ccc;padding:6px 8px;text-align:left;vertical-align:top}th{background:#f5f5f5}</style></head><body>' +
-      "<h1>游戏快捷侧边栏 · 文案确认结果</h1><p>导出时间：" + esc(OCStore.stamp()) + "（GMT+8）；每条取最新一次提交。</p><table><tr><th>编号</th><th>页面 / 位置</th><th>原文案</th><th>运营处理</th><th>备注</th><th>产品是否采纳</th><th>提交时间</th></tr>" + rows + "</table></body></html>");
+    save(DOC + (ITER ? "-" + ITER : "") + "-文案确认-" + stampName() + ".html", "text/html;charset=utf-8",
+      '<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><title>' + esc(DOC) + '-文案确认</title><style>body{font-family:"Microsoft YaHei","微软雅黑",sans-serif;margin:24px;color:#222}table{border-collapse:collapse;width:100%;font-size:13px}th,td{border:1px solid #ccc;padding:6px 8px;text-align:left;vertical-align:top}th{background:#f5f5f5}</style></head><body>' +
+      "<h1>" + esc(DOC + (ITER ? " · " + ITER : "")) + " · 文案确认结果</h1><p>导出时间：" + esc(OCStore.stamp()) + "（GMT+8）；每条取最新一次提交。</p><table><tr><th>编号</th><th>页面 / 位置</th><th>原文案</th><th>运营处理</th><th>备注</th><th>产品是否采纳</th><th>提交时间</th></tr>" + rows + "</table></body></html>");
     msg("已下载文案确认文档。");
   };
   $("ccDlCsv").onclick = function () {
@@ -187,7 +217,7 @@
     var lines = [["编号", "页面", "位置", "原中文", "原英文", "运营处理", "修改后的中文", "修改后的英文", "备注", "产品是否采纳", "提交时间"].map(q).join(",")].concat(L.map(function (x) {
       var d = x.d; return [d.id, d.page, d.place, d.zh, d.en, d.act, d.nzh, d.nen, d.memo, adoption(x.r), x.v.at].map(q).join(",");
     }));
-    save("游戏快捷侧边栏-文案确认-" + stampName() + ".csv", "text/csv;charset=utf-8", "﻿" + lines.join("\r\n"));
+    save(DOC + (ITER ? "-" + ITER : "") + "-文案确认-" + stampName() + ".csv", "text/csv;charset=utf-8", "﻿" + lines.join("\r\n"));
     msg("已下载表格。");
   };
 
@@ -199,7 +229,7 @@
       function (e) { bar.textContent = "云端读取失败：" + OCRemote.explain(e); renderHist(); });
   }
   $("ccRole").textContent = PDM ? "当前：产品（可标记是否采纳）" : "当前：运营（逐条确认或修改后提交）";
-  renderRows(); load();
+  renderRows(); iterFilter().then(function (done) { if (done) renderRows(); }); load();
   window.addEventListener("pdm-unlocked", load);
   setInterval(load, 60000);
 })();

@@ -133,9 +133,14 @@
 <script src="../assets/oc-store.js"></script>
 <script>
 (function () {
-  var ROOT = "../", TOPIC = "游戏快捷侧边栏", VER = "v1.2";
+  /* ITER：多迭代需求包的迭代标签（如 "v1.0"、"完整需求"，和 TOPIC 里的标签一致），单版本留空。填了以后：原型下拉只列本迭代 prototype/<迭代文件夹>/ 下的页面，名称写「迭代 · 页面名」，标题带迭代 */
+  var ROOT = "../", TOPIC = "游戏快捷侧边栏", VER = "v1.2", ITER = "";
   /* 标题里的版本号跟着 VER 显示：升版本只改 VER 一处（需求包框架规范第 12.1 节「升版本要改的位置」） */
   document.getElementById("hdVer").textContent = VER;
+  if (ITER) {   /* 多迭代：页面标题和浏览器标题带迭代（需求包框架规范第 3 节「页面标题带迭代号」） */
+    var h1 = document.querySelector(".oc-head h1"); if (h1 && h1.firstChild && h1.firstChild.nodeType === 3) h1.firstChild.nodeValue = h1.firstChild.nodeValue.replace(" · 运营需求确认", " · " + ITER + " · 运营需求确认");
+    if (document.title.indexOf("-" + ITER + "-") < 0) document.title = document.title.replace("-运营需求确认", "-" + ITER + "-运营需求确认");
+  }
   var KEY = TOPIC + "功能需求-运营需求确认";   /* 不含版本号：需求升版本后，已提交的意见和产品回复照样保留 */
   /* 角色由 assets/nav.js 统一识别（访问链接 ?role=pdm / opr / dev）。本页只对产品（pdm）和运营（opr）开放：
      产品可以填写产品回复和是否修改，运营只能查看；开发和未指定角色时由 nav.js 显示「无权访问」，本页功能不加载。 */
@@ -155,13 +160,15 @@
   function stamp() { return OCStore.stamp(); }
 
   /* ---------- 上半部分：原型查看 ---------- */
+  /* 多迭代：从本页所在文件夹 docs/<迭代文件夹>/ 取迭代文件夹名，只列 prototype/<迭代文件夹>/ 下的原型 */
+  var ITER_DIR = ITER ? ((/\/docs\/([^\/]+)\/[^\/]*$/.exec(decodeURIComponent(location.pathname)) || [])[1] || "") : "";
   var pages = [];
   (function walk(n, path) {
-    if (n.type === "page" || n.type === "admin") pages.push({ href: n.href, title: n.title, group: path[path.length - 1] || "" });
+    if ((n.type === "page" || n.type === "admin") && (!ITER_DIR || String(n.href || "").indexOf("prototype/" + ITER_DIR + "/") === 0)) pages.push({ href: n.href, title: n.title, group: path[path.length - 1] || "" });
     (n.children || []).forEach(function (c) { walk(c, n.children ? path.concat(n.title) : path); });
   })(window.NAV_DATA, []);
   var pg = $("pg"), pf = $("pf"), vbox = $("views"), nw = $("newwin");
-  pages.forEach(function (p, i) { var o = document.createElement("option"); o.value = i; o.textContent = (p.group ? p.group + " › " : "") + p.title; pg.appendChild(o); });
+  pages.forEach(function (p, i) { var o = document.createElement("option"); o.value = i; o.textContent = (ITER ? ITER + " · " : (p.group ? p.group + " › " : "")) + p.title; pg.appendChild(o); });
   var cur = { page: 0, view: "" };
   function loadPage(i, view) {
     var p = pages[i]; if (!p) return;
@@ -1158,6 +1165,8 @@
   }
   $("tabList").onclick = function () { showTab("list"); };
   $("tabVer").onclick = function () { showTab("ver"); };
+  /* 从「需求修改总结」点「查看全部版本」（#versions）或入口页点某个版本（#ver=…）进来：先切到「已提交版本」，不等本机数据库读完（读不到本机数据时也能切过去） */
+  if (location.hash === "#versions" || /^#ver=/.test(location.hash)) showTab("ver");
   var lb = $("lb");
   function zoom(src) { if (!src) return; lb.querySelector("img").src = src; lb.hidden = false; }
   lb.onclick = function () { lb.hidden = true; };
