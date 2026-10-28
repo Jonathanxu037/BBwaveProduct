@@ -57,11 +57,19 @@
       <div class="cs-body" id="chatBody">
         <div class="cs-q">
           <h4>需要什么帮助？</h4>
-          <div class="cs-tabs"><span class="on">热门问题</span><span>充值与提现</span><span>账号</span></div>
-          <div class="cs-ql">
+          <div class="cs-tabs" id="qTabs"><span class="on" data-qt="hot" style="cursor:pointer">热门问题</span><span data-qt="dw" style="cursor:pointer">充值与提现</span><span data-qt="acc" style="cursor:pointer">账号</span></div>
+          <!-- 同一个快捷问题出现在多个分类页签里时，按固定编号识别，处理方式完全一样（PRD N12） -->
+          <div class="cs-ql" data-qt="hot">
             <div data-act="askPwd">我忘记了登录密码，怎么办？<span>›</span></div>
             <div data-act="askDep" class="glow">我的充值没到账，怎么办？<span>›</span></div>
             <div data-act="askWd">我的提现延迟了，要多久？<span>›</span></div>
+          </div>
+          <div class="cs-ql" data-qt="dw" hidden>
+            <div data-act="askDep" class="glow">我的充值没到账，怎么办？<span>›</span></div>
+            <div data-act="askWd">我的提现延迟了，要多久？<span>›</span></div>
+          </div>
+          <div class="cs-ql" data-qt="acc" hidden>
+            <div data-act="askPwd">我忘记了登录密码，怎么办？<span>›</span></div>
           </div>
         </div>
         <div id="thread" style="display:flex;flex-direction:column;gap:10px"></div>
@@ -86,26 +94,27 @@
 
   <aside class="notes">
     <h2>客服对话窗查看订单</h2>
-    <p class="sub">入口：首页右侧悬浮客服按钮 → 点平台自带客服（猫头像）→ 帮助中心 → 点「人工客服」进入对话窗。本需求只改对话窗里「我的充值没到账，怎么办？」这一个快捷问题：点击后显示最近交易卡片，玩家可以直接打开订单页查看（带淡色光晕的是本需求改动的控件）。</p>
+    <p class="sub">入口：首页右侧悬浮客服按钮 → 点平台自带客服（猫头像）→ 帮助中心 → 点「人工客服」进入对话窗；在游戏页内打开的同一客服对话窗同样适用。本需求只改对话窗里「我的充值没到账，怎么办？」这一个快捷问题：点击后显示最近交易卡片，玩家可以直接打开订单页查看（带淡色光晕的是本需求改动的控件）。</p>
     <h3>模拟场景</h3>
     <div class="sim">
       <button type="button" data-go="chat"><span class="simtag">对话窗</span>进入对话窗（未点问题）</button>
       <button type="button" data-go="nodata"><span class="simtag">已登录</span>点「充值没到账」：没有记录</button>
       <button type="button" data-go="data"><span class="simtag">已登录</span>点「充值没到账」：有记录</button>
+      <button type="button" onclick="location.hash='chat';setTimeout(function(){document.querySelector('#qTabs [data-qt=dw]').click();},50)"><span class="simtag">其他页签</span>在「充值与提现」页签点同一问题：处理相同</button>
       <button type="button" data-go="fail"><span class="simtag">已登录</span>点「充值没到账」：取数失败</button>
       <button type="button" data-go="orders"><span class="simtag">订单页</span>点「查看订单」后</button>
       <button type="button" data-go="guest"><span class="simtag">未登录</span>点「充值没到账」</button>
     </div>
     <h3>规则批注</h3>
     <ol>
-      <li><b>适用范围</b>：只改首页右侧悬浮客服按钮进入的客服窗口（底部导航「Chat」是聊天室入口，不是客服入口，不涉及）。H5、Android、iOS、PWA 所有端都生效；App 如果用的是原生客服窗口，由研发依据平台现行方案处理。快捷问题里只改「我的充值没到账，怎么办？」，「我的提现延迟了，要多久？」等其他问题保持现有自动回复。<span class="ref"><a href="../../docs/客服系统优化-需求开发PRD文档.html#n11">自助问题优化 PRD 规则 N11</a> · F02-01 充值没到账显示最近交易卡片</span></li>
+      <li><b>适用范围</b>：只改首页右侧悬浮客服按钮进入的客服窗口，以及游戏页内打开的同一客服窗口（如游戏快捷侧边栏的 CS 按钮）；底部导航「Chat」是聊天室入口，不是客服入口，不涉及。H5、Android、iOS、PWA 所有端都生效；App 如果用的是原生客服窗口，由研发依据平台现行方案处理。快捷问题里只改「我的充值没到账，怎么办？」，「我的提现延迟了，要多久？」等其他问题保持现有自动回复。<span class="ref"><a href="../../docs/客服系统优化-需求开发PRD文档.html#n11">自助问题优化 PRD 规则 N11</a> · F02-01 充值没到账显示最近交易卡片</span></li>
       <li><b>识别这个问题</b>：按这个快捷问题的固定编号识别，不按文字识别：所有语言版本、所有出现这个问题的分类页签（如「热门问题」「充值与提现」）都按本规则处理；运营修改问题文字不影响；问题被删除后不再显示。配置位置和编号方式由研发依据平台现行方案确定。</li>
       <li><b>点击后显示</b>：对话框里先显示玩家点的问题，再显示「最近一笔充值 / 提现」卡片，不再显示原来的自动回复文字。卡片和帮助中心首页的「最近交易」卡片一样，但去掉「联系客服」按钮，只留「查看订单」，改为通栏黑色按钮。</li>
       <li><b>卡片内容</b>：显示几笔、显示哪些信息，都按平台现有规则（和帮助中心「最近交易」卡片一致），不限定只显示一笔；没有记录时显示「暂无充值或提现记录」。卡片显示点击那一刻的数据，之后不自动刷新，要看最新状态点「查看订单」。</li>
-      <li><b>取数失败</b>：接口失败或超过 5 秒没返回时，卡片里显示「暂时无法获取记录，请刷新」和「刷新」按钮，点「刷新」重新取数据；「查看订单」按钮照常显示。订单页本身取数失败按平台现有处理。</li>
-      <li><b>点击频率</b>：每点一次，在对话里新加一组「问题 + 卡片」；这个问题 1 分钟内只能点一次，1 分钟内再点不发送，提示「操作太频繁，请 1 分钟后再试」。未登录时按当前设备的客服会话计时；登录成功后重新计时，登录后自动显示的卡片不算点击。</li>
+      <li><b>取数失败</b>：接口失败或超过 5 秒没返回时，卡片里显示「加载失败，请刷新重试」和「刷新」按钮，点「刷新」重新取数据；「查看订单」按钮照常显示。订单页本身取数失败按平台现有处理。</li>
+      <li><b>点击频率</b>：每点一次，在对话里新加一组「问题 + 卡片」；这个问题 1 分钟内只能点一次，1 分钟内再点不发送，提示「操作过于频繁，请 1 分钟后再试」。未登录时按当前设备的客服会话计时；登录成功后重新计时，登录后自动显示的卡片不算点击。</li>
       <li><b>查看订单</b>：点「查看订单」打开订单页，页面内容和默认页签都沿用平台现有规则。充值、提现两个记录列表按页加载（滑到底部加载下一页），每页条数沿用平台现有规则。<span class="ref"><a href="../../docs/客服系统优化-需求开发PRD文档.html#n17">自助问题优化 PRD 规则 N17</a> · F02-02 从对话打开订单页</span></li>
-      <li><b>返回</b>：从对话里打开的订单页，点左上角「‹」或右上角「×」都回到刚才的客服对话窗（聊天记录保留）。要关掉整个客服窗口，回到对话窗后按对话窗现有方式关闭。从帮助中心首页进入的订单页，返回和关闭保持现状，不改。</li>
+      <li><b>返回</b>：从对话里打开的订单页，点左上角「‹」或右上角「×」都回到刚才的客服对话窗（聊天记录保留）。要关掉整个客服窗口，回到对话窗后按对话窗现有方式关闭。在游戏页内打开的客服对话窗（如游戏快捷侧边栏的 CS 按钮），订单页以覆盖层盖在客服窗上打开，关闭后回到客服窗，不离开游戏页、不结算、不刷新。从帮助中心首页进入的订单页，返回和关闭保持现状，不改。</li>
       <li><b>订单页「人工客服」</b>：从对话里打开的订单页，点右下角「人工客服」回到刚才的对话窗并转人工（等同在对话窗点「转人工」），不新开会话；从帮助中心首页进入的订单页保持现状。</li>
       <li><b>复制订单号</b>：保持现状，玩家在订单页点一行复制订单号，回到对话窗后自己粘贴发送。</li>
       <li><b>未登录</b>：拉取不到订单数据，不显示卡片，提示先登录，并给「登录」按钮（跳转平台现有登录页）。登录成功后回到客服对话窗，保留刚才的对话，并自动显示最近交易卡片，玩家点「查看订单」直接查看。海外 IP 访问时按平台现有的海外 IP 处理方案。</li>
@@ -124,6 +133,7 @@
 <script src="../../assets/nav.js"></script>
 <script src="../../assets/req-tabs.js"></script>
 <script src="../../assets/proto-en.js"></script>
+<script>window.PROTO_LANG = "en";   /* 本页手机画面制作和预览都用英文（用户 2026-10-26 要求）；对照表 assets/proto-en.js，规则批注和模拟面板仍是中文；地址加 ?lang=zh 可临时看中文 */</script>
 <script src="../../assets/proto.js"></script>
 <script>
 (function () {
@@ -133,7 +143,7 @@
   function toast(t) { var el = document.getElementById("toast"); el.textContent = t; el.hidden = false; clearTimeout(el._t); el._t = setTimeout(function () { el.hidden = true; }, 1800); }
   function ask(q) { thread.insertAdjacentHTML("beforeend", '<div class="me">' + q + '</div>'); }
   function cardInner() {
-    if (state.fail) return '<div class="em">暂时无法获取记录，请刷新</div><button class="blk" type="button" data-act="refresh" style="background:#fff;color:#111;border:1px solid #D1D5DB;margin-bottom:8px">刷新</button>';
+    if (state.fail) return '<div class="em">加载失败，请刷新重试</div><button class="blk" type="button" data-act="refresh" style="background:#fff;color:#111;border:1px solid #D1D5DB;margin-bottom:8px">刷新</button>';
     if (state.rec) return '<div class="rec">充值 ₱500.00 · 处理中<br><span style="color:#9CA3AF">2026-10-22 14:05 · 订单号 D2026102214051234</span></div><p class="ui-reqnote">显示几笔、显示哪些信息按平台现有规则，和帮助中心「最近交易」卡片一致；这里的数据是虚构示例。</p>';
     return '<div class="em">暂无充值或提现记录</div>';
   }
@@ -143,7 +153,7 @@
   function depositReply() {
     ask("我的充值没到账，怎么办？");
     if (!state.login) {
-      thread.insertAdjacentHTML("beforeend", '<div class="bot glow">请先登录，再查看订单。<br><button class="blk" type="button" data-act="login" style="margin-top:8px">登录</button></div>');
+      thread.insertAdjacentHTML("beforeend", '<div class="bot glow">登录后即可查看订单。<br><button class="blk" type="button" data-act="login" style="margin-top:8px">登录</button></div>');
       return;
     }
     card();
@@ -181,7 +191,7 @@
     var a = e.target.closest("[data-act]"); if (!a) return;
     var act = a.dataset.act;
     if (act === "askDep") {
-      if (Date.now() - lastAsk < 60000) { toast("操作太频繁，请 1 分钟后再试"); return; }
+      if (Date.now() - lastAsk < 60000) { toast("操作过于频繁，请 1 分钟后再试"); return; }
       lastAsk = Date.now(); depositReply();
     }
     else if (act === "refresh") {
@@ -200,6 +210,11 @@
       a.disabled = true; state.login = true; lastAsk = 0; card(); toast("登录成功，已回到客服对话窗");   /* 登录成功后重新计时，自动显示的卡片不算点击 */
     }
   });
+  /* 快捷问题分类页签：切换显示对应分类的问题；「充值与提现」里的「我的充值没到账，怎么办？」和「热门问题」里的处理完全一样 */
+  document.querySelectorAll("#qTabs span").forEach(function (t) { t.onclick = function () {
+    document.querySelectorAll("#qTabs span").forEach(function (x) { x.classList.toggle("on", x === t); });
+    document.querySelectorAll(".cs-ql[data-qt]").forEach(function (q) { q.hidden = q.dataset.qt !== t.dataset.qt; });
+  }; });
   document.querySelectorAll(".od-tabs span").forEach(function (t) { t.onclick = function () { document.querySelectorAll(".od-tabs span").forEach(function (x) { x.classList.toggle("on", x === t); }); odTab = t.dataset.tab; renderOrders(); }; });
   show(location.hash.slice(1) || "chat");
 })();

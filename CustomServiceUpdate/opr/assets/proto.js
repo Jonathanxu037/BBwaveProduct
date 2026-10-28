@@ -130,7 +130,7 @@
   if (mode !== "en") return;
   var D = window.PROTO_EN || {}, exact = {}, pats = [], missing = {}, bd = null, DONE = {};
   /* 英文里的「（示意）」只是给运营看的标记（文案确认页据此列出待确认文案），画面上不显示 */
-  function clean(s) { return String(s).replace(/\s*[（(]\s*示意\s*[)）]\s*/g, " ").replace(/\s{2,}/g, " ").trim(); }
+  function clean(s) { return String(s).replace(/\s*[（(]\s*(示意|placeholder)\s*[)）]\s*/gi, " ").replace(/\s{2,}/g, " ").trim(); }   /* 「（示意）」「(placeholder)」都不上画面 */
   Object.keys(D).forEach(function (k) {
     if (!/\{\w+\}/.test(k)) { exact[k.trim()] = D[k]; return; }
     var names = [], pat = "^" + k.trim().replace(/[.*+?^$()|[\]\\]/g, "\\$&").replace(/\{(\w+)\}/g, function (_, n) { names.push(n); return "(.+?)"; }) + "$";

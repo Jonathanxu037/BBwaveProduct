@@ -19,7 +19,7 @@
 <hr class="doc-rule">
 
 <h2 id="a-k1">一句话需求</h2>
-<div class="oneline">在客服后台「All Conversations（全部会话）」页面的会话列表中，于每条会话的用户名后新增身份和等级标签（VIP 等级 › 普通会员等级 › 会员 › 游客），Mine、Unassigned、All 三个页签改为按身份和等级从高到低排序，同一等级按进线时间先来在前；排序按钮只决定同一等级内的先后，左侧其他列表和状态筛选不变。</div>
+<div class="oneline">客服后台所有会话列表的用户名后显示身份和等级标签（VIP › LV › 会员 › 游客）；排序方式新增「User level: Highest first」并设为默认，按等级从高到低排，同级先来在前。</div>
 
 <h2 id="a-k2">业务流程</h2>
 <div class="flow">
@@ -27,7 +27,7 @@
   <div class="fa">↓</div>
   <div class="fs"><div class="no">2</div><div><b>识别身份和等级</b>：VIP / LV / 会员 / 游客</div></div>
   <div class="fa">↓</div>
-  <div class="fs key"><div class="no">3</div><div><b>服务端排序插入</b>：VIP › 会员等级 › 会员 › 游客，同级按排序按钮所选（默认进线时间先来在前）</div></div>
+  <div class="fs key"><div class="no">3</div><div><b>服务端排序插入</b>：默认按用户等级：VIP › 会员等级 › 会员 › 游客，同级按进线时间先来在前</div></div>
   <div class="fa">↓</div>
   <div class="fs"><div class="no">4</div><div><b>客服接入</b>：从上往下接待，进入 Mine 后规则不变</div></div>
 </div>
@@ -37,7 +37,7 @@
   <h3><span class="code">F01-01</span>身份和等级标签<a href="客服系统优化-需求开发PRD文档.html#F01-01">查看 PRD ›</a></h3>
   <div class="fpgrid">
     <b>要做什么</b>
-    <ul><li>All Conversations 页面三个页签的每条会话，用户名后加标签；用户名过长时省略用户名，标签完整显示</li><li>同步失败沿用上次成功的等级</li></ul>
+    <ul><li>所有会话列表和会话详情标题的用户名后加标签；用户名过长时省略用户名，标签完整显示</li><li>同步失败沿用上次成功的等级</li></ul>
     <b>公式</b>
     <div class="formula">标签 = VIP 用户 ?「VIP + 等级号」（金色）: 普通用户 ?「LV + 等级号」（蓝紫色，含 LV 0）: 能识别账号 ?「会员」（绿色）:「游客」（灰色图标）</div>
     <b>涉及端</b>
@@ -48,18 +48,18 @@
   <h3><span class="code">F01-02</span>按身份和等级排序<a href="客服系统优化-需求开发PRD文档.html#F01-02">查看 PRD ›</a></h3>
   <div class="fpgrid">
     <b>要做什么</b>
-    <ul><li>Mine、Unassigned、All 三个页签都按身份和等级排序，排序在服务端完成</li><li>新会话按等级插入已加载列表的对应位置；比已加载的都低时在向下加载时出现</li><li>不做低等级超时置顶</li></ul>
+    <ul><li>所有会话列表默认按用户等级排序，在服务端完成</li><li>新会话按等级插入对应位置；比已加载的都低时向下加载时出现</li><li>不做低等级超时置顶</li></ul>
     <b>公式</b>
-    <div class="formula">排序键 = VIP（等级号降序）› 会员等级（等级号降序）› 会员 › 游客 › 同级按排序按钮所选 › 会话 ID 兜底</div>
+    <div class="formula">按用户等级排序时，排序键 = VIP（等级号降序）› 会员等级（等级号降序）› 会员 › 游客 › 进线时间（先来在前；没转人工的用创建时间）› 会话 ID 兜底</div>
     <b>涉及端</b>
     <div class="ends"><span>客服后台</span></div>
   </div>
 </div>
 <div class="fpcard" id="F01-03">
-  <h3><span class="code">F01-03</span>排序按钮同级排序<a href="客服系统优化-需求开发PRD文档.html#F01-03">查看 PRD ›</a></h3>
+  <h3><span class="code">F01-03</span>排序选项新增用户等级<a href="客服系统优化-需求开发PRD文档.html#F01-03">查看 PRD ›</a></h3>
   <div class="fpgrid">
     <b>要做什么</b>
-    <ul><li>保留现有全部排序选项，新增「进线时间（先来在前）」并设为默认</li><li>所选方式只决定同一等级内的先后</li></ul>
+    <ul><li>「Order by」第一项新增「User level: Highest first」并设为默认，现有选项保留</li><li>选哪项按哪项排；选其他项时，排序值相同的再按等级排</li></ul>
     <b>公式</b>
     <div class="formula">无</div>
     <b>涉及端</b>
@@ -70,7 +70,7 @@
   <h3><span class="code">F01-04</span>进线与等级变化<a href="客服系统优化-需求开发PRD文档.html#F01-04">查看 PRD ›</a></h3>
   <div class="fpgrid">
     <b>要做什么</b>
-    <ul><li>记录进线时间（原则上为转人工时间，细节按客服后台现有规则）</li><li>等级只由平台服务端写入，变化后刷新重排</li><li>鼠标停在列表上暂停重排，移开 2 秒后刷新</li></ul>
+    <ul><li>记录进线时间（转人工时间；没转人工的用创建时间）</li><li>等级只由平台服务端写入，变化后刷新重排</li><li>鼠标停在列表上暂停重排，移开 2 秒后刷新</li></ul>
     <b>公式</b>
     <div class="formula">无</div>
     <b>涉及端</b>
@@ -86,7 +86,7 @@
 <hr class="doc-rule">
 
 <h2 id="b-k1">一句话需求</h2>
-<div class="oneline">在前台首页右侧悬浮客服按钮进入的客服对话窗中，玩家点快捷问题「我的充值没到账，怎么办？」后，不再显示原自动回复，改为显示最近交易卡片和通栏「查看订单」按钮，点击打开订单页，返回时回到对话窗；其他快捷问题和客服窗口其他功能不变。</div>
+<div class="oneline">客服对话窗（首页悬浮客服按钮进入，或游戏页内打开）里点「我的充值没到账，怎么办？」，改为显示最近交易卡片和通栏「查看订单」，可打开订单页并返回对话；其他快捷问题不变。</div>
 
 <h2 id="b-k2">业务流程</h2>
 <div class="flow">
@@ -98,7 +98,7 @@
 </div>
 <div class="brs">
   <div class="bc"><h5>A - 已登录 · 取数成功</h5><p class="s"><b>显示卡片</b><small>内容按平台现有规则；无记录显示「暂无充值或提现记录」</small></p></div>
-  <div class="bc"><h5>B - 取数失败或超过 5 秒</h5><p class="s"><b>失败提示 + 刷新</b><small>「暂时无法获取记录，请刷新」，「查看订单」照常显示</small></p></div>
+  <div class="bc"><h5>B - 取数失败或超过 5 秒</h5><p class="s"><b>失败提示 + 刷新</b><small>「加载失败，请刷新重试」，「查看订单」照常显示</small></p></div>
   <div class="bc br"><h5>C - 未登录</h5><p class="s"><b>提示登录</b><small>登录成功回到对话窗，自动显示卡片</small></p></div>
 </div>
 
@@ -118,7 +118,7 @@
   <h3><span class="code">F02-02</span>从对话打开订单页<a href="客服系统优化-需求开发PRD文档.html#F02-02">查看 PRD ›</a></h3>
   <div class="fpgrid">
     <b>要做什么</b>
-    <ul><li>「查看订单」打开订单页，内容和默认页签沿用现有，记录列表按页加载</li><li>从对话打开时：「‹」「×」回到对话窗；「人工客服」回到原对话并转人工，不新开会话</li><li>从帮助中心进入时保持现状</li></ul>
+    <ul><li>订单页内容和默认页签沿用现有，记录按页加载</li><li>「‹」「×」回对话窗；「人工客服」回原对话转人工，不新开会话</li><li>游戏页内：订单页以覆盖层打开，关闭回客服窗，不离开游戏</li><li>从帮助中心进入时保持现状</li></ul>
     <b>公式</b>
     <div class="formula">无</div>
     <b>涉及端</b>
@@ -129,7 +129,7 @@
   <h3><span class="code">F02-03</span>未登录与登录后<a href="客服系统优化-需求开发PRD文档.html#F02-03">查看 PRD ›</a></h3>
   <div class="fpgrid">
     <b>要做什么</b>
-    <ul><li>未登录不取数：显示「请先登录，再查看订单。」和「登录」</li><li>登录成功回到对话窗，保留对话并自动显示卡片</li><li>海外 IP 按平台现有方案</li></ul>
+    <ul><li>未登录不取数：显示「登录后即可查看订单。」和「登录」</li><li>登录成功回到对话窗，保留对话并自动显示卡片</li><li>海外 IP 按平台现有方案</li></ul>
     <b>公式</b>
     <div class="formula">无</div>
     <b>涉及端</b>
@@ -140,7 +140,7 @@
   <h3><span class="code">F02-04</span>取数失败与点击频率<a href="客服系统优化-需求开发PRD文档.html#F02-04">查看 PRD ›</a></h3>
   <div class="fpgrid">
     <b>要做什么</b>
-    <ul><li>接口失败或超过 5 秒：「暂时无法获取记录，请刷新」+「刷新」</li><li>同一玩家 1 分钟内只能点一次，再点提示「操作太频繁，请 1 分钟后再试」</li></ul>
+    <ul><li>接口失败或超过 5 秒：「加载失败，请刷新重试」+「刷新」</li><li>距上次成功发送不足 60 秒再点：不发送，提示「操作过于频繁，请 1 分钟后再试」</li></ul>
     <b>公式</b>
     <div class="formula">可再次点击 ⇔ 当前时间 − 上次成功发送时间 ≥ 60 秒（未登录按当前设备的客服会话计时；登录成功后重新计时，登录后自动显示的卡片不算点击）</div>
     <b>涉及端</b>

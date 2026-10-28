@@ -24,14 +24,14 @@
 <!-- ############ 后台列表优化 ############ -->
 <section data-req="a">
 <h2 id="a-q0">适用范围 <span class="en-t">Scope</span></h2>
-<div class="bi"><div class="zh">客服后台「All Conversations（全部会话）」页面的会话列表。上线后生效，上线时间另行通知。玩家端没有变化。</div><div class="en">The conversation list on the "All Conversations" page of the CS console. Effective after release; the release date will be announced separately. Nothing changes on the player side.</div></div>
+<div class="bi"><div class="zh">客服后台所有会话列表和会话详情。上线时间另行通知；玩家端没有变化。</div><div class="en">All conversation lists and conversation details in the CS console. Release date to be announced; nothing changes on the player side.</div></div>
 
 <h2 id="a-q1">这次改了什么 <span class="en-t">What changed</span></h2>
-<div class="bi"><div class="zh">每条会话用户名后显示身份和等级（VIP、LV、会员、游客），列表按等级从高到低排序，同一等级先来的在前。</div><div class="en">Each conversation shows the player's tier and level (VIP, LV, Member, Guest) after the name, and the list is sorted from the highest level down; within the same level, earlier handoffs come first.</div></div>
+<div class="bi"><div class="zh">每条会话用户名后显示身份和等级（VIP、LV、会员、游客）；排序方式新增「User level: Highest first」并设为默认，列表默认按等级从高到低排序，同一等级先来的在前。</div><div class="en">Each conversation shows the player's tier and level (VIP, LV, Member, Guest) after the name. A new sort option, "User level: Highest first", is the default: the list is sorted from the highest level down, and within the same level, earlier handoffs come first.</div></div>
 
 <h2 id="a-q2">客服核查步骤 <span class="en-t">How to check</span></h2>
 <ol class="qa-steps">
-  <li class="bi"><div class="zh"><b>看身份和等级</b>：会话列表用户名后的标签；「游客」先核实玩家账号。</div><div class="en"><b>Check tier and level</b>: the tag after the name in the conversation list (All Conversations); for "Guest", verify the player's account first.</div></li>
+  <li class="bi"><div class="zh"><b>看身份和等级</b>：会话列表用户名后的标签；「游客」先核实玩家账号。</div><div class="en"><b>Check tier and level</b>: the tag after the name in any conversation list; for "Guest", verify the player's account first.</div></li>
 </ol>
 
 <h2 id="a-q3">问答 <span class="en-t">Q&amp;A</span></h2>
@@ -63,10 +63,10 @@
 <!-- ############ 自助问题优化 ############ -->
 <section data-req="b">
 <h2 id="q0">适用范围 <span class="en-t">Scope</span></h2>
-<div class="bi"><div class="zh">前台首页右侧悬浮客服按钮进入的客服对话窗里，快捷问题「我的充值没到账，怎么办？」。适用 H5、Android、iOS、PWA。上线后生效，上线时间另行通知。</div><div class="en">The quick question "My deposit is missing. What do I do?" in the chat window opened from the floating support button on the home page. Applies to H5, Android, iOS and PWA. Effective after release; the release date will be announced separately.</div></div>
+<div class="bi"><div class="zh">客服对话窗（首页悬浮客服按钮进入，或游戏页内打开）里的快捷问题「我的充值没到账，怎么办？」，H5、Android、iOS、PWA 都适用。上线时间另行通知。</div><div class="en">The quick question "My deposit is missing. What do I do?" in the chat window (opened from the floating support button on the home page, or inside a game). Applies to H5, Android, iOS and PWA. Release date to be announced.</div></div>
 
 <h2 id="q1">这次改了什么 <span class="en-t">What changed</span></h2>
-<div class="bi"><div class="zh">玩家点「我的充值没到账，怎么办？」后，不再收到一段文字回复，而是看到最近交易卡片和「查看订单」按钮，可以直接打开订单页；从订单页返回会回到对话。其他快捷问题不变。客服后台会话里只显示玩家点的问题。</div><div class="en">When a player taps "My deposit is missing. What do I do?", instead of a text reply they see their latest transaction card with a "View Orders" button that opens the Orders page; going back returns to the chat. Other quick questions are unchanged. In the CS console the conversation shows only the question the player tapped.</div></div>
+<div class="bi"><div class="zh">玩家点「我的充值没到账，怎么办？」后，看到的是最近交易卡片和「查看订单」按钮，不再是文字回复；打开订单页后可返回对话。其他快捷问题不变。客服后台会话里只显示玩家点的问题。</div><div class="en">When a player taps "My deposit is missing. What do I do?", instead of a text reply they see their latest transaction card with a "View Orders" button that opens the Orders page; going back returns to the chat. Other quick questions are unchanged. In the CS console the conversation shows only the question the player tapped.</div></div>
 
 <h2 id="q2">客服核查步骤 <span class="en-t">How to check</span></h2>
 <ol class="qa-steps">
@@ -84,7 +84,7 @@
     <div class="bi"><div class="zh">订单状态异常按现有充值异常流程转交。</div><div class="en">If the order status is abnormal, escalate under the existing deposit-issue process.</div></div></div>
 </section>
 <section class="qa-card" id="qa2">
-  <h3><span class="qa-no">2</span><span class="bi-inline"><span class="zh">卡片显示「暂时无法获取记录」</span><span class="en">The card says it can't load my records</span></span></h3>
+  <h3><span class="qa-no">2</span><span class="bi-inline"><span class="zh">卡片显示「加载失败」</span><span class="en">The card says it can't load my records</span></span></h3>
   <div class="qa-row"><b>回复玩家<small>Reply</small></b>
     <div class="bi"><div class="en qa-reply">Please tap "Refresh" on the card to load it again. You can also tap "View Orders" to see your records directly. If it still doesn't load, send us your deposit amount and time and we'll check for you.<button type="button" class="qa-copy">复制 Copy</button></div>
     <div class="zh">请点卡片上的「刷新」重新加载，也可以直接点「查看订单」查看记录。如果还是加载不出来，把充值金额和时间发给我们，我们帮你查。</div></div></div>
@@ -94,7 +94,7 @@
     <div class="bi"><div class="zh">多名玩家同时反映加载不出来，转技术。</div><div class="en">If several players report the same issue, escalate to Tech.</div></div></div>
 </section>
 <section class="qa-card" id="qa3">
-  <h3><span class="qa-no">3</span><span class="bi-inline"><span class="zh">点问题时提示「操作太频繁」</span><span class="en">It says "Too many requests" when I tap the question</span></span></h3>
+  <h3><span class="qa-no">3</span><span class="bi-inline"><span class="zh">点问题时提示「操作过于频繁」</span><span class="en">It says "Too many attempts" when I tap the question</span></span></h3>
   <div class="qa-row"><b>回复玩家<small>Reply</small></b>
     <div class="bi"><div class="en qa-reply">This question can be sent once per minute. Please try again in a minute, or tap "View Orders" on the card you already received.<button type="button" class="qa-copy">复制 Copy</button></div>
     <div class="zh">这个问题 1 分钟内只能发送一次。请 1 分钟后再试，或者直接点已经收到的卡片上的「查看订单」。</div></div></div>

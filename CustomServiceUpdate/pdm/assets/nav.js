@@ -427,3 +427,51 @@ function isPubAdmin() {
   try { if (q) sessionStorage.setItem("proto-publish", v); else v = sessionStorage.getItem("proto-publish"); } catch (e) {}
   return v ? v === "1" : !!window.PROTO_PUBLISH;
 }
+
+/* 表格自动列宽（生成内容规范第五章第 2 节「表格排版」）：PRD 以外的文档页（如后台操作手册）里带 data-fit 的静态表格。
+   算法和 PRD 页面里的一样：表格宽度等于容器宽度、不出现水平滚动，从有富余的列把宽度挪给撑高行的列。
+   PRD 正文（#doc）由 PRD 页面自己的脚本计算，这里跳过，避免同一张表算两遍 */
+(function () {
+  function cols(tbl) {
+    var cs = tbl.querySelectorAll("col"); if (cs.length) return cs;
+    var first = tbl.rows[0]; if (!first) return cs;
+    var n = 0; [].forEach.call(first.cells, function (c) { n += c.colSpan || 1; });
+    var g = document.createElement("colgroup"); for (var i = 0; i < n; i++) g.appendChild(document.createElement("col"));
+    tbl.insertBefore(g, tbl.firstChild); return tbl.querySelectorAll("col");
+  }
+  function fit(tbl, force) {
+    var cl = cols(tbl); if (!cl.length) return;
+    /* 表格直接放在带内边距的容器里（如手册的 .mcard）时，可用宽度要扣掉内边距 */
+    var ps = getComputedStyle(tbl.parentNode), n = cl.length, W = tbl.parentNode.clientWidth - (parseFloat(ps.paddingLeft) || 0) - (parseFloat(ps.paddingRight) || 0); if (W <= 0) return;
+    if (!force && tbl._fitW === W) return;
+    tbl._fitW = W;
+    var MIN = 44, STEP = Math.max(4, Math.round(W / 120));
+    var rows = [].slice.call(tbl.rows), len = [];
+    for (var c = 0; c < n; c++) { var m = 1; rows.forEach(function (r) { var cell = r.cells[c]; if (cell && cell.colSpan === 1) m = Math.max(m, cell.textContent.trim().length); }); len.push(Math.sqrt(m)); }
+    var mn = []; for (var k = 0; k < n; k++) mn.push(MIN);
+    rows.forEach(function (r) { for (var k = 0; k < r.cells.length && k < n; k++) { var cell = r.cells[k]; if (cell.colSpan !== 1) continue; [].forEach.call(cell.querySelectorAll(".fp,.nw,.ui-nw,code,nobr"), function (e) { mn[k] = Math.max(mn[k], e.offsetWidth + 18); }); } });
+    var sum = len.reduce(function (a, b) { return a + b; }, 0), w = len.map(function (l, i) { return Math.max(mn[i], Math.floor(W * l / sum)); });
+    var cells = [].slice.call(tbl.querySelectorAll("th,td")), rg = document.createRange();
+    function apply() { var s = w.reduce(function (a, b) { return a + b; }, 0); for (var i = 0; i < n; i++) cl[i].style.width = (w[i] / s * 100).toFixed(3) + "%"; var t = 0; cells.forEach(function (x) { rg.selectNodeContents(x); t += rg.getBoundingClientRect().height; }); return tbl.offsetHeight * 1000 + t; }
+    var best = apply(), guard = 0, improved = true;
+    while (improved && guard++ < 150) {
+      improved = false; var move = null;
+      [1, 2, 4, 8].forEach(function (k) {
+        var d = STEP * k;
+        for (var to = 0; to < n; to++) for (var from = 0; from < n; from++) {
+          if (to === from || w[from] - d < mn[from]) continue;
+          w[from] -= d; w[to] += d; var h = apply();
+          if (h < best - 0.5) { best = h; move = [from, to, d]; }
+          w[from] += d; w[to] -= d;
+        }
+      });
+      if (move) { w[move[0]] -= move[2]; w[move[1]] += move[2]; improved = true; }
+      apply();
+    }
+  }
+  function fitAll(force) { [].forEach.call(document.querySelectorAll("table[data-fit]"), function (t) { if (!t.closest("#doc")) fit(t, force === true); }); }
+  var tm = 0; function later() { clearTimeout(tm); tm = setTimeout(fitAll, 150); }
+  window.addEventListener("resize", later); window.addEventListener("navtoggle", later);
+  var loaded = document.readyState === "complete" ? Promise.resolve() : new Promise(function (r) { window.addEventListener("load", r); });
+  Promise.all([loaded, document.fonts && document.fonts.ready ? document.fonts.ready : null]).then(function () { fitAll(true); });
+})();

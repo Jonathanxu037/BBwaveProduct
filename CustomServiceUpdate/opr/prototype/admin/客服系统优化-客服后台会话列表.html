@@ -16,6 +16,8 @@
 .cw-search b{width:30px;border:1px solid #E4E7EC;border-radius:8px;background:#fff;display:grid;place-items:center;font-weight:400;color:#6B7280}
 .cw-nav div{padding:7px 10px;border-radius:8px;color:#374151;font-size:13.5px}
 .cw-nav .on{background:#EEF0F3}
+.cw-nav [data-list]{cursor:pointer}
+.cw-nav [data-list]:hover{background:#F1F3F5}
 .cw-nav .sub{padding-left:26px}
 .cw-nav .lb{padding-left:34px;display:flex;align-items:center;gap:8px}
 .cw-nav .lb i{width:8px;height:8px;border-radius:2px}
@@ -73,19 +75,20 @@
         <div>My Inbox</div>
         <div>工单</div>
         <div>Conversations</div>
-        <div class="sub on">All Conversations</div>
-        <div class="sub">Mentions</div>
-        <div class="sub">Participating</div>
-        <div class="sub">Unattended</div>
+        <div class="sub on" data-list="all">All Conversations</div>
+        <div class="sub" data-list="mentions">Mentions</div>
+        <div class="sub" data-list="participating">Participating</div>
+        <div class="sub" data-list="unattended">Unattended</div>
         <div class="sub">Channels</div>
-        <div class="lb">789 H5 Chat</div>
+        <div class="lb" data-list="inbox">789 H5 Chat</div>
         <div class="sub">Labels</div>
-        <div class="lb"><i style="background:#3B82F6"></i>account_login</div>
-        <div class="lb"><i style="background:#F59E0B"></i>bets_games</div>
-        <div class="lb"><i style="background:#10B981"></i>deposit_with…</div>
-        <div class="lb"><i style="background:#8B5CF6"></i>kyc</div>
-        <div class="lb"><i style="background:#9CA3AF"></i>other</div>
-        <div class="lb"><i style="background:#EC4899"></i>promotions</div>
+        <div class="lb" data-list="label:bets_games"><i style="background:#F59E0B"></i>bets_games</div>
+        <div class="lb" data-list="label:deposit_withdrawal"><i style="background:#10B981"></i>deposit_with…</div>
+        <div class="lb" data-list="label:kyc"><i style="background:#8B5CF6"></i>kyc</div>
+        <div class="lb" data-list="label:other"><i style="background:#9CA3AF"></i>other</div>
+        <div class="lb" data-list="label:promotions"><i style="background:#EC4899"></i>promotions</div>
+        <div class="lb" data-list="label:safety_responsible"><i style="background:#EF4444"></i>safety_respo…</div>
+        <div class="lb" data-list="label:system_maintenance"><i style="background:#4B5563"></i>system_mainte…</div>
         <div>Captain</div>
         <div>Calls</div>
         <div>Contacts</div>
@@ -94,18 +97,27 @@
     </aside>
 
     <section class="cw-list" aria-label="会话列表">
-      <div class="cw-lh" style="position:relative"><h3>Conversations</h3><span class="st">Open</span><span class="ic"><b>☰</b><b id="sortBtn" class="glow" role="button" tabindex="0" aria-label="排序" style="cursor:pointer">⇅</b><b>⇥</b></span>
-        <div id="sortMenu" hidden style="position:absolute;right:40px;top:44px;z-index:5;background:#fff;border:1px solid #E4E7EC;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,.08);padding:6px;width:210px;font-size:13px">
-          <div style="color:#6B7280;font-size:12px;padding:4px 8px">先按身份和等级排，同一等级内：</div>
-          <label class="glow" style="display:block;padding:5px 8px;cursor:pointer"><input type="radio" name="sk" value="in" checked> 进线时间（先来在前，新增，默认）</label>
-          <label style="display:block;padding:5px 8px;cursor:pointer"><input type="radio" name="sk" value="last"> 最近活动（最新在前）</label>
-          <div style="color:#9CA3AF;font-size:11.5px;padding:2px 8px 4px">…客服后台现有的其他排序选项全部保留，清单以系统为准</div>
+      <div class="cw-lh" style="position:relative"><h3 id="listTitle">Conversations</h3><span class="st">Open</span><span class="ic"><b>☰</b><b id="sortBtn" class="glow" role="button" tabindex="0" aria-label="排序" style="cursor:pointer">⇅</b><b>⇥</b></span>
+        <div id="sortMenu" hidden style="position:absolute;right:8px;top:44px;z-index:5;background:#fff;border:1px solid #E4E7EC;border-radius:10px;box-shadow:0 4px 12px rgba(0,0,0,.08);padding:12px 14px;width:300px;font-size:13.5px">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">Status<span style="background:#EEF0F3;border-radius:8px;padding:5px 12px">Open ⌄</span></div>
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:10px">Order by
+            <select id="sortSel" class="glow" aria-label="排序方式" style="flex:1;max-width:180px;border:0;background:#EEF0F3;border-radius:8px;padding:6px 8px;font:inherit;font-size:13px">
+              <option value="level" selected>User level: Highest first</option>
+              <option value="last_old">Last activity: Oldest first</option>
+              <option value="last_new">Last activity: Newest first</option>
+              <option value="created_new">Created at: Newest first</option>
+              <option value="created_old">Created at: Oldest first</option>
+              <option value="unread">Unread Count: Highest first</option>
+              <option disabled>…Priority、Pending Response 等现有选项全部保留</option>
+            </select>
+          </div>
         </div>
       </div>
       <div class="cw-tabs" role="tablist">
         <button type="button" role="tab" data-go="mine">Mine<em id="cMine">0</em></button>
         <button type="button" role="tab" data-go="unassigned">Unassigned<em id="cUn">0</em></button>
         <button type="button" role="tab" data-go="all">All<em id="cAll">0</em></button>
+        <button type="button" role="tab" data-go="pending">Pending<em id="cPend">0</em></button>
       </div>
       <div class="cw-items" id="items"></div>
     </section>
@@ -122,20 +134,23 @@
 
   <aside class="notes adm-notes">
     <h2>客服后台会话列表</h2>
-    <p class="sub">客服后台 › Conversations（会话）› 中间会话列表。本需求在会话列表的用户名后显示用户身份和等级，并让三个页签按身份和等级排序（带淡色光晕的是本需求新增的标签）。</p>
+    <p class="sub">客服后台 › Conversations（会话）› 中间会话列表。本需求在左侧「Conversations」下所有会话列表的用户名后显示用户身份和等级，并在排序方式里新增「User level: Highest first」、设为默认（带淡色光晕的是本需求新增的内容）。左侧各分类都可以点开查看。</p>
     <h3>模拟场景</h3>
     <div class="sim">
       <button type="button" data-go="unassigned"><span class="simtag">Unassigned</span>现阶段：会员等级 › 会员 › 游客</button>
       <button type="button" data-go="vip"><span class="simtag">Unassigned</span>VIP 上线后：VIP › 会员等级 › 会员 › 游客</button>
-      <button type="button" onclick="document.getElementById('sortBtn').click()"><span class="simtag">排序按钮</span>打开排序按钮，切换同级排序</button>
+      <button type="button" onclick="document.getElementById('sortBtn').click()"><span class="simtag">排序按钮</span>打开排序弹窗，切换排序方式</button>
       <button type="button" id="simNew"><span class="simtag">Unassigned</span>新会话进线（LV 15 插到对应位置）</button>
       <button type="button" data-go="mine"><span class="simtag">Mine</span>按等级排序</button>
       <button type="button" data-go="all"><span class="simtag">All</span>按等级排序</button>
+      <button type="button" data-go="pending"><span class="simtag">Pending</span>按等级排序</button>
+      <button type="button" onclick="document.querySelector('[data-list=&quot;label:deposit_withdrawal&quot;]').click()"><span class="simtag">左侧标签</span>deposit_withdrawal：显示标签、按等级排序</button>
+      <button type="button" onclick="document.querySelector('[data-list=&quot;unattended&quot;]').click()"><span class="simtag">左侧分类</span>Unattended：显示标签、按等级排序</button>
       <button type="button" data-go="empty"><span class="simtag">Unassigned</span>没有待分配会话</button>
     </div>
     <h3>规则批注</h3>
     <ol>
-      <li><b>适用范围</b>：只改这个页面——左侧「All Conversations（全部会话）」的会话列表，含 Mine（分给我的）、Unassigned（未分配）、All（全部）三个页签。左侧其他列表（提到我的、我参与的、未处理、各渠道、各标签）这版不涉及。VIP 客服和普通客服是同一个后台，VIP 用户的会话同样按本页规则显示和排序。<span class="ref"><span class="link-off" title="当前角色不能查看这个页面">后台列表优化 PRD 规则 N1、N3</span> · F01-01 身份和等级标签</span></li>
+      <li><b>适用范围</b>：左侧「Conversations（会话）」下的所有会话列表——All Conversations（含 Mine 分给我的、Unassigned 未分配、All 全部、Pending 待处理页签）、Mentions（提到我的）、Participating（我参与的）、Unattended（未处理）、各渠道、各标签，以及以后新增的会话列表——都显示身份和等级标签，都提供按用户等级排序；会话详情页标题也显示标签。状态筛选不改。VIP 客服和普通客服是同一个后台，规则相同。<span class="ref"><span class="link-off" title="当前角色不能查看这个页面">后台列表优化 PRD 规则 N1、N3</span> · F01-01 身份和等级标签</span></li>
       <li><b>等级来源</b>：普通会员等级取新版会员等级（等级中心 Level Center，后台「用户管理 › 会员等级」配置），按实际配置显示，不写死等级上限；不用旧版 VIP 等级（VIP0–VIP8）。</li>
       <li><b>身份标签</b>（显示在用户名后面，用户名过长时省略用户名，标签完整显示），按顺序取第一个符合的：
         ① VIP 用户：金色「VIP + 等级号」，如「VIP 3」（VIP 上线后才有）；
@@ -143,14 +158,14 @@
         ③ 能识别出平台账号、但没有会员等级：绿色「会员」；
         ④ 识别不出平台账号：灰色图标「游客」（从其他渠道进线、识别不出平台账号的也显示「游客」）。
         等级号是该用户真实等级的序号，不显示等级名称。等级同步失败时沿用上次同步成功的等级；从未同步成功的显示「会员」。</li>
-      <li><b>排序</b>：三个页签都按身份和等级排序：VIP（等级号高在前）› 普通会员等级（等级号高在前）› 会员（没有等级）› 游客；同一等级内按排序按钮所选方式排，默认进线时间先来在前。<span class="ref"><span class="link-off" title="当前角色不能查看这个页面">后台列表优化 PRD 规则 N4</span> · F01-02 按身份和等级排序</span></li>
-      <li><b>排序按钮（⇅）</b>：会话列表标题右边的排序按钮保留，但只在等级排序的基础上排序：始终先按身份和等级排，客服在按钮里选的方式只决定同一等级内的先后（比如选「最近活动」，同一等级内最近有消息的在前）。菜单保留客服后台现有的全部排序选项，另加一项「进线时间（先来在前）」并设为默认；现有选项按客服后台现行方案保留。</li>
+      <li><b>按用户等级排序</b>：排序方式为「User level: Highest first」（默认）时，所有会话列表都按 VIP（等级号高在前）› 普通会员等级（等级号高在前）› 会员（没有等级）› 游客排序；同一等级内按进线时间先来在前，还没转人工的会话（如 Pending 里的）按会话创建时间比较。<span class="ref"><span class="link-off" title="当前角色不能查看这个页面">后台列表优化 PRD 规则 N4</span> · F01-02 按身份和等级排序</span></li>
+      <li><b>排序选项（⇅）</b>：点会话列表标题右边的排序按钮，弹窗的「Order by（排序方式）」下拉列表第一项新增「User level: Highest first」并默认选中；其余现有选项全部保留。客服选哪一项，列表就按哪一项排序；选其他选项（如「Last activity: Newest first」）时，排序值相同的会话（如最近活动时间相同）再按用户等级从高到低排；身份和等级标签照常显示。所选项是否记住，沿用客服后台现有处理。<span class="ref"><span class="link-off" title="当前角色不能查看这个页面">后台列表优化 PRD 规则 N5</span> · F01-03 排序选项新增用户等级</span></li>
       <li><b>状态筛选</b>：列表左上角的状态筛选（截图中的「Open」）功能保持平台现状，本需求不改。</li>
-      <li><b>排序在服务端完成</b>：列表滚动加载，排序由客服后台服务端完成，每一批都按排好的顺序返回，不能只对已加载的部分排序。</li>
+      <li><b>排序在服务端完成</b>：列表滚动加载，按用户等级排序时，排序由客服后台服务端完成，每一批都按排好的顺序返回，不能只对已加载的部分排序。</li>
       <li><b>新会话进线</b>：和已加载的会话比对等级：比已加载的会话中某一条的等级高，就直接插入列表对应位置；比已加载的都低，就在继续向下加载时出现在对应位置。不固定放在最上面或最下面。</li>
-      <li><b>等级变化时</b>：会话进行中用户等级变化，列表每次刷新都取最新等级，并按新等级重新排序。</li>
+      <li><b>等级变化时</b>：会话进行中用户等级变化，标签按最新等级显示；按用户等级排序时，列表每次刷新都按新等级重新排序。</li>
       <li><b>防止列表跳动</b>：鼠标停在会话列表上时暂停重排，移开 2 秒后再按最新顺序刷新；当前打开的会话始终保持选中高亮。</li>
-      <li><b>进线时间</b>：原则上取会话转人工的时间；取消分配、已解决后重新打开等情况，由研发按客服后台现行方案确定。</li>
+      <li><b>进线时间</b>：原则上取会话转人工的时间；取消分配、已解决后重新打开等情况，由研发按客服后台现行方案确定。还没转人工的会话没有进线时间，排序时用会话创建时间代替。</li>
       <li><b>等级数据</b>：等级只能以平台的真实数据为准，玩家端不能修改；同步方式和防篡改的具体实现由研发依据平台现行方案确定。</li>
       <li><b>这版不做</b>：低等级用户等待超时置顶。风险：按等级排序后，高峰期低等级玩家、会员和游客的等待时间可能变长。</li>
     </ol>
@@ -196,20 +211,48 @@
     if (c.lv != null) return 100 + c.lv;
     return c.acct !== false ? 1 : 0;
   }
-  var sub = "in";   /* 排序按钮选的同级排序：in 进线时间先来在前（默认）/ last 最近活动最新在前 */
+  /* 排序方式（Order by）：level 用户等级从高到低（新增，默认）；其他为客服后台现有选项，选中后按该方式排，排序值相同时再按用户等级从高到低排。
+     last 为最近活动距今分钟数，inAt 为进线（创建）距今分钟数，越大越早 */
+  var sub = "level";
+  var BY = {
+    last_old: function (a, b) { return b.last - a.last; }, last_new: function (a, b) { return a.last - b.last; },
+    created_new: function (a, b) { return a.inAt - b.inAt; }, created_old: function (a, b) { return b.inAt - a.inAt; },
+    unread: function (a, b) { return b.un - a.un; }
+  };
   function rank(a, b) {
-    var d = key(b) - key(a);
-    return d || (sub === "last" ? a.last - b.last : b.inAt - a.inAt);
+    var d = sub === "level" ? (key(b) - key(a)) || (b.inAt - a.inAt) : BY[sub](a, b) || (key(b) - key(a));
+    return d || a.id - b.id;
   }
   function un() { return BASE.concat(extra ? [extra] : []); }
+  /* 左侧各分类的示例归属：lb 标签；men 提到我；part 我参与；pend 待处理（Pending 页签） */
+  var META = { 7: { lb: "other", pend: 1 }, 8: { lb: "other", pend: 1 }, 1: { lb: "other" }, 2: { lb: "deposit_withdrawal" }, 3: { lb: "deposit_withdrawal", men: 1 },
+    4: { lb: "kyc" }, 5: { lb: "deposit_withdrawal" }, 6: { lb: "bets_games", part: 1 }, 11: { lb: "other", part: 1 }, 12: { lb: "promotions", men: 1, part: 1 }, 99: { lb: "deposit_withdrawal" } };
+  function m(c) { return META[c.id] || {}; }
+  /* 当前左侧分类：all = All Conversations（有 Mine / Unassigned / All / Pending 页签）；其他分类同样显示标签、同样可按用户等级排序 */
+  var listKey = "all";
+  var LIST = {
+    mentions: { t: "Mentions", f: function (c) { return m(c).men; } },
+    participating: { t: "Participating", f: function (c) { return m(c).part; } },
+    unattended: { t: "Unattended", f: function (c) { return c.un > 0; } },
+    inbox: { t: "789 H5 Chat", f: function () { return true; } }
+  };
+  function listDef(k) { return k.indexOf("label:") === 0 ? { t: k.slice(6), f: function (c) { return m(c).lb === k.slice(6); } } : LIST[k]; }
 
   function render(tab, empty) {
-    var list = tab === "unassigned" ? (empty ? [] : un().slice().sort(rank))
-             : tab === "mine" ? MINE.slice().sort(rank)
-             : (empty ? [] : un()).concat(MINE).sort(rank);
+    var pool = (empty ? [] : un()).concat(MINE), list;
+    if (listKey === "all") {
+      list = tab === "unassigned" ? (empty ? [] : un().slice())
+           : tab === "mine" ? MINE.slice()
+           : tab === "pending" ? pool.filter(function (c) { return m(c).pend; })
+           : pool;
+    } else list = un().concat(MINE).filter(listDef(listKey).f);
+    list = list.slice().sort(rank);
+    document.getElementById("listTitle").textContent = listKey === "all" ? "Conversations" : listDef(listKey).t;
+    document.querySelector(".cw-tabs").style.display = listKey === "all" ? "" : "none";
     document.getElementById("cMine").textContent = MINE.length;
     document.getElementById("cUn").textContent = empty ? 0 : un().length;
     document.getElementById("cAll").textContent = (empty ? 0 : un().length) + MINE.length;
+    document.getElementById("cPend").textContent = pool.filter(function (c) { return m(c).pend; }).length;
     document.querySelectorAll(".cw-tabs button").forEach(function (b) { b.classList.toggle("on", b.dataset.go === tab); b.setAttribute("aria-selected", b.dataset.go === tab); });
     var box = document.getElementById("items");
     if (!list.length) { box.innerHTML = '<div class="cw-empty">There are no active conversations in this group.</div>'; return; }
@@ -223,12 +266,14 @@
   }
 
   var cur = "unassigned";
+  function curTab() { return cur === "vip" || cur === "empty" ? "unassigned" : cur; }
+  function navOn() { document.querySelectorAll(".cw-nav [data-list]").forEach(function (d) { d.classList.toggle("on", d.dataset.list === listKey); }); }
   function show(view) {
-    if (["unassigned", "vip", "mine", "all", "empty"].indexOf(view) < 0) view = "unassigned";
+    if (["unassigned", "vip", "mine", "all", "pending", "empty"].indexOf(view) < 0) view = "unassigned";
     vipOn = view === "vip";
     if (view !== "unassigned") extra = null;
-    var tab = view === "vip" || view === "empty" ? "unassigned" : view;
-    cur = view; render(tab, view === "empty");
+    listKey = "all"; navOn();
+    cur = view; render(curTab(), view === "empty");
     if (location.hash.slice(1) !== view) history.replaceState(null, "", "#" + view);
     /* 嵌在「运营需求确认」页时，把当前视图告诉外层，用来同步切换按钮 */
     if (window.self !== window.top) window.parent.postMessage({ type: "proto-view", view: view }, "*");
@@ -236,9 +281,14 @@
   window.addEventListener("hashchange", function () { show(location.hash.slice(1) || "unassigned"); });
   document.addEventListener("click", function (e) {
     var b = e.target.closest("[data-go]"); if (b) { e.preventDefault(); sel = null; show(b.dataset.go); return; }
+    var nv = e.target.closest(".cw-nav [data-list]"); if (nv) {
+      sel = null;
+      if (nv.dataset.list === "all") { show(cur); return; }
+      listKey = nv.dataset.list; navOn(); render(curTab(), false); return;
+    }
     var it = e.target.closest(".cw-it"); if (it) {
       var c = un().concat(MINE).filter(function (x) { return x.id === +it.dataset.id; })[0];
-      sel = c.id; render(cur === "vip" || cur === "empty" ? "unassigned" : cur, cur === "empty");
+      sel = c.id; render(curTab(), cur === "empty");
       document.getElementById("main").innerHTML = '<div class="cw-conv"><div class="hd"><div class="cw-av">P</div><b>' + c.nm + '</b>' + tag(c) + '</div><div class="bd"><p>' + c.msg + '</p></div></div>';
     }
   });
@@ -246,10 +296,10 @@
   document.getElementById("sortBtn").onclick = function () { menu.hidden = !menu.hidden; };
   menu.addEventListener("change", function (e) {
     sub = e.target.value; menu.hidden = true;
-    render(cur === "vip" || cur === "empty" ? "unassigned" : cur, cur === "empty");
+    render(curTab(), cur === "empty");
   });
   document.getElementById("simNew").onclick = function () {
-    if (cur !== "unassigned") show("unassigned");
+    if (cur !== "unassigned" || listKey !== "all") show("unassigned");
     extra = { id: 99, nm: "Playerh5j6k30028", lv: 15, vip: null, inAt: 0, last: 0, un: 1, msg: "Connecting you to a live agent, please wait…", isNew: true };
     render("unassigned", false);
     setTimeout(function () { if (extra) extra.isNew = false; }, 2500);

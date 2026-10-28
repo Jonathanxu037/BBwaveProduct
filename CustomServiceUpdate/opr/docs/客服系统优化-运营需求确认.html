@@ -839,7 +839,7 @@
     S.mod = null; persist(); render(); say("已放弃修改");
   }
   function exportHTML(v) {
-    return '<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>客服系统优化-运营需求确认</title>' +
+    return '<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>' + esc(v.name) + '</title>' +
       '<style>body{font-family:"Microsoft YaHei","微软雅黑",sans-serif;max-width:1000px;margin:32px auto;padding:0 16px;line-height:1.7;color:#1B1720;background:#fff}h1{font-size:19px;border-bottom:2px solid #C89A3C;padding-bottom:8px}.m{color:#6A6076;font-size:13px}table{border-collapse:collapse;width:100%;font-size:13px}th,td{border:1px solid #D9D2E4;padding:8px;text-align:left;vertical-align:top}th{background:#F3EFF8;white-space:nowrap}td:first-child,td:last-child,td:nth-child(4){white-space:nowrap;text-align:center}img{max-width:280px;display:block;margin:0 0 6px;border:1px solid #D9D2E4;border-radius:4px}.p高{color:#C00000;font-weight:700}.d确认修改{color:#237804;font-weight:700}.d部分修改{color:#AD6800;font-weight:700}.d不修改{color:#6A6076;font-weight:700}.d待确认{color:#1677FF}</style></head><body>' +
       "<h1>" + esc(v.name) + '</h1><p class="m">' + stats(v) + (v.from ? " · 由「" + esc(v.from) + "」修改" : "") + "</p>" + verTable(v) +
       /* 内嵌数据：在「运营需求确认」页点「导入版本文件」可以读回（含产品回复和结果） */

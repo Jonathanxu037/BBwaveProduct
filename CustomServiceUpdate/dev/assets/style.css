@@ -955,7 +955,7 @@ body.pub-admin .adm-stage{grid-template-columns:minmax(0,1fr)}
 .cc-tag{display:inline-block;font-size:12px;border-radius:10px;padding:0 8px;background:#F5F5F5;color:#595959}
 .cc-tag.t采纳{background:#F6FFED;color:#237804}.cc-tag.t部分采纳{background:#FFFBE6;color:#AD6800}.cc-tag.t不采纳{background:#FFF1F0;color:#CF1322}
 
-/* 引用编号按钮和浮窗（生成内容规范第五章第 2 节「引用编号」，规范 v5.76，同模板） */
+/* PRD 引用编号按钮和浮窗（生成内容规范第五章第 2 节「引用编号」） */
 .ref-btn{font-family:var(--font);font-size:.92em;font-weight:700;line-height:1.3;padding:0 5px;margin:0 1px;border:1px solid #D6C3F0;border-radius:4px;background:#F6F0FD;color:#5B2A9E;cursor:pointer;vertical-align:baseline}
 .ref-btn:hover{background:#EBDDFB}
 .ref-btn:focus-visible{outline:2px solid var(--gold);outline-offset:1px}
@@ -964,8 +964,12 @@ body.pub-admin .adm-stage{grid-template-columns:minmax(0,1fr)}
 .ref-pop p{margin:0 0 4px}
 .ref-pop a{font-size:12px}
 @media print{.ref-btn{border:0;background:none;padding:0;color:inherit;font-weight:inherit}.ref-pop{display:none}}
+
 /* PRD 表格自动列宽（生成内容规范第五章第 2 节「表格排版」）：带 data-fit 的表铺满正文宽度、单元格允许换行，列宽由 PRD 页面脚本计算 */
-.paper table[data-fit]{table-layout:fixed;width:100%;min-width:0}
-.paper table[data-fit] th,.paper table[data-fit] td{white-space:normal!important;word-break:break-word;overflow-wrap:anywhere;font-size:12px;line-height:1.5;padding:5px 6px;vertical-align:top}
+.paper table[data-fit],.mcard table[data-fit]{table-layout:fixed;width:100%;min-width:0}
+.paper table[data-fit] th,.paper table[data-fit] td,.mcard table[data-fit] th,.mcard table[data-fit] td{white-space:normal!important;word-break:break-word;overflow-wrap:anywhere;font-size:12px;line-height:1.5;padding:5px 6px;vertical-align:top}
 .paper table[data-fit] th{text-align:left}
+/* 可编辑的确认页表格（运营需求确认的版本表、文案确认）：内容由页面脚本反复重画、含输入框，不用 data-fit；单元格强制换行，手机宽度改为每条一张卡片，同样不出现水平滚动（生成内容规范第五章第 2 节） */
+.mcard td,.oc-vt td,.cc-t td{word-break:break-word;overflow-wrap:anywhere}
+@media (max-width:640px){.oc-vt,.oc-vt thead,.oc-vt tbody,.oc-vt tr,.oc-vt td,.cc-t,.cc-t thead,.cc-t tbody,.cc-t tr,.cc-t td{display:block;width:auto!important;min-width:0!important}.oc-vt thead,.cc-t thead{display:none}.oc-vt tr,.cc-t tr{border:1px solid var(--line);border-radius:8px;margin-bottom:10px;padding:6px}.oc-vt td,.cc-t td{border:0!important;padding:4px;text-align:left!important;white-space:normal!important}}
 .paper .cell-sub{color:#8a8f98;font-size:11px}

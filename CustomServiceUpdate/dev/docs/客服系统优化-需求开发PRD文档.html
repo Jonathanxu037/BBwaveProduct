@@ -33,20 +33,20 @@
 <p>与本文档其他章节冲突时，以本章为准。</p>
 <div class="tbl"><table data-fit>
 <tr><th>类别</th><th>本迭代包含</th><th>顺延至</th></tr>
-<tr data-fp="F01"><td>客服后台</td><td class="w">「All Conversations（全部会话）」页面会话列表的 Mine（分给我的）、Unassigned（未分配）、All（全部）三个页签：身份和等级标签、按身份和等级排序、排序按钮改为同级排序（N1–N10）</td><td>—</td></tr>
-<tr><td>不包含</td><td class="w">左侧其他会话列表（提到我的、我参与的、未处理、各渠道、各标签）；状态筛选；低等级玩家等待超时置顶；新增数据埋点</td><td>不顺延</td></tr>
+<tr data-fp="F01"><td>客服后台</td><td class="w">左侧「Conversations（会话）」下的所有会话列表和会话详情：身份和等级标签、排序方式新增「User level: Highest first」并设为默认（N1–N10）</td><td>—</td></tr>
+<tr><td>不包含</td><td class="w">状态筛选；页签计数；低等级玩家等待超时置顶；新增数据埋点</td><td>不顺延</td></tr>
 </table></div>
 
 <h2 id="a-c1">1. 项目概述</h2>
 <div class="tbl"><table data-fit>
 <tr><th>项目</th><th>说明</th></tr>
-<tr data-fp="F01"><td>需求描述</td><td class="w">客服后台会话列表在用户名后显示玩家的身份和等级，并按身份和等级从高到低排序。</td></tr>
+<tr data-fp="F01"><td>需求描述</td><td class="w">客服后台所有会话列表在用户名后显示玩家的身份和等级；排序方式新增「User level: Highest first」并设为默认。</td></tr>
 <tr><td>背景与目标</td><td class="w">待回复会话目前不区分玩家价值，高等级玩家得不到优先接待；按等级排序后，客服从上往下接待即可先回复高等级玩家。</td></tr>
 <tr><td>名词</td><td class="w"><b>会员等级</b>：新版会员等级（Level Center，等级中心），在后台【用户管理 › 会员等级】按有效投注累计值配置，显示为「LV 12」。<br>
 <b>VIP 等级</b>：VIP 会员体系上线后的 VIP 当前等级，显示为「VIP 3」；上线前不出现。<br>
 <b>会员</b>：能识别出平台账号、但没有会员等级的玩家。<br>
 <b>游客</b>：客服后台识别不出平台账号的联系人。<br>
-<b>进线时间</b>：会话转人工、进入 Unassigned（未分配）的时间，取值细则见 N8。</td></tr>
+<b>进线时间</b>：会话转人工、进入 Unassigned（未分配）的时间（N8）。</td></tr>
 <tr><td>多端范围</td><td class="w">客服后台：改会话列表。平台服务端：向客服后台同步等级。前台：不涉及。</td></tr>
 <tr><td>时间与时区</td><td class="w">业务时间按 GMT+8；上线时间待排期。</td></tr>
 </table></div>
@@ -58,7 +58,7 @@
   <div class="fa">↓</div>
   <div class="fs" data-fp="F01-01"><div class="no">2</div><div><b>识别身份和等级</b>：按平台账号得到 VIP / LV / 会员 / 游客标签（N3）。</div></div>
   <div class="fa">↓</div>
-  <div class="fs key" data-fp="F01-02"><div class="no">3</div><div><b>排序插入</b>：客服后台服务端把会话插入三个页签的对应位置（N4–N6）。</div></div>
+  <div class="fs key" data-fp="F01-02"><div class="no">3</div><div><b>排序插入</b>：客服后台服务端把会话插入各会话列表的对应位置（N4–N6）。</div></div>
   <div class="fa">↓</div>
   <div class="fs key" data-fp="F01-02"><div class="no">4</div><div><b>客服接入</b>：客服从上往下接待 → 会话进入 Mine（分给我的），标签和排序规则不变。</div></div>
 </div>
@@ -74,19 +74,19 @@
 <div class="tbl"><table data-fit>
 <tr><th>规则</th><th>说明</th><th>依据</th></tr>
 <tr><td>会员等级</td><td class="w">新版会员等级在【用户管理 › 会员等级】按有效投注累计值配置，只能新增或从末级往前删除；与旧版 VIP 等级（VIP0–VIP8）两套并存</td><td>管理后台知识库 §4.1.5、§4.1.6</td></tr>
-<tr><td>客服后台会话列表</td><td class="w">左上角状态筛选（Open 等），三个页签 Mine / Unassigned / All，右上角排序按钮；列表滚动加载</td><td>客服后台现状（截图，2026-10-22）</td></tr>
+<tr><td>客服后台会话列表</td><td class="w">左侧「Conversations」下有 All Conversations（全部会话，含 Mine / Unassigned / All / Pending 页签）、Mentions（提到我的）、Participating（我参与的）、Unattended（未处理）、Channels（各渠道，目前只有 789 H5 Chat）、Labels（各标签）；右上角排序按钮（⇅）弹窗含「Status（状态）」筛选和「Order by（排序方式）」下拉，现有排序选项：Last activity（最近活动）、Created at（创建时间）、Unread Count（未读数）、Priority（优先级）、Pending Response（等待回复时长）等；列表滚动加载</td><td>客服后台现状（截图，2026-10-22、2026-10-26）</td></tr>
 </table></div>
 <h3 id="a-c3-2">3.2 本需求规则</h3>
 <div class="tbl"><table data-fit>
 <tr><th>编号</th><th>规则</th><th>起因</th><th>功能点</th></tr>
-<tr id="n1" data-brief="只改「All Conversations」页面 Mine、Unassigned、All 三个页签；VIP 客服是同一后台，规则相同。" data-fp="F01-01"><td>N1</td><td class="w"><b>适用范围</b>：只改「All Conversations（全部会话）」页面会话列表的 Mine、Unassigned、All 三个页签，左侧其他列表和状态筛选不改。VIP 客服与普通客服共用同一后台，规则相同</td><td class="w">需求评审结论（2026-10-22、2026-10-23）</td><td><span class="fp">F01-01</span> 身份和等级标签</td></tr>
+<tr id="n1" data-brief="左侧「Conversations」下所有会话列表（含各页签）和会话详情都显示标签、都有按用户等级排序；状态筛选不改。" data-fp="F01-01"><td>N1</td><td class="w"><b>适用范围</b>：左侧「Conversations（会话）」下的所有会话列表（All Conversations 的 Mine、Unassigned、All、Pending 页签，Mentions、Participating、Unattended、各渠道、各标签，含以后新增的列表）和会话详情页标题，都显示身份和等级标签（N3）；所有会话列表都提供按用户等级排序（N4、N5）。状态筛选不改。VIP 客服与普通客服共用同一后台，规则相同</td><td class="w">需求评审结论（2026-10-22、2026-10-23、2026-10-26）</td><td><span class="fp">F01-01</span> 身份和等级标签</td></tr>
 <tr id="n2" data-brief="取新版会员等级，按后台实际配置，不写死上限；VIP 上线后，有 VIP 等级的取 VIP 当前等级。" data-fp="F01-01"><td>N2</td><td class="w"><b>等级来源</b>：取新版会员等级，按后台实际配置显示，不写死上限，不用旧版 VIP 等级（VIP0–VIP8）。VIP 会员体系上线后，有 VIP 等级的玩家取 VIP 当前等级</td><td class="w">两套等级并存（管理后台知识库 §4.1.5）</td><td><span class="fp">F01-01</span> 身份和等级标签</td></tr>
-<tr id="n3" data-brief="按顺序取第一个符合的：VIP 用户金色「VIP + 等级号」› 普通用户蓝紫色「LV + 等级号」（含 LV 0）› 有账号无等级「会员」绿色 › 识别不出账号「游客」灰色；等级号是用户真实等级的序号，不显示等级名称；同步失败沿用上次成功的等级。" data-fp="F01-01"><td>N3</td><td class="w"><b>身份标签</b>：按用户分类显示，按顺序取第一个符合的：① VIP 用户：金色「VIP + 等级号」，如「VIP 3」；② 普通用户（有会员等级，含 LV 0）：蓝紫色「LV + 等级号」，如「LV 12」；③ 能识别出平台账号、但没有会员等级：绿色「会员」；④ 识别不出平台账号：灰色「游客」（带图标），从其他渠道进线、识别不出平台账号的联系人同样显示「游客」。等级号是该用户真实等级的序号，不显示等级名称。等级同步失败时沿用上次同步成功的等级；从未同步成功的显示「会员」</td><td class="w">客服需要一眼看出玩家价值；避免同步失败把高等级玩家排到后面</td><td><span class="fp">F01-01</span> 身份和等级标签</td></tr>
-<tr id="n4" data-brief="三个页签都按：VIP（等级号高→低）› 会员等级（等级号高→低）› 会员 › 游客；同一等级内按排序按钮所选方式排。" data-fp="F01-02"><td>N4</td><td class="w"><b>排序</b>：三个页签都按 VIP（等级号高在前）› 会员等级（等级号高在前）› 会员 › 游客排序，等级号按用户真实等级；同一等级内按排序按钮所选方式排（N5）</td><td class="w">高等级玩家优先接待</td><td><span class="fp">F01-02</span> 按身份和等级排序</td></tr>
-<tr id="n5" data-brief="排序按钮只决定同一等级内的先后；保留现行选项，新增「进线时间（先来在前）」并设为默认。" data-fp="F01-03"><td>N5</td><td class="w"><b>排序按钮</b>：保留列表右上角排序按钮，所选方式只决定同一等级内的先后。菜单保留现有全部选项，新增「进线时间（先来在前）」并设为默认</td><td class="w">需求评审结论（2026-10-23）</td><td><span class="fp">F01-03</span> 排序按钮同级排序</td></tr>
-<tr id="n6" data-brief="服务端排好后分批返回，顺序相同时按会话 ID 兜底；新会话按等级插入已加载列表，比已加载的都低时在向下加载时出现。" data-fp="F01-02"><td>N6</td><td class="w"><b>服务端排序与新会话插入</b>：排序在客服后台服务端完成，按排好的顺序分批返回，不能只对页面上已加载的部分排序；顺序完全相同时按会话 ID 兜底，保证分批加载不重复、不遗漏。新会话进线时：比已加载的某条等级高，直接插入对应位置；比已加载的都低，向下加载到对应位置时出现</td><td class="w">列表滚动加载，只在页面上排序会让后面批次的高等级玩家排在低等级玩家之后</td><td><span class="fp">F01-02</span> 按身份和等级排序</td></tr>
-<tr id="n7" data-brief="刷新时取最新等级重排；鼠标停在列表上暂停重排，移开 2 秒后刷新。" data-fp="F01-04"><td>N7</td><td class="w"><b>等级变化与防跳动</b>：会话进行中玩家等级变化，列表每次刷新都按最新等级重排。鼠标停在会话列表上时暂停重排，移开 2 秒后按最新顺序刷新；当前打开的会话始终保持选中高亮</td><td class="w">避免列表突然变化导致客服点错会话</td><td><span class="fp">F01-04</span> 进线与等级变化</td></tr>
-<tr id="n8" data-brief="原则上取转人工时间；取消分配、重新打开等情况由研发按现行规则确定并记录。" data-fp="F01-04"><td>N8</td><td class="w"><b>进线时间</b>：原则上取会话转人工的时间；取消分配、已解决后重新打开等情况，由研发按客服后台现有规则确定。客服后台需记录该时间</td><td class="w">客服后台没有现成的「转人工时间」字段</td><td><span class="fp">F01-04</span> 进线与等级变化</td></tr>
+<tr id="n3" data-brief="按顺序取第一个符合的：金色「VIP + 等级号」› 蓝紫色「LV + 等级号」（含 LV 0）› 绿色「会员」› 灰色「游客」；等级号取真实等级序号；同步失败沿用上次成功的等级。" data-fp="F01-01"><td>N3</td><td class="w"><b>身份标签</b>：按顺序取第一个符合的：① VIP 用户：金色「VIP + 等级号」，如「VIP 3」；② 有会员等级（含 LV 0）：蓝紫色「LV + 等级号」，如「LV 12」；③ 识别出平台账号但没有会员等级：绿色「会员」；④ 识别不出平台账号（含其他渠道进线的联系人）：灰色「游客」，带图标。等级号取用户真实等级的序号，不显示等级名称。等级同步失败时沿用上次同步成功的等级，从未同步成功的显示「会员」</td><td class="w">客服需要一眼看出玩家价值；避免同步失败把高等级玩家排到后面</td><td><span class="fp">F01-01</span> 身份和等级标签</td></tr>
+<tr id="n4" data-brief="选「User level: Highest first」（默认）时：VIP（等级号高→低）› 会员等级（等级号高→低）› 会员 › 游客；同一等级内进线时间先来在前。" data-fp="F01-02"><td>N4</td><td class="w"><b>按用户等级排序</b>：排序方式为「User level: Highest first」（默认，N5）时，按 VIP（等级号高在前）› 会员等级（等级号高在前）› 会员 › 游客排序；同一等级内按进线时间先来在前（N8）</td><td class="w">高等级玩家优先接待</td><td><span class="fp">F01-02</span> 按身份和等级排序</td></tr>
+<tr id="n5" data-brief="排序弹窗「Order by」新增「User level: Highest first」并设为默认；选哪项就按哪项排，其他方式排序值相同时再按用户等级从高到低排。" data-fp="F01-03"><td>N5</td><td class="w"><b>排序选项</b>：排序弹窗（⇅）的「Order by（排序方式）」下拉第一项新增「User level: Highest first」（界面只显示英文，意为按用户等级从高到低）并设为默认，现有选项全部保留。选哪项按哪项排；选其他项时，排序值相同的会话（如最近活动时间相同）再按 N4 的等级顺序排，仍相同按会话 ID。所选项是否记住，沿用客服后台现有处理</td><td class="w">需求评审结论（2026-10-23、2026-10-26）</td><td><span class="fp">F01-03</span> 排序选项新增用户等级</td></tr>
+<tr id="n6" data-brief="服务端排好后分批返回，顺序相同时按会话 ID 兜底；新会话按等级插入已加载列表，比已加载的都低时在向下加载时出现。" data-fp="F01-02"><td>N6</td><td class="w"><b>服务端排序与新会话插入</b>：按用户等级排序在客服后台服务端完成，按顺序分批返回，不能只排已加载的部分；顺序完全相同按会话 ID 兜底，保证分批不重不漏。新会话比已加载的某条等级高，直接插入对应位置；比已加载的都低，向下加载时出现在对应位置</td><td class="w">列表滚动加载，只在页面上排序会让后面批次的高等级玩家排在低等级玩家之后</td><td><span class="fp">F01-02</span> 按身份和等级排序</td></tr>
+<tr id="n7" data-brief="刷新时取最新等级重排；鼠标停在列表上暂停重排，移开 2 秒后刷新。" data-fp="F01-04"><td>N7</td><td class="w"><b>等级变化与防跳动</b>：玩家等级变化后标签显示最新等级；按用户等级排序时，列表刷新即按最新等级重排。鼠标停在列表上时暂停重排，移开 2 秒后刷新；当前打开的会话保持选中高亮</td><td class="w">避免列表突然变化导致客服点错会话</td><td><span class="fp">F01-04</span> 进线与等级变化</td></tr>
+<tr id="n8" data-brief="原则上取转人工时间；取消分配、重新打开等情况由研发按现行规则确定并记录；没转人工的用创建时间代替。" data-fp="F01-04"><td>N8</td><td class="w"><b>进线时间</b>：取会话转人工的时间，客服后台需记录；取消分配、已解决后重新打开等情况由研发按客服后台现有规则确定。还没转人工的会话（如 Pending 里的）用会话创建时间代替</td><td class="w">客服后台没有现成的「转人工时间」字段</td><td><span class="fp">F01-04</span> 进线与等级变化</td></tr>
 <tr id="n9" data-brief="等级只允许平台服务端写入，不采用玩家端传来的等级。" data-fp="F01-04"><td>N9</td><td class="w"><b>等级数据</b>：等级只允许平台服务端写入，不采用玩家端传来的等级；同步方式、触发时机和防篡改实现由研发确定</td><td class="w">客服窗口运行在玩家端，防止玩家伪造等级插队</td><td><span class="fp">F01-04</span> 进线与等级变化</td></tr>
 <tr id="n10" data-brief="本版不做低等级玩家等待超时置顶。" data-fp="F01-02"><td>N10</td><td class="w"><b>本版不做</b>：低等级玩家等待超时置顶</td><td class="w">需求评审结论（2026-10-22）；风险见 <a href="#a-c8">8. 风险与依赖</a></td><td><span class="fp">F01-02</span> 按身份和等级排序</td></tr>
 </table></div>
@@ -104,18 +104,18 @@
 <p><span class="warn-2">※ 测试环境值只用于测试和原型演示，和生产环境不一定相同；上线前按生产配置核对。</span></p>
 
 <h2 id="a-c4">4. 客服后台需求：会话列表</h2>
-<p>原型：<a href="../prototype/admin/客服系统优化-客服后台会话列表.html#unassigned">客服后台会话列表</a>（模拟场景：现阶段、VIP 上线后、排序按钮、新会话进线、Mine、All、没有待分配会话）</p>
+<p>原型：<a href="../prototype/admin/客服系统优化-客服后台会话列表.html#unassigned">客服后台会话列表</a>（模拟场景：现阶段、VIP 上线后、排序弹窗、新会话进线、Mine、All、Pending、左侧标签和分类、没有待分配会话；左侧各分类可点开）</p>
 <h3 id="a-c4-1">4.1 页面与交互</h3>
 <div class="tbl"><table data-fit>
 <tr><th>功能</th><th>说明</th></tr>
-<tr data-fp="F01-01"><td><span class="fp">F01-01</span> 身份和等级标签</td><td class="w">显示在会话列表每条会话的用户名后，以及会话详情页标题的用户名后；用户名过长时省略用户名，标签始终完整显示</td></tr>
-<tr data-fp="F01-03"><td><span class="fp">F01-03</span> 排序按钮</td><td class="w">菜单标题改为「先按身份和等级排，同一等级内：」</td></tr>
-<tr><td>页签计数、状态筛选、其他列表</td><td class="w">不改</td></tr>
+<tr data-fp="F01-01"><td><span class="fp">F01-01</span> 身份和等级标签</td><td class="w">显示在所有会话列表每条会话的用户名后，以及会话详情页标题的用户名后；用户名过长时省略用户名，标签始终完整显示</td></tr>
+<tr data-fp="F01-03"><td><span class="fp">F01-03</span> 排序弹窗</td><td class="w">「Order by」下拉列表第一项新增「User level: Highest first」，默认选中，下拉框显示该项名称；「Status（状态）」筛选和其他选项不变</td></tr>
+<tr><td>页签计数、状态筛选</td><td class="w">不改</td></tr>
 </table></div>
 <h3 id="a-c4-2">4.2 列表分页</h3>
 <div class="tbl"><table data-fit>
 <tr><th>列表（所在页面）</th><th>分页方式</th><th>每页条数（默认 / 可选）</th><th>默认排序</th><th>筛选、搜索、操作后停在哪一页</th><th>空列表 / 加载失败</th><th>导出</th></tr>
-<tr data-fp="F01-02"><td class="w">会话列表 Mine / Unassigned / All（All Conversations 页面）</td><td>沿用现有滚动加载</td><td>沿用客服后台现行方案</td><td class="w">N4–N6</td><td class="w">切换页签、状态筛选、排序方式后从头加载</td><td class="w">沿用现有（空列表文案「There are no active conversations in this group.」）</td><td>不涉及</td></tr>
+<tr data-fp="F01-02"><td class="w">所有会话列表（All Conversations 各页签、Mentions、Participating、Unattended、各渠道、各标签）</td><td>沿用现有滚动加载</td><td>沿用客服后台现行方案</td><td class="w">N4–N6</td><td class="w">切换左侧分类、页签、状态筛选、排序方式后从头加载</td><td class="w">沿用现有（空列表文案「There are no active conversations in this group.」）</td><td>不涉及</td></tr>
 </table></div>
 <h3 id="a-c4-3">4.3 帮助提示内容</h3>
 <p>本需求没有新增可配置的数据项，不新增「?」帮助提示。</p>
@@ -129,10 +129,10 @@
 <li data-fp="F01-01"><span class="fp">F01-01</span> VIP 上线前，会员等级号为 12 的玩家显示「LV 12」，LV 0 的玩家显示「LV 0」；有账号无等级的显示「会员」；没有平台账号的显示「游客」；用户名很长时标签不被截断。</li>
 <li data-fp="F01-01"><span class="fp">F01-01</span> VIP 上线后，VIP 用户显示金色「VIP + 等级号」（如 VIP 等级号为 3 的显示「VIP 3」），不再显示会员等级。</li>
 <li data-fp="F01-01"><span class="fp">F01-01</span> 等级同步失败：已同步过 LV 20 的玩家仍显示「LV 20」；从未同步成功的显示「会员」。</li>
-<li data-fp="F01-02"><span class="fp">F01-02</span> Unassigned 中有 LV 25、LV 12（进线 7 分钟前）、LV 12（进线 3 分钟前）、LV 0、会员、游客各一条：顺序为 LV 25 → LV 12（7 分钟前）→ LV 12（3 分钟前）→ LV 0 → 会员 → 游客；Mine 和 All 同样规则。</li>
+<li data-fp="F01-02"><span class="fp">F01-02</span> Unassigned 中有 LV 25、LV 12（进线 7 分钟前）、LV 12（进线 3 分钟前）、LV 0、会员、游客各一条：顺序为 LV 25 → LV 12（7 分钟前）→ LV 12（3 分钟前）→ LV 0 → 会员 → 游客；其他页签和左侧各分类列表同样规则。</li>
 <li data-fp="F01-02"><span class="fp">F01-02</span> 准备 30 条以上会话（超过一批），最后一批里放一条最高等级会话：打开列表时它排第一。</li>
 <li data-fp="F01-02"><span class="fp">F01-02</span> 新进一条 LV 15 会话：插在已加载的 LV 25 和 LV 12 之间；新进一条比已加载都低的会话：继续向下加载时出现在对应位置。</li>
-<li data-fp="F01-03"><span class="fp">F01-03</span> 排序按钮默认选中「进线时间（先来在前）」；改选「最近活动」后，等级顺序不变，只有同一等级内按最近活动排；现有选项都还在。</li>
+<li data-fp="F01-03"><span class="fp">F01-03</span> 「Order by」默认选中「User level: Highest first」，现有选项都在；改选「Last activity: Newest first」后按最近活动排，最近活动时间相同的等级高的在前；改回后恢复按等级排。</li>
 <li data-fp="F01-04"><span class="fp">F01-04</span> 会话进行中玩家从 LV 12 升到 LV 13：列表刷新后标签和位置更新；鼠标停在列表上时不重排，移开 2 秒后重排。</li>
 <li data-fp="F01-04"><span class="fp">F01-04</span> 在玩家端改等级参数后进线：客服后台显示的仍是真实等级（绕过前端直接调接口同样无效）。</li>
 </ol>
@@ -150,7 +150,7 @@
 <ul>
 <li><b>上线前</b>：先给存量联系人补齐会员等级，否则上线初期大量会话显示「会员」或「游客」。</li>
 <li><b>开关</b>：不加新开关。</li>
-<li><b>上线后验证</b>：按验收第 4 条抽查三个页签的顺序。</li>
+<li><b>上线后验证</b>：按验收第 4 条抽查各会话列表的标签和顺序。</li>
 <li><b>回滚</b>：沿用平台现有的发版回滚方式，回滚后恢复原排序。</li>
 </ul>
 
@@ -175,7 +175,7 @@
 <div class="tbl"><table data-fit>
 <tr><th>文案位置</th><th>示意文案</th><th>负责人</th><th>状态</th></tr>
 <tr><td class="w">客服后台 › 身份标签</td><td class="w">会员 / Member；游客 / Guest</td><td>研发</td><td>待定稿</td></tr>
-<tr><td class="w">客服后台 › 排序菜单新选项</td><td class="w">进线时间（先来在前） / Handoff time (oldest first)</td><td>研发</td><td>待定稿</td></tr>
+<tr><td class="w">客服后台 › 排序方式新选项</td><td class="w">User level: Highest first（界面只显示英文，意思是「按用户等级从高到低」）</td><td>研发</td><td>待定稿</td></tr>
 </table></div>
 
 <h2 id="a-c10">10. 各角色协作 Tips</h2>
@@ -221,8 +221,8 @@
 <div class="tbl"><table data-fit>
 <tr><th>原型页面</th><th>功能点</th><th>可演示的交互</th><th>是否模拟</th></tr>
 <tr data-fp="F01-01"><td><a href="../prototype/admin/客服系统优化-客服后台会话列表.html#unassigned">客服后台会话列表</a></td><td><span class="fp">F01-01</span> 身份和等级标签</td><td class="w">LV、VIP、会员、游客四种标签；点会话在右侧显示标签</td><td>真实交互</td></tr>
-<tr data-fp="F01-02"><td><a href="../prototype/admin/客服系统优化-客服后台会话列表.html#vip">客服后台会话列表</a></td><td><span class="fp">F01-02</span> 按身份和等级排序</td><td class="w">现阶段、VIP 上线后、Mine、All 四种顺序；新会话进线插入；空列表</td><td>模拟场景按钮</td></tr>
-<tr data-fp="F01-03"><td><a href="../prototype/admin/客服系统优化-客服后台会话列表.html#unassigned">客服后台会话列表</a></td><td><span class="fp">F01-03</span> 排序按钮同级排序</td><td class="w">点「⇅」切换进线时间 / 最近活动，等级顺序不变</td><td>真实交互</td></tr>
+<tr data-fp="F01-02"><td><a href="../prototype/admin/客服系统优化-客服后台会话列表.html#vip">客服后台会话列表</a></td><td><span class="fp">F01-02</span> 按身份和等级排序</td><td class="w">现阶段、VIP 上线后、Mine、All、Pending 的顺序；左侧 Mentions、Participating、Unattended、渠道、各标签列表的标签和顺序；新会话进线插入；空列表</td><td>模拟场景按钮</td></tr>
+<tr data-fp="F01-03"><td><a href="../prototype/admin/客服系统优化-客服后台会话列表.html#unassigned">客服后台会话列表</a></td><td><span class="fp">F01-03</span> 排序选项新增用户等级</td><td class="w">点「⇅」打开排序弹窗，在「Order by」里切换「User level: Highest first」（默认）和「Last activity: Newest first」</td><td>真实交互</td></tr>
 <tr data-fp="F01-04"><td>客服后台会话列表</td><td><span class="fp">F01-04</span> 进线与等级变化</td><td class="w">只在规则批注说明（防跳动、同步、防篡改）</td><td>只做静态示意</td></tr>
 </table></div>
 </section>
@@ -246,7 +246,7 @@
 <p>与本文档其他章节冲突时，以本章为准。</p>
 <div class="tbl"><table data-fit>
 <tr><th>类别</th><th>本迭代包含</th><th>顺延至</th></tr>
-<tr data-fp="F02"><td>前台（H5、Android、iOS、PWA）</td><td class="w">首页右侧悬浮客服按钮进入的客服对话窗：快捷问题「我的充值没到账，怎么办？」改为回复最近交易卡片，可从卡片打开订单页（N11–N21）</td><td>—</td></tr>
+<tr data-fp="F02"><td>前台（H5、Android、iOS、PWA）</td><td class="w">首页右侧悬浮客服按钮进入的客服对话窗，以及游戏页内打开的同一客服对话窗：快捷问题「我的充值没到账，怎么办？」改为回复最近交易卡片，可从卡片打开订单页（N11–N21）</td><td>—</td></tr>
 <tr><td>不包含</td><td class="w">其他快捷问题的自动回复；底部导航「Chat」（聊天室入口，不是客服入口）；帮助中心首页的「最近交易」卡片和从那里进入的订单页；新增数据埋点</td><td>不顺延</td></tr>
 </table></div>
 
@@ -299,17 +299,17 @@
 <h3 id="b-c3-2">3.2 本需求规则</h3>
 <div class="tbl"><table data-fit>
 <tr><th>编号</th><th>规则</th><th>起因</th><th>功能点</th></tr>
-<tr id="n11" data-brief="只改首页悬浮客服按钮进入的对话窗里「我的充值没到账，怎么办？」；其他快捷问题不变。" data-fp="F02-01"><td>N11</td><td class="w"><b>适用范围</b>：只改首页右侧悬浮客服按钮进入的客服对话窗中的快捷问题「我的充值没到账，怎么办？」，其他快捷问题保持原自动回复。底部导航「Chat」是聊天室入口，不涉及</td><td class="w">需求评审结论（2026-10-22、2026-10-23）</td><td><span class="fp">F02-01</span> 充值没到账显示最近交易卡片</td></tr>
-<tr id="n12" data-brief="按快捷问题的固定编号识别，所有语言和分类页签都生效；改文字不影响，删除问题后功能随之消失。" data-fp="F02-01"><td>N12</td><td class="w"><b>识别这个问题</b>：按快捷问题的固定编号识别，不按文字识别。所有语言版本、所有包含该问题的分类页签（如热门问题、充值与提现）都生效；运营修改问题文字不影响，删除该问题后功能随之消失。配置位置和编号方式由研发依据平台现行方案确定</td><td class="w">客服窗口要先选语言，同一问题会出现在多个分类页签</td><td><span class="fp">F02-01</span> 充值没到账显示最近交易卡片</td></tr>
+<tr id="n11" data-brief="只改客服对话窗里「我的充值没到账，怎么办？」（首页悬浮客服按钮进入；游戏页内打开的同一对话窗同样生效）；其他快捷问题不变。" data-fp="F02-01"><td>N11</td><td class="w"><b>适用范围</b>：首页右侧悬浮客服按钮进入的客服对话窗，以及游戏页内打开的同一对话窗（如游戏快捷侧边栏的 CS 按钮）。只改快捷问题「我的充值没到账，怎么办？」，其他快捷问题保持原自动回复。底部导航「Chat」是聊天室，不涉及</td><td class="w">需求评审结论（2026-10-22、2026-10-23）；与「游戏快捷侧边栏」需求同步（2026-10-27）</td><td><span class="fp">F02-01</span> 充值没到账显示最近交易卡片</td></tr>
+<tr id="n12" data-brief="按快捷问题的固定编号识别，所有语言和分类页签都生效；改文字不影响，删除问题后功能随之消失。" data-fp="F02-01"><td>N12</td><td class="w"><b>识别这个问题</b>：按快捷问题的固定编号识别，不按文字识别；所有语言、所有包含该问题的分类页签（如热门问题、充值与提现）都生效，共用同一点击频率（N16）。改问题文字不影响，删除问题后功能随之消失。配置位置和编号方式由研发依据平台现行方案确定</td><td class="w">客服窗口要先选语言，同一问题会出现在多个分类页签</td><td><span class="fp">F02-01</span> 充值没到账显示最近交易卡片</td></tr>
 <tr id="n13" data-brief="显示问题和最近交易卡片，不再显示原自动回复；卡片只留通栏黑色「查看订单」。" data-fp="F02-01"><td>N13</td><td class="w"><b>点击后显示</b>：对话里先显示玩家点的问题，再显示最近交易卡片，不再显示原自动回复。卡片去掉「联系客服」按钮，「查看订单」改为通栏黑色按钮</td><td class="w">玩家在对话里直接看到交易状态</td><td><span class="fp">F02-01</span> 充值没到账显示最近交易卡片</td></tr>
 <tr id="n14" data-brief="内容按帮助中心「最近交易」卡片现行规则；无记录显示「暂无充值或提现记录」；显示点击时的数据，不自动刷新。" data-fp="F02-01"><td>N14</td><td class="w"><b>卡片内容</b>：显示笔数和字段沿用帮助中心「最近交易」卡片现行规则，不限定只显示一笔；无记录时显示「暂无充值或提现记录」。卡片显示点击时的数据，不自动刷新，最新状态到订单页查看</td><td class="w">沿用现有卡片，不另定规则</td><td><span class="fp">F02-01</span> 充值没到账显示最近交易卡片</td></tr>
-<tr id="n15" data-brief="失败或超过 5 秒：显示「暂时无法获取记录，请刷新」和「刷新」；「查看订单」照常显示。" data-fp="F02-04"><td>N15</td><td class="w"><b>取数失败</b>：接口失败或超过 5 秒未返回时，卡片显示「暂时无法获取记录，请刷新」和「刷新」按钮，点「刷新」重新取数；「查看订单」照常显示。订单页取数失败按平台现有处理</td><td class="w">避免玩家看到空白卡片误以为记录丢失</td><td><span class="fp">F02-04</span> 取数失败与点击频率</td></tr>
-<tr id="n16" data-brief="距上次成功发送不足 60 秒时不发送并提示；未登录按设备的客服会话计时，登录成功后重新计时，自动显示的卡片不算点击。" data-fp="F02-04"><td>N16</td><td class="w"><b>点击频率</b>：每点一次，对话里新增一组「问题 + 卡片」。距上次成功发送不足 60 秒时不发送，提示「操作太频繁，请 1 分钟后再试」。已登录按玩家计时，未登录按当前设备的客服会话计时；登录成功后重新计时，登录后自动显示的卡片（N19）不算一次点击</td><td class="w">防止刷屏和重复请求</td><td><span class="fp">F02-04</span> 取数失败与点击频率</td></tr>
+<tr id="n15" data-brief="失败或超过 5 秒：显示「加载失败，请刷新重试」和「刷新」；「查看订单」照常显示。" data-fp="F02-04"><td>N15</td><td class="w"><b>取数失败</b>：接口失败或超过 5 秒未返回，卡片显示「加载失败，请刷新重试」和「刷新」按钮，点击重新取数；「查看订单」照常显示。订单页取数失败按平台现有处理</td><td class="w">避免玩家看到空白卡片误以为记录丢失</td><td><span class="fp">F02-04</span> 取数失败与点击频率</td></tr>
+<tr id="n16" data-brief="距上次成功发送不足 60 秒时不发送并提示；未登录按设备的客服会话计时，登录成功后重新计时，自动显示的卡片不算点击。" data-fp="F02-04"><td>N16</td><td class="w"><b>点击频率</b>：每点一次新增一组「问题 + 卡片」。距上次成功发送不足 60 秒时不发送，提示「操作过于频繁，请 1 分钟后再试」。已登录按玩家计时，未登录按当前设备的客服会话计时；登录成功后重新计时，登录后自动显示的卡片（N19）不算点击</td><td class="w">防止刷屏和重复请求</td><td><span class="fp">F02-04</span> 取数失败与点击频率</td></tr>
 <tr id="n17" data-brief="打开订单页，内容和默认页签沿用现行；充值、提现记录按页加载。" data-fp="F02-02"><td>N17</td><td class="w"><b>查看订单</b>：点「查看订单」打开订单页，页面内容和默认页签沿用平台现有规则；充值、提现记录改为按页加载（<a href="#b-c4-2">4.2 列表分页</a>）</td><td class="w">需求评审结论（2026-10-23）</td><td><span class="fp">F02-02</span> 从对话打开订单页</td></tr>
-<tr id="n18" data-brief="从对话打开的订单页：「‹」「×」回对话窗；「人工客服」回原对话转人工，不新开会话；帮助中心入口不变。" data-fp="F02-02"><td>N18</td><td class="w"><b>返回、关闭与人工客服</b>：从对话打开的订单页，点「‹」或「×」都回到原对话窗，聊天记录保留（关闭整个客服窗口在对话窗按现有方式操作）；点右下角「人工客服」回到原对话并转人工，不新开会话。从帮助中心首页进入的订单页保持现状</td><td class="w">避免玩家回到帮助中心后找不到对话，避免出现两条会话</td><td><span class="fp">F02-02</span> 从对话打开订单页</td></tr>
-<tr id="n19" data-brief="未登录不显示卡片，提示登录；登录成功回对话窗并自动显示卡片；海外 IP 按现行方案。" data-fp="F02-03"><td>N19</td><td class="w"><b>未登录</b>：不取数、不显示卡片，显示「请先登录，再查看订单。」和「登录」按钮（跳转平台现有登录页）。登录成功后回到客服对话窗，保留原对话并自动显示最近交易卡片。游客会话与登录后会话是否合并，按客服系统现有规则处理。海外 IP 访问按平台现有方案处理</td><td class="w">需求评审结论（2026-10-23）</td><td><span class="fp">F02-03</span> 未登录与登录后</td></tr>
+<tr id="n18" data-brief="从对话打开的订单页：「‹」「×」回对话窗；「人工客服」回原对话转人工，不新开会话；游戏页内以覆盖层打开，不离开游戏；帮助中心入口不变。" data-fp="F02-02"><td>N18</td><td class="w"><b>返回、关闭与人工客服</b>：从对话打开的订单页，点「‹」或「×」回到原对话窗，聊天记录保留；点「人工客服」回到原对话并转人工，不新开会话。游戏页内的客服窗中，订单页以覆盖层盖在客服窗上打开，关闭后回到客服窗，不离开游戏、不结算、不刷新。从帮助中心首页进入的订单页保持现状</td><td class="w">避免玩家回到帮助中心后找不到对话，避免出现两条会话；避免在游戏未结算时离开游戏</td><td><span class="fp">F02-02</span> 从对话打开订单页</td></tr>
+<tr id="n19" data-brief="未登录不显示卡片，提示登录；登录成功回对话窗并自动显示卡片；海外 IP 按现行方案。" data-fp="F02-03"><td>N19</td><td class="w"><b>未登录</b>：不取数、不显示卡片，显示「登录后即可查看订单。」和「登录」按钮（跳转平台现有登录页）。登录成功后回到对话窗，保留原对话并自动显示最近交易卡片。游客会话与登录后会话是否合并、海外 IP 访问，按平台现有规则处理</td><td class="w">需求评审结论（2026-10-23）</td><td><span class="fp">F02-03</span> 未登录与登录后</td></tr>
 <tr id="n20" data-brief="客服后台会话只显示玩家点的问题，没有自动回复和备注。" data-fp="F02-01"><td>N20</td><td class="w"><b>客服后台显示</b>：客服后台会话只显示玩家点的问题，不显示原自动回复，不加备注</td><td class="w">需求评审结论（2026-10-23）：避免客服依赖备注、怠于核查</td><td><span class="fp">F02-01</span> 充值没到账显示最近交易卡片</td></tr>
-<tr id="n21" data-brief="保持现状：玩家在订单页复制订单号，回对话窗自己粘贴。" data-fp="F02-02"><td>N21</td><td class="w"><b>复制订单号</b>：保持现状：玩家在订单页点一行复制订单号，回到对话窗自行粘贴发送</td><td class="w">需求评审结论（2026-10-22）</td><td><span class="fp">F02-02</span> 从对话打开订单页</td></tr>
+<tr id="n21" data-brief="保持现状：玩家在订单页复制订单号，回对话窗自己粘贴。" data-fp="F02-02"><td>N21</td><td class="w"><b>复制订单号</b>：保持现状，玩家在订单页点一行复制订单号，回到对话窗自行粘贴发送</td><td class="w">需求评审结论（2026-10-22）</td><td><span class="fp">F02-02</span> 从对话打开订单页</td></tr>
 </table></div>
 <h3 id="b-c3-3">3.3 与知识库的冲突与取舍</h3>
 <div class="tbl"><table data-fit>
@@ -324,7 +324,7 @@
 <p><span class="warn-2">※ 测试环境值只用于测试和原型演示，和生产环境不一定相同；上线前按生产配置核对。</span></p>
 
 <h2 id="b-c4">4. 前台页面一：客服对话窗查看订单</h2>
-<p>原型：<a href="../prototype/front/客服系统优化-客服对话窗查看订单.html#chat">客服对话窗查看订单</a>（模拟场景：进入对话窗、没有记录、有记录、取数失败、订单页、未登录）</p>
+<p>原型：<a href="../prototype/front/客服系统优化-客服对话窗查看订单.html#chat">客服对话窗查看订单</a>（模拟场景：进入对话窗、没有记录、有记录、其他分类页签、取数失败、订单页、未登录）</p>
 <h3 id="b-c4-1">4.1 页面与交互</h3>
 <div class="tbl"><table data-fit>
 <tr><th>模块</th><th>功能与交互要求</th></tr>
@@ -350,11 +350,12 @@
 <li data-fp="F02-01"><span class="fp">F02-01</span> 已登录点「我的充值没到账，怎么办？」：对话里显示问题和最近交易卡片，没有原自动回复，没有「联系客服」按钮，「查看订单」为通栏黑色按钮；无记录时显示「暂无充值或提现记录」。</li>
 <li data-fp="F02-01"><span class="fp">F02-01</span> 切换到其他语言、或在「充值与提现」页签点同一问题：同样显示卡片；点其他快捷问题仍是原自动回复。</li>
 <li data-fp="F02-01"><span class="fp">F02-01</span> 客服后台该会话只显示玩家点的问题，没有自动回复，没有备注。</li>
-<li data-fp="F02-04"><span class="fp">F02-04</span> 接口 4.9 秒返回：正常显示卡片；5.1 秒未返回：显示「暂时无法获取记录，请刷新」，点「刷新」重新取数后正常显示。</li>
-<li data-fp="F02-04"><span class="fp">F02-04</span> 点击后第 59 秒再点：提示「操作太频繁，请 1 分钟后再试」，不发送；第 61 秒再点：新增一组问题和卡片。未登录时同一设备同样受限。未登录点一次后立即登录：自动显示卡片，紧接着再点可正常发送。</li>
+<li data-fp="F02-04"><span class="fp">F02-04</span> 接口 4.9 秒返回：正常显示卡片；5.1 秒未返回：显示「加载失败，请刷新重试」，点「刷新」重新取数后正常显示。</li>
+<li data-fp="F02-04"><span class="fp">F02-04</span> 点击后第 59 秒再点：提示「操作过于频繁，请 1 分钟后再试」，不发送；第 61 秒再点：新增一组问题和卡片。未登录时同一设备同样受限。未登录点一次后立即登录：自动显示卡片，紧接着再点可正常发送。</li>
 <li data-fp="F02-02"><span class="fp">F02-02</span> 点「查看订单」打开订单页；记录超过一页时滑到底部加载下一页；点「‹」或「×」回到对话窗且聊天记录还在；点「人工客服」回到原对话并转人工，客服后台没有新增会话。</li>
 <li data-fp="F02-02"><span class="fp">F02-02</span> 从帮助中心首页进入订单页，返回、关闭、人工客服与上线前一致。</li>
-<li data-fp="F02-03"><span class="fp">F02-03</span> 未登录点问题：显示「请先登录，再查看订单。」和「登录」；登录成功后回到对话窗，刚才的对话还在，并自动显示最近交易卡片。</li>
+<li data-fp="F02-02"><span class="fp">F02-02</span> 在游戏页内打开客服对话窗，点问题后点「查看订单」：订单页盖在客服窗上打开，游戏页不跳走、不刷新，正在进行的游戏不结算；点「‹」或「×」回到客服窗，关闭客服窗后游戏状态不变。</li>
+<li data-fp="F02-03"><span class="fp">F02-03</span> 未登录点问题：显示「登录后即可查看订单。」和「登录」；登录成功后回到对话窗，刚才的对话还在，并自动显示最近交易卡片。</li>
 </ol>
 <h3 id="b-c6-2">6.2 跨端验收矩阵</h3>
 <p>✓ 需要验证；— 不涉及。</p>
@@ -369,7 +370,7 @@
 <h2 id="b-c7">7. 上线方式</h2>
 <ul>
 <li><b>开关</b>：不加新开关。</li>
-<li><b>上线后验证</b>：用测试账号在各端点一次问题、打开订单页并返回。</li>
+<li><b>上线后验证</b>：用测试账号在各端点一次问题、打开订单页并返回；在游戏页内再做一次，确认订单页以覆盖层打开、不离开游戏。</li>
 <li><b>回滚</b>：沿用平台现有的发版回滚方式，回滚后恢复原自动回复。</li>
 </ul>
 
@@ -378,6 +379,7 @@
 <tr><th>风险</th><th>等级</th><th>应对</th></tr>
 <tr><td class="w">依赖：快捷问题是否有固定编号</td><td>中</td><td class="w">研发依据平台现行方案确定识别方式；没有编号时先给快捷问题加编号</td></tr>
 <tr><td class="w">依赖：App 客服窗口是内嵌 H5 还是原生</td><td>低</td><td class="w">研发依据平台现行方案处理</td></tr>
+<tr><td class="w">依赖：游戏页内的客服窗由「游戏快捷侧边栏」需求提供，覆盖层打开订单页（N18）需要两个需求的研发一起实现、一起验收</td><td>中</td><td class="w">两个需求同批上线；先上线的一方在游戏页内暂不显示「查看订单」入口</td></tr>
 </table></div>
 
 <h2 id="b-c9">9. 待确认事项</h2>
@@ -393,11 +395,11 @@
 <p>下列为示意文案，由研发依据平台现行方案定稿。</p>
 <div class="tbl"><table data-fit>
 <tr><th>文案位置</th><th>示意文案</th><th>负责人</th><th>状态</th></tr>
-<tr><td class="w">对话窗 › 未登录提示</td><td class="w">请先登录，再查看订单。 / Please log in to view your orders.</td><td>研发</td><td>待定稿</td></tr>
+<tr><td class="w">对话窗 › 未登录提示</td><td class="w">登录后即可查看订单。 / Log in to view your orders.</td><td>研发</td><td>待定稿</td></tr>
 <tr><td class="w">对话窗 › 未登录按钮</td><td class="w">登录 / Log In</td><td>研发</td><td>待定稿</td></tr>
-<tr><td class="w">对话窗 › 卡片取数失败</td><td class="w">暂时无法获取记录，请刷新 / Unable to load records. Please refresh.</td><td>研发</td><td>待定稿</td></tr>
+<tr><td class="w">对话窗 › 卡片取数失败</td><td class="w">加载失败，请刷新重试 / Failed to load. Please refresh and try again.</td><td>研发</td><td>待定稿</td></tr>
 <tr><td class="w">对话窗 › 刷新按钮</td><td class="w">刷新 / Refresh</td><td>研发</td><td>待定稿</td></tr>
-<tr><td class="w">对话窗 › 点击太频繁</td><td class="w">操作太频繁，请 1 分钟后再试 / Too many requests. Please try again in 1 minute.</td><td>研发</td><td>待定稿</td></tr>
+<tr><td class="w">对话窗 › 点击太频繁</td><td class="w">操作过于频繁，请 1 分钟后再试 / Too many attempts. Please try again in 1 minute.</td><td>研发</td><td>待定稿</td></tr>
 <tr><td class="w">订单页 › 全部加载完</td><td class="w">没有更多了 / No more records</td><td>研发</td><td>待定稿</td></tr>
 </table></div>
 
@@ -425,7 +427,7 @@
 <tr><td>8. 性能</td><td class="w">卡片取数 5 秒超时</td><td>N15</td></tr>
 <tr><td>9. 安全</td><td class="w">卡片只读当前登录玩家本人的数据；未登录不取数</td><td>N19</td></tr>
 <tr><td>10. 上线方式</td><td class="w">不加开关，随版本发布</td><td>7. 上线方式</td></tr>
-<tr><td>11. 验收</td><td class="w">8 条验收条目和跨端矩阵</td><td>6. 验收标准</td></tr>
+<tr><td>11. 验收</td><td class="w">9 条验收条目和跨端矩阵</td><td>6. 验收标准</td></tr>
 <tr><td>12. 工单规范</td><td class="w">按 F02 单独建开发任务</td><td>0. 本迭代范围</td></tr>
 </table></div>
 <h3 id="b-appA-2">A.2 异常边界覆盖（规范第五章第 0 节 8 类）</h3>
@@ -444,7 +446,7 @@
 <h2 id="b-appB">附录 B 原型对照表</h2>
 <div class="tbl"><table data-fit>
 <tr><th>原型页面</th><th>功能点</th><th>可演示的交互</th><th>是否模拟</th></tr>
-<tr data-fp="F02-01"><td><a href="../prototype/front/客服系统优化-客服对话窗查看订单.html#chat">客服对话窗查看订单</a></td><td><span class="fp">F02-01</span> 充值没到账显示最近交易卡片</td><td class="w">点问题显示卡片（无记录、有记录）；其他问题显示原自动回复</td><td>真实交互 + 模拟场景</td></tr>
+<tr data-fp="F02-01"><td><a href="../prototype/front/客服系统优化-客服对话窗查看订单.html#chat">客服对话窗查看订单</a></td><td><span class="fp">F02-01</span> 充值没到账显示最近交易卡片</td><td class="w">点问题显示卡片（无记录、有记录）；切换分类页签，在充值与提现页签点同一问题处理相同；其他问题显示原自动回复</td><td>真实交互 + 模拟场景</td></tr>
 <tr data-fp="F02-02"><td><a href="../prototype/front/客服系统优化-客服对话窗查看订单.html#orders">客服对话窗查看订单</a></td><td><span class="fp">F02-02</span> 从对话打开订单页</td><td class="w">查看订单、「‹」「×」返回、「人工客服」回到对话并转人工</td><td>真实交互</td></tr>
 <tr data-fp="F02-03"><td><a href="../prototype/front/客服系统优化-客服对话窗查看订单.html#guest">客服对话窗查看订单</a></td><td><span class="fp">F02-03</span> 未登录与登录后</td><td class="w">未登录提示、点「登录」后自动显示卡片</td><td>模拟（登录过程不演示）</td></tr>
 <tr data-fp="F02-04"><td><a href="../prototype/front/客服系统优化-客服对话窗查看订单.html#fail">客服对话窗查看订单</a></td><td><span class="fp">F02-04</span> 取数失败与点击频率</td><td class="w">取数失败和刷新；1 分钟内再点的提示</td><td>模拟场景 + 真实交互</td></tr>
@@ -466,7 +468,7 @@
 (function () {
   /* 功能点名称（与开发自查清单保持一致） */
   var FP = {
-    F01: "客服后台会话列表按身份和等级排序", "F01-01": "身份和等级标签", "F01-02": "按身份和等级排序", "F01-03": "排序按钮同级排序", "F01-04": "进线与等级变化",
+    F01: "客服后台会话列表按身份和等级排序", "F01-01": "身份和等级标签", "F01-02": "按身份和等级排序", "F01-03": "排序选项新增用户等级", "F01-04": "进线与等级变化",
     F02: "客服对话窗查看订单", "F02-01": "充值没到账显示最近交易卡片", "F02-02": "从对话打开订单页", "F02-03": "未登录与登录后", "F02-04": "取数失败与点击频率"
   };
   var doc = document.getElementById("doc");

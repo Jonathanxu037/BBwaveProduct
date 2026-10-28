@@ -6,13 +6,13 @@
          note 为什么待确认（缺失 / 示意 / 有歧义…）。可选：lang 语言（如「前台英文」「后台中文」），use 用途（如「短信」「弹窗」）。
    多迭代需求包：每条加 iter 写所属迭代（"v1.0"、"v1.1"…，完整需求写 "完整需求" 或 "full"），各迭代的文案确认页只显示本迭代的条目；编号每个迭代从 T01 起，没写 iter 的条目所有迭代都显示。文案定稿后，把定稿内容写回 PRD 和 proto-en.js，再从这里删掉这条。 */
 window.COPY_ITEMS = [
-  { id: "T01", lang: "前台英文", use: "提示", page: "客服对话窗查看订单", place: "未登录时点「充值没到账」的提示", zh: "请先登录，再查看订单。", en: "Please log in to view your orders.（示意）", note: "新增文案，研发依据平台现行方案定稿；运营有意见可在此提出" },
+  { id: "T01", lang: "前台英文", use: "提示", page: "客服对话窗查看订单", place: "未登录时点「充值没到账」的提示", zh: "登录后即可查看订单。", en: "Log in to view your orders.（示意）", note: "新增文案，研发依据平台现行方案定稿；运营有意见可在此提出" },
   { id: "T02", lang: "前台英文", use: "按钮", page: "客服对话窗查看订单", place: "未登录提示下的按钮", zh: "登录", en: "Log In（示意）", note: "新增文案，研发依据平台现行方案定稿；运营有意见可在此提出" },
-  { id: "T03", lang: "前台英文", use: "提示", page: "客服对话窗查看订单", place: "最近交易卡片取数失败", zh: "暂时无法获取记录，请刷新", en: "Unable to load records. Please refresh.（示意）", note: "新增文案，研发依据平台现行方案定稿；运营有意见可在此提出" },
+  { id: "T03", lang: "前台英文", use: "提示", page: "客服对话窗查看订单", place: "最近交易卡片取数失败", zh: "加载失败，请刷新重试", en: "Failed to load. Please refresh and try again.（示意）", note: "新增文案，研发依据平台现行方案定稿；运营有意见可在此提出" },
   { id: "T04", lang: "前台英文", use: "按钮", page: "客服对话窗查看订单", place: "取数失败时的刷新按钮", zh: "刷新", en: "Refresh（示意）", note: "新增文案，研发依据平台现行方案定稿；运营有意见可在此提出" },
-  { id: "T05", lang: "前台英文", use: "提示", page: "客服对话窗查看订单", place: "1 分钟内重复点「充值没到账」", zh: "操作太频繁，请 1 分钟后再试", en: "Too many requests. Please try again in 1 minute.（示意）", note: "新增文案，研发依据平台现行方案定稿；运营有意见可在此提出" },
+  { id: "T05", lang: "前台英文", use: "提示", page: "客服对话窗查看订单", place: "1 分钟内重复点「充值没到账」", zh: "操作过于频繁，请 1 分钟后再试", en: "Too many attempts. Please try again in 1 minute.（示意）", note: "新增文案，研发依据平台现行方案定稿；运营有意见可在此提出" },
   { id: "T09", lang: "前台英文", use: "提示", page: "客服对话窗查看订单", place: "订单页记录全部加载完", zh: "没有更多了", en: "No more records（示意）", note: "新增文案，研发依据平台现行方案定稿；运营有意见可在此提出" },
   { id: "T06", lang: "后台英文", use: "标签", page: "客服后台会话列表", place: "身份标签：有账号无等级", zh: "会员", en: "Member（示意）", note: "新增文案，研发依据平台现行方案定稿；运营有意见可在此提出" },
   { id: "T07", lang: "后台英文", use: "标签", page: "客服后台会话列表", place: "身份标签：识别不出账号", zh: "游客", en: "Guest（示意）", note: "新增文案，研发依据平台现行方案定稿；运营有意见可在此提出" },
-  { id: "T08", lang: "后台英文", use: "菜单", page: "客服后台会话列表", place: "排序按钮新增选项", zh: "进线时间（先来在前）", en: "Handoff time (oldest first)（示意）", note: "新增文案，研发依据平台现行方案定稿；运营有意见可在此提出" }
+  { id: "T08", lang: "后台英文", use: "菜单", page: "客服后台会话列表", place: "排序弹窗「Order by」新增选项", zh: "用户等级：从高到低", en: "User level: Highest first（示意）", note: "新增文案，研发依据平台现行方案定稿；运营有意见可在此提出" }
 ];

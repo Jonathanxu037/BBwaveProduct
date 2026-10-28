@@ -34,11 +34,11 @@ window.PROTO_EN = {
   "没有更多了": "No more records",
   "🎧 人工客服": "🎧 Live Support",
   /* 自助问题优化新增文案（研发依据平台现行方案定稿，PRD 9.1） */
-  "请先登录，再查看订单。": "Please log in to view your orders.",
+  "登录后即可查看订单。": "Log in to view your orders.",
   "登录": "Log In",
-  "暂时无法获取记录，请刷新": "Unable to load records. Please refresh.",
+  "加载失败，请刷新重试": "Failed to load. Please refresh and try again.",
   "刷新": "Refresh",
-  "操作太频繁，请 1 分钟后再试": "Too many requests. Please try again in 1 minute.",
+  "操作过于频繁，请 1 分钟后再试": "Too many attempts. Please try again in 1 minute.",
   "关闭，回到对话窗": "Close and return to chat",
   "返回对话窗": "Back to chat",
   /* 原型里的示例数据和演示反馈 */
