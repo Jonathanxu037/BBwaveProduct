@@ -158,8 +158,7 @@ table.lv-l td.sum{background:#F5F7FA}
             </div>
             <div class="lv-sub">VIP会员等级奖励规则</div>
             <div class="lv-row"><span class="fl"><span class="ui-nw">KYC 限制<i class="qm" tabindex="0" data-h="KYC 限制">?</i></span></span>
-              <label><input type="radio" name="rKyc" value="1" checked> 开启</label><label><input type="radio" name="rKyc" value="0"> 关闭</label>
-              <span class="lv-red">※ 关闭与 Claire 答复 C-11 不一致，关闭前须经老板或 Claire 确认</span></div>
+              <label><input type="radio" name="rKyc" value="1" checked> 开启</label><label><input type="radio" name="rKyc" value="0"> 关闭</label></div>
             <div class="lv-row"><span class="fl"><span class="ui-nw">强制审核<i class="qm" tabindex="0" data-h="强制审核">?</i></span></span>
               <label><input type="radio" name="rAud" value="1"> 开启</label><label><input type="radio" name="rAud" value="0" checked> 关闭</label></div>
             <div class="lv-row glow"><span class="fl"><span class="ui-nw">生日奖金有效期<i class="qm" tabindex="0" data-h="生日奖金有效期（天）">?</i></span></span>
@@ -405,7 +404,7 @@ table.lv-l td.sum{background:#F5F7FA}
     "生日奖金": "生日所在月份 1 日 13:00 结算后按等级生成，玩家生日当天起在 VIP中心领取。0–9,999,999.99，填 0 不发。",
     "影响预览": "保存前试算：门槛下调后将立即升级的人数和升级奖金合计，以及本月结算受影响的人数。",
     "VIP领取奖励": "即 VIP 体系开关。开启后实时定级、发奖、结算；第一次开启时只按累计有效投注和累计充值定级，已到达的等级不发升级奖金；再次开启时按当前累计判定一次升级，关闭期间达到的新等级照常发升级奖金。关闭期间停止定级、发奖和结算，事后不补。",
-    "KYC 限制": "开启（默认）：未完成 KYC 的玩家不参与 VIP。关闭：等级、升级奖金、月度奖金不要求 KYC，生日奖金仍要求。※ 关闭与 Claire 答复 C-11 不一致，关闭前须经老板或 Claire 确认。",
+    "KYC 限制": "开启（默认）：未完成 KYC 的玩家不参与 VIP。关闭：等级、升级奖金、月度奖金不要求 KYC，生日奖金仍要求。",
     "流水倍数": "奖金到账后须完成「奖金 × 倍数」的有效投注才能提款。整数 0–50，默认 1，0 表示无流水要求。",
     "生日奖金有效期（天）": "含生日当天的可领取天数，到期未领取的变为「已过期」，不能再领取。整数 1–30，默认 15。",
     "强制审核": "开启后升级、月度、生日奖金须在【活动奖励统计】审核通过才到账。默认关闭，只影响开启后生成的奖金。",
@@ -580,7 +579,7 @@ table.lv-l td.sum{background:#F5F7FA}
   function openSw(mode) {
     swMode = mode; $("gaCode").value = ""; $("gaErr").textContent = ""; $("swOk").disabled = false; $("gaRow").hidden = mode === "aud-on" || mode === "aud-off";
     var t = $("dSwT"), b = $("dSwBody");
-    if (mode === "kyc-off") { t.textContent = "关闭 KYC 限制"; b.innerHTML = '<p class="lv-red">※ 关闭与 Claire 答复 C-11 不一致，关闭前须经老板或 Claire 确认</p><p>关闭后，未完成 KYC 的玩家将按累计定级，已达到的等级不发升级奖金；生日奖金仍要求 KYC。</p>'; }
+    if (mode === "kyc-off") { t.textContent = "关闭 KYC 限制"; b.innerHTML = '<p>关闭后，未完成 KYC 的玩家将按累计定级，已达到的等级不发升级奖金；生日奖金仍要求 KYC。</p>'; }
     else if (mode === "kyc-on") { t.textContent = "开启 KYC 限制"; b.innerHTML = '<p>开启后，未完成 KYC 的玩家等级冻结，未到账的奖金改为「暂停发放（风控）」；完成 KYC 后恢复冻结时的等级。</p>'; }
     else if (mode === "sys-on") {
       t.textContent = "开启VIP领取奖励";

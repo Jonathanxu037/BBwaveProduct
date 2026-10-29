@@ -60,8 +60,8 @@
   <colgroup><col style="width:28%"><col><col></colgroup>
   <thead><tr><th>玩家状态</th><th>当月保级达标</th><th>当月保级未达标</th></tr></thead>
   <tbody>
-    <tr><td>正常（C = H）</td><td>次月保持 C，发 C 的月度奖金</td><td>次月降为 C−1，不发奖金</td></tr>
-    <tr><td>降级中（C &lt; H）</td><td>发 C 的月度奖金，次月恢复为 C+1（最多到 H），恢复不发升级奖金</td><td>次月再降为 C−1，不发奖金</td></tr>
+    <tr><td>正常（C = H）</td><td>次月保持 C，发 C 的月度奖金</td><td>次月降为 C−1；这次结算 C 和 C−1 的月度奖金都不发</td></tr>
+    <tr><td>降级中（C &lt; H）</td><td>发 C 的月度奖金，次月恢复为 C+1（最多到 H），恢复不发升级奖金</td><td>次月再降为 C−1；这次结算不发任何月度奖金</td></tr>
     <tr><td>VIP1</td><td>保持 VIP1</td><td>降为会员（后台显示「VIP0」）</td></tr>
     <tr><td>会员（到过 VIP1）</td><td>当月有效投注 ≥ VIP1 保级投注 → 次月回到 VIP1；会员没有月度奖金</td><td>保持会员</td></tr>
   </tbody>
