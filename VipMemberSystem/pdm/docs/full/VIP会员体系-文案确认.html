@@ -75,7 +75,7 @@
   function eid(s) { var h = 0x811c9dc5; for (var i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 0x01000193) >>> 0; } return "E-" + ("00000" + h.toString(36)).slice(-6); }
   var EN = window.PROTO_EN || {}, n = 0;
   Object.keys(EN).forEach(function (k) {
-    if (!/示意/.test(String(EN[k]))) return;
+    if (!/示意|\(\s*placeholder\s*\)/i.test(String(EN[k]) + " " + k)) return;   /* 英文或中文带「（示意）」或「(placeholder)」都算待定稿（2026-10-27，来源「游戏快捷侧边栏」） */
     n++; ITEMS.push({ id: eid(k), page: "前台原型", place: "英文对照表", zh: k, en: EN[k], note: "英文是示意，未定稿" });
   });
   /* 多迭代需求包：proto-en.js 各迭代共用，「示意」英文只列本迭代前台原型里真正出现的那些——读取目录数据里本迭代 prototype/<迭代文件夹>/front/ 下的页面比对；

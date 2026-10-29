@@ -1,0 +1,783 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>VIP会员体系-v1.2-VIP中心页面</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<link rel="stylesheet" href="../../../assets/vip.css">
+<style>
+/* 本页专用（v1.2，类名统一 vc- 前缀）：深色头部（标题栏 + 弧形等级刻度 + 等级卡轮播；头像、玩家名、徽章已删除，用户 2026-10-27）+ 生日卡片 + 规则 + 等级表；
+   弧形刻度和等级卡样式移植自封存版（完整需求）VIP中心：VIP0蓝色卡、VIP1–VIP24 香槟金、SUPER VIP 皇室紫金（用户 2026-10-27） */
+.vc{padding:0!important;gap:0!important;background:#0f0b16}
+.vc-head{background:linear-gradient(180deg,#1d1429 0%,#120d1a 100%);padding:10px 16px 0}
+.vc-body{padding:12px 14px 22px;display:flex;flex-direction:column;gap:12px}
+.vc-card{background:#1b1526;border:1px solid #2e2540;border-radius:12px;padding:12px}
+.vc-card h4{margin:0 0 8px;font-size:14px;color:#f6dc8c}
+.vc-risk{background:#3a1d1d;border:1px solid #7a3434;color:#ffd0d0;border-radius:10px;padding:8px 10px;font-size:12.5px;margin-top:10px}
+/* ===== 弧形等级刻度（移植自封存版 .arcwrap / .ticks / .tick）：一条下凹的弧线，选中等级在正中最低处、上方白色 ▼；两侧刻度沿椭圆下沿逐级抬高、越远越淡（由脚本 select() 计算）；
+   颜色：VIP0蓝色（同VIP0 卡）、VIP1–VIP24 金色、SUPER VIP 紫金；当前等级亮金加粗 + 下方小圆点（选中时仍为亮金）；选中的非当前等级为白色 ===== */
+.vc-arc{position:relative;margin:8px -16px 0;overflow:hidden}
+.vc-arc::before{content:"";position:absolute;left:-5%;right:-5%;top:-130px;height:150px;border-radius:50%;border-bottom:1.5px solid rgba(255,255,255,.4);box-shadow:0 10px 18px -12px rgba(255,255,255,.25);pointer-events:none}
+.vc-ticks{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding:26px 50% 8px;align-items:flex-start;min-height:30px;scroll-behavior:smooth;border-radius:0}
+.vc-ticks::-webkit-scrollbar{display:none}
+.vc-tick{all:unset;cursor:pointer;flex:none;min-width:40px;text-align:center;font-size:13px;color:#e3bb5f;position:relative;padding:4px 2px;border-radius:6px;white-space:nowrap;transition:transform .25s,opacity .25s,font-size .25s}
+.vc-tick:focus-visible{outline:2px solid #f2c661;outline-offset:1px}
+.vc-tick.t0{color:#9cc7ff}
+.vc-tick.ts{color:#d9a6ff;text-shadow:0 0 6px rgba(212,175,55,.6)}
+.vc-tick.sel{color:#fff;font-size:16px;font-weight:800}
+.vc-tick.sel::before{content:"";position:absolute;top:-11px;left:50%;transform:translateX(-50%);border-left:7px solid transparent;border-right:7px solid transparent;border-top:8px solid #fff}
+.vc-tick.cur{color:#ffd54a;font-weight:900;text-shadow:0 0 6px rgba(255,200,60,.75),0 0 1px #3a2600}
+.vc-tick.cur::after{content:"";position:absolute;left:50%;bottom:-3px;width:6px;height:6px;margin-left:-3px;border-radius:50%;background:#ffd54a;box-shadow:0 0 6px rgba(255,200,60,.9)}
+/* ===== 等级卡轮播（移植自封存版 .car / .track / .vcard）：中间卡选中（不透明、原尺寸），相邻卡半透明缩小；点相邻卡、点刻度、左右滑动切换 ===== */
+.vc-car{overflow:hidden;padding:10px 0 16px;margin:0 -16px;touch-action:pan-y;user-select:none;border-radius:0}
+.vc-trk{display:flex;gap:10px;align-items:center;transition:transform .3s ease}
+.vc-vc{flex:0 0 84%;box-sizing:border-box;border-radius:14px;padding:14px 16px 12px;font-size:12.5px;position:relative;overflow:hidden;opacity:.5;transform:scale(.94);transition:opacity .3s,transform .3s;cursor:pointer;display:flex;flex-direction:column;align-items:flex-start;min-height:100px;text-align:left}
+.vc-vc.on{opacity:1;transform:none;cursor:default}
+.vc-vc.vipc{background:linear-gradient(135deg,#fff4cf 0%,#f1cf7a 38%,#d9a441 70%,#b07a1e 100%);color:#4a3008;border:1.5px solid #c99a3a;box-shadow:0 6px 18px rgba(150,100,10,.45),inset 0 0 0 1px rgba(255,248,220,.7)}
+.vc-vc.svip{background:radial-gradient(120% 90% at 20% 0%,#6a2c91 0%,#3b0f5c 45%,#1c0630 100%);color:#f6d77b;border:1.5px solid #d4af37;box-shadow:0 6px 20px rgba(80,20,120,.55),inset 0 0 0 1px rgba(246,215,123,.45),inset 0 0 0 4px rgba(28,6,48,.6),inset 0 0 0 5px rgba(212,175,55,.35)}
+.vc-vc.regc{background:linear-gradient(135deg,#e8f2ff 0%,#9cc7ff 40%,#4a8fe8 75%,#2a64c4 100%);color:#0f2f63;border:1.5px solid #3f7fd6;box-shadow:0 6px 18px rgba(30,80,170,.4),inset 0 0 0 1px rgba(255,255,255,.65)}
+.vc-vc.vipc::before,.vc-vc.svip::before{content:"";position:absolute;inset:0;background:linear-gradient(115deg,transparent 30%,rgba(255,255,255,.45) 45%,transparent 58%);pointer-events:none}
+.vc-vc::after{content:"VIP";position:absolute;top:0;left:50%;transform:translateX(-50%);padding:0 12px;border-radius:0 0 8px 8px;background:linear-gradient(90deg,#8a5a12,#c99a3a,#8a5a12);color:#fff6d8;font-size:10px;font-weight:900;letter-spacing:1.5px;line-height:16px}
+.vc-vc.regc::after{content:"MEMBER";background:linear-gradient(90deg,#1f56b3,#4a8fe8,#1f56b3);color:#fff}   /* VIP0 卡角标用「MEMBER」（用户 2026-10-28） */
+.vc-vc.svip::after{content:"♛ " attr(data-vtag);background:linear-gradient(90deg,#b8860b,#f6d77b,#b8860b);color:#2a0845}
+.vc-vc .medal{position:absolute;right:12px;top:12px;width:58px;height:58px;border-radius:50%;display:grid;place-items:center;font-weight:900;font-size:13px;line-height:1.05;text-align:center;color:#5a3a00;background:radial-gradient(circle at 35% 30%,#fffbe6,#f0c75e 55%,#a8761c 90%);box-shadow:inset 0 0 0 3px rgba(255,255,255,.7),0 0 0 2px #c99a3a,0 3px 8px rgba(90,58,0,.35)}
+.vc-vc.svip .medal{background:radial-gradient(circle at 35% 30%,#fff3c4,#e2b83f 50%,#7a4f0a 90%);color:#3b0f5c;box-shadow:inset 0 0 0 3px rgba(255,255,255,.6),0 0 0 2px #d4af37,0 0 12px rgba(246,215,123,.55)}
+.vc-vc.svip .medal::before{content:"♛";position:absolute;top:-14px;left:50%;transform:translateX(-50%);font-size:18px;color:#f6d77b;text-shadow:0 1px 3px rgba(0,0,0,.5)}
+.vc-vc.regc .medal{font-size:12px;background:radial-gradient(circle at 35% 30%,#ffffff,#b9d7ff 50%,#2f6fd0 90%);color:#0f2f63;box-shadow:inset 0 0 0 3px rgba(255,255,255,.75),0 0 0 2px #3f7fd6,0 3px 8px rgba(20,60,140,.35)}
+.vc-vc.locked .medal{filter:grayscale(.6)}
+.vc-vc .pill{display:inline-flex;align-items:center;gap:4px;font-size:11.5px;font-weight:800;background:rgba(0,0,0,.08);border-radius:10px;padding:1px 9px}
+.vc-vc .pill.c{background:#5a3a00;color:#ffe7a6}.vc-vc .pill.u{background:#8a5a12;color:#fff3d1}
+.vc-vc.svip .pill{background:rgba(246,215,123,.18);color:#f6d77b}.vc-vc.svip .pill.c{background:#d4af37;color:#2a0845}
+.vc-vc.regc .pill.c{background:#1f4f9e;color:#eef5ff}
+.vc-vc .ach{display:block;width:23px;height:23px}.vc-vc .ach svg,.vc-vc .ok-ic svg{width:100%;height:100%;display:block}
+.vc-vc .ok-ic{display:inline-block;width:18px;height:18px;flex:none;vertical-align:middle}
+/* 卡片内容：紧贴状态标签，右上角浮动占位给徽章让位，徽章下方的内容用满宽度；底部「查看详情」按钮横跨卡片 */
+.vc-vc .vbody{align-self:stretch;flex:1;margin-top:8px;display:block;min-height:0}
+.vc-vc .vbody::before{content:"";float:right;width:62px;height:36px}
+.vc-vc .vbody>*{display:flow-root}
+.vc-vc .vbody>*+*{margin-top:7px}
+.vc-vc .crt{display:flex;margin-bottom:-3px}
+.vc-vc .stg{flex:none;display:inline-block;font-size:10px;font-weight:800;line-height:1.5;padding:0 6px;border-radius:8px;white-space:nowrap;background:rgba(90,58,0,.13);color:#5a3a00}
+.vc-vc.svip .stg{background:rgba(246,215,123,.18);color:#f6d77b}.vc-vc.regc .stg{background:rgba(15,47,99,.13);color:#0f2f63}
+.vc-vc .pg .t{display:flex;justify-content:space-between;align-items:center;gap:6px;font-size:11.5px;font-weight:700;margin-bottom:3px}
+.vc-vc .pg.kept .t span{color:#1b7a4c;font-weight:800}.vc-vc.svip .pg.kept .t span{color:#7ee2a8}
+.vc-vc .bar{height:6px;border-radius:3px;background:rgba(90,58,0,.15);overflow:hidden}
+.vc-vc .bar i{display:block;height:100%;border-radius:3px;background:linear-gradient(90deg,#e8a92a,#b8741a)}
+.vc-vc.svip .bar{background:rgba(255,255,255,.18)}.vc-vc.svip .bar i{background:linear-gradient(90deg,#f6d77b,#d4af37)}
+.vc-vc.regc .bar{background:rgba(15,47,99,.15)}
+.vc-vc .bar.full i{background:linear-gradient(90deg,#3ccf7a,#1b9a55)}.vc-vc.svip .bar.full{background:rgba(126,226,168,.22)}
+.vc-vc .pg2 .row{display:flex;align-items:center;gap:6px}.vc-vc .pg2 .bar{flex:1}
+.vc-vc .pg2 .end{font-size:11px;font-weight:800;white-space:nowrap}
+.vc-vc .okt{color:#1b7a4c;font-weight:800}.vc-vc.svip .okt{color:#7ee2a8}.vc-vc.regc .okt{color:#0b5d2c}
+.vc-vc .mut{color:#8a6a35;font-size:11px}.vc-vc.svip .mut{color:#c9a95e}.vc-vc.regc .mut{color:rgba(15,47,99,.85)}
+.vc-vc .rgd{font-size:12px;font-weight:700}
+/* 图标（用户 2026-10-28：图标代替文字标签）：emoji / 符号，统一宽度便于对齐；差额右对齐 */
+.vic{font-style:normal;display:inline-block;min-width:17px;text-align:center;line-height:1;font-size:14px;vertical-align:-2px}
+.vc-vc .pg .t .gap{font-variant-numeric:tabular-nums}
+.vc-vc .okt,.vc-vc .vbody>.mut{display:flex;align-items:center;gap:4px}
+.vc-vc .okt .sep{width:8px}
+.vc-vc .stg .vic{font-size:11px;min-width:12px;vertical-align:0}
+.vc-legend{display:flex;flex-wrap:wrap;justify-content:center;gap:2px 10px;font-size:11px;color:#cbb7da;padding:0 0 10px;margin-top:-6px}
+.vc-legend .vic{font-size:12px;margin-right:2px}
+.vc-legend[hidden]{display:none}
+.vc-vc .mut b{margin-left:3px}
+/* 2026-10-28 用户再改：「当前」标签放到右侧徽章下方；进度行 = 图标 | 缩短的进度条 | 差额或对勾，同一行垂直居中；保级 + 对勾、恢复图标 + 恢复等级各用一个底色框包在一起 */
+.vc-vc .pill.c{position:absolute;right:12px;top:76px;width:58px;justify-content:center;padding:1px 0;z-index:1}
+.vc-vc.on .vbody,.vc-vc .vbody{margin-top:0}
+.vc-vc .vbody::before{width:66px;height:84px}
+.vc-vc .pg{display:flex;align-items:center;gap:6px;max-width:calc(100% - 48px)}
+.vc-vc .pg .pi{flex:none;width:20px;display:flex;align-items:center;justify-content:center}
+.vc-vc .pg .bar{flex:1;min-width:40px}
+.vc-vc .pg .pv{flex:none;min-width:18px;display:flex;align-items:center;justify-content:flex-end;font-size:11.5px;font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap}
+.vc-vc .svic{width:18px;height:18px;display:block}
+.vc-vc .svic.back,.vc-legend .svic.back{width:30px;height:15px}
+.vc-legend .svic{width:14px;height:14px;display:inline-block;vertical-align:-3px}
+.vc-vc .chips{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.vc-vc .chipx{display:inline-flex;align-items:center;gap:4px;padding:2px 8px 2px 6px;border-radius:12px;font-size:11.5px;font-weight:800;line-height:1}
+.vc-vc .chipx b{font-weight:900}
+.vc-vc .chipx.ok{background:rgba(27,154,85,.16);border:1px solid rgba(27,154,85,.55);color:#14663d}
+.vc-vc .chipx.wait{background:rgba(90,58,0,.08);border:1px solid rgba(90,58,0,.28);color:#7a5a25}
+.vc-vc.svip .chipx.ok{background:rgba(126,226,168,.16);border-color:rgba(126,226,168,.5);color:#7ee2a8}.vc-vc.svip .chipx.wait{background:rgba(246,215,123,.1);border-color:rgba(246,215,123,.35);color:#f6d77b}
+.vc-vc.regc .chipx.wait{background:rgba(15,47,99,.08);border-color:rgba(15,47,99,.3);color:#0f2f63}
+.vc-vc .chipx .ok-ic{width:15px;height:15px}/* 2026-10-28 用户再改：组合底框不用绿色，统一赭石色（比金黄更深）；卡片内容整体下移，不顶到顶部「VIP」角标 */
+.vc-vc{padding-top:24px}
+.vc-vc .medal{top:22px}
+.vc-vc .pill.c{top:86px}
+.vc-vc .vbody::before{height:90px}
+.vc-vc .vbody>*+*{margin-top:8px}
+.vc-vc .chipx.ok,.vc-vc .chipx.hist{background:rgba(160,82,30,.16);border:1px solid rgba(140,70,22,.55);color:#6e3510}
+.vc-vc .chipx.wait{background:rgba(160,82,30,.06);border:1px dashed rgba(140,70,22,.5);color:#8a5a2a}
+.vc-vc.svip .chipx.ok,.vc-vc.svip .chipx.hist{background:rgba(204,119,34,.22);border-color:rgba(232,160,80,.6);color:#f3c98a}
+.vc-vc.svip .chipx.wait{background:rgba(204,119,34,.08);border-color:rgba(232,160,80,.45);color:#e6b878}
+.vc-vc.regc .chipx.ok,.vc-vc.regc .chipx.hist{background:rgba(160,82,30,.2);border-color:rgba(140,70,22,.6);color:#5a2c0c}
+.vc-vc.regc .chipx.wait{background:rgba(160,82,30,.08);border-color:rgba(140,70,22,.5);color:#6e3d14}
+.vc-vc .svic.hist,.vc-legend .svic.hist{width:17px;height:17px}/* 2026-10-28 用户再改：保级 · 恢复 · 升级 · 历史最高 四个状态框在同一行（紧凑尺寸，不换行） */
+.vc-vc .chips.one{flex-wrap:nowrap;gap:4px;clear:both}   /* 状态一行放在进度条下方、徽章区域以下，用满卡片宽度，四个框不换行 */
+.vc-vc .chips.one .chipx{padding:1px 5px;gap:3px;font-size:10.5px;border-radius:10px}
+.vc-vc .chips.one .vic{font-size:11.5px;min-width:12px}
+.vc-vc .chips.one .ok-ic{width:13px;height:13px}
+.vc-vc .chips.one .svic.back{width:24px;height:12px}
+.vc-vc .chips.one .svic.hist{width:14px;height:14px}/* 2026-10-28 用户再改：右侧徽章缩小，徽章 + 「当前」标签的总高度与两条升级进度行的总高度一致（约 43px），卡片整体变矮；等级卡区域固定高度（按内容最多的卡确定），卡片本身按内容自适应高度、在区域内上下居中，切换卡片和场景时下方生日卡片、等级表的位置不变（用户 2026-10-28）；；当前卡在进度条下方另列（只在当前等级卡显示，用户 2026-10-28）：下一次升级「升到 VIPn 升级奖金 ₱x」（n = 历史最高 + 1，已是最高级不显示），以及当前等级可领取的月度奖金（本月保级达标后次月 1 日 13:00 到账）、生日奖金（该级有配置才显示）；会员卡只列「升到 VIPn 升级奖金」。；有「UP VIPn」标题时，右侧徽章放大，徽章 + 「当前」标签的总高度与「UP 标题 + 两条升级进度条」整块一致 */
+.vc-vc .medal{top:24px;right:17px;width:26px;height:26px;font-size:8.5px;line-height:1;box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.7),0 0 0 1.5px #c99a3a,0 2px 4px rgba(90,58,0,.3)}
+.vc-vc.regc .medal{font-size:8px;box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.75),0 0 0 1.5px #3f7fd6,0 2px 4px rgba(20,60,140,.3)}
+.vc-vc.svip .medal{font-size:6.5px;box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.6),0 0 0 1.5px #d4af37,0 0 6px rgba(246,215,123,.5)}
+.vc-vc.svip .medal::before{font-size:10px;top:-9px}
+.vc-vc .pill.c{top:51px;right:12px;width:36px;font-size:10px;line-height:16px;padding:0;border-radius:8px}
+.vc-vc .vbody::before{width:44px;height:45px}
+.vc-vc .ach{width:20px;height:20px}/* 升级目标标题：两条升级进度条上方，纯文字「UP VIPn」，不用图标（用户 2026-10-28） */
+.vc-vc .uph{font-size:11.5px;font-weight:800;letter-spacing:.2px;margin-bottom:-3px}
+.vc-vc .uph b{font-weight:900;letter-spacing:1px;margin-right:2px}/* 有「UP VIPn」标题时（用户 2026-10-28 再改）：右侧徽章放大，徽章 + 「当前」标签的总高度与「UP 标题 + 两条升级进度条」整块一致（上下边对齐） */
+.vc-vc:has(.uph) .medal{top:24px;right:12px;width:46px;height:46px;font-size:11.5px}
+.vc-vc.svip:has(.uph) .medal{font-size:9px}.vc-vc.regc:has(.uph) .medal{font-size:11px}
+.vc-vc:has(.uph) .pill.c{top:73px;right:12px;width:46px}
+.vc-vc:has(.uph) .vbody::before{width:54px;height:67px}
+.vc-vc:has(.uph) .pg{max-width:calc(100% - 56px)}/* 详情弹窗里的当前等级状态（用户 2026-10-28）：沿用卡片组合框样式 */
+.dtl-st{margin:0 0 10px}.dtl-st[hidden]{display:none}
+.dtl-st .chips{display:flex;flex-wrap:wrap;gap:6px}
+.dtl-st .chipx{display:inline-flex;align-items:center;gap:4px;padding:2px 8px 2px 6px;border-radius:12px;font-size:12px;font-weight:800;line-height:1}
+.dtl-st .chipx.ok,.dtl-st .chipx.hist{background:rgba(160,82,30,.16);border:1px solid rgba(140,70,22,.55);color:#6e3510}
+.dtl-st .chipx.wait{background:rgba(160,82,30,.06);border:1px dashed rgba(140,70,22,.5);color:#8a5a2a}
+.dtl-st .ok-ic{width:15px;height:15px;display:inline-block}.dtl-st .ok-ic svg,.dtl-st .svic{display:block;width:100%;height:100%}
+.dtl-st .svic{width:18px;height:18px}.dtl-st .svic.back{width:30px;height:15px}
+#dtlTbl[hidden],#dtlFt[hidden]{display:none}/* 恢复进度行（用户 2026-10-28）：BACK 图标比普通图标宽 */
+.vc-vc .pg .pi.pb{width:30px;color:#7a4a18}.vc-vc.svip .pg .pi.pb{color:#f3c98a}.vc-vc .pg .pi.pb .svic.back{width:30px;height:15px}
+.vc-vc .pg .mut2{font-size:10.5px;font-weight:700;opacity:.75}.vc-vc .pg .pi.pt{width:auto;font-size:11px;font-weight:800;white-space:nowrap}
+.vc-vc .rtx{font-size:11.5px;font-weight:800;opacity:.8}.vc-vc .pill.d{background:rgba(160,82,30,.18);color:#6e3510;border:1px solid rgba(140,70,22,.45)}.vc-vc.regc .pill.d{background:rgba(15,47,99,.12);color:#0f2f63;border-color:rgba(15,47,99,.35)}
+/* 详情弹窗新版（用户 2026-10-28） */
+#dtlDlg .dtl-hd{display:flex;align-items:flex-end;justify-content:space-between;gap:8px;margin-right:34px}
+#dtlDlg .dtl-hd h3{margin:0;line-height:1.2}#dtlDlg #dtlHist{display:flex;align-items:flex-end}
+#dtlDlg #dtlHist .chipx{display:inline-flex;align-items:center;gap:4px;padding:1px 7px 1px 5px;border-radius:10px;font-size:11.5px;font-weight:800;line-height:1.3;background:rgba(160,82,30,.16);border:1px solid rgba(140,70,22,.55);color:#6e3510}
+#dtlDlg #dtlHist .svic{width:15px;height:15px;display:block}
+#dtlDlg .dtl-st{display:grid;gap:6px;margin:0;background:#fff;border:1px solid #EDE4D3;border-radius:10px;padding:10px}
+#dtlDlg .dsl{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:800;color:#5a3a00}
+#dtlDlg .dlb{font-size:12px;font-weight:800}#dtlDlg .dok{font-size:11px;font-weight:800;color:#6e3510;background:rgba(160,82,30,.16);border:1px solid rgba(140,70,22,.5);border-radius:8px;padding:0 6px}
+#dtlDlg .drow{display:flex;align-items:center;gap:6px;font-size:12px}
+#dtlDlg .drow .di{flex:none;width:20px;display:flex;justify-content:center}
+#dtlDlg .drow .di .svic{width:18px;height:18px;display:block}
+#dtlDlg .drow .bar{flex:1;height:6px;border-radius:3px;background:rgba(90,58,0,.15);overflow:hidden}
+#dtlDlg .drow .bar i{display:block;height:100%;border-radius:3px;background:linear-gradient(90deg,#e8a92a,#b8741a)}
+#dtlDlg .drow .bar.full i{background:linear-gradient(90deg,#3ccf7a,#1b9a55)}
+#dtlDlg .drow .dv{flex:none;font-weight:800;font-variant-numeric:tabular-nums;min-width:18px;text-align:right}
+#dtlDlg .drow .dbk{flex:none;font-weight:800;font-size:11.5px;color:#8a5a2a;white-space:nowrap}
+#dtlDlg .drow .dbk.ok{color:#6e3510}
+#dtlDlg .ok-ic{display:inline-block;width:15px;height:15px;vertical-align:middle}#dtlDlg .ok-ic svg{display:block;width:100%;height:100%}
+#dtlDlg .uph{font-size:12px;font-weight:800;margin-top:4px}#dtlDlg .uph b{letter-spacing:1px;margin-right:2px}
+#dtlDlg .dsl .chipx{display:inline-flex;align-items:center;gap:4px;padding:1px 7px 1px 5px;border-radius:10px;background:rgba(160,82,30,.16);border:1px solid rgba(140,70,22,.55)}
+#dtlDlg .dtl-sec{font-size:12.5px;font-weight:800;color:#4A2A7A;margin:2px 0 -4px}#dtlDlg .dtl-sec[hidden]{display:none}
+#dtlDlg .mut{font-size:12px;color:#8a6a35}/* 右上角「i」信息按钮 + VIP 规则弹窗（用户 2026-10-28）：规则不在页面上展示，点按钮弹窗查看 */
+.vc .topline{position:relative}
+.vc-info{all:unset;cursor:pointer;position:absolute;right:0;top:50%;transform:translateY(-50%);width:22px;height:22px;border-radius:50%;border:1.5px solid #f2c661;color:#f2c661;font:italic 800 13px/20px Georgia,serif;text-align:center}
+.vc-info:focus-visible{outline:2px solid #f2c661;outline-offset:2px}
+#ruleDlg .dlg{position:relative;width:100%;max-width:340px;box-sizing:border-box;max-height:82%;overflow-y:auto;background:#FBF7EF;color:#2E2638;border:1px solid #E6DCC8;border-radius:16px;box-shadow:0 10px 30px rgba(0,0,0,.35);padding:18px 16px 14px;line-height:1.55}
+#ruleDlg h3{color:#4A2A7A;font-size:16px;margin:0 32px 8px 0}
+#ruleDlg ol{margin:0;padding-left:18px;font-size:12.5px;color:#2E2638;line-height:1.6}
+#ruleDlg li+li{margin-top:5px}
+#ruleDlg .hx{position:absolute;top:10px;right:10px;width:28px;height:28px;border-radius:50%;border:0;background:#EFE7D6;color:#5F566B;font:700 16px/28px Arial,sans-serif;cursor:pointer;padding:0}/* 等级表两个 tab（用户 2026-10-28）：每个 tab 只有 4 列，表格用满宽度、不横向滚动 */
+.vc-ttab{display:flex;gap:6px;margin:0 0 8px}
+.vc-ttab button{all:unset;cursor:pointer;flex:1;text-align:center;padding:5px 0;border-radius:8px;font-size:12px;font-weight:800;color:#cfc6dd;background:#2a2138;border:1px solid #3a3050}
+.vc-ttab button.on{background:linear-gradient(90deg,#f6dc8c,#c8962e);color:#3a2600;border-color:#c8962e}
+.vc-ttab button:focus-visible{outline:2px solid #f2c661;outline-offset:2px}
+#vMain .vc-tw{overflow-x:hidden}
+#vMain .vc-tbl{min-width:0;table-layout:fixed}
+#vMain .vc-tbl th,#vMain .vc-tbl td{white-space:normal;overflow-wrap:anywhere;padding:5px 4px}
+#vMain .vc-tbl th:first-child,#vMain .vc-tbl td:first-child{width:24%;position:static}.vc-vc .bgrid.cg{clear:both;margin-top:6px;padding-top:6px;border-top:1px dashed rgba(90,58,0,.25)}.vc-vc.svip .bgrid.cg{border-top-color:rgba(246,215,123,.3)}
+#vMain .vc-tw{overflow-y:auto;max-height:392px;position:relative}#vMain .vc-tbl th,#vMain .vc-tbl th:first-child{position:sticky;top:0;z-index:2}   /* 等级表限高约 9 行、表内滚动、表头固定（用户 2026-10-28） */
+.vc-vc .uph{display:flex;align-items:baseline;justify-content:space-between;gap:8px}.vc-vc:has(.uph) .uph{max-width:calc(100% - 56px)}
+.vc-vc .uph .kok{font-size:11px;font-weight:800;color:#6e3510}.vc-vc.svip .uph .kok{color:#f3c98a}.vc-vc.regc .uph .kok{color:#0f2f63}
+/* 等级卡区域固定高度 220px（用户 2026-10-28）：卡片本身按内容自适应高度、在区域内上下居中，区域高度不变，切换卡片和场景时下面的生日卡片、等级表位置不动 */
+.vc-trk{align-items:center;height:220px}
+.vc-vc .bgrid{display:grid;grid-template-columns:1fr auto;gap:7px 8px;align-items:center;font-size:11.5px;font-weight:700}.vc-vc .bgrid>span:nth-child(2n){justify-self:end}
+.vc-vc .dtlb{align-self:stretch;margin-top:10px;display:block;box-sizing:border-box;text-align:center;white-space:nowrap;font-family:inherit;font-size:12px;font-weight:800;line-height:1.5;border-radius:10px;padding:5px 0;cursor:pointer;background:rgba(74,48,8,.1);color:#4a3008;border:1px solid rgba(74,48,8,.4)}
+.vc-vc .dtlb:focus-visible{outline:2px solid #4A2A7A;outline-offset:2px}
+.vc-vc.svip .dtlb{background:rgba(246,215,123,.14);color:#f6d77b;border-color:rgba(246,215,123,.6)}
+.vc-vc:not(.on) .dtlb{opacity:.45;pointer-events:none}
+/* 引导卡（未登录 / 未完成 KYC 且「KYC 限制」开启）：沿用 VIP 卡香槟金样式，单张居中，在刻度上方；刻度和等级卡照常显示 */
+.vc-vc.vc-guide{width:84%;margin:12px auto 0;cursor:default}
+.vc-guide .kt{font-size:14px;font-weight:900}
+.vc-guide .kd{font-size:12px;line-height:1.5}
+.vc-guide .vc-btn{justify-self:start;padding:6px 16px;font-size:12.5px}
+/* 奖励详情弹窗（卡片「查看详情」）：沿用封存版暖白阅读样式 */
+.vc-dov{position:absolute;inset:0;background:rgba(5,8,12,.72);display:grid;place-items:center;padding:20px;z-index:6}
+#dtlDlg .dlg{position:relative;width:100%;max-width:340px;box-sizing:border-box;max-height:82%;overflow-y:auto;background:#FBF7EF;color:#2E2638;border:1px solid #E6DCC8;border-radius:16px;box-shadow:0 10px 30px rgba(0,0,0,.35);padding:18px 16px 14px;line-height:1.55;display:grid;gap:10px}
+#dtlDlg h3{color:#4A2A7A;font-size:16px;margin:0 32px 0 0}
+#dtlDlg table{width:100%;border-collapse:collapse;font-size:12.5px;background:#fff;border:1px solid #EDE4D3;table-layout:fixed}
+#dtlDlg th{background:#F3ECDD;color:#4A2A7A;font-weight:800;padding:7px 8px;text-align:left;font-size:12px}
+#dtlDlg td{padding:8px;border-top:1px solid #F1EADC;color:#2E2638;vertical-align:middle;word-break:break-word}
+#dtlDlg th:nth-child(1),#dtlDlg td:nth-child(1){width:30%}#dtlDlg th:nth-child(2),#dtlDlg td:nth-child(2){width:30%;font-weight:800}
+#dtlDlg .ds-ok{color:#1b7a4c;font-weight:800}#dtlDlg .ds-lk{color:#8A7F9A;font-weight:700}#dtlDlg .ds-on{color:#d46b08;font-weight:800}#dtlDlg .ds-x{color:#9a929f;font-weight:700}
+#dtlDlg .dtl-ft{margin:0;font-size:11.5px;color:#5F566B}
+#dtlDlg .hx{position:absolute;top:10px;right:10px;width:28px;height:28px;border-radius:50%;border:0;background:#EFE7D6;color:#5F566B;font:700 16px/28px Arial,sans-serif;cursor:pointer;padding:0}
+#dtlDlg .hx:focus-visible{outline:2px solid #4A2A7A;outline-offset:2px}
+.vc-btn{all:unset;cursor:pointer;display:inline-block;text-align:center;padding:8px 18px;border-radius:18px;background:linear-gradient(90deg,#f6dc8c,#c8962e);color:#3a2600;font-weight:800;font-size:13px}
+.vc-btn[disabled],.vc-btn.dis{background:#3a3346;color:#8f86a2;cursor:not-allowed}
+.vc-bd{display:flex;align-items:center;gap:10px;background:linear-gradient(135deg,#3b1d4a,#20122c);border:1px solid #6b3f86;border-radius:12px;padding:10px 12px}
+.vc-bd .ic{font-size:26px}
+.vc-bd .mid{flex:1;min-width:0}
+.vc-bd .amt{font-size:18px;font-weight:800;color:#f6dc8c}
+.vc-bd .m{font-size:11.5px;color:#cbb7da}
+.vc-bd .st{font-size:12px;font-weight:700;color:#cbb7da;white-space:nowrap}
+.vc-bd .st.ok{color:#7ee2a8}
+.vc-bd.gray{filter:grayscale(.8);opacity:.75}
+.vc-rules ol{margin:0;padding-left:18px;font-size:12px;color:#cfc6dd;line-height:1.65}
+.vc-rules li+li{margin-top:4px}
+.vc-tw{overflow-x:auto;border-radius:8px;border:1px solid #2e2540}
+.vc-tbl{border-collapse:collapse;font-size:11.5px;min-width:560px;width:100%}
+.vc-tbl th,.vc-tbl td{border:1px solid rgba(255,255,255,.14);padding:5px 6px;text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+.vc-tbl th{background:#2a2138;color:#f6dc8c;font-weight:700;text-align:center}
+.vc-tbl td:first-child,.vc-tbl th:first-child{position:sticky;left:0;background:#1b1526;text-align:left;z-index:1}
+.vc-tbl th:first-child{background:#2a2138}
+.vc-tbl tr.cur td{background:#3d2f12;color:#ffe7a6}
+.vc-tbl tr.cur td:first-child{background:#3d2f12}
+.vc-swipe{font-size:11px;color:#8f86a2;margin:0 0 6px}
+.vc-off{text-align:center;padding:40px 10px;color:#cfc6dd;font-size:14px}
+.vc-err{display:grid;place-items:center;height:70%}
+.vc-err button{all:unset;cursor:pointer;color:#f2c661;font-weight:700}
+.vc-sk{height:90px;border-radius:12px;background:linear-gradient(90deg,#1b1526 25%,#2a2138 50%,#1b1526 75%);background-size:200% 100%;animation:vcsk 1.2s infinite}
+@keyframes vcsk{to{background-position:-200% 0}}
+</style>
+</head>
+<body>
+<div class="with-nav">
+<div class="stage">
+  <div class="vip-phonecol">
+  <div class="app" role="region" aria-label="手机画面">
+    <div class="sb"><span>9:41</span><span>●●● 5G</span></div>
+
+    <!-- ============ 主页面（各场景由脚本按模拟数据渲染） ============ -->
+    <div class="view vc" id="vMain">
+      <div class="vc-head">
+        <div class="topline"><a class="back" href="#vip5" aria-label="返回">‹</a>VIP中心<button type="button" class="vc-info glow" id="infoBtn" aria-label="VIP 规则" title="VIP 规则">i</button></div>
+        <!-- 原头像、玩家名和等级徽章（.vc-user）已删除（用户 2026-10-27）：当前等级由刻度的当前标记表达，历史最高写在当前等级卡上；未登录、未加入 VIP 由引导卡的状态标签表达 -->
+        <div class="vc-risk glow" id="riskBar" hidden>部分 VIP 奖金暂未发放，有疑问联系客服</div>
+        <!-- 引导卡（未登录 / 未完成 KYC 且「KYC 限制」开启）：在刻度上方，由脚本写入；刻度和等级卡照常显示 -->
+        <div class="vc-vc vipc on vc-guide glow" id="guide" hidden></div>
+        <!-- ① 弧形等级刻度：会员 + VIP1–SUPER VIP，档数按后台配置（默认 26 个），由脚本写入 -->
+        <div class="vc-arc" id="arcwrap"><div class="vc-ticks glow" id="ticks" role="tablist" aria-label="等级刻度"></div></div>
+        <!-- ② 等级卡轮播：档数按后台配置（默认 26 张），由脚本写入；中间卡选中 -->
+        <div class="vc-car" id="car"><div class="vc-trk" id="track"></div></div>
+      </div>
+      <div class="vc-body">
+        <!-- 生日卡片（有今年的生日奖金时显示） -->
+        <div class="vc-bd glow" id="bdCard" hidden>
+          <div class="ic" aria-hidden="true">🎂</div>
+          <div class="mid"><b>生日快乐！</b><div class="amt" id="bdAmt">₱488</div><div class="m" id="bdMeta"></div></div>
+          <div id="bdAct"></div>
+        </div>
+        
+        <!-- VIP 规则：移到右上角「i」按钮的弹窗里（用户 2026-10-28） -->
+        <!-- ④ 等级表（VIP1–SUPER VIP，默认 25 行，不列会员；只显示奖金 4 列，用户 2026-10-28） -->
+        <div class="vc-card glow"><h4>VIP 等级表</h4><div class="vc-tw"><table class="vc-tbl" id="lvTable"></table></div></div>
+      </div>
+    </div>
+
+    <!-- ============ VIP 体系关闭 ============ -->
+    <div class="view vc" id="vOff" hidden>
+      <div class="vc-head"><div class="topline"><a class="back" href="#vip5" aria-label="返回">‹</a>VIP中心</div></div>
+      <div class="vc-body">
+        <div class="vc-off">VIP 暂未开放</div>
+        <div class="vc-bd glow" id="offBd"><div class="ic" aria-hidden="true">🎂</div><div class="mid"><b>生日快乐！</b><div class="amt">₱488</div><div class="m">有效期至 2026-10-27 23:59（GMT+8）</div></div><div><button type="button" class="vc-btn" id="offClaim">领取</button></div></div>
+      </div>
+    </div>
+
+    <!-- ============ 加载失败 ============ -->
+    <div class="view vc" id="vError" hidden>
+      <div class="vc-head"><div class="topline"><a class="back" href="#vip5" aria-label="返回">‹</a>VIP中心</div></div>
+      <div class="vc-body"><div class="vc-sk" id="skel" hidden></div><div class="vc-err" id="errBox"><button type="button" id="retry">加载失败，点击重试</button></div></div>
+    </div>
+
+    <!-- ============ VIP 规则弹窗（右上角「i」按钮，用户 2026-10-28） ============ -->
+    <div class="vc-dov" id="ruleDlg" hidden>
+      <div class="dlg glow" role="dialog" aria-modal="true" aria-labelledby="ruleTitle">
+        <button type="button" class="hx x-close" id="ruleX" aria-label="关闭">×</button>
+        <h3 id="ruleTitle">VIP 规则</h3>
+        <ol id="rules"></ol>
+      </div>
+    </div>
+
+    <!-- ============ 奖励详情弹窗（等级卡「查看详情」） ============ -->
+    <div class="vc-dov" id="dtlDlg" hidden>
+      <div class="dlg glow" role="dialog" aria-modal="true" aria-labelledby="dtlName">
+        <button type="button" class="hx x-close" id="dtlX" aria-label="关闭">×</button>
+        <div class="dtl-hd"><h3 id="dtlName"></h3><span id="dtlHist"></span></div>
+        <div class="dtl-sec" id="dtlRwT">享有奖励</div>
+        <table id="dtlTbl"><thead><tr><th>奖金</th><th>金额</th><th>状态</th></tr></thead><tbody id="dtlBody"></tbody></table>
+        <p class="dtl-ft" id="dtlFt">升级、月度奖金自动到账；生日奖金在生日卡片领取</p>
+        <!-- 用户 2026-10-28：先显示奖励，再显示玩家在该等级的数据（保级、升级进度） -->
+        <div class="dtl-st" id="dtlSt" hidden></div>
+      </div>
+    </div>
+
+    <div class="toast" id="toast" role="status" hidden></div>
+  </div>
+  <div class="vip-req-note ui-reqnote vip-outnote">页面数据全部为虚构示例；「去认证」「登录」上线时跳到现有 KYC 认证页、登录页；本原型点击后只在右侧「模拟操作」面板显示演示反馈。</div>
+  </div>
+
+  <aside class="notes">
+    <h2>VIP会员体系-v1.2-VIP中心页面</h2>
+    <p class="sub">原等级中心（Level Center）改为 VIP中心（用户 2026-10-28，PRD 规则 N40）：入口为个人中心原「Level Center」入口，改为进入 VIP中心；原 LEVEL 等级不再使用，本页不显示任何 LEVEL 等级（PC 网页是否要做待确认 Q11）。自上而下：标题栏「VIP中心」（右上角「i」按钮弹出 VIP 规则）→ 弧形等级刻度 → 等级卡轮播（会员 + VIP1–SUPER VIP 档数按后台配置、默认 26 张，当前等级卡即玩家的 VIP 进度）→ 生日卡片 → VIP 等级表；不显示头像、玩家名和等级徽章。「会员」是 VIP0（未达到 VIP1 的玩家，后台等级名 VIP0）的前台显示名，前台不显示等级号。刻度和等级卡样式沿用封存版（完整需求）。带淡色光晕的是本需求新增的内容。</p>
+    <h3>模拟场景</h3>
+    <div class="sim">
+      <button type="button" data-go="vip0"><span class="simtag">等级</span>VIP0（前台显示「会员」）· 从未到达 VIP1</button>
+      <button type="button" data-go="vip5"><span class="simtag">等级</span>VIP5 · 升级进行中</button>
+      <button type="button" data-go="kept"><span class="simtag">等级</span>VIP14 · 本月保级达成</button>
+      <button type="button" data-go="demoted"><span class="simtag">等级</span>降级玩家 · 当前 VIP10 / 历史最高 VIP12 · 本月保级达成</button>
+      <button type="button" data-go="demoted-miss" class="glow"><span class="simtag">等级</span>降级玩家 · 当前 VIP10 / 历史最高 VIP12 · 本月保级未达成（本月 ₱2M / 保级 ₱3M，用户 2026-10-28）</button>
+      <button type="button" data-go="vip0back"><span class="simtag">等级</span>VIP1 保级失败 · 降为 VIP0（前台显示「会员」）</button>
+      <button type="button" data-go="svip"><span class="simtag">等级</span>SUPER VIP · 本月未保级</button>
+      <button type="button" data-go="svip-kept" class="glow"><span class="simtag">等级</span>SUPER VIP · 本月已保级</button>
+      <button type="button" data-go="settling"><span class="simtag">时间</span>每月 1 日结算中</button>
+      <button type="button" data-go="settling-late" class="glow"><span class="simtag">时间</span>结算中 · 13:30 后未完成</button>
+      <button type="button" data-go="nokyc"><span class="simtag">状态</span>未完成 KYC</button>
+      <button type="button" data-go="nokyc-review" class="glow"><span class="simtag">状态</span>未完成 KYC · 审核中</button>
+      <button type="button" data-go="risk"><span class="simtag">状态</span>风控暂停（含生日奖金暂停发放）</button>
+      <button type="button" data-go="bd-pending"><span class="simtag">生日</span>生日奖金 · 待领取</button>
+      <button type="button" data-go="bd-claimed"><span class="simtag">生日</span>生日奖金 · 已领取</button>
+      <button type="button" data-go="bd-expired"><span class="simtag">生日</span>生日奖金 · 已过期</button>
+      <button type="button" data-go="bd-audit"><span class="simtag">生日</span>生日奖金 · 审核中</button>
+      <button type="button" data-go="bd-rejected" class="glow"><span class="simtag">生日</span>生日奖金 · 已驳回</button>
+      <button type="button" data-go="bd-wait" class="glow"><span class="simtag">生日</span>生日奖金 · 1 日生日结算中</button>
+      <button type="button" data-go="off"><span class="simtag">状态</span>VIP 体系关闭</button>
+      <button type="button" data-go="logout"><span class="simtag">状态</span>未登录</button>
+      <button type="button" data-go="error"><span class="simtag">异常</span>接口失败</button>
+    </div>
+    <h3>模拟操作</h3>
+    <div class="sim" id="simPanel"></div>
+    <h3>规则批注</h3>
+    <ol>
+      <li><b>图标与进度行</b>：🎰 有效投注（升级进度为累计有效投注；VIP1 降为会员时为本月有效投注）、「钞票进钱包」图标 累计充值、🛡️ 保级、「历史 + TOP」图标 历史最高（只在「查看详情」弹窗）、⏳ 结算中 / 进行中 / 审核中 / 待核验、绿色圆形 ✓ 已满足 / 已到账、🔒 未解锁、🔓 已解锁、🎂 生日奖金待领取。升级目标和恢复用文字「UP VIPn」「恢复 VIPn」「先恢复 VIPn」「→ VIPn」，不用图标。进度行 = 左侧图标（恢复行为文字）| 进度条 | 右侧差额或 ✓，同一行、垂直居中；不显示百分比，不写「还差」；已满足 = ✓ + 绿色满格。单独出现的图标带中文 aria-label / title（英文模式翻译），后面有文字的图标 aria-hidden。图标为示意，UI 可换成同含义图标；不设图例。<span class="ref">PRD F07-02 图标与卡片排版</span></li>
+      <li><b>当前等级卡</b>：「当前」标签在右侧徽章正下方，各状态按 PRD 表 1 ①–⑦：本月未保级 → 🛡️ 保级进度（本月有效投注 ÷ 当前等级保级投注）；已保级且有下一级 → 标题行「UP VIPn」+ 右侧「保级成功」+ 🎰、钱包两条升级进度；SUPER VIP 已保级 → 只有「保级成功」+ 1 条绿色满格；降级玩家同未保级 / 已保级。进度下方奖金行：升到 VIPn 升级奖金（n = 历史最高 + 1，已是最高级不显示）、月度奖金、生日奖金（该级有配置才显示）。会员：从未到达 VIP1 → 「UP VIP1」+ 两条升级进度 + 升到 VIP1 升级奖金，无「查看详情」；VIP1 降为会员 → 🎰 本月有效投注 ÷ VIP1 保级投注 + 升到 VIPn 升级奖金，有「查看详情」。卡上有标题行时徽章放大（徽章 +「当前」总高与标题行 + 进度条一致），其余小尺寸。卡上不显示保级成功框、次月恢复、历史最高，这些在「查看详情」弹窗（第 4 条）。<span class="ref">PRD 表 1 ①–⑦ · F07-01 当前等级进度</span></li>
+      <li><b>非当前等级卡</b>：按 PRD 表 1 ⑧–⑬。低于当前 → 标签「已达成」，无进度条、无奖金行；降级后高于当前、≤ 历史最高 → 「🔓 已解锁」：当前 + 1 的卡显示「恢复 VIPn」+ 本月有效投注 ÷ 当前等级保级投注（当前为会员按 VIP1 保级投注），更高的只显示「先恢复 VIPn」（n = 当前 + 1，每月最多恢复 1 级）；下一级（历史最高 + 1）→ 「🔒 未解锁」+ 两条升级进度 + 升级奖金、月度奖金；更高 → 「🔒 未解锁」+ 升级奖金、月度奖金；高于历史最高的卡徽章置灰。未登录 / 未完成 KYC：会员卡「未达 VIP1，无奖金」，VIP1 起全部按未解锁。<span class="ref">PRD 表 1 ⑧–⑬ · F07-02 弧形刻度与等级卡</span></li>
+      <li><b>「查看详情」弹窗</b>：VIP1 起每张卡底部都有（会员卡只在 VIP1 降为会员时有），只有中间卡可点；×、遮罩、Esc 关闭。当前等级卡：标题「VIPn 详情」，降级玩家标题右侧显示历史最高框；先显示「享有奖励」奖金表，下面再显示玩家在该等级的数据：「本月保级」（达标加「已达成」）+ 🛡️ 进度（降级玩家后接「→ VIPn+1」次月恢复等级）+「UP VIPm」两条升级进度（最高级无）；结算中只显示 ⏳ 一行。VIP1 降为会员：「会员 详情」+ 历史最高框 + 🎰 本月有效投注 ÷ VIP1 保级投注 +「→ VIP1」+ UP 两条进度，无奖金表。非当前等级卡只显示奖金表。奖金状态：升级奖金 ✓ 已到账 / 🔒 未解锁；月度奖金 ✓ 1 日 13:00 到账 / ⏳ 进行中 / ⏳ 待核验 / 当前等级可得；生日奖金按生日卡片状态（1 日生日结算完成前金额显示「—」、状态「⏳ 结算完成后可领取」，与生日卡片一致），非当前等级「生日当天为该级可领」。<span class="ref">PRD 表 2 · F07-02 查看详情</span></li>
+      <li><b>弧形刻度与轮播</b>：刻度数按后台配置（默认 26 个：会员 + VIP1–SUPER VIP）沿下凹弧线排列，选中等级在正中最低处、上方白色 ▼，离选中越远越高越淡；会员蓝色、VIP 金色、SUPER VIP 紫金，当前等级亮金加粗带小圆点。点刻度、点相邻卡、左右滑动都可切换，刻度和卡片联动；默认定位当前等级（会员定位会员卡；未登录、未完成 KYC 定位 VIP1）。卡面：会员蓝色（徽章和刻度文字「会员」，不显示等级号）、VIP1–VIP24 香槟金、SUPER VIP 皇室紫金。等级卡区域固定高度，切换卡片和场景时下方内容位置不变。<span class="ref">PRD F07-02 弧形刻度与等级卡</span></li>
+      <li><b>升级条件</b>：累计有效投注和累计充值同时达到才升级，实时判定；跨多级逐级发升级奖金，每级终身一次。<span class="ref">PRD 规则 N7、N9 · F03-02 实时升级与升级奖金</span></li>
+      <li><b>降级与恢复</b>：降级玩家累计仍满足原等级也不立即升回，升级目标是历史最高 + 1；当月有效投注达到当前等级的保级投注，照常领当前等级月度奖金，次月恢复 1 级；VIP1 降为会员的（历史最高 ≥ VIP1）按 VIP1 保级投注判断，次月回到 VIP1（Q19 已定，用户 2026-10-28）。<span class="ref">PRD 规则 N10、N16、N17 · F04-02 降级与逐级恢复</span></li>
+      <li><b>结算中</b>：每月 1 日 00:00 至结算完成，当前等级卡和「查看详情」第二部分（玩家数据）只显示「⏳ 上月结算中，预计 13:00 完成」（13:30 后仍未完成时为「⏳ 上月结算中，完成后自动更新」），第一部分奖金表照常，卡片奖金行照常；升级照常实时判定（下一级卡升级进度照常）。<span class="ref">PRD 规则 N12、N18 · 表 1 ④ · F07-01 结算中</span></li>
+      <li><b>金额显示</b>：奖金写 ₱ + 千分位；门槛和进度差额 ≥ ₱1,000 用 K / M / B，最多 2 位小数、向上取整。<span class="ref">PRD 规则 N42</span></li>
+      <li><b>VIP 规则</b>：右上角「i」按钮弹窗，×、遮罩、Esc 关闭，打开时上报 vip_rules_view。最多 13 条、每条一句话；流水倍数、生日有效期读后台配置；「KYC 限制」开启时显示 KYC 一条，强制审核开启时显示审核一条（右侧模拟操作可切换）。全文待运营定稿。<span class="ref">PRD 4.1 VIP 规则 · F07-03 VIP 规则</span></li>
+      <li><b>等级表</b>：只列 VIP1–SUPER VIP（默认 25 行，按后台配置），不列会员；只显示奖金 4 列（等级、升级奖金、月度奖金、生日奖金），不显示门槛（用户 2026-10-28），不横向滚动；当前等级行高亮。表格限高约 13 行、表内上下滚动、表头固定；进入页面时当前等级定位在第 2 行（VIP1 在第 1 行），没有当前等级（会员、未登录、未完成 KYC）停在顶部。<span class="ref">PRD F07-03 等级表</span></li>
+      <li><b>生日卡片</b>：待领取 → 领取（成功到账 / 强制审核时「审核中」/ 失败可重试）；已领取、已过期灰色；暂停发放「暂不可领取，有疑问联系客服」，不显示按钮；已驳回「未通过审核，有疑问联系客服」，不显示按钮，保留到有效期结束后隐藏（「查看详情」生日奖金状态为「未通过审核」）；已作废卡片隐藏；补发按新记录状态显示（直接到账时为「已领取」）。生日奖金统一由玩家手动领取：金额在生日所在月份 1 日 13:00 月度结算完成时按结算后的等级确定（结算后为 VIP0（前台「会员」）或该级生日奖金为 0 的不生成），生成条件在那一刻判断（已完成 KYC、VIP 体系开启）；从生日当天 00:00（GMT+8）起可领取，有效期按后台「生日奖金有效期」（默认含生日当天 15 天），到期变为「已过期」；生日前不显示生日卡片。生日在 1 日的：1 日 00:00 至结算完成显示「⏳ 结算完成后可领取」（无按钮），结算完成后变为待领取。领取时到账失败不自动重试，状态保持待领取，toast「领取失败，请重试」，有效期内可再次领取。「查看详情」当前等级卡今年还没有生日奖金时显示「生日当天可领」。<span class="ref">PRD 规则 N21、N22 · F07-04 生日卡片</span></li>
+      <li><b>未完成 KYC（「KYC 限制」开启时）</b>：弧形刻度上方显示 KYC 引导卡（状态标签「未加入 VIP」+「完成 KYC 加入 VIP」+「去认证」；KYC 审核中时按钮置灰并显示「KYC 审核中」），刻度不标当前等级、默认定位 VIP1，等级卡按表 1 ⑬，规则、等级表照常显示，不显示生日卡片；「KYC 限制」关闭时按正常玩家显示。<span class="ref">PRD 规则 N23、N24 · F07-05 特殊状态</span></li>
+      <li><b>风控暂停</b>：等级照算，页面多一条提示条；奖金暂停发放，不弹升级弹窗；生日卡片显示「暂不可领取，有疑问联系客服」，无按钮。<span class="ref">PRD 规则 N31 · F07-05 特殊状态</span></li>
+      <li><b>VIP 体系关闭</b>：整页只显示「VIP 暂未开放」，已生成未领取的生日奖金在有效期内仍可领取。<span class="ref">PRD 规则 N27 · F07-05 特殊状态</span></li>
+    </ol>
+    <h3>评审待确认</h3>
+    <ol>
+      <li><b>PC 网页</b>：入口已定为个人中心原 Level Center 入口（用户 2026-10-28）；PC 网页是否要做。<span class="ref">PRD 待确认 Q11</span></li>
+            <li><b>规则里显示流水倍数</b>：第 10 条「VIP 奖金完成 1 倍流水后可提现」（v1.2 方案写法），封存版曾决定前台不显示流水倍数。<span class="ref">PRD 待确认 Q15</span></li>
+      <li><b>前台文案定稿</b>：规则全文、卡片和按钮的英文为示意，待运营在「文案确认」页定稿。<span class="ref">PRD 待确认 Q14</span></li>
+    </ol>
+    <div class="pager"><span></span><a href="VIP会员体系-VIP通知页面.html">下一页：VIP通知页面 →</a></div>
+  </aside>
+</div>
+</div>
+<script>window.NAV_ROOT = "../../../";</script>
+<script src="../../../assets/nav-data.js"></script>
+<script src="../../../assets/nav.js"></script>
+<script src="../../../assets/proto-en.js"></script>
+<script src="../../../assets/vip.js"></script>
+<script src="../../../assets/proto.js"></script>
+<script>
+/* 模拟操作面板：后台配置项和领取结果（演示用，跨页面共享） */
+P.init({ defaults: { kycLimit: true, audit: false, turnover: "1", bdDays: "15", claimRes: "ok" } });
+P.panel(document.getElementById("simPanel"), [
+  { title: "切换后台配置项", items: [
+    { type: "check", key: "kycLimit", label: "KYC 限制（默认开启）" },
+    { type: "check", key: "audit", label: "强制审核（默认关闭）" },
+    { type: "select", key: "turnover", label: "流水倍数", options: [["1", "1 倍（默认）"], ["0", "0 · 无流水要求"], ["3", "3 倍"]] },
+    { type: "select", key: "bdDays", label: "生日奖金有效期", options: [["15", "15 天（默认）"], ["7", "7 天"], ["30", "30 天"]] }
+  ] },
+  { title: "生日奖金领取结果", items: [{ type: "radio", key: "claimRes", tag: "结果", options: [["ok", "成功"], ["fail", "到账失败"], ["expired", "点击时已过期"]] }] },
+  { title: "演示值说明", items: [{ type: "note", text: "演示数据：VIP5 累计有效投注 ₱732,400、累计充值 ₱168,000、本月有效投注 ₱62,500；生日 10-13，有效期 15 天至 10-27。所有数据均为虚构。" }] },
+  { items: [{ type: "reset" }] }
+]);
+</script>
+<script>
+(function () {
+  /* 等级配置（PRD 7.2 默认值）：名称、累计有效投注、累计充值、保级投注、升级奖金、月度奖金、生日奖金 */
+  var LV = [
+    ["会员", 0, 0, 0, 0, 0, 0],   /* 等级值 0：VIP0（未达到 VIP1，后台等级名 VIP0），前台显示「会员」 */
+    ["VIP1", 1e4, 2e3, 5e3, 8, 6, 88], ["VIP2", 5e4, 1e4, 2e4, 18, 12, 88], ["VIP3", 1e5, 2e4, 4e4, 28, 18, 88], ["VIP4", 2.5e5, 5e4, 8e4, 38, 28, 88],
+    ["VIP5", 5e5, 1e5, 1e5, 48, 38, 88], ["VIP6", 1e6, 2.5e5, 1.5e5, 68, 48, 188], ["VIP7", 2e6, 5e5, 3e5, 108, 68, 188], ["VIP8", 4e6, 1e6, 5e5, 288, 88, 188],
+    ["VIP9", 1.2e7, 3e6, 1e6, 588, 200, 188], ["VIP10", 2.4e7, 6e6, 3e6, 888, 400, 188], ["VIP11", 3e7, 1e7, 5e6, 1088, 600, 288], ["VIP12", 4.5e7, 1.5e7, 8e6, 1288, 800, 288],
+    ["VIP13", 6e7, 2e7, 1e7, 1488, 1100, 288], ["VIP14", 7.5e7, 2.5e7, 1.2e7, 1688, 1350, 488], ["VIP15", 9e7, 3e7, 1.5e7, 1888, 1800, 488], ["VIP16", 1e8, 5e7, 2e7, 2288, 2000, 488],
+    ["VIP17", 1.2e8, 6e7, 2.5e7, 2888, 2600, 888], ["VIP18", 1.4e8, 7.2e7, 3e7, 3688, 2800, 888], ["VIP19", 1.6e8, 8.8e7, 3.5e7, 5288, 4200, 888], ["VIP20", 1.8e8, 1.8e8, 3.8e7, 6288, 5000, 1288],
+    ["VIP21", 2.5e8, 2.5e8, 4e7, 15888, 10000, 1288], ["VIP22", 4e8, 4e8, 5e7, 30888, 20000, 1888], ["VIP23", 6e8, 6e8, 5.5e7, 40888, 30000, 1888], ["VIP24", 8e8, 8e8, 5.8e7, 68888, 40000, 2888],
+    ["SUPER VIP", 1e9, 1e9, 6e7, 118888, 100000, 5888]
+  ];
+  /* 各场景的模拟玩家数据：cur 当前等级、hist 历史最高、bet 累计有效投注、dep 累计充值、mon 当月有效投注、bd 生日奖金 */
+  var BD = { amt: 488, exp: "2026-10-27" };
+  var S = {
+    vip0: { cur: 0, hist: 0, bet: 6200, dep: 1500, mon: 6200 },
+    vip5: { cur: 5, hist: 5, bet: 732400, dep: 168000, mon: 62500 },
+    kept: { cur: 14, hist: 14, bet: 81250000, dep: 26800000, mon: 12600000 },
+    demoted: { cur: 10, hist: 12, bet: 47300000, dep: 16200000, mon: 3450000 },
+    "demoted-miss": { cur: 10, hist: 12, bet: 47300000, dep: 16200000, mon: 2000000 },
+    vip0back: { cur: 0, hist: 1, bet: 18600, dep: 3200, mon: 2100 },
+    svip: { cur: 25, hist: 25, bet: 1035000000, dep: 1012000000, mon: 21500000 },
+    "svip-kept": { cur: 25, hist: 25, bet: 1035000000, dep: 1012000000, mon: 61500000 },
+    settling: { cur: 5, hist: 5, bet: 732400, dep: 168000, mon: 0, settling: true },
+    "settling-late": { cur: 5, hist: 5, bet: 732400, dep: 168000, mon: 0, settling: true, late: true },
+    nokyc: { cur: -1, hist: -1, bet: 268000, dep: 52000, mon: 31000, kyc: "none" },
+    "nokyc-review": { cur: -1, hist: -1, bet: 268000, dep: 52000, mon: 31000, kyc: "review" },
+    risk: { cur: 5, hist: 5, bet: 732400, dep: 168000, mon: 62500, risk: true, bd: "pending" },
+    "bd-rejected": { cur: 14, hist: 14, bet: 81250000, dep: 26800000, mon: 4200000, bd: "rejected" },
+    "bd-wait": { cur: 14, hist: 14, bet: 81250000, dep: 26800000, mon: 0, bd: "wait", settling: true },
+    "bd-pending": { cur: 14, hist: 14, bet: 81250000, dep: 26800000, mon: 4200000, bd: "pending" },
+    "bd-claimed": { cur: 14, hist: 14, bet: 81250000, dep: 26800000, mon: 4200000, bd: "claimed" },
+    "bd-expired": { cur: 14, hist: 14, bet: 81250000, dep: 26800000, mon: 4200000, bd: "expired" },
+    "bd-audit": { cur: 14, hist: 14, bet: 81250000, dep: 26800000, mon: 4200000, bd: "audit" },
+    logout: { cur: -1, hist: -1, logout: true }
+  };
+  var VIEWS = Object.keys(S).concat(["off", "error"]);
+  var view = "vip5", sel = 0, bdState = null;
+  function $(id) { return document.getElementById(id); }
+  function money(n) { var d = Math.round(n * 100) % 100 !== 0; return "₱" + n.toLocaleString("en-US", { minimumFractionDigits: d ? 2 : 0, maximumFractionDigits: 2 }); }
+  /* 门槛缩写：≥ 1,000 用 K / M / B，最多 2 位小数、向上取整、去末尾 0（PRD 规则 N42） */
+  function abbr(n) {
+    if (n < 1000) return "₱" + n;
+    var u = n >= 1e9 ? ["B", 1e9] : n >= 1e6 ? ["M", 1e6] : ["K", 1e3];
+    var v = Math.ceil(n / u[1] * 100 - 1e-9) / 100;
+    return "₱" + String(+v.toFixed(2)) + u[0];
+  }
+  function lvName(i) { return LV[i][0]; }
+  /* 未加入 VIP：「KYC 限制」开启且 KYC 未审核通过（未提交 none、审核中 review） */
+  function noKyc(d) { return (d.kyc === "none" || d.kyc === "review") && P.get("kycLimit"); }
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+  var TOP = LV.length - 1;
+
+  /* ===== 弧形刻度 + 等级卡（v1.2，用户 2026-10-27：移植自封存版完整需求，名词换成 v1.2 的升级奖金 / 月度奖金 / 生日奖金） ===== */
+  /* 玩家上下文：none = 未登录 / 未完成 KYC 且「KYC 限制」开启（没有 VIP 数据，所有卡按未解锁显示、刻度不标当前）；cur 当前等级；hist 历史最高 */
+  function ctx(d) {
+    if (d.logout || (noKyc(d))) return { none: true, cur: -1, hist: -1 };
+    var c = d.cur < 0 ? levelByAcc(d) : d.cur;
+    return { none: false, cur: c, hist: d.hist < 0 ? c : d.hist };
+  }
+  /* 圆形绿色对勾（已完成项）与绿底紫边已达成图标：原型自绘 SVG（沿用封存版），正式由 UI 出图 */
+  var OK_SVG = '<svg viewBox="0 0 32 32" aria-hidden="true"><defs><radialGradient id="gkG" cx=".38" cy=".32" r=".75"><stop offset="0" stop-color="#7ef0a2"/><stop offset=".55" stop-color="#1fae55"/><stop offset="1" stop-color="#0b6b32"/></radialGradient><linearGradient id="gkA" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff2b0"/><stop offset=".55" stop-color="#f2c14e"/><stop offset="1" stop-color="#b9821f"/></linearGradient></defs>' +
+    '<path d="M16 .8l2.4 3.6-4.8 0zM16 31.2l2.4-3.6-4.8 0zM.8 16l3.6-2.4 0 4.8zM31.2 16l-3.6-2.4 0 4.8z" fill="url(#gkA)"/><circle cx="16" cy="16" r="12.2" fill="url(#gkG)" stroke="url(#gkA)" stroke-width="2.4"/>' +
+    '<path d="M9.6 16.4l4.2 4.2 8.6-9" fill="none" stroke="#7a4d0c" stroke-width="4.6" stroke-linecap="round" stroke-linejoin="round" opacity=".55"/><path d="M9.6 16.4l4.2 4.2 8.6-9" fill="none" stroke="url(#gkA)" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  var ACH_SVG = '<svg viewBox="0 0 32 32" aria-hidden="true"><defs><radialGradient id="gvG" cx=".38" cy=".32" r=".75"><stop offset="0" stop-color="#7ef0a2"/><stop offset=".55" stop-color="#1fae55"/><stop offset="1" stop-color="#0b6b32"/></radialGradient><linearGradient id="gvP" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#b57cff"/><stop offset=".5" stop-color="#7b2fe0"/><stop offset="1" stop-color="#3f0d85"/></linearGradient><linearGradient id="gvA" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff2b0"/><stop offset=".55" stop-color="#f2c14e"/><stop offset="1" stop-color="#b9821f"/></linearGradient></defs>' +
+    '<path d="M16 .8l2.4 3.6-4.8 0zM16 31.2l2.4-3.6-4.8 0zM.8 16l3.6-2.4 0 4.8zM31.2 16l-3.6-2.4 0 4.8z" fill="url(#gvP)"/><circle cx="16" cy="16" r="12.2" fill="url(#gvG)" stroke="url(#gvP)" stroke-width="2.6"/>' +
+    '<path d="M9.6 16.4l4.2 4.2 8.6-9" fill="none" stroke="#7a4d0c" stroke-width="4.6" stroke-linecap="round" stroke-linejoin="round" opacity=".55"/><path d="M9.6 16.4l4.2 4.2 8.6-9" fill="none" stroke="url(#gvA)" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  function okIc() { return '<span class="ok-ic" role="img" aria-label="已完成" title="已完成">' + OK_SVG + "</span>"; }
+  function pct(have, need) { return have >= need ? 100 : Math.min(99, Math.floor(have / need * 100)); }
+  function bar(p) { return '<div class="bar' + (p >= 100 ? " full" : "") + '"><i style="width:' + p + '%"></i></div>'; }
+  function pg2(p, end) { return '<div class="pg2"><div class="row">' + bar(p) + (end ? '<span class="end">' + end + "</span>" : "") + "</div></div>"; }
+  function stg(t) { return '<div class="crt"><span class="stg">' + t + "</span></div>"; }
+  /* 图标（用户 2026-10-28：能用图标表达的不用文字）：🎰 累计有效投注、钞票进钱包 累计充值、🛡️ 保级（本月有效投注对保级投注）、⬆ 升级目标、BACK 调头箭头 次月恢复、👑 历史最高、⏳ 结算中；
+     每个图标带 aria-label / title 写中文含义（英文模式按对照表翻译），图标本身不翻译 */
+  function ic(sym, label) { return '<i class="vic" role="img" aria-label="' + label + '" title="' + label + '">' + sym + "</i>"; }
+  /* 图标（用户 2026-10-28 再改）：累计有效投注 = 老虎机 🎰；累计充值 = 钞票进钱包（SVG）；恢复 = 横向调头箭头、凹陷处写 BACK（SVG，替代像「刷新」的 ↻） */
+  var BET = "🎰";
+  var DEP = '<svg class="svic" viewBox="0 0 24 24" aria-hidden="true"><rect x="6.5" y="1.5" width="11" height="9" rx="1.2" fill="#43c97b" stroke="#1b7a4c" stroke-width="1"/><circle cx="12" cy="6" r="1.8" fill="none" stroke="#1b7a4c" stroke-width="1"/><path d="M12 9.6v3.2M10.4 11.4l1.6 1.6 1.6-1.6" fill="none" stroke="#fff" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/><rect x="2" y="9" width="20" height="13" rx="3" fill="#8a5a12"/><rect x="2" y="9" width="20" height="3.2" rx="1.6" fill="#a8761c"/><rect x="14.5" y="13.5" width="7.5" height="5" rx="1.6" fill="#e2b552"/><circle cx="17" cy="16" r="1" fill="#5a3a00"/></svg>';
+  var BACK = '<svg class="svic back" viewBox="0 0 46 23" aria-hidden="true"><path d="M8 3.5H33a7.5 7.5 0 0 1 0 15H9" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/><path d="M2.5 18.5L9.5 14v9z" fill="currentColor"/><text x="21" y="13.6" text-anchor="middle" font-size="7.6" font-weight="900" fill="currentColor" font-family="Arial,sans-serif">BACK</text></svg>';
+  /* 升级目标（用户 2026-10-28）：在两条升级进度条上方以标题显示，不用图标，用最简单的英文「UP」+ 目标等级 */
+  function upHead(k, kept) { return '<div class="uph"><span><b>UP</b> ' + lvName(k) + "</span>" + (kept ? '<span class="kok">保级成功</span>' : "") + "</div>"; }
+  /* 进度行（用户 2026-10-28 再改）：左侧图标、中间进度条（缩短）、右侧差额或对勾，三者同一行、垂直居中对齐；不显示百分比、不写「还差」；已满足：对勾 + 绿色满格 */
+  function gapRow(sym, label, have, need) {
+    var ok = have >= need;
+    return '<div class="pg"><span class="pi">' + ic(sym, label) + "</span>" + bar(ok ? 100 : pct(have, need)) + '<span class="pv">' + (ok ? okIc() : '<span class="gap">' + abbr(Math.ceil(need - have)) + "</span>") + "</span></div>";
+  }
+  /* 已过等级（会员卡、低于当前的已达成卡、降级后已解锁卡）：投注、充值两条进度均为已满足（✓ + 绿色满格，用户 2026-10-28） */
+  /* 恢复进度行：BACK 图标 | 进度条 | 差额或 ✓；wait = 本月还不能恢复到此等级（需先回到低一级） */
+  function backRow(have, need, wait, lv) {
+    /* 恢复（用户 2026-10-28 再改）：不用 BACK 图标，用文字。当前等级 + 1 的卡：「恢复 VIPn」+ 进度条 + 差额或 ✓；更高的已解锁卡：只显示文字「先恢复 VIPn」（n = 当前等级 + 1） */
+    if (wait) return '<div class="rtx">先恢复 ' + lv + "</div>";
+    var ok = have >= need;
+    return '<div class="pg"><span class="pi pt">恢复 ' + lv + "</span>" + bar(ok ? 100 : pct(have, need)) + '<span class="pv">' + (ok ? okIc() : '<span class="gap">' + abbr(Math.ceil(need - have)) + "</span>") + "</span></div>";
+  }
+  /* 详情弹窗进度行：图标 | 进度条 | 差额或 ✓ | 「→ VIPn」（降级玩家次月恢复等级） */
+  function dtlRow(icon, have, need, back) {
+    var ok = have >= need;
+    return '<div class="drow"><span class="di">' + icon + "</span>" + bar(ok ? 100 : pct(have, need)) + '<span class="dv">' + (ok ? okIc() : abbr(Math.ceil(need - have))) + "</span>" + (back ? '<span class="dbk' + (ok ? " ok" : "") + '">→ ' + back + "</span>" : "") + "</div>";
+  }
+  function done2() { return gapRow(BET, "累计有效投注", 1, 1) + gapRow(DEP, "累计充值", 1, 1); }
+  /* 状态组合块（用户 2026-10-28）：保级图标 + 对勾放在同一个底色框里；恢复图标 + 恢复等级同样放在一个底色框里，表示两者是一组 */
+  function chip(inner, cls, label) { return '<span class="chipx ' + cls + '" role="img" aria-label="' + label + '" title="' + label + '">' + inner + "</span>"; }
+  function keptChip() { return chip('<i class="vic" aria-hidden="true">🛡️</i>' + okIc(), "ok", "本月保级成功"); }
+  function backChip(lv, ok) { return chip(BACK + "<b>" + lv + "</b>" + (ok ? okIc() : ""), ok ? "ok" : "wait", ok ? "已达恢复条件" : "保级达标后次月恢复"); }
+  function keptPg() { return '<div class="chips">' + keptChip() + "</div>" + '<div class="pg"><span class="pi"></span>' + bar(100) + '<span class="pv"></span></div>'; }
+  function keptLine(extra) { return '<div class="chips">' + keptChip() + (extra || "") + "</div>"; }
+  function backLine(lv, ok) { return '<div class="chips">' + backChip(lv, ok) + "</div>"; }
+  /* 历史最高（用户 2026-10-28）：「历史」逆时针箭头 + 「TOP」组合图标，和等级放在同一个赭石色底框里 */
+  var HIST = '<svg class="svic hist" viewBox="0 0 24 24" aria-hidden="true"><path d="M4.2 12a7.8 7.8 0 1 0 2.3-5.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M2.6 3.6l.6 4.6 4.4-1.2z" fill="currentColor"/><text x="12.6" y="14.6" text-anchor="middle" font-size="6.6" font-weight="900" fill="currentColor" font-family="Arial,sans-serif">TOP</text></svg>';
+  function histChip(k) { return chip(HIST + "<b>" + lvName(k) + "</b>", "hist", "历史最高"); }
+  function retChip(ok) { return ok ? keptChip() : chip('<i class="vic" aria-hidden="true">🛡️</i>', "wait", "本月保级进行中"); }
+  function upChip(k) { return chip('<i class="vic" aria-hidden="true">⬆</i><b>' + lvName(k) + "</b>", "wait", "升级目标"); }
+  function statusRow(list) { return '<div class="chips one">' + list.join("") + "</div>"; }
+  function histLine(k) { return '<div class="chips">' + chip(HIST + "<b>" + lvName(k) + "</b>", "hist", "历史最高") + "</div>"; }
+  /* 结算中：13:30 后仍未完成时不写预计时间（PRD F07-01 结算中） */
+  var SETTLE = '<span class="mut">' + ic("⏳", "结算中") + " 上月结算中，预计 13:00 完成</span>";
+  var SETTLE_LATE = '<span class="mut">' + ic("⏳", "结算中") + " 上月结算中，完成后自动更新</span>";
+  function settleTxt(d) { return d.late ? SETTLE_LATE : SETTLE; }
+  var LOCK = '<span class="pill">🔒 未解锁</span>';
+  function bonusGrid(L) { return '<div class="bgrid"><span>升级奖金</span><span>' + money(L[4]) + "</span><span>月度奖金</span><span>" + money(L[5]) + "</span></div>"; }
+  function cardHtml(i, d, x) {
+    var L = LV[i], nm = L[0], b = "";
+    var h = '<div class="medal" aria-hidden="true">' + (i === 0 ? "会员" : i === TOP ? "SUPER<br>VIP" : "VIP<br>" + i) + "</div>";
+    if (x.none) {
+      /* 未登录 / 未完成 KYC：没有 VIP 数据，VIP0 卡只写一句，其余卡按「更高的未解锁卡」显示 */
+      if (i === 0) b = '<span class="rgd">未达 VIP1，无奖金</span>';
+      else { h += LOCK; b = bonusGrid(L); }
+    } else if (i === x.cur) {
+      h += '<span class="pill c">当前</span>';
+      if (i === 0) {
+        if (x.hist >= 1) {
+          /* VIP1 保级失败降为VIP0：🛡️ 本月有效投注对 VIP1 保级投注的差额 + 进度条；↻ VIP1（达标后变绿 + 对勾）；👑 历史最高 */
+          var n1 = LV[1][3];
+          /* 状态一行（用户 2026-10-28）：保级 · 恢复 · 升级 · 历史最高 同一行；下面是保级进度条 */
+          /* 会员没有保级（用户 2026-10-28）：不显示 🛡️；只显示回到 VIP1 的进度（🎰 本月有效投注对 VIP1 保级投注额）+ 恢复框 + 历史最高框 */
+          b += (d.settling ? settleTxt(d) : gapRow(BET, "本月有效投注", d.mon, n1)) + '<div class="bgrid cg"><span>升到 ' + lvName(x.hist + 1) + ' 升级奖金</span><span>' + money(LV[x.hist + 1][4]) + "</span></div>";   /* 恢复、历史最高移到「查看详情」弹窗（用户 2026-10-28） */
+        } else b = upHead(1) + gapRow(BET, "累计有效投注", d.bet, LV[1][1]) + gapRow(DEP, "累计充值", d.dep, LV[1][2]) + '<div class="bgrid cg"><span>升到 VIP1 升级奖金</span><span>' + money(LV[1][4]) + "</span></div>";   /* VIP0不考核保级；当前卡显示升级到 VIP1 的两条进度（与 VIP1 卡相同，用户 2026-10-28） */
+      } else {
+        /* 降级与恢复（用户 2026-10-27 改，覆盖 C-02「达到高一级保级投注才恢复」）：降级玩家（当前 < 历史最高）达到当前等级的保级投注即恢复条件——
+           照常领当前等级月度奖金，次月恢复 1 级；保级行下「↻ VIPn」（达标变绿 + 对勾）；最后「👑 历史最高」 */
+        var ret = L[3], kept = d.mon >= ret, up = x.hist + 1, dn = x.cur < x.hist, tg = dn ? lvName(x.cur + 1) : "";
+        var upRows = up <= TOP ? upHead(up) + gapRow(BET, "累计有效投注", d.bet, LV[up][1]) + gapRow(DEP, "累计充值", d.dep, LV[up][2]) : "";
+        /* 状态一行（用户 2026-10-28）：保级 · 恢复（降级玩家）· 升级目标 · 历史最高（降级玩家）放在同一行；
+           下面：本月未保级 → 保级进度条；已保级 → 升级到下一级的投注、充值两条进度（已是最高级 → 绿色满格） */
+        /* 当前等级可领取的奖金（用户 2026-10-28）：放在进度条下方——月度奖金（本月保级达标后次月 1 日 13:00 到账）、生日奖金（该级配置了才显示） */
+        /* 下一次升级（用户 2026-10-28，只在当前等级卡显示）：升到哪一级（历史最高 + 1）及该级升级奖金；已是最高级不显示 */
+        var row = '<div class="bgrid cg">' + (up <= TOP ? "<span>升到 " + lvName(up) + " 升级奖金</span><span>" + money(LV[up][4]) + "</span>" : "") + "<span>月度奖金</span><span>" + money(L[5]) + "</span>" + (L[6] ? "<span>生日奖金</span><span>" + money(L[6]) + "</span>" : "") + "</div>";
+        if (d.settling) b += settleTxt(d) + row;
+        else if (!kept) b += gapRow("🛡️", "保级投注", d.mon, ret) + row;
+        /* 本月保级成功（用户 2026-10-28）：「UP VIPn」标题行右侧显示「保级成功」，与下方进度条数字右对齐、与「UP VIPn」底线对齐；已是最高级时只有「保级成功」+ 绿色满格 */
+        else if (up <= TOP) b += upHead(up, true) + gapRow(BET, "累计有效投注", d.bet, LV[up][1]) + gapRow(DEP, "累计充值", d.dep, LV[up][2]) + row;
+        else b += '<div class="uph"><span></span><span class="kok">保级成功</span></div><div class="pg"><span class="pi"></span>' + bar(100) + '<span class="pv"></span></div>' + row;
+      }
+    } else if (i < x.cur) {
+      /* 已完成的非当前等级（低于当前）：顶部显示文字标签「已达成」（用户 2026-10-28，替代绿色对勾图标） */
+      h += '<span class="pill d">已达成</span>';
+      /* 会员卡（玩家已是 VIP）：显示升级到 VIP1 的投注、充值两条进度，均为已满足（✓ + 绿色满格，用户 2026-10-28） */
+      b = "";   /* 投注、充值进度条只在未解锁卡（下一级）和本月已保级的当前卡显示（用户 2026-10-28），已完成的等级卡不显示进度条 */
+    } else if (i <= x.hist) {
+      /* 降级后之前到过的等级（用户 2026-10-28）：只显示能否恢复到此等级——
+         当前等级 + 1：本月有效投注对当前等级保级投注额（会员按 VIP1 保级投注额）的进度，达标 ✓（次月恢复到此等级）；
+         更高的已解锁等级：每月最多恢复 1 级，本月不能直接恢复，进度条为空，右侧「先恢复 VIPn」 */
+      h += '<span class="pill u">🔓 已解锁</span>';
+      var rneed = x.cur === 0 ? LV[1][3] : LV[x.cur][3];
+      b = i === x.cur + 1 ? backRow(d.mon, rneed, false, nm) : backRow(0, 1, true, lvName(x.cur + 1));
+    } else if (i === x.hist + 1) {
+      h += LOCK; b = gapRow(BET, "累计有效投注", d.bet, L[1]) + gapRow(DEP, "累计充值", d.dep, L[2]) + bonusGrid(L);   /* 下一级未解锁卡：两条升级进度 + 升级奖金、月度奖金金额（用户 2026-10-28） */
+    } else { h += LOCK; b = bonusGrid(L); }
+    /* VIP0没有奖金，不放「查看详情」 */
+    var btn = i === 0 && !(i === x.cur && !x.none && x.hist >= 1) ? "" : '<button type="button" class="dtlb" data-dtl="' + i + '" aria-label="' + nm + ' 奖励详情">查看详情</button>';
+    return h + '<div class="vbody">' + b + "</div>" + btn;
+  }
+  function renderGuide(d) {
+    var g = $("guide");
+    if (d.logout) {
+      g.hidden = false;
+      g.innerHTML = '<div class="medal" aria-hidden="true">VIP</div><span class="pill c">未登录</span><div class="vbody"><span class="kt">登录查看 VIP 进度</span><span><button type="button" class="vc-btn" id="loginBtn">登录</button></span></div>';
+      $("loginBtn").onclick = function () { demo("已模拟：跳到现有登录页，登录后返回 VIP中心"); };
+    } else if (noKyc(d)) {
+      g.hidden = false;
+      /* KYC 审核中：「去认证」置灰不可点，按钮文字为「KYC 审核中」（PRD F07-05） */
+      var rv = d.kyc === "review";
+      g.innerHTML = '<div class="medal" aria-hidden="true">KYC</div><span class="pill c">未加入 VIP</span><div class="vbody"><span class="kt">完成 KYC 加入 VIP</span><span class="kd">加入时按累计定级</span><span><button type="button" class="vc-btn' + (rv ? " dis" : "") + '" id="kycBtn"' + (rv ? " disabled" : "") + ">" + (rv ? "KYC 审核中" : "去认证") + "</button></span></div>";
+      if (!rv) $("kycBtn").onclick = function () { demo("已模拟：跳到现有 KYC 认证页"); };
+    } else { g.hidden = true; g.innerHTML = ""; }
+  }
+  function renderCards(d) {
+    var x = ctx(d);
+    /* 卡片下方图例已删除（用户 2026-10-28） */
+    $("ticks").innerHTML = LV.map(function (L, i) {
+      return '<button type="button" role="tab" class="vc-tick' + (i === 0 ? " t0" : i === TOP ? " ts" : "") + (!x.none && i === x.cur ? " cur" : "") + '" data-k="' + i + '">' + L[0] + "</button>";
+    }).join("");
+    $("track").innerHTML = LV.map(function (L, i) {
+      var cls = i === 0 ? "regc" : i === TOP ? "svip" : "vipc";
+      if (x.none ? i > 0 : i > x.hist) cls += " locked";
+      return '<div class="vc-vc ' + cls + '" data-k="' + i + '"' + (i === TOP ? ' data-vtag="' + L[0] + '"' : "") + ' role="group" aria-label="' + L[0] + '">' + cardHtml(i, d, x) + "</div>";
+    }).join("");
+    /* 默认定位：当前等级（VIP0定位VIP0 卡）；未登录、未完成 KYC 定位 VIP1 */
+    select(x.none ? 1 : x.cur, true);
+  }
+  function select(k, silent) {
+    var track = $("track"), cards = track.children, ticks = $("ticks");
+    if (!cards.length) return;
+    sel = Math.max(0, Math.min(cards.length - 1, k));
+    [].forEach.call(cards, function (c, j) {
+      c.classList.toggle("on", j === sel);
+      var db = c.querySelector(".dtlb"); if (db) db.tabIndex = j === sel ? 0 : -1;
+    });
+    /* 选中卡居中（卡片宽度相同，按实际位置计算） */
+    var cs = cards[sel], off = $("car").clientWidth / 2 - (cs.offsetLeft - cards[0].offsetLeft + cs.offsetWidth / 2);
+    track.style.transform = "translateX(" + off + "px)";
+    /* 弧形：刻度沿椭圆下沿（半宽 a = 容器宽 × 0.55，半高 b = 75px）抬高，离选中等级越远越淡 */
+    var t = ticks.children[sel];
+    [].forEach.call(ticks.children, function (x, j) {
+      x.classList.toggle("sel", j === sel); x.setAttribute("aria-selected", String(j === sel));
+      var a = ticks.clientWidth * .55, b = 75, dx = (x.offsetLeft + x.offsetWidth / 2) - (t.offsetLeft + t.offsetWidth / 2), r = a ? Math.abs(dx) / a : 1;
+      x.style.transform = "translateY(" + (r >= 1 ? -b : -b * (1 - Math.sqrt(1 - r * r))).toFixed(1) + "px)";
+      x.style.opacity = r >= .95 ? 0 : Math.max(.3, 1 - Math.abs(j - sel) * .18);
+    });
+    ticks.scrollLeft = t.offsetLeft - ticks.clientWidth / 2 + t.offsetWidth / 2;
+    if (!silent) console.log("[埋点] vip_card_switch", { to_level: LV[sel][0] });
+  }
+  /* 交互：点刻度、点相邻卡、左右滑动；只有中间卡的「查看详情」可点 */
+  $("ticks").addEventListener("click", function (e) { var b = e.target.closest(".vc-tick"); if (b) select(+b.dataset.k); });
+  var swipedAt = 0;   /* 滑动松手后浏览器还会补发一次 click，落在原来那张卡上；滑动后 400ms 内的点击忽略，避免切回去 */
+  $("track").addEventListener("click", function (e) {
+    if (Date.now() - swipedAt < 400) return;
+    var db = e.target.closest(".dtlb");
+    if (db && db.closest(".vc-vc.on")) { openDtl(+db.dataset.dtl); return; }
+    var c = e.target.closest(".vc-vc"); if (c && !c.classList.contains("on")) select(+c.dataset.k);
+  });
+  (function () {
+    var x0 = null, t0 = 0, car = $("car");
+    car.addEventListener("pointerdown", function (e) { x0 = e.target.closest(".vc-vc.on .dtlb") ? null : e.clientX; t0 = Date.now(); });
+    car.addEventListener("pointerup", function (e) { if (x0 === null) return; var dx = e.clientX - x0; x0 = null; if (Math.abs(dx) > 40 && Date.now() - t0 < 1500) { swipedAt = Date.now(); select(sel + (dx < 0 ? 1 : -1)); } });
+    car.addEventListener("pointercancel", function () { x0 = null; });
+  })();
+  window.addEventListener("resize", function () { if (!$("vMain").hidden && S[view]) select(sel, true); });
+
+  /* ===== 奖励详情弹窗：升级奖金 / 月度奖金 / 生日奖金（金额 > 0 时）及状态 =====
+     升级奖金：≤ 历史最高 → 已到账；否则未解锁。月度奖金：当前等级 → 本月保级达成「1 日 13:00 到账」（风控暂停「待核验」）、未达成或结算中「进行中」；其他等级「当前等级可得」。
+     生日奖金：当前等级 → 按生日卡片状态（待领取 / 已领取 / 审核中 / 已过期，风控暂停「待核验」，今年没有生日奖金「生日当天可领」，1 日生日结算中「结算完成后可领取」）；其他等级「生日当天为该级可领」 */
+  function openDtl(i) {
+    var d = S[view], x = ctx(d), L = LV[i], rows = [], isCur = !x.none && i === x.cur;
+    /* 状态前加图标：✓ 已到账 / 已领取 / 已达标（绿）、⏳ 进行中 / 审核中 / 待核验（橙）、🔒 未解锁（灰）、已过期灰色；图标后有文字，图标本身 aria-hidden */
+    var SYM = { "ds-ok": "✓", "ds-on": "⏳", "ds-lk": "" };
+    function st(t, c, sym) { var s = sym != null ? sym : SYM[c]; return '<span class="' + c + '">' + (s ? '<i class="vic" aria-hidden="true">' + s + "</i> " : "") + t + "</span>"; }
+    rows.push(["升级奖金", money(L[4]), !x.none && i <= x.hist ? st("已到账", "ds-ok") : st("未解锁", "ds-lk", "🔒")]);
+    var ms = !isCur ? st("当前等级可得", "ds-lk") : !d.settling && d.mon >= L[3] ? (d.risk ? st("待核验", "ds-on") : st("1 日 13:00 到账", "ds-ok")) : st("进行中", "ds-on");
+    rows.push(["月度奖金", money(L[5]) + " / 月", ms]);
+    if (L[6]) {
+      var bs, bAmt = money(L[6]);
+      if (!isCur) bs = st("生日当天为该级可领", "ds-lk");
+      else {
+        var b = d.bd ? (bdState || d.bd) : null;
+        if (!b) bs = st("生日当天可领", "ds-lk");
+        else if (d.risk) bs = st("待核验", "ds-on");
+        else bs = { pending: st("待领取", "ds-on", "🎂"), claimed: st("已领取", "ds-ok"), audit: st("审核中", "ds-on"), expired: st("已过期", "ds-x"), rejected: st("未通过审核", "ds-x"), wait: st("结算完成后可领取", "ds-on") }[b];
+        /* 1 日生日结算中（用户 2026-10-29）：金额在 1 日 13:00 结算完成后按结算后等级确定，结算完成前金额显示「—」，与生日卡片一致 */
+        if (b === "wait" && !d.risk) bAmt = "—";
+      }
+      rows.push(["生日奖金", bAmt, bs]);
+    }
+    /* 当前等级状态（用户 2026-10-28：从卡片移到弹窗）：本月保级（会员没有保级）、次月恢复（降级玩家）、历史最高（降级玩家），各用一个赭石色组合框 */
+    /* 详情弹窗（用户 2026-10-28 再改）：当前等级卡 → 标题「VIPn 详情」，右侧历史最高框（降级玩家）与标题底对齐；
+       第一部分：本月保级状态 + 保级进度条（降级玩家进度条后标注「→ 次月恢复等级」）；下面升级两项指标进度条 + 升级目标「UP VIPn」；
+       第二部分：享有的奖励（奖金表）。会员没有保级：VIP1 降为会员的第一部分为回到 VIP1 的进度；会员没有奖励，不显示第二部分 */
+    var st1 = "", hist = "";
+    if (isCur) {
+      var dn = x.cur < x.hist, up = x.hist + 1;
+      if (d.settling) st1 += settleTxt(d);
+      else if (i >= 1) {
+        var kp = d.mon >= L[3];
+        st1 += '<div class="dsl"><span class="dlb">本月保级</span>' + (kp ? '<span class="dok">已达成</span>' : "") + "</div>";
+        st1 += dtlRow('<i class="vic" aria-hidden="true">🛡️</i>', d.mon, L[3], dn ? lvName(x.cur + 1) : "");
+      } else if (x.hist >= 1) {
+        st1 += dtlRow('<i class="vic" aria-hidden="true">🎰</i>', d.mon, LV[1][3], "VIP1");
+      }
+      if (up <= TOP && !d.settling) st1 += '<div class="uph">' + "<b>UP</b> " + lvName(up) + "</div>" + dtlRow(BET, d.bet, LV[up][1], "") + dtlRow(DEP, d.dep, LV[up][2], "");
+      if (dn) hist = histChip(x.hist);
+    }
+    $("dtlHist").innerHTML = hist;
+    $("dtlSt").hidden = !st1; $("dtlSt").innerHTML = st1;
+    $("dtlTbl").hidden = i === 0; $("dtlFt").hidden = i === 0; $("dtlRwT").hidden = i === 0 || !st1;
+    if (i === 0) rows = [];
+    $("dtlName").textContent = L[0] + " 详情";
+    $("dtlBody").innerHTML = rows.map(function (r) { return "<tr><td>" + r[0] + "</td><td>" + r[1] + "</td><td>" + r[2] + "</td></tr>"; }).join("");
+    $("dtlDlg").hidden = false; $("dtlX").focus();
+  }
+  $("infoBtn").addEventListener("click", function () { $("ruleDlg").hidden = false; $("ruleX").focus(); console.log("[埋点] vip_rules_view"); });
+  $("ruleX").addEventListener("click", function () { $("ruleDlg").hidden = true; });
+  $("ruleDlg").addEventListener("click", function (e) { if (e.target === this) this.hidden = true; });
+  window.addEventListener("keydown", function (e) { if (e.key === "Escape" && !$("ruleDlg").hidden) { e.stopPropagation(); $("ruleDlg").hidden = true; } }, true);
+  function closeDtl() { $("dtlDlg").hidden = true; }
+  $("dtlX").addEventListener("click", closeDtl);
+  $("dtlDlg").addEventListener("click", function (e) { if (e.target === this) closeDtl(); });
+  window.addEventListener("keydown", function (e) { if (e.key === "Escape" && !$("dtlDlg").hidden) { e.stopPropagation(); closeDtl(); } }, true);
+
+  function demo(m) { var a = document.querySelector("#simPanel .simnote") || document.querySelector("#simPanel button"); if (a) P.note(m, a); }
+  function levelByAcc(d) { var k = 0; for (var i = 1; i < LV.length; i++) if (d.bet >= LV[i][1] && d.dep >= LV[i][2]) k = i; return k; }
+
+  function renderBd(d) {
+    var c = $("bdCard"), st = d.bd ? (bdState || d.bd) : null;
+    if (!st || (noKyc(d)) || d.logout) { c.hidden = true; return; }
+    c.hidden = false; c.classList.toggle("gray", st === "expired");
+    $("bdAmt").textContent = money(d.cur > 0 && LV[d.cur][6] ? LV[d.cur][6] : BD.amt);   /* 按当前等级的生日奖金 */
+    var meta = $("bdMeta"), act = $("bdAct");
+    var days = +P.get("bdDays"), end = new Date(2026, 9, 13 + days - 1), ed = end.getFullYear() + "-" + String(end.getMonth() + 1).padStart(2, "0") + "-" + String(end.getDate()).padStart(2, "0");
+    if (d.risk) st = "risk";
+    if (st === "pending") { meta.textContent = "有效期至 " + ed + " 23:59（GMT+8）"; act.innerHTML = '<button type="button" class="vc-btn" id="bdBtn">领取</button>'; $("bdBtn").onclick = claim; }
+    else if (st === "claimed") { meta.textContent = "已到账"; act.innerHTML = '<span class="st ok"><i class="vic" aria-hidden="true">✓</i> 已领取</span>'; }
+    else if (st === "audit") { meta.textContent = "审核通过后到账"; act.innerHTML = '<span class="st"><i class="vic" aria-hidden="true">⏳</i> 审核中</span>'; }
+    else if (st === "expired") { meta.textContent = "有效期至 " + ed + " 23:59（GMT+8）"; act.innerHTML = '<span class="st">已过期</span>'; }
+    else if (st === "risk") { meta.textContent = "暂不可领取，有疑问联系客服"; act.innerHTML = ""; }
+    /* 已驳回（强制审核开启时运营驳回）：无按钮，保留到有效期结束后隐藏；已作废：卡片隐藏；补发：按新记录状态显示（PRD F07-04） */
+    else if (st === "rejected") { meta.textContent = "未通过审核，有疑问联系客服"; act.innerHTML = ""; }
+    /* 生日在 1 日：1 日 00:00 至结算完成，金额待结算后确定，无按钮；结算完成后变为待领取 */
+    else if (st === "wait") { $("bdAmt").textContent = "—"; meta.textContent = ""; act.innerHTML = '<span class="st"><i class="vic" aria-hidden="true">⏳</i> 结算完成后可领取</span>'; }
+  }
+  function claim() {
+    var b = $("bdBtn"); b.disabled = true; b.classList.add("dis"); b.textContent = "领取中…";
+    setTimeout(function () {
+      var r = P.get("claimRes");
+      if (r === "fail") { P.toast("领取失败，请重试"); b.disabled = false; b.classList.remove("dis"); b.textContent = "领取"; return; }
+      if (r === "expired") { P.toast("生日奖金已过期"); bdState = "expired"; renderBd(S[view]); return; }
+      if (P.get("audit")) { P.toast("已提交，审核通过后到账"); bdState = "audit"; }
+      else { P.toast("领取成功，已到账"); bdState = "claimed"; }
+      renderBd(S[view]);
+    }, 700);
+  }
+
+  function renderRules() {
+    /* VIP 规则（精简，用户 2026-10-28）：口径以 PRD 第 3 章为准；「会员」= VIP0的前台显示名 */
+    var n = P.get("turnover"), days = P.get("bdDays"), R = [
+      "VIP 等级从 VIP1 到 SUPER VIP，VIP1 以下为会员。累计有效投注和累计充值同时达到某级要求，立即升到该级。",
+      "累计有效投注、累计充值从注册起计算。有效投注只计 Slot、Casino、Poker、Bingo、Arcade、Fishing；累计充值只计自行充值成功的金额，不扣提款。",
+      "首次到达某级即得该级升级奖金，跨多级逐级发放；每级只发一次，降级后再到达不重发。",
+      "当月有效投注达到当前等级保级投注即保级：次月保持等级，次月 1 日 13:00（GMT+8）自动发该级月度奖金；当月升级的按新等级考核。",
+      "未保级：不发月度奖金，次月降 1 级（每月最多降 1 级），VIP1 降为会员。",
+      "降级后，当月达到当前等级保级投注：照常发月度奖金，次月恢复 1 级，最多恢复到历史最高等级；超过历史最高的等级按累计立即升级。例：10 月 VIP10 未达 ₱3M → 11 月降为 VIP9；11 月达 VIP9 保级 ₱1M → 12 月 1 日得 ₱200 并回到 VIP10。",
+      "从 VIP1 降为会员的，当月达到 VIP1 保级投注，次月回到 VIP1（不发奖金）。",
+      "有效投注统计到月末 23:59:59；次月 1 日 13:00 结算完成后，等级和月度奖金才会更新。",
+      "生日奖金：每年一次，金额按生日所在月份 1 日 13:00 结算后的等级确定，须在此之前完成 KYC；生日当天起 " + days + " 天内（含当天）在本页领取，过期不能再领。",
+      n === "0" ? "VIP 奖金无流水要求，到账可提现。" : "VIP 奖金完成 " + n + " 倍流水后可提现。"
+    ];
+    if (P.get("kycLimit")) R.push("须完成 KYC 才能加入 VIP；加入时按累计定级，此前已达到的等级不发升级奖金。");
+    if (P.get("audit")) R.push("VIP 奖金须审核通过后到账。");
+    R.push("如有疑问，请联系客服。");
+    $("rules").innerHTML = R.map(function (x) { return "<li>" + esc(x) + "</li>"; }).join("");
+  }
+  /* VIP 等级表（用户 2026-10-28）：去掉会员行（只列 VIP1–SUPER VIP 25 行）；只显示奖金（升级奖金、月度奖金、生日奖金）4 列，门槛页签已去掉，表格不横向滚动 */
+  var lvTab = "rw", lastD = null; /* 用户 2026-10-28：去掉门槛页签，只显示奖金 */
+  function renderTable(d) {
+    lastD = d || lastD; d = lastD;
+    var cur = d.logout || (noKyc(d)) ? -1 : (d.cur < 0 ? levelByAcc(d) : d.cur);
+    var req = lvTab === "req";
+    var h = "<tr><th>等级</th>" + (req ? "<th>累计有效投注</th><th>累计充值</th><th>保级投注</th>" : "<th>升级奖金</th><th>月度奖金</th><th>生日奖金</th>") + "</tr>";
+    LV.forEach(function (L, i) {
+      if (i === 0) return;
+      h += "<tr" + (i === cur ? ' class="cur"' : "") + "><td>" + L[0] + "</td>" + (req ? "<td>" + abbr(L[1]) + "</td><td>" + abbr(L[2]) + "</td><td>" + abbr(L[3]) + "</td>" : "<td>" + money(L[4]) + "</td><td>" + money(L[5]) + "</td><td>" + (L[6] ? money(L[6]) : "—") + "</td>") + "</tr>";
+    });
+    $("lvTable").innerHTML = h;
+    /* 默认定位（用户 2026-10-28）：表格限高、表内上下滚动、表头固定；当前等级显示在第 2 行（上面露出低一级），当前是 VIP1 时在第 1 行；没有当前等级（会员、未登录、未完成 KYC）停在顶部 */
+    var tw = $("lvTable").parentNode, cr = $("lvTable").querySelector("tr.cur");
+    if (cr) { var prev = cr.previousElementSibling, hd = $("lvTable").rows[0].offsetHeight; tw.scrollTop = Math.max(0, (prev && prev.rowIndex > 0 ? prev.offsetTop : cr.offsetTop) - hd); } else tw.scrollTop = 0;
+
+  }
+
+
+  function show(v) {
+    if (VIEWS.indexOf(v) < 0) v = "vip5";
+    if (v !== view) bdState = null;
+    view = v; closeDtl();
+    $("vMain").hidden = v === "off" || v === "error"; $("vOff").hidden = v !== "off"; $("vError").hidden = v !== "error";
+    if (S[v]) { var d = S[v]; $("riskBar").hidden = !d.risk; renderGuide(d); renderBd(d); renderCards(d); renderRules(); renderTable(d); $("vMain").scrollTop = 0; }
+    if (location.hash.slice(1) !== v) history.replaceState(null, "", "#" + v);
+    if (window.self !== window.top) window.parent.postMessage({ type: "proto-view", view: v }, "*");
+  }
+  $("retry").onclick = function () { $("errBox").hidden = true; $("skel").hidden = false; setTimeout(function () { $("skel").hidden = true; $("errBox").hidden = false; show("vip5"); }, 900); };
+  $("offClaim").onclick = function () { this.disabled = true; this.classList.add("dis"); this.textContent = "已领取"; P.toast("领取成功，已到账"); };
+  window.addEventListener("proto-change", function () { if (S[view]) show(view); });
+  window.addEventListener("hashchange", function () { show(location.hash.slice(1) || "vip5"); });
+  document.addEventListener("click", function (e) { var b = e.target.closest("[data-go]"); if (b) { e.preventDefault(); show(b.dataset.go); } });
+  show(location.hash.slice(1) || "vip5");
+})();
+</script>
+</body>
+</html>

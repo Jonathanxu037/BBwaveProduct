@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>VIP会员体系-v1.2-等级规则推演</title>
+<link rel="stylesheet" href="../../assets/style.css">
+<style>
+.lr-intro{font-size:14px;line-height:1.8}
+.lr-key{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 4px}
+.lr-key span{font-size:13px;border:1px solid #e4dfeb;border-radius:8px;padding:4px 10px;background:#faf8fc}
+.lr-key b{color:#4A2A7A}
+.lr-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px;margin:10px 0}
+.lr-box{border:1px solid #e4dfeb;border-radius:12px;padding:10px 14px;background:#fff;font-size:14px;line-height:1.7}
+.lr-box h4{margin:0 0 4px;font-size:14px;color:#4A2A7A}
+.lr-box ul{margin:0;padding-left:18px}
+.lr-t{width:100%;border-collapse:collapse;table-layout:fixed;font-size:14px;line-height:1.65;margin:8px 0 14px}
+.lr-t th,.lr-t td{border:1px solid #e4dfeb;padding:7px 10px;text-align:left;vertical-align:top;overflow-wrap:anywhere;white-space:normal}
+.lr-t th{background:#f6f2fb;color:#4A2A7A;font-weight:800}
+.lr-t td:first-child{font-weight:800;color:#4A2A7A}
+.lr-t .c1{width:58px}.lr-t .c2{width:42%}
+.lr-flow{display:flex;flex-wrap:wrap;align-items:stretch;gap:6px;margin:8px 0 14px}
+.lr-flow div{flex:1 1 150px;border:1px solid #e4dfeb;border-radius:10px;padding:8px 10px;background:#faf8fc;font-size:13px;line-height:1.6}
+.lr-flow b{display:block;color:#4A2A7A;font-size:13px}
+.lr-flow i{font-style:normal;align-self:center;color:#9a90a8;font-weight:800}
+.lr-tag{display:inline-block;font-size:12px;font-weight:800;padding:1px 8px;border-radius:10px;margin-right:6px;vertical-align:1px}
+.g-a{background:#e8f3ea;color:#2f6b3a}.g-b{background:#eef4fd;color:#1d4f8c}.g-c{background:#fff2cc;color:#7a4b00}.g-d{background:#fde8e8;color:#a32626}
+.lr-w{border:1px solid #e4dfeb;border-radius:12px;margin:10px 0;overflow:hidden;background:#fff}
+.lr-wh{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:8px 14px;background:#f6f2fb;border-bottom:1px solid #e4dfeb}
+.lr-wh .id{font-weight:800;color:#4A2A7A}.lr-wh .tt{font-weight:700;flex:1 1 240px}
+.sv{font-size:12px;font-weight:800;padding:1px 8px;border-radius:10px;white-space:nowrap}
+.sv-h{background:#fde8e8;color:#a32626}.sv-m{background:#fff2cc;color:#7a4b00}.sv-l{background:#efedf2;color:#5f5a66}
+.st{font-size:12px;padding:1px 8px;border-radius:10px;background:#eef4fd;color:#1d4f8c;white-space:nowrap}
+.lr-wb{display:grid;grid-template-columns:1fr 1fr;font-size:14px;line-height:1.7}
+.lr-wb>div{padding:8px 14px;min-width:0;overflow-wrap:anywhere}
+.lr-wb>div+div{border-left:1px solid #e4dfeb;background:#f3f8f2}
+.lr-wb .lb{display:block;font-size:12px;font-weight:800;color:#5f5a66}
+.lr-ok{margin:6px 0 0;padding-left:20px;font-size:14px;line-height:1.8}
+.lr-ok b{color:#2f6b3a}
+@media (max-width:640px){.lr-wb{grid-template-columns:1fr}.lr-wb>div+div{border-left:0;border-top:1px solid #e4dfeb}.lr-t .c1{width:46px}.lr-t .c2{width:45%}.lr-flow i{display:none}}
+</style></head>
+<body>
+<div class="with-nav">
+<div class="desk"><article class="paper">
+
+<h1 class="doc-title">VIP会员体系-v1.2-等级规则推演</h1>
+<div class="doc-meta"><span>整理日期：2026-10-29（GMT+8）</span><span>适用：v1.2</span><span>金额为后台默认配置，单位 ₱</span></div>
+<p class="lr-intro">本页把 VIP 的升级、保级、降级、恢复规则整理成一条主线，再按四类玩家情况推演结果，最后列出这套规则的风险和优势。</p>
+<div class="lr-key"><span><b>C</b> 当前等级</span><span><b>H</b> 历史最高等级（C ≤ H）</span><span><b>升级条件</b> 累计有效投注 + 累计充值，自注册起累计、不清零</span><span><b>保级条件</b> 当月有效投注，按自然月</span></div>
+<hr class="doc-rule">
+
+<h2 id="s1">一、等级规则</h2>
+<div class="lr-grid">
+  <div class="lr-box"><h4>① 升级：随时判定</h4><ul><li>累计有效投注、累计充值<b>两项同时</b>达到某级门槛，才算达到该级。</li><li>只看<b>比 H 高</b>的等级：达到后立即升级，可一次跨多级。</li><li>每个新到达的等级各发一次升级奖金，<b>每级终身一次</b>。</li><li>降级后累计仍够 H 及以下等级，也不会立即升回。</li></ul></div>
+  <div class="lr-box"><h4>② 保级：每月考核一次</h4><ul><li>统计到每月最后一天 23:59:59，次月 1 日 13:00 结算。</li><li>考核等级 = 月底那一刻的 C；月中升过级的按新等级考核整月投注。</li><li>当月有效投注 ≥ 考核等级的保级投注 = 保级成功，发该级月度奖金；未达标不发。</li></ul></div>
+</div>
+
+<h3>③ 结算后等级怎么变</h3>
+<table class="lr-t">
+  <colgroup><col style="width:28%"><col><col></colgroup>
+  <thead><tr><th>玩家状态</th><th>当月保级达标</th><th>当月保级未达标</th></tr></thead>
+  <tbody>
+    <tr><td>正常（C = H）</td><td>次月保持 C，发 C 的月度奖金</td><td>次月降为 C−1，不发奖金</td></tr>
+    <tr><td>降级中（C &lt; H）</td><td>发 C 的月度奖金，次月恢复为 C+1（最多到 H），恢复不发升级奖金</td><td>次月再降为 C−1，不发奖金</td></tr>
+    <tr><td>VIP1</td><td>保持 VIP1</td><td>降为会员（后台显示「VIP0」）</td></tr>
+    <tr><td>会员（到过 VIP1）</td><td>当月有效投注 ≥ VIP1 保级投注 → 次月回到 VIP1；会员没有月度奖金</td><td>保持会员</td></tr>
+  </tbody>
+</table>
+
+<h3>④ 两条路线同时存在</h3>
+<div class="lr-grid">
+  <div class="lr-box"><h4>恢复路线（降级玩家）</h4>每月达标恢复 1 级，最高回到 H。</div>
+  <div class="lr-box"><h4>升级路线（所有玩家）</h4>累计达到 H+1 及以上随时升级，并直接结束恢复路线。</div>
+</div>
+
+<h3>示例：降级与恢复</h3>
+<div class="lr-flow">
+  <div><b>10 月 · VIP5</b>当月投注 ₱60,000 &lt; ₱100,000，保级失败</div><i>→</i>
+  <div><b>11 月 · VIP4</b>当月投注 ₱90,000 ≥ ₱80,000，发 VIP4 月度奖金 ₱28</div><i>→</i>
+  <div><b>12 月 · VIP5</b>恢复原级，不再发 VIP5 升级奖金</div>
+</div>
+<hr class="doc-rule">
+
+<h2 id="s2">二、情况推演</h2>
+<p class="lr-intro">数值：VIP4 保级 ₱80,000、月度 ₱28；VIP5 保级 ₱100,000、月度 ₱38；VIP6 门槛 累计投注 ₱1,000,000 + 累计充值 ₱250,000、保级 ₱150,000、升级奖金 ₱68。</p>
+
+<h3 id="s2a"><span class="lr-tag g-a">A</span>常规情况</h3>
+<table class="lr-t"><colgroup><col class="c1"><col class="c2"><col></colgroup>
+<thead><tr><th>编号</th><th>情况</th><th>结果</th></tr></thead><tbody>
+<tr><td>A1</td><td>新玩家累计投注 ₱10,000、充值 ₱2,000</td><td>立即升 VIP1，发 ₱8</td></tr>
+<tr><td>A2</td><td>会员一笔大额充值，同时达到 VIP3 门槛</td><td>直接升 VIP3，逐级发 ₱8 + ₱18 + ₱28 = ₱54</td></tr>
+<tr><td>A3</td><td>VIP5 当月投注 ₱120,000</td><td>次月保持 VIP5，1 日 13:00 发 ₱38</td></tr>
+<tr><td>A4</td><td>VIP5 当月投注 ₱60,000</td><td>次月降为 VIP4，不发奖金；H 仍为 VIP5</td></tr>
+<tr><td>A5</td><td>接 A4，VIP4 当月投注 ₱90,000</td><td>发 VIP4 月度 ₱28，次月恢复 VIP5，不发升级奖金</td></tr>
+<tr><td>A6</td><td>接 A4，VIP4 当月只投注 ₱30,000</td><td>次月降为 VIP3，恢复要从 VIP3 逐级往上</td></tr>
+<tr><td>A7</td><td>VIP1 保级失败，之后某月投注 ≥ ₱5,000</td><td>先降为会员，达标后次月回到 VIP1</td></tr>
+<tr><td>A8</td><td>VIP5 月中累计达到 VIP6 门槛</td><td>立即升 VIP6，发 ₱68；月底按 VIP6 保级 ₱150,000 考核</td></tr>
+<tr><td>A9</td><td>降级玩家 C = VIP4、H = VIP5，累计达到 VIP6 门槛</td><td>直接升 VIP6，发 ₱68，恢复路线结束</td></tr>
+<tr><td>A10</td><td>SUPER VIP 保级成功</td><td>保持，发 ₱100,000；没有更高的升级目标</td></tr>
+<tr><td>A11</td><td>SUPER VIP 之后完全不玩</td><td>每月降 1 级，25 个月后成为会员，期间不发奖金</td></tr>
+</tbody></table>
+
+<h3 id="s2b"><span class="lr-tag g-b">B</span>非常规情况</h3>
+<table class="lr-t"><colgroup><col class="c1"><col class="c2"><col></colgroup>
+<thead><tr><th>编号</th><th>情况</th><th>结果</th></tr></thead><tbody>
+<tr><td>B1</td><td>VIP5 当月已投注 ₱120,000，月底最后一天一笔充值升到 VIP6</td><td>按 VIP6 ₱150,000 考核失败，次月降回 VIP5，拿不到本可拿的 ₱38（见 W3）</td></tr>
+<tr><td>B2</td><td>1 日 00:00–13:00 结算前下注或升级</td><td>投注计入新月；升级照常；结算结果低于当时等级时保留较高者，月度奖金仍按考核结果发或不发（PRD 规则 N18，见 W6）</td></tr>
+<tr><td>B3</td><td>月末最后一刻下注，次月才结算</td><td>按结算时间计入次月，不计入当月保级</td></tr>
+<tr><td>B4</td><td>保级结算后，当月注单被撤单</td><td>已结算结果不重算，月度奖金不追回</td></tr>
+<tr><td>B5</td><td>充值退款或拒付，累计低于当前等级门槛</td><td>等级不降，已发奖金不追回</td></tr>
+<tr><td>B6</td><td>后台下调门槛</td><td>全体重算，达到新门槛的立即升级并发升级奖金；上调不降级</td></tr>
+<tr><td>B7</td><td>后台在月底前修改保级投注</td><td>按结算时的配置考核，玩家整月看到的目标与最终考核不同（见 W5）</td></tr>
+<tr><td>B8</td><td>后台删除了玩家 H 所在的等级</td><td>只能删最高一级：当前或 H 为被删等级的都改为低一级（新的 SUPER VIP），不算降级、不发奖（PRD 规则 N50，见 W7）</td></tr>
+<tr><td>B9</td><td>后台新增最高级</td><td>原 SUPER VIP 改名 VIP25，SUPER VIP 玩家有了新的升级目标</td></tr>
+<tr><td>B10</td><td>KYC 限制开启时未完成 KYC，或被风控</td><td>等级冻结或奖金暂停发放，完成 KYC 或放行后恢复</td></tr>
+<tr><td>B11</td><td>VIP 体系关闭一个月后再开启</td><td>关闭期间不考核、不升级、不补发</td></tr>
+<tr><td>B12</td><td>月度结算失败</td><td>自动重试，仍失败则修复后补跑，以补跑结果为准</td></tr>
+<tr><td>B13</td><td>降级玩家当月保级达标，同月又升到 H+1</td><td>月底等级为 H+1，按 H+1 考核，恢复路线作废</td></tr>
+</tbody></table>
+
+<h3 id="s2c"><span class="lr-tag g-c">C</span>玩家利益最大化</h3>
+<table class="lr-t"><colgroup><col class="c1"><col class="c2"><col></colgroup>
+<thead><tr><th>编号</th><th>玩家做法</th><th>结果</th></tr></thead><tbody>
+<tr><td>C1</td><td>接近门槛时月初集中冲级，月底前停止充值，避开 B1</td><td>月度奖金更稳；不懂规则的玩家会吃亏</td></tr>
+<tr><td>C2</td><td>每月投注刚好压在保级线</td><td>用最低成本稳定领取月度奖金</td></tr>
+<tr><td>C3</td><td>降级后离 H+1 不远，直接冲 H+1</td><td>一次回到更高等级，并多拿一份升级奖金</td></tr>
+<tr><td>C4</td><td>生日前冲高一级</td><td>生日奖金金额按生日所在月份 1 日结算后的等级确定；1 日之前冲高一级可多拿，1 日之后升级不影响金额（PRD 规则 N21）</td></tr>
+</tbody></table>
+
+<h3 id="s2d"><span class="lr-tag g-d">D</span>恶意攻击与找漏洞</h3>
+<table class="lr-t"><colgroup><col class="c1"><col class="c2"><col></colgroup>
+<thead><tr><th>编号</th><th>手法</th><th>结果</th></tr></thead><tbody>
+<tr><td>D1</td><td>充值 → 提款 → 再充值，循环刷累计充值</td><td>累计充值不扣提款，几乎零成本达到充值门槛（见 W1）</td></tr>
+<tr><td>D2</td><td>对冲下注（同局两边下注、押低赔率），低成本刷有效投注</td><td>低成本达到升级和保级，套取升级、月度奖金（见 W2）</td></tr>
+<tr><td>D3</td><td>多开账号刷低等级奖金</td><td>VIP1–VIP5 升级奖金合计 ₱140 需投注 ₱500,000，不划算；生日奖金需 KYC、每年一次</td></tr>
+<tr><td>D4</td><td>达标领奖后，让注单撤单或作废</td><td>已发奖金不追回，依赖风控拦截（见 W9）</td></tr>
+<tr><td>D5</td><td>充值升级领奖后发起拒付</td><td>等级和奖金保留，产生资金损失（见 W9）</td></tr>
+<tr><td>D6</td><td>后台人员下调门槛，或删除、修改等级</td><td>可能触发批量发奖；后台无操作日志查看页，只能查库追溯</td></tr>
+<tr><td>D7</td><td>领取大额升级奖金（SUPER VIP ₱118,888）后按 1 倍流水立即提款</td><td>单笔金额大，依赖强制审核和风控暂停</td></tr>
+</tbody></table>
+<hr class="doc-rule">
+
+<h2 id="s5">三、降到会员后怎么恢复</h2>
+<p class="lr-intro">VIP1 保级失败会降为会员（后台显示「VIP0」）。会员没有保级考核、没有月度奖金，但系统仍记着历史最高 H，所以有两条路回去。数值：VIP1 保级 ₱5,000、月度 ₱6；VIP2 保级 ₱20,000、月度 ₱12；VIP3 保级 ₱40,000；VIP4 门槛 累计投注 ₱250,000 + 累计充值 ₱50,000、升级奖金 ₱38。</p>
+<div class="lr-grid">
+  <div class="lr-box"><h4>路线一：逐级恢复（H ≥ VIP1 的会员）</h4><ul><li>会员当月有效投注 ≥ VIP1 保级投注（₱5,000）→ 次月回到 VIP1；这个月不发月度奖金。</li><li>之后按降级中规则：每月达到当前等级保级投注，发当前等级月度奖金，次月再升 1 级，直到 H。</li><li>中途某月未达标，再降 1 级（VIP1 未达标则又回到会员）。</li></ul></div>
+  <div class="lr-box"><h4>路线二：直接升级（随时）</h4><ul><li>累计有效投注和累计充值达到 H+1 的门槛，立即升到 H+1 及以上，发新等级升级奖金，恢复路线结束。</li><li>累计达到 H 及以下等级的门槛不算，会员不会因此直接回到原等级。</li><li>从未到过 VIP1 的会员（H = 会员）只有这条路：累计达到 VIP1 门槛即升 VIP1。</li></ul></div>
+</div>
+<h3>示例：历史最高 VIP3，降到会员后恢复</h3>
+<div class="lr-flow">
+  <div><b>1 月 · VIP3</b>投注不足 ₱40,000 → 次月 VIP2</div><i>→</i>
+  <div><b>2 月 · VIP2</b>投注不足 ₱20,000 → 次月 VIP1</div><i>→</i>
+  <div><b>3 月 · VIP1</b>投注不足 ₱5,000 → 次月会员</div><i>→</i>
+  <div><b>4 月 · 会员</b>投注 ₱6,000 ≥ ₱5,000，无奖金 → 次月 VIP1</div><i>→</i>
+  <div><b>5 月 · VIP1</b>投注 ₱8,000，发 ₱6 → 次月 VIP2</div><i>→</i>
+  <div><b>6 月 · VIP2</b>投注 ₱25,000，发 ₱12 → 7 月回到 VIP3</div>
+</div>
+<p class="lr-intro">同一玩家如果在 4 月累计达到 VIP4 门槛，当时就直接从会员升到 VIP4，发 VIP4 升级奖金 ₱38，不用再走 5、6 月。</p>
+<h3>情况推演</h3>
+<table class="lr-t"><colgroup><col class="c1"><col class="c2"><col></colgroup>
+<thead><tr><th>编号</th><th>情况</th><th>结果</th></tr></thead><tbody>
+<tr><td>M1</td><td>H = VIP3 的会员，当月投注 ₱3,000</td><td>不够 ₱5,000，次月仍是会员，不再往下降</td></tr>
+<tr><td>M2</td><td>H = VIP3 的会员，当月投注 ₱100,000（远超 VIP3 保级）</td><td>次月只回到 VIP1，之后每月最多升 1 级（见 W4）</td></tr>
+<tr><td>M3</td><td>H = VIP3 的会员，累计达到 VIP4 门槛</td><td>立即升 VIP4，发 ₱38；H 变为 VIP4</td></tr>
+<tr><td>M4</td><td>H = VIP3 的会员，累计只够 VIP3 门槛</td><td>不升级，仍需按路线一逐级恢复</td></tr>
+<tr><td>M5</td><td>H = SUPER VIP 的玩家降到会员</td><td>没有更高等级，只能逐级恢复，最快 25 个月回到 SUPER VIP</td></tr>
+<tr><td>M6</td><td>回到 VIP1 后当月又未达 ₱5,000</td><td>次月再降为会员，恢复重新从会员开始</td></tr>
+<tr><td>M7</td><td>会员生日</td><td>会员没有生日奖金；生日所在月份 1 日结算后为 VIP1 及以上的，按结算后等级生成，生日当天起可领</td></tr>
+<tr><td>M8</td><td>会员在 VIP 中心查看</td><td>当前卡显示本月有效投注对 VIP1 保级投注的进度和「→ VIP1」，以及升到 H+1 的两条累计进度</td></tr>
+</tbody></table>
+<h3>结论</h3>
+<ul class="lr-ok">
+  <li><b>优点</b>：降到会员不是终点，只要一个月投注 ₱5,000 就能重新进入 VIP，回流门槛低。</li>
+  <li><b>弊端</b>：H 越高，从会员回到原等级越慢（最多 25 个月）；会员当月投注再多也只回到 VIP1（同 W4，可用 W4 的建议解决）。</li>
+  <li><b>弊端</b>：H = SUPER VIP 的玩家没有「直接升级」这条快路，只能逐级恢复。</li>
+</ul>
+<hr class="doc-rule">
+
+<h2 id="s3">四、风险与弊端</h2><p class="lr-intro">按严重程度排序。</p>
+
+<div class="lr-w" id="W1"><div class="lr-wh"><span class="id">W1</span><span class="tt">累计充值不扣提款，可循环刷充值门槛</span><span class="sv sv-h">高 · 资金</span></div>
+<div class="lr-wb"><div><span class="lb">影响</span>充值门槛失去作用，低成本达到高等级并领取奖金（D1）</div><div><span class="lb">建议</span>累计充值改为净充值（充值 − 提款）；或充值达到一定流水后才计入累计</div></div></div>
+
+<div class="lr-w" id="W2"><div class="lr-wh"><span class="id">W2</span><span class="tt">对冲下注可低成本刷有效投注</span><span class="sv sv-h">高 · 资金</span></div>
+<div class="lr-wb"><div><span class="lb">影响</span>升级和保级成本被压低，奖金被套取（D2）</div><div><span class="lb">建议</span>沿用平台现有对冲识别与风控暂停；高等级奖金开启强制审核</div></div></div>
+
+<div class="lr-w" id="W3"><div class="lr-wh"><span class="id">W3</span><span class="tt">月底被动升级，反因新等级保级失败</span><span class="sv sv-m">中 · 体验</span></div>
+<div class="lr-wb"><div><span class="lb">影响</span>升级后当月反而拿不到月度奖金，次月降级，易投诉（B1）</div><div><span class="lb">建议</span>升级当月免保级；或升级当月按升级前等级的保级投注考核</div></div></div>
+
+<div class="lr-w" id="W4"><div class="lr-wh"><span class="id">W4</span><span class="tt">降级玩家投注再多，每月也只恢复 1 级</span><span class="sv sv-m">中 · 公平</span></div>
+<div class="lr-wb"><div><span class="lb">影响</span>大额玩家回到原级要多个月，积极性受挫；降到会员的玩家影响更大（M2、M5）</div><div><span class="lb">建议</span>恢复到当月投注达到保级投注的最高等级，最多到 H</div></div></div>
+
+<div class="lr-w" id="W5"><div class="lr-wh"><span class="id">W5</span><span class="tt">保级投注、月度奖金月中修改当月生效</span><span class="sv sv-m">中 · 公平</span></div>
+<div class="lr-wb"><div><span class="lb">影响</span>玩家按旧目标投注，最终按新目标考核（B7）</div><div><span class="lb">建议</span>这两项修改改为次月 1 日起生效</div></div></div>
+
+<div class="lr-w" id="W6"><div class="lr-wh"><span class="id">W6</span><span class="tt">已定：结算前已实时升级的保留较高等级（PRD 规则 N18）</span><span class="sv sv-l">已定 · 口径</span></div>
+<div class="lr-wb"><div><span class="lb">口径</span>1 日 00:00 至结算完成照常实时升级；结算执行时当前等级已高于结算结果的，保留当前等级，月度奖金仍按考核等级的保级结果发或不发（B2）</div><div><span class="lb">剩余影响</span>无规则缺口；玩家可能对「降级结果未生效、但上月月度奖金不发」有疑问，客服按 PRD 规则 N18 解释</div></div></div>
+
+<div class="lr-w" id="W7"><div class="lr-wh"><span class="id">W7</span><span class="tt">已定：只能删最高一级，被删等级的当前等级和 H 改为低一级（PRD 规则 N50）</span><span class="sv sv-l">已定 · 口径</span></div>
+<div class="lr-wb"><div><span class="lb">口径</span>删除只发生在最高一级，其他等级的等级值不变；当前等级或 H 为被删等级的改为低一级，不算降级、不发升级奖金（B8）</div><div><span class="lb">剩余影响</span>恢复目标不会指向不存在的等级；以后再新增的等级是新等级，到达时照常发升级奖金</div></div></div>
+
+<div class="lr-w" id="W8"><div class="lr-wh"><span class="id">W8</span><span class="tt">不活跃玩家每月只降 1 级</span><span class="sv sv-l">低</span><span class="st">暂不处理</span></div>
+<div class="lr-wb"><div><span class="lb">影响</span>等级不能代表当前活跃度（A11）</div><div><span class="lb">建议</span>以后等级挂提款限额等权益时重新评估</div></div></div>
+
+<div class="lr-w" id="W9"><div class="lr-wh"><span class="id">W9</span><span class="tt">撤单、拒付后等级不回退、奖金不追回</span><span class="sv sv-m">中 · 资金</span></div>
+<div class="lr-wb"><div><span class="lb">影响</span>存在先领奖后撤销的资金缺口（B4、B5、D4、D5）</div><div><span class="lb">建议</span>增加「风控认定违规的，可作废未到账奖金并追回已到账奖金」</div></div></div>
+
+<div class="lr-w" id="W10"><div class="lr-wh"><span class="id">W10</span><span class="tt">规则多，玩家难懂、客服难答</span><span class="sv sv-m">中 · 客诉</span><span class="st">已部分处理</span></div>
+<div class="lr-wb"><div><span class="lb">影响</span>降级玩家问「怎么回去」时答不清，易投诉</div><div><span class="lb">建议</span>前台「查看详情」已显示恢复目标；客服 QA 写清降级、恢复、升级的区别</div></div></div>
+
+<div class="lr-w" id="W11"><div class="lr-wh"><span class="id">W11</span><span class="tt">VIP20 以上充值与投注 1:1，一般玩家难以到达</span><span class="sv sv-l">低</span></div>
+<div class="lr-wb"><div><span class="lb">影响</span>顶级等级更像宣传天花板</div><div><span class="lb">建议</span>确认为有意定位即可</div></div></div>
+<hr class="doc-rule">
+
+<h2 id="s4">五、优势</h2>
+<ol class="lr-ok">
+  <li><b>防刷奖</b>：升级奖金每级终身一次，升级目标锁定 H+1，「降级再升级」拿不到第二份奖金。</li>
+  <li><b>降级真正有效</b>：累计不清零，但只判断 H+1，降级后必须靠保级逐级恢复，不会因累计够而立刻升回。</li>
+  <li><b>软着陆</b>：每月只降 1 级，不会一次掉到底，减少流失。</li>
+  <li><b>恢复目标清楚</b>：降级玩家每月只需达到当前等级的保级投注，目标近、看得见，促进回流。</li>
+  <li><b>双门槛</b>：同时挡住「只充不玩」和「只刷流水不充值」（需先解决 W1）。</li>
+  <li><b>奖金与当月贡献挂钩</b>：月度奖金以保级达标为前提，不奖励不活跃玩家。</li>
+  <li><b>全自动</b>：实时升级、自动发奖、固定时间结算，无需客服介入。</li>
+  <li><b>高位可快速回归</b>：降级玩家有能力时可直接冲 H+1，不被逐月恢复拖住。</li>
+</ol>
+
+</article></div>
+</div>
+<script>window.NAV_ROOT = "../../";</script>
+<script src="../../assets/nav-data.js"></script>
+<script src="../../assets/nav.js"></script>
+</body>
+</html>

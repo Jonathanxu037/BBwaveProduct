@@ -43,7 +43,7 @@ textarea.bo-inp{height:auto;padding:6px 10px;line-height:1.5;resize:vertical;wid
 .adm-stage .bo tr td .sub2{color:#909399;text-decoration:none}
 /* 升级奖励记录显示生成时的等级（原「领取时的等级」，用户 2026-10-19），重新编号过的显示「VIP5（原 VIP4）」（用户 2026-10-19） */
 .lvn{white-space:nowrap}.lvo{color:#E6A23C}
-/* 审核弹窗（短信内容与短信模板，用户 2026-10-20） */
+/* 审核弹窗（用户 2026-10-20） */
 .au-kv{display:grid;grid-template-columns:110px 1fr;gap:4px 10px;color:#606266}
 .au .vip-cnt{text-align:left;color:#909399;font-size:12px;margin-top:4px}
 .au .cb{display:inline-flex;align-items:center;gap:4px;cursor:pointer}
@@ -139,7 +139,7 @@ td.vip-pg-st .vip-pg-retry{border:0;background:none;color:#409EFF;cursor:pointer
             </table>
             </div>
             <div class="sum" id="rSum"></div>
-            <p style="font-size:12px;color:#909399;margin:10px 0 0">表中时间均为 GMT+8。示例数据均为虚构；VIP 体系示例于 2026-07-01 第一次开启并按历史累计完成存量初始化。现有字段（会员名、福利类别、状态、金额、币种、日期讯息）沿用，「派发时间」改为「到账时间」，并补充 VIP 等级、流水倍数、流水游戏范围、账变类型、审核人、操作（用户 2026-10-17：会员等级与 VIP特权 分开）；Level 段奖励记录在【会员等级 › 活动奖励统计】。<span class="glow">新旧福利记录同表，用「福利类别」区分，旧版记录带灰色「旧版」标签、没有放行 / 补发等新版操作；旧版示例早于 2026-07-01（新版上线），到账时间默认从 2026-05-01 起查（用户 2026-10-19）。</span><span class="glow">「VIP 等级」显示生成时的等级（用户 2026-10-19）；VIP 等级配置重新编号后，旧记录显示为「VIP5（原 VIP4）」（演示见模拟操作「在 VIP3 后插入一级」，用户 2026-10-19）。导出包含旧版记录，用「福利类别」区分，不加「新版 / 旧版」列。升级、保级、生日奖励「发放失败」补发成功后统一显示「已发放（补发）」，计入已发放，筛选「已发放」包含它（用户 2026-10-19）。</span><span class="glow">「不发放（注册未满 n 天）」（灰）、「待审核」（橙）、「审核驳回」（红）都不计入已发放金额（用户 2026-10-19）。</span>这里是 VIP 奖励的统计口径：VIP 奖励账变类型为独立的「VIP 奖励」，不进活动报表、活动费用报表、平台报表「活动费用」和财务数据「活动总额」（规则 N54）。本区块提示文案以运营定稿为准。</p>
+            <p style="font-size:12px;color:#909399;margin:10px 0 0">表中时间均为 GMT+8。示例数据均为虚构；VIP 体系示例于 2026-07-01 第一次开启并按历史累计完成存量初始化。现有字段（会员名、福利类别、状态、金额、币种、日期讯息）沿用，「派发时间」改为「到账时间」，并补充 VIP 等级、流水倍数、流水游戏范围、账变类型、审核人、操作（用户 2026-10-17：会员等级与 VIP特权 分开）；Level 段奖励记录在【会员等级 › 活动奖励统计】。<span class="glow">新旧福利记录同表，用「福利类别」区分，旧版记录带灰色「旧版」标签、没有放行 / 补发等新版操作；旧版示例早于 2026-07-01（新版上线），到账时间默认从 2026-05-01 起查（用户 2026-10-19）。</span><span class="glow">「VIP 等级」显示生成时的等级（用户 2026-10-19）；VIP 等级配置重新编号后，旧记录显示为「VIP5（原 VIP4）」（演示见模拟操作「在 VIP3 后插入一级」，用户 2026-10-19）。导出包含旧版记录，用「福利类别」区分，不加「新版 / 旧版」列。升级、保级、生日奖励「发放失败」补发成功后统一显示「已发放（补发）」，计入已发放，筛选「已发放」包含它（用户 2026-10-19）。</span><span class="glow">「不发放（注册未满 n 天）」（灰）、「待审核」（橙）、「审核驳回」（红）都不计入已发放金额（用户 2026-10-19）。</span>这里是 VIP 奖励的统计口径：VIP 奖励账变类型为独立的「VIP 奖励」，不进各活动的活动报表、活动费用报表，按实际到账金额计入平台报表「活动费用」和财务数据「活动总额」（规则 N54，用户 2026-10-26）。本区块提示文案以运营定稿为准。</p>
           </div>
         </section>
         </div>
@@ -149,7 +149,7 @@ td.vip-pg-st .vip-pg-retry{border:0;background:none;color:#409EFF;cursor:pointer
 
   <aside class="notes adm-notes">
     <h2>VIP会员体系-完整需求-后台会员福利页面</h2>
-    <p class="sub">用户管理 › VIP特权 › 会员福利（会员福利记录：现有页签，承接本需求 VIP 升级 / 保级 / 生日奖励记录）。<span class="glow">用户 2026-10-21：【VIP特权】分为 VIP特权、会员福利、VIP数据报表三个页签，本页为「会员福利」页签（原页面名「后台结算与奖励记录」）；原「月度结算记录」页签已移到「VIP数据报表」。</span><span class="glow">用户 2026-10-17：会员等级与 VIP特权 分开，VIP 奖励记录从【会员等级 › 活动奖励统计】移到这里，活动奖励统计只保留 Level 段记录；左侧菜单高亮「VIP特权」，页签条为 VIP特权 栏目的页签。</span>带淡色光晕的是本需求新增的页签、列、筛选项、操作。左侧菜单「实体奖品管理 › 库存管理 / 发放管理」属于实体奖品管理需求（灰色不可点）；顶栏不再显示「库存告急」「待派发奖品」。<span class="glow">运营可见文字去「（示意）」、内部编号改写为规则内容（用户 2026-10-21）：导出等弹出提示去掉「（示意）」，所在区块说明块注明「本区块提示文案以运营定稿为准」；审核弹窗的短信模板来源提示去掉「示意文案（打包前交运营定稿）」「原文十六」，改为「默认显示系统预设文案」，出处移入相邻说明块。</span></p>
+    <p class="sub">用户管理 › VIP特权 › 会员福利（会员福利记录：现有页签，承接本需求 VIP 升级 / 保级 / 生日奖励记录）。<span class="glow">用户 2026-10-21：【VIP特权】分为 VIP特权、会员福利、VIP数据报表三个页签，本页为「会员福利」页签（原页面名「后台结算与奖励记录」）；原「月度结算记录」页签已移到「VIP数据报表」。</span><span class="glow">用户 2026-10-17：会员等级与 VIP特权 分开，VIP 奖励记录从【会员等级 › 活动奖励统计】移到这里，活动奖励统计只保留 Level 段记录；左侧菜单高亮「VIP特权」，页签条为 VIP特权 栏目的页签。</span>带淡色光晕的是本需求新增的页签、列、筛选项、操作。左侧菜单「实体奖品管理 › 库存管理 / 发放管理」属于实体奖品管理需求（灰色不可点）；顶栏不再显示「库存告急」「待派发奖品」。<span class="glow">运营可见文字去「（示意）」、内部编号改写为规则内容（用户 2026-10-21）：导出等弹出提示去掉「（示意）」，所在区块说明块注明「本区块提示文案以运营定稿为准」；审核弹窗不填写短信内容，到账短信按奖励类别使用短信模板（用户 2026-10-26）。</span></p>
     <h3>模拟场景</h3>
     <div class="vip-req-note ui-reqnote vip-req-hd"></div>
     <div class="sim">
@@ -183,7 +183,7 @@ td.vip-pg-st .vip-pg-retry{border:0;background:none;color:#409EFF;cursor:pointer
       <li class="glow"><b>HELP 同步块已按 PRD 8.8 精炼版整块同步；清理过时批注</b>：本页「?」帮助全部取自 PRD 8.8 精炼版（共 11 条；用户 2026-10-21 月度结算记录相关 12 条随页签移到 VIP数据报表页），HELP2 中与 HELP 相同的条目已清空（用户 2026-10-21）。</li>
       <li class="glow"><b>数据表一行显示</b>：数据表尽量一行显示（用户 2026-10-20）。本页数据表（列表、配置表、弹窗里的表）的表头和单元格不换行，放不下时在表格区域内左右滚动，页面本身不出现横向滚动条；备注、说明、原因等长文字超过约 300px 时单行省略，鼠标悬停显示全文；金额、数字、时间、状态、等级名和操作按钮不省略。原来分两行的「值 + 小字说明」合并为一行，用「·」分隔。<span class="ref">用户 2026-10-20</span></li>
       <li class="glow"><b>列表分页</b>（用户 2026-10-20 / 规范 v5.41）：本页列表：会员福利记录（各表排序见分页条左侧；月度结算记录、结算明细弹窗已移到 VIP数据报表页，用户 2026-10-21）。会员福利记录下方汇总（共 N 条、已发放金额）按全部符合筛选的记录统计，不只算当前页。后台页码分页，表格下方显示默认排序、共 N 条、每页条数（默认 20，可选 10 / 20 / 50 / 100）、上一页 / 页码 / 下一页、前往某页（输入 0、负数或超过总页数时取首页或末页）；排序时间相同时按 ID 兜底，翻页不重复、不遗漏。改每页条数、筛选 / 搜索 / 重置后回到第 1 页；编辑后停在当前页；删除后当前页为空时回到上一页；翻页期间有新数据时不插入当前页，重新查询后按排序显示（各表默认排序和本条已定，用户 2026-10-20）；空列表显示「暂无数据」；加载失败显示「加载失败，点击重试」。导出按当前筛选条件导出全部数据，不受分页限制。<span class="ref">生成内容规范第五章第 2 节「列表分页」· 需求包框架规范第 4 节</span></li>
-      <li><b>会员福利记录（改）</b><span class="glow">（用户 2026-10-17：会员等级与 VIP特权 分开）：VIP 升级 / 保级 / 生日奖励记录从【会员等级 › 活动奖励统计】移到【VIP特权 › 会员福利记录】，活动奖励统计只保留 Level 段记录。表头沿用现有会员福利记录字段（现有（管理后台知识库 4.1.6）：会员名、福利类别、状态、金额、币种、日期讯息、派发时间），「派发时间」改为「到账时间」，并补充 VIP 等级、流水倍数、流水游戏范围、账变类型（固定为「VIP 奖励」）、审核人、操作；福利类别为 VIP 升级奖励、VIP 保级奖励、VIP 生日奖励<span class="glow">，以及旧版 晋级礼金、每周红包、生日礼金、专属红包（新旧同表，见下一条「新旧福利记录同表」，用户 2026-10-19）</span>；<span class="glow">「日期讯息」按显示（见下一条）</span>；币种为 PHP。筛选为会员名、福利类别、金额、状态、到账时间，与表头同名。</span><span class="glow">（「VIP 实物改发彩金」已删除，替代奖励在实体奖品管理 v1.1 支持后再接入）</span>表格下方注明「表中时间均为 GMT+8」。流水倍数和流水游戏范围是这笔奖励发放时按 VIP 全局参数生成的，之后修改参数不影响已发放的记录（规则 N34；示例 liza_d 发放时游戏范围为指定游戏类型，其他记录为全部 6 大类）。发放状态<span class="glow">（用户 2026-10-17 定：按原文倾向升级、保级奖励自动到账（撤销 10-16 一键领取），生日奖励按原文由玩家领取）</span>：<span class="glow">VIP 升级奖励、VIP 保级奖励为 已发放、暂停发放（风控）、发放失败、已作废、不发放（门槛调整）、不发放（存量初始化）、不发放（KYC 前已达到，只用于升级奖励）；VIP 生日奖励为 待领取、已领取、已过期、暂停发放（风控）、发放失败、已作废（「待领取 / 已领取 / 已过期」用于生日奖励<span class="glow">，以及领取方式设为「手动领取」时的升级、保级奖励（用户 2026-10-20，见 VIP特权页「VIP全局参数 › 领取方式」）</span>）</span><span class="glow">，另有「已发放（补发）」（升级、保级、生日奖励发放失败后补发成功，用户 2026-10-19、用户 2026-10-19）</span><span class="glow">（「不发放（存量初始化）」按 Claire 答复 C-01）</span><span class="glow">；升级、保级、生日奖励另有细节设定产生的三种状态：「不发放（注册未满 n 天）」（「注册天数」生效时注册未满 n 天期间生成的奖励，占用唯一键，满 n 天后也不补发）、「待审核」（「强制审核」生效时进入人工审核、尚未处理）、「审核驳回」（审核驳回，不发放，记录驳回原因）（用户 2026-10-19）</span>。<span class="glow">升级、保级奖励自动到账时「到账时间」为自动到账时刻、「审核人」为「系统」；生日奖励由玩家在生日卡片领取后为「已领取」，「到账时间」为领取时间，「审核人」显示「玩家领取」（只有生日奖励显示「玩家领取」）。</span><span class="ref">PRD 8.5 · 3.1 · F08-03 活动奖励统计（VIP） · 用户 2026-10-17</span></li>
+      <li><b>会员福利记录（改）</b><span class="glow">（用户 2026-10-17：会员等级与 VIP特权 分开）：VIP 升级 / 保级 / 生日奖励记录从【会员等级 › 活动奖励统计】移到【用户管理 › VIP特权 › 会员福利】页签的会员福利记录，活动奖励统计只保留 Level 段记录。表头沿用现有会员福利记录字段（现有（管理后台知识库 4.1.6）：会员名、福利类别、状态、金额、币种、日期讯息、派发时间），「派发时间」改为「到账时间」，并补充 VIP 等级、流水倍数、流水游戏范围、账变类型（固定为「VIP 奖励」）、审核人、操作；福利类别为 VIP 升级奖励、VIP 保级奖励、VIP 生日奖励<span class="glow">，以及旧版 晋级礼金、每周红包、生日礼金、专属红包（新旧同表，见下一条「新旧福利记录同表」，用户 2026-10-19）</span>；<span class="glow">「日期讯息」按显示（见下一条）</span>；币种为 PHP。筛选为会员名、福利类别、金额、状态、到账时间，与表头同名。</span><span class="glow">（「VIP 实物改发彩金」已删除，替代奖励在实体奖品管理 v1.1 支持后再接入）</span>表格下方注明「表中时间均为 GMT+8」。流水倍数和流水游戏范围是这笔奖励发放时按 VIP全局参数生成的，之后修改参数不影响已发放的记录（规则 N34；示例 liza_d 发放时游戏范围为指定游戏类型，其他记录为全部 6 大类）。发放状态<span class="glow">（用户 2026-10-17 定：按原文倾向升级、保级奖励自动到账（撤销 10-16 一键领取），生日奖励按原文由玩家领取）</span>：<span class="glow">VIP 升级奖励、VIP 保级奖励为 已发放、暂停发放（风控）、发放失败、已作废、不发放（门槛调整）、不发放（存量初始化）、不发放（KYC 前已达到，只用于升级奖励）；VIP 生日奖励为 待领取、已领取、已过期、暂停发放（风控）、发放失败、已作废（「待领取 / 已领取 / 已过期」用于生日奖励<span class="glow">，以及领取方式设为「手动领取」时的升级、保级奖励（用户 2026-10-20，见 VIP特权页「VIP全局参数 › 领取方式」）</span>）</span><span class="glow">，另有「已发放（补发）」（升级、保级、生日奖励发放失败后补发成功，用户 2026-10-19、用户 2026-10-19）</span><span class="glow">（「不发放（存量初始化）」按 Claire 答复 C-01）</span><span class="glow">；升级、保级、生日奖励另有细节设定产生的三种状态：「不发放（注册未满 n 天）」（「注册天数」生效时注册未满 n 天期间生成的奖励，占用唯一键，满 n 天后也不补发）、「待审核」（「强制审核」生效时进入人工审核、尚未处理）、「审核驳回」（审核驳回，不发放，记录驳回原因）（用户 2026-10-19）</span>。<span class="glow">升级、保级奖励自动到账时「到账时间」为自动到账时刻、「审核人」为「系统」；生日奖励由玩家在生日卡片领取后为「已领取」，「到账时间」为领取时间，「审核人」显示「玩家领取」（只有生日奖励显示「玩家领取」）。</span><span class="ref">PRD 8.5 · 3.1 · F08-03 活动奖励统计（VIP） · 用户 2026-10-17</span></li>
       <li class="glow"><b>新旧福利记录同表（A 版）</b>（用户 2026-10-19）：<br>
         ① <b>福利类别</b>：新版 VIP 升级奖励 / VIP 保级奖励 / VIP 生日奖励；旧版 晋级礼金 / 每周红包 / 生日礼金 / 专属红包（旧版【活动配置 › VIP活动】产生，类别后带浅灰「旧版」标签，整行文字浅灰）。筛选「福利类别」增加「新版全部」「旧版全部」和旧版 4 个类别。<br>
         ② <b>旧版历史示例</b>（虚构账号，日期早于新版上线 2026-07-01）：pedro_m 晋级礼金 ₱500、kaye_s 每周红包 ₱300、benj_r 生日礼金 ₱200、arlene_v 专属红包 ₱1,000，状态均为「已发放」，合计 ₱2,000。旧版记录没有放行、补发、作废等新版操作（操作列为「—」）；VIP 等级列显示旧版等级（如「旧版 VIP5」）；流水倍数、流水游戏范围为「—」（旧版按 VIP活动「提现倍数」，资料未覆盖具体值）；账变类型示意为「活动金额（旧版）」；每周红包的审核人为【派奖审核】的审核人。合并后晋级礼金、生日礼金在 VIP 体系开启后停止生成，每周红包、专属红包子开关默认关，所以 2026-07-01 之后没有旧版记录。到账时间默认从 2026-05-01 起查，便于看到旧版记录。<br>
@@ -197,11 +197,11 @@ td.vip-pg-st .vip-pg-retry{border:0;background:none;color:#409EFF;cursor:pointer
       <li><b>升级奖励</b>：规则 N5：首次到达某个 VIP 等级时<span class="glow">立即自动发放到账（1 倍流水），记录为「已发放」，不生成待领取、不需玩家领取（Claire 原文四「立即获得」；用户 2026-10-17 定）</span><span class="glow">（以上为默认「自动领取」；领取方式设为「手动领取」时生成「待领取」，玩家领取后「已领取」，过期「已过期」，示例 lyn_c、nora_v，用户 2026-10-20）</span>，每级终身一次，唯一键「会员 + 等级配置 ID」<span class="glow">（原写「会员 + 等级编号」；按等级配置 ID 判定，重新编号不影响，用户 2026-10-19）</span>。规则 N6：一次跨多级时中间每个首次到达的等级各一条（示例 mango_88：VIP4 ₱180 + VIP5 ₱220 + VIP6 ₱300 = ₱700，<span class="glow">三条同一时刻自动到账</span>）。<span class="ref">规则 N5 · N6 · Q5 · F02-03</span></li>
       <li><b>不发放的记录</b>：规则 N45：门槛下调时选「不发放差额奖励 · A 继续累计」，这次跨过的等级为「不发放（门槛调整）」（示例 pauleen），占用唯一键，以后也不再发，没有操作按钮，不计入已发放金额。规则 N46：第一次开启 VIP 体系时按历史累计做存量初始化，初始化时已到达的每个等级生成「不发放（存量初始化）」记录、占用唯一键，以后也不补发，没有操作按钮，不计入已发放金额（示例 olga_t 初始化到 VIP2，VIP1、VIP2 各一条；tonyo77 初始化到 VIP24，示例只列 VIP24 一条）；初始化之后升到的更高等级正常发放（示例 tonyo77 2026-09-02 升到 SUPER VIP，升级奖励 ₱50,000 已发放）。<span class="glow">初始化时已到达的等级不发升级奖励（Claire 答复 C-01，与现状一致；目前老板口径，后续可能调整）。</span><span class="glow"><b>完成 KYC 时定级（已定（用户 2026-10-17））</b>：未完成 KYC 的玩家不参与 VIP 体系，不生成任何 VIP 奖励记录；玩家完成 KYC 时按<b>历史累计</b>（同 Claire 原文三）用 N2 双门槛确定当前等级和历史最高等级，KYC 前已达到的每个等级生成「不发放（KYC 前已达到）」记录、占用唯一键，以后也不补发，没有操作按钮，不计入已发放金额，不弹升级弹窗、不发到账通知（同存量初始化的处理）；之后新到达的等级按 N5、N6 正常发放。示例 jun_rey 2026-10-11 完成 KYC，按历史累计定为 VIP3，VIP1–VIP3 每级一条（示例只列 VIP3）。<span class="warn-2">「KYC 前已达到不发升级奖励」「累计按历史累计」为已定（用户 2026-10-17），依据 Claire 原文历史累计和 C-01 存量初始化</span>。</span><span class="ref">规则 N45 · N46 · N6 · F02-05 · C-01 · C-11</span></li>
       <li><b>保级奖励</b>：规则 N14：每月一次，唯一键「会员 + 结算月份」；「结算月份」只在保级奖励上显示。<span class="glow">每月 1 日结算达标的（含当月有升级的），结算时自动发放到账（1 倍流水），记录为「已发放」，按结算时的当前等级发放（示例 rica_win 2026-09、tonyo77 2026-08 和 2026-09 已发放；Claire 原文七、八「发放」，用户 2026-10-17 定）。</span><span class="glow">当月有升级的玩家按升级后的新等级考核，达到即保持新等级并发保级奖励（明细示例 tonyo77 2026-09 月内升到 SUPER VIP，发 SUPER VIP 保级奖励 ₱40,000）（用户 2026-10-17 定，依据 Claire 原文一、七、八章与 C-04）。</span><span class="glow">降级后恢复（C-02）的玩家恢复 1 级的同时，照常按结算时当前等级发保级奖励（示例 marites_c 2026-09 按 VIP11 发 ₱800，10 月 1 日恢复到 VIP12）；原文五、七「当月有效投注达到当前等级每月保级要求或以上 → 次月保持并获得保级奖励」，恢复条件必然也达到当前等级保级要求（用户 2026-10-17，依据原文五、七 / C-02，覆盖原「恢复 1 级、不发保级奖励」）。VIP1 保级失败后的普通用户回到 VIP1 当次，结算时没有当前等级，不发保级奖励（明细示例 joy_ann，C-07）。</span><span class="ref">规则 N14 · F03-02</span></li>
-      <li><b>生日奖励</b>：规则 N26：生日当天 00:00 生成「待领取」，<span class="glow">按生日当天的当前等级发放，玩家在生日卡片点「领取」后为「已领取」（生日卡片「领取」只领生日奖励；按 Claire 原文十，用户 2026-10-17 定）</span>；有效期从生日当天算起（天数后台可配置），过期为「已过期」。规则 N25：唯一键「会员 + 自然年」。<span class="glow"><b>生日在 1 日的玩家</b>：生日与月度结算同一天，前一天不发生日提醒短信；1 日等级结算完成后，按结算后的当前等级可获得的生日奖励发当天生日短信，结算后没有资格（如 VIP1 保级失败退出 VIP 段）的不发（用户 2026-10-19）；当天短信同样受免打扰时段约束，结算完成时间落在免打扰时段（默认 21:00–10:00）内的，顺延到时段结束（默认 1 日 10:00）发送（用户 2026-10-19）。</span><span class="glow"><b>免打扰时段</b>：VIP 所有短信（保级短信、生日前一天 / 当天提醒）和 APP 推送（到账推送等）按【VIP特权 › VIP 全局参数】「短信 / 推送免打扰时段」配置（默认 21:00–10:00，GMT+8，生效），触发时间落在时段内的顺延到时段结束（默认 10:00）发送；站内信不是推送，照常即时生成（用户 2026-10-19）。</span><span class="ref">规则 N25 · N26 · Q6 · Q18 · F04</span></li>
+      <li><b>生日奖励</b>：规则 N26：生日当天 00:00 生成「待领取」，<span class="glow">按生日当天的当前等级发放，玩家在生日卡片点「领取」后为「已领取」（生日卡片「领取」只领生日奖励；按 Claire 原文十，用户 2026-10-17 定）</span>；有效期从生日当天算起（天数后台可配置），过期为「已过期」。规则 N25：唯一键「会员 + 自然年」。<span class="glow"><b>生日在 1 日的玩家</b>：生日与月度结算同一天，前一天照常发生日提醒短信，但不写金额和期限（原文十；2026-10-26 按原始需求调整）；1 日等级结算完成后，按结算后的当前等级可获得的生日奖励发当天生日短信，结算后没有资格（如 VIP1 保级失败退出 VIP 段）的不发（用户 2026-10-19）；当天短信同样受免打扰时段约束，结算完成时间落在免打扰时段（默认 21:00–10:00）内的，顺延到时段结束（默认 1 日 10:00）发送（用户 2026-10-19）。</span><span class="glow"><b>免打扰时段</b>：VIP 所有短信（保级短信、生日前一天 / 当天提醒）和 APP 推送（到账推送等）按【用户管理 › VIP特权 › VIP特权 › VIP全局参数】「短信 / 推送免打扰时段」配置（默认 21:00–10:00，GMT+8，生效），触发时间落在时段内的顺延到时段结束（默认 10:00）发送；站内信不是推送，照常即时生成（用户 2026-10-19）。</span><span class="ref">规则 N25 · N26 · Q6 · Q18 · F04</span></li>
       <li><b>入账</b>：规则 N35：现金奖励进平台余额，由 VIP 自己的发放流程入账，账变类型为独立的「VIP 奖励」，不使用活动奖金的「活动金额」，资金报表和会员账变记录中按「VIP 奖励」单独显示；备注分别为 "VIP Upgrade Bonus"、"VIP Retention Bonus"、"VIP Birthday Bonus"<span class="glow">（原 "VIP Prize Cash Bonus" 随实物删除）</span>。Level 段原有奖励的账变类型不变（原型示意为「活动金额」）。<span class="ref">规则 N35 · 3.1 · F02-03</span></li>
       <li><b>与活动配置并行</b>：规则 N53：VIP 的一切内容（门槛、奖励、流水、发放、入账和账变、报表统计、通知、预算）与活动配置并行存在、相互不受任何影响；VIP 不读取、不复用活动配置的规则、报表、账变类型和通知配置，VIP 的发放也不计入任何活动的数据。<span class="ref">PRD 0.1 · 规则 N53</span></li>
-      <li><b>报表口径</b>：规则 N54：VIP 奖励（升级奖励、保级奖励、生日奖励）不计入活动统计、活动报表、活动费用报表、平台报表「活动费用」和财务数据「活动总额」；只在本页签 VIP 奖励类型（底部按类型汇总已发放金额）、「VIP数据报表 › 月度结算记录」的保级奖励总额，以及资金报表、会员账变记录中的「VIP 奖励」账变类型统计。是否计入代理 NGR 待确认 Q21。<span class="ref">规则 N54 · Q21 · F08-03</span></li>
-      <li><b>到账通知</b>：规则 N55：VIP 三类现金奖励（升级奖励、保级奖励、生日奖励）<span class="glow">入账时发送：升级、保级奖励在自动到账时（含风控放行后到账、补发到账），生日奖励在玩家领取成功时（用户 2026-10-17 定）</span><span class="glow">（原「实物改发彩金」随替代奖励一起删除）</span>，由 VIP 自己的发放流程发站内信「Reward Received」和 APP 推送「奖励到账」（沿用平台现有模板和通道）；<span class="glow">生日奖励生成待领取、风控放行回到待领取时不发；奖励暂停发放（风控）期间不发；「不发放」的记录（含不发放（KYC 前已达到））不发</span>。营销中心「奖励金到账」短信不发，保级奖励短信由规则 N41 代替（<span class="glow">文案「已到账」，按 Claire 原文十六</span>）。VIP 奖励不触发活动配置的任何通知。<span class="glow"><b>免打扰时段</b>：APP 推送「奖励到账」按【VIP特权 › VIP 全局参数】「短信 / 推送免打扰时段」配置，到账时间落在免打扰时段（默认 21:00–10:00）内的顺延到时段结束（默认 10:00）推送（按默认值：升级奖励 22:18 自动到账 → 次日 10:00 推送；保级奖励 1 日 00:05 到账 → 1 日 10:00 推送）；风控放行、补发等运营操作后到账的推送同样顺延；站内信「Reward Received」不是推送，到账时照常即时生成（用户 2026-10-19）。顺延期间玩家状态变化（冻结、生日奖励已领取、VIP 体系关闭等），实际发送时按 N43、N48、N55 再判断，不满足的不发、不补发；时段结束集中发送的限流由开发评估（已定，用户 2026-10-19）。</span><span class="ref">规则 N55 · N41 · F07-01</span></li>
+      <li><b>报表口径</b>：规则 N54：VIP 奖励（升级奖励、保级奖励、生日奖励）按实际到账金额计入平台报表「活动费用」「活动费用 / 平台流水%」、财务数据「活动总额」和平台营销费用（用户 2026-10-26，检查报告 R3-06）；不计入各活动的活动统计、活动报表、活动费用报表；另在本页签 VIP 奖励类型（底部按类型汇总已发放金额）、「VIP数据报表 › 月度结算记录」的保级奖励总额、VIP 奖励总额和奖励占有效投注比，以及资金报表、会员账变记录中的「VIP 奖励」账变类型统计。是否计入代理 NGR 待确认 Q21。<span class="ref">规则 N54 · Q21 · F08-03</span></li>
+      <li><b>到账通知</b>：规则 N55：VIP 三类现金奖励（升级奖励、保级奖励、生日奖励）<span class="glow">入账时发送：升级、保级奖励在自动到账时（含风控放行后到账、补发到账），生日奖励在玩家领取成功时（用户 2026-10-17 定）</span><span class="glow">（原「实物改发彩金」随替代奖励一起删除）</span>，由 VIP 自己的发放流程发站内信「Reward Received」和 APP 推送「奖励到账」（沿用平台现有模板和通道）；<span class="glow">生日奖励生成待领取、风控放行回到待领取时不发；奖励暂停发放（风控）期间不发；「不发放」的记录（含不发放（KYC 前已达到））不发</span>。营销中心「奖励金到账」短信不发，保级奖励短信由规则 N41 代替（使用模板「VIP 保级奖励到账」，文案见 PRD 附录 D）。VIP 奖励不触发活动配置的任何通知（聊天室播报除外）。<span class="glow"><b>到账推送与聊天室播报（用户 2026-10-26）</b>：APP 推送复用现有「奖励到账后」推送模板（变量能否带出奖励类别和金额待 PRD 待确认 Q42 确认，不能时按通用文案）；受【公告管理 › 消息推送 › app系统推送】「奖励金到账通知」开关控制，关闭时不发推送、站内信照发；推送写入【消息推送 › 推送记录】。VIP 奖励实际到账时参与聊天室「活动奖励播报」，按聊天室管理现有阈值判断，审核中、暂停发放、驳回、不发放的不播报。</span><span class="glow"><b>免打扰时段</b>：APP 推送「奖励到账」按【用户管理 › VIP特权 › VIP特权 › VIP全局参数】「短信 / 推送免打扰时段」配置，到账时间落在免打扰时段（默认 21:00–10:00）内的顺延到时段结束（默认 10:00）推送（按默认值：升级奖励 22:18 自动到账 → 次日 10:00 推送；保级奖励 1 日 00:05 到账 → 1 日 10:00 推送）；风控放行、补发等运营操作后到账的推送同样顺延；站内信「Reward Received」不是推送，到账时照常即时生成（用户 2026-10-19）。顺延期间玩家状态变化（冻结、生日奖励已领取、VIP 体系关闭等），实际发送时按 N43、N48、N55 再判断，不满足的不发、不补发；时段结束集中发送的限流由开发评估（已定，用户 2026-10-19）。</span><span class="ref">规则 N55 · N41 · F07-01</span></li>
       <li><b>补发</b>：「发放失败」可「补发」（二次确认）：按原唯一键重发，成功后直接到账，<span class="glow">原记录改为「已发放（补发）」——升级、保级、生日奖励统一（用户 2026-10-19，原来只有生日奖励这样、升级和保级改为「已发放」）。生日奖励的发放失败为玩家领取时入账失败的记录（用户 2026-10-19）。「到账时间」显示蓝色「到账时间（补发）」，计入已发放金额，状态筛选「已发放」包含「已发放（补发）」。示例：nico_bet VIP2 升级奖励 ₱120 补发后显示「已发放（补发）」，新版已发放 ₱123,168 → ₱123,288、升级 ₱52,980 → ₱53,100；abby_g VIP6 生日奖励 ₱188 补发后新版已发放 ₱123,168 → ₱123,356、生日 ₱2,888 → ₱3,076；两条都补发后新版已发放 ₱123,476。</span>并记录操作人，不新增记录，同一记录不能重复补发（补发后按钮消失）。<span class="glow">补发到账后的「奖励到账」推送按免打扰时段（默认 21:00–10:00）顺延到时段结束（默认 10:00）推送，站内信即时生成（用户 2026-10-19）。</span>第 10 章：升级奖励发放失败先自动重试 3 次，仍失败才由运营补发。<span class="ref">PRD 8.5 · 第 10 章 · F08-03</span></li>
       <li><b>放行 / 作废</b>：「暂停发放（风控）」可「放行」或「作废」，都需二次确认，作废必须填原因。规则 N36：<span class="glow">放行后升级奖励、保级奖励立即自动到账，改为「已发放」；生日奖励回到「待领取」，由玩家在生日卡片领取（用户 2026-10-17 定）</span>；生日奖励有效期从放行时刻重新计算原有效天数（截止到「放行当天 + 有效天数 − 1」那天的 23:59:59，GMT+8）；放行后不补弹升级弹窗、不补发短信<span class="glow">；放行后到账的「奖励到账」推送按免打扰时段（默认 21:00–10:00）顺延到时段结束（默认 10:00）推送，站内信即时生成（用户 2026-10-19）</span>。作废后为「已作废」，不再发放。原型以 2026-10-13 放行、有效期 15 天计算，截止 2026-10-27 23:59:59。<span class="ref">PRD 8.5 · 规则 N36 · Q15 · F08-05 风控暂停与放行</span></li>
       <li><b>账号状态处理</b>：规则 N48（状态以奖励生成时刻为准，同时命中多种按最严格的处理）：
@@ -214,9 +214,9 @@ td.vip-pg-st .vip-pg-retry{border:0;background:none;color:#409EFF;cursor:pointer
           <tr><td>风险分 40–69（打标转人工复核）</td><td>照常发放，打标转人工复核，不暂停</td><td>照常</td></tr>
           <tr><td>风险分 70 及以上</td><td>暂停发放（风控）；90 分以上按冻结处理</td><td>不发</td></tr>
           <tr><td>未绑定手机号</td><td>照常</td><td>不发（没有号码）</td></tr></table>
-        各状态的等级计算都照常。示例：dino_q 冻结、cora_l 自我排除、lenlen_7 风险分 52。<span class="glow">表中「照常」发送的 VIP 短信和推送也受免打扰时段约束：落在免打扰时段（默认 21:00–10:00，见【VIP特权 › VIP 全局参数】「短信 / 推送免打扰时段」）内的，顺延到时段结束（默认 10:00）发送（用户 2026-10-19）。</span><span class="ref">规则 N48 · N36 · F08-05</span></li>
-      <li class="glow"><b>审核：短信内容与短信模板（用户 2026-10-20）</b>：会员福利记录里「待审核」的记录（「强制审核」生效时的升级 / 保级 / 生日奖励）操作列加「审核」，打开审核弹窗：① 审核结果：审核通过 / 审核驳回（默认通过）；② 短信内容：必填，审核通过、奖励实际到账时发给玩家，下方显示发送预览（变量替换为实际值）；③「设为短信模板」：勾选后保存为该类别的短信模板，升级 / 保级 / 生日分开，下次审核同类别奖励时短信内容默认显示上次设为模板的文案（可修改）；从没设过模板时，保级带出 VIP 全局参数「保级短信模板」（原文十六「已到账」短信），升级、生日带出示意文案（升级「恭喜升级到 {VIPLevel}！PHP{UpgradeBonus} VIP 升级奖励已到账！…」、生日「…PHP{BirthdayBonus} {VIPLevel} 生日奖励已到账！…」，仿原文十六格式；中文以此系统预设为准（已定，用户 2026-10-22），英文待运营在文案确认页定稿），发送预览里替换变量；<span class="glow">三类审核通过都发短信（手动领取的审核通过后也发），短信内容必填（已定，用户 2026-10-20）</span>；<span class="glow"><b>两套短信模板</b>：VIP 全局参数「保级短信模板」= 不审核、自动到账时发送用；审核短信模板 = 审核通过发送用的默认文案；强制审核时以审核弹窗填写的为准（已定，用户 2026-10-20）</span>；④ 审核驳回：驳回原因必填，<span class="glow">只在后台显示，前台统一显示「审核未通过，如有疑问请联系客服」（已定，用户 2026-10-20）</span>，短信内容和「设为短信模板」置灰，不发放、不发短信；⑤ 谷歌验证码在弹窗内填写，空或 000000 提示错误、弹窗不关；确定后生效，写操作日志（审核结果、状态前后、短信内容或驳回原因、是否设为模板）。通过后升级、保级为「已发放」，生日为「已领取」。线上若走【派奖审核】，短信内容与短信模板功能需在派奖审核里提供，开发评估。原型：短信模板存共享模拟状态 smsTpl = { up, rv, bd }。<span class="ref">用户 2026-10-20</span></li>
-      <li><b>权限、日志、导出</b><span class="glow">（按三页签归属更正，用户 2026-10-21）</span>：查看权限沿用现有「会员福利记录」页签的查看权限；本页按钮级权限码为「补发」「放行 / 作废」「审核」「导出」，各一个（服务端校验，授权后需重新登录生效）；补发、放行、作废、审核写操作日志：操作人、时间（GMT+8）、对象、修改前后值（审核另记短信内容或驳回原因、是否设为模板）；会员福利记录按当前筛选导出（含旧版记录，沿用平台异步导出）；列表、汇总和导出沿用平台「VIP 线」数据权限。<span class="glow">重跑失败、月度结算记录导出见 VIP数据报表页签（用户 2026-10-21）。</span><span class="ref">PRD 8.1 · F08</span></li>
+        各状态的等级计算都照常。示例：dino_q 冻结、cora_l 自我排除、lenlen_7 风险分 52。<span class="glow">表中「照常」发送的 VIP 短信和推送也受免打扰时段约束：落在免打扰时段（默认 21:00–10:00，见【用户管理 › VIP特权 › VIP特权 › VIP全局参数】「短信 / 推送免打扰时段」）内的，顺延到时段结束（默认 10:00）发送（用户 2026-10-19）。</span><span class="ref">规则 N48 · N36 · F08-05</span></li>
+      <li class="glow"><b>审核（用户 2026-10-20；2026-10-26 改）</b>：会员福利记录里「待审核」的记录（「强制审核」生效时的升级 / 保级 / 生日奖励）操作列加「审核」，打开审核弹窗：① 审核结果：审核通过 / 审核驳回（默认通过）；② 驳回原因：驳回时必填，只在后台显示，前台统一显示「审核未通过，如有疑问请联系客服」；③ 谷歌验证码。审核通过、奖励实际到账时，系统按奖励类别发送对应的短信模板（升级「VIP 升级奖励审核通过到账」、保级「VIP 保级奖励到账」、生日「VIP 生日奖励审核通过到账」），模板在【公告管理 › 短信模板列表】维护，文案见 PRD 附录 D；审核弹窗不填写短信内容、不设短信模板（用户 2026-10-26）。三类审核通过都发短信（手动领取的审核通过后也发，用户 2026-10-20）；驳回不发放、不发短信。审核结果写操作日志。<span class="ref">PRD 8.6、规则 N64 · F08-06</span></li>
+      <li><b>权限、日志、导出</b><span class="glow">（按三页签归属更正，用户 2026-10-21）</span>：查看权限沿用现有「会员福利记录」页签的查看权限；本页按钮级权限码为「补发」「放行 / 作废」「导出」，各一个（服务端校验，授权后需重新登录生效）；「审核」的入口和权限待 Q29（强制审核的审核入口放在现有【派奖审核】还是本需求另建审核列表）评估后确定：放在会员福利页签时为本页签新增的「审核」按钮权限码，放进【派奖审核】时沿用派奖审核的现有权限（检查报告 R3-02）；补发、放行、作废、审核写操作日志：操作人、时间（GMT+8）、对象、修改前后值（审核另记审核结果、驳回原因和发送的短信模板）；会员福利记录按当前筛选导出（含旧版记录，沿用平台异步导出）；列表、汇总和导出沿用平台「VIP 线」数据权限。<span class="glow">重跑失败、月度结算记录导出见 VIP数据报表页签（用户 2026-10-21）。</span><span class="ref">PRD 8.1 · F08</span></li>
       <li><b>顶栏</b>：顶栏不再显示「库存告急」「待派发奖品」；库存告急、待派发奖品等库存扩展在实体奖品管理 v1.1 支持后再接入。顶栏统计行始终一行显示，放不下时在行内左右滚动。<span class="ref">用户 2026-10-16 决定</span></li>
       <li class="glow"><b>表头缩短</b>（用户 2026-10-17：所有表格表头一行、最多两行）：会员福利记录「派发时间」→「到账时间」（用户 2026-10-17 再改：已到账显示到账时间；未到账显示红色「生成时间（未到账原因）」，原因为状态大类：不发放 / 暂停发放 / 发放失败 / 待领取 / 已过期 / 已作废，如「2026-10-12 11:05:20（不发放）」；运营放行或补发后到账的显示蓝色「到账时间（放行）」「到账时间（补发）」）（原在活动奖励统计里由「申请领取时间」「审核发放时间」合并而来，随 VIP 奖励记录移到会员福利记录；活动奖励统计恢复现有表头，用户 2026-10-17）。时间均为 GMT+8，在表格下方注明。筛选项、导出文件的列名和「?」帮助内容不变（帮助按原名称对应）。<span class="ref">用户 2026-10-17</span></li>
     </ol>
@@ -227,8 +227,8 @@ td.vip-pg-st .vip-pg-retry{border:0;background:none;color:#409EFF;cursor:pointer
       <li class="glow">已定（用户 2026-10-17 定：按原文倾向升级、保级奖励自动到账（撤销 10-16 一键领取），生日奖励按原文由玩家领取）：升级、保级奖励不再有「待领取 / 已领取 / 已过期」，这三种状态只保留给生日奖励。<span class="glow">用户 2026-10-20 更新：新增「领取方式」配置，升级、保级奖励默认仍自动到账；设为「手动领取」时同样有「待领取 / 已领取 / 已过期」（示例 lyn_c、nora_v）。</span><span class="ref">原文四、七、八、十、十六 · 用户 2026-10-17</span></li>
       <li class="glow">已定（用户 2026-10-17）：未完成 KYC 的玩家不参与 VIP 体系，进入等级中心时引导去 KYC，不存在「完成 KYC 后补发」；原「暂停发放（未 KYC）」状态、筛选项和 liza_d「完成 KYC → 自动补发」示例已删除（liza_d 改为门槛重算升级正常到账）。新增「不发放（KYC 前已达到）」：完成 KYC 时按历史累计定级，KYC 前已达到的等级不发升级奖励，之后新到达的等级正常发放（<span class="warn-2">已定（用户 2026-10-17），依据 Claire 原文历史累计和 C-01 存量初始化</span>）。<span class="ref">C-01 · C-11 · 规则 N48</span></li>
       <li class="glow">已答复（Claire 2026-10-17）：Q15 → C-11 完成 KYC 才能享受所有 VIP 奖励（用户 2026-10-17 定为未完成 KYC 不参与 VIP 体系）；C-01 存量初始化不发升级奖励；C-04 月中升级当月也考核；C-15 短信用 PHP。<span class="ref">PRD Q15 · C-01 · C-04 · C-11 · C-15</span></li>
-      <li>待确认 Q21（VIP 奖励是否计入营销费用和代理 NGR）。<span class="ref">PRD Q21</span></li>
-      <li class="glow">待用户确认（用户 2026-10-19衍生）：① 「日期讯息」<span class="glow">已定：按原型用法——保级 = 结算月份、生日 = 生日日期、升级 = 到达等级日期，旧版原样（每周红包显示周次、晋级礼金显示晋级日期、生日礼金显示生日日期、专属红包「—」）（用户 2026-10-19）</span>；② 旧版记录的账变类型、流水倍数如何显示（原型：活动金额（旧版）、「—」）；③ 导出文件是否含旧版记录、是否加「新版 / 旧版」列 → <span class="glow">已定：导出包含旧版记录，不加「新版 / 旧版」列（用户 2026-10-19）</span>。<span class="ref">用户 2026-10-19</span></li>
+      <li>待确认 Q21（VIP 奖励是否计入代理 NGR；营销费用已定计入，用户 2026-10-26）。<span class="ref">PRD Q21</span></li>
+      <li class="glow"><b>旧版记录的显示</b>：「日期讯息」按记录类别显示——保级 = 结算月份、生日 = 生日日期、升级 = 到达等级日期，旧版原样（每周红包显示周次、晋级礼金显示晋级日期、生日礼金显示生日日期、专属红包「—」）（用户 2026-10-19）；导出包含旧版记录，不加「新版 / 旧版」列（用户 2026-10-19）。旧版记录的账变类型、流水倍数怎么显示，待确认（PRD 待确认 Q34：会员福利记录中旧版记录的账变类型、流水倍数显示方式；原型暂显示「活动金额（旧版）」「—」）。<span class="ref">用户 2026-10-19 · 检查报告 R3-15</span></li>
     </ol>
     <h3>模拟操作日志</h3>
     <ol id="log"><li style="color:#909399">暂无（补发、放行、作废后显示）</li></ol>
@@ -254,10 +254,10 @@ td.vip-pg-st .vip-pg-retry{border:0;background:none;color:#409EFF;cursor:pointer
     "VIP 等级（生成时等级）": "奖励生成时的等级：升级奖励是到达的等级，保级奖励是考核等级，生日奖励是生日当天的当前等级；等级重新编号后显示为「当前名称（原名称）」，如「VIP5（原 VIP4）」。",
     "流水倍数（奖励记录）": "这笔奖励发放时的流水倍数；之后修改全局参数，不影响已发放的记录。",
     "流水游戏范围（奖励记录）": "这笔奖励发放时的流水计入游戏范围（全部 6 大类或所选游戏类型）；之后修改，不影响已发放的记录。",
-    "账变类型": "VIP 奖励入账使用独立的账变类型「VIP 奖励」，不计入活动金额、活动报表、活动费用报表和财务活动总额。",
+    "账变类型": "VIP 奖励入账使用独立的账变类型「VIP 奖励」，不计入活动金额和各活动的活动报表、活动费用报表；按实际到账金额计入平台报表「活动费用」、财务数据「活动总额」和平台营销费用（规则 N54，用户 2026-10-26）。",
     "补发（含生日）": "只对「发放失败」的奖励重新发放一次，成功后直接到账，状态改为「已发放（补发）」，不新增记录；到账推送落在免打扰时段内的，顺延到时段结束再发。",
     "放行 / 作废": "处理「暂停发放（风控）」的奖励：放行后升级、保级奖励立即到账，生日奖励回到待领取，从放行时起重新计算有效期（不补弹窗、不补短信）；作废要填原因，奖励不再发放。",
-    "审核（短信内容与短信模板）": "「强制审核」生效时处理待审核奖励，选通过或驳回并填谷歌验证码。通过：奖励到账，并把必填的「短信内容」发给玩家，可勾选「设为短信模板」；驳回：不发放、不发短信，原因必填。审核入口以后台配置为准。"
+    "审核（到账短信）": "「强制审核」生效时处理待审核奖励，选通过或驳回并填谷歌验证码。通过：奖励到账，并按奖励类别发送对应的「审核通过到账」短信模板（模板在【公告管理 › 短信模板列表】维护）；驳回：不发放、不发短信，原因必填。审核入口和权限待 Q29（强制审核的审核入口放在现有【派奖审核】还是本需求另建审核列表）评估后确定：放在会员福利页签时需要本页签的「审核」按钮权限，放进【派奖审核】时沿用派奖审核的现有权限。"
   };
   /* HELP:END */
   /* HELP2：HELP 同步块外的覆盖条目，initHelp 取值 HELP2 优先于 HELP。2026-10-21 HELP 同步块已按 PRD 8.8 精炼版整块同步，原 HELP2 条目与 HELP 完全相同，已清空（用户 2026-10-21）；以后同步块外新增的「?」帮助先放这里，PRD 8.8 补上后再移入 HELP */
@@ -455,7 +455,7 @@ td.vip-pg-st .vip-pg-retry{border:0;background:none;color:#409EFF;cursor:pointer
       if (r.old) op = "—";   /* 旧版记录只供查询，没有放行 / 补发 / 作废等新版操作（用户 2026-10-19） */
       else if (r.st === "发放失败") op = "<button class='bo-btn link glow' type='button' data-perm='1' data-reissue='" + i + "'>补发</button><i class='qm' data-h='补发（含生日）'>?</i>";
       else if (r.st === "暂停发放（风控）") op = "<button class='bo-btn link glow' type='button' data-perm='1' data-pass='" + i + "'>放行</button><button class='bo-btn link glow' type='button' data-perm='1' data-void='" + i + "'>作废</button><i class='qm' data-h='放行 / 作废'>?</i>";
-      else if (r.st === "待审核") op = "<button class='bo-btn link glow' type='button' data-perm='1' data-audit='" + i + "'>审核</button><i class='qm' data-h='审核（短信内容与短信模板）'>?</i>";   /* 用户 2026-10-20 */
+      else if (r.st === "待审核") op = "<button class='bo-btn link glow' type='button' data-perm='1' data-audit='" + i + "'>审核</button><i class='qm' data-h='审核（到账短信）'>?</i>";   /* 用户 2026-10-20 */
       /* 列顺序：现有会员福利记录字段（会员名、福利类别、状态、金额、币种、日期讯息、到账时间（原派发时间））+ 本需求补充列（用户 2026-10-17） */
       return "<tr" + (r.old ? " class='old'" : "") + "><td>" + r.acc + "</td><td>" + r.type + (r.old ? "<span class='tagl'>旧版</span>" : "") + "</td><td class='" + stCls(r.st) + "'>" + r.st + (r.note ? "<span class='sub2" + (r.rq ? " ui-reqnote vip-req-inl" : "") + "'>" + esc(r.note) + "</span>" : "") + "</td><td>" + fmt(r.amt) + "</td><td>PHP</td><td>" + dateInfo(r) + "</td><td>" + arrCell(r) + "</td><td>" + lvCell(r) + "</td><td>" + (r.x === null || r.x === undefined ? "—" : r.x + " 倍") + "</td><td>" + esc(r.rng || "全部 6 大类") + "</td><td>" + (r.ct || "VIP 奖励") + "</td><td>" + (r.by || "—") + "</td><td>" + op + "</td></tr>";
     }).join("") : "<tr><td colspan='13' class='empty'>暂无数据</td></tr>";
@@ -540,56 +540,41 @@ td.vip-pg-st .vip-pg-retry{border:0;background:none;color:#409EFF;cursor:pointer
       } }]
     });
   }
-  /* ===== 审核（用户 2026-10-20）：强制审核生效时的待审核奖励（升级 / 保级 / 生日），在待审核记录行点「审核」打开审核弹窗。
-     弹窗：审核结果（通过 / 驳回）、短信内容（审核通过时发给玩家）、「设为短信模板」（按类别保存，下次审核同类别奖励时默认显示，可修改）、驳回原因、谷歌验证码；
-     驳回不发短信，短信内容和「设为短信模板」置灰。短信模板存共享模拟状态 smsTpl = { up, rv, bd }（每项 { t 文案, at 设置时间, by 设置人 }）；
-     用户 2026-10-20 已定：升级 / 保级 / 生日三类审核通过都发短信（手动领取的审核通过后也发），短信内容必填；该类别设过模板时每次默认显示模板（可改），没设过时保级带出 VIP 全局参数「保级短信模板」，升级 / 生日带出示意文案（含金额变量，打包前交运营定稿）。线上若走【派奖审核】，短信内容与模板功能需在派奖审核里提供（开发评估） */
-  var SMS_CAT = { "VIP 升级奖励": "up", "VIP 保级奖励": "rv", "VIP 生日奖励": "bd" }, SMS_NM = { up: "升级奖励", rv: "保级奖励", bd: "生日奖励" };
-  var SMS_DEF = {
-    up: "恭喜升级到 {VIPLevel}！PHP{UpgradeBonus} VIP 升级奖励已到账！登录 789Bingo 查看奖励。",   /* 仿原文十六格式（用户 2026-10-20）；中文以此系统预设为准（已定，用户 2026-10-22），英文待运营定稿 */
-    rv: "PHP{RetentionBonus} VIP 保级奖励已到账！登录 789Bingo 查看奖励。",   /* = VIP 全局参数「保级短信模板」（VIP 保级奖励到账，原文十六） */
-    bd: "789Bingo 祝你生日快乐！PHP{BirthdayBonus} {VIPLevel} 生日奖励已到账！登录 789Bingo 查看奖励。"
-  };
-  function smsTpl() { return P.get("smsTpl") || {}; }
-  function smsFill(t, r) { return t.replace(/\{VIPLevel\}/g, lvText(r)).replace(/\{(RetentionBonus|UpgradeBonus|BirthdayBonus)\}/g, fmt(r.amt)); }   /* 金额变量（用户 2026-10-20） */
+  /* ===== 审核（用户 2026-10-20；2026-10-26 改）：强制审核生效时的待审核奖励（升级 / 保级 / 生日），在待审核记录行点「审核」打开审核弹窗。
+     弹窗：审核结果（通过 / 驳回）、驳回原因（驳回时必填）、谷歌验证码。审核通过、实际到账时系统按奖励类别发送对应的短信模板（模板在【公告管理 › 短信模板列表】维护，文案见 PRD 附录 D），
+     审核弹窗不填写短信内容、不设短信模板（原「短信内容」「设为短信模板」和共享状态 smsTpl 已删除，用户 2026-10-26） */
+  var SMS_TPL = { "VIP 升级奖励": "VIP 升级奖励审核通过到账", "VIP 保级奖励": "VIP 保级奖励到账", "VIP 生日奖励": "VIP 生日奖励审核通过到账" };
   function audit(i) {
     var r = REWARDS[i]; if (!r || r.st !== "待审核") return;
-    var k = SMS_CAT[r.type] || "rv", tp = smsTpl()[k], def = tp && tp.t ? tp.t : SMS_DEF[k];
-    var src = tp && tp.t ? "默认显示上次设为模板的文案（" + esc(tp.by || "") + " 于 " + esc(tp.at || "") + " 设置），可修改" : "尚未设置" + SMS_NM[k] + "审核短信模板，" + (k === "rv" ? "默认带出 VIP 全局参数「保级短信模板」（VIP 保级奖励到账）" : "默认显示系统预设文案") + "，可修改";
+    var tn = SMS_TPL[r.type] || "VIP 保级奖励到账", okTxt = "审核通过、实际到账时发送短信模板「" + tn + "」（模板在【公告管理 › 短信模板列表】维护，文案见 PRD 附录 D）";
     return dialog({
-      title: "审核 · " + r.type, width: 600,
+      title: "审核 · " + r.type, width: 560,
       body: "<div class='au'><div class='au-kv'><span>会员名</span><span>" + esc(r.acc) + "</span><span>福利类别</span><span>" + esc(r.type) + "</span><span>VIP 等级</span><span>" + esc(lvText(r)) + "</span><span>金额</span><span>₱" + fmt(r.amt) + "</span><span>生成时间</span><span>" + esc(r.gen) + "</span></div>" +
         "<div class='frow' style='grid-template-columns:110px 1fr'><label><span style='color:#F56C6C'>*</span>审核结果</label><div class='fctl'><label class='cb'><input type='radio' name='auRes' value='ok' checked>审核通过</label> <label class='cb' style='margin-left:16px'><input type='radio' name='auRes' value='no'>审核驳回</label></div></div>" +
-        "<div class='frow' style='grid-template-columns:110px 1fr'><label for='auSms'><span style='color:#F56C6C'>*</span>短信内容</label><div class='fctl' style='display:block'><textarea class='bo-inp' id='auSms' rows='3' style='width:100%' maxlength='300' aria-label='短信内容'>" + esc(def) + "</textarea>" +
-        "<div class='vip-cnt vip-live' id='auSrc'>" + src + "</div><div class='vip-req-note ui-reqnote'><span>上方提示为上线提示；系统预设文案以运营定稿为准；出处：保级短信默认文案取自 Claire 原文十六。</span></div><div class='vip-cnt'>必填。审核通过、奖励实际到账时发给玩家（升级 / 保级 / 生日三类都发，手动领取的审核通过后也发，已定，用户 2026-10-20）；变量 {VIPLevel}、{UpgradeBonus}、{RetentionBonus}、{BirthdayBonus} 发送时替换为实际值，金额货币写「PHP」（C-15）；受免打扰时段约束，自我排除、未绑定手机号的玩家不发。VIP 全局参数「保级短信模板」用于不审核、自动到账时发送；审核短信模板是审核通过时发送的默认文案；强制审核时以本弹窗填写的为准。</div>" +
-        "<div class='vip-cnt' id='auPre' style='color:#606266'></div><div class='ferr' id='auSmsE' hidden></div>" +
-        "<label class='cb' style='margin-top:6px'><input type='checkbox' id='auTpl'>设为短信模板（保存为「" + SMS_NM[k] + "」短信模板，下次审核同类别奖励时默认显示）</label></div></div>" +
+        "<div class='frow' style='grid-template-columns:110px 1fr'><label>到账短信</label><div class='fctl' style='display:block'><div class='vip-cnt' id='auPre'></div></div></div>" +
         "<div class='frow' id='auWhyRow' style='grid-template-columns:110px 1fr' hidden><label for='auWhy'><span style='color:#F56C6C'>*</span>驳回原因</label><div class='fctl' style='display:block'><textarea class='bo-inp' id='auWhy' rows='2' style='width:100%' placeholder='请输入驳回原因'></textarea><div class='ferr' id='auWhyE' hidden></div><div class='vip-cnt'>驳回原因只在后台显示；前台统一显示「审核未通过，如有疑问请联系客服」（已定，用户 2026-10-20）。</div></div></div>" +
         "<div class='frow' style='grid-template-columns:110px 1fr'><label for='auGc'><span style='color:#F56C6C'>*</span>谷歌验证码</label><div class='fctl' style='display:block'><input class='bo-inp' id='auGc' maxlength='6' style='width:180px' placeholder='请输入谷歌验证码' inputmode='numeric'><div class='ferr' id='auGcE' hidden></div></div></div>" +
-        "<div class='vip-cnt glow'>驳回不发放、不发短信（已定，用户 2026-10-20）。审核结果写操作日志。线上若走【派奖审核】，短信内容与短信模板功能需在派奖审核里提供，开发评估（用户 2026-10-20）。</div></div>",
+        "<div class='vip-cnt glow'>驳回不发放、不发短信（已定，用户 2026-10-20）。审核结果写操作日志。审核弹窗不填写短信内容（用户 2026-10-26）。</div></div>",
       onOpen: function (c) {
         function sy() {
-          var no = c.el.querySelector("input[name='auRes']:checked").value === "no", s = c.el.querySelector("#auSms");
-          s.disabled = no; c.el.querySelector("#auTpl").disabled = no; c.el.querySelector("#auWhyRow").hidden = !no;
-          c.el.querySelector("#auPre").textContent = no ? "驳回不发短信" : "发送预览：" + smsFill(s.value, r);
-          if (no) c.el.querySelector("#auSmsE").hidden = true;
+          var no = c.el.querySelector("input[name='auRes']:checked").value === "no";
+          c.el.querySelector("#auWhyRow").hidden = !no;
+          c.el.querySelector("#auPre").textContent = no ? "驳回不发短信" : okTxt;
         }
-        c.el.addEventListener("change", sy); c.el.querySelector("#auSms").addEventListener("input", sy); sy();
+        c.el.addEventListener("change", sy); sy();
       },
       buttons: [{ text: "取消" }, { text: "确定", cls: "q", key: "ok", onClick: function (c) {
-        var no = c.el.querySelector("input[name='auRes']:checked").value === "no", sms = c.el.querySelector("#auSms").value.trim(), why = c.el.querySelector("#auWhy").value.trim(), gc = c.el.querySelector("#auGc").value.trim(), tpl = !no && c.el.querySelector("#auTpl").checked, bad = 0;
+        var no = c.el.querySelector("input[name='auRes']:checked").value === "no", why = c.el.querySelector("#auWhy").value.trim(), gc = c.el.querySelector("#auGc").value.trim(), bad = 0;
         function err(id, m) { var e = c.el.querySelector("#" + id); e.hidden = !m; e.textContent = m || ""; if (m) bad++; }
-        err("auSmsE", !no && !sms ? "请输入短信内容" : "");
         err("auWhyE", no && !why ? "请输入驳回原因" : "");
         err("auGcE", !gc ? "请输入谷歌验证码" : gc === "000000" ? "谷歌验证码错误" : "");
         if (bad) return false;
-        var from = r.st, bd = k === "bd";
+        var from = r.st, bd = r.type === "VIP 生日奖励";
         if (no) { r.st = "审核驳回"; r.note = "驳回原因：" + why + "；不发短信"; }
-        else { r.st = bd ? "已领取" : "已发放"; r.pay = "2026-10-13 10:33:10"; r.note = "审核通过后到账；短信：「" + smsFill(sms, r) + "」"; }
+        else { r.st = bd ? "已领取" : "已发放"; r.pay = "2026-10-13 10:33:10"; r.note = "审核通过后到账；发送短信模板「" + tn + "」"; }
         r.by = "运营账号A";
-        if (tpl) { var all = clone(smsTpl()); all[k] = { t: sms, at: "2026-10-13 10:33:10", by: "运营账号A" }; P.set("smsTpl", all); }
         saveR(); renderRewards(); toast(no ? "已驳回" : "审核通过");
-        addLog((no ? "审核驳回" : "审核通过") + " · " + r.acc + " · " + r.type + " " + r.lv + " ₱" + fmt(r.amt) + " · " + from + " → " + r.st + (no ? " · 驳回原因：" + why + " · 不发短信" : " · 发送短信：「" + smsFill(sms, r) + "」" + (tpl ? " · 已设为「" + SMS_NM[k] + "」短信模板" : "")));
+        addLog((no ? "审核驳回" : "审核通过") + " · " + r.acc + " · " + r.type + " " + r.lv + " ₱" + fmt(r.amt) + " · " + from + " → " + r.st + (no ? " · 驳回原因：" + why + " · 不发短信" : " · 发送短信模板「" + tn + "」"));
       } }]
     });
   }
@@ -682,11 +667,10 @@ td.vip-pg-st .vip-pg-retry{border:0;background:none;color:#409EFF;cursor:pointer
       { type: "button", tag: "筛选", label: "只看「审核驳回」（rudy_t，红色，不计入）", run: function () { show("welfare"); document.getElementById("rSt").value = "审核驳回"; renderRewards(); } },
       { type: "button", tag: "导出", label: "点「导出」（含旧版记录，不加「新版 / 旧版」列）", run: function () { show("welfare", true); document.getElementById("rExport").click(); } }
     ] },
-    { title: "审核：短信内容与短信模板（用户 2026-10-20）", items: [
-      { type: "button", tag: "审核", label: "gina_p 保级奖励「待审核」→ 点「审核」（短信内容默认显示模板，没设过时为原文十六「已到账」示意文案）", run: function () { auditDemo(); } },
-      { type: "button", tag: "审核", label: "审核通过 + 勾选「设为短信模板」（改一句文案，验证码 123456）→ 已发放、写日志", run: function () { var c = auditDemo(); if (!c) return; var s = c.el.querySelector("#auSms"); s.value = "PHP{RetentionBonus} VIP 保级奖励已到账（审核通过）！登录 789Bingo 查看奖励。"; s.dispatchEvent(new Event("input", { bubbles: true })); c.el.querySelector("#auTpl").checked = true; c.el.querySelector("#auGc").value = "123456"; c.btn.ok.click(); } },
-      { type: "button", tag: "模板", label: "接上一步：恢复示例数据（不清短信模板）后再审核 gina_p → 短信内容默认显示上次设为模板的文案", run: function () { P.set(RKEY, null); REWARDS = load(); renderRewards(); auditDemo(); } },
-      { type: "button", tag: "驳回", label: "选「审核驳回」→ 短信内容和「设为短信模板」置灰，驳回原因必填（不填点确定看提示）", run: function () { var c = auditDemo(); if (!c) return; var no = c.el.querySelector("input[name='auRes'][value='no']"); no.checked = true; no.dispatchEvent(new Event("change", { bubbles: true })); c.el.querySelector("#auGc").value = "123456"; c.btn.ok.click(); } }
+    { title: "审核（用户 2026-10-20；2026-10-26 去掉短信内容）", items: [
+      { type: "button", tag: "审核", label: "gina_p 保级奖励「待审核」→ 点「审核」（审核通过到账时发送短信模板「VIP 保级奖励到账」）", run: function () { auditDemo(); } },
+      { type: "button", tag: "审核", label: "审核通过（验证码 123456）→ 已发放、写日志（日志记录发送的短信模板名称）", run: function () { var c = auditDemo(); if (!c) return; c.el.querySelector("#auGc").value = "123456"; c.btn.ok.click(); } },
+      { type: "button", tag: "驳回", label: "选「审核驳回」→ 驳回原因必填（不填点确定看提示）；驳回不发短信", run: function () { var c = auditDemo(); if (!c) return; var no = c.el.querySelector("input[name='auRes'][value='no']"); no.checked = true; no.dispatchEvent(new Event("change", { bubbles: true })); c.el.querySelector("#auGc").value = "123456"; c.btn.ok.click(); } }
     ] },
     { title: "生成时等级与重新编号（用户 2026-10-19，示意）", items: [
       { type: "radio", key: "renum", tag: "编号", options: [["", "未重新编号（默认，与 VIP特权页当前 25 级一致）"], ["1","已在 VIP3 后插入一级：旧记录显示「VIP5（原 VIP4）」"]], change: function () { renderRewards(); } }
@@ -699,7 +683,7 @@ td.vip-pg-st .vip-pg-retry{border:0;background:none;color:#409EFF;cursor:pointer
     { title: "设置账号权限", items: [
       { type: "radio", key: "perm", tag: "权限", options: [["all", "有全部按钮权限"], ["none", "无按钮级权限（隐藏补发、放行 / 作废、审核、导出）"]], change: function () { renderRewards(); applyPerm(); } }
     ] },
-    { title: "演示值说明", items: [{ type: "note", text: "会员账号和金额均为虚构，同名玩家与其他后台页一致；以 2026-10-13 放行、生日奖励有效期 15 天计算。流水游戏范围示例为发放时的 VIP 全局参数快照。" }] },
+    { title: "演示值说明", items: [{ type: "note", text: "会员账号和金额均为虚构，同名玩家与其他后台页一致；以 2026-10-13 放行、生日奖励有效期 15 天计算。流水游戏范围示例为发放时的 VIP全局参数快照。" }] },
     { items: [{ type: "button", tag: "重置", label: "恢复本页示例数据", run: function () { P.set(RKEY, null); P.set("renum", null); location.reload(); } }, { type: "reset" }] }
   ]);
   window.addEventListener("proto-change", function (e) {

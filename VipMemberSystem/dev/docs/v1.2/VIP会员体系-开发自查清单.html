@@ -1,0 +1,450 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>VIP会员体系-v1.2-开发自查清单</title>
+<link rel="stylesheet" href="../../assets/style.css">
+<style>.ck-left .tx,.ck-left .ex{overflow-wrap:anywhere;word-break:break-word}</style>
+</head>
+<body>
+<div class="with-nav">
+  <header class="ck-head" id="ckhead">
+    <div class="ck-top">
+      <div>
+        <div class="k">789BINGO · 功能自查</div>
+        <h1>VIP会员体系-v1.2-开发自查清单 · <span id="hdVer">v1.2</span></h1>
+        <div class="d">勾选状态保存在本机浏览器，按角色分别保存；换电脑或换浏览器后看不到，留档请导出 CSV。</div>
+      </div>
+      <div class="ck-total"><b id="tp">0%</b><span id="tn">0 / 0 项</span><div class="pbar"><i id="tb" style="width:0"></i></div></div>
+    </div>
+    <div class="filters">
+      <div class="fgroup" data-g="role"><span class="gl">角色</span></div>
+      <div class="fgroup" data-g="type"><span class="gl">类型</span></div>
+      <div class="fgroup" data-g="state"><span class="gl">状态</span></div>
+      <div class="fgroup"><button class="pill" type="button" id="exall">全部展开</button><button class="pill" type="button" id="coall">全部收起</button><button class="pill" type="button" id="csv">导出 CSV</button><button class="pill" type="button" id="prt">打印</button></div>
+      <button class="clearbtn" type="button" id="clear">清空勾选</button>
+    </div>
+  </header>
+  <div class="split" id="split">
+    <div class="ck-left" id="list"></div>
+    <div class="divider" id="divider" role="separator" aria-label="拖动调整宽度"></div>
+    <div class="ck-right">
+      <div class="rhead">PRD 需求文档 <button type="button" id="up" aria-label="上一处标注">↑</button><button type="button" id="dn" aria-label="下一处标注">↓</button><span class="cnt2" id="hitn"></span></div>
+      <iframe id="prd" src="VIP会员体系-需求开发PRD文档.html" title="PRD 需求文档"></iframe>
+    </div>
+  </div>
+</div>
+
+<script>
+window.NAV_NEWWIN_TEXT = "在新标签页打开";
+window.addEventListener("navtoggle", function () { setTimeout(fitHead, 0); });
+</script>
+<script>window.NAV_ROOT = "../../";</script>
+<script src="../../assets/nav-data.js"></script>
+<script src="../../assets/nav.js"></script>
+<script>
+/* 自查项：[类型, 适用角色, 关键, 检查什么, 预期结果, 新增或修改的版本]。新自查项只追加在各组末尾，保证已有编号不变。
+   类型 fn 功能 / bd 边界值 / ex 异常 / un 非常规；角色 d 设计 / f 前端 / b 后端 / q 测试。功能点名称与 PRD 保持一致。v1.0 首版不写版本。 */
+var PG = "分页：数据超过一页、刚好一页、为空；改每页条数、翻到末页、输入页码 0 或大于总页数、改筛选";
+var PGE = "共几条和页数正确；改每页条数和改筛选回到第 1 页；越界页码取首页或末页；排序稳定（相同按 ID 兜底），翻页不重复不遗漏";
+var DATA = [
+ { c: "F01", n: "VIP 等级配置", s: [
+  { c: "F01-01", n: "VIP 等级配置表", i: [
+   ["fn", "fbq", 1, "打开【VIP会员等级配置】「VIP会员等级配置」的等级门槛表和「VIP会员等级奖励配置」的奖金表，核对 26 行默认值（VIP1 ₱10,000 / ₱2,000 / ₱5,000 / ₱8 / ₱6 / ₱88 … SUPER VIP ₱1,000,000,000 / ₱1,000,000,000 / ₱60,000,000 / ₱118,888 / ₱100,000 / ₱5,888）", "与 PRD 7.2 默认值表逐格一致；等级门槛表列累计有效投注、累计充值、保级投注，奖金表列升级奖金、月度奖金、生日奖金；两张表都是每行输入框、默认 26 行（VIP0 + 25 个 VIP 等级）、不分页；门槛表最后一列「操作」", "v1.2"],
+   ["fn", "fq", 0, "VIP0（等级值 0）一行", "会员等级列显示「VIP0」（前台显示「会员」），输入框全部为 0 且置灰只读，操作列只有「新增」、没有「删除」；调接口修改或删除等级值 0 被拒绝", "v1.2"],
+   ["bd", "bq", 0, "门槛输入 0、1、99,999,999,999、100,000,000,000、小数 1.5；奖金输入 9,999,999.99、10,000,000、0.001", "门槛只接受 1–99,999,999,999 的整数；奖金只接受 0–9,999,999.99 且最多 2 位小数；不合法标红不保存，绕过前端直接调接口同样拦截"],
+   ["fn", "d", 0, "前 3 个页签的页面样式与现网【用户管理 › 会员等级】对照", "卡片式页签、表格、输入框、单选行、按钮位置和分页样式与现网一致；锁定提示清楚可见", "v1.2"],
+   ["fn", "fq", 1, "后台【用户管理】菜单和【VIP会员等级配置】页签", "没有「VIP特权」菜单；原「会员等级」菜单和面包屑显示「VIP会员等级配置」；有 4 个页签：VIP会员等级配置、VIP会员等级奖励配置、活动奖励统计、VIP月度结算记录；不再有原 LEVEL 等级、有效投注累计值单门槛、领取方式；奖励配置页签右侧实体奖品表整体置灰、标「本期不做」、不可操作（Q21）", "v1.2"]
+  ]},
+  { c: "F01-02", n: "表内修改与保存", i: [
+   ["fn", "fbq", 1, "在奖金表把 VIP5 月度奖金 ₱38 改为 ₱40，点表格下方「保存」并确认影响预览", "立即生效；日志「VIP5 月度奖金：₱38 → ₱40」；已生成的奖金金额不变", "v1.2"],
+   ["fn", "fbq", 0, "一次改多个等级的多个输入框后点「保存」", "整表一次提交；影响预览列出修改内容（多于 4 项显示「等共 n 项」）；日志每个改动的单元格一条明细", "v1.2"],
+   ["bd", "fq", 0, "没有修改直接点「保存」；影响预览点取消", "提示「没有修改」；取消不保存，输入框保留修改后的值", "v1.2"],
+   ["bd", "bq", 1, "每月 1 日 00:00:00 至结算完成；月末 23:59:59", "1 日 00:00:00 起等级门槛表和奖金表的输入框置灰、「VIP会员等级配置」的「新增」「删除」「保存」不可用并提示「月度结算进行中，结算完成后才能修改等级配置」，结算完成后恢复；整次结算失败时锁定到补跑完成，提示「上月结算失败，补跑完成后才能修改等级配置」；23:59:59 仍可修改；绕过前端直接调接口同样拦截", "v1.2"],
+   ["fn", "bq", 1, "月中修改保级投注和月度奖金；修改升级奖金、生日奖金", "保级投注和月度奖金按结算执行时的配置考核和发放；升级、生日奖金按生成时的配置"],
+   ["un", "bq", 0, "两个运营同时修改同一等级", "后保存的提示「配置已被他人修改，请刷新后重试」，不覆盖"],
+   ["un", "fq", 0, "保存中再点「保存」；影响预览点右上角 ×", "保存中按钮置灰，只提交一次；× 等同取消不保存", "v1.2"]
+  ]},
+  { c: "F01-03", n: "递增校验与影响预览", i: [
+   ["bd", "fbq", 1, "把 VIP5 累计充值改为 ₱50,000（= VIP4）、₱50,001", "₱50,000 提示「VIP5 的累计充值须大于 VIP4（₱50,000）」并标红不保存；₱50,001 通过；累计有效投注、保级投注同样校验；绕过前端直接调接口同样拦截"],
+   ["fn", "fq", 0, "一次改出多级不递增", "出错输入框全部标红，表格下方列出全部出错等级，不保存", "v1.2"],
+   ["fn", "bq", 1, "下调 VIP1 门槛并保存", "影响预览显示将升级人数和升级奖金合计；确认后这些玩家立即升级并逐级发奖，上调门槛不降级、不追回"],
+   ["ex", "fbq", 0, "影响预览试算超过 30 秒", "提示「试算超时，可直接保存或稍后再试」"],
+   ["fn", "q", 0, "只改奖金、不改门槛", "奖金不做递增校验；影响预览显示变化等级和当前人数"]
+  ]},
+  { c: "F01-04", n: "新增与删除等级", i: [
+   ["fn", "fbq", 1, "点 VIP0 行「新增」，填写新行门槛后保存", "表格最下方出现浅蓝底新行，等级名 SUPER VIP，原 SUPER VIP 改名 VIP25；新行三项门槛为空、提示「必填」；保存时影响预览写「新增 SUPER VIP（…）；原 SUPER VIP 改名为 VIP25」、新等级升级 / 月度 / 生日奖金三个输入框（默认 0，填 -1 或 3 位小数标红且不能确认）和「n 人已达到新 SUPER VIP 门槛，将立即升级并按上面填写的升级奖金发放」；确认后两张表都多 1 行，奖金表新行为填写的值，立即升级的玩家按填写的升级奖金到账，写操作日志", "v1.2"],
+   ["bd", "fbq", 1, "新行门槛留空；新行保级投注 = 上一级；新行门槛大于上一级", "留空提示「SUPER VIP 的…为必填」、等于上一级提示「SUPER VIP 的保级投注须大于 VIP25（₱…）」，标红不保存；大于上一级通过；绕过前端直接调接口同样拦截", "v1.2"],
+   ["fn", "fq", 0, "新增后未保存：点新行「取消」；再点「新增」；点各行「删除」", "「取消」后新行消失、等级名恢复；有未保存新增行时「新增」置灰（提示「一次只能新增 1 个等级，请先保存或取消」），各行「删除」置灰（提示「请先保存或取消新增的等级」）", "v1.2"],
+   ["bd", "fbq", 0, "VIP 等级数为 59、60 时点「新增」", "59 个时可新增；60 个时「新增」置灰，提示「最多 60 个 VIP 等级」；调接口新增第 61 个被拒绝", "v1.2"],
+   ["fn", "fbq", 1, "删除最高一级 SUPER VIP（该级有玩家，另有历史最高为 SUPER VIP、当前已降到 VIP23 的玩家）", "只有 SUPER VIP 行有「删除」，其他行没有；确认框列出 SUPER VIP 门槛、该级人数和处理方式、等级名变化「VIP24 → SUPER VIP」和不可撤销提示；确认后立即生效，两张表同步删行，原 VIP24 改名 SUPER VIP，其他等级名不变；原 SUPER VIP 玩家当前等级改为新的 SUPER VIP（原 VIP24），历史最高为原 SUPER VIP 的玩家（含已降到 VIP23 的）历史最高改为原 VIP24，等级变动记「删除等级调整」，不算降级、不发升级奖金、不弹窗；已发奖金不追回、该级未到账的奖金照常处理；写操作日志", "v1.2"],
+   ["bd", "fbq", 0, "删除 SUPER VIP 后再新增一级；调接口删除非最高一级", "再新增的等级是新等级（新的等级 ID），之前到达过被删等级的玩家到达新等级时照常发升级奖金；调接口删除非最高一级被拒绝", "v1.2"],
+   ["bd", "fbq", 0, "只剩 1 个 VIP 等级；结算期间（1 日 00:00 至结算完成）", "只剩 1 个时「删除」置灰，提示「至少保留 1 个 VIP 等级」；结算期间「新增」「删除」都置灰；调接口同样拦截", "v1.2"],
+   ["fn", "fq", 0, "删除确认框点「取消」或 ×；表格有未保存的修改时确认删除", "取消不删除；确认删除后未保存的修改丢失（确认框已提示）", "v1.2"],
+   ["fn", "fq", 0, "新增、删除后打开前台 VIP中心", "刻度、等级卡、等级表的数量和等级名与后台一致；VIP 规则第 1 条为固定文字「VIP 等级从 VIP1 到 SUPER VIP……」", "v1.2"]
+  ]}
+ ]},
+ { c: "F02", n: "奖励参数", s: [
+  { c: "F02-01", n: "VIP 体系开关与上线定级", i: [
+   ["fn", "fbq", 1, "版本发布后查看【活动配置 › 活动列表】，再开启「VIP领取奖励」", "没有旧版「VIP活动」（旧版 VIP 体系被完全替换）；开启时没有旧版 VIP活动的拦截或提示", "v1.2"],
+   ["fn", "fbq", 1, "第一次开启：确认框显示定级人数 → 输入谷歌验证码", "累计达 VIP10 的老玩家直接为 VIP10，VIP1–VIP10 记「不发放（上线定级）」，不弹窗；等级变动记录「上线定级」；日志写入"],
+   ["ex", "fq", 0, "谷歌验证码错误或过期", "提示「谷歌验证码错误」，不保存"],
+   ["fn", "bq", 1, "关闭期间玩家累计达到新等级、跨过 1 日 13:00、生日到达", "关闭期间不升级、不结算（事后不补）、不生成生日奖金、不发 VIP 通知；已生成未领的生日奖金有效期内仍可领"],
+   ["fn", "fbq", 0, "再次开启", "确认框为「将按当前累计为全部参与玩家判定一次升级：预计 n 人升级，发放升级奖金 m 笔、合计 ₱x（关闭期间达到的新等级照常发放并弹窗）。」，试算超 30 秒显示「试算超时，可直接开启或稍后再试」；不重新定级，保留关闭前两个等级；按当时累计判定一次升级，新到达等级发升级奖金并弹窗", "v1.2"],
+   ["fn", "bq", 0, "月中第一次开启后的第一个 1 日结算", "考核用整月当月有效投注（含开启前部分）"],
+   ["un", "b", 1, "开启过程中重复点击、两人同时开启", "只执行一次上线定级，不重复写记录"],
+   ["fn", "bq", 1, "上线定级只按累计：某玩家原为 LEVEL 20、旧版 VIP3，开启时累计有效投注 ₱120,000、累计充值 ₱25,000", "定为 VIP3（同时满足 VIP3 的 ₱100,000 / ₱20,000，未满足 VIP4），不参考原 LEVEL 和旧版 VIP 等级；VIP1–VIP3 记「不发放（上线定级）」，不弹窗", "v1.2"],
+   ["fn", "bq", 1, "版本发布前玩家有原 LEVEL 生日礼包待领取、原 LEVEL 升级奖励待审核、旧版 VIP活动每周红包待派奖审核、已到账的 LEVEL 升级奖励", "发布后三笔未到账的都作废、玩家不能领取，不补发、不折算到新 VIP；已到账的不追回；上线前导出的待作废清单包含这三笔（会员账号、奖励类型、金额、原状态）（规则 N48）", "v1.2"],
+   ["fn", "fq", 0, "开关位置与系统参数", "「VIP 体系」开关为【VIP会员等级配置 › VIP会员等级奖励配置】顶部的「VIP领取奖励」（原「活动状态」改名，开启 / 关闭）；确认框标题为「开启VIP领取奖励」/「关闭VIP领取奖励」；系统参数里没有「新版VIP特权状态」", "v1.2"]
+  ]},
+  { c: "F02-02", n: "KYC 限制开关", i: [
+   ["fn", "dfq", 1, "开关行和关闭确认框的文字", "行内和确认框都显示红字「※ 关闭与 Claire 答复 C-11 不一致，关闭前须经老板或 Claire 确认」"],
+   ["fn", "fbq", 1, "关闭「KYC 限制」：确认 + 谷歌验证码", "日志写「KYC 限制：开启 → 关闭」；未完成 KYC、未定级的玩家按当时累计定级，已达到的等级记「不发放（KYC 限制关闭前已达到）」，不弹窗"],
+   ["fn", "bq", 1, "「KYC 限制」关闭时，未完成 KYC 的玩家升级、保级、生日", "升级奖金、月度奖金照常；生日奖金仍不生成"],
+   ["fn", "bq", 1, "「KYC 限制」由关闭重新开启，玩家未完成 KYC", "等级冻结（不升级、不结算、不显示），未到账奖金改为「暂停发放（风控）」；参与状态「冻结」"],
+   ["un", "bq", 1, "冻结期间该玩家被降过级（如关闭期间 VIP14 降到 VIP12），之后完成 KYC", "恢复冻结时的 VIP12 / 历史最高 VIP14，不按累计直接回到 VIP14；累计超过 VIP14 的才升到新等级并记不发放"],
+   ["fn", "bq", 0, "「VIP 体系」关闭期间切换「KYC 限制」", "只记录开关值，体系重新开启时按当时开关值处理"]
+  ]},
+  { c: "F02-03", n: "流水与生日有效期", i: [
+   ["bd", "fbq", 0, "流水倍数输入 −1、0、50、51、1.5", "只接受 0–50 整数；0 表示无流水要求；绕过前端直接调接口同样拦截"],
+   ["bd", "fbq", 0, "生日有效期输入 0、1、30、31", "只接受 1–30 整数"],
+   ["fn", "bq", 1, "流水倍数由 1 改为 2 后到账", "改之后到账的奖金流水 = 金额 × 2；之前已到账的不变"],
+   ["fn", "bq", 0, "生日有效期改为 20 天", "只影响之后生成的生日奖金，已生成的有效期不变"]
+  ]},
+  { c: "F02-04", n: "强制审核、免打扰与短信模板", i: [
+   ["fn", "fbq", 1, "开启强制审核（二次确认）后生成升级奖金；再关闭", "开启后生成的进入待审核；关闭时已待审核的仍须审核；日志写入"],
+   ["bd", "fq", 0, "免打扰设为 21:00–10:00、22:00–22:00、跨天 23:00–07:00", "开始 = 结束视为不设免打扰；跨天正确"],
+   ["fn", "fbq", 0, "短信模板下拉选项；清空某一类并保存", "只列【短信模板列表】已启用的模板；清空的提示「未选择模板的短信不会发送」，该类短信不发"],
+   ["fn", "d", 0, "奖励参数表单的「?」帮助", "每个新增参数都有「?」，文字与 PRD 7.7 帮助提示内容一字不差", "v1.2"]
+  ]}
+ ]},
+ { c: "F03", n: "累计与升级", s: [
+  { c: "F03-01", n: "累计口径", i: [
+   ["fn", "bq", 1, "充值成功、投注站 / 代理代充、兑换码充值、充值返利、人工加款、赠送彩金、活动奖励、提款", "自行充值成功和投注站 / 代理代充计入累计充值；提款不扣；其余不计", "v1.2"],
+   ["fn", "bq", 1, "Slot、Casino、Poker、Bingo、Arcade、Fishing 与 Sports（体育）、Perya、ESports、未分类游戏的注单", "只有六大类的有效投注计入累计和当月", "v1.2"],
+   ["bd", "bq", 1, "10-31 23:59:59 与 11-01 00:00:00 结算的注单（GMT+8）", "前者计入 10 月当月有效投注，后者计入 11 月；按结算时间而非下注时间"],
+   ["ex", "bq", 1, "当月注单撤单；上月（已结算月份）注单撤单", "当月撤单扣累计和当月；上月撤单只扣累计，已结算结果不重算；等级和已发奖金都不回退"],
+   ["fn", "bq", 0, "上线前历史累计回算", "每档抽查至少 5 名玩家，与资金明细一致"],
+   ["ex", "bq", 0, "注单重新结算、改单使有效投注增加或减少", "按差额增减累计有效投注和所属月份的当月有效投注，归属同撤单；等级和已发奖金不回退", "v1.2"]
+  ]},
+  { c: "F03-02", n: "实时升级与升级奖金", i: [
+   ["bd", "bq", 1, "累计有效投注 ₱10,000 + 累计充值 ₱1,999；₱9,999 + ₱2,000；₱10,000 + ₱2,000", "前两种不升级；第三种立即升 VIP1，到账 ₱8，弹升级弹窗；绕过前端直接调接口同样按后端判定"],
+   ["fn", "bq", 1, "VIP0 一次满足 VIP3 门槛", "到账 VIP1 ₱8、VIP2 ₱18、VIP3 ₱28 三笔，合计 ₱54"],
+   ["fn", "bq", 1, "当前 VIP18、历史最高 VIP20，累计达到 VIP24 门槛", "立即当前和历史最高都为 VIP24；只发 VIP21–VIP24 的升级奖金"],
+   ["fn", "bq", 1, "VIP5 降到 VIP4 后累计仍满足 VIP5；之后再到达 VIP5；累计满足 VIP6", "满足 VIP5 不升回；再到 VIP5 不发奖；满足 VIP6 立即升 VIP6 发 ₱68"],
+   ["fn", "bq", 0, "某级升级奖金配置为 0", "该级不生成奖金记录，升级照常"],
+   ["un", "b", 1, "充值和注单结算同时触发升级（并发）", "按会员加锁串行；「会员 + 等级」唯一，不重复发奖"],
+   ["ex", "bq", 0, "升级时到账接口失败", "升级照常生效；奖金按重试规则处理；弹窗金额行显示「升级奖金发放中」"],
+   ["fn", "bq", 0, "玩家升到 VIP1 及以上", "支付层级不变", "v1.2"]
+  ]},
+  { c: "F03-03", n: "KYC 定级", i: [
+   ["fn", "bq", 1, "「KYC 限制」开启，未 KYC 玩家累计已达 VIP4，KYC 审核通过", "直接为 VIP4，VIP1–VIP4 记「不发放（KYC 前已达到）」，不弹窗；之后到达 VIP5 发 ₱48"],
+   ["fn", "bq", 0, "「KYC 限制」开启时 KYC 审核中、被拒", "都不参与 VIP：不定级、不发奖、不结算，累计照常"],
+   ["un", "bq", 0, "「不发放（KYC 前已达到）」的记录尝试补发", "没有补发按钮；调接口补发被拒绝"]
+  ]}
+ ]},
+ { c: "F04", n: "月度结算", s: [
+  { c: "F04-01", n: "保级与月度奖金", i: [
+   ["bd", "bq", 1, "VIP5 当月有效投注 ₱99,999 与 ₱100,000", "₱99,999：次月 1 日 13:00 降为 VIP4，不发月度奖金和短信；₱100,000：保持 VIP5，到账 ₱38，发短信「₱38 VIP Monthly Bonus credited! Log in to 789Bingo to check your reward.」"],
+   ["fn", "bq", 1, "10-20 升到 VIP6 的玩家", "按 VIP6 考核 10 月整月当月有效投注"],
+   ["fn", "bq", 0, "某级月度奖金配置为 0 且保级成功", "保级照常判定，不生成奖金记录、不发通知"],
+   ["fn", "bq", 0, "「KYC 限制」开启时未完成 KYC 的玩家、从未到达 VIP1 的 VIP0", "都不出现在结算明细里"],
+   ["un", "b", 1, "同一结算月份任务重复执行", "「会员 + 结算月份」唯一，不重复降级、不重复发奖"]
+  ]},
+  { c: "F04-02", n: "降级与逐级恢复", i: [
+   ["bd", "bq", 1, "当前 VIP10、历史最高 VIP12：当月 ₱2,999,999 / ₱3,000,000；VIP9（历史最高 VIP10）当月 ₱1,000,000", "依次：不发奖，次月降到 VIP9；到账 VIP10 月度奖金 ₱400，次月恢复 VIP11；到账 VIP9 月度奖金 ₱200，次月恢复 VIP10（达到当前等级保级投注即恢复，用户 2026-10-27）"],
+   ["fn", "bq", 0, "当前 VIP12 = 历史最高，当月达到 VIP13 保级投注", "只保持 VIP12，不恢复到更高级"],
+   ["bd", "bq", 1, "VIP1 当月 ₱4,999；VIP0（历史最高 VIP1）次月 ₱5,000", "VIP1 降为 VIP0；VIP0 次月恢复 VIP1，不发任何奖金（VIP0 按 VIP1 保级投注判断，Q19 已定，用户 2026-10-28）", "v1.2"],
+   ["fn", "bq", 0, "恢复到曾到达的等级", "不发升级奖金、不弹升级弹窗；每月最多恢复 1 级、最多降 1 级"]
+  ]},
+  { c: "F04-03", n: "结算任务", i: [
+   ["fn", "fbq", 1, "每月 1 日 00:00:00 至结算完成打开 VIP中心", "保级行显示「⏳ 上月结算中，预计 13:00 完成」；以接口返回状态判断，不按本机时间", "v1.2"],
+   ["fn", "bq", 1, "考核等级 VIP5 保级失败，1 日 09:00 已实时升到 VIP7", "结算后仍为 VIP7，上月月度奖金不发；明细结算结果「降级」、结算后等级 VIP7", "v1.2"],
+   ["ex", "bq", 1, "单人结算失败", "自动重试 3 次（间隔 1 分钟），仍失败记「结算失败」，等级不变；该月状态仍为「已完成」，下方小字「n 人结算失败，待技术补结算」，「结算失败」列为 n，参与人数含这 n 人；明细结算结果「结算失败」、结算后等级「—（未结算）」", "v1.2"],
+   ["ex", "bq", 0, "1 日 13:30 结算仍未完成", "向技术和运营告警"],
+   ["fn", "bq", 0, "1 日 13:00 时「VIP 体系」关闭", "该月不结算，事后不补；当月生日的玩家不生成生日奖金", "v1.2"],
+   ["fn", "fq", 0, "1 日 13:30 后结算仍未完成，打开 VIP中心", "当前等级卡和「查看详情」玩家数据部分显示「⏳ 上月结算中，完成后自动更新」，不写预计时间", "v1.2"]
+  ]}
+ ]},
+ { c: "F05", n: "生日奖金", s: [
+  { c: "F05-01", n: "生日奖金生成", i: [
+   ["bd", "bq", 1, "生日 10-13：10-01 13:00 结算完成时 KYC 已通过与未通过", "已通过的 10-01 结算完成时生成（待领取），10-13 00:00 起可领；未通过的今年不生成，之后补 KYC 也不补生成（「KYC 限制」开启或关闭都要求）", "v1.2"],
+   ["fn", "bq", 1, "00:00 时为 VIP14，当天 09:00 升到 VIP17", "金额 ₱488，不变"],
+   ["fn", "bq", 0, "生日所在月 1 日结算后为 VIP0、或该级生日奖金为 0、或体系关闭", "不生成", "v1.2"],
+   ["bd", "fbq", 0, "每月 1 日生日；2 月 29 日生日在非闰年", "1 日生日：00:00 至结算完成卡片显示「⏳ 结算完成后可领取」、无按钮，结算完成后按结算后的等级生成、可领，当天提醒短信在生成后发；非闰年 2 月 28 日起可领", "v1.2"],
+   ["un", "bq", 1, "同一年内修改生日", "今年已生成的不再生成第二笔（会员 + 年份唯一）"],
+   ["fn", "bq", 0, "风控暂停的玩家生日", "照常生成，状态「暂停发放（风控）」"],
+   ["fn", "fbq", 1, "生日 10-13，10-01 结算后为 VIP14，10-05 升到 VIP17", "生日奖金 ₱488（按 10-01 结算后的 VIP14），升级后金额不变；10-12 前 VIP中心不显示生日卡片", "v1.2"]
+  ]},
+  { c: "F05-02", n: "生日奖金领取", i: [
+   ["bd", "fbq", 1, "有效期 15 天，生日 10-13：10-27 23:59:59 与 10-28 00:00:00 领取", "前者成功；后者「已过期」不能领"],
+   ["un", "fbq", 1, "双击「领取」、两台设备同时领取", "只到账 1 笔，其余返回「生日奖金已领取」"],
+   ["fn", "bq", 0, "强制审核开启时领取", "进入待审核，卡片「审核中」"],
+   ["ex", "fbq", 1, "领取时到账失败", "不自动重试；toast「领取失败，请重试」，状态保持待领取，有效期内可再领；后台不出现「发放失败」；再次领取成功只到账 1 笔", "v1.2"],
+   ["un", "bq", 0, "绕过前端用别人的奖金记录 ID 领取", "按登录会员校验，拒绝"]
+  ]}
+ ]},
+ { c: "F06", n: "发放、审核与风控", s: [
+  { c: "F06-01", n: "到账与流水", i: [
+   ["fn", "bq", 1, "三类奖金到账", "进余额、写资金明细，账变类型为新增的「VIP 升级奖金」「VIP 月度奖金」「VIP 生日奖金」，备注「VIP{等级} {奖金名}，记录 ID：xxx」；交易记录显示同名，金额为正；生成流水 = 金额 × 到账时流水倍数；计入活动费用报表和平台报表「活动费用」（活动目的「留存」）", "v1.2"],
+   ["ex", "bq", 1, "到账接口连续失败", "升级、月度奖金按 1、5、30 分钟重试 3 次，仍失败记「发放失败」并告警（生日奖金除外，见 F05-02）；同一奖金记录 ID 只到账一次", "v1.2"],
+   ["fn", "bq", 0, "VIP 奖金到账后活动、返水的判定", "互不影响，不占用活动预算", "v1.2"],
+   ["fn", "q", 0, "上线后一周每日核对", "VIP 奖金到账合计与资金明细、【活动奖励统计】的已到账记录一致", "v1.2"]
+  ]},
+  { c: "F06-02", n: "强制审核", i: [
+   ["fn", "fbq", 1, "开启后升级奖金待审核 → 通过；另一笔 → 驳回", "待审核时余额不变；通过后到账并发站内信、推送；驳回原因必填，状态「已驳回」，可补发 1 次"],
+   ["fn", "fq", 0, "审核时该记录已被他人处理", "提示「记录状态已变化，请刷新」，不执行；本期没有批量审核（Q23 已定不补）", "v1.2"],
+   ["un", "bq", 0, "无审核权限的账号调审核接口", "拒绝，提示「没有权限」"]
+  ]},
+  { c: "F06-03", n: "风控暂停与人工处理", i: [
+   ["bd", "bq", 1, "风险分 69 与 70 的玩家升级", "69 正常到账；70 等级更新，奖金「暂停发放（风控）」，无弹窗、无短信、无站内信和推送"],
+   ["fn", "bq", 1, "放行月度奖金；放行已过期的生日奖金；放行时玩家仍在风控暂停", "月度奖金到账并发短信；过期生日奖金直接到账；仍在暂停时先提示「该会员仍处于风控暂停状态，确认放行？」；暂停原因为「KYC 限制开启（未完成 KYC）」的提示「原因为 KYC 限制的，玩家完成 KYC 前不建议放行」；不补弹升级弹窗", "v1.2"],
+   ["fn", "fbq", 1, "作废未到账奖金；补发已作废记录两次", "作废原因必填 1–200 字；补发生成新记录并关联原记录，第二次补发不可用"],
+   ["un", "bq", 1, "「不发放（上线定级）」记录补发；已到账记录作废", "都没有按钮，调接口被拒绝"],
+   ["un", "fbq", 0, "两名运营同时处理同一条", "后提交的提示「记录状态已变化，请刷新」，不执行"],
+   ["fn", "bq", 0, "风控状态解除后", "已暂停的奖金不自动恢复，需运营放行或作废"]
+  ]}
+ ]},
+ { c: "F07", n: "前台 VIP中心", s: [
+  { c: "F07-01", n: "入口与当前等级进度", i: [
+   ["fn", "dfq", 1, "新版本 App 和 H5 个人中心原「Level Center」入口；未登录点入口", "入口文字为「VIP中心」，进入 VIP中心（Level Center 已改为 VIP中心，页面不显示任何 LEVEL 等级）；未登录先登录，登录后回到 VIP中心", "v1.2"],
+   ["fn", "fq", 1, "VIP5 本月有效投注 ₱62,500（保级投注 ₱100,000），未保级", "当前卡（PRD 表 1 ①）：「当前」在小徽章正下方；无标题行；🛡️ 进度条 + 差额「₱37.5K」，无百分比、无「还差」；奖金行「升到 VIP6 升级奖金 ₱68」「月度奖金 ₱38」「生日奖金 ₱88」；卡上无保级成功框、次月恢复、历史最高", "v1.2"],
+   ["fn", "fq", 1, "VIP14 本月有效投注 ₱12,600,000（保级投注 ₱12,000,000），累计有效投注 ₱81,250,000、累计充值 ₱26,800,000", "当前卡（表 1 ②）：标题行「UP VIP15」+ 右侧「保级成功」；🎰 差额「₱8.75M」、钱包 差额「₱3.2M」两条进度；徽章放大，徽章 +「当前」总高与标题行 + 两条进度一致；奖金行升到 VIP15 升级奖金 ₱1,888、月度奖金 ₱1,350、生日奖金 ₱488", "v1.2"],
+   ["fn", "fq", 0, "当前 VIP10 / 历史最高 VIP12，本月有效投注分别为 ₱2,000,000、₱3,450,000（VIP10 保级投注 ₱3,000,000）", "当前卡（表 1 ⑤）：未保级同 ①（🛡️ 差额「₱1M」）；已保级同 ②（「UP VIP13」+「保级成功」+ 🎰 差额「₱12.7M」、钱包 差额「₱3.8M」）；奖金行升到 VIP13 升级奖金 ₱1,488；卡上不出现次月恢复和历史最高。VIP11 卡「🔓 已解锁」+「恢复 VIP11」进度（未保级差额「₱1M」，已保级 ✓ 绿色满格）；VIP12 卡「🔓 已解锁」+ 只有文字「先恢复 VIP11」（表 1 ⑨⑩）", "v1.2"],
+   ["fn", "fq", 0, "从未到达 VIP1 的会员；VIP1 降为会员（本月有效投注 ₱2,100）", "从未到达（表 1 ⑥）：会员卡标题行「UP VIP1」（无「保级成功」）+ 🎰 差额「₱3.8K」、钱包 差额「₱500」+「升到 VIP1 升级奖金 ₱8」，无「查看详情」；VIP1 降为会员（表 1 ⑦）：无标题行，🎰 本月有效投注对 VIP1 保级投注 ₱5,000 的进度、差额「₱2.9K」+「升到 VIP2 升级奖金 ₱18」，有「查看详情」；VIP1 卡「🔓 已解锁」+「恢复 VIP1」进度", "v1.2"],
+   ["fn", "fq", 0, "SUPER VIP 本月有效投注达 ₱60,000,000；每月 1 日 00:00 至结算完成", "SUPER VIP 当前卡（表 1 ③）：只有右侧「保级成功」+ 1 条无图标的绿色满格，奖金行只有月度奖金 ₱100,000、生日奖金 ₱5,888，无升级奖金；结算中（表 1 ④）：当前卡不显示进度条，只显示「⏳ 上月结算中，预计 13:00 完成」（13:30 后「⏳ 上月结算中，完成后自动更新」）+ 奖金行，其他卡照常（下一级卡升级进度照常实时）", "v1.2"],
+   ["fn", "dq", 0, "当前等级卡在 390 宽度下（降级玩家内容最长）", "文字不压徽章、不溢出卡片，进度条和对勾对齐；整页无横向滚动"],
+   ["un", "fq", 0, "老版本 App", "不弹 VIP 升级弹窗；等级和奖金照常到账，站内信、推送、短信照常；原 Level Center 入口打开后的显示按技术上线前确认的结果核对", "v1.2"]
+  ]},
+  { c: "F07-02", n: "弧形刻度与等级卡", i: [
+   ["fn", "fq", 1, "打开页面默认定位；VIP0；未登录、未完成 KYC", "默认当前等级（刻度 ▼ 和中间卡一致）；VIP0 定位「会员」卡；未登录、未完成 KYC 定位 VIP1，刻度不标当前", "v1.2"],
+   ["bd", "fq", 0, "点刻度、点相邻卡、左右滑动；切到 VIP0 和 SUPER VIP", "三种方式都能切换，刻度弧线、选中 ▼ 和中间卡同步；滑动松手不会被补发的点击切回；两端不越界"],
+   ["fn", "dfq", 0, "非当前等级卡（玩家当前 VIP5、历史最高 VIP5）", "会员卡和 VIP1–VIP4：标签「已达成」，无进度条、无奖金行（表 1 ⑧）；VIP6：「🔒 未解锁」+ 🎰 差额「₱267.6K」、钱包 差额「₱82K」两条进度 + 升级奖金、月度奖金（⑪）；VIP7 起：「🔒 未解锁」+ 只有升级奖金、月度奖金（⑫）；VIP6 起徽章置灰", "v1.2"],
+   ["fn", "fq", 0, "未登录；「KYC 限制」开启且未完成 KYC", "会员卡只写「未达 VIP1，无奖金」，无顶部标签、无「查看详情」；VIP1 起全部「🔒 未解锁」+ 升级奖金、月度奖金，无进度条（表 1 ⑬）", "v1.2"],
+   ["fn", "dfq", 1, "当前等级卡点「查看详情」：VIP5 未保级、VIP14 已保级、降级玩家 VIP10 / 历史最高 VIP12、SUPER VIP、结算中", "按 PRD 表 2：标题「VIPn 详情」；先显示「享有奖励」奖金表 + 底部说明，再显示玩家在该等级的数据：「本月保级」（达标加「已达成」）+ 🛡️ 进度 + 差额或 ✓，下面「UP VIPm」+ 🎰、钱包两条升级进度（m = 历史最高 + 1，SUPER VIP 无 UP 部分）；降级玩家标题右侧历史最高框（「历史 + TOP」图标 + VIP12）与标题底对齐，🛡️ 进度后接「→ VIP11」（达标为达成样式）；结算中玩家数据部分只有 ⏳ 一行", "v1.2"],
+   ["fn", "dfq", 0, "VIP1 降为会员的会员卡、非当前等级卡点「查看详情」", "会员卡：标题「会员 详情」+ 历史最高框 VIP1，无「本月保级」行，🎰 本月有效投注对 VIP1 保级投注的进度 + 差额或 ✓ +「→ VIP1」+「UP VIP2」两条进度，不显示奖金表和底部说明；非当前等级卡：只显示奖金表（无「享有奖励」小标题）+ 底部说明", "v1.2"],
+   ["fn", "fq", 0, "「查看详情」奖金状态", "升级奖金：≤ 历史最高 ✓ 已到账，> 历史最高或未登录 / 未完成 KYC 🔒 未解锁；月度奖金：当前等级本月已保级 ✓ 1 日 13:00 到账（风控暂停 ⏳ 待核验），未保级或结算中 ⏳ 进行中，其他等级「当前等级可得」；生日奖金（该级为 0 时无此行）：当前等级按生日卡片状态（🎂 待领取 / ✓ 已领取 / ⏳ 审核中 / 已过期 / 未通过审核 / ⏳ 结算完成后可领取；风控暂停 ⏳ 待核验；今年还没有生日奖金或未到生日「生日当天可领」），其他等级「生日当天为该级可领」；颜色 ✓ 绿、⏳ 和 🎂 橙、其余灰", "v1.2"],
+   ["bd", "f", 0, "「查看详情」交互", "只有中间卡的按钮可点，点相邻卡只切换卡片不打开弹窗；×、遮罩、Esc 都能关闭", "v1.2"],
+   ["fn", "dfq", 1, "图标与进度行", "🎰 有效投注、「钞票进钱包」图标 累计充值、🛡️ 保级、「历史 + TOP」图标 历史最高（只在「查看详情」弹窗）、⏳、✓、🔒、🔓、🎂 的含义与 PRD F07-02「图标与卡片排版」一致；升级目标和恢复只用文字「UP VIPn」「恢复 VIPn」「先恢复 VIPn」「→ VIPn」，页面不出现 ⬆、BACK 调头箭头图标和 🛡️✓ 组合框；进度行为图标 | 进度条 | 差额或 ✓，同一行垂直居中，无百分比、无「还差」，差额 ≥ ₱1,000 用 K / M（N42）；单独出现的图标有中文 aria-label 和 title（英文模式翻译）；不显示图例；深色底和浅色卡上图标都看得清、与文字对齐", "v1.2"],
+   ["fn", "d", 0, "徽章与卡片区域高度", "「当前」在右侧徽章正下方；有标题行（「UP VIPn」或「保级成功」）的卡徽章放大，徽章 +「当前」总高与标题行 + 进度条整块一致，其余小尺寸；卡片内容不贴顶部「VIP」角标；等级卡区域固定高度，卡片按内容自适应高度并上下居中，切换卡片和场景时生日卡片、等级表位置不变", "v1.2"],
+   ["fn", "d", 0, "卡面和刻度颜色", "会员卡蓝（刻度和徽章文字为「会员」，不显示「VIP0」）、VIP1–VIP24 香槟金、SUPER VIP 皇室紫金；刻度同色，当前等级亮金加粗带小圆点", "v1.2"]
+  ]},
+  { c: "F07-03", n: "VIP 规则与等级表", i: [
+   ["fn", "fq", 1, "「KYC 限制」开启 / 关闭、强制审核开启 / 关闭时的规则条目", "KYC 一条只在「KYC 限制」开启时显示；审核一条只在强制审核开启时显示；流水倍数和有效期天数随配置"],
+   ["fn", "fq", 0, "等级表", "默认 25 行（VIP1–SUPER VIP，不列会员，行数随后台等级数变化）；只有等级、升级奖金、月度奖金、生日奖金 4 列（生日奖金为 0 显示「—」），没有「等级要求」页签；当前行高亮；表格和页面都无横向滚动；表格限高约 13 行、表内上下滚动、表头固定；进入页面时自动定位，当前等级显示在第 2 行（上面露出低一级），VIP1 在第 1 行；末尾几级（如 SUPER VIP）滚到底部显示；没有当前等级（会员、未登录、未完成 KYC）停在顶部；数值按 N42", "v1.2"],
+   ["fn", "d", 0, "规则全文", "不出现「最高数百万」类宣传金额；英文按 PRD 附录 C"]
+  ]},
+  { c: "F07-04", n: "生日卡片", i: [
+   ["fn", "dfq", 1, "待领取 → 领取成功 / 审核中 / 失败", "成功 toast「领取成功，已到账」并变「已领取」；审核中 toast「已提交，审核通过后到账」；失败 toast「领取失败，请重试」按钮恢复", "v1.2"],
+   ["fn", "fq", 0, "已过期、暂停发放、已驳回、已作废、补发", "已过期灰色，过期后 7 天隐藏；暂停发放显示「暂不可领取，有疑问联系客服」，无按钮；已驳回显示「未通过审核，有疑问联系客服」，无按钮，有效期结束后隐藏；已作废卡片隐藏；补发按新记录状态显示", "v1.2"],
+   ["bd", "fbq", 0, "停留页面跨过有效期最后一秒再点领取", "toast「生日奖金已过期」，卡片变「已过期」"],
+   ["un", "f", 0, "领取中再次点击", "按钮加载中不可点"],
+   ["fn", "fq", 0, "生日前一天、生日当天 00:00 打开 VIP中心", "生日前不显示生日卡片；生日当天 00:00 起显示待领取卡片", "v1.2"]
+  ]},
+  { c: "F07-05", n: "特殊状态", i: [
+   ["fn", "fq", 1, "「KYC 限制」开启、KYC 未提交 / 审核中", "刻度上方 KYC 引导卡（标签「未加入 VIP」+「完成 KYC 加入 VIP」+「加入时按累计定级」+「去认证」）；审核中按钮置灰「KYC 审核中」；刻度和等级卡（全部未解锁、定位 VIP1）、规则、等级表照常，无生日卡片", "v1.2"],
+   ["fn", "fq", 0, "风控暂停、体系关闭、未登录", "风控提示条「部分 VIP 奖金暂未发放，有疑问联系客服」；体系关闭整页「VIP 暂未开放」（有待领取生日奖金时显示生日卡片）；未登录刻度上方登录引导卡（标签「未登录」+「登录查看 VIP 进度」+「登录」）", "v1.2"],
+   ["ex", "fq", 0, "接口失败或超时 10 秒、弱网", "显示「加载失败，点击重试」，可重试；已加载部分不清空"],
+   ["fn", "f", 0, "埋点 vip_center_view 和 vip_kyc_click", "页面加载成功上报 from、state；点「去认证」上报", "v1.2"]
+  ]}
+ ]},
+ { c: "F08", n: "通知", s: [
+  { c: "F08-01", n: "升级弹窗", i: [
+   ["fn", "dfq", 1, "单级、跨多级（超过 5 级）、强制审核三种弹窗", "单级「升级奖金 ₱x 已到账」；跨多级显示合计并只列最高 5 级加「等 n 个等级」；审核写「升级奖金 ₱x 审核中，通过后到账」；跨多级从 VIP0 升级写「已从会员升级到 VIP b」", "v1.2"],
+   ["fn", "fq", 0, "游戏中升级、离线升级、多次升级未展示", "游戏中不弹、返回大厅弹；离线下次登录弹；合并为 1 个显示最终等级和合计"],
+   ["fn", "fbq", 1, "上线定级、KYC 定级、逐级恢复、风控暂停、老版本 App", "都不弹"],
+   ["un", "fq", 0, "点右上角 × 与「知道了」「查看权益」", "× 等同「知道了」；「查看权益」进 VIP中心；只展示一次", "v1.2"],
+   ["fn", "f", 0, "埋点 vip_upgrade_popup", "展示、点击上报 action、from_level、to_level、bonus_total"]
+  ]},
+  { c: "F08-02", n: "VIP 短信", i: [
+   ["bd", "bq", 1, "月度奖金 ₱0.99 与 ₱1.00 到账", "₱0.99 只收到推送；₱1.00 短信和推送都收到"],
+   ["bd", "bq", 1, "20:59:59 与 21:00:00 到账", "前者立即发；后者短信和推送次日 10:00 发，站内信即时"],
+   ["fn", "bq", 1, "短信金额写法", "「VIP 月度奖金到账」写「₱」（只这一个模板例外）；「VIP 生日提醒 · 当天」写「PHP」；符号与数字之间无空格"],
+   ["fn", "bq", 0, "生日前一天 10:00、当天 10:00", "前一天短信不含金额（明天是 1 日的，按当时 KYC 和等级判断是否发）；当天短信含金额和有效期，1 日生日的在结算完成、生日奖金生成后发；已领取的当天不发；风控暂停、体系关闭不发；每年每种最多 1 条", "v1.2"],
+   ["fn", "bq", 0, "升级、生日奖金到账；月度奖金审核通过 / 放行 / 补发到账", "升级、生日到账不发短信；月度奖金各种到账方式都发，每月最多 1 条"],
+   ["ex", "b", 0, "短信通道失败", "沿用短信列表重试，不影响奖金到账"]
+  ]},
+  { c: "F08-03", n: "站内信与 APP 推送", i: [
+   ["fn", "fbq", 1, "三类奖金实际到账", "各 1 条站内信和推送，标题正文与 PRD 第 5 章一致；点击进 VIP中心"],
+   ["fn", "bq", 0, "一次升 3 级", "3 条站内信，推送合并为 1 条"],
+   ["fn", "bq", 0, "待审核、暂停发放、驳回、作废、过期", "不发站内信和推送"],
+   ["un", "fq", 0, "玩家未开通系统通知权限", "只有站内信"]
+  ]}
+ ]},
+ { c: "F09", n: "奖励统计与数据留存", s: [
+  { c: "F09-01", n: "活动奖励统计", i: [
+   ["fn", "fbq", 1, "按会员账号、奖励金额、奖励类型、发放状态、申请领取时间筛选后点「搜索」", "结果正确，回到第 1 页；申请领取时间默认近 7 天；每页默认 10 条；「合计」为本页奖励金额合计；点「查询总计」后「审核已发放金额」为当前筛选全部页已到账金额合计，重新搜索后为 0", "v1.2"],
+   ["bd", "fbq", 0, PG, PGE],
+   ["fn", "fbq", 0, "导出 3 页数据；超过 10 万行", "导出全部符合筛选的行；超 10 万行改为后台生成，完成后在【数据报表 › 报表下载】下载", "v1.2"],
+   ["fn", "fq", 0, "空列表、加载失败", "表格显示「No Data」；「加载失败，请重试」", "v1.2"],
+   ["fn", "fq", 0, "审核等操作后", "停在当前页"],
+   ["bd", "fbq", 0, "不填会员账号选 31 天、32 天；填写会员账号、不填申请领取时间", "不填账号时最长 31 天，32 天不能查询；填账号时可不填时间，查出该会员全部记录", "v1.2"],
+   ["fn", "fq", 0, "【VIP会员等级配置 › 活动奖励统计】的字段（原 Tab3 改造）", "布局和 9 列同现网；奖励类型下拉为全部 / 升级奖金 / 月度奖金 / 生日奖金，列表显示中文（不再显示 upgrade）；发放状态为 9 种状态；会员等级显示 VIP 等级名；不发放、暂停发放（账号冻结 / 自我排除 / 风险分 ≥ 70 / KYC 限制开启（未完成 KYC））、驳回、作废原因和补发原记录以小字显示在状态下方；申请领取时间、审核发放时间列名标「（GMT+8）」，按 GMT+8 显示；审核人显示 SYSTEM 或后台账号", "v1.2"]
+  ]},
+  { c: "F09-02", n: "VIP会员数据（本期无查询页）", i: [
+   ["fn", "bq", 1, "查库核对一名降级玩家的数据", "当前等级、历史最高、三项累计、本月保级状态、恢复目标「VIPn+1：₱y」、参与状态与实际一致", "v1.2"],
+   ["fn", "fq", 0, "后台【VIP会员等级配置】", "没有 VIP会员数据查询页（Q23 已定不补）", "v1.2"],
+   ["fn", "bq", 0, "未完成 KYC（「KYC 限制」开启时）、风控暂停、冻结玩家", "参与状态分别为未参与、风控暂停、冻结"]
+  ]},
+  { c: "F09-03", n: "等级变动记录（本期无查询页）", i: [
+   ["fn", "bq", 1, "上线定级、KYC 定级、升级、保级、降级、恢复、冻结、解冻各触发一次", "数据库每次一条，类型、前后等级、历史最高、触发原因、关联奖金记录正确", "v1.2"],
+   ["fn", "fq", 0, "后台【VIP会员等级配置】", "没有等级变动记录查询页（Q23 已定不补）", "v1.2"]
+  ]},
+  { c: "F09-04", n: "VIP月度结算记录", i: [
+   ["fn", "bq", 1, "【VIP月度结算记录】核对一个考核月份的汇总", "参与人数 = 保级成功 + 恢复 + 降级 + 结算失败；其中降为 VIP0 ≤ 降级；月度奖金笔数和金额与明细、【活动奖励统计】该月月度奖金记录一致", "v1.2"],
+   ["fn", "fq", 0, "第 4 个页签「VIP月度结算记录」列表和筛选", "每月一行，按考核月份倒序；列为考核月份、结算执行时间、结算状态、参与人数、保级成功、恢复、降级、其中降为 VIP0、结算失败、月度奖金「n 笔 / ₱x」、操作「明细」；结算执行时间列名标「（GMT+8）」；考核月份范围和结算状态筛选正确；页面没有修改操作；无数据显示「暂无数据」", "v1.2"],
+   ["fn", "bq", 0, "结算明细：结算时已实时升级的玩家（考核 VIP5 保级失败，1 日 09:00 已升到 VIP7）", "明细结算结果「降级」、结算后等级 VIP7，月度奖金「—」（规则 N18）", "v1.2"],
+   ["fn", "fbq", 1, "点「明细」，按会员账号、考核等级、结算结果筛选后导出", "标题「YYYY-MM 结算明细」，「‹ 返回」回到列表；列为会员账号、考核等级、当月有效投注、保级投注、结算结果、结算后等级、月度奖金、奖金状态；筛选结果正确；结算结果可选「结算失败」；导出全部符合筛选的行（不受分页限制），超 10 万行改为后台生成，在【数据报表 › 报表下载】下载", "v1.2"],
+   ["ex", "fbq", 1, "整次结算自动重试 3 次仍失败", "该月状态「结算失败」，下方小字「已自动重试 3 次，已通知技术，修复后补跑」；人数和月度奖金显示「—」，没有「明细」；补跑完成前等级配置保持锁定；补跑完成后变为「已完成」", "v1.2"],
+   ["bd", "fbq", 0, PG, PGE]
+  ]},
+  { c: "F09-05", n: "权限与操作日志", i: [
+   ["fn", "fbq", 1, "无某项权限的账号", "按钮置灰并提示「没有权限」；绕过前端直接调接口同样拦截"],
+   ["fn", "bq", 1, "各类配置修改和奖金处理", "数据库日志写时间（GMT+8）、操作人、模块、对象、「字段：旧值 → 新值」、原因；只追加不可删改", "v1.2"],
+   ["fn", "fq", 0, "后台【VIP会员等级配置】", "没有操作日志页签（Q23 已定不补）", "v1.2"],
+   ["fn", "q", 0, "旧版 VIP 体系（VIP特权、旧版 VIP活动）", "【用户管理 › VIP特权】菜单和【活动配置 › 活动列表】中的旧版「VIP活动」整个去掉：旧版成长值等级 VIP0–VIP8、成长值和场馆成长值倍数、下注限额与返水、成长值记录、会员福利记录都不再使用、不再生效；旧版数据不迁移到新 VIP（规则 N47）", "v1.2"]
+  ]}
+ ]}
+];
+var VER = "v1.2", ITER = "v1.2", BASE = "VIP会员体系功能需求-" + (ITER ? ITER + "-" : ""), KEY = BASE + VER + "-checklist";
+document.getElementById("hdVer").textContent = VER;
+var PREV = (function () {
+  function vn(v) { var m = /^v(\d+)\.(\d+)$/.exec(v || ""); return m ? (+m[1]) * 1000 + (+m[2]) : -1; }
+  var best = "", bestN = -1, cur = vn(VER);
+  try { for (var i = 0; i < localStorage.length; i++) { var k = localStorage.key(i); if (k.indexOf(BASE) !== 0 || !/-checklist$/.test(k)) continue;
+    var v = k.slice(BASE.length, -"-checklist".length), n = vn(v); if (n >= 0 && n < cur && n > bestN) { best = k; bestN = n; } } } catch (e) {}
+  return best;
+})();
+var RN = { d: "设计", f: "前端", b: "后端", q: "测试" }, TN = { fn: "功能", bd: "边界值", ex: "异常", un: "非常规" };
+var F = { role: "all", type: "all", state: "all" };
+var store = {};
+try { store = JSON.parse(localStorage.getItem(KEY) || "null"); } catch (e) { store = null; }
+try { var sv = JSON.parse(localStorage.getItem(KEY + "-filters") || "{}"); if (sv.role) F = sv; } catch (e) {}
+var MIGRATE = store === null; if (MIGRATE) store = {};
+function save() { try { localStorage.setItem(KEY, JSON.stringify(store)); localStorage.setItem(KEY + "-filters", JSON.stringify(F)); } catch (e) {} }
+function done(it, role) {
+  var rs = role === "all" ? it.r.split("") : [role];
+  return rs.every(function (r) { return store[r + ":" + it.id]; });
+}
+function setDone(it, on) { (F.role === "all" ? it.r.split("") : [F.role]).forEach(function (r) { if (on) store[r + ":" + it.id] = 1; else delete store[r + ":" + it.id]; }); }
+var ITEMS = [];
+DATA.forEach(function (fp) { fp.s.forEach(function (s) { s.i.forEach(function (x, k) {
+  var it = { id: s.c + "-" + (k + 1), fp: fp, sub: s, t: x[0], r: x[1], key: !!x[2], q: x[3], e: x[4], v: x[5] || "" }; ITEMS.push(it); s.items = (s.items || []).concat(it);
+}); }); });
+function inRole(it) { return F.role === "all" || it.r.indexOf(F.role) >= 0; }
+function visible(it) {
+  if (!inRole(it)) return false;
+  if (F.type === "fn" && it.t !== "fn") return false;
+  if (F.type === "bd" && it.t !== "bd") return false;
+  if (F.type === "ex" && it.t !== "ex" && it.t !== "un") return false;
+  var d = done(it, F.role);
+  if (F.state === "todo" && d) return false;
+  if (F.state === "done" && !d) return false;
+  if (F.state === "key" && !it.key) return false;
+  return true;
+}
+function stat(list) { var n = list.length, c = list.filter(function (it) { return done(it, F.role); }).length; return { n: n, c: c, p: n ? Math.round(c * 100 / n) : 0 }; }
+var closed = {};
+function render() {
+  var html = "";
+  DATA.forEach(function (fp) {
+    var all = []; fp.s.forEach(function (s) { all = all.concat(s.items.filter(inRole)); });
+    var vis = all.filter(visible); if (!vis.length) return;
+    var st = stat(all), tag = st.c === 0 ? '<span class="stt">未开始</span>' : st.c === st.n ? '<span class="stt done">已完成</span>' : '<span class="stt ing">进行中</span>';
+    html += '<section class="fpc' + (closed[fp.c] ? " closed" : "") + '" data-fp="' + fp.c + '"><div class="fpc-h">' +
+      '<button class="tri" type="button" data-tog="' + fp.c + '" aria-label="展开或收起">▼</button><span class="code">' + fp.c + '</span><span class="nm">' + fp.n + "</span>" + tag +
+      '<span class="mbar"><i style="width:' + st.p + '%"></i></span><span class="num">' + st.c + " / " + st.n + "</span>" +
+      '<button class="selall" type="button" data-sel="' + fp.c + '">全选本组</button><button class="gopr" type="button" data-pr="' + fp.c + '">查看 PRD ›</button></div><div class="fpc-b">';
+    fp.s.forEach(function (s) {
+      var sv = s.items.filter(visible); if (!sv.length) return;
+      var ss = stat(s.items.filter(inRole));
+      html += '<div class="sub-h"><span class="code2">' + s.c + '</span><span class="nm">' + s.n + '</span><span class="mbar"><i style="width:' + ss.p + '%"></i></span><span class="num">' + ss.c + " / " + ss.n + '</span><button class="gopr" type="button" data-pr="' + s.c + '">查看 PRD ›</button></div><ul class="items">';
+      sv.forEach(function (it) {
+        var d = done(it, F.role);
+        html += '<li class="' + (d ? "done" : "") + (it.v ? " vmark" + (it.v === VER ? "" : " old") : "") + '"><input type="checkbox" data-id="' + it.id + '"' + (d ? " checked" : "") + ' aria-label="' + it.q.replace(/"/g, "&quot;") + '"><div><span class="tx">' + it.q +
+          '<span class="tags"><span class="lb t-' + it.t + '">' + TN[it.t] + "</span>" + it.r.split("").map(function (r) { return '<span class="lb r-' + r + '">' + RN[r] + "</span>"; }).join("") + (it.key ? '<span class="lb key">关键</span>' : "") +
+          (it.v ? '<sup class="vtag' + (it.v === VER ? "" : " old") + '" title="' + it.v + '">' + it.v + "</sup>" : "") +
+          '</span></span><span class="ex">预期：' + it.e + "</span></div></li>";
+      });
+      html += "</ul>";
+    });
+    html += "</div></section>";
+  });
+  document.getElementById("list").innerHTML = html || '<div class="empty">当前筛选下没有检查项</div>';
+  var t = stat(ITEMS.filter(inRole));
+  document.getElementById("tp").textContent = t.p + "%";
+  document.getElementById("tn").textContent = t.c + " / " + t.n + " 项";
+  document.getElementById("tb").style.width = t.p + "%";
+}
+var byId = {}; ITEMS.forEach(function (it) { byId[it.id] = it; });
+if (MIGRATE && PREV) { try { var old = JSON.parse(localStorage.getItem(PREV) || "{}"); Object.keys(old).forEach(function (k) { var it = byId[k.split(":")[1]]; if (it && it.v !== VER) store[k] = old[k]; }); } catch (e) {} save(); }
+var list = document.getElementById("list");
+list.addEventListener("change", function (e) { var id = e.target.dataset.id; if (!id) return; setDone(byId[id], e.target.checked); save(); render(); });
+list.addEventListener("click", function (e) {
+  var b = e.target.closest("button"); if (!b) return;
+  if (b.dataset.tog) { closed[b.dataset.tog] = !closed[b.dataset.tog]; b.closest(".fpc").classList.toggle("closed"); }
+  if (b.dataset.sel) {
+    var its = ITEMS.filter(function (it) { return it.fp.c === b.dataset.sel && visible(it); });
+    var allOn = its.every(function (it) { return done(it, F.role); });
+    its.forEach(function (it) { setDone(it, !allOn); }); save(); render();
+  }
+  if (b.dataset.pr) showPRD(b.dataset.pr);
+});
+var frame = document.getElementById("prd"), ready = false, pending = null;
+frame.addEventListener("load", function () { ready = true; if (pending) { frame.contentWindow.postMessage({ type: "prd-show", code: pending }, "*"); pending = null; } });
+function showPRD(code) {
+  if (window.matchMedia("(max-width:699px)").matches) { window.open("VIP会员体系-需求开发PRD文档.html#" + code, "_blank"); return; }
+  if (!ready) { pending = code; return; }
+  frame.contentWindow.postMessage({ type: "prd-show", code: code }, "*");
+}
+document.getElementById("up").onclick = function () { frame.contentWindow.postMessage({ type: "prd-step", dir: -1 }, "*"); };
+document.getElementById("dn").onclick = function () { frame.contentWindow.postMessage({ type: "prd-step", dir: 1 }, "*"); };
+window.addEventListener("message", function (e) {
+  var d = e.data || {}; if (d.type !== "prd-hits") return;
+  document.getElementById("hitn").textContent = d.total ? "第 " + (d.pos + 1) + " / " + d.total + " 处标注" : "";
+});
+var GROUPS = { role: [["all", "全部"], ["d", "设计"], ["f", "前端"], ["b", "后端"], ["q", "测试"]], type: [["all", "全部"], ["fn", "功能"], ["bd", "边界值"], ["ex", "异常与非常规操作"]], state: [["all", "全部"], ["todo", "未完成"], ["done", "已完成"], ["key", "仅关键项"]] };
+Object.keys(GROUPS).forEach(function (g) {
+  var box = document.querySelector('[data-g="' + g + '"]');
+  GROUPS[g].forEach(function (o) {
+    var b = document.createElement("button"); b.type = "button"; b.className = "pill"; b.textContent = o[1]; b.setAttribute("aria-pressed", F[g] === o[0]);
+    b.onclick = function () { F[g] = o[0]; box.querySelectorAll(".pill").forEach(function (x) { x.setAttribute("aria-pressed", x === b); }); save(); render(); };
+    box.appendChild(b);
+  });
+});
+document.getElementById("exall").onclick = function () { closed = {}; render(); };
+document.getElementById("coall").onclick = function () { DATA.forEach(function (fp) { closed[fp.c] = true; }); render(); };
+document.getElementById("prt").onclick = function () { window.print(); };
+document.getElementById("clear").onclick = function () {
+  var m = document.createElement("div"); m.className = "cfm";
+  m.innerHTML = '<div role="dialog" aria-modal="true"><p><b>清空勾选</b></p><p>将清空本需求 ' + ITER + " " + VER + ' 在本浏览器里所有角色的勾选，不能撤销。</p><div class="row2"><button class="obtn" type="button" data-x="0">取消</button><button class="obtn" type="button" data-x="1" style="border-color:#C00000;color:#C00000">确认清空</button></div></div>';
+  m.onclick = function (e) { var x = e.target.dataset.x; if (x === undefined) return; if (x === "1") { store = {}; save(); render(); } m.remove(); };
+  document.body.appendChild(m);
+};
+document.getElementById("csv").onclick = function () {
+  var rows = [["大功能点", "子功能点", "编号", "类型", "适用角色", "关键", "检查什么", "预期结果", "设计", "前端", "后端", "测试"]];
+  ITEMS.forEach(function (it) {
+    rows.push([it.fp.c + " " + it.fp.n, it.sub.c + " " + it.sub.n, it.id, TN[it.t], it.r.split("").map(function (r) { return RN[r]; }).join("/"), it.key ? "是" : "",
+      it.q, it.e].concat(["d", "f", "b", "q"].map(function (r) { return it.r.indexOf(r) < 0 ? "—" : store[r + ":" + it.id] ? "已勾" : "未勾"; })));
+  });
+  var csv = "﻿" + rows.map(function (r) { return r.map(function (c) { return '"' + String(c).replace(/"/g, '""') + '"'; }).join(","); }).join("\r\n");
+  var a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([csv], { type: "text/csv;charset=utf-8" })); a.download = "VIP会员体系-v1.2-开发自查清单-" + VER + ".csv";
+  document.body.appendChild(a); a.click(); a.remove();
+};
+(function () {
+  var split = document.getElementById("split"), dv = document.getElementById("divider"), drag = false;
+  dv.addEventListener("mousedown", function (e) { drag = true; frame.style.pointerEvents = "none"; e.preventDefault(); });
+  window.addEventListener("mouseup", function () { drag = false; frame.style.pointerEvents = ""; });
+  window.addEventListener("mousemove", function (e) {
+    if (!drag) return;
+    var r = split.getBoundingClientRect(), p = Math.min(70, Math.max(25, (e.clientX - r.left) * 100 / r.width));
+    split.style.setProperty("--lw", p + "%");
+  });
+})();
+function fitHead() { document.getElementById("split").style.setProperty("--headh", document.getElementById("ckhead").offsetHeight + "px"); }
+window.addEventListener("resize", fitHead);
+render(); setTimeout(fitHead, 0);
+</script>
+</body>
+</html>

@@ -1,0 +1,435 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>VIP会员体系-v1.2-需求要点</title>
+<link rel="stylesheet" href="../../assets/style.css">
+<style>
+.paper code{overflow-wrap:anywhere;word-break:break-word;white-space:normal}
+.paper .formula,.paper .fpgrid li{overflow-wrap:anywhere}
+.paper .grp{margin:22px 0 6px;font-size:16px;color:#4A3410;border-left:4px solid #C89A3C;padding-left:8px}
+.lvflow{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:10px 0 16px;font-size:13px}
+.lvflow span{border:1px solid #D9C89A;border-radius:14px;padding:2px 10px;background:#FFFBF0}
+.lvflow i{font-style:normal;color:#8A8F98}
+</style>
+</head>
+<body>
+<div class="with-nav">
+<div class="desk"><article class="paper">
+
+<h1 class="doc-title">VIP会员体系-v1.2-需求要点</h1>
+<div class="doc-meta"><span>版本：v1.2</span><span>端：H5、iOS 原生、iOS Flutter、安卓 Flutter、管理后台</span><span>依据：<a href="VIP会员体系-需求开发PRD文档.html">需求开发 PRD 文档</a></span></div>
+<hr class="doc-rule">
+
+<h2 id="k1">一句话需求</h2>
+<div class="oneline">把现有【用户管理 › 会员等级】（LEVEL）模块改造为 VIP 体系（菜单改名「VIP会员等级配置」）：默认 VIP1–VIP24、SUPER VIP 共 25 个 VIP 等级，门槛和奖金可改，可新增、删除等级（最多 60 个 VIP 等级）；未达到 VIP1 的玩家为「VIP0」（等级值 0），前台显示「会员」（Member）：累计有效投注和累计充值同时达标即实时升级并自动发该级升级奖金（每级终身一次）；每月按当月有效投注保级，次月 1 日 13:00（GMT+8）结算，保级成功自动发月度奖金，失败次月降 1 级；生日奖金金额在生日所在月份 1 日结算后按等级确定，生日当天起由玩家领取；前台等级中心（Level Center）改为「VIP中心」。原 LEVEL 不再使用，旧版 VIP 体系（【用户管理 › VIP特权】、系统参数「新版VIP特权状态」和旧版「VIP活动」）被完全替换、不再存在；上线时只按累计有效投注和累计充值定级，已到达的等级不发升级奖金，原 LEVEL 和旧版 VIP 未到账的奖励一律作废（用户 2026-10-28）。</div>
+
+<h2 id="k2">业务流程</h2>
+<div class="flow">
+  <div class="fs key"><div class="no">1</div><div><b>上线开启</b>：核对等级门槛表和奖金表 → 版本发布（原 LEVEL、旧版 VIP 体系含旧版 VIP活动去掉，未到账旧奖励作废）→ 开「VIP领取奖励」（VIP 体系开关）→ 只按累计有效投注和累计充值上线定级，不发升级奖金。</div></div>
+  <div class="fa">↓</div>
+  <div class="fs"><div class="no">2</div><div><b>累计</b>：充值成功、注单结算 → 更新累计充值、累计有效投注、当月有效投注。</div></div>
+  <div class="fa">↓</div>
+  <div class="fs key"><div class="no">3</div><div><b>升级</b>：两项同时达标 → 立即升级 → 逐级自动发升级奖金 → 回大厅弹升级弹窗。</div></div>
+  <div class="fa">↓</div>
+  <div class="fs key"><div class="no">4</div><div><b>月度结算</b>：次月 1 日 13:00 → 保级成功发月度奖金和短信 / 失败降 1 级。</div></div>
+  <div class="fa">↓</div>
+  <div class="fs"><div class="no">5</div><div><b>生日</b>：生日所在月份 1 日结算完成时按结算后等级生成 → 前一天 10:00 短信 → 当天 00:00 起可领、10:00 短信 → 玩家在 VIP中心领取（15 天有效）。</div></div>
+</div>
+<p><b>月度结算分支</b>（考核等级 = 月末 23:59:59 时的当前等级）：</p>
+<div class="brs">
+  <div class="bc"><h5>A - 达到考核等级保级投注</h5><p class="s"><b>保持 + 发月度奖金</b><small>到账后发短信、站内信、推送</small></p></div>
+  <div class="bc"><h5>B - 降过级且达到当前等级保级投注</h5><p class="s"><b>恢复 1 级 + 发月度奖金</b><small>最多到历史最高，不重发升级奖金</small></p></div>
+  <div class="bc br"><h5>C - 未达到</h5><p class="s"><b>降 1 级，不发奖金</b><small>VIP1 降为 VIP0</small></p></div>
+  <div class="bc"><h5>D - VIP0（历史最高 ≥ VIP1）</h5><p class="s"><b>达到 VIP1 保级投注 → 恢复 VIP1</b><small>不发奖金</small></p></div>
+</div>
+<p><b>参与资格分支</b>：</p>
+<div class="brs">
+  <div class="bc br"><h5>A - 未完成 KYC（「KYC 限制」开启时）</h5><p class="s"><b>只累计、不参与</b><small>完成 KYC 时按累计定级，已达到的等级不发升级奖金</small></p></div>
+  <div class="bc br"><h5>B - 风控暂停</h5><p class="s"><b>等级照算，奖金暂停发放</b><small>不发 VIP 通知；运营放行或作废</small></p></div>
+  <div class="bc"><h5>C - 强制审核开启</h5><p class="s"><b>奖金先待审核</b><small>审核通过才到账</small></p></div>
+</div>
+<p><b>等级状态示意</b>：</p>
+<div class="lvflow"><span>VIP0</span><i>累计达标 →</i><span>VIP n（当前 = 历史最高）</span><i>保级失败 →</i><span>VIP n−1（当前 &lt; 历史最高）</span><i>达到 VIP n−1 保级投注（照发月度奖金）→</i><span>次月 VIP n</span><i>累计超过历史最高 →</i><span>立即升到新等级</span></div>
+
+<h2 id="k3">开发功能点</h2>
+
+<h3 class="grp">F01 VIP 等级配置</h3>
+<div class="fpcard" id="F01-01">
+  <h3><span class="code">F01-01</span>VIP 等级配置表<a href="VIP会员体系-需求开发PRD文档.html#F01-01">查看 PRD ›</a></h3>
+  <div class="fpgrid">
+    <b>要做什么</b>
+    <ul><li>【用户管理 › 会员等级】改名【用户管理 › VIP会员等级配置】，按现网页面的 3 个页签改造并新增第 4 个页签（用户 2026-10-28），同一页面切换，前 3 个布局、控件、按钮位置、表格和分页样式同现网：VIP会员等级配置、VIP会员等级奖励配置、活动奖励统计、VIP月度结算记录（新增，见 F09-04）。原方案的 VIP会员数据、等级变动记录、操作日志查询页本期不做，数据保留在数据库。</li><li>「VIP会员等级配置」等级门槛表：列「会员等级｜累计有效投注｜累计充值｜保级投注｜操作」，门槛为输入框，默认 26 行（VIP0 + 25 个 VIP 等级），VIP0 一行只读全 0；等级名按位置自动生成，最高级始终叫 SUPER VIP；每个等级有不变的内部等级 ID（升级奖金唯一键、记录关联用）；「操作」列新增、删除等级见 F01-04；表格下方「保存」（同现网）。去掉现网 LEVEL 和有效投注累计值单门槛。</li><li>「VIP会员等级奖励配置」：顶部「VIP领取奖励」（原「活动状态」改名，= VIP 体系开关）；奖金表「会员等级｜升级奖金｜月度奖金｜生日奖金」，行与门槛表一一对应；右侧实体奖品表保留但整体置灰、标「本期不做」；去掉「操作」列；下方「VIP会员等级奖励规则」参数行；底部「保存」。</li><li>默认值用 v1.2 方案数值；生日奖金按 VIP1 ₱88 … SUPER VIP ₱5,888。</li></ul>
+    <b>公式</b>
+    <div class="formula">门槛 ∈ 整数 1–99,999,999,999；奖金 ∈ 0–9,999,999.99（最多 2 位小数）</div>
+    <b>涉及端</b>
+    <div class="ends"><span>后台前端</span><span>后端</span></div>
+  </div>
+</div>
+<div class="fpcard" id="F01-02">
+  <h3><span class="code">F01-02</span>表内修改与保存<a href="VIP会员体系-需求开发PRD文档.html#F01-02">查看 PRD ›</a></h3>
+  <div class="fpgrid">
+    <b>要做什么</b>
+    <ul><li>同现网：输入框直接修改 → 表格下方「保存」→ 校验 → 有变化时弹影响预览 → 确认后整表保存、写日志；没有修改时提示「没有修改」；两人同时保存，后保存的提示「配置已被他人修改，请刷新后重试」。</li><li>本期不做单项修改弹窗、批量修改和「最后修改」列。</li><li>每月 1 日 00:00 至结算完成，两张等级表输入框置灰、「VIP会员等级配置」的「新增」「删除」「保存」不可用并提示锁定；整次结算失败时锁定到补跑完成，提示「上月结算失败，补跑完成后才能修改等级配置」；奖励配置页签的 VIP领取奖励开关和奖励规则不受限。</li><li>保存即生效；升级 / 生日奖金按生成时配置，保级投注 / 月度奖金按结算执行时配置。</li></ul>
+    <b>公式</b>
+    <div class="formula">保存范围：整张表一次提交；门槛为整数，奖金最多 2 位小数</div>
+    <b>涉及端</b>
+    <div class="ends"><span>后台前端</span><span>后端</span></div>
+  </div>
+</div>
+<div class="fpcard" id="F01-03">
+  <h3><span class="code">F01-03</span>递增校验与影响预览<a href="VIP会员体系-需求开发PRD文档.html#F01-03">查看 PRD ›</a></h3>
+  <div class="fpgrid">
+    <b>要做什么</b>
+    <ul><li>三列门槛逐级严格递增（新增行同样必填），不通过时出错输入框标红、表格下方列出全部出错等级、不保存。</li><li>保存前试算影响预览，超 30 秒提示超时。</li><li>下调门槛后对全部参与玩家重算一次升级（只升不降）。</li></ul>
+    <b>公式</b>
+    <div class="formula">校验 ＝ 每级门槛 &gt; 低一级门槛（VIP1 &gt; 0）；奖金不要求递增</div>
+    <b>涉及端</b>
+    <div class="ends"><span>后台前端</span><span>后端</span></div>
+  </div>
+</div>
+
+<div class="fpcard" id="F01-04">
+  <h3><span class="code">F01-04</span>新增与删除等级<a href="VIP会员体系-需求开发PRD文档.html#F01-04">查看 PRD ›</a></h3>
+  <div class="fpgrid">
+    <b>要做什么</b>
+    <ul><li>新增：VIP0 行「新增」→ 最下方加一行新的 SUPER VIP，原 SUPER VIP 顺延为 VIP25；新行三项门槛必填且大于上一级，保存前可「取消」；一次只能新增 1 行，最多 60 个 VIP 等级；点「保存」后影响预览列出新增、改名和立即升级人数，并在预览里填写新等级的升级、月度、生日奖金（默认 0，0–9,999,999.99）；确认后门槛和奖金同时生效，立即升级的玩家按填写的升级奖金发放。</li><li>删除：只有最高一级 SUPER VIP 行有「删除」（同现网）→ 确认框列出等级、该级人数、等级名变化「VIPn → SUPER VIP」→ 确认即生效、不能撤销、写日志；原次高级改名 SUPER VIP，两张表同步删行；被删等级的玩家当前等级改为低一级，历史最高等于被删等级的也改为低一级，记「删除等级调整」，不算降级、不发升级奖金、不弹窗；已发奖金不追回。</li><li>限制：VIP0 不能删除；至少保留 1 个 VIP 等级；有未保存新增行或结算期间不能删除；结算期间不能新增。</li><li>前台刻度、等级卡、等级表按实际等级数显示。</li></ul>
+    <b>公式</b>
+    <div class="formula">VIP 等级数 ∈ 1–60；等级名：第 i 级（1 ≤ i &lt; 等级数）＝ VIPi，最高一级 ＝ SUPER VIP</div>
+    <b>涉及端</b>
+    <div class="ends"><span>后台前端</span><span>后端</span><span>C 端</span></div>
+  </div>
+</div>
+
+<h3 class="grp">F02 奖励参数</h3>
+<div class="fpcard" id="F02-01">
+  <h3><span class="code">F02-01</span>VIP 体系开关与上线定级<a href="VIP会员体系-需求开发PRD文档.html#F02-01">查看 PRD ›</a></h3>
+  <div class="fpgrid">
+    <b>要做什么</b>
+    <ul><li>开关即【VIP会员等级配置 › VIP会员等级奖励配置】顶部的「VIP领取奖励」（开启 / 关闭，原「活动状态」改名，用户 2026-10-28）；系统参数「新版VIP特权状态」去掉。上线时关闭，版本发布后运营开启。</li><li>开 / 关：确认框 + 谷歌验证码 + 日志。</li><li>第一次开启：只按截至开启时刻的累计有效投注和累计充值定级，不参考原 LEVEL 和旧版 VIP 等级；已到达等级记「不发放（上线定级）」，不弹窗、不补发。</li><li>旧奖励作废：版本发布时原 LEVEL（升级奖励、生日礼包）和旧版 VIP（会员福利，含旧版 VIP活动的未领取或待派奖审核福利）未到账的一律作废、不能再领；已到账的不追回；上线前导出待作废清单留档。</li><li>旧版 VIP 体系整个去掉：【用户管理 › VIP特权】菜单（旧版成长值、限额与返水、成长值记录、会员福利记录）和【活动配置 › 活动列表】中的旧版「VIP活动」不再存在，数据不迁移。</li><li>关闭期间停止升级、结算、生日生成和 VIP 通知，事后不补；再次开启保留原等级，按当时累计判定一次升级，新到达的等级照常发升级奖金；再次开启的确认框显示预计升级人数、奖金笔数和合计（试算超 30 秒提示超时）。</li></ul>
+    <b>公式</b>
+    <div class="formula">上线定级：当前等级 ＝ 历史最高 ＝ 截至开启时刻累计有效投注和累计充值同时满足门槛的最高等级</div>
+    <b>涉及端</b>
+    <div class="ends"><span>后台前端</span><span>后端</span></div>
+  </div>
+</div>
+<div class="fpcard" id="F02-02">
+  <h3><span class="code">F02-02</span>KYC 限制开关<a href="VIP会员体系-需求开发PRD文档.html#F02-02">查看 PRD ›</a></h3>
+  <div class="fpgrid">
+    <b>要做什么</b>
+    <ul><li>由原「是否需要 KYC」改造。默认开启；行内和确认框显示红字「※ 关闭与 Claire 答复 C-11 不一致，关闭前须经老板或 Claire 确认」。</li><li>切换：确认框 + 谷歌验证码，日志「KYC 限制：开启 → 关闭」。</li><li>开 → 关：未完成 KYC 的玩家按累计定级，已达到的等级不发升级奖金。</li><li>关 → 开：未完成 KYC 的玩家冻结等级，未到账奖金改为暂停发放（原因「KYC 限制开启（未完成 KYC）」）；完成 KYC 后恢复冻结时的等级。</li><li>生日奖金始终要求 KYC。</li></ul>
+    <b>公式</b>
+    <div class="formula">参与 ＝ 「KYC 限制」关闭 或 KYC 已通过</div>
+    <b>涉及端</b>
+    <div class="ends"><span>后台前端</span><span>后端</span></div>
+  </div>
+</div>
+<div class="fpcard" id="F02-03">
+  <h3><span class="code">F02-03</span>流水与生日有效期<a href="VIP会员体系-需求开发PRD文档.html#F02-03">查看 PRD ›</a></h3>
+  <div class="fpgrid">
+    <b>要做什么</b>
+    <ul><li>流水倍数（原「奖金所需流水」改造）：整数 0–50，默认 1，按到账时取值。</li><li>生日奖金有效期：整数 1–30 天，默认 15，按生成时取值。</li></ul>
+    <b>公式</b>
+    <div class="formula">流水要求 ＝ 奖金金额 × 流水倍数</div>
+    <b>涉及端</b>
+    <div class="ends"><span>后台前端</span><span>后端</span></div>
+  </div>
+</div>
+<div class="fpcard" id="F02-04">
+  <h3><span class="code">F02-04</span>强制审核、免打扰与短信模板<a href="VIP会员体系-需求开发PRD文档.html#F02-04">查看 PRD ›</a></h3>
+  <div class="fpgrid">
+    <b>要做什么</b>
+    <ul><li>强制审核单选（原「生日礼包发放方式」「升级奖励发放方式」合并），默认关闭，二次确认即时生效；去掉原「领取方式」；原「手动领取时间」改为生日奖金有效期（「生日当天至 N 天内可领取」）。</li><li>免打扰开始、结束时间（默认 21:00–10:00），开始 = 结束视为不设。</li><li>三个短信模板下拉（月度奖金到账、生日提醒 · 前一天、生日提醒 · 当天），读【短信模板列表】已启用模板，可清空，清空的不发。</li></ul>
+    <b>公式</b>
+    <div class="formula">无</div>
+    <b>涉及端</b>
+    <div class="ends"><span>后台前端</span><span>后端</span></div>
+  </div>
+</div>
+
+<h3 class="grp">F03 累计与升级</h3>
+<div class="fpcard" id="F03-01">
+  <h3><span class="code">F03-01</span>累计口径<a href="VIP会员体系-需求开发PRD文档.html#F03-01">查看 PRD ›</a></h3>
+  <div class="fpgrid">
+    <b>要做什么</b>
+    <ul><li>累计充值：自注册起成功到账的自行充值（含投注站 / 代理代充），不扣提款，不含人工加款、兑换码充值、充值返利、彩金、活动奖励。</li><li>有效投注：只计 Slot、Casino、Poker、Bingo、Arcade、Fishing，Sports（体育）、Perya、ESports 和未分类游戏不计；按注单结算时间（GMT+8）归属。</li><li>撤单：扣累计；原注单在当月的同时扣当月；等级和已发奖金不回退。重新结算、改单按差额增减，归属同撤单。</li><li>上线前回算历史累计。</li></ul>
+    <b>公式</b>
+    <div class="formula">当月有效投注 ＝ Σ 当月 1 日 00:00:00 至最后一天 23:59:59 结算的六类注单有效投注</div>
+    <b>涉及端</b>
+    <div class="ends"><span>后端</span></div>
+  </div>
+</div>
+<div class="fpcard" id="F03-02">
+  <h3><span class="code">F03-02</span>实时升级与升级奖金<a href="VIP会员体系-需求开发PRD文档.html#F03-02">查看 PRD ›</a></h3>
+  <div class="fpgrid">
+    <b>要做什么</b>
+    <ul><li>充值成功、注单结算后实时判定。</li><li>满足的最高等级高于历史最高 → 当前和历史最高都升到该级。</li><li>原历史最高之上到新等级的每一级各发一次升级奖金，自动到账；为 0 的不生成。</li><li>降级后累计达标不立即升回。</li><li>VIP 等级变动不改支付层级。</li></ul>
+    <b>公式</b>
+    <div class="formula">达到等级 L ＝ 累计有效投注 ≥ L 门槛 且 累计充值 ≥ L 门槛；升级 ＝ max(达到的 L) &gt; 历史最高；唯一键：会员 + 等级</div>
+    <b>涉及端</b>
+    <div class="ends"><span>后端</span></div>
+  </div>
+</div>
+<div class="fpcard" id="F03-03">
+  <h3><span class="code">F03-03</span>KYC 定级<a href="VIP会员体系-需求开发PRD文档.html#F03-03">查看 PRD ›</a></h3>
+  <div class="fpgrid">
+    <b>要做什么</b>
+    <ul><li>「KYC 限制」开启时，KYC 审核通过即按累计定级，已达到的等级记「不发放（KYC 前已达到）」，不弹窗，不补发。</li><li>有冻结记录的玩家恢复冻结时的等级，冻结期间累计超过历史最高的升到新等级、记不发放。</li></ul>
+    <b>公式</b>
+    <div class="formula">KYC 定级：当前等级 ＝ 历史最高 ＝ 满足门槛的最高等级</div>
+    <b>涉及端</b>
+    <div class="ends"><span>后端</span></div>
+  </div>
+</div>
+
+<h3 class="grp">F04 月度结算</h3>
+<div class="fpcard" id="F04-01">
+  <h3><span class="code">F04-01</span>保级与月度奖金<a href="VIP会员体系-需求开发PRD文档.html#F04-01">查看 PRD ›</a></h3>
+  <div class="fpgrid">
+    <b>要做什么</b>
+    <ul><li>按考核等级和整月当月有效投注判定。</li><li>保级成功：次月保持，自动发考核等级的月度奖金（为 0 不生成）。</li><li>未完成 KYC（「KYC 限制」开启时）和从未到达 VIP1 的 VIP0 不参与。</li></ul>
+    <b>公式</b>
+    <div class="formula">考核等级 ＝ 月末 23:59:59 的当前等级；保级成功 ＝ 当月有效投注 ≥ 考核等级保级投注；唯一键：会员 + 结算月份</div>
+    <b>涉及端</b>
+    <div class="ends"><span>后端</span></div>
+  </div>
+</div>
+<div class="fpcard" id="F04-02">
+  <h3><span class="code">F04-02</span>降级与逐级恢复<a href="VIP会员体系-需求开发PRD文档.html#F04-02">查看 PRD ›</a></h3>
+  <div class="fpgrid">
+    <b>要做什么</b>
+    <ul><li>未达到：不发月度奖金，次月降 1 级，VIP1 降为 VIP0，历史最高不变。</li><li>当前 &lt; 历史最高且达到当前等级保级投注：照发当前等级月度奖金，次月恢复 1 级（用户 2026-10-27 改，原 C-02 为高一级）；每月最多恢复 1 级。例：10 月 VIP10 未达 ₱3M → 11 月 1 日降 VIP9，不发奖；11 月达到 VIP9 的 ₱1M → 12 月 1 日发 ₱200 并回到 VIP10。</li><li>VIP0（历史最高 ≥ VIP1）达到 VIP1 保级投注：恢复 VIP1，不发奖金。</li><li>恢复不发升级奖金、不弹窗。</li></ul>
+    <b>公式</b>
+    <div class="formula">恢复 ＝ 当前 &lt; 历史最高 且 当月有效投注 ≥ 考核等级保级投注（VIP0 取 VIP1 的）；降级 ＝ 当月有效投注 &lt; 考核等级保级投注</div>
+    <b>涉及端</b>
+    <div class="ends"><span>后端</span></div>
+  </div>
+</div>
+<div class="fpcard" id="F04-03">
+  <h3><span class="code">F04-03</span>结算任务<a href="VIP会员体系-需求开发PRD文档.html#F04-03">查看 PRD ›</a></h3>
+  <div class="fpgrid">
+    <b>要做什么</b>
+    <ul><li>每月 1 日 13:00:00 开始逐人结算；00:00 至完成前前台显示「上月结算中」。</li><li>结算期间实时升级照常；结算结果低于当时当前等级时保留当前等级。</li><li>单人失败重试 3 次（间隔 1 分钟），仍失败记「结算失败」，整次结算仍为「已完成」，结算记录显示失败人数，明细结算结果「结算失败」；13:30 未完成告警。</li><li>整次结算失败：补跑完成前等级配置保持锁定。</li><li>1 日 13:00 体系关闭的，该月不结算、不补。</li></ul>
+    <b>公式</b>
+    <div class="formula">结算后等级 ＝ max(结算结果等级, 结算执行时的当前等级)</div>
+    <b>涉及端</b>
+    <div class="ends"><span>后端</span><span>C 端</span></div>
+  </div>
+</div>
+
+<h3 class="grp">F05 生日奖金</h3>
+<div class="fpcard" id="F05-01">
+  <h3><span class="code">F05-01</span>生日奖金生成<a href="VIP会员体系-需求开发PRD文档.html#F05-01">查看 PRD ›</a></h3>
+  <div class="fpgrid">
+    <b>要做什么</b>
+    <ul><li>生日所在月份 1 日 13:00 月度结算完成时生成 1 笔（待领取），金额按结算后的等级，之后升降级不变。</li><li>生日当天 00:00 起可领，生日前前台不显示；1 日生日的结算完成前显示「⏳ 结算完成后可领取」。</li><li>生日取 KYC 资料；2 月 29 日生日非闰年 2 月 28 日起可领。</li><li>风控暂停的照常生成，状态「暂停发放（风控）」。</li></ul>
+    <b>公式</b>
+    <div class="formula">生成（生日所在月份 1 日结算完成时）＝ KYC 已通过 且 结算后等级 ≥ VIP1 且 该级生日奖金 &gt; 0 且 VIP 体系开启；唯一键：会员 + 年份</div>
+    <b>涉及端</b>
+    <div class="ends"><span>后端</span></div>
+  </div>
+</div>
+<div class="fpcard" id="F05-02">
+  <h3><span class="code">F05-02</span>生日奖金领取<a href="VIP会员体系-需求开发PRD文档.html#F05-02">查看 PRD ›</a></h3>
+  <div class="fpgrid">
+    <b>要做什么</b>
+    <ul><li>玩家在 VIP中心生日卡片点「领取」，成功到账；强制审核开启时进入待审核。</li><li>到期变「已过期」；重复点击、多端同时领取只成功 1 次。</li><li>领取时到账失败：不自动重试，保持「待领取」，提示「领取失败，请重试」，有效期内可再领。</li></ul>
+    <b>公式</b>
+    <div class="formula">有效期 ＝ 生日当天 00:00:00（1 日生日为结算完成时）至第 N 天 23:59:59（N 默认 15，含生日当天）</div>
+    <b>涉及端</b>
+    <div class="ends"><span>C 端</span><span>后端</span></div>
+  </div>
+</div>
+
+<h3 class="grp">F06 发放、审核与风控</h3>
+<div class="fpcard" id="F06-01">
+  <h3><span class="code">F06-01</span>到账与流水<a href="VIP会员体系-需求开发PRD文档.html#F06-01">查看 PRD ›</a></h3>
+  <div class="fpgrid">
+    <b>要做什么</b>
+    <ul><li>到账进余额、写资金明细（新增账变类型「VIP 升级奖金」「VIP 月度奖金」「VIP 生日奖金」，备注「VIP{等级} {奖金名}，记录 ID：xxx」），交易记录显示同名。</li><li>生成流水稽核，沿用平台现有奖金流水规则。</li><li>升级、月度奖金到账失败重试 3 次（1、5、30 分钟），仍失败记「发放失败」并告警；生日奖金除外（领取失败保持待领取，见 F05-02）。</li><li>不占用活动预算，不影响活动和返水的判定；计入活动费用报表和平台报表「活动费用」，活动目的「留存」。</li></ul>
+    <b>公式</b>
+    <div class="formula">流水要求 ＝ 奖金金额 × 到账时流水倍数；同一奖金记录 ID 只到账一次</div>
+    <b>涉及端</b>
+    <div class="ends"><span>后端</span><span>C 端</span></div>
+  </div>
+</div>
+<div class="fpcard" id="F06-02">
+  <h3><span class="code">F06-02</span>强制审核<a href="VIP会员体系-需求开发PRD文档.html#F06-02">查看 PRD ›</a></h3>
+  <div class="fpgrid">
+    <b>要做什么</b>
+    <ul><li>开启后三类奖金先「待审核」（生日奖金在领取后）。</li><li>通过 → 到账；驳回 → 「已驳回」，原因必填。</li><li>只影响开启后生成的奖金；待审核无期限、不自动通过。</li></ul>
+    <b>公式</b>
+    <div class="formula">无</div>
+    <b>涉及端</b>
+    <div class="ends"><span>后台前端</span><span>后端</span></div>
+  </div>
+</div>
+<div class="fpcard" id="F06-03">
+  <h3><span class="code">F06-03</span>风控暂停与人工处理<a href="VIP会员体系-需求开发PRD文档.html#F06-03">查看 PRD ›</a></h3>
+  <div class="fpgrid">
+    <b>要做什么</b>
+    <ul><li>账号冻结、自我排除、风险分 ≥ 70：等级照算，奖金「暂停发放（风控）」，不发 VIP 短信、站内信、推送和升级弹窗。</li><li>放行：按当前强制审核设置到账或待审核；生日奖金恢复待领取，已过期的直接到账；原因为 KYC 限制的提示「玩家完成 KYC 前不建议放行」。</li><li>作废：未到账的可作废，原因必填 1–200 字。</li><li>补发：已作废 / 已驳回 / 发放失败的补发 1 次，生成新记录关联原记录；「不发放」类不能补发。</li></ul>
+    <b>公式</b>
+    <div class="formula">风控暂停 ＝ 账号冻结 或 自我排除 或 风险分 ≥ 70</div>
+    <b>涉及端</b>
+    <div class="ends"><span>后台前端</span><span>后端</span></div>
+  </div>
+</div>
+
+<h3 class="grp">F07 前台 VIP中心</h3>
+<div class="fpcard" id="F07-01">
+  <h3><span class="code">F07-01</span>入口与当前等级进度<a href="VIP会员体系-需求开发PRD文档.html#F07-01">查看 PRD ›</a></h3>
+  <div class="fpgrid">
+    <b>要做什么</b>
+    <ul><li>入口：前台等级中心（Level Center）改为 VIP中心，新版本 App 和 H5 个人中心原「Level Center」入口改为「VIP中心」；老版本 App 原入口打开后的显示由技术上线前确认。</li><li>标题栏下直接接弧形等级刻度，不显示头像、玩家名和等级徽章。</li><li>进度在当前等级卡上（「当前」标签在徽章正下方）：未保级 🛡️ + 进度条 + 差额；已保级「UP VIPn」+「保级成功」+ 🎰、钱包两条升级进度；SUPER VIP 已保级「保级成功」+ 绿色满格。进度下列「升到 VIPn 升级奖金」、月度奖金、生日奖金。</li><li>会员：从未到达 VIP1 →「UP VIP1」+ 两条升级进度；VIP1 降为会员 → 🎰 本月有效投注对 VIP1 保级投注的进度。</li><li>降级玩家：卡上与正常玩家相同（UP 目标 = 历史最高 + 1）；次月恢复（→ VIPn）和历史最高只在「查看详情」弹窗显示。</li><li>1 日 00:00 至结算完成，当前卡不显示进度条，改为「⏳ 上月结算中，预计 13:00 完成」；13:30 后仍未完成改为「⏳ 上月结算中，完成后自动更新」。</li><li>各状态对照见 PRD 第 4 章表 1、表 2。</li><li>原 LEVEL 不再使用，页面不显示任何 LEVEL 等级。</li></ul>
+    <b>公式</b>
+    <div class="formula">升级目标 ＝ 历史最高 + 1；恢复目标 ＝ 当前 + 1（只在当前 &lt; 历史最高时显示，条件为达到当前等级保级投注）</div>
+    <b>涉及端</b>
+    <div class="ends"><span>C 端</span><span>后端</span></div>
+  </div>
+</div>
+<div class="fpcard" id="F07-02">
+  <h3><span class="code">F07-02</span>弧形刻度与等级卡<a href="VIP会员体系-需求开发PRD文档.html#F07-02">查看 PRD ›</a></h3>
+  <div class="fpgrid">
+    <b>要做什么</b>
+    <ul><li>弧形刻度按实际等级数（默认 26 个：会员 + 25 个 VIP 等级）：选中在最低处 + 白色 ▼，越远越高越淡；会员蓝、VIP 金、SUPER VIP 紫金，当前等级亮金加粗带小圆点。</li><li>等级卡轮播：点刻度、点相邻卡、滑动切换；默认当前等级（VIP0 定位「会员」卡，未登录、未 KYC 定位 VIP1）。</li><li>卡面会员卡蓝（刻度和徽章文字「会员」）、VIP1–VIP24 香槟金、SUPER VIP 皇室紫金。低于当前：「已达成」，无进度条、不加内容；降级后 ≤ 历史最高：「🔓 已解锁」，当前 + 1 的卡显示「恢复 VIPn」进度，更高的只显示「先恢复 VIPn」；下一级：「🔒 未解锁」+ 🎰、钱包两条升级进度 + 升级、月度奖金；更高：只列升级、月度奖金（PRD 表 1）。</li><li>「查看详情」弹窗（只在中间卡可点）：标题「VIPn 详情」；先显示「享有奖励」奖金表和底部说明，再显示玩家在该等级的数据：本月保级和 UP 升级进度（降级玩家加「→ VIPn」，标题右侧历史最高框）（用户 2026-10-28）；非当前卡只有奖金表；奖金状态 ✓ 已到账 / 1 日 13:00 到账、⏳ 进行中 / 审核中 / 待核验、🔒 未解锁、🎂 待领取、已过期、未通过审核等（PRD 表 2）。</li><li>图标：🎰 有效投注、「钞票进钱包」图标 累计充值、🛡️ 保级、「历史 + TOP」图标 历史最高、⏳ 结算中 / 进行中、✓ 已满足 / 已到账；升级、恢复用文字「UP VIPn」「恢复 VIPn」「→ VIPn」；每个图标带中文 aria-label / title；不显示图例（用户 2026-10-28）。</li></ul>
+    <b>公式</b>
+    <div class="formula">门槛 ≥ ₱1,000 用 K / M / B 缩写，最多 2 位小数、向上取整；奖金写 ₱ + 千分位</div>
+    <b>涉及端</b>
+    <div class="ends"><span>C 端</span></div>
+  </div>
+</div>
+<div class="fpcard" id="F07-03">
+  <h3><span class="code">F07-03</span>VIP 规则与等级表<a href="VIP会员体系-需求开发PRD文档.html#F07-03">查看 PRD ›</a></h3>
+  <div class="fpgrid">
+    <b>要做什么</b>
+    <ul><li>规则固定文字（13 条，每条一句话），流水倍数和有效期天数读配置；KYC 一条只在「KYC 限制」开启时显示，审核一条只在强制审核开启时显示。</li><li>等级表只列 VIP1–SUPER VIP（行数按实际 VIP 等级数，默认 25 行，不列会员），只显示等级奖励 4 列：等级、升级奖金、月度奖金、生日奖金（去掉「等级要求」页签，用户 2026-10-28），不横向滚动，当前行高亮。表格限高约 13 行、表内上下滚动、表头固定；进入页面时自动定位，当前等级显示在第 2 行（上面露出低一级），VIP1 在第 1 行；末尾几级（如 SUPER VIP）滚到底部显示；没有当前等级（会员、未登录、未完成 KYC）停在顶部（用户 2026-10-28）；</li></ul>
+    <b>公式</b>
+    <div class="formula">无</div>
+    <b>涉及端</b>
+    <div class="ends"><span>C 端</span></div>
+  </div>
+</div>
+<div class="fpcard" id="F07-04">
+  <h3><span class="code">F07-04</span>生日卡片<a href="VIP会员体系-需求开发PRD文档.html#F07-04">查看 PRD ›</a></h3>
+  <div class="fpgrid">
+    <b>要做什么</b>
+    <ul><li>生日当天起显示，生日前不显示。状态：结算完成后可领取（1 日生日结算前，无按钮）、待领取（有效期 + 领取）、审核中、已领取、已过期（过期后 7 天隐藏）、暂不可领取（风控）、未通过审核（已驳回，无按钮，有效期结束后隐藏）；已作废隐藏；补发按新记录状态显示。</li><li>领取中按钮不可点；成功 / 审核中 / 失败 / 过期各有 toast。</li></ul>
+    <b>公式</b>
+    <div class="formula">无</div>
+    <b>涉及端</b>
+    <div class="ends"><span>C 端</span></div>
+  </div>
+</div>
+<div class="fpcard" id="F07-05">
+  <h3><span class="code">F07-05</span>特殊状态<a href="VIP会员体系-需求开发PRD文档.html#F07-05">查看 PRD ›</a></h3>
+  <div class="fpgrid">
+    <b>要做什么</b>
+    <ul><li>未完成 KYC（「KYC 限制」开启时）：刻度上方显示 KYC 引导卡（标签「未加入 VIP」+「完成 KYC 加入 VIP」+「去认证」），审核中按钮置灰。</li><li>风控暂停：刻度上方提示条「部分 VIP 奖金暂未发放，有疑问联系客服」。</li><li>体系关闭：整页「VIP 暂未开放」，有待领取生日奖金时显示生日卡片。</li><li>未登录：刻度上方登录引导卡（标签「未登录」），等级卡全部按未解锁显示。</li><li>加载骨架屏；失败或超时 10 秒显示重试。</li></ul>
+    <b>公式</b>
+    <div class="formula">无</div>
+    <b>涉及端</b>
+    <div class="ends"><span>C 端</span></div>
+  </div>
+</div>
+
+<h3 class="grp">F08 通知</h3>
+<div class="fpcard" id="F08-01">
+  <h3><span class="code">F08-01</span>升级弹窗<a href="VIP会员体系-需求开发PRD文档.html#F08-01">查看 PRD ›</a></h3>
+  <div class="fpgrid">
+    <b>要做什么</b>
+    <ul><li>实时升级后在大厅或 VIP中心弹一次；游戏中升级返回大厅弹；离线升级下次登录弹；未展示的合并为一个。</li><li>上线定级、KYC 定级、恢复、风控暂停、老版本 App 不弹。</li><li>单级 / 跨多级（列最高 5 级）/ 强制审核三种写法；× 等同「知道了」。</li><li>埋点 <code>vip_upgrade_popup</code>（<code>action</code>、<code>from_level</code>、<code>to_level</code>、<code>bonus_total</code>）。</li></ul>
+    <b>公式</b>
+    <div class="formula">弹窗金额 ＝ Σ 本次合并的各级升级奖金</div>
+    <b>涉及端</b>
+    <div class="ends"><span>C 端</span><span>后端</span></div>
+  </div>
+</div>
+<div class="fpcard" id="F08-02">
+  <h3><span class="code">F08-02</span>VIP 短信<a href="VIP会员体系-需求开发PRD文档.html#F08-02">查看 PRD ›</a></h3>
+  <div class="fpgrid">
+    <b>要做什么</b>
+    <ul><li>「VIP 月度奖金到账」：月度奖金实际到账时发，每人每月最多 1 条；金额写「₱」（只这一个模板例外）。</li><li>「VIP 生日提醒 · 前一天」10:00 发，不写金额；「VIP 生日提醒 · 当天」10:00 对待领取的发（1 日生日的结算完成后发），金额写「PHP」。</li><li>风控暂停、体系关闭不发；升级、生日奖金到账不发短信。</li><li>免打扰时段内顺延到结束时刻。</li></ul>
+    <b>公式</b>
+    <div class="formula">月度奖金到账：金额 &lt; ₱1 → 只推送；≥ ₱1 → 短信 + 推送；免打扰 ＝ 21:00:00 至次日 09:59:59（默认）</div>
+    <b>涉及端</b>
+    <div class="ends"><span>后端</span></div>
+  </div>
+</div>
+<div class="fpcard" id="F08-03">
+  <h3><span class="code">F08-03</span>站内信与 APP 推送<a href="VIP会员体系-需求开发PRD文档.html#F08-03">查看 PRD ›</a></h3>
+  <div class="fpgrid">
+    <b>要做什么</b>
+    <ul><li>三类奖金实际到账时各发 1 条站内信 + 1 条推送；一次升多级每级 1 条站内信、推送合并 1 条。</li><li>未到账（待审核、暂停、驳回、作废、过期）不发。</li><li>站内信即时生成，推送受免打扰顺延；点击进 VIP中心。</li></ul>
+    <b>公式</b>
+    <div class="formula">无</div>
+    <b>涉及端</b>
+    <div class="ends"><span>C 端</span><span>后端</span></div>
+  </div>
+</div>
+
+<h3 class="grp">F09 奖励统计与数据留存</h3>
+<div class="fpcard" id="F09-01">
+  <h3><span class="code">F09-01</span>活动奖励统计<a href="VIP会员体系-需求开发PRD文档.html#F09-01">查看 PRD ›</a></h3>
+  <div class="fpgrid">
+    <b>要做什么</b>
+    <ul><li>布局同现网：筛选会员账号、奖励金额、奖励类型（全部 / 升级奖金 / 月度奖金 / 生日奖金）、发放状态（全部 + 9 种状态）、申请领取时间（GMT+8，默认近 7 天；不填会员账号时最长 31 天，填会员账号时不限），「搜索」「导出」；「审核已发放金额」+「查询总计」。</li><li>列表 9 列同现网：会员账号、会员等级（VIP 等级名）、申请领取时间（生成时间）、奖励类型（中文，不再显示 upgrade）、奖励金额、审核发放时间（到账时间）、状态（不发放、暂停发放、驳回、作废、发放失败的原因和补发的原记录以小字显示在状态下方）、审核人（SYSTEM 或后台账号）、操作；最后一行「合计」= 本页合计。</li><li>操作：审核、放行、作废、补发（逐条，本期不做批量审核）；记录状态已变时提示刷新。</li><li>导出全部符合筛选的记录，超 10 万行改为后台生成，在【数据报表 › 报表下载】下载。</li><li>4 个页签的时间一律按 GMT+8 显示，列名标「（GMT+8）」。</li></ul>
+    <b>公式</b>
+    <div class="formula">排序：申请领取时间倒序，相同按记录 ID 倒序；每页默认 10（可选 10 / 20 / 50）；审核已发放金额 ＝ 当前筛选全部页「已到账」金额合计</div>
+    <b>涉及端</b>
+    <div class="ends"><span>后台前端</span><span>后端</span></div>
+  </div>
+</div>
+<div class="fpcard" id="F09-02">
+  <h3><span class="code">F09-02</span>VIP会员数据（本期无查询页）<a href="VIP会员体系-需求开发PRD文档.html#F09-02">查看 PRD ›</a></h3>
+  <div class="fpgrid">
+    <b>要做什么</b>
+    <ul><li>后端保存每位玩家的当前等级、历史最高、三项累计、本月保级状态、恢复目标、参与状态、KYC、生日、最后变动时间（实时）。</li><li>本期后台不做查询页，需要时技术查库。</li></ul>
+    <b>公式</b>
+    <div class="formula">本月保级状态 ＝ 当月有效投注 ≥ 当前等级保级投注 ? 已达成 : 未达成（VIP0 为不考核）</div>
+    <b>涉及端</b>
+    <div class="ends"><span>后台前端</span><span>后端</span></div>
+  </div>
+</div>
+<div class="fpcard" id="F09-03">
+  <h3><span class="code">F09-03</span>等级变动记录（本期无查询页）<a href="VIP会员体系-需求开发PRD文档.html#F09-03">查看 PRD ›</a></h3>
+  <div class="fpgrid">
+    <b>要做什么</b>
+    <ul><li>记录每次等级变动：类型（上线定级 / KYC 定级 / 升级 / 保级 / 降级 / 恢复 / 冻结 / 解冻）、前后等级、历史最高、触发原因、关联奖金记录；删除最高一级时记「删除等级调整」。</li><li>本期后台不做查询页，需要时技术查库。</li></ul>
+    <b>公式</b>
+    <div class="formula">无</div>
+    <b>涉及端</b>
+    <div class="ends"><span>后台前端</span><span>后端</span></div>
+  </div>
+</div>
+<div class="fpcard" id="F09-04">
+  <h3><span class="code">F09-04</span>VIP月度结算记录<a href="VIP会员体系-需求开发PRD文档.html#F09-04">查看 PRD ›</a></h3>
+  <div class="fpgrid">
+    <b>要做什么</b>
+    <ul><li>第 4 个页签，只读。列表每月一行：考核月份、结算执行时间、结算状态（已完成 / 结算中 / 结算失败）、参与人数、保级成功、恢复、降级、其中降为 VIP0、结算失败（单人）、月度奖金笔数 / 金额、操作「明细」；筛选考核月份范围、结算状态。</li><li>整次结算失败：状态下方小字「已自动重试 3 次，已通知技术，修复后补跑」，人数显示「—」、无明细。单人结算失败：状态仍为「已完成」，下方「n 人结算失败，待技术补结算」，明细结算结果「结算失败」、结算后等级「—（未结算）」。</li><li>明细：会员账号、考核等级、当月有效投注、保级投注、结算结果、结算后等级、月度奖金、奖金状态；可按账号、考核等级、结算结果筛选并导出（规则同活动奖励统计）。</li></ul>
+    <b>公式</b>
+    <div class="formula">参与人数 ＝ 保级成功 ＋ 恢复 ＋ 降级；月度奖金笔数 ＝ 保级成功和恢复的玩家中，考核等级月度奖金 &gt; 0 的人数</div>
+    <b>涉及端</b>
+    <div class="ends"><span>后台前端</span><span>后端</span></div>
+  </div>
+</div>
+<div class="fpcard" id="F09-05">
+  <h3><span class="code">F09-05</span>权限与操作日志<a href="VIP会员体系-需求开发PRD文档.html#F09-05">查看 PRD ›</a></h3>
+  <div class="fpgrid">
+    <b>要做什么</b>
+    <ul><li>权限项：VIP会员等级配置 查看 / 修改（含新增、删除等级）；VIP会员等级奖励配置 查看 / 修改；活动奖励统计 查看 / 审核 / 放行 / 作废 / 补发 / 导出；VIP月度结算记录 查看 / 导出（原会员等级模块的权限项资料未覆盖）；无权限按钮置灰，接口同样拦截。</li><li>操作日志：后端照常记录，写法「字段：旧值 → 新值」，只追加不可删；本期后台不做查看页。</li><li>【用户管理 › VIP特权】菜单（含旧版设置、成长值记录、会员福利记录）和旧版「VIP活动」整个去掉。</li></ul>
+    <b>公式</b>
+    <div class="formula">无</div>
+    <b>涉及端</b>
+    <div class="ends"><span>后台前端</span><span>后端</span></div>
+  </div>
+</div>
+
+</article></div>
+</div>
+<script>window.NAV_ROOT = "../../";</script>
+<script src="../../assets/nav-data.js"></script>
+<script src="../../assets/nav.js"></script>
+</body>
+</html>

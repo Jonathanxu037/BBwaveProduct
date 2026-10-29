@@ -113,6 +113,7 @@ td.vip-pg-st .vip-pg-retry{border:0;background:none;color:#409EFF;cursor:pointer
           <button type="button" role="tab" data-dv="settle">月度结算记录</button>
           <button type="button" role="tab" data-dv="growlog">成长值记录</button>
         </div>
+        <div id="dvNone" hidden style="margin:24px 0;padding:24px;border:1px dashed #C0C4CC;border-radius:6px;color:#606266;text-align:center;line-height:1.8">（演示）当前账号 4 个二级页签都没有查看权限：真实后台不显示「VIP数据报表」页签；用书签或地址直接打开本页时，自动切到第一个有权限的顶部页签（如「VIP特权」），三个顶部页签都没有权限时显示平台现有的无权限提示（PRD 8.1，检查报告 R3-11、R3-12）。</div>
 
         <!-- ============ VIP会员数据 ============ -->
         <section id="vMembers" hidden>
@@ -180,7 +181,7 @@ td.vip-pg-st .vip-pg-retry{border:0;background:none;color:#409EFF;cursor:pointer
               <thead><tr>
                 <th>结算月份<i class="qm" data-h="结算月份">?</i></th><th>开始时间</th><th>完成时间</th>
                 <th>参与人数<i class="qm" data-h="参与人数">?</i></th><th>保级成功人数<i class="qm" data-h="保级成功人数">?</i></th><th class="glow">恢复人数<i class="qm" data-h="恢复人数">?</i></th><th>降级人数<i class="qm" data-h="降级人数">?</i></th>
-                <th>保级奖励总额（₱）<i class="qm" data-h="保级奖励总额">?</i></th><th>短信成功 / 失败<i class="qm" data-h="短信成功 / 失败">?</i></th><th>失败人数<i class="qm" data-h="失败人数">?</i></th><th>状态<i class="qm" data-h="结算状态">?</i></th><th>操作</th>
+                <th>保级奖励总额（₱）<i class="qm" data-h="保级奖励总额">?</i></th><th class="glow">VIP 奖励总额（₱）<i class="qm" data-h="VIP 奖励总额">?</i></th><th class="glow">奖励占有效投注比<i class="qm" data-h="奖励占有效投注比">?</i></th><th>短信成功 / 失败<i class="qm" data-h="短信成功 / 失败">?</i></th><th>失败人数<i class="qm" data-h="失败人数">?</i></th><th>状态<i class="qm" data-h="结算状态">?</i></th><th>操作</th>
               </tr></thead>
               <tbody id="sBody"></tbody>
             </table>
@@ -287,11 +288,11 @@ td.vip-pg-st .vip-pg-retry{border:0;background:none;color:#409EFF;cursor:pointer
       <li class="glow"><b>只计 6 大类游戏</b>（用户 2026-10-21）：累计有效投注、本月有效投注和成长值只计 Slot、Casino、Poker、Bingo、Arcade、Fishing 6 大类游戏的有效投注，Perya、ESports、未分类等其他游戏的投注不计入（与 Claire 原方案二、三未限定游戏类型的差异，用户已定）。<span class="ref">规则 N77 · 3.3 冲突 18</span></li>
       <li class="glow"><b>不提供人工调整入口</b>（用户 2026-10-21）：本期本页和「成长值明细」弹窗都没有调整 VIP 累计数据（累计充值、累计有效投注、本月有效投注）和 VIP 成长值的入口；【VIP特权 › VIP数据报表 › 成长值记录】现有的「修改会员成长值」只改 Level 成长值；VIP 数据需要修正时（如投诉补偿、数据修复）走技术工单。<span class="ref">PRD 8.7 · 第 10 章</span></li>
       <li><b>客服用法</b>：客服先在「VIP会员数据」看当前 VIP 等级和历史最高 VIP 等级。<span class="ref">PRD 第 15 章</span></li>
-      <li><b>月度结算记录</b>：每月一行：结算月份、开始时间、完成时间<span class="glow">（原：开始时间（GMT+8）、完成时间（GMT+8）；表格下方注明时间均为 GMT+8）</span>、参与人数、保级成功人数、<span class="glow">恢复人数</span>、降级人数、保级奖励总额、短信成功 / 失败、失败人数、状态（进行中 / 完成 / 部分失败）。操作：查看明细、重跑失败（无失败时不可点）。明细字段：会员账号、考核等级、当月有效投注、每月保级投注、结算结果、<span class="glow">结算后等级（原：结算后当前 VIP 等级）</span>、保级奖励、短信结果、失败原因。「VIP 体系状态」关闭期间的结算日不生成记录。<span class="glow">按原文八「每月最后一天 23:59 截止统计，次月 1 日统一结算」：当月有效投注按整个自然月统计（GMT+8）；存量初始化后老用户上线即有 VIP 等级，开启当月按当前等级参加考核；不管当月哪天升级，当月整月数据未达到当前等级保级要求的，下月初降级（Claire 答复 C-04）；当月有升级的按升级后的新等级考核，达到即保持并发保级奖励（用户 2026-10-17 定，依据 Claire 原文一、七、八章与 C-04）；开启当月通过存量初始化得到的 VIP 等级不算「当月有升级」（上线前已达到的等级视为玩家已拥有、之前的奖励已领过，不发升级奖励，C-01；当月按整个自然月考核当前等级，C-04），这些玩家在结算日照常考核，达标发保级奖励（已定，依据 Claire C-01、C-04，用户 2026-10-17 定）。示例 VIP 体系 2026-07-01 00:00:00 开启并完成存量初始化，8 月 1 日结算 7 月。</span><span class="ref">PRD 8.5 · 规则 N40 · F08-04 月度结算记录</span></li>
+      <li><b>月度结算记录</b>：每月一行：结算月份、开始时间、完成时间<span class="glow">（原：开始时间（GMT+8）、完成时间（GMT+8）；表格下方注明时间均为 GMT+8）</span>、参与人数、保级成功人数、<span class="glow">恢复人数</span>、降级人数、保级奖励总额、<span class="glow">VIP 奖励总额（结算月份内实际到账的升级 + 保级 + 生日奖励合计）、奖励占有效投注比（VIP 奖励总额 ÷ 参与会员该月有效投注合计，4 位小数，有效投注为 0 显示「-」），两列随导出输出（用户 2026-10-26，口径见 PRD 8.7、规则 N54）</span>、短信成功 / 失败、失败人数、状态（进行中 / 完成 / 部分失败）。操作：查看明细、重跑失败（无失败时不可点）。明细字段：会员账号、考核等级、当月有效投注、每月保级投注、结算结果、<span class="glow">结算后等级（原：结算后当前 VIP 等级）</span>、保级奖励、短信结果、失败原因。「VIP 体系状态」关闭期间的结算日不生成记录。<span class="glow">按原文八「每月最后一天 23:59 截止统计，次月 1 日统一结算」：当月有效投注按整个自然月统计（GMT+8）；存量初始化后老用户上线即有 VIP 等级，开启当月按当前等级参加考核；不管当月哪天升级，当月整月数据未达到当前等级保级要求的，下月初降级（Claire 答复 C-04）；当月有升级的按升级后的新等级考核，达到即保持并发保级奖励（用户 2026-10-17 定，依据 Claire 原文一、七、八章与 C-04）；开启当月通过存量初始化得到的 VIP 等级不算「当月有升级」（上线前已达到的等级视为玩家已拥有、之前的奖励已领过，不发升级奖励，C-01；当月按整个自然月考核当前等级，C-04），这些玩家在结算日照常考核，达标发保级奖励（已定，依据 Claire C-01、C-04，用户 2026-10-17 定）。示例 VIP 体系 2026-07-01 00:00:00 开启并完成存量初始化，8 月 1 日结算 7 月。</span><span class="ref">PRD 8.5 · 规则 N40 · F08-04 月度结算记录</span></li>
       <li><b>结算顺序与范围</b>：规则 N17：每月最后一天 23:59:59（GMT+8）截止，次月 1 日结算：① 统计上月有效投注 ② <span class="glow">按结算时的当前等级（月内有升级的，按升级后的新等级）判断是否达到当前等级保级投注</span> ③ 达到的：<span class="glow">发放结算时当前等级的保级奖励（含当月有升级的；结算时自动到账）；其中当前等级 &lt; 历史最高等级、且达到「当前等级之上的下一个开启等级」保级投注的，次月恢复 1 级（C-02），其余保持等级（恢复当次照常发保级奖励，用户 2026-10-17，依据原文五、七 / C-02，覆盖原「恢复的不发」）</span> ④ 未达到的降 1 级 ⑤ 更新当前等级 ⑥ 发短信（只发给本次获得保级奖励的玩家，含恢复的玩家）。规则 N18：结算范围为截止时当前等级在 VIP1 及以上的会员，以截止时刻为快照<span class="glow">；另外判断当前为普通用户、历史最高 ≥ VIP1（VIP1 保级失败退出 VIP 段）的玩家：上月有效投注达到 VIP1 保级投注 → 次月回到 VIP1，不发保级奖励（结算时没有当前等级）、不重发 VIP1 升级奖励，只计入恢复人数、不计入参与人数（明细示例 joy_ann；用户 2026-10-17，依据 C-02、C-07）；未完成 KYC 的玩家不参与 VIP 体系、没有 VIP 等级，不在结算范围内，不生成保级记录，不计入参与人数（已定（用户 2026-10-17））；当月完成 KYC 定级的玩家不算「当月有升级」，次月 1 日按当前等级考核整个自然月（同存量初始化，C-01、C-04；已定（用户 2026-10-17），依据 Claire 原文历史累计和 C-01 存量初始化）</span>。<span class="ref">规则 N17 · N18 · F03-04 结算任务</span></li>
       <li><b>重跑失败</b>：规则 N19：按「会员 + 月份」幂等，重复执行不重复发奖、不重复降级；单个会员失败自动重试 3 次，仍失败的标为失败，运营「重跑失败」（二次确认）。重跑时状态为「进行中」，按钮不可点。第 10 章：结算中断按「会员 + 月份」幂等重跑。<span class="ref">规则 N19 · 第 10 章 · F03-04</span></li>
       <li><b>保级与降级</b>：规则 N11：当月有效投注 ≥ 每月保级投注，次月保持并发保级奖励<span class="glow">（当月有升级的按新等级考核，达到 → 保持新等级并发保级奖励，结算结果「保级成功」、计入保级成功人数，明细示例 tonyo77（用户 2026-10-17 定，依据 Claire 原文一、七、八章与 C-04））</span>；规则 N12：未达到不发奖励、次月降 1 级，历史最高等级不变；规则 N16：VIP1 保级失败退出 VIP 段，<span class="glow">变为普通用户，前台不显示等级（Claire 答复 C-07）</span>（明细示例 nene_o，计入降级人数）。<span class="glow">降级后恢复（Claire 答复 C-02，用户 2026-10-17 定）：当前等级低于历史最高等级、且没有解锁新的历史最高等级的玩家，当月有效投注达到「当前等级之上的下一个开启等级」的每月保级投注 → 次月恢复 1 级（结算结果「恢复」，明细示例 marites_c VIP11 → VIP12）；达到当前等级保级 → 保持；未达到 → 降 1 级；每月最多恢复 1 级。达到高于历史最高等级的新等级条件时实时立即升级，不等月结。</span><span class="glow">恢复当次照常发结算时当前等级的保级奖励，结算结果「恢复」、同时计入保级成功人数和保级奖励总额、发保级短信；恢复人数另外单独统计（月度结算记录「恢复人数」列，一人可同时计入保级成功和恢复）（用户 2026-10-17，依据原文五、七 / C-02，覆盖原「恢复不发、不计入保级成功」）。VIP1 保级失败后的普通用户（明细示例 joy_ann）上月达到 VIP1 保级投注 → 次月回到 VIP1，结算时没有当前等级，不发保级奖励，只计入恢复人数（C-02、C-07）。<b>合计口径</b>：参与人数 = 保级成功 + 降级 + 失败（2026-09：742 + 541 + 3 = 1,286；2026-08：701 + 497 + 0 = 1,198；2026-07：655 + 450 + 0 = 1,105）；恢复人数 13 = 12 名降级玩家恢复（已含在保级成功 742 里）+ 1 名普通用户回到 VIP1。</span><span class="ref">规则 N11 · N12 · N16 · F03-02 · F03-03 · C-02 · C-07</span></li>
-      <li><b>短信</b>：规则 N41：保级奖励短信在结算发奖成功后对获得保级奖励的玩家发送，每人每月最多 1 条，<span class="glow">次月 1 日保级结算及奖励发放成功后发送（原文十六为结算发奖成功后触发；用户 2026-10-19）；<b>免打扰时段</b>：结算完成时间落在免打扰时段（默认 21:00–10:00，GMT+8，见【VIP特权 › VIP 全局参数】「短信 / 推送免打扰时段」）内的（通常 1 日 00:0x 结算完成），顺延到时段结束（默认 1 日 10:00）发送（免打扰时段顺延及其配置项是用户 2026-10-19 的规则，Claire 原文无此项）</span>；N48 表中不发短信的玩家不发、不计入短信成功 / 失败。第 10 章：短信失败记入短信失败数，不自动重发（明细示例 rica_win）。<span class="glow">恢复 1 级的玩家照常获得保级奖励，照发保级短信（明细示例 marites_c；用户 2026-10-17，依据原文五、七 / C-02）。</span><span class="glow">保级短信、生日短信里的金额货币写「PHP」，不用「₱」，金额紧跟 PHP、无空格（如 PHP1,500、PHP488；Claire 答复 C-15，用户 2026-10-17）。保级短信文案按原文十六「已到账」：「PHP{RetentionBonus} VIP 保级奖励已到账！登录 789Bingo 查看奖励。」（英文 "PHP{RetentionBonus} VIP Retention Bonus credited! Log in to 789Bingo to check your reward."；用户 2026-10-17 定）。保级奖励「暂停发放（风控）」的不发短信，之后放行到账也不补发短信；未完成 KYC 的玩家不参加月结保级，不发保级短信（已定（用户 2026-10-17））。</span><span class="glow"><b>强制审核生效时（已定，用户 2026-10-20）</b>：保级短信在审核通过、实际到账时才发，审核中不发；驳回不发短信。</span><span class="ref">规则 N41 · N48 · 第 10 章 · F07-01</span></li>
+      <li><b>短信</b>：规则 N41：保级奖励短信在结算发奖成功后对获得保级奖励的玩家发送，每人每月最多 1 条，<span class="glow">次月 1 日保级结算及奖励发放成功后发送（原文十六为结算发奖成功后触发；用户 2026-10-19）；<b>免打扰时段</b>：结算完成时间落在免打扰时段（默认 21:00–10:00，GMT+8，见【用户管理 › VIP特权 › VIP特权 › VIP全局参数】「短信 / 推送免打扰时段」）内的（通常 1 日 00:0x 结算完成），顺延到时段结束（默认 1 日 10:00）发送（免打扰时段顺延及其配置项是用户 2026-10-19 的规则，Claire 原文无此项）</span>；N48 表中不发短信的玩家不发、不计入短信成功 / 失败。第 10 章：短信失败记入短信失败数，不自动重发（明细示例 rica_win）。<span class="glow">恢复 1 级的玩家照常获得保级奖励，照发保级短信（明细示例 marites_c；用户 2026-10-17，依据原文五、七 / C-02）。</span><span class="glow">保级短信、生日短信里的金额货币写「PHP」，不用「₱」，金额紧跟 PHP、无空格（如 PHP1,500；Claire 答复 C-15，用户 2026-10-17）。保级短信使用模板「VIP 保级奖励到账」（文案见 PRD 附录 D，用户 2026-10-26）。保级奖励「暂停发放（风控）」的不发短信，之后放行到账也不补发短信；未完成 KYC 的玩家不参加月结保级，不发保级短信（已定（用户 2026-10-17））。</span><span class="glow"><b>强制审核生效时（已定，用户 2026-10-20）</b>：保级短信在审核通过、实际到账时才发，审核中不发；驳回不发短信。</span><span class="ref">规则 N41 · N48 · 第 10 章 · F07-01</span></li>
       <li><b>边界</b>：规则 N21：结算开始后（1 日 00:00 起）的新升级计入新月份；结算完成后当前等级取「结算结果」与「新升级后的等级」中较高者。<span class="ref">规则 N21 · F03-04</span></li>
       <li><b>运营用法</b>：每月 1 日上午看月度结算记录。<span class="ref">PRD 第 15 章</span></li>
       <li><b>成长值记录（现有，不改）</b>：现有（管理后台知识库 4.1.6）页签原样示意：会员名、分类、有效投注额、流水倍数、成长值变化、当前成长值、币种、新增时间、操作人、原因；可「修改会员成长值」（人工调整需填原因）。只记录 Level 段成长值；VIP 段累计充值、累计有效投注和等级变动见「VIP会员数据」「等级变动记录」。<span class="glow">已定（用户 2026-10-21）：本期不提供 VIP 累计数据和 VIP 成长值的人工调整入口，「修改会员成长值」只改 Level 成长值，VIP 数据修正走技术工单（PRD 8.7）。</span><span class="ref">管理后台知识库 4.1.6 · PRD 8.7</span></li>
@@ -332,20 +333,22 @@ td.vip-pg-st .vip-pg-retry{border:0;background:none;color:#409EFF;cursor:pointer
     "每月保级投注（含恢复目标）": "玩家当前等级的每月保级投注（计算方式为成长值时是保级所需成长值）；降级的玩家在下方小字显示「恢复目标 VIPx · 需 ₱x」（目标是当前等级之上的下一个开启等级），本月达到就次月恢复到这一级。",
     "本月保级进度（按计算方式）": "本月有效投注 ÷ 当前等级的每月保级投注（成长值方式为本月新增成长值 ÷ 保级所需成长值），向下取整，没达标的最多显示 99%。",
     "最近等级变动时间": "该会员最近一次等级变动的时间（GMT+8），包括升级、保级成功、降级、恢复、退出 VIP 段、存量初始化和重新归级。",
-    "变动类型（含重新归级）": "升级（含完成 KYC 时定级）、保级成功、降级、恢复（降级后达到恢复条件，次月回升）、退出 VIP 段（VIP1 保级失败）、存量初始化（第一次开启时按历史累计定级）、重新归级（等级关闭并复核通过后重新归入开启的等级）。未完成 KYC 的玩家没有变动记录。",
+    "变动类型（含重新归级）": "升级（含完成 KYC 时定级、「KYC 限制」关闭时定级）、保级成功、降级、恢复（降级后达到恢复条件，次月回升）、退出 VIP 段（VIP1 保级失败）、存量初始化（第一次开启时按历史累计定级）、重新归级（等级关闭并复核通过后重新归入开启的等级）。不参与 VIP 体系期间没有变动记录。",
     "变动后等级": "这次变动后玩家的当前 VIP 等级。",
     "变动后最高等级": "这次变动后玩家的历史最高 VIP 等级（不会下降）。",
-    "触发原因（含等级关闭）": "引起这次变动的原因：充值、结算投注、门槛重算、门槛重算（不发放差额）、月度结算、开关开启、存量初始化、完成 KYC、等级关闭（关闭某一级并复核通过后重新归级）。",
+    "触发原因（含等级关闭）": "引起这次变动的原因：充值、结算投注、门槛重算、门槛重算（不发放差额）、月度结算、开关开启、存量初始化、完成 KYC、KYC 限制关闭、等级关闭（关闭某一级并复核通过后重新归级）。",
     "成长值（变动时）": "计算方式为「成长值」时显示：变动发生时该会员的成长值（历史累计）。",
     "当月有效投注（月度结算时）": "变动类型为保级成功、降级、恢复、退出 VIP 段时，显示被考核月份（GMT+8）的有效投注合计；其他类型显示「—」。",
     "当月新增成长值（月度结算时）": "计算方式为「成长值」时显示：变动类型为保级成功、降级、恢复、退出 VIP 段时，显示被考核月份（GMT+8）新增的成长值；其他类型显示「—」。",
     "成长值明细月份": "选「全部」显示历史累计：各分类成长值 + 充值成长值 − 降级扣减 = 当前成长值；选某个月显示该月（GMT+8，本月截至统计时）新增的成长值和降级扣减，有效投注按结算时间计入月份，撤单扣回。",
     "结算月份": "这次月度结算考核的自然月（GMT+8）。",
-    "参与人数": "结算时当前等级为 VIP1 及以上的会员数（未完成 KYC 的不计），等于保级成功、降级、失败三项人数之和。",
+    "参与人数": "结算时当前等级为 VIP1 及以上的会员数（不参与 VIP 体系的不计），等于保级成功、降级、失败三项人数之和。",
     "保级成功人数": "达到当前等级每月保级投注的人数，等于保级奖励笔数。",
     "降级人数": "本次结算降级的人数，含 VIP1 保级失败、退出 VIP 段的人数。",
     "恢复人数": "这次结算中恢复的人数：降级玩家恢复到当前等级之上的下一个开启等级（同时计入保级成功人数），以及 VIP1 保级失败后的普通用户回到 VIP1（不计入参与人数和保级成功人数）。",
     "保级奖励总额": "该月结算生成的保级奖励中已到账的合计（₱）：只计已发放、已领取、已发放（补发），不含待领取、已过期、待审核、审核驳回、暂停发放、发放失败和不发放。",
+    "VIP 奖励总额": "结算月份（该月 1 日 00:00:00 至月末 23:59:59，GMT+8）内实际到账的 VIP 升级、保级、生日奖励合计（₱），按到账时间归月：含补发、放行、审核通过后到账的；不含暂停发放、审核中、驳回、作废、不发放、待领取和已过期的。保级奖励按到账时间计入，与「保级奖励总额」（本次结算生成、次月 1 日到账）口径不同。",
+    "奖励占有效投注比": "VIP 奖励总额 ÷ 本次结算参与会员（参与人数口径）该月有效投注合计 × 100%，保留 4 位小数；有效投注合计为 0 时显示「-」。用于看 VIP 奖励成本，对应原方案第二节「升级奖占比 / 保级奖占比」的成本口径。",
     "短信成功 / 失败": "该月保级奖励短信发送成功和失败的条数，失败的不自动重发；按账号状态不发短信的不计入。",
     "失败人数": "自动重试 3 次后仍结算失败、等待「重跑失败」的会员数。",
     "结算状态": "进行中、完成、部分失败（有会员自动重试 3 次后仍失败，可以点「重跑失败」）。",
@@ -726,10 +729,14 @@ td.vip-pg-st .vip-pg-retry{border:0;background:none;color:#409EFF;cursor:pointer
   var SETTLE = P.get("set2") || clone(SET0), DETAIL = P.get("det2") || clone(DET0);
   function saveS() { P.set("set2", SETTLE); P.set("det2", DETAIL); }
   var SC = { "完成": "s-ok", "部分失败": "s-fail", "进行中": "s-run" };
+  /* VIP 奖励总额、奖励占有效投注比（用户 2026-10-26，检查报告 R3-06）：vt = 结算月份内实际到账的升级 + 保级 + 生日奖励合计（示例：2026-09 = 9-01 到账的 8 月保级 1,014,700 + 升级 2,356,400 + 生日 286,300）；bet = 本次结算参与会员该月有效投注合计（示例值） */
+  var VRM = { "2026-09": { vt: 3657400, bet: 18530000000 }, "2026-08": { vt: 3302400, bet: 17215000000 }, "2026-07": { vt: 2222500, bet: 16102000000 } };
+  function vrOf(r) { return VRM[r.m] || { vt: 0, bet: 0 }; }
+  function vrPct(r) { var x = vrOf(r); return x.bet > 0 ? (x.vt / x.bet * 100).toFixed(4) + "%" : "-"; }
   function renderSettle() {
     document.getElementById("sBody").innerHTML = SETTLE.map(function (r, i) {
       var canRerun = r.fail > 0 && r.st === "部分失败";
-      return "<tr><td>" + r.m + "</td><td>" + r.s + "</td><td>" + (r.e || "—") + "</td><td>" + fmt(r.all) + "</td><td>" + fmt(r.keep) + "</td><td>" + fmt(r.rec || 0) + "</td><td>" + fmt(r.down) + "</td><td>" + fmt(r.amt) +
+      return "<tr><td>" + r.m + "</td><td>" + r.s + "</td><td>" + (r.e || "—") + "</td><td>" + fmt(r.all) + "</td><td>" + fmt(r.keep) + "</td><td>" + fmt(r.rec || 0) + "</td><td>" + fmt(r.down) + "</td><td>" + fmt(r.amt) + "</td><td>" + fmt(vrOf(r).vt) + "</td><td>" + vrPct(r) +
         "</td><td>" + fmt(r.smsOk) + " / " + fmt(r.smsNg) + "</td><td class='" + (r.fail ? "s-fail" : "") + "'>" + fmt(r.fail) + "</td><td class='" + SC[r.st] + "'>" + r.st +
         "</td><td><button class='bo-btn link' type='button' data-detail='" + i + "'>查看明细</button>" +
         "<button class='bo-btn link glow' type='button' data-perm='1' data-rerun='" + i + "'" + (canRerun ? "" : " disabled") + ">重跑失败</button><i class='qm' data-h='重跑失败'>?</i></td></tr>";
@@ -805,10 +812,19 @@ td.vip-pg-st .vip-pg-retry{border:0;background:none;color:#409EFF;cursor:pointer
   }
   /* ===== 视图切换 ===== */
   var VIEWS = { members: "VIP会员数据", settle: "月度结算记录", detail: "月度结算记录", growlog: "成长值记录", growth: "VIP会员数据", growthCut: "VIP会员数据", changes: "等级变动记录", init: "等级变动记录", regroup: "等级变动记录" };   /* regroup：重新归级场景（用户 2026-10-19） */   /* growth：成长值明细场景（用户 2026-10-19） */ /* init：「存量初始化记录」入口（运营需求确认页引用），打开等级变动记录并只看「存量初始化」 */
+  /* 二级页签查看权限演示（检查报告 R3-12）：模拟面板「设置账号权限」勾选「没有…查看权限」= 该二级页签无权限 */
+  function dvOk(t) { return !P.get("dvNo_" + t); }
   function show(view) {
     if (!VIEWS[view]) view = "members";
     closeTip(); closeAllMs(null); closeG(); while (stack.length) stack[stack.length - 1].close();
     var tab = view === "members" || view === "growth" || view === "growthCut" ? "members" : view === "settle" || view === "detail" ? "settle" : view === "growlog" ? "growlog" : "changes";   /* 二级页签（用户 2026-10-21） */
+    /* 只显示有查看权限的二级页签；打开无权限的二级页签时自动切到第一个有权限的；4 个都没有权限时不显示「VIP数据报表」页签（PRD 8.1，已定，用户 2026-10-22；检查报告 R3-11、R3-12） */
+    var okTab = ["members", "changes", "settle", "growlog"].filter(dvOk);
+    document.querySelectorAll("#vDr [data-dv]").forEach(function (x) { x.hidden = !dvOk(x.dataset.dv); });
+    document.querySelectorAll(".bo-tabs [data-view]").forEach(function (x) { x.hidden = !okTab.length; });
+    document.getElementById("vDr").hidden = !okTab.length; document.getElementById("dvNone").hidden = !!okTab.length;
+    if (!okTab.length) { ["vMembers", "vChanges", "vSettle", "vGrowLog"].forEach(function (id) { document.getElementById(id).hidden = true; }); document.getElementById("crumb").innerHTML = "位置 › 用户管理 › VIP特权"; return; }
+    if (!dvOk(tab)) { toast("没有「" + VIEWS[tab] + "」的查看权限，已切到第一个有权限的「" + VIEWS[okTab[0]] + "」（演示）", "info"); tab = okTab[0]; view = tab; }
     document.getElementById("vMembers").hidden = tab !== "members";
     document.getElementById("vChanges").hidden = tab !== "changes";
     document.getElementById("vSettle").hidden = tab !== "settle";
@@ -871,12 +887,17 @@ td.vip-pg-st .vip-pg-retry{border:0;background:none;color:#409EFF;cursor:pointer
     { title: "月度结算记录", items: [
       { type: "button", label: "2026-09 重跑失败（二次确认，约 2 秒后完成）", run: function () { show("settle"); if (SETTLE[0].st === "部分失败") rerun(0); else demo("2026-09 当前不是「部分失败」，点「恢复本页示例数据」可重新演示"); } }
     ] },
-    { title: "设置账号权限", items: [{ type: "radio", key: "perm", tag: "权限", options: [["all", "有全部按钮权限"], ["none", "无按钮级权限（隐藏「导出」「重跑失败」）"]], change: function () { renderSettle(); applyPerm(); } }] },
+    { title: "设置账号权限", items: [{ type: "radio", key: "perm", tag: "权限", options: [["all", "有全部按钮权限"], ["none", "无按钮级权限（隐藏「导出」「重跑失败」）"]], change: function () { renderSettle(); applyPerm(); } },
+      { type: "check", key: "dvNo_members", label: "没有「VIP会员数据」查看权限" },
+      { type: "check", key: "dvNo_changes", label: "没有「等级变动记录」查看权限" },
+      { type: "check", key: "dvNo_settle", label: "没有「月度结算记录」查看权限" },
+      { type: "check", key: "dvNo_growlog", label: "没有「成长值记录」查看权限" },
+      { type: "note", text: "二级页签查看权限（检查报告 R3-12）：勾选后该二级页签不显示；正在看的二级页签没有权限时自动切到第一个有权限的；4 个都勾选时「VIP数据报表」页签不显示（PRD 8.1，已定，用户 2026-10-22）。真实后台按账号权限判断，原型用勾选模拟；「清空原型状态」恢复为全部有权限。" }] },
     { title: "注入异常", items: [{ type: "button", label: "查询无结果（会员账号 nobody_x）→ 暂无数据", run: function () { resetM(); show("members"); document.getElementById("mAcc").value = "nobody_x"; renderMembers(); } }] },
     { title: "演示值说明", items: [{ type: "note", text: "统计到 2026-10-13 10:30（GMT+8）；所有账号和金额均为虚构，同名玩家的数值与其他后台页一致（如 kaloy_2024 累计有效投注 179,400,000）；累计数值为历史累计；VIP 体系示例于 2026-07-01 00:00:00 第一次开启并完成存量初始化。" }] },
     { items: [{ type: "button", tag: "重置", label: "恢复本页示例数据（月度结算记录）", run: function () { P.set("set2", null); P.set("det2", null); location.reload(); } }, { type: "reset" }] }
   ]);
-  window.addEventListener("proto-change", function (e) { var k = e.detail.key; if (k === "perm" || k === "*") applyPerm(); if (k === "vipCalc" || k === "*") { closeG(); renderMembers(); renderChanges(); } });
+  window.addEventListener("proto-change", function (e) { var k = e.detail.key; if (k === "perm" || k === "*") applyPerm(); if (k === "*" || /^dvNo_/.test(k)) show(location.hash.slice(1) || "members"); if (k === "vipCalc" || k === "*") { closeG(); renderMembers(); renderChanges(); } });
 
   initHelp();
   msCur = makeMs(document.getElementById("msCur"), LV.concat(OUT)); msHi = makeMs(document.getElementById("msHi"), LV); allMs = [msCur, msHi];

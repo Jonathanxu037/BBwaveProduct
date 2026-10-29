@@ -175,3 +175,25 @@ body.pub-admin .adm-stage aside.notes,body.pub-admin .nd-btn{display:none!import
 /* 本需求过渡兼容（2026-10-21 同步模板 v5.46）：后台页尾 VIP-HELPINLINE 的 .vip-req-note 只画左边框，模板 .ui-reqnote 的虚线框会补出另外三边，这里保持页面原样；
    以后后台页面删掉页内 .vip-req-note 样式、改用模板 .ui-reqnote 样式时，一并删掉本条 */
 .adm-stage .vip-req-note.ui-reqnote,.bo-mask .vip-req-note.ui-reqnote{border:0;border-left:2px solid #DCDFE6;border-radius:0}
+
+/* ===== VIP全局参数排版（用户 2026-10-27：不重叠、不破版；三个迭代的后台VIP特权配置页面共用，只作用于 #gBlk）=====
+   两列网格：标签列固定宽度、允许换行；控件列 min-width:0、flex 换行；说明文字和需求说明批注框占满整行、自动换行；不用绝对定位 */
+#gBlk .frow{grid-template-columns:168px minmax(0,1fr);align-items:start;column-gap:12px}
+#gBlk .frow>.fl,#gBlk .frow>label{display:block;min-width:0;line-height:1.5;padding-top:6px;white-space:normal;overflow-wrap:anywhere}
+#gBlk .frow>.fl .ui-nw,#gBlk .frow>.fl .vip-nw{white-space:normal;display:inline}
+#gBlk .frow>.fl .mode{display:block;margin-top:2px;white-space:normal;line-height:1.5}
+#gBlk .frow>.fctl{display:flex!important;flex-wrap:wrap;align-items:center;gap:6px 8px;min-width:0;max-width:100%;padding-top:2px}
+#gBlk .fctl>*{max-width:100%;min-width:0}
+#gBlk .fctl .vip-cnt{text-align:left;white-space:normal;overflow-wrap:anywhere;line-height:1.6}
+#gBlk .fctl>.vip-cnt.vip-live{flex:1 1 100%}
+#gBlk .fctl>.vip-req-note,#gBlk .fctl>.ui-reqnote,#gBlk .fctl>.ferr,#gBlk .fctl>.rdg2+.vip-cnt.vip-live{flex:1 1 100%;width:100%;box-sizing:border-box;overflow-wrap:anywhere;white-space:normal}
+#gBlk .fctl>.vip-req-note,#gBlk .fctl>.ui-reqnote{margin:2px 0 0}
+#gBlk .fctl .rdg2{display:flex;flex-wrap:wrap;gap:6px 16px;min-width:0}
+#gBlk .fctl .rd{white-space:nowrap}
+#gBlk .fctl select,#gBlk .fctl .bo-inp{max-width:100%}
+#gBlk .vip-sw,#gBlk .vip-sw-btn{flex:none}
+#gBlk .fctl .ui-nw,#gBlk .fctl .vip-nw{white-space:normal;flex-wrap:wrap;max-width:100%}
+#gBlk .cmr{display:flex;flex-wrap:wrap;align-items:center;gap:4px 12px;min-width:0;max-width:100%}
+#gBlk .cmr .rdg2{min-width:0}
+@media (max-width:1100px){#gBlk .frow{grid-template-columns:132px minmax(0,1fr)}}
+@media (max-width:960px){#gBlk .frow{grid-template-columns:minmax(0,1fr);row-gap:4px}#gBlk .frow>.fl,#gBlk .frow>label{padding-top:0}}

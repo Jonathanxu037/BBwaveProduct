@@ -1,0 +1,298 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>VIP会员体系-v1.2-客服QA</title>
+<link rel="stylesheet" href="../../assets/style.css">
+<style>.qa .bi div,.qa .qa-reply{overflow-wrap:anywhere}
+.paper .qa-tbl td:first-child{white-space:normal;overflow-wrap:anywhere}.paper .qa-tbl td:last-child{width:28%}</style>
+</head>
+<body class="qa-page" data-lang="both">
+<div class="with-nav">
+<div class="desk"><article class="paper qa">
+
+<h1 class="doc-title">VIP会员体系-v1.2-客服QA<span class="qa-sub">VIP Center · Customer Service Q&amp;A</span></h1>
+<div class="doc-meta"><span>版本 / Version：v1.2</span><span>适用 / For：客服 Customer Service</span><span>依据 / Based on：PRD、后台操作手册 Admin Manual</span></div>
+<div class="qa-lang" role="group" aria-label="语言 Language">
+  <button type="button" data-l="both" aria-pressed="true">双语 Bilingual</button>
+  <button type="button" data-l="zh" aria-pressed="false">中文</button>
+  <button type="button" data-l="en" aria-pressed="false">English</button>
+</div>
+<hr class="doc-rule">
+
+<h2 id="q0">适用范围 <span class="en-t">Scope</span></h2>
+<div class="bi"><div class="zh">VIP 会员体系 v1.2（VIP中心、升级奖金、月度奖金、保级与降级、生日奖金），适用 H5、iOS、安卓新版本 App，从运营开启 VIP 体系起生效。全部时间按 GMT+8（菲律宾时间）。具体奖金以 VIP中心等级表为准，门槛以后台【VIP会员等级配置】为准，运营可调整。</div><div class="en">VIP program v1.2 (VIP Center, Upgrade Bonus, Monthly Bonus, level retention and drops, Birthday Bonus) on H5 and the latest iOS and Android apps, effective once Operations turns the VIP program on. All times are GMT+8 (Philippine time). Exact bonus amounts follow the level table in VIP Center; requirements follow 【VIP会员等级配置】 in the back office. Operations may adjust both.</div></div>
+
+<h2 id="q1">这次改了什么 <span class="en-t">What changed</span></h2>
+<div class="bi"><div class="zh">新增 VIP 等级（默认 25 个：VIP1–VIP24、SUPER VIP，运营可在最高一级之上新增等级或删除最高一级），未达到 VIP1 的玩家为 VIP0（前台显示「会员」）。累计有效投注和累计充值同时达到要求即实时升级，每个等级首次到达时自动发一次升级奖金；每月有效投注达到当前等级的保级投注即保级成功，次月 1 日 13:00 自动发月度奖金，未达到次月降 1 级；生日奖金金额在生日所在月份 1 日结算后按等级确定，生日当天起可在 VIP中心领取。原会员等级（Level）不再使用，等级中心（Level Center）改为 VIP中心；旧版 VIP 体系（VIP0–VIP8、成长值、下注限额与返水，以及旧版 VIP活动）被完全替换，不再存在。上线时只按累计有效投注和累计充值定级，已达到的等级不发升级奖金；原 Level 和旧版 VIP 未到账的奖励一律作废。</div><div class="en">We added VIP levels (25 by default: VIP1–VIP24, SUPER VIP; Operations can add a level above the top or remove the top level); players below VIP1 are VIP0 in the back office (shown as "Member" in the app). When both total valid bets and total deposits meet a level's requirements, the player levels up instantly and gets that level's Upgrade Bonus automatically, once per level. If monthly valid bets reach the current level's retention bet, the player keeps the level and receives the Monthly Bonus automatically at 13:00 on the 1st of next month; otherwise the level drops by 1 next month. The Birthday Bonus amount is set by the level after settlement on the 1st of the birthday month, and players can claim it in VIP Center from their birthday. Member Levels are no longer used, and Level Center has become VIP Center; the old VIP program (VIP0–VIP8, growth points, bet limits and rebates, and the old VIP promotion) has been fully replaced and no longer exists. At launch, levels are set only from total valid bets and total deposits, with no Upgrade Bonus for levels already reached; unpaid rewards from the old Levels and old VIP program are all voided.</div></div>
+
+<h2 id="q2">客服核查步骤 <span class="en-t">How to check</span></h2>
+<ol class="qa-steps">
+  <li class="bi"><div class="zh"><b>查等级和进度</b>：本期后台没有 VIP会员数据查询页（Q23 已定不补）。玩家问自己的等级和进度时，先请玩家看 App 里的 VIP中心；需要核实当前等级、历史最高等级、累计有效投注、累计充值、本月保级状态时，转运营由技术查库。</div><div class="en"><b>Level and progress</b>: The back office has no VIP member lookup page in this release (Q23: not added). Ask the player to check VIP Center in the app first; if the current level, highest level, total valid bets, total deposits or retention status must be verified, pass it to Operations for a database check by Tech.</div></li>
+  <li class="bi"><div class="zh"><b>查等级变动</b>：本期后台没有等级变动记录查询页（Q23 已定不补）。每月结算造成的保级、降级、恢复，在【用户管理 › VIP会员等级配置 › VIP月度结算记录】对应月份点「明细」按会员账号查；实时升级、上线定级、KYC 定级等其他变动，记下会员账号和时间，转运营由技术查库。</div><div class="en"><b>Level changes</b>: No level change lookup page in this release (Q23: not added). For monthly retention, drops and restores, open the month in 【用户管理 › VIP会员等级配置 › VIP月度结算记录】 (VIP Monthly Settlement Records), click Details and search the account. For other changes (instant level-ups, launch leveling, KYC leveling, etc.), note the account and time and pass it to Operations for a database check by Tech.</div></li>
+  <li class="bi"><div class="zh"><b>查奖金</b>：【用户管理 › VIP会员等级配置 › 活动奖励统计】输入会员账号、选好申请领取时间后点「搜索」，看奖励类型、奖励金额、状态（状态下方小字为原因）、审核发放时间。</div><div class="en"><b>Bonuses</b>: 【用户管理 › VIP会员等级配置 › 活动奖励统计】 (Reward Statistics): enter the account, set the date range and click Search; check reward type, amount, status (the reason is shown in small text under the status) and credit time.</div></li>
+  <li class="bi"><div class="zh"><b>查月度结算</b>：【用户管理 › VIP会员等级配置 › VIP月度结算记录】看该月结算状态（已完成 / 结算中 / 结算失败）和人数；点「明细」按会员账号查考核等级、当月有效投注、保级投注、结算结果、结算后等级、月度奖金和奖金状态。月度奖金的处理（审核、放行、补发）看【活动奖励统计】奖励类型「月度奖金」。</div><div class="en"><b>Monthly settlement</b>: In 【用户管理 › VIP会员等级配置 › VIP月度结算记录】 (VIP Monthly Settlement Records), check the month's status (Completed / In Progress / Failed) and counts; click Details and search the account for the assessed level, monthly valid bets, retention bet, result, level after settlement, Monthly Bonus and its status. For Monthly Bonus handling (review, release, reissue), see 【活动奖励统计】 with reward type "Monthly Bonus".</div></li>
+  <li class="bi"><div class="zh"><b>查参数</b>：【VIP会员等级配置 › VIP会员等级奖励配置】看顶部「VIP领取奖励」（即 VIP 体系开关）、「VIP会员等级奖励规则」里的 KYC 限制、强制审核是否开启，流水倍数和生日奖金有效期。</div><div class="en"><b>Settings</b>: 【VIP会员等级奖励配置】 (VIP Reward Settings): whether "VIP领取奖励" (the VIP program switch), the KYC requirement and mandatory review are on, plus the turnover multiple and Birthday Bonus validity.</div></li>
+</ol>
+
+<h2 id="q3">问答 <span class="en-t">Q&amp;A</span></h2>
+
+<section class="qa-card" id="qa1">
+  <h3><span class="qa-no">1</span><span class="bi-inline"><span class="zh">怎么升 VIP？</span><span class="en">How do I level up in VIP?</span></span></h3>
+  <div class="qa-row"><b>回复玩家<small>Reply</small></b><div class="bi"><div class="en qa-reply">Your VIP level goes up instantly when both your total valid bets and your total deposits reach the requirements of a higher level. VIP Center shows your progress to the next level.<button type="button" class="qa-copy">复制 Copy</button></div><div class="zh">累计有效投注和累计充值同时达到更高等级的要求，就会立即升级。VIP中心会显示你升到下一级的进度。</div></div></div>
+  <div class="qa-row"><b>客服核查<small>Check</small></b><div class="bi"><div class="zh">玩家的两项累计本期后台查不到（Q23 已定不补），转运营由技术查库后与【VIP会员等级配置】的门槛对比；也可请玩家看 VIP中心的升级进度。玩家问更高等级的要求时，按后台【VIP会员等级配置】门槛表回答。</div><div class="en">The player's two totals cannot be looked up in the back office in this release (Q23); pass it to Operations for a database check and compare with the thresholds in 【VIP会员等级配置】, or ask the player to check the upgrade progress in VIP Center. If the player asks about the requirements of higher levels, answer from the threshold table in 【VIP会员等级配置】.</div></div></div>
+  <div class="qa-row"><b>转交<small>Escalate</small></b><div class="bi"><div class="zh">两项都已达到但没升级：转技术。</div><div class="en">Both met but no level-up: escalate to Tech.</div></div></div>
+</section>
+
+<section class="qa-card" id="qa2">
+  <h3><span class="qa-no">2</span><span class="bi-inline"><span class="zh">我的投注已经够了，为什么还没升级？</span><span class="en">My bets are enough, why haven't I leveled up?</span></span></h3>
+  <div class="qa-row"><b>回复玩家<small>Reply</small></b><div class="bi"><div class="en qa-reply">To level up, your total valid bets and your total deposits must both reach the level's requirements. Meeting only one of them is not enough. Please check the progress bars in VIP Center to see what is still missing.<button type="button" class="qa-copy">复制 Copy</button></div><div class="zh">升级需要累计有效投注和累计充值两项同时达到要求，只达到一项不能升级。请在 VIP中心查看进度条，看还差哪一项。</div></div></div>
+  <div class="qa-row"><b>客服核查<small>Check</small></b><div class="bi"><div class="zh">看哪一项未达到；累计充值只算玩家自行充值成功的金额（含投注站 / 代理代充），不含人工加款、兑换码充值、充值返利、彩金和活动奖励；有效投注只计 6 类游戏，注单重新结算、改单按差额增减。</div><div class="en">See which one is short. Deposits count only the player's own successful deposits, including top-ups by betting stations or agents (no manual credits, redeem-code top-ups, deposit rebates, bonuses or promo rewards); valid bets count only the 6 game types, and resettled or amended bets are adjusted by the difference.</div></div></div>
+  <div class="qa-row"><b>转交<small>Escalate</small></b><div class="bi"><div class="zh">不需要。</div><div class="en">Not needed.</div></div></div>
+</section>
+
+<section class="qa-card" id="qa3">
+  <h3><span class="qa-no">3</span><span class="bi-inline"><span class="zh">我一次升了好几级，奖金怎么算？</span><span class="en">I jumped several levels at once. How is the bonus paid?</span></span></h3>
+  <div class="qa-row"><b>回复玩家<small>Reply</small></b><div class="bi"><div class="en qa-reply">When you pass several levels at once, you receive the Upgrade Bonus of every new level you reach for the first time. For example, going from Member to VIP3 pays the VIP1, VIP2 and VIP3 Upgrade Bonuses. You can check the amounts in the level table in VIP Center.<button type="button" class="qa-copy">复制 Copy</button></div><div class="zh">一次跨过多个等级时，每个首次到达的等级都会发放升级奖金。例如从会员升到 VIP3，会发 VIP1、VIP2、VIP3 三个等级的升级奖金。金额以 VIP中心等级表为准。</div></div></div>
+  <div class="qa-row"><b>客服核查<small>Check</small></b><div class="bi"><div class="zh">【活动奖励统计】按会员账号、奖励类型「升级奖金」搜索，应每级一条。</div><div class="en">In 【活动奖励统计】 (Reward Statistics), search the account with reward type Upgrade Bonus; there should be one record per level.</div></div></div>
+  <div class="qa-row"><b>转交<small>Escalate</small></b><div class="bi"><div class="zh">缺某一级的记录：转技术。</div><div class="en">A level's record is missing: escalate to Tech.</div></div></div>
+</section>
+
+<section class="qa-card" id="qa4">
+  <h3><span class="qa-no">4</span><span class="bi-inline"><span class="zh">我降级后又升回来，为什么没有升级奖金？</span><span class="en">I dropped and came back up. Why no Upgrade Bonus?</span></span></h3>
+  <div class="qa-row"><b>回复玩家<small>Reply</small></b><div class="bi"><div class="en qa-reply">Each level's Upgrade Bonus is paid only once. If you have reached a level before, getting back to it after a drop does not pay the bonus again. You will receive the Upgrade Bonus when you reach a level higher than your highest level so far.<button type="button" class="qa-copy">复制 Copy</button></div><div class="zh">每个等级的升级奖金只发一次。以前到达过的等级，降级后再回到这个等级不会重复发放；到达比你以前最高等级更高的等级时，才会发放升级奖金。</div></div></div>
+  <div class="qa-row"><b>客服核查<small>Check</small></b><div class="bi"><div class="zh">【活动奖励统计】按会员账号、奖励类型「升级奖金」搜索（填写会员账号后申请领取时间可不填，查出全部记录），看该等级以前是否已有记录；历史最高等级本期后台查不到，需要时转运营由技术查库（Q23 已定不补）。</div><div class="en">In 【活动奖励统计】, search the account with reward type Upgrade Bonus (with the account filled in, the claim-request time can be left empty to show all records) to see whether the level already has a record; the highest level cannot be looked up in the back office in this release, so pass it to Operations for a database check if needed (Q23).</div></div></div>
+  <div class="qa-row"><b>转交<small>Escalate</small></b><div class="bi"><div class="zh">不需要。</div><div class="en">Not needed.</div></div></div>
+</section>
+
+<section class="qa-card" id="qa5">
+  <h3><span class="qa-no">5</span><span class="bi-inline"><span class="zh">为什么我的 VIP 等级降了？</span><span class="en">Why did my VIP level drop?</span></span></h3>
+  <div class="qa-row"><b>回复玩家<small>Reply</small></b><div class="bi"><div class="en qa-reply">To keep your level, your valid bets in each calendar month (GMT+8) must reach your level's retention bet. If they don't, your level drops by 1 in the following month, at most 1 level per month. VIP1 drops to Member.<button type="button" class="qa-copy">复制 Copy</button></div><div class="zh">每个自然月（GMT+8）的有效投注要达到当前等级的保级投注才能保级；未达到的，次月降 1 级，每月最多降 1 级；VIP1 降为会员。</div></div></div>
+  <div class="qa-row"><b>客服核查<small>Check</small></b><div class="bi"><div class="zh">【VIP月度结算记录】降级当月的明细按会员账号查，对比当月有效投注与保级投注；怎么恢复见第 28 条。</div><div class="en">In 【VIP月度结算记录】, open the month of the drop, click Details and search the account to compare monthly valid bets with the retention bet; for how to get the level back, see Q28.</div></div></div>
+  <div class="qa-row"><b>转交<small>Escalate</small></b><div class="bi"><div class="zh">已达到保级投注仍被降级：转技术。</div><div class="en">Retention bet met but still dropped: escalate to Tech.</div></div></div>
+</section>
+
+<section class="qa-card" id="qa6">
+  <h3><span class="qa-no">6</span><span class="bi-inline"><span class="zh">降级后我的累计还够，为什么不能马上升回去？</span><span class="en">After the drop my totals are still enough. Why can't I go back up right away?</span></span></h3>
+  <div class="qa-row"><b>回复玩家<small>Reply</small></b><div class="bi"><div class="en qa-reply">After a drop, your level comes back one step at a time: if your valid bets this month reach the retention bet of your current level, you get that level's Monthly Bonus as usual and move up 1 level next month, up to the highest level you have reached. For example, if you were VIP10 in October and missed VIP10's retention bet of ₱3M, you dropped to VIP9 on November 1; if you then reach VIP9's retention bet of ₱1M in November, you get VIP9's ₱200 Monthly Bonus on December 1 and return to VIP10. If your totals reach a level higher than your highest level so far, you level up instantly.<button type="button" class="qa-copy">复制 Copy</button></div><div class="zh">降级后按月逐级恢复：当月有效投注达到你当前等级的保级投注，照常获得当前等级的月度奖金，次月恢复 1 级，最多恢复到你到达过的最高等级。例如 10 月是 VIP10、没达到 VIP10 的保级投注 ₱3M，11 月 1 日降为 VIP9；11 月达到 VIP9 的保级投注 ₱1M，12 月 1 日会收到 VIP9 月度奖金 ₱200，并回到 VIP10。累计达到比你以前最高等级更高的等级要求时，会立即升级。</div></div></div>
+  <div class="qa-row"><b>客服核查<small>Check</small></b><div class="bi"><div class="zh">请玩家看 VIP中心当前等级卡的保级进度；上月结算结果可在【VIP月度结算记录】明细查；需要核实本月实时的当月有效投注时转运营由技术查库（Q23 已定不补）。</div><div class="en">Ask the player to check the retention progress on the current level card in VIP Center; last month's result is in the 【VIP月度结算记录】 details; to verify this month's live valid bets, pass it to Operations for a database check (Q23: not added).</div></div></div>
+  <div class="qa-row"><b>转交<small>Escalate</small></b><div class="bi"><div class="zh">不需要。</div><div class="en">Not needed.</div></div></div>
+</section>
+
+<section class="qa-card" id="qa7">
+  <h3><span class="qa-no">7</span><span class="bi-inline"><span class="zh">月度奖金什么时候到账？</span><span class="en">When is the Monthly Bonus credited?</span></span></h3>
+  <div class="qa-row"><b>回复玩家<small>Reply</small></b><div class="bi"><div class="en qa-reply">The Monthly Bonus is paid only if you keep your level for the month. Settlement starts at 13:00 (GMT+8) on the 1st of the following month, and the bonus is credited automatically after settlement.<button type="button" class="qa-copy">复制 Copy</button></div><div class="zh">当月保级成功才有月度奖金。次月 1 日 13:00（GMT+8）开始结算，结算后自动到账。</div></div></div>
+  <div class="qa-row"><b>客服核查<small>Check</small></b><div class="bi"><div class="zh">【VIP月度结算记录】看该月状态是否「已完成」；「结算失败」时下方小字「已自动重试 3 次，已通知技术，修复后补跑」，请玩家稍后再查看。</div><div class="en">In 【VIP月度结算记录】, check that the month's status is Completed; if it shows Failed ("retried 3 times, Tech notified, will rerun after the fix"), ask the player to check again later.</div></div></div>
+  <div class="qa-row"><b>转交<small>Escalate</small></b><div class="bi"><div class="zh">1 日 13:30 后结算仍未完成：转技术。</div><div class="en">Settlement still not finished after 13:30 on the 1st: escalate to Tech.</div></div></div>
+</section>
+
+<section class="qa-card" id="qa8">
+  <h3><span class="qa-no">8</span><span class="bi-inline"><span class="zh">我没收到月度奖金。</span><span class="en">I didn't get my Monthly Bonus.</span></span></h3>
+  <div class="qa-row"><b>回复玩家<small>Reply</small></b><div class="bi"><div class="en qa-reply">Let me check this for you. The Monthly Bonus is paid only when your valid bets for the month reached your level's retention bet, and it is credited after settlement at 13:00 (GMT+8) on the 1st. I'll check your record and get back to you.<button type="button" class="qa-copy">复制 Copy</button></div><div class="zh">我帮你查一下。只有当月有效投注达到当前等级的保级投注才会发月度奖金，在 1 日 13:00（GMT+8）结算后到账。我查完记录后回复你。</div></div></div>
+  <div class="qa-row"><b>客服核查<small>Check</small></b><div class="bi"><div class="zh">① 保级是否失败（【VIP月度结算记录】该月明细按会员账号查结算结果）；②【活动奖励统计】中月度奖金的状态：待审核（强制审核开启）、暂停发放（风控）、发放失败；③ 已到账但没收到短信：到账在 21:00–10:00 时短信顺延到 10:00，金额小于 ₱1 只发推送；④ 该等级月度奖金是否配置为 0。</div><div class="en">① Was the level not kept? (Check the result in that month's 【VIP月度结算记录】 details.) ② Monthly Bonus status in 【活动奖励统计】: Pending Review (mandatory review on), Paused (risk), or Failed. ③ Credited but no SMS: SMS for credits between 21:00–10:00 is sent at 10:00; amounts under ₱1 get push only. ④ Is that level's Monthly Bonus set to 0?</div></div></div>
+  <div class="qa-row"><b>转交<small>Escalate</small></b><div class="bi"><div class="zh">待审核、暂停发放：转运营；发放失败：转运营补发；保级成功但没有记录：转技术。不承诺补发时间。</div><div class="en">Pending review or paused: Operations. Failed: Operations for reissue. Kept level but no record: Tech. Do not promise a time.</div></div></div>
+</section>
+
+<section class="qa-card" id="qa9">
+  <h3><span class="qa-no">9</span><span class="bi-inline"><span class="zh">VIP中心里的「会员」是什么？</span><span class="en">What does "Member" mean in VIP Center?</span></span></h3>
+  <div class="qa-row"><b>回复玩家<small>Reply</small></b><div class="bi"><div class="en qa-reply">"Member" means you are in the VIP program but have not reached VIP1 yet, or dropped from VIP1. Members have no VIP bonuses. Once your total valid bets and total deposits reach VIP1's requirements, you will become VIP1.<button type="button" class="qa-copy">复制 Copy</button></div><div class="zh">「会员」表示你已加入 VIP，但还没达到 VIP1，或从 VIP1 降下来。会员没有 VIP 奖金。累计有效投注和累计充值达到 VIP1 的要求后就会成为 VIP1。</div></div></div>
+  <div class="qa-row"><b>客服核查<small>Check</small></b><div class="bi"><div class="zh">前台的「会员」（Member）即后台的 VIP0（等级值 0），后台各页显示「VIP0」。历史最高 ≥ VIP1 的 VIP0，当月有效投注达到 VIP1 保级投注，次月恢复到 VIP1。</div><div class="en">"Member" in VIP Center = VIP0 in the back office (level value 0). A VIP0 player whose highest level is VIP1 or above returns to VIP1 next month if this month's valid bets reach VIP1's retention bet.</div></div></div>
+  <div class="qa-row"><b>转交<small>Escalate</small></b><div class="bi"><div class="zh">不需要。</div><div class="en">Not needed.</div></div></div>
+</section>
+
+<section class="qa-card" id="qa10">
+  <h3><span class="qa-no">10</span><span class="bi-inline"><span class="zh">VIP 刚上线我就是高等级，为什么没有升级奖金？</span><span class="en">I was already at a high level when VIP launched. Why no Upgrade Bonus?</span></span></h3>
+  <div class="qa-row"><b>回复玩家<small>Reply</small></b><div class="bi"><div class="en qa-reply">When the VIP program launched, your VIP level was set by your total valid bets and total deposits up to launch: you were placed at the highest level whose two requirements you both met. Your old Member Level and old VIP level were not used. Upgrade Bonuses are not paid for levels reached before launch. You will receive the Upgrade Bonus for every new level you reach after launch.<button type="button" class="qa-copy">复制 Copy</button></div><div class="zh">VIP 上线时，只按你截至上线时的累计有效投注和累计充值确定等级，两项同时满足哪一级就定为哪一级，不参考原 Level 和旧版 VIP 等级。上线前已达到的等级不发升级奖金；上线后每到达一个新等级，都会发放升级奖金。</div></div></div>
+  <div class="qa-row"><b>客服核查<small>Check</small></b><div class="bi"><div class="zh">【活动奖励统计】状态「不发放」，状态下方小字「上线定级」。这些记录不能补发。</div><div class="en">In 【活动奖励统计】, status Not Paid with "Launch Leveling" in small text under it. These cannot be reissued.</div></div></div>
+  <div class="qa-row"><b>转交<small>Escalate</small></b><div class="bi"><div class="zh">玩家坚持投诉：转运营。</div><div class="en">Player insists on a complaint: Operations.</div></div></div>
+</section>
+
+<section class="qa-card" id="qa11">
+  <h3><span class="qa-no">11</span><span class="bi-inline"><span class="zh">我刚完成 KYC，等级出来了，为什么没有升级奖金？</span><span class="en">I just finished KYC and got a level. Why no Upgrade Bonus?</span></span></h3>
+  <div class="qa-row"><b>回复玩家<small>Reply</small></b><div class="bi"><div class="en qa-reply">When your KYC is approved, your VIP level is set based on your totals, and Upgrade Bonuses are not paid for levels reached before KYC was completed. Every new level you reach from now on pays its Upgrade Bonus.<button type="button" class="qa-copy">复制 Copy</button></div><div class="zh">KYC 通过时按你的累计确定 VIP 等级，完成 KYC 前已达到的等级不发升级奖金；之后每到达一个新等级都会发放。</div></div></div>
+  <div class="qa-row"><b>客服核查<small>Check</small></b><div class="bi"><div class="zh">适用于「KYC 限制」开启时。记录状态「不发放」，状态下方小字「KYC 前已达到」；「KYC 限制」关闭期间定级的为「KYC 限制关闭前已达到」。都不能补发。</div><div class="en">Applies while the KYC requirement is on. Status Not Paid with "Reached Before KYC" in small text under it; if leveled while the KYC requirement was off, it shows "Reached Before KYC Requirement Was Off". Neither can be reissued.</div></div></div>
+  <div class="qa-row"><b>转交<small>Escalate</small></b><div class="bi"><div class="zh">不需要。</div><div class="en">Not needed.</div></div></div>
+</section>
+
+<section class="qa-card" id="qa12">
+  <h3><span class="qa-no">12</span><span class="bi-inline"><span class="zh">VIP中心叫我先完成 KYC。</span><span class="en">VIP Center asks me to complete KYC first.</span></span></h3>
+  <div class="qa-row"><b>回复玩家<small>Reply</small></b><div class="bi"><div class="en qa-reply">You need to complete KYC verification to join VIP. Your bets and deposits are still being counted, and once your KYC is approved your VIP level will be set based on your totals. Tap "Verify" in VIP Center to start.<button type="button" class="qa-copy">复制 Copy</button></div><div class="zh">完成 KYC 认证后才能加入 VIP。你的投注和充值仍在累计，KYC 通过后会按累计确定 VIP 等级。请在 VIP中心点「去认证」。</div></div></div>
+  <div class="qa-row"><b>客服核查<small>Check</small></b><div class="bi"><div class="zh">「KYC 限制」开启时才会出现；关闭时不要求 KYC（生日奖金除外）。看 KYC 审核状态。</div><div class="en">Only shown while the KYC requirement is on; when off, KYC is not required (except for the Birthday Bonus). Check KYC status.</div></div></div>
+  <div class="qa-row"><b>转交<small>Escalate</small></b><div class="bi"><div class="zh">KYC 审核问题按现有 KYC 流程处理。</div><div class="en">KYC review issues follow the existing KYC process.</div></div></div>
+</section>
+
+<section class="qa-card" id="qa13">
+  <h3><span class="qa-no">13</span><span class="bi-inline"><span class="zh">我今天生日，为什么没有生日奖金？</span><span class="en">It's my birthday today. Why no Birthday Bonus?</span></span></h3>
+  <div class="qa-row"><b>回复玩家<small>Reply</small></b><div class="bi"><div class="en qa-reply">The Birthday Bonus is given once a year. It is set at 13:00 (GMT+8) on the 1st of your birthday month, after monthly settlement, for players who are VIP1 or above after settlement and whose KYC is already approved. You can claim it in VIP Center from your birthday. The birthday follows the date of birth in your KYC details. Let me check your account.<button type="button" class="qa-copy">复制 Copy</button></div><div class="zh">生日奖金每年一次，在生日所在月份 1 日 13:00（GMT+8）月度结算完成时生成，条件是结算后为 VIP1 及以上，且 KYC 已通过；生日当天起可在 VIP中心领取。生日以 KYC 资料中的出生日期为准。我帮你查一下。</div></div></div>
+  <div class="qa-row"><b>客服核查<small>Check</small></b><div class="bi"><div class="zh">【活动奖励统计】按会员账号、奖励类型「生日奖金」查今年是否已有记录及状态；没有记录时核对：生日所在月份 1 日结算完成时 KYC 是否已通过、结算后的等级（转运营由技术查库）、当时 VIP 体系是否开启、该等级生日奖金是否为 0。生日在 1 日的，当天结算完成后才生成。不论「KYC 限制」开或关，生日奖金都要求 KYC。</div><div class="en">In 【活动奖励统计】, search the account with reward type Birthday Bonus for this year's record and status. If there is none, check: was KYC approved when settlement finished on the 1st of the birthday month, the level after settlement (database check via Operations), whether VIP was on, and whether that level's Birthday Bonus is 0. For birthdays on the 1st, it is created only after that day's settlement. KYC is always required for the Birthday Bonus.</div></div></div>
+  <div class="qa-row"><b>转交<small>Escalate</small></b><div class="bi"><div class="zh">条件都满足但没有记录：转技术。</div><div class="en">All conditions met but no record: Tech.</div></div></div>
+</section>
+
+<section class="qa-card" id="qa14">
+  <h3><span class="qa-no">14</span><span class="bi-inline"><span class="zh">生日奖金金额按哪个等级？这个月升级了能多拿吗？</span><span class="en">Which level decides the Birthday Bonus? I leveled up this month, do I get more?</span></span></h3>
+  <div class="qa-row"><b>回复玩家<small>Reply</small></b><div class="bi"><div class="en qa-reply">The Birthday Bonus amount follows your VIP level after monthly settlement at 13:00 (GMT+8) on the 1st of your birthday month. Level changes after that do not change the amount.<button type="button" class="qa-copy">复制 Copy</button></div><div class="zh">生日奖金金额按你生日所在月份 1 日 13:00（GMT+8）月度结算后的 VIP 等级确定，之后的等级变化不影响金额。</div></div></div>
+  <div class="qa-row"><b>客服核查<small>Check</small></b><div class="bi"><div class="zh">【活动奖励统计】生日奖金记录的会员等级即按结算后等级确定的等级。生日在 1 日的玩家，1 日 00:00 至结算完成卡片显示「结算完成后可领取」，结算完成后可领。</div><div class="en">The level shown on the Birthday Bonus record in 【活动奖励统计】 is the level after settlement. For birthdays on the 1st, the card shows "Claimable after settlement" from 00:00 until settlement finishes, then it can be claimed.</div></div></div>
+  <div class="qa-row"><b>转交<small>Escalate</small></b><div class="bi"><div class="zh">不需要。</div><div class="en">Not needed.</div></div></div>
+</section>
+
+<section class="qa-card" id="qa15">
+  <h3><span class="qa-no">15</span><span class="bi-inline"><span class="zh">生日奖金过期了还能领吗？</span><span class="en">My Birthday Bonus expired. Can I still claim it?</span></span></h3>
+  <div class="qa-row"><b>回复玩家<small>Reply</small></b><div class="bi"><div class="en qa-reply">Sorry, the Birthday Bonus must be claimed on the birthday card in VIP Center within the period shown on the card (including your birthday). Once it expires, it can no longer be claimed.<button type="button" class="qa-copy">复制 Copy</button></div><div class="zh">抱歉，生日奖金需要在 VIP中心生日卡片显示的有效期内（含生日当天）领取，过期后不能再领取。</div></div></div>
+  <div class="qa-row"><b>客服核查<small>Check</small></b><div class="bi"><div class="zh">记录状态「已过期」；有效期默认 15 天，以【VIP会员等级奖励配置】的设置为准。</div><div class="en">Status Expired; validity defaults to 15 days, per 【VIP会员等级奖励配置】 (Reward Settings).</div></div></div>
+  <div class="qa-row"><b>转交<small>Escalate</small></b><div class="bi"><div class="zh">不需要；不承诺补发。</div><div class="en">Not needed; do not promise a reissue.</div></div></div>
+</section>
+
+<section class="qa-card" id="qa16">
+  <h3><span class="qa-no">16</span><span class="bi-inline"><span class="zh">点「领取」失败了。</span><span class="en">Claiming the Birthday Bonus failed.</span></span></h3>
+  <div class="qa-row"><b>回复玩家<small>Reply</small></b><div class="bi"><div class="en qa-reply">Please try again later. If the claim fails, the bonus stays available to claim within its validity period. Make sure you are using the latest app or our mobile site.<button type="button" class="qa-copy">复制 Copy</button></div><div class="zh">请稍后再试。领取失败时，奖金在有效期内仍可再次领取。请使用最新版本 App 或手机浏览器（H5）领取。</div></div></div>
+  <div class="qa-row"><b>客服核查<small>Check</small></b><div class="bi"><div class="zh">记录仍为「待领取」（领取时到账失败不会自动重试，也不会变为「发放失败」，玩家在有效期内可再次领取）；如显示「暂停发放」见第 23 条。</div><div class="en">Record should still be Pending Claim (a failed claim is not retried automatically and does not become Failed; the player can claim again within the validity period); if Paused, see Q23.</div></div></div>
+  <div class="qa-row"><b>转交<small>Escalate</small></b><div class="bi"><div class="zh">多次失败：转技术，收集会员账号、时间、App 版本和截图。</div><div class="en">Repeated failures: Tech, with account, time, app version and screenshot.</div></div></div>
+</section>
+
+<section class="qa-card" id="qa17">
+  <h3><span class="qa-no">17</span><span class="bi-inline"><span class="zh">VIP 奖金能直接提现吗？</span><span class="en">Can I withdraw VIP bonuses right away?</span></span></h3>
+  <div class="qa-row"><b>回复玩家<small>Reply</small></b><div class="bi"><div class="en qa-reply">VIP bonuses need to meet the turnover requirement shown in the VIP rules before withdrawal (currently 1x the bonus amount).<button type="button" class="qa-copy">复制 Copy</button></div><div class="zh">VIP 奖金完成 VIP 规则中写明的流水后即可提现（目前为奖金金额的 1 倍）。</div></div></div>
+  <div class="qa-row"><b>客服核查<small>Check</small></b><div class="bi"><div class="zh">流水要求 = 奖励金额 × 到账时【VIP会员等级奖励配置】的流水倍数（本期列表不单独显示流水要求列）；玩家的剩余流水按平台现有流水稽核查询。</div><div class="en">Turnover = reward amount × the multiple set in 【VIP会员等级奖励配置】 at credit time (the list has no separate turnover column in this release); check the remaining turnover with the platform's existing turnover audit lookup.</div></div></div>
+  <div class="qa-row"><b>转交<small>Escalate</small></b><div class="bi"><div class="zh">提现稽核问题按现有流程。</div><div class="en">Withdrawal turnover issues follow the existing process.</div></div></div>
+</section>
+
+<section class="qa-card" id="qa18">
+  <h3><span class="qa-no">18</span><span class="bi-inline"><span class="zh">玩 Sports（体育）/ Perya / ESports 算 VIP 投注吗？</span><span class="en">Do Sports, Perya or ESports bets count for VIP?</span></span></h3>
+  <div class="qa-row"><b>回复玩家<small>Reply</small></b><div class="bi"><div class="en qa-reply">Only valid bets on Slot, Casino, Poker, Bingo, Arcade and Fishing games count toward VIP level-up and retention. Bets on other games, including Sports, Perya and ESports, do not count.<button type="button" class="qa-copy">复制 Copy</button></div><div class="zh">只有 Slot、Casino、Poker、Bingo、Arcade、Fishing 游戏的有效投注计入 VIP 升级和保级，Sports（体育）、Perya、ESports 等其他游戏不计入。</div></div></div>
+  <div class="qa-row"><b>客服核查<small>Check</small></b><div class="bi"><div class="zh">不需要查后台。</div><div class="en">No back-office check needed.</div></div></div>
+  <div class="qa-row"><b>转交<small>Escalate</small></b><div class="bi"><div class="zh">不需要。</div><div class="en">Not needed.</div></div></div>
+</section>
+
+<section class="qa-card" id="qa19">
+  <h3><span class="qa-no">19</span><span class="bi-inline"><span class="zh">有注单被取消了，我的等级会降吗？</span><span class="en">A bet was cancelled. Will my level drop?</span></span></h3>
+  <div class="qa-row"><b>回复玩家<small>Reply</small></b><div class="bi"><div class="en qa-reply">A cancelled bet is removed from your totals, but levels you have already reached and bonuses already paid are not taken back.<button type="button" class="qa-copy">复制 Copy</button></div><div class="zh">被取消的注单会从累计中扣除，但已达到的等级和已发放的奖金不会收回。</div></div></div>
+  <div class="qa-row"><b>客服核查<small>Check</small></b><div class="bi"><div class="zh">注单属于当月的，同时扣当月有效投注，可能影响本月保级；属于已结算月份的不重算。</div><div class="en">If the bet settled this month, this month's valid bets also drop and may affect retention; settled months are not recalculated.</div></div></div>
+  <div class="qa-row"><b>转交<small>Escalate</small></b><div class="bi"><div class="zh">不需要。</div><div class="en">Not needed.</div></div></div>
+</section>
+
+<section class="qa-card" id="qa20">
+  <h3><span class="qa-no">20</span><span class="bi-inline"><span class="zh">我的 Level 去哪了？为什么只有 VIP 了？</span><span class="en">Where is my Level? Why is there only VIP now?</span></span></h3>
+  <div class="qa-row"><b>回复玩家<small>Reply</small></b><div class="bi"><div class="en qa-reply">Member Levels have been replaced by the new VIP program, and Level Center is now VIP Center. Your VIP level is based on your total valid bets and total deposits, and comes with Upgrade, Monthly and Birthday Bonuses. Players who have not reached VIP1 yet are shown as "Member".<button type="button" class="qa-copy">复制 Copy</button></div><div class="zh">原来的会员 Level 已由新的 VIP 体系代替，等级中心（Level Center）改为 VIP中心。VIP 等级按累计有效投注和累计充值确定，提供升级奖金、月度奖金和生日奖金；还没达到 VIP1 的玩家显示为「会员」。</div></div></div>
+  <div class="qa-row"><b>客服核查<small>Check</small></b><div class="bi"><div class="zh">原 LEVEL 等级不再使用，后台【用户管理 › 会员等级】已改造为 VIP 体系并改名【用户管理 › VIP会员等级配置】；VIP 等级本期后台没有查询页，需核实时转运营由技术查库（Q23 已定不补）。原 LEVEL 历史记录保留（Q21 已定），玩家要求查询旧记录时转运营。</div><div class="en">Old Levels are no longer used; 【用户管理 › 会员等级】 now runs the VIP program and is renamed 【用户管理 › VIP会员等级配置】. The back office has no VIP level lookup page in this release; to verify a level, pass it to Operations for a database check (Q23: not added). Old Level records are kept (Q21); refer requests for them to Operations.</div></div></div>
+  <div class="qa-row"><b>转交<small>Escalate</small></b><div class="bi"><div class="zh">查询原 Level 历史记录：转运营。</div><div class="en">Requests for old Level history: Operations.</div></div></div>
+</section>
+
+<section class="qa-card" id="qa21">
+  <h3><span class="qa-no">21</span><span class="bi-inline"><span class="zh">我是 VIP 了，提款能更快吗？</span><span class="en">I'm a VIP now. Are my withdrawals faster?</span></span></h3>
+  <div class="qa-row"><b>回复玩家<small>Reply</small></b><div class="bi"><div class="en qa-reply">VIP levels currently come with Upgrade, Monthly and Birthday Bonuses. Withdrawal processing follows our normal withdrawal rules and does not change with your VIP level.<button type="button" class="qa-copy">复制 Copy</button></div><div class="zh">目前 VIP 等级提供升级奖金、月度奖金和生日奖金。提款处理按平台现有提款规则，不随 VIP 等级变化。</div></div></div>
+  <div class="qa-row"><b>客服核查<small>Check</small></b><div class="bi"><div class="zh">VIP 等级不改变支付层级，支付层级仍按现有方式维护；不要把 VIP 等级和支付层级混为一谈。</div><div class="en">VIP level does not change the payment tier; the payment tier is maintained as before. Do not mix them up.</div></div></div>
+  <div class="qa-row"><b>转交<small>Escalate</small></b><div class="bi"><div class="zh">支付层级问题转运营。</div><div class="en">Payment tier questions: Operations.</div></div></div>
+</section>
+
+<section class="qa-card" id="qa22">
+  <h3><span class="qa-no">22</span><span class="bi-inline"><span class="zh">我的 App 里找不到 VIP中心 / 页面显示暂未开放。</span><span class="en">I can't find VIP Center in my app / it says not available yet.</span></span></h3>
+  <div class="qa-row"><b>回复玩家<small>Reply</small></b><div class="bi"><div class="en qa-reply">Please update to the latest app or open VIP Center on our mobile site. If the page says "VIP is not available yet", it has not been opened; we'll let you know when it is.<button type="button" class="qa-copy">复制 Copy</button></div><div class="zh">请更新到最新版本 App 或在手机浏览器（H5）打开 VIP中心。如果页面显示「VIP 暂未开放」，说明还没有开放，开放后会通知你。</div></div></div>
+  <div class="qa-row"><b>客服核查<small>Check</small></b><div class="bi"><div class="zh">新版本 App 和 H5 的入口在个人中心（原 Level Center 位置）。老版本 App 没有 VIP中心入口，等级和奖金照常计算到账；老版本 App 原 Level Center 入口打开后的显示由技术上线前确认。看【VIP会员等级奖励配置】顶部的「VIP领取奖励」是否开启。</div><div class="en">On the latest app and H5, the entry is in the account page (where Level Center used to be). Old app versions have no VIP Center entry, but levels and bonuses still work; what the old Level Center entry shows in old apps will be confirmed by Tech before launch. Check whether "VIP领取奖励" (the VIP program switch) is on in 【VIP会员等级奖励配置】.</div></div></div>
+  <div class="qa-row"><b>转交<small>Escalate</small></b><div class="bi"><div class="zh">不需要。</div><div class="en">Not needed.</div></div></div>
+</section>
+
+<section class="qa-card" id="qa23">
+  <h3><span class="qa-no">23</span><span class="bi-inline"><span class="zh">VIP中心说我的部分奖金暂未发放 / 生日奖金暂不可领取。</span><span class="en">VIP Center says some bonuses are not paid yet / my Birthday Bonus can't be claimed.</span></span></h3>
+  <div class="qa-row"><b>回复玩家<small>Reply</small></b><div class="bi"><div class="en qa-reply">Some of your VIP bonuses are on hold for now. I have recorded your case and passed it to the relevant team for review. Your VIP level is still counted as usual.<button type="button" class="qa-copy">复制 Copy</button></div><div class="zh">你的部分 VIP 奖金目前暂缓发放，我已记录并转交相关同事处理。你的 VIP 等级照常计算。</div></div></div>
+  <div class="qa-row"><b>客服核查<small>Check</small></b><div class="bi"><div class="zh">记录状态「暂停发放（风控）」；原因（状态下方小字）可能是账号冻结、自我排除、风险分 ≥ 70，或「KYC 限制」开启时玩家未完成 KYC——这种情况请玩家先完成 KYC。不要向玩家说明内部原因或风险分。</div><div class="en">Status Paused (risk); the cause (small text under the status) may be account freeze, self-exclusion, risk score ≥ 70, or the KYC requirement being on while the player has not completed KYC — in that case, ask the player to complete KYC first. Do not tell the player internal reasons or scores.</div></div></div>
+  <div class="qa-row"><b>转交<small>Escalate</small></b><div class="bi"><div class="zh">转风控和运营，由运营放行或作废；不承诺发放和时限。</div><div class="en">Risk and Operations; Operations releases or voids. No promise of payment or time.</div></div></div>
+</section>
+
+<section class="qa-card" id="qa24">
+  <h3><span class="qa-no">24</span><span class="bi-inline"><span class="zh">升级弹窗写奖金审核中 / 领取后显示审核中。</span><span class="en">The pop-up or claim says the bonus is under review.</span></span></h3>
+  <div class="qa-row"><b>回复玩家<small>Reply</small></b><div class="bi"><div class="en qa-reply">Your bonus is under review and will be credited once approved. You will get a notification when it is credited.<button type="button" class="qa-copy">复制 Copy</button></div><div class="zh">你的奖金正在审核，审核通过后到账，到账时会通知你。</div></div></div>
+  <div class="qa-row"><b>客服核查<small>Check</small></b><div class="bi"><div class="zh">强制审核开启；记录状态「待审核」；被驳回的状态「已驳回」，状态下方小字为驳回原因。</div><div class="en">Mandatory review is on; status Pending Review; rejected records show Rejected with the reason in small text under it.</div></div></div>
+  <div class="qa-row"><b>转交<small>Escalate</small></b><div class="bi"><div class="zh">催审核、驳回申诉：转运营；不承诺时限。</div><div class="en">Review follow-up or rejection appeal: Operations; no time promise.</div></div></div>
+</section>
+
+<section class="qa-card" id="qa25">
+  <h3><span class="qa-no">25</span><span class="bi-inline"><span class="zh">为什么每月 1 日上午 VIP中心显示「上月结算中」？</span><span class="en">Why does VIP Center say last month's settlement is in progress on the 1st?</span></span></h3>
+  <div class="qa-row"><b>回复玩家<small>Reply</small></b><div class="bi"><div class="en qa-reply">Monthly settlement runs at 13:00 (GMT+8) on the 1st. Your level and Monthly Bonus update after settlement. If it is still in progress, it will update automatically when done; please check again later.<button type="button" class="qa-copy">复制 Copy</button></div><div class="zh">每月 1 日 13:00（GMT+8）进行月度结算，结算完成后等级和月度奖金才会更新。上月结算还在处理时，完成后会自动更新，请稍后查看。</div></div></div>
+  <div class="qa-row"><b>客服核查<small>Check</small></b><div class="bi"><div class="zh">结算期间升级仍会实时生效。</div><div class="en">Level-ups still apply in real time during this period.</div></div></div>
+  <div class="qa-row"><b>转交<small>Escalate</small></b><div class="bi"><div class="zh">13:30 后仍显示：转技术。</div><div class="en">Still shown after 13:30: Tech.</div></div></div>
+</section>
+
+<section class="qa-card" id="qa26">
+  <h3><span class="qa-no">26</span><span class="bi-inline"><span class="zh">以前的 Level 升级奖励、生日礼包、旧 VIP 福利还能领吗？</span><span class="en">Can I still claim my old Level Upgrade Reward, Birthday Gift or old VIP benefits?</span></span></h3>
+  <div class="qa-row"><b>回复玩家<small>Reply</small></b><div class="bi"><div class="en qa-reply">Sorry, when the new VIP program launched, all unpaid rewards from the old Member Levels and the old VIP program (such as Level Upgrade Rewards, Birthday Gifts and old VIP benefits) were cancelled and can no longer be claimed. Rewards already credited to your account are not affected. From now on, you can earn Upgrade, Monthly and Birthday Bonuses in VIP Center.<button type="button" class="qa-copy">复制 Copy</button></div><div class="zh">抱歉，新 VIP 体系上线时，原会员 Level 和旧版 VIP 所有未到账的奖励（如 Level 升级奖励、生日礼包、旧 VIP 福利）都已作废，不能再领取；已到账的奖励不受影响。之后你可以在 VIP中心获得升级奖金、月度奖金和生日奖金。</div></div></div>
+  <div class="qa-row"><b>客服核查<small>Check</small></b><div class="bi"><div class="zh">上线时未到账的（待领取、待审核、待派奖审核）一律作废，不补发、不折算到新 VIP；已到账的不追回。可按技术上线前导出的待作废清单核对玩家当时的奖励。原 LEVEL 实体奖品的配置和记录保留，本期不做实体奖品（Q21 已定）。</div><div class="en">Everything unpaid at launch (pending claim, pending review, pending payout review) was voided, with no reissue and no conversion into new VIP; credited rewards are not taken back. Check the voided-reward list exported by Tech before launch. Old Level physical prize settings and records are kept; physical prizes are not part of this release (Q21).</div></div></div>
+  <div class="qa-row"><b>转交<small>Escalate</small></b><div class="bi"><div class="zh">玩家坚持投诉、或问实体奖品：转运营；不承诺补发。</div><div class="en">Player insists on a complaint or asks about physical prizes: Operations; do not promise a reissue.</div></div></div>
+</section>
+
+<section class="qa-card" id="qa27">
+  <h3><span class="qa-no">27</span><span class="bi-inline"><span class="zh">旧 VIP 的返水和下注限额去哪了？</span><span class="en">Where are the old VIP rebates and bet limits?</span></span></h3>
+  <div class="qa-row"><b>回复玩家<small>Reply</small></b><div class="bi"><div class="en qa-reply">The old VIP program, including its rebates and bet limits, has been replaced by the new VIP program and is no longer used. The new VIP program offers Upgrade, Monthly and Birthday Bonuses; you can see the details in VIP Center.<button type="button" class="qa-copy">复制 Copy</button></div><div class="zh">旧版 VIP（包括其返水和下注限额）已由新 VIP 体系代替，不再使用。新 VIP 提供升级奖金、月度奖金和生日奖金，详情请在 VIP中心查看。</div></div></div>
+  <div class="qa-row"><b>客服核查<small>Check</small></b><div class="bi"><div class="zh">后台【用户管理 › VIP特权】和【活动配置 › 活动列表】中的旧版「VIP活动」（晋级礼金、每周红包等）已去掉：旧版 VIP0–VIP8、成长值、下注限额与返水（单注最大下注额、充值返水、体育返水等）都不再使用；新 VIP 等级不带返水和下注限额。</div><div class="en">【用户管理 › VIP特权】 and the old VIP promotion in 【活动配置 › 活动列表】 (promotion bonuses, weekly red packets, etc.) have been removed: old VIP0–VIP8, growth points, bet limits and rebates (max single bet, deposit rebate, sports rebate, etc.) are no longer used; the new VIP levels have no rebates or bet limits.</div></div></div>
+  <div class="qa-row"><b>转交<small>Escalate</small></b><div class="bi"><div class="zh">玩家坚持投诉：转运营。</div><div class="en">Player insists on a complaint: Operations.</div></div></div>
+</section>
+
+<section class="qa-card" id="qa28">
+  <h3><span class="qa-no">28</span><span class="bi-inline"><span class="zh">我降级了，怎么回到原来的等级？</span><span class="en">My level dropped. How do I get my old level back?</span></span></h3>
+  <div class="qa-row"><b>回复玩家<small>Reply</small></b><div class="bi"><div class="en qa-reply">After a drop, you can get your level back step by step. In any month, if your valid bets reach the retention bet of your current level, you get that level's Monthly Bonus as usual and move up 1 level the next month. This repeats each month, 1 level per month, until you are back at the highest level you have reached. If your total valid bets and total deposits reach the requirements of the level above your highest level, you level up to it right away. You can see this month's progress on your current level card in VIP Center.<button type="button" class="qa-copy">复制 Copy</button></div><div class="zh">降级后可以逐级回到原来的等级：任何一个月，只要当月有效投注达到你当前等级的保级投注，就照常获得当前等级的月度奖金，并在次月恢复 1 级；之后每个月都这样，每月恢复 1 级，最多恢复到你到达过的最高等级。如果累计有效投注和累计充值达到比你最高等级再高一级的要求，会立即升到那一级。本月进度可在 VIP中心当前等级卡上查看。</div></div></div>
+  <div class="qa-row"><b>客服核查<small>Check</small></b><div class="bi"><div class="zh">规则依据 PRD 规则 N16、N17：从 VIP1 降为会员的，当月达到 VIP1 保级投注，次月回到 VIP1（不发奖金）。恢复不重发升级奖金、不弹升级弹窗。上月是否已达到恢复条件，在【VIP月度结算记录】该月明细按会员账号查（结算结果「恢复」）。</div><div class="en">Per PRD rules N16 and N17: a player who dropped from VIP1 to Member returns to VIP1 next month if this month's valid bets reach VIP1's retention bet (no bonus). Restoring does not pay the Upgrade Bonus again and shows no level-up pop-up. To see whether last month's restore condition was met, search the account in that month's 【VIP月度结算记录】 details (result "Restored").</div></div></div>
+  <div class="qa-row"><b>转交<small>Escalate</small></b><div class="bi"><div class="zh">已达到当前等级保级投注，次月仍未恢复：转技术。</div><div class="en">Retention bet of the current level met but not restored next month: escalate to Tech.</div></div></div>
+</section>
+
+<section class="qa-card" id="qa29">
+  <h3><span class="qa-no">29</span><span class="bi-inline"><span class="zh">我的等级名为什么变了（如 SUPER VIP 变成 VIP25）？</span><span class="en">Why did my level name change (e.g., SUPER VIP became VIP25)?</span></span></h3>
+  <div class="qa-row"><b>回复玩家<small>Reply</small></b><div class="bi"><div class="en qa-reply">We have adjusted the VIP levels, so some level names have changed. Your level itself is the same; only its name is different. You can see the current levels and bonuses in VIP Center.<button type="button" class="qa-copy">复制 Copy</button></div><div class="zh">我们调整了 VIP 等级，部分等级的名称有变化。你所在的等级没有变，只是名称不同。当前的等级和奖金可在 VIP中心查看。</div></div></div>
+  <div class="qa-row"><b>客服核查<small>Check</small></b><div class="bi"><div class="zh">运营在【VIP会员等级配置】新增或删除了等级：新增时原 SUPER VIP 顺延为 VIP25；只能删除最高一级，删除后原次高级改名为 SUPER VIP，其他等级名不变（PRD 规则 N49、N50）。如果玩家原来的等级（最高一级）被删除，玩家已改为低一级（新的 SUPER VIP），不算降级、不发升级奖金，这种情况不能按上面的回复，转运营。</div><div class="en">Operations added or removed a level in 【VIP会员等级配置】: adding one renames the old SUPER VIP to VIP25; only the top level can be removed, and then the level below it is renamed SUPER VIP while other names stay the same (PRD rules N49, N50). If the player's own (top) level was removed, they were moved down 1 level (the new SUPER VIP), not counted as a drop and with no Upgrade Bonus; do not use the reply above, refer to Operations.</div></div></div>
+  <div class="qa-row"><b>转交<small>Escalate</small></b><div class="bi"><div class="zh">玩家原等级被删除、或对新等级有异议：转运营。</div><div class="en">Player's level was removed, or the player disputes the new level: Operations.</div></div></div>
+</section>
+
+<h2 id="q4">转交与升级 <span class="en-t">Escalation</span></h2>
+<div class="tbl"><table class="qa-tbl">
+  <thead><tr><th>情况 <small>Situation</small></th><th>转给 <small>To</small></th></tr></thead>
+  <tbody>
+  <tr><td class="bi"><div class="zh">条件已满足但没有升级、没有奖金记录、结算未完成或结果异常；领取多次失败。收集：会员账号、发生时间（GMT+8）、App 版本、截图。</div><div class="en">Conditions met but no level-up or record, settlement unfinished or wrong, repeated claim failures. Collect: account, time (GMT+8), app version, screenshot.</div></td><td class="bi"><div class="zh">技术</div><div class="en">Tech</div></td></tr>
+  <tr><td class="bi"><div class="zh">奖金待审核、驳回申诉、发放失败需补发、上线定级投诉、原 Level / 旧版 VIP 奖励作废投诉、查询原 Level 历史记录。收集：会员账号、奖励类型、申请领取时间、奖励金额。</div><div class="en">Pending review, rejection appeals, failed payouts needing reissue, launch-leveling complaints, complaints about voided old Level / old VIP rewards, requests for old Level history. Collect: account, reward type, claim-request time, amount.</div></td><td class="bi"><div class="zh">运营</div><div class="en">Operations</div></td></tr>
+  <tr><td class="bi"><div class="zh">奖金「暂停发放（风控）」。收集：会员账号、奖励类型、申请领取时间、奖励金额。</div><div class="en">Bonus Paused (risk). Collect: account, reward type, claim-request time, amount.</div></td><td class="bi"><div class="zh">风控、运营</div><div class="en">Risk, Operations</div></td></tr>
+  </tbody>
+</table></div>
+
+<h2 id="q5">资料未覆盖的问题 <span class="en-t">Not covered yet</span></h2>
+<ul class="qa-open">
+  <li class="bi"><div class="zh">PC 网页能否看 VIP中心（PRD 待确认）：统一转运营确认，不自行答复。</div><div class="en">Whether VIP Center is available on PC web (pending): refer to Operations.</div></li>
+  <li class="bi"><div class="zh">VIP 等级是否会带来专属客服、极速提款、专属活动等权益：本期不做，以后是否提供资料未覆盖，转运营。</div><div class="en">Whether VIP brings dedicated support, fast withdrawal or exclusive promotions: not in this release; future plans not covered, refer to Operations.</div></li>
+  <li class="bi"><div class="zh">修改 KYC 出生日期后生日奖金的日期如何变化（同一年只发 1 次以外的细节）：转运营。</div><div class="en">How changing the KYC birth date affects the Birthday Bonus date (beyond once per year): refer to Operations.</div></li>
+  <li class="bi"><div class="zh">各等级门槛和奖金以后是否调整、何时调整：转运营。</div><div class="en">Whether or when level requirements and bonuses will change: refer to Operations.</div></li>
+  <li class="bi"><div class="zh">原 Level 和旧版 VIP 的历史记录（已保留，Q21）在哪里查询；原 Level 实体奖品以后是否发放：转运营。</div><div class="en">Where old Level and old VIP history (kept, Q21) can be looked up; whether old Level physical prizes will be given out later: refer to Operations.</div></li>
+  <li class="bi"><div class="zh">老版本 App 的原 Level Center 入口打开后显示什么（技术上线前确认）：建议玩家更新 App。</div><div class="en">What the old Level Center entry shows in old app versions (to be confirmed by Tech): ask the player to update the app.</div></li>
+  <li class="bi"><div class="zh">运营新增、删除 VIP 等级后，是否会通知玩家等级名变化（PRD 待确认 Q24）：玩家询问时按第 29 条回复。</div><div class="en">Whether players are notified of level name changes after Operations adds or removes VIP levels (pending Q24): reply as in Q29.</div></li>
+</ul>
+
+</article></div>
+</div>
+<script>window.NAV_ROOT = "../../";</script>
+<script src="../../assets/nav-data.js"></script>
+<script src="../../assets/nav.js"></script>
+<script>
+(function () {
+  /* 语言切换：双语 / 中文 / English，记在本机浏览器 */
+  var KEY = "VIP会员体系功能需求-v1.2-客服QA-lang";
+  function set(l) {
+    document.body.dataset.lang = l;
+    document.querySelectorAll(".qa-lang button").forEach(function (b) { b.setAttribute("aria-pressed", b.dataset.l === l); });
+    try { localStorage.setItem(KEY, l); } catch (e) {}
+  }
+  document.querySelectorAll(".qa-lang button").forEach(function (b) { b.onclick = function () { set(b.dataset.l); }; });
+  try { var s = localStorage.getItem(KEY); if (s) set(s); } catch (e) {}
+  /* 复制英文回复 */
+  document.addEventListener("click", function (e) {
+    var b = e.target.closest(".qa-copy"); if (!b) return;
+    var box = b.parentNode.cloneNode(true); box.querySelector(".qa-copy").remove();
+    var text = box.textContent.trim();
+    function done(ok) { b.textContent = ok ? "已复制 Copied" : "复制失败 Failed"; setTimeout(function () { b.textContent = "复制 Copy"; }, 1500); }
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(function () { done(true); }, function () { done(fallback(text)); });
+    else done(fallback(text));
+  });
+  function fallback(text) {
+    var t = document.createElement("textarea"); t.value = text; t.style.cssText = "position:fixed;left:-9999px"; document.body.appendChild(t); t.select();
+    var ok = false; try { ok = document.execCommand("copy"); } catch (e) {}
+    t.remove(); return ok;
+  }
+})();
+</script>
+</body>
+</html>
