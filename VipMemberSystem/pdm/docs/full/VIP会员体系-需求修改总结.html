@@ -11,7 +11,7 @@
 <div class="desk"><article class="paper sum">
 
 <h1 class="doc-title">VIP会员体系-完整需求-需求修改总结</h1>
-<div class="doc-meta"><span id="sumVer">最新版本：—</span><span id="sumAt">提交时间：—</span><span id="sumSeal">状态：—</span></div>
+<div class="doc-meta"><span id="sumVer">最新版本：-</span><span id="sumAt">提交时间：-</span><span id="sumSeal">状态：-</span></div>
 <p class="sum-note">※ 这里显示最新一版运营需求修改意见、产品回复和补充，数据来自云端，换电脑、换浏览器都能看到，每分钟自动刷新。</p>
 <div class="oc-sync" id="sumSync"></div>
 <div class="sum-acts"><a class="sum-btn pri" href="VIP会员体系-运营需求确认.html">去运营需求确认 ›</a><a class="sum-btn" href="VIP会员体系-运营需求确认.html#versions" id="allVers">查看全部版本</a></div>
@@ -46,7 +46,7 @@
     }
     var v = V[0], rows = v.rows || [];
     $("sumVer").textContent = "最新版本：v" + v.major + "." + v.minor + "（共 " + V.length + " 个版本）";
-    $("sumAt").textContent = "提交时间：" + (v.at || "—");
+    $("sumAt").textContent = "提交时间：" + (v.at || "-");
     $("sumSeal").textContent = "状态：" + (S.sealed ? "已于 " + S.sealed.at + "（GMT+8）" + (OCStore.ROLE_NAME[S.sealed.role] ? "由" + OCStore.ROLE_NAME[S.sealed.role] : "") + "封板（最终版本 v" + S.sealed.ver + "）" : "未封板");
     var cnt = {}; DEC.forEach(function (d) { cnt[d] = 0; });
     var replied = 0;

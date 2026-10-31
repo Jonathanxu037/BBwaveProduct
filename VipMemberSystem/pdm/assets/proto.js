@@ -154,7 +154,7 @@
   function miss(el) { if (preview && el && el.classList) el.classList.add("en-miss"); }
   function walk(n) {
     if (n.nodeType === 3) { var r = tr(n.nodeValue); if (r) n.nodeValue = r; else if (r === undefined) miss(n.parentNode); return; }
-    if (n.nodeType !== 1 || n.tagName === "SCRIPT" || n.tagName === "STYLE" || (n.classList && n.classList.contains("ui-reqnote"))) return;   /* 需求说明文字不翻译 */
+    if (n.nodeType !== 1 || n.tagName === "SCRIPT" || n.tagName === "STYLE" || (n.classList && (n.classList.contains("ui-reqnote") || n.classList.contains("ui-devtag")))) return;   /* 需求说明文字、研发说明标签不翻译 */
     ATTRS.forEach(function (a) {
       if (a === "value" && !(n.tagName === "BUTTON" || (n.tagName === "INPUT" && /^(button|submit|reset)$/i.test(n.type)))) return;
       var v = n.getAttribute(a); if (!v) return;

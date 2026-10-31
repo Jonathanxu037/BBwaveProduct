@@ -12,10 +12,12 @@ window.NAV_DATA = {
   children: [
     { title: "版本规划", href: "prototype/v1.2/front/VIP会员体系-VIP中心页面.html", bar: "#D8242F", children: [
       { title: "v1.2 迭代", href: "prototype/v1.2/front/VIP会员体系-VIP中心页面.html", bar: "#E8C06A", children: [
+          { title: "版本需求说明", href: "docs/v1.2/VIP会员体系-版本需求说明.html", type: "doc", roles: [] },   /* 2026-10-31 新建，只有产品可看 */
           { title: "原型页面", href: "prototype/v1.2/front/VIP会员体系-VIP中心页面.html", children: [
             { title: "前台页面", href: "prototype/v1.2/front/VIP会员体系-VIP中心页面.html", children: [
               { title: "VIP中心页面", href: "prototype/v1.2/front/VIP会员体系-VIP中心页面.html", type: "page" },
-              { title: "VIP通知页面", href: "prototype/v1.2/front/VIP会员体系-VIP通知页面.html", type: "page" }
+              { title: "VIP通知页面", href: "prototype/v1.2/front/VIP会员体系-VIP通知页面.html", type: "page" },
+              { title: "升级通知动画页面", href: "prototype/v1.2/front/VIP会员体系-升级通知动画页面.html", type: "page" }   /* 2026-10-30 新增（用户「前台页面增加一个页面，升级通知动画」） */
             ]},
             { title: "后台页面", href: "prototype/v1.2/admin/VIP会员体系-后台VIP配置页面.html", children: [
               { title: "后台VIP会员等级配置页面", href: "prototype/v1.2/admin/VIP会员体系-后台VIP配置页面.html", type: "admin" }   /* 2026-10-28 按现网【用户管理 › 会员等级】三个页签重做，合并为一个页面；文件名沿用以保留已有链接和运营意见；2026-10-29 名称统一为「后台VIP会员等级配置页面」 */
@@ -24,14 +26,18 @@ window.NAV_DATA = {
           { title: "需求文档", href: "docs/v1.2/VIP会员体系-需求要点.html", children: [
             { title: "开发文档", href: "docs/v1.2/VIP会员体系-需求要点.html", children: [
               { title: "需求要点", href: "docs/v1.2/VIP会员体系-需求要点.html", type: "doc", roles: ["dev"] },
-              { title: "需求开发PRD文档", href: "docs/v1.2/VIP会员体系-需求开发PRD文档.html", type: "doc", roles: ["dev", "repo"] },
+              { title: "需求开发PRD文档", href: "docs/v1.2/VIP会员体系-需求开发PRD文档.html", type: "doc", roles: ["dev", "repo"], children: [
+              { title: "附录 D 页面控件说明", href: "docs/v1.2/VIP会员体系-需求开发PRD文档.html#appD" }   /* 2026-10-30 规范 v5.99 研发说明标签 */
+            ] },
               { title: "开发自查清单", href: "docs/v1.2/VIP会员体系-开发自查清单.html", type: "doc", roles: ["dev"] }
             ]},
             { title: "运营文档", href: "docs/v1.2/VIP会员体系-需求修改总结.html", children: [
               { title: "需求修改总结", href: "docs/v1.2/VIP会员体系-需求修改总结.html", type: "doc", roles: ["opr"] },
               { title: "运营需求确认", href: "docs/v1.2/VIP会员体系-运营需求确认.html", type: "doc", roles: ["opr"] },
               { title: "文案确认", href: "docs/v1.2/VIP会员体系-文案确认.html", type: "doc", roles: ["opr"] },
-              { title: "后台操作手册", href: "docs/v1.2/VIP会员体系-后台操作手册.html", type: "doc", roles: ["opr"] },
+              { title: "后台操作手册", href: "docs/v1.2/VIP会员体系-后台操作手册.html", type: "doc", roles: ["opr"], children: [
+              { title: "02A 短信提醒设置", href: "docs/v1.2/VIP会员体系-后台操作手册.html#m2s" }   /* 2026-10-30 用户要求短信提醒独立成节 */
+            ] },
               { title: "客服QA", href: "docs/v1.2/VIP会员体系-客服QA.html", type: "doc", roles: ["opr"] },
               { title: "需求问题", href: "docs/v1.2/VIP会员体系-需求问题.html", type: "doc", roles: ["opr"] }
             ]},

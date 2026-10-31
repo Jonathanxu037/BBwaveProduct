@@ -1,120 +1,17 @@
 <!doctype html>
-<html lang="zh-CN">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>VIP会员体系-需求与原型中心</title>
-<link rel="stylesheet" href="assets/style.css">
-</head>
-<body>
-<div class="with-nav">
-<main class="home">
-  <div class="home-head">
-    <div>
-      <h1>需求与原型中心</h1>
-      <p>VIP会员体系 · 需求包按访问链接的角色显示可查看的页面</p>
-    </div>
-    <div class="hbtns"><button class="obtn" type="button" id="ex">全部展开</button><button class="obtn" type="button" id="co">全部收起</button></div>
-  </div>
-
-  <section class="reqcard">
-    <div class="reqcard-h"><b>VIP会员体系 · 会员等级改造为 VIP 体系（双门槛升级、月度保级、生日奖金） · v1.2</b><small>VIP会员体系功能需求</small></div>
-    <div class="reqcard-b">
-      <div>
-        <p style="margin:0 0 6px">当前迭代 v1.2：把现网【用户管理 › 会员等级】改造为 VIP 体系，替换原 LEVEL，旧版 VIP（VIP特权、旧版 VIP活动）完全移除。VIP0 + VIP1–VIP24、SUPER VIP（默认 26 档，后台可新增最高级、删除最高级）；VIP0 前台、后台都显示「VIP0」，前台等级按段位显示样式；累计有效投注和累计充值同时达标即实时升级，每级生成一次升级奖金：任何页面弹 3 秒动画，回到平台页面在确认弹窗点「领取奖金」领取；每月 1 日 13:00（GMT+8）结算，按当月达到保级投注的最高等级 k（不超过历史最高）生成月度工资，未保级次月只降 1 级，降级玩家可一次恢复多级；「KYC 限制」开启时完成 KYC 补发已达到等级的升级奖金；三种奖金都由玩家在等级卡「查看详情」弹窗里手动领取，升级奖金、月度工资默认 7 天有效、生日奖金 15 天，过期作废；不设审核（用户 2026-10-29 更新）。后台 4 个页签：VIP会员等级配置、VIP会员等级奖励配置、活动奖励统计、VIP月度结算记录；前台 Level Center 改为 VIP中心。</p>
-        <div class="facts">
-          <div><b>3</b><span>前台原型页面</span></div>
-          <div><b>1</b><span>后台原型页面</span></div>
-          <div><b>9</b><span>大功能点</span></div>
-          <div><b>32</b><span>子功能点</span></div>
-          <div><b>50</b><span>本需求规则</span></div>
-          <div><b>24</b><span>待确认事项</span></div>
-        </div>
-        <p style="margin:0 0 6px">按多迭代需求包分为四套文档，每套是一份独立、完整、可单独交给开发的需求；v1.2 为当前迭代，v1.0、v1.1、完整需求已于 2026-10-27 封存（只有产品可看）。上方统计为完整需求口径，打包时自动刷新：</p>
-        <div class="tbl" style="margin:0 0 8px"><table class="mini">
-          <tr><th>文档</th><th>范围（与该迭代 PRD「需求描述」和第 0 章一致）</th><th>前台原型页面</th><th>后台原型页面</th><th>大 / 子功能点</th><th>规则</th><th>待确认</th><th>云端主题（运营意见）</th></tr>
-          <tr><td>v1.2 迭代（当前）</td><td class="w">在现有【用户管理 › 会员等级】模块上改造为 VIP 体系（菜单改名「VIP会员等级配置」）：默认 VIP1–VIP24、SUPER VIP 共 25 个 VIP 等级，门槛和奖金可改，可在最高一级之上新增等级、删除最高一级（最多 60 个）；未达到 VIP1 的为 VIP0（前台、后台都显示 VIP0）；累计有效投注和累计充值同时达标实时升级并生成升级奖金；每月 1 日 13:00（GMT+8）结算，按 k 级生成月度工资、未保级次月降 1 级、降级玩家可一次恢复多级；完成 KYC 补发升级奖金；不设审核；前台段位样式；生日奖金金额按生日所在月份 1 日结算后的等级确定；三种奖金都由玩家手动领取（以上为用户 2026-10-29 更新）；原 LEVEL 不再使用、Level Center 改为 VIP中心，旧版 VIP 体系（【VIP特权】和旧版 VIP活动）被完全替换；后台 4 个页签（VIP会员等级配置、VIP会员等级奖励配置、活动奖励统计、VIP月度结算记录）；不做成长值、实体奖品</td><td>3</td><td>1</td><td>9 / 32</td><td>50</td><td>24</td><td>VIP会员体系-v1.2</td></tr>
-          <tr><td>v1.0 迭代</td><td class="w">以原方案和 Claire 答复为准：VIP 等级固定为 VIP1–VIP24、SUPER VIP 共 25 级，不能新增、关闭；升级、保级奖励自动到账，生日奖励由玩家在等级中心领取；普通用户没有等级，前台不显示 LEVEL，没有 VIP 等级的玩家显示「普通用户」；不含实体奖品（C-10）；【会员等级】保持线上现状、不改</td><td>2</td><td>3</td><td>7 / 33</td><td>59</td><td>13</td><td>VIP会员体系-v1.0</td></tr>
-          <tr><td>v1.1 迭代</td><td class="w">包含 v1.0 全部内容，范围与完整需求相同：【会员等级】配套改造（前台显示方式、等级表并入下注限额与返水、添加 / 修改 / 删除等级、场馆成长值倍数）；VIP 等级新增、关闭和复核，SUPER VIP 只是等级名称、不作为最高等级标识（规则 N74）；奖励领取方式（自动到账 / 手动领取）；VIP奖品配置（只做「VIP 等级 → 奖品」和活动库存预占，领取、审核、发货由「实体奖品管理」需求负责）</td><td>2</td><td>4</td><td>8 / 41</td><td>68</td><td>17</td><td>VIP会员体系-v1.1</td></tr>
-          <tr><td>完整需求</td><td class="w">全部功能（与 v1.1 迭代一致）</td><td>2</td><td>4</td><td>8 / 41</td><td>68</td><td>17</td><td>VIP会员体系</td></tr>
-        </table></div>
-        <p style="margin:0"><span class="warn-2">※ 实体奖品：v1.0 不含实体奖品（C-10）；v1.1 和完整需求只做「VIP 等级 → 奖品」的选择和活动库存预占，实体奖品的领取、审核、扣库存和发货由「实体奖品管理」需求负责（各迭代 PRD 第 0 章、规则 N72）。</span></p>
-        <div class="tbl" style="margin-top:12px"><table class="mini">
-          <tr><th>版本号</th><th>时间</th><th>修改人</th><th>概述</th></tr>
-          <tr><td>v1.2</td><td>2026-10-29</td><td>Joshua</td><td>v1.2 迭代：基于现网会员等级模块改造为 VIP 体系（替换 LEVEL，去掉旧版 VIP特权）；26 档双门槛实时升级、按月保级降级与恢复（10-29 改为 k 级月度工资、可一次恢复多级）、月度工资和生日奖金；10-29 追加：VIP0 统一命名、KYC 补发升级奖金、不设审核、段位样式、三种奖金手动领取（升级确认弹窗、详情弹窗领取）；后台 4 个页签（含新增删除等级、VIP领取奖励开关、VIP月度结算记录）；新增等级规则推演文档</td></tr>
-          <tr><td>v1.0</td><td>2026-10-12</td><td>Joshua</td><td>创建VIP会员体系 v1.0</td></tr>
-        </table></div>
-      </div>
-      <div class="ltree" id="tree"></div>
-    </div>
-</section>
-
-  <section class="reqcard arch">
-    <div class="reqcard-h"><b>需求文档架构图</b><small>按角色和需求文件展示整体结构：各角色能访问哪些页面、打开后的默认页</small></div>
-    <div class="arch-b" id="arch"></div>
-  </section>
-
-  <section class="reqcard oc-log">
-    <div class="reqcard-h"><b>运营需求修改记录</b><small>按提交时间倒序，最新提交的在最上面</small></div>
-    <div class="reqcard-b oc-log-b">
-      <p class="oc-log-note">※ 运营需求修改意见按迭代分开提交和保存（v1.2、v1.0、v1.1、完整需求各一份）；运营提交的版本、产品回复和补充都保存在云端，换电脑、换浏览器打开都能看到，每分钟自动刷新；产品输入产品密码后才能读取。重新打包上传不会删除或覆盖这些记录。</p>
-      <div id="ocLogs"></div>
-    </div>
-  </section>
-</main>
-</div>
-<script>window.NAV_ROOT = "";</script>
-<script src="assets/nav-data.js"></script>
-<script src="assets/nav.js"></script>
-<script src="assets/oc-store.js"></script>
-<script src="assets/arch.js"></script>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>VIP会员体系 需求</title>
+<style>:root{--bg:#F5F5F4;--card:#fff;--fg:#1B1720;--muted:#6A6076;--gold:#C89A3C}
+@media (prefers-color-scheme: dark){:root{--bg:#17151b;--card:#1f1c25;--fg:#E6E1EC;--muted:#A79DB3}}
+body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);color:var(--fg);font-family:"Microsoft YaHei","微软雅黑",sans-serif;padding:16px;box-sizing:border-box}
+.c{max-width:460px;background:var(--card);border-top:4px solid var(--gold);border-radius:10px;padding:28px 32px;box-shadow:0 4px 16px rgba(22,5,47,.1)}
+h1{font-size:19px;margin:0 0 10px}p{font-size:14px;line-height:1.7;color:var(--muted);margin:0}</style>
 <script>
-var t = NAV.buildTree(document.getElementById("tree"), { light: true });
-ARCH.render(document.getElementById("arch"));
-document.getElementById("ex").onclick = t.expandAll;
-document.getElementById("co").onclick = t.collapseAll;
-
-/* 运营需求修改记录：按迭代分开（需求包框架规范第 3 节「多迭代需求包」），每个迭代云端优先（读不到云端时用本机缓存），数据与该迭代「运营需求确认」页同源，按提交时间倒序。
-   云端主题：v1.2 =「VIP会员体系-v1.2」，v1.0 =「VIP会员体系-v1.0」，v1.1 =「VIP会员体系-v1.1」，完整需求沿用拆分前的「VIP会员体系」（保留已有的运营意见，不能改名） */
+/* 没有分身份的链接（仓库根地址）：先进这台电脑上次使用的角色站点，没有记录时进产品站点（要输密码） */
 (function () {
-  var ITERS = [["v1.2", "v1.2 迭代", "VIP会员体系-v1.2"], ["v1.0", "v1.0 迭代", "VIP会员体系-v1.0"], ["v1.1", "v1.1 迭代", "VIP会员体系-v1.1"], ["full", "完整需求", "VIP会员体系"]];
-  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
-  var box = document.getElementById("ocLogs");
-  ITERS.forEach(function (it) {
-    var TOPIC = it[2];
-    var CONFIRM = "docs/" + it[0] + "/VIP会员体系-运营需求确认.html";
-    var KEY = OCStore.key(TOPIC);
-    var sec = document.createElement("div"); sec.className = "oc-log-it";
-    sec.innerHTML = '<h3 style="margin:14px 0 6px;font-size:14px">' + it[1] + ' <a style="font-size:12px;font-weight:400" href="' + CONFIRM + '">去运营需求确认 ›</a></h3>' +
-      '<div class="oc-sync"></div><div class="tbl"><table class="mini oc-log-t"><thead><tr><th>提交时间</th><th>版本</th><th>版本名称</th><th>条数</th><th>产品已回复</th><th>是否修改</th><th></th></tr></thead>' +
-      '<tbody><tr><td colspan="7" class="oc-log-empty">正在读取…</td></tr></tbody></table></div><p class="oc-log-foot"></p>';
-    box.appendChild(sec);
-    var body = sec.querySelector("tbody"), foot = sec.querySelector(".oc-log-foot");
-    function renderLog(S) {
-      var V = OCStore.byTime(S && S.versions);
-      if (!V.length) {
-        body.innerHTML = '<tr><td colspan="7" class="oc-log-empty">还没有运营提交的需求修改记录。</td></tr>';
-      } else {
-        body.innerHTML = V.map(function (v, i) {
-          var s = OCStore.stats(v), d = s.dec;
-          var href = CONFIRM + "#ver=" + encodeURIComponent(v.name);
-          return "<tr" + (i === 0 ? ' class="latest"' : "") + "><td>" + esc(v.at || "-") + (i === 0 ? ' <span class="oc-new">最新</span>' : "") + "</td>" +
-            "<td><b>v" + v.major + "." + v.minor + "</b></td>" +
-            '<td class="w">' + esc(v.name) + (v.from ? '<div class="oc-log-from">由「' + esc(v.from) + "」修改</div>" : "") + "</td>" +
-            "<td>" + s.total + "</td><td>" + s.replied + " / " + s.total + "</td>" +
-            '<td class="w"><span class="oc-dtag d确认修改">确认修改 ' + d["确认修改"] + '</span> <span class="oc-dtag d部分修改">部分修改 ' + d["部分修改"] + '</span> <span class="oc-dtag d不修改">不修改 ' + d["不修改"] + '</span> <span class="oc-dtag d待确认">待确认 ' + d["待确认"] + "</span></td>" +
-            '<td><a href="' + href + '">查看 ›</a></td></tr>';
-        }).join("");
-      }
-      foot.textContent = V.length
-        ? "共 " + V.length + " 个版本" + (S.sealed ? "；已于 " + S.sealed.at + "（GMT+8）" + (OCStore.ROLE_NAME[S.sealed.role] ? "由" + OCStore.ROLE_NAME[S.sealed.role] : "") + "封板，最终版本 v" + S.sealed.ver : "；未封板")
-          + (OCStore.sealLog(S).length ? "。封板记录：" + OCStore.sealLog(S).map(OCStore.sealLine).join("；") : "")
-        : "";
-    }
-    OCStore.read(KEY).then(renderLog);
-    OCSync.bar(sec.querySelector(".oc-sync"), KEY, TOPIC, renderLog);   /* 从云端或共享文件夹读取该迭代运营提交的版本 */
-  });
+  var r = ""; try { r = localStorage.getItem("req-role") || ""; } catch (e) {}
+  if (!/^(pdm|opr|dev|repo)$/.test(r)) r = "pdm";
+  location.replace(r + "/");
 })();
-</script>
-</body>
-</html>
+</script></head>
+<body><div class="c"><h1>VIP会员体系 需求</h1><p>正在进入……如果没有自动跳转，请使用发给你的访问链接打开。</p></div></body></html>

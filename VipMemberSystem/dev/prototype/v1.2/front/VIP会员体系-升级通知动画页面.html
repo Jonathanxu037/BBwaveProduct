@@ -1,0 +1,412 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>VIP会员体系-v1.2-升级通知动画页面</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<link rel="stylesheet" href="../../../assets/vip.css">
+<style>
+/* 本页专用（v1.2，用户 2026-10-30 新增页面「升级通知动画」）：动画类名 ua- 前缀；大厅、第三方游戏页、确认弹窗沿用 VIP通知页面的 vn- 样式 */
+.vn-lobby{padding:12px 16px!important;background:#10141c}
+.vn-lobby .tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}
+.vn-lobby .tiles div{height:70px;border-radius:10px;background:#1a2030;display:grid;place-items:center;color:#8b94a8;font-size:12px}
+.vn-mask{position:absolute;inset:30px 0 0;background:rgba(5,8,12,.72);display:grid;place-items:center;padding:22px;z-index:5}
+.vn-mask[hidden]{display:none}
+.vn-dlg{position:relative;width:100%;background:linear-gradient(180deg,#2a1b3c,#16101f);border:1.5px solid #d4af37;border-radius:16px;padding:22px 16px 16px;text-align:center;color:#f2f4f8}
+.vn-dlg h3{margin:0;font-size:20px;color:#f6d77b}
+.vn-dlg .bg{display:inline-block;margin:12px 0 6px;background:linear-gradient(90deg,#f6dc8c,#c8962e);color:#3a2600;font-weight:900;border-radius:12px;padding:3px 14px;font-size:16px}
+.vn-dlg p{margin:6px 0;font-size:13.5px}
+.vn-dlg .amt{font-size:15px;font-weight:800;color:#f6dc8c}
+.vn-items{margin:8px auto 2px;max-width:220px;font-size:13px;text-align:left}
+.vn-items[hidden]{display:none}
+.vn-items div{display:flex;justify-content:space-between;padding:3px 2px;border-bottom:1px dashed rgba(246,220,140,.25)}
+.vn-items div span:last-child{font-variant-numeric:tabular-nums;color:#f6dc8c}
+.vn-items div.sum{border-bottom:0;border-top:1px solid rgba(246,220,140,.6);margin-top:2px;font-weight:800}
+.vn-dlg .acts{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.vn-dlg .ux{all:unset;cursor:pointer;position:absolute;top:8px;right:8px;width:28px;height:28px;border-radius:50%;text-align:center;font:700 18px/28px Arial,sans-serif;color:#cbb7da;background:rgba(255,255,255,.08)}
+.vn-dlg .ux:focus-visible{outline:2px solid #f6d77b;outline-offset:2px}
+.vn-dlg .acts button{all:unset;cursor:pointer;text-align:center;height:40px;line-height:40px;border-radius:10px;font-weight:700;font-size:13.5px}
+.vn-dlg .acts button:focus-visible{outline:2px solid #f6d77b;outline-offset:2px}
+.vn-dlg .acts .pri{background:linear-gradient(90deg,#f6dc8c,#c8962e);color:#3a2600}
+.vn-dlg .acts .sec{border:1px solid #4a3d5e;color:#e7e1f0}
+.vn-game{padding:0!important;background:radial-gradient(120% 80% at 50% 30%,#3b1c0e,#0b0604)}
+.vn-game .gbar{display:flex;align-items:center;gap:8px;padding:8px 12px;background:rgba(0,0,0,.55);color:#f2f4f8;font-size:13px}
+.vn-game .gbar button{all:unset;cursor:pointer;font-weight:800;color:#f6dc8c}
+.vn-game .gbar button:focus-visible{outline:2px solid #f6dc8c}
+.vn-game .reel{margin:40px auto 0;width:80%;height:180px;border-radius:14px;border:3px solid #c8962e;background:repeating-linear-gradient(90deg,#1c1008 0 33%,#2a170b 33% 34%);display:grid;place-items:center;color:#f6dc8c;font-size:28px;letter-spacing:10px}
+/* 确认弹窗徽章段位颜色（规则 N51，与 VIP通知页面一致） */
+.tr-bronze{background:linear-gradient(135deg,#fbe3cb,#b8713b 70%,#8a4e22)!important;color:#2e1405!important}
+.tr-silver{background:linear-gradient(135deg,#ffffff,#b9c1ca 70%,#8e98a3)!important;color:#18222d!important}
+.tr-gold{background:linear-gradient(135deg,#fff4cf,#d9a441 70%,#b07a1e)!important;color:#4a3008!important}
+.tr-plat{background:linear-gradient(135deg,#effffc,#7fd0c6 70%,#3f9f96)!important;color:#08332f!important}
+.tr-diamond{background:linear-gradient(135deg,#f4f2ff,#9db0ff 70%,#6d7cf0)!important;color:#121a52!important}
+.tr-star{background:linear-gradient(140deg,#2a3590,#24195e 55%,#0a0d2e)!important;color:#eef2ff!important;border:1.5px solid #8f9cff}
+.tr-glory{background:radial-gradient(120% 90% at 20% 0%,#b3192c,#7a0e1e 45%,#3a0610)!important;color:#ffe08a!important;border:1.5px solid #f2c94c}
+
+/* ===== 升级 3 秒提示动画（规则 N34 · F08-01，用户 2026-10-30 调整动效，同日再调：文字更粗、LEVEL UP 盖住徽章上沿、VIPn 狠砸、整体放大到屏宽 95%）：
+   画面按 300 × 380 设计，脚本 UA 按手机画面宽度等比缩放（设计宽 300 = 屏宽 95%）；
+   0–0.5 秒徽章弹出（0.2 → 1.1 → 1）+ 冷色流星 → 0.4–2.0 秒四周暖色焰火陆续绽放 → 0.5–1.0 秒两行 LEVEL UP 从徽章背后升起、越过徽章停在上沿并盖在徽章上层 + 彩带 →
+   1.0–1.33 秒 VIPn 从约 3.6 倍大、半透明加速砸到徽章下部 + 残影收拢 → 1.33 秒落地压扁回弹、徽章下沉抖动、整屏震动、冲击波 + 火花 →
+   1.4–2.6 秒停留（文字流光、徽章闪光）→ 2.6–3.0 秒淡出 → 3.0 秒关闭；全程不拦截点击；减少动态效果时只保留整体淡入淡出 ===== */
+.ua-anim{position:absolute;inset:30px 0 0;z-index:6;pointer-events:none;display:grid;place-items:center;opacity:0;overflow:hidden;background:radial-gradient(62% 46% at 50% 44%,rgba(0,0,0,.15),rgba(5,8,12,.7));--ray:#f2c94c;--lvg:linear-gradient(180deg,#fffbe0,#ffd75e 45%,#a86b05 55%,#ffe28a);--stk:#3d2600}
+.ua-anim[hidden]{display:none}
+.ua-anim.play{animation:uaFade 3s linear forwards}
+.ua-anim .box{position:relative;width:300px;height:380px;flex:none;transform-origin:50% 50%}
+.ua-stage{position:absolute;inset:0}
+.ua-anim.play .ua-stage{animation:uaShake .38s linear 1.33s}
+.ua-bd{position:absolute;left:55px;top:132px;width:190px;height:190px;z-index:3;object-fit:contain;filter:drop-shadow(0 0 14px var(--ray))}
+.ua-anim.play .ua-bd{animation:uaBadge .5s cubic-bezier(.3,1.3,.5,1) both,uaSink .4s ease-out 1.33s,uaShine 1.1s ease-in-out 1.75s infinite alternate}
+/* 超粗金属字：段位金属渐变 + 厚描边 + 立体阴影 + 流光 */
+.ua-up b,.ua-lv,.ua-gh{display:inline-block;white-space:nowrap;font-family:Impact,"Arial Black","Haettenschweiler","Franklin Gothic Heavy",sans-serif;font-weight:900;background:linear-gradient(100deg,transparent 40%,rgba(255,255,255,.9) 50%,transparent 60%) no-repeat,var(--lvg);background-size:260% 100%,100% 100%;background-position:160% 0,0 0;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.ua-upw{position:absolute;left:0;right:0;top:-6px;text-align:center;z-index:1}
+.ua-anim.play .ua-upw{animation:uaRise .5s cubic-bezier(.25,.9,.35,1) .5s both}
+/* LEVEL UP 两行（用户 2026-10-30）：上行 LEVEL、下行 UP（略大），负行距，UP 在上层压住 LEVEL 下半部分约 30% 字高 */
+.ua-up{display:inline-block;filter:drop-shadow(0 3px 0 var(--stk)) drop-shadow(0 6px 0 rgba(0,0,0,.45)) drop-shadow(0 10px 10px rgba(0,0,0,.6))}
+.ua-up b{display:block;width:max-content;margin:0 auto;line-height:.9;letter-spacing:.03em;-webkit-text-stroke:2.6px var(--stk)}
+.ua-up .l1{font-size:58px}
+.ua-up .l2{position:relative;font-size:72px;margin-top:-.28em;filter:drop-shadow(0 -3px 0 var(--stk)) drop-shadow(0 -5px 6px rgba(0,0,0,.6))}   /* UP 压住 LEVEL 下半部分约 30% 字高，上沿加深色描边投影把两层分开（用户 2026-10-30） */
+.ua-anim.play .ua-up b{animation:uaSweep 1.2s ease-in-out 1.4s infinite}
+.ua-lvw{position:absolute;left:0;right:0;top:282px;height:84px;z-index:7;text-align:center;transform:scaleX(1.3)}   /* VIPn 宽体（用户 2026-10-30）：整体横向拉宽 1.3 倍，与高窄的 LEVEL UP 区分 */
+.ua-lv,.ua-gh{position:absolute;left:50%;top:0;font-family:"Arial Black","Segoe UI Black","Helvetica Neue",Arial,sans-serif;font-size:76px;line-height:84px;letter-spacing:.05em;-webkit-text-stroke:3.2px var(--stk);transform:translateX(-50%) skewX(-8deg)}
+.ua-lv{filter:drop-shadow(0 4px 0 var(--stk)) drop-shadow(0 8px 0 rgba(0,0,0,.5)) drop-shadow(0 14px 12px rgba(0,0,0,.7))}
+.ua-anim.play .ua-lv{animation:uaSlam .55s 1s both,uaSweep 1.2s ease-in-out 1.7s infinite}
+.ua-gh{opacity:0}
+.ua-anim.play .ua-gh{animation:uaGhost .36s ease-in 1s both}
+.ua-shock{position:absolute;left:50%;top:50%;width:170px;height:40px;margin:-20px 0 0 -85px;border-radius:50%;border:4px solid var(--ray);box-shadow:0 0 16px var(--ray),inset 0 0 10px var(--ray);opacity:0}
+.ua-shock.s2{border-width:2px;animation-delay:1.42s!important}
+.ua-anim.play .ua-shock{animation:uaShock .6s ease-out 1.33s both}
+/* 火花 / 碎屑：VIPn 落地时从落点向上方和两侧迸射 */
+.ua-spk{position:absolute;left:50%;top:50%;z-index:8}
+.ua-spk i{position:absolute;left:0;top:-1.5px;height:3px;border-radius:2px;background:linear-gradient(90deg,transparent,var(--mc) 60%,#fff);box-shadow:0 0 6px var(--mc);transform-origin:0 50%;opacity:0}
+.ua-anim.play .ua-spk i{animation:uaMet .5s cubic-bezier(.1,.7,.3,1) 1.33s both}
+/* 流星（冷色，用户 2026-10-30）：徽章弹出时以徽章为中心向四周喷射，拖尾由白到冷色渐隐；在焰火下层 */
+.ua-met{position:absolute;left:150px;top:227px;z-index:1}
+.ua-met i{position:absolute;left:0;top:-1.5px;height:3px;border-radius:2px;background:linear-gradient(90deg,transparent,var(--mc) 55%,#fff);box-shadow:0 0 6px var(--mc);transform-origin:0 50%;opacity:0}
+.ua-anim.play .ua-met i{animation-name:uaMet;animation-timing-function:cubic-bezier(.1,.6,.3,1);animation-fill-mode:both}
+/* 焰火（暖色，用户 2026-10-30「四周去掉光芒，而是向四周放焰火」）：徽章四周 5–6 发依次升空绽放，圆形放射火花带拖尾、下坠、二次闪烁；中心白金闪光 */
+.ua-fw{position:absolute;z-index:2;width:0;height:0}
+.ua-anim.play .ua-fw{animation:uaDroop 1.1s ease-in both}
+.ua-fw .rk{position:absolute;left:-2px;top:0;width:4px;height:16px;border-radius:2px;background:linear-gradient(#fff6d5,var(--mc),transparent);opacity:0}
+.ua-anim.play .ua-fw .rk{animation:uaRocket .28s ease-out both}
+.ua-fw s{position:absolute;left:-11px;top:-11px;width:22px;height:22px;border-radius:50%;background:radial-gradient(#fff,#fff1a8 35%,var(--mc) 55%,transparent 72%);opacity:0}
+.ua-anim.play .ua-fw s{animation:uaFlash .35s ease-out both}
+.ua-fw b{position:absolute;left:0;top:-1.5px;height:3px;border-radius:2px;background:linear-gradient(90deg,transparent,var(--mc) 55%,#fff6d5);box-shadow:0 0 5px var(--mc);transform-origin:0 50%;opacity:0}
+.ua-anim.play .ua-fw b{animation:uaFw .9s cubic-bezier(.15,.7,.3,1) both}
+@keyframes uaDroop{0%{transform:none}100%{transform:translateY(24px)}}
+@keyframes uaRocket{0%{transform:translateY(70px);opacity:1}85%{opacity:1}100%{transform:none;opacity:0}}
+@keyframes uaFlash{0%{transform:scale(.2);opacity:1}100%{transform:scale(2.6);opacity:0}}
+@keyframes uaFw{0%{transform:rotate(var(--a)) translateX(2px) scaleX(.3);opacity:1}55%{transform:rotate(var(--a)) translateX(var(--d)) scaleX(1);opacity:1}68%{opacity:.3}80%{opacity:.95}100%{transform:rotate(var(--a)) translateX(calc(var(--d) * 1.08)) scaleX(.4);opacity:0}}
+/* 彩带：从徽章后方向左上、右上喷射，旋转下落 */
+.ua-conf{position:absolute;left:150px;top:210px;z-index:1}
+.ua-conf i{position:absolute;left:0;top:0;border-radius:1px;opacity:0}
+.ua-anim.play .ua-conf i{animation-name:uaConf;animation-timing-function:cubic-bezier(.2,.7,.4,1);animation-fill-mode:both}
+@keyframes uaFade{0%{opacity:0}6%{opacity:1}87%{opacity:1}100%{opacity:0}}
+@keyframes uaBadge{0%{transform:scale(.2);opacity:0}60%{transform:scale(1.1);opacity:1}100%{transform:scale(1);opacity:1}}
+@keyframes uaSink{0%{transform:none}25%{transform:translateY(12px) scale(.97,.95) rotate(-2deg)}50%{transform:translateY(-4px) rotate(1.5deg)}75%{transform:translateY(2px) rotate(-.8deg)}100%{transform:none}}
+@keyframes uaShine{to{filter:drop-shadow(0 0 28px var(--ray)) brightness(1.12)}}
+/* LEVEL UP：前段在徽章下层（z-index 1），越过徽章后升到上层（z-index 6），回落停在徽章上沿 */
+@keyframes uaRise{0%{transform:translateY(156px) scale(.55);opacity:0;z-index:1}25%{opacity:1;z-index:1}55%{transform:translateY(-6px) scale(1);z-index:1}56%{z-index:6}75%{transform:translateY(-16px) scale(1.04);z-index:6}100%{transform:none;opacity:1;z-index:6}}
+@keyframes uaSweep{0%{background-position:160% 0,0 0}100%{background-position:-60% 0,0 0}}
+@keyframes uaSlam{0%{transform:translateX(-50%) skewX(-8deg) translateY(-40px) scale(3.6);opacity:.3;animation-timing-function:cubic-bezier(.6,0,.95,.5)}60%{transform:translateX(-50%) skewX(-8deg) scale(1);opacity:1;animation-timing-function:ease-out}72%{transform:translateX(-50%) skewX(-8deg) translateY(6px) scale(1.14,.8)}86%{transform:translateX(-50%) skewX(-8deg) translateY(-3px) scale(.97,1.05)}100%{transform:translateX(-50%) skewX(-8deg) scale(1);opacity:1}}
+@keyframes uaGhost{0%{transform:translateX(calc(-50% + var(--gx) * 2.4)) skewX(-8deg) scale(2.8);opacity:0}35%{opacity:var(--go)}100%{transform:translateX(-50%) skewX(-8deg) scale(1);opacity:0}}
+@keyframes uaShock{0%{transform:scale(.3);opacity:1}100%{transform:scale(2.6);opacity:0}}
+@keyframes uaShake{0%,100%{transform:none}15%{transform:translate(-9px,7px)}30%{transform:translate(8px,-6px)}45%{transform:translate(-6px,4px)}60%{transform:translate(5px,-3px)}80%{transform:translate(-2px,1px)}}
+@keyframes uaMet{0%{transform:rotate(var(--a)) translateX(14px) scaleX(.2);opacity:1}70%{opacity:1}100%{transform:rotate(var(--a)) translateX(var(--d)) scaleX(1);opacity:0}}
+@keyframes uaConf{0%{transform:translate(0,0) rotate(0);opacity:1}45%{transform:translate(var(--x1),var(--y1)) rotate(calc(var(--r) * .5));opacity:1}100%{transform:translate(var(--x2),var(--y2)) rotate(var(--r));opacity:0}}
+/* 段位（规则 N51）配色：--ray 主色（徽章光晕、冲击波、落地火花），--lvg 金属渐变，--stk 描边 */
+.ua-anim.t-iron{--ray:#b8bec5;--lvg:linear-gradient(180deg,#f4f6f8,#b9bfc6 45%,#5d6268 55%,#c9ced3);--stk:#1e2226}
+.ua-anim.t-bronze{--ray:#e7a86b;--lvg:linear-gradient(180deg,#fff1df,#f0b47a 45%,#9a5426 55%,#e5a06a);--stk:#3a1a06}
+.ua-anim.t-silver{--ray:#e3e9ef;--lvg:linear-gradient(180deg,#ffffff,#dfe5eb 45%,#7d8792 55%,#eef2f5);--stk:#1f2833}
+.ua-anim.t-gold{--ray:#f2c94c;--lvg:linear-gradient(180deg,#fffbe0,#ffd75e 45%,#a86b05 55%,#ffe28a);--stk:#3d2600}
+.ua-anim.t-plat{--ray:#bfe3f7;--lvg:linear-gradient(180deg,#ffffff,#d4f0ff 45%,#5f87a6 55%,#e6f6ff);--stk:#10283d}
+.ua-anim.t-diamond{--ray:#6fa8ff;--lvg:linear-gradient(180deg,#f2f8ff,#9cc8ff 45%,#1f4fc8 55%,#b9d6ff);--stk:#06143d}
+.ua-anim.t-star{--ray:#c08cff;--lvg:linear-gradient(180deg,#fff6cc,#f2c94c 40%,#9b5cf0 58%,#e2c6ff);--stk:#22073f}
+.ua-anim.t-glory{--ray:#ffcf5a;--lvg:linear-gradient(180deg,#fff6cc,#ffd75e 42%,#b3192c 58%,#ffcf6a);--stk:#3a0610}
+@media (prefers-reduced-motion:reduce){.ua-anim.play *{animation:none!important}.ua-met,.ua-fw,.ua-conf,.ua-gh,.ua-shock,.ua-spk{display:none}.ua-upw{z-index:6}}
+/* 右侧时序读数（说明用，不在手机画面里） */
+.ua-tl{margin:6px 0 4px;font-size:12.5px;color:var(--muted,#666)}
+.ua-tl b{font-variant-numeric:tabular-nums}
+</style>
+</head>
+<body>
+<div class="with-nav">
+<div class="stage">
+  <div class="vip-phonecol">
+  <div class="app" role="region" aria-label="手机画面">
+    <div class="sb"><span>9:41</span><span>●●● 5G</span></div>
+
+    <!-- ============ 大厅（平台页面）：动画结束后弹升级确认弹窗 ============ -->
+    <div class="view vn-lobby" id="vLobby">
+      <div class="topline" data-dev="D56" data-dev-inline>大厅</div>
+      <div class="tiles"><div>Slot</div><div>Casino</div><div>Bingo</div><div>Poker</div><div>Arcade</div><div>Fishing</div></div>
+      <!-- 升级确认弹窗：规则沿用 VIP通知页面（领取奖金 / 查看权益 / ×；跨多级只显示最高等级和合计；KYC 定级补发逐级列出） -->
+      <div class="vn-mask glow" id="upMask" hidden>
+        <div class="vn-dlg" role="dialog" aria-modal="true" aria-labelledby="upT">
+          <button type="button" class="ux glow" id="upX" data-dev="D45" aria-label="关闭" title="关闭">×</button>
+          <h3 id="upT">恭喜升级！</h3>
+          <span class="bg" id="upBadge" data-dev="D38">VIP 5</span>
+          <p id="upLine" data-dev="D39">已升级到 VIP5</p>
+          <p class="amt" id="upAmt" data-dev="D40">升级奖金 ₱48</p>
+          <div class="vn-items glow" id="upList" data-dev="D41" hidden></div>
+          <div class="acts"><button type="button" class="sec" id="upGo" data-dev="D44">查看权益</button><button type="button" class="pri" id="upOk" data-dev="D43">领取奖金</button></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ 第三方游戏页（示意） ============ -->
+    <div class="view vn-game" id="vGame" hidden>
+      <div class="gbar"><button type="button" id="gBack" data-dev="D49">‹ 返回平台</button><span data-dev="D56" data-dev-inline>第三方游戏</span></div>
+      <div class="reel" aria-hidden="true">7 7 7</div>
+    </div>
+
+    <!-- ============ 升级 3 秒提示动画：段位徽章 + LEVEL UP + VIPn（画面由脚本 UA 生成）；不可交互，3 秒后自动关闭 ============ -->
+    <div class="ua-anim glow" id="anim" hidden aria-live="polite"><div class="box"></div></div>
+    <div class="toast" id="toast" role="status" hidden></div>
+  </div>
+  <div class="vip-req-note ui-reqnote vip-outnote" id="outNote"></div>
+  </div>
+
+  <aside class="notes">
+    <h2>VIP会员体系-v1.2-升级通知动画页面</h2>
+    <p class="sub">升级 3 秒提示动画：各段位显示效果、跨多级只显示最高等级、第三方游戏页叠加与无法叠加的处理、KYC 定级补发，以及动画结束后衔接升级确认弹窗。确认弹窗规则见 <span class="link-off" title="当前角色不能查看这个页面">VIP通知页面</span>。带淡色光晕的是本需求新增内容。</p>
+    <h3>模拟场景</h3>
+    <div class="sim">
+      <button type="button" data-go="flow" class="glow"><span class="simtag">衔接</span>平台页 VIP4 → VIP5 · 动画结束弹确认弹窗（领取奖金 / 查看权益 / ×）</button>
+      <button type="button" data-go="t-bronze" class="glow"><span class="simtag">青铜</span>VIP0 → VIP1</button>
+      <button type="button" data-go="t-silver" class="glow"><span class="simtag">白银</span>VIP5 → VIP6</button>
+      <button type="button" data-go="t-gold" class="glow"><span class="simtag">黄金</span>VIP8 → VIP9</button>
+      <button type="button" data-go="t-plat" class="glow"><span class="simtag">铂金</span>VIP12 → VIP13</button>
+      <button type="button" data-go="t-diamond" class="glow"><span class="simtag">钻石</span>VIP16 → VIP17</button>
+      <button type="button" data-go="t-star" class="glow"><span class="simtag">星耀</span>VIP20 → VIP21</button>
+      <button type="button" data-go="t-glory" class="glow"><span class="simtag">荣耀</span>VIP24 → SUPER VIP</button>
+      <button type="button" data-go="multi" class="glow"><span class="simtag">跨级</span>跨多级 VIP0 → VIP3 · 只显示 VIP3</button>
+      <button type="button" data-go="game" class="glow"><span class="simtag">游戏</span>第三方游戏页上叠加动画 → 点「返回平台」弹确认弹窗</button>
+      <button type="button" data-go="game-fb" class="glow"><span class="simtag">游戏</span>第三方游戏页无法叠加 → 返回平台先播动画再弹确认弹窗</button>
+      <button type="button" data-go="kyc" class="glow"><span class="simtag">KYC</span>完成 KYC 定级 VIP3 · 动画 + 逐级列出的确认弹窗</button>
+      <button type="button" data-go="auto" class="glow"><span class="simtag">自动领取</span>升级奖金自动领取 · 动画照常 → 到账通知（无「领取奖金」）</button>
+      <button type="button" data-go="auto-risk" class="glow"><span class="simtag">自动领取</span>升级奖金自动领取 + 风控命中 · 动画照常 → 弹窗不提金额</button>
+      <button type="button" data-go="risk" class="glow"><span class="simtag">风控</span>手动领取 + 风控暂停 · 动画照常 → 弹窗不提金额</button>
+      <button type="button" data-go="restore" class="glow"><span class="simtag">恢复</span>月度结算恢复 VIP2 → VIP4 · 不播动画、不弹确认弹窗</button>
+    </div>
+    <h3>模拟操作</h3>
+    <div class="sim">
+      <button type="button" id="replay" class="glow"><span class="simtag">重播</span>重播当前场景</button>
+    </div>
+    <p class="ua-tl" id="tl" aria-live="off">时序：<b id="tlT">-</b></p>
+    <h3>规则批注</h3>
+    <ol>
+      <li><b>触发</b>（用户 2026-10-29 定）：实时升级后（N8 实时升级），玩家无论在哪个页面（含第三方游戏页面）立即弹出。动画只看是否升级，不受奖金领取方式影响：升级奖金设为自动领取时照常播放，结束后弹到账通知（用户 2026-10-30 定）；风控暂停期间照常播放，弹窗不提金额、没有「领取奖金」（用户 2026-10-31 定）。不播放：上线结算、降级后在月度结算恢复（用户 2026-10-30 定）、新增或删除等级后的重算、「KYC 限制」从开启改为关闭时的定级（规则 N25 ①）、老版本 App（规则 N46「老版本 App」）、「VIP领取奖励」关闭期间。降级后累计仍达原等级门槛不实时升回，因此没有「升回」动画（N10 降级后不立即升回）。风控放行后不补播动画，只在玩家下次进入平台页面时弹确认弹窗（N32 放行）。<span class="ref">PRD 规则 N34 升级动画与确认弹窗 · F08-01 升级动画与确认弹窗</span></li>
+      <li><b>显示内容</b>：升到的最高等级的段位徽章（黑铁以外的 7 个段位各一个徽章图）、文案「LEVEL UP」（中英文界面都显示 LEVEL UP）、等级名「VIPn」（最高级显示「SUPER VIP」）。段位按后台实际等级数实时分配，算法与 VIP中心相同（N51 前台段位层级）。不显示金额和按钮。3 秒自动关闭，不可交互、不拦截点击、不领取，下层页面照常可操作；动画期间断网照常 3 秒关闭。<span class="ref">PRD 规则 N34 升级动画与确认弹窗、N51 前台段位层级 · F08-01 升级动画与确认弹窗</span></li>
+      <li><b>动画时序</b>（用户 2026-10-30 定，只在原型说明，PRD 不记录）：① 0–0.5 秒 段位徽章弹出，同时四周喷射流星；② 0.4–2.0 秒 徽章四周陆续绽放 5–6 发焰火；③ 0.5–1.0 秒「LEVEL UP」从徽章后方升起，停在徽章上沿，同时喷出彩带；④ 1.0–1.33 秒「VIPn」砸落到徽章下部，落地时整屏震动；⑤ 1.4–2.6 秒 停留，文字和徽章闪光；⑥ 2.6–3.0 秒 整体淡出，3.0 秒关闭。系统开启「减少动态效果」时只保留整体淡入淡出，时长仍为 3 秒。右侧「时序」读数显示当前阶段。<span class="ref">原型说明</span></li>
+      <li><b>只显示最高等级</b>（用户 2026-10-29 定）：一次跨多级，或动画未播完又升级，合并为一次动画，只显示最终升到的最高等级，不逐级播放。<span class="ref">PRD 规则 N9 升级奖金、N34 升级动画与确认弹窗</span></li>
+      <li><b>第三方游戏页</b>：动画叠加在游戏画面上，3 秒后关闭，玩家留在游戏中；离开游戏回到平台任意页面时弹升级确认弹窗。<b>无法叠加时</b>（由技术评估，用户 2026-10-29 定）：游戏中不弹，回到平台页面先播 3 秒动画，结束后再弹确认弹窗。<span class="ref">PRD 规则 N34 升级动画与确认弹窗 · 第 9 章异常</span></li>
+      <li><b>衔接确认弹窗</b>：本来就在平台页面的，动画结束后立即弹升级确认弹窗；动画播放中回到平台页面的，动画播完再弹。确认弹窗的按钮和规则见 VIP通知页面。<span class="ref">PRD 规则 N34 升级动画与确认弹窗、N52 领取与有效期</span></li>
+      <li><b>KYC 定级补发</b>（用户 2026-10-29 定）：「KYC 限制」开启时完成 KYC 定级，同样先播 3 秒动画（显示定级后的最高等级），确认弹窗逐级列出各级升级奖金并合计。各级都被风控暂停时动画照常，弹窗按风控暂停处理：只显示恭喜升级和定级后的等级，不提金额、不逐级列金额（用户 2026-10-31 定）。「KYC 限制」从开启改为关闭时不补发奖金，定级不弹动画和确认弹窗。<span class="ref">PRD 规则 N31 ⑤ 风控暂停、N23 KYC 限制开启（默认）、N25 ① KYC 限制切换、N34 升级动画与确认弹窗</span></li>
+    </ol>
+    <h3>评审待确认</h3>
+    <ol>
+      <li><b>文案定稿</b>：「LEVEL UP」为示意，以运营定稿为准。<span class="ref">PRD Q14 前台文案定稿（待确认）</span></li>
+      <li><b>动效</b>：徽章、流星、焰火、彩带、残影、冲击波等动效以 UI 设计稿为准，原型只作示意。</li>
+    </ol>
+    <div class="pager"><span class="link-off" title="当前角色不能查看这个页面">← 上一页：VIP通知页面</span><span></span></div>
+  </aside>
+</div>
+</div>
+<script>window.NAV_ROOT = "../../../";</script>
+<script src="../../../assets/nav-data.js"></script>
+<script src="../../../assets/nav.js"></script>
+<script src="../../../assets/proto-en.js"></script>
+<script src="../../../assets/vip.js"></script>
+<script src="../../../assets/proto.js"></script>
+<script>
+(function () {
+  /* 段位（规则 N51，与 VIP中心同一算法）：默认 VIP0 + VIP1–VIP24 + SUPER VIP，TOP = 25、中间 N = 24 → 青铜 VIP1–4、白银 5–8、黄金 9–12、铂金 13–16、钻石 17–20、星耀 21–24、荣耀 SUPER VIP */
+  var TOP = 25, TIERS = ["bronze", "silver", "gold", "plat", "diamond", "star"];
+  function tierOf(i) {
+    if (i === 0) return "iron"; if (i === TOP) return "glory";
+    var n = TOP - 1, sz = [0, 0, 0, 0, 0, 0], j;
+    if (n < 6) for (j = 0; j < n; j++) sz[j] = 1;
+    else { var s = Math.ceil(n / 6); if (n - 5 * s >= 1) sz = [n - 5 * s, s, s, s, s, s]; else { var b = Math.floor(n / 6), r = n % 6; sz = [b, b, b, b, b, b]; for (j = 0; j < r; j++) sz[5 - j]++; } }
+    for (j = 0, n = 0; j < 6; j++) { n += sz[j]; if (i <= n) return TIERS[j]; }
+    return "star";
+  }
+  function lvName(i) { return i === TOP ? "SUPER VIP" : "VIP" + i; }
+  /* 升级 3 秒提示动画（与「升级通知动画页面」同一实现，用户 2026-10-30）：每次播放重新生成画面和粒子——
+     冷色流星 8–14 道、暖色焰火 5–6 发（每发 14 粒火花，徽章四周依次升空绽放）、彩带 26 片、落地火花 14 道；画面按 300 宽设计，按手机画面宽度等比缩放到 95% */
+  var UA = (function () {
+    var PAL = { iron: ["#b8bec5", "#6b7178", "#eef0f2"], bronze: ["#e7a86b", "#b8713b", "#ffe1c2"], silver: ["#e9eef3", "#9aa6b2", "#ffffff"], gold: ["#f2c94c", "#d99a1e", "#fff4c2"], plat: ["#bfe3f7", "#7fb6d6", "#f0fbff"], diamond: ["#6fa8ff", "#2f63e0", "#d8e8ff"], star: ["#f2c94c", "#9b5cf0", "#e9d6ff"], glory: ["#ffcf5a", "#c8202f", "#fff0c2"] };
+    var FW_POS = [[40, -40], [260, -40], [6, 232], [294, 232], [30, 402], [270, 402]];   /* 焰火位置（设计坐标）：左上、右上、左、右、左下、右下，避开徽章和文字主体 */
+    var COLD = ["#e8f6ff", "#7fd6ff", "#5aa0ff", "#9d8cff"], WARM = ["#fff1a8", "#ffc23d", "#ff7a2e", "#ff3d5a", "#ff86b0"];   /* 流星冷色、焰火暖色（用户 2026-10-30），不随段位 */
+    function rnd(a, b) { return a + Math.random() * (b - a); }
+    function mk(tag, cls, txt) { var e = document.createElement(tag); if (cls) e.className = cls; if (txt != null) e.textContent = txt; return e; }
+    function vars(e, o) { for (var p in o) e.style.setProperty(p, o[p]); }
+    function pick(a) { return a[Math.floor(Math.random() * a.length)]; }
+    function build(box, name, tier, src) {
+      var pal = PAL[tier] || PAL.gold, st = mk("div", "ua-stage"), i, j;
+      box.textContent = "";
+      /* 冷色流星：徽章弹出时向四周喷射，0.6–1 秒内消散（在焰火下层） */
+      var met = mk("div", "ua-met"), n = 8 + Math.floor(Math.random() * 7);
+      for (i = 0; i < n; i++) {
+        var m = mk("i"); vars(m, { "--a": rnd(0, 360) + "deg", "--d": rnd(120, 200) + "px", "--mc": pick(COLD) });
+        m.style.width = rnd(30, 66) + "px"; m.style.animationDuration = rnd(0.6, 1) + "s"; m.style.animationDelay = rnd(0, 0.12) + "s"; met.appendChild(m);
+      }
+      st.appendChild(met);
+      /* 暖色焰火：5–6 发，0.4–2.0 秒陆续绽放，火花中心偏白金 */
+      var pos = FW_POS.slice().sort(function () { return Math.random() - 0.5; }), nf = 5 + Math.floor(Math.random() * 2);
+      for (i = 0; i < nf; i++) {
+        var t = 0.4 + i * 0.32 + rnd(0, 0.08), fw = mk("div", "ua-fw"), col = pick(WARM);
+        fw.style.left = pos[i][0] + "px"; fw.style.top = pos[i][1] + "px"; fw.style.animationDelay = t + "s";
+        var rk = mk("i", "rk"); rk.style.setProperty("--mc", col); rk.style.animationDelay = (t - 0.28) + "s"; fw.appendChild(rk);
+        var fl = mk("s"); fl.style.setProperty("--mc", col); fl.style.animationDelay = t + "s"; fw.appendChild(fl);
+        for (j = 0; j < 14; j++) {
+          var b = mk("b"); vars(b, { "--a": (j * 360 / 14 + rnd(-8, 8)) + "deg", "--d": rnd(34, 52) + "px", "--mc": Math.random() < 0.25 ? "#fff6d5" : Math.random() < 0.75 ? col : pick(WARM) });
+          b.style.width = rnd(10, 18) + "px"; b.style.animationDelay = t + "s"; fw.appendChild(b);
+        }
+        st.appendChild(fw);
+      }
+      /* 彩带：LEVEL UP 升起时从徽章后方向左上、右上喷射 */
+      var conf = mk("div", "ua-conf"), cols = pal.concat(["#ff6b8b", "#5fd3ff", "#ffe066", "#8cff9e"]);
+      for (i = 0; i < 26; i++) {
+        var c = mk("i"), sd = i % 2 ? 1 : -1, x1 = sd * rnd(45, 150), y1 = -rnd(100, 180);
+        c.style.background = pick(cols);
+        if (Math.random() < 0.35) { c.style.width = "3px"; c.style.height = rnd(12, 18) + "px"; } else { c.style.width = rnd(5, 8) + "px"; c.style.height = rnd(7, 11) + "px"; }
+        vars(c, { "--x1": x1 + "px", "--y1": y1 + "px", "--x2": (x1 + sd * rnd(10, 45)) + "px", "--y2": (y1 + rnd(130, 210)) + "px", "--r": (sd * rnd(360, 900)) + "deg" });
+        c.style.animationDuration = rnd(0.9, 1.2) + "s"; c.style.animationDelay = (0.5 + rnd(0, 0.15)) + "s"; conf.appendChild(c);
+      }
+      st.appendChild(conf);
+      var bd = mk("img", "ua-bd"); bd.src = src; bd.alt = ""; st.appendChild(bd);
+      var uw = mk("div", "ua-upw"), up = mk("span", "ua-up"); up.appendChild(mk("b", "l1", "LEVEL")); up.appendChild(mk("b", "l2", "UP")); uw.appendChild(up); st.appendChild(uw);   /* 两行：LEVEL 在上、UP 在下（用户 2026-10-30） */
+      var lw = mk("div", "ua-lvw");
+      [[-2, ".3"], [-1, ".5"], [1, ".5"], [2, ".3"]].forEach(function (g) { var e = mk("span", "ua-gh", name); e.setAttribute("aria-hidden", "true"); vars(e, { "--gx": g[0] * 24 + "px", "--go": g[1] }); lw.appendChild(e); });
+      lw.appendChild(mk("span", "ua-lv", name));
+      lw.appendChild(mk("i", "ua-shock")); lw.appendChild(mk("i", "ua-shock s2"));
+      var spk = mk("div", "ua-spk");
+      for (i = 0; i < 14; i++) { var s = mk("i"); vars(s, { "--a": rnd(185, 355) + "deg", "--d": rnd(50, 120) + "px", "--mc": Math.random() < 0.5 ? pal[0] : "#fff3c4" }); s.style.width = rnd(12, 26) + "px"; spk.appendChild(s); }
+      lw.appendChild(spk); st.appendChild(lw); box.appendChild(st);
+    }
+    /* 文字适配：LEVEL 行宽约 77%（设计宽 300 中占 230，两行总高约 160，盖住徽章上沿约 15%），UP 为 LEVEL 的 1.15 倍字号；VIPn 拉宽 1.3 倍后最宽 240（约屏宽 77%，SUPER VIP 自动缩小） */
+    function fit(box) {
+      var l1 = box.querySelector(".ua-up .l1"), l2 = box.querySelector(".ua-up .l2"), w = l1.offsetWidth;
+      if (w) { var f1 = 58 * 230 / w; l1.style.fontSize = f1.toFixed(1) + "px"; l2.style.fontSize = (f1 * 1.15).toFixed(1) + "px"; }
+      var lv = box.querySelector(".ua-lv"), w2 = lv.offsetWidth;
+      if (w2 > 185) { var fs = (76 * 185 / w2).toFixed(1) + "px"; [].forEach.call(box.querySelectorAll(".ua-lv,.ua-gh"), function (e) { e.style.fontSize = fs; }); }
+    }
+    return {
+      play: function (a, name, tier, src) {
+        var box = a.querySelector(".box");
+        a.className = "ua-anim glow t-" + tier; a.hidden = false; build(box, name, tier, src); fit(box);
+        var k = Math.min(0.95 * a.clientWidth / 300, 0.92 * a.clientHeight / 380); box.style.transform = "scale(" + k.toFixed(3) + ")";
+        void a.offsetWidth; a.classList.add("play");
+      },
+      stop: function (a) { a.hidden = true; a.classList.remove("play"); }
+    };
+  })();
+  /* 预载 7 个段位徽章图，避免首次播放闪白 */
+  ["bronze", "silver", "gold", "plat", "diamond", "star", "glory"].forEach(function (t) { new Image().src = "../../../assets/vip-badge-" + t + ".webp"; });
+
+  /* 场景数据：lv 升到的最高等级、amt 升级奖金（默认配置，跨多级为合计）、at 起始页面（lobby 平台页 / game 第三方游戏页）、fb 无法叠加、items KYC 逐级列出 */
+  var SC = {
+    "flow": { lv: 5, amt: "₱48", at: "lobby" },
+    "t-bronze": { lv: 1, amt: "₱8", at: "lobby" },
+    "t-silver": { lv: 6, amt: "₱68", at: "lobby" },
+    "t-gold": { lv: 9, amt: "₱588", at: "lobby" },
+    "t-plat": { lv: 13, amt: "₱1,488", at: "lobby" },
+    "t-diamond": { lv: 17, amt: "₱2,888", at: "lobby" },
+    "t-star": { lv: 21, amt: "₱15,888", at: "lobby" },
+    "t-glory": { lv: 25, amt: "₱118,888", at: "lobby" },
+    "multi": { lv: 3, amt: "₱54", at: "lobby" },
+    "game": { lv: 5, amt: "₱48", at: "game" },
+    "game-fb": { lv: 5, amt: "₱48", at: "game", fb: true },
+    "kyc": { lv: 3, at: "lobby", kyc: true, items: [["VIP1", "₱8"], ["VIP2", "₱18"], ["VIP3", "₱28"]], sum: "₱54" },
+    "auto": { lv: 5, amt: "₱48", at: "lobby", auto: true },
+    "auto-risk": { lv: 5, amt: "₱48", at: "lobby", auto: true, risk: true },
+    "risk": { lv: 5, amt: "₱48", at: "lobby", risk: true },
+    "restore": { lv: 4, at: "lobby", none: true }
+  };
+  var NOTE = {
+    "flow": "平台页升级（VIP4 → VIP5，白银）：先播 3 秒动画，自动关闭后立即弹升级确认弹窗。点「领取奖金」领取 ₱48、直接到账；点「查看权益」不领取，进 VIP中心并打开 VIP5 详情弹窗；点 × 视为未领取，确认弹窗不再弹，从次日起由待领取奖金通知提醒。",
+    "t-bronze": "VIP0 → VIP1：青铜徽章。动画结束后弹确认弹窗，升级奖金 ₱8（默认配置）。",
+    "t-silver": "VIP5 → VIP6：白银徽章（默认段位白银为 VIP5–VIP8）。升级奖金 ₱68。",
+    "t-gold": "VIP8 → VIP9：从白银升入黄金，动画显示黄金徽章（默认段位黄金为 VIP9–VIP12）。升级奖金 ₱588。",
+    "t-plat": "VIP12 → VIP13：铂金徽章（默认段位铂金为 VIP13–VIP16）。升级奖金 ₱1,488。",
+    "t-diamond": "VIP16 → VIP17：钻石徽章（默认段位钻石为 VIP17–VIP20）。升级奖金 ₱2,888。",
+    "t-star": "VIP20 → VIP21：星耀徽章（默认段位星耀为 VIP21–VIP24）。升级奖金 ₱15,888。",
+    "t-glory": "VIP24 → SUPER VIP：荣耀徽章，等级名显示「SUPER VIP」。升级奖金 ₱118,888。后台新增或删除等级后，段位按新的等级数重新分配，最高级始终为荣耀。",
+    "multi": "VIP0 一次满足 VIP3 门槛：只播 1 次动画，只显示 VIP3（青铜），不逐级播放；确认弹窗金额为 VIP1–VIP3 合计 ₱54（₱8 + ₱18 + ₱28），点「领取奖金」一次领完。动画未播完又升级的同样合并，只显示最终等级。",
+    "game": "第三方游戏中升级：动画叠加在游戏画面上，不拦截点击，3 秒后关闭，玩家留在游戏中；点左上角「‹ 返回平台」回到平台后弹确认弹窗（动画播放中返回的，播完再弹）。",
+    "game-fb": "技术上无法在第三方游戏页面叠加动画时（降级方案，用户 2026-10-29）：游戏中不弹；点「‹ 返回平台」回到平台页面后先播 3 秒动画，结束后弹确认弹窗。",
+    "auto": "后台「升级奖金领取方式」= 自动领取（用户 2026-10-30「升级动画在升级时仍需显示」）：升级 3 秒动画照常播放，结束后弹到账通知：「已升级到 VIP5」「升级奖金 ₱48 已到账」，只有「查看权益」和 ×，没有「领取奖金」，只弹 1 次。",
+    "risk": "玩家处于风控暂停状态时升级（升级奖金手动领取，用户 2026-10-31）：照常播 3 秒动画，弹窗只显示「恭喜升级！」和「已升级到 VIP5」，不提金额，没有「领取奖金」，只有「查看权益」和 ×；不发站内信和推送，暂停的奖金不进待领取奖金通知；放行后恢复为待领取（规则 N32），不补弹。",
+    "auto-risk": "升级奖金设为自动领取、升级时风控命中（用户 2026-10-31 已定）：升级 3 秒动画照常播放，结束后弹窗只显示「恭喜升级！」和「已升级到 VIP5」，不提奖金金额和状态，只有「查看权益」和 ×；不发到账站内信和推送；放行后直接到账（规则 N32），不再补弹。",
+    "restore": "月度结算恢复等级（用户 2026-10-30「恢复等级不显示升级动画」，规则 N16）：降级玩家本月投注达标，次月初从 VIP2 恢复到 VIP4，不播 3 秒动画、不弹确认弹窗，也不重发升级奖金；VIP中心按新等级显示。同样不播的：上线结算、新增或删除等级后的重算（规则 N55）；降级后累计仍达原等级门槛不实时升回（规则 N10），只有超过历史最高时按实时升级播动画（依据规则 N10）；门槛下调后达标的按实时升级处理，发升级奖金、照常播动画（用户 2026-10-31）。",
+    "kyc": "完成 KYC 时按累计定级 VIP3：先播 3 秒动画（显示 VIP3），再弹确认弹窗，逐级列出 VIP1 ₱8、VIP2 ₱18、VIP3 ₱28，最后一行合计 ₱54。「KYC 限制」从开启改为关闭时不补发、不弹动画和确认弹窗（规则 N25 ①）。"
+  };
+  /* 「查看权益」跳转 VIP中心（示意，借用 VIP中心已有场景，打开升到那一级的详情弹窗） */
+  var DTL = { 1: "up3", 3: "up3", 5: "vip5", 6: "vip5", 9: "kept", 13: "kept", 17: "star-cur", 21: "star-cur", 25: "svip-kept" };
+  var VIEWS = Object.keys(SC), cur = null, curV = "flow", animTimer = 0, then = null, t0 = 0, raf = 0;
+  function $(id) { return document.getElementById(id); }
+
+  /* 时序读数（右侧说明，不在手机画面里） */
+  function tick() {
+    var s = (performance.now() - t0) / 1000;
+    $("tlT").textContent = s >= 3 ? "3.0 秒 · 已自动关闭" : s.toFixed(1) + " 秒 · " + (s < 0.4 ? "徽章弹出 + 流星" : s < 0.5 ? "徽章弹出 + 流星 + 焰火" : s < 1 ? "LEVEL UP 升起 + 彩带 + 焰火" : s < 1.33 ? "VIPn 砸下 + 残影" : s < 1.4 ? "落地冲击 + 震动" : s < 2.6 ? "停留（流光 + 焰火）" : "淡出");
+    if (s < 3) raf = requestAnimationFrame(tick);
+  }
+  /* 播放 3 秒动画：结束后自动关闭；next 为结束后的动作（平台页弹确认弹窗） */
+  function playAnim(u, next) {
+    clearTimeout(animTimer); cancelAnimationFrame(raf);
+    var a = $("anim"), t = tierOf(u.lv);
+    UA.play(a, lvName(u.lv), t, "../../../assets/vip-badge-" + t + ".webp");
+    then = next || null; t0 = performance.now(); tick();
+    animTimer = setTimeout(function () { UA.stop(a); var f = then; then = null; if (f) f(); }, 3000);
+  }
+  function stopAnim() { clearTimeout(animTimer); cancelAnimationFrame(raf); then = null; UA.stop($("anim")); $("tlT").textContent = "-"; }
+  function onLobby() { return !$("vLobby").hidden; }
+  function showConfirm(u) {
+    var b = $("upBadge"); b.className = "bg tr-" + tierOf(u.lv); b.textContent = u.lv === TOP ? "SUPER VIP" : "VIP " + u.lv;
+    $("upLine").textContent = (u.kyc ? "完成 KYC，已定级 " : "已升级到 ") + lvName(u.lv);
+    $("upAmt").hidden = !!u.items; $("upAmt").textContent = u.items ? "" : "升级奖金 " + u.amt;
+    var ls = $("upList"); ls.textContent = ""; ls.hidden = !u.items;
+    (u.items || []).concat(u.items ? [["合计", u.sum]] : []).forEach(function (r, i, arr) {
+      var row = document.createElement("div"); if (i === arr.length - 1) row.className = "sum";
+      var s1 = document.createElement("span"); s1.textContent = r[0]; var s2 = document.createElement("span"); s2.textContent = r[1];
+      row.appendChild(s1); row.appendChild(s2); ls.appendChild(row);
+    });
+    $("upAmt").textContent = u.items ? "" : "升级奖金 " + u.amt + (u.auto ? " 已到账" : ""); $("upAmt").hidden = !!u.items || !!u.risk; $("upOk").hidden = !!u.auto || !!u.risk;   /* 风控暂停 / 风控命中：不提金额、没有「领取奖金」（用户 2026-10-31，不分领取方式） */   /* 自动领取：到账通知，没有「领取奖金」 */ $("upOk").disabled = false; $("upOk").textContent = "领取奖金";
+    $("upMask").hidden = false; (cur && cur.auto ? $("upGo") : $("upOk")).focus();
+  }
+  function show(v) {
+    if (VIEWS.indexOf(v) < 0) v = "flow";
+    curV = v; cur = SC[v]; stopAnim(); $("upMask").hidden = true;
+    $("vLobby").hidden = cur.at !== "lobby"; $("vGame").hidden = cur.at !== "game";
+    if (cur.none) { /* 结算恢复：不播动画、不弹确认弹窗 */ } else if (cur.at === "lobby") playAnim(cur, function () { showConfirm(cur); });
+    else if (!cur.fb) playAnim(cur, null);   /* 游戏页：叠加播放，结束后停留在游戏 */
+    $("outNote").textContent = "数据均为示例。" + (NOTE[v] || "");
+    document.querySelectorAll("[data-go]").forEach(function (b) { b.setAttribute("aria-pressed", String(b.dataset.go === v)); });
+    if (location.hash.slice(1) !== v) history.replaceState(null, "", "#" + v);
+    if (window.self !== window.top) window.parent.postMessage({ type: "proto-view", view: v }, "*");
+  }
+  /* 返回平台：无法叠加的先播动画再弹确认；动画播放中返回的，播完再弹；已播完的直接弹 */
+  $("gBack").onclick = function () {
+    if (!cur) return;
+    $("vGame").hidden = true; $("vLobby").hidden = false;
+    if (cur.fb) playAnim(cur, function () { showConfirm(cur); });
+    else if (!$("anim").hidden) then = function () { showConfirm(cur); };
+    else showConfirm(cur);
+  };
+  /* 「领取奖金」= 领取本次合计：直接到账后关闭；重复点击只处理一次 */
+  $("upOk").onclick = function () {
+    var b = this; if (b.disabled) return; b.disabled = true; b.textContent = "领取中…";
+    setTimeout(function () { $("upMask").hidden = true; P.toast("领取成功，已到账"); }, 600);
+  };
+  $("upGo").onclick = function () { if (cur) location.href = "VIP会员体系-VIP中心页面.html#" + (DTL[cur.lv] || "vip5") + "~dtl" + cur.lv; };
+  $("upX").onclick = function () { $("upMask").hidden = true; };
+  $("replay").onclick = function () { show(curV); };
+  window.addEventListener("hashchange", function () { show(location.hash.slice(1) || "flow"); });
+  document.addEventListener("click", function (e) { var b = e.target.closest("[data-go]"); if (b) { e.preventDefault(); show(b.dataset.go); } });
+  show(location.hash.slice(1) || "flow");
+})();
+</script>
+</body>
+</html>

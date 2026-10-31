@@ -91,7 +91,7 @@ window.OCStore = {
     return S && S.sealed ? [{ at: S.sealed.at, role: S.sealed.role || "", action: "封板", ver: S.sealed.ver, name: S.sealed.name }] : [];
   },
   sealLine: function (e) {
-    return (e.at || "—") + "（GMT+8）· " + (OCStore.ROLE_NAME[e.role] || "角色未记录") + " · " + e.action + (e.pending ? " · 未同步到云端" : "");
+    return (e.at || "-") + "（GMT+8）· " + (OCStore.ROLE_NAME[e.role] || "角色未记录") + " · " + e.action + (e.pending ? " · 未同步到云端" : "");
   },
   /* 封板记录列表元素（文字用 textContent 写入）；没有记录返回 null */
   sealLogEl: function (S) {

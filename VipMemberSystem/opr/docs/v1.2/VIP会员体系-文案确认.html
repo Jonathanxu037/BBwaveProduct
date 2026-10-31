@@ -11,7 +11,7 @@
 <div class="desk"><article class="paper cc">
 
 <h1 class="doc-title">VIP会员体系-v1.2-文案确认</h1>
-<div class="doc-meta"><span id="ccCount">待确认文案：—</span><span id="ccLast">最近一次提交：—</span><span id="ccRole"></span></div>
+<div class="doc-meta"><span id="ccCount">待确认文案：-</span><span id="ccLast">最近一次提交：-</span><span id="ccRole"></span></div>
 <p class="sum-note">※ 这里列出本需求里缺失或还没定稿的文案（标「示意」的英文、待定的提示、短信和 push 文案等）。运营逐条选择「确认」或「修改」，点「提交确认结果」后保存到云端，换电脑、换浏览器都能看到；产品在任何电脑上都能查看每条的处理结果、标记是否采纳，并下载文案确认文档。</p>
 <div class="oc-sync" id="ccSync">正在读取云端…</div>
 
@@ -43,6 +43,7 @@
 </div>
 <script>window.NAV_ROOT = "../../";</script>
 <script src="../../assets/nav-data.js"></script>
+<script>window.NO_REF_LINKS = true; /* 确认页不把编号换成链接 */</script>
 <script src="../../assets/nav.js"></script>
 <script src="../../assets/oc-store.js"></script>
 <script src="../../assets/proto-en.js"></script>
@@ -167,7 +168,7 @@
   function adoption(r) { return ADOPT[OCStore.dec(r)] || "待产品确认"; }
   function renderHist() {
     var box = $("ccHist"), V = OCStore.byTime(versions);
-    $("ccLast").textContent = "最近一次提交：" + (V[0] ? V[0].at + "（GMT+8）" : "—");
+    $("ccLast").textContent = "最近一次提交：" + (V[0] ? V[0].at + "（GMT+8）" : "-");
     if (!V.length) { box.innerHTML = '<p class="cc-hint">还没有提交记录。</p>'; return; }
     box.innerHTML = V.map(function (v) {
       return '<section class="cc-ver"><h3>' + esc(v.name) + ' <small>' + esc(v.at) + "（GMT+8）· " + v.rows.length + " 条</small></h3>" +

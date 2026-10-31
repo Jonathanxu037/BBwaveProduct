@@ -19,7 +19,7 @@
 }
 /* 发布页面只做浅色，不做深色模式（需求包框架规范第 3.1 节，用户决定 D13、C59） */
 *{box-sizing:border-box}
-h2[id],h3[id],h4[id],[id].fp-anchor{scroll-margin-top:56px}
+[id]{scroll-margin-top:56px}   /* 锚点跳转时目标不被吸顶的顶栏盖住（标题、规则行、待确认行、功能点锚点等） */
 html{scroll-behavior:smooth}
 body{margin:0;background:var(--shell-bg);color:var(--fg);font-family:var(--font);font-size:14.5px;line-height:1.75}
 a{color:var(--link)}
@@ -973,3 +973,45 @@ body.pub-admin .adm-stage{grid-template-columns:minmax(0,1fr)}
 .mcard td,.oc-vt td,.cc-t td{word-break:break-word;overflow-wrap:anywhere}
 @media (max-width:640px){.oc-vt,.oc-vt thead,.oc-vt tbody,.oc-vt tr,.oc-vt td,.cc-t,.cc-t thead,.cc-t tbody,.cc-t tr,.cc-t td{display:block;width:auto!important;min-width:0!important}.oc-vt thead,.cc-t thead{display:none}.oc-vt tr,.cc-t tr{border:1px solid var(--line);border-radius:8px;margin-bottom:10px;padding:6px}.oc-vt td,.cc-t td{border:0!important;padding:4px;text-align:left!important;white-space:normal!important}}
 .paper .cell-sub{color:#8a8f98;font-size:11px}
+
+/* 研发说明标签（需求包框架规范第 4 节「研发说明标签」）：只在开发、产品角色的原型里由 assets/nav.js 生成。
+   荧光绿小标签，绝对定位、不占位置；默认几乎透明，鼠标移到控件或标签上、键盘聚焦时变清晰 */
+.ui-devtag{position:absolute;z-index:3;display:inline-block;box-sizing:border-box;height:16px;padding:0 5px;border-radius:8px;background:#39FF14;color:#0B3D00;border:1px solid #1FB800;font:700 10px/14px "Microsoft YaHei","微软雅黑",sans-serif;letter-spacing:0;white-space:nowrap;text-transform:none;cursor:pointer;opacity:.16;transition:opacity .15s;box-shadow:0 1px 3px rgba(0,0,0,.18);user-select:none;pointer-events:auto}
+.ui-devtag:hover,.ui-devtag.on,.ui-devtag:focus-visible{opacity:1}
+.ui-devtag:focus-visible{outline:2px solid #0B3D00;outline-offset:1px}
+.ui-devhost{position:relative}
+/* 标题挂法：标签排在标题文字后面，行内显示、始终可见，可以并排多个 */
+.ui-devtag.inline{position:static;vertical-align:middle;margin:0 0 0 6px;font-size:10px;line-height:14px;font-weight:700;letter-spacing:0}
+.ui-devtag.inline + .ui-devtag.inline{margin-left:4px}
+/* 所有标签默认显示为绿点：看上去 8px，点击热区 16px；普通控件的贴在控件右上角外沿，标题挂法的排在标题文字后面。
+   鼠标移上去或键盘聚焦时，由 nav.js 在最上层浮层（.ui-devlift）展开成完整标签，绿点本身不变大、不挤动标题排版 */
+.ui-devtag.mini{width:16px;height:16px;padding:0;border:0;border-radius:50%;background:transparent;box-shadow:none;font-size:0;line-height:0;overflow:hidden;opacity:.55}
+.ui-devtag.mini::before{content:"";position:absolute;left:4px;top:4px;width:8px;height:8px;border-radius:50%;background:#39FF14;border:1px solid #1FB800;box-sizing:border-box;box-shadow:0 1px 2px rgba(0,0,0,.25)}
+.ui-devtag.mini.inline{position:relative;margin-left:2px}
+.ui-devtag.mini.inline + .ui-devtag.mini.inline{margin-left:0}
+.ui-devtag.mini:hover,.ui-devtag.mini.on,.ui-devtag.mini:focus-visible{opacity:1}
+/* 鼠标移到绿点上时的独立浮层：展开成完整标签「研发说明·编号 控件名」，最上层（低于研发说明弹窗 2147483000），不被页面元素盖住 */
+.ui-devtag.ui-devlift{position:fixed;z-index:2147482000;opacity:1;margin:0;vertical-align:top}
+/* 研发说明图例：页面有绿点时常驻在顶栏（原型画面外）；没有顶栏时贴在左下角 */
+.ui-devhint{position:fixed;left:12px;bottom:12px;z-index:5;display:flex;align-items:center;gap:6px;max-width:calc(100vw - 24px);padding:4px 10px;border-radius:6px;background:#F1FFEC;color:#1F5A12;border:1px solid #9BE58A;font:12px/18px "Microsoft YaHei","微软雅黑",sans-serif}
+.ui-devhint i{flex:none;display:inline-block;width:8px;height:8px;border-radius:50%;background:#39FF14;border:1px solid #1FB800;box-sizing:border-box}
+.ui-devhint span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+.ui-devhint.in-bar{position:static;flex:0 1 auto;min-width:0;max-width:none;padding:2px 8px}@media print{.ui-devhint{display:none!important}}
+.ui-devpop-mask{position:fixed;inset:0;z-index:2147483000;background:rgba(10,20,10,.38);display:grid;place-items:center;padding:16px}
+.ui-devpop{position:relative;box-sizing:border-box;width:min(480px,100%);max-height:calc(100vh - 32px);overflow:auto;background:#fff;color:#1B1720;border-radius:12px;border-top:4px solid #39FF14;padding:16px 18px 14px;font:13px/1.65 "Microsoft YaHei","微软雅黑",sans-serif;box-shadow:0 10px 30px rgba(0,0,0,.25);text-align:left}
+.ui-devpop .dp-k{display:inline-block;font-size:11px;font-weight:700;color:#0B3D00;background:#39FF14;border-radius:8px;padding:0 7px}
+.ui-devpop h3{margin:6px 32px 2px 0;font-size:16px;color:#16052F}
+.ui-devpop .dp-page{font-size:12px;color:#6A6076;margin-bottom:6px}
+.ui-devpop dl{margin:8px 0 0;display:grid;grid-template-columns:76px minmax(0,1fr);gap:6px 10px}
+.ui-devpop dt{font-weight:700;color:#3A2E4A}
+.ui-devpop dd{margin:0;word-break:break-word;overflow-wrap:anywhere}
+.ui-devpop dd.dp-f{font-family:Consolas,"Microsoft YaHei",monospace;background:#F3FFF0;border:1px solid #B7F5A8;border-radius:6px;padding:4px 8px}
+.ui-devpop .dp-miss{color:#C00000}
+.ui-devpop .dp-prd{display:inline-block;margin-top:12px;font-weight:700;color:#1677FF;text-decoration:none}
+@media (max-width:480px){.ui-devpop dl{grid-template-columns:minmax(0,1fr)}.ui-devpop dt{margin-top:4px}}
+@media print{.ui-devtag{display:none!important}}
+/* PRD 附录 D 页面控件说明 */
+.paper .dev-tbl .dev-id{white-space:nowrap;font-weight:700}
+.paper .dev-tbl .dev-f{font-family:Consolas,"Microsoft YaHei",monospace;background:#F3FFF0;border-radius:4px;padding:0 4px}
+.paper .dev-tbl .dev-k{color:#6A6076;font-weight:700;margin-right:4px}
+.paper .dev-tbl tr.dev-hit td{background:#EFFFEA;box-shadow:inset 0 0 0 9999px rgba(57,255,20,.10)}

@@ -57,11 +57,11 @@ window.ARCH = (function () {
       pages.map(function (p) {
         return '<tr><td class="w"><a href="' + esc(ROOT + p.href) + '">' + esc(p.title) + "</a></td><td>" + (p.type === "home" ? "主页" : TYPE[p.type] || "") + "</td><td>" + esc(p.group) + "</td>" +
           ROLES.map(function (r) {
-            if (!canFor(p, r.k)) return '<td class="no">—</td>';
+            if (!canFor(p, r.k)) return '<td class="no">-</td>';
             return homeOf(D, r.k) === p.href ? '<td class="def">★ 默认页</td>' : '<td class="ok">✓</td>';
           }).join("") + "</tr>";
       }).join("") + "</tbody></table></div>" +
-      '<p class="arch-foot">✓ 可访问　★ 打开后的默认页　— 不可访问（该角色站点里没有这个页面）。产品能看全部页面；架构图按目录数据自动生成。</p>';
+      '<p class="arch-foot">✓ 可访问　★ 打开后的默认页　- 不可访问（该角色站点里没有这个页面）。产品能看全部页面；架构图按目录数据自动生成。</p>';
     box.innerHTML = html;
   }
   return { render: render };

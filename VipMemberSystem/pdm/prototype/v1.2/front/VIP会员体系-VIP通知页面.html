@@ -12,16 +12,24 @@
 .vn-lobby .tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}
 .vn-lobby .tiles div{height:70px;border-radius:10px;background:#1a2030;display:grid;place-items:center;color:#8b94a8;font-size:12px}
 .vn-mask{position:absolute;inset:30px 0 0;background:rgba(5,8,12,.72);display:grid;place-items:center;padding:22px;z-index:5}
+.vn-mask[hidden]{display:none}
 .vn-dlg{position:relative;width:100%;background:linear-gradient(180deg,#2a1b3c,#16101f);border:1.5px solid #d4af37;border-radius:16px;padding:22px 16px 16px;text-align:center;color:#f2f4f8}
 .vn-dlg h3{margin:0;font-size:20px;color:#f6d77b}
 .vn-dlg .bg{display:inline-block;margin:12px 0 6px;background:linear-gradient(90deg,#f6dc8c,#c8962e);color:#3a2600;font-weight:900;border-radius:12px;padding:3px 14px;font-size:16px}
 .vn-dlg p{margin:6px 0;font-size:13.5px}
 .vn-dlg .amt{font-size:15px;font-weight:800;color:#f6dc8c}
+.vn-dlg .lst{font-size:11.5px;color:#a99fbb}
+/* KYC 定级补发：确认弹窗逐级列出各级升级奖金，最后一行合计（用户 2026-10-29） */
+.vn-items{margin:8px auto 2px;max-width:220px;font-size:13px;text-align:left}
+.vn-items[hidden]{display:none}
+.vn-items div{display:flex;justify-content:space-between;padding:3px 2px;border-bottom:1px dashed rgba(246,220,140,.25)}
+.vn-items div span:last-child{font-variant-numeric:tabular-nums;color:#f6dc8c}
+.vn-items div.sum{border-bottom:0;border-top:1px solid rgba(246,220,140,.6);margin-top:2px;font-weight:800}
+.vn-dlg .acts{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
 .vn-dlg .ux{all:unset;cursor:pointer;position:absolute;top:8px;right:8px;width:28px;height:28px;border-radius:50%;text-align:center;font:700 18px/28px Arial,sans-serif;color:#cbb7da;background:rgba(255,255,255,.08)}
 .vn-dlg .ux:focus-visible{outline:2px solid #f6d77b;outline-offset:2px}
-.vn-dlg .lst{font-size:11.5px;color:#a99fbb}
-.vn-dlg .acts{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
 .vn-dlg .acts button{all:unset;cursor:pointer;text-align:center;height:40px;line-height:40px;border-radius:10px;font-weight:700;font-size:13.5px}
+.vn-dlg .acts button:focus-visible{outline:2px solid #f6d77b;outline-offset:2px}
 .vn-dlg .acts .pri{background:linear-gradient(90deg,#f6dc8c,#c8962e);color:#3a2600}
 .vn-dlg .acts .sec{border:1px solid #4a3d5e;color:#e7e1f0}
 .vn-sms{padding:0!important;background:#f2f2f7;color:#111}
@@ -43,6 +51,102 @@
 .vn-tx{display:flex;justify-content:space-between;align-items:center;background:#1a2030;border-radius:10px;padding:10px 12px;font-size:13px}
 .vn-tx .pl{color:#3ecf8e;font-weight:700;font-variant-numeric:tabular-nums}
 .vn-tx small{display:block;color:#8b94a8;font-size:11px}
+/* 第三方游戏页（示意）：升级时同样弹 3 秒动画，平台页面不在前台；左上角「‹ 返回平台」回到平台后弹升级确认弹窗（规则 8，用户 2026-10-29） */
+.vn-game{padding:0!important;background:radial-gradient(120% 80% at 50% 30%,#3b1c0e,#0b0604)}
+.vn-game .gbar{display:flex;align-items:center;gap:8px;padding:8px 12px;background:rgba(0,0,0,.55);color:#f2f4f8;font-size:13px}
+.vn-game .gbar button{all:unset;cursor:pointer;font-weight:800;color:#f6dc8c}
+.vn-game .gbar button:focus-visible{outline:2px solid #f6dc8c}
+.vn-game .reel{margin:40px auto 0;width:80%;height:180px;border-radius:14px;border:3px solid #c8962e;background:repeating-linear-gradient(90deg,#1c1008 0 33%,#2a170b 33% 34%);display:grid;place-items:center;color:#f6dc8c;font-size:28px;letter-spacing:10px}
+/* 升级 3 秒提示动画：与「升级通知动画页面」同一实现（用户 2026-10-30），动画细节以该页为准 */
+/* ===== 升级 3 秒提示动画（规则 N34 · F08-01，用户 2026-10-30 调整动效，同日再调：文字更粗、LEVEL UP 盖住徽章上沿、VIPn 狠砸、整体放大到屏宽 95%）：
+   画面按 300 × 380 设计，脚本 UA 按手机画面宽度等比缩放（设计宽 300 = 屏宽 95%）；
+   0–0.5 秒徽章弹出（0.2 → 1.1 → 1）+ 冷色流星 → 0.4–2.0 秒四周暖色焰火陆续绽放 → 0.5–1.0 秒两行 LEVEL UP 从徽章背后升起、越过徽章停在上沿并盖在徽章上层 + 彩带 →
+   1.0–1.33 秒 VIPn 从约 3.6 倍大、半透明加速砸到徽章下部 + 残影收拢 → 1.33 秒落地压扁回弹、徽章下沉抖动、整屏震动、冲击波 + 火花 →
+   1.4–2.6 秒停留（文字流光、徽章闪光）→ 2.6–3.0 秒淡出 → 3.0 秒关闭；全程不拦截点击；减少动态效果时只保留整体淡入淡出 ===== */
+.ua-anim{position:absolute;inset:30px 0 0;z-index:6;pointer-events:none;display:grid;place-items:center;opacity:0;overflow:hidden;background:radial-gradient(62% 46% at 50% 44%,rgba(0,0,0,.15),rgba(5,8,12,.7));--ray:#f2c94c;--lvg:linear-gradient(180deg,#fffbe0,#ffd75e 45%,#a86b05 55%,#ffe28a);--stk:#3d2600}
+.ua-anim[hidden]{display:none}
+.ua-anim.play{animation:uaFade 3s linear forwards}
+.ua-anim .box{position:relative;width:300px;height:380px;flex:none;transform-origin:50% 50%}
+.ua-stage{position:absolute;inset:0}
+.ua-anim.play .ua-stage{animation:uaShake .38s linear 1.33s}
+.ua-bd{position:absolute;left:55px;top:132px;width:190px;height:190px;z-index:3;object-fit:contain;filter:drop-shadow(0 0 14px var(--ray))}
+.ua-anim.play .ua-bd{animation:uaBadge .5s cubic-bezier(.3,1.3,.5,1) both,uaSink .4s ease-out 1.33s,uaShine 1.1s ease-in-out 1.75s infinite alternate}
+/* 超粗金属字：段位金属渐变 + 厚描边 + 立体阴影 + 流光 */
+.ua-up b,.ua-lv,.ua-gh{display:inline-block;white-space:nowrap;font-family:Impact,"Arial Black","Haettenschweiler","Franklin Gothic Heavy",sans-serif;font-weight:900;background:linear-gradient(100deg,transparent 40%,rgba(255,255,255,.9) 50%,transparent 60%) no-repeat,var(--lvg);background-size:260% 100%,100% 100%;background-position:160% 0,0 0;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.ua-upw{position:absolute;left:0;right:0;top:-6px;text-align:center;z-index:1}
+.ua-anim.play .ua-upw{animation:uaRise .5s cubic-bezier(.25,.9,.35,1) .5s both}
+/* LEVEL UP 两行（用户 2026-10-30）：上行 LEVEL、下行 UP（略大），负行距，UP 在上层压住 LEVEL 下半部分约 30% 字高 */
+.ua-up{display:inline-block;filter:drop-shadow(0 3px 0 var(--stk)) drop-shadow(0 6px 0 rgba(0,0,0,.45)) drop-shadow(0 10px 10px rgba(0,0,0,.6))}
+.ua-up b{display:block;width:max-content;margin:0 auto;line-height:.9;letter-spacing:.03em;-webkit-text-stroke:2.6px var(--stk)}
+.ua-up .l1{font-size:58px}
+.ua-up .l2{position:relative;font-size:72px;margin-top:-.28em;filter:drop-shadow(0 -3px 0 var(--stk)) drop-shadow(0 -5px 6px rgba(0,0,0,.6))}   /* UP 压住 LEVEL 下半部分约 30% 字高，上沿加深色描边投影把两层分开（用户 2026-10-30） */
+.ua-anim.play .ua-up b{animation:uaSweep 1.2s ease-in-out 1.4s infinite}
+.ua-lvw{position:absolute;left:0;right:0;top:282px;height:84px;z-index:7;text-align:center;transform:scaleX(1.3)}   /* VIPn 宽体（用户 2026-10-30）：整体横向拉宽 1.3 倍，与高窄的 LEVEL UP 区分 */
+.ua-lv,.ua-gh{position:absolute;left:50%;top:0;font-family:"Arial Black","Segoe UI Black","Helvetica Neue",Arial,sans-serif;font-size:76px;line-height:84px;letter-spacing:.05em;-webkit-text-stroke:3.2px var(--stk);transform:translateX(-50%) skewX(-8deg)}
+.ua-lv{filter:drop-shadow(0 4px 0 var(--stk)) drop-shadow(0 8px 0 rgba(0,0,0,.5)) drop-shadow(0 14px 12px rgba(0,0,0,.7))}
+.ua-anim.play .ua-lv{animation:uaSlam .55s 1s both,uaSweep 1.2s ease-in-out 1.7s infinite}
+.ua-gh{opacity:0}
+.ua-anim.play .ua-gh{animation:uaGhost .36s ease-in 1s both}
+.ua-shock{position:absolute;left:50%;top:50%;width:170px;height:40px;margin:-20px 0 0 -85px;border-radius:50%;border:4px solid var(--ray);box-shadow:0 0 16px var(--ray),inset 0 0 10px var(--ray);opacity:0}
+.ua-shock.s2{border-width:2px;animation-delay:1.42s!important}
+.ua-anim.play .ua-shock{animation:uaShock .6s ease-out 1.33s both}
+/* 火花 / 碎屑：VIPn 落地时从落点向上方和两侧迸射 */
+.ua-spk{position:absolute;left:50%;top:50%;z-index:8}
+.ua-spk i{position:absolute;left:0;top:-1.5px;height:3px;border-radius:2px;background:linear-gradient(90deg,transparent,var(--mc) 60%,#fff);box-shadow:0 0 6px var(--mc);transform-origin:0 50%;opacity:0}
+.ua-anim.play .ua-spk i{animation:uaMet .5s cubic-bezier(.1,.7,.3,1) 1.33s both}
+/* 流星（冷色，用户 2026-10-30）：徽章弹出时以徽章为中心向四周喷射，拖尾由白到冷色渐隐；在焰火下层 */
+.ua-met{position:absolute;left:150px;top:227px;z-index:1}
+.ua-met i{position:absolute;left:0;top:-1.5px;height:3px;border-radius:2px;background:linear-gradient(90deg,transparent,var(--mc) 55%,#fff);box-shadow:0 0 6px var(--mc);transform-origin:0 50%;opacity:0}
+.ua-anim.play .ua-met i{animation-name:uaMet;animation-timing-function:cubic-bezier(.1,.6,.3,1);animation-fill-mode:both}
+/* 焰火（暖色，用户 2026-10-30「四周去掉光芒，而是向四周放焰火」）：徽章四周 5–6 发依次升空绽放，圆形放射火花带拖尾、下坠、二次闪烁；中心白金闪光 */
+.ua-fw{position:absolute;z-index:2;width:0;height:0}
+.ua-anim.play .ua-fw{animation:uaDroop 1.1s ease-in both}
+.ua-fw .rk{position:absolute;left:-2px;top:0;width:4px;height:16px;border-radius:2px;background:linear-gradient(#fff6d5,var(--mc),transparent);opacity:0}
+.ua-anim.play .ua-fw .rk{animation:uaRocket .28s ease-out both}
+.ua-fw s{position:absolute;left:-11px;top:-11px;width:22px;height:22px;border-radius:50%;background:radial-gradient(#fff,#fff1a8 35%,var(--mc) 55%,transparent 72%);opacity:0}
+.ua-anim.play .ua-fw s{animation:uaFlash .35s ease-out both}
+.ua-fw b{position:absolute;left:0;top:-1.5px;height:3px;border-radius:2px;background:linear-gradient(90deg,transparent,var(--mc) 55%,#fff6d5);box-shadow:0 0 5px var(--mc);transform-origin:0 50%;opacity:0}
+.ua-anim.play .ua-fw b{animation:uaFw .9s cubic-bezier(.15,.7,.3,1) both}
+@keyframes uaDroop{0%{transform:none}100%{transform:translateY(24px)}}
+@keyframes uaRocket{0%{transform:translateY(70px);opacity:1}85%{opacity:1}100%{transform:none;opacity:0}}
+@keyframes uaFlash{0%{transform:scale(.2);opacity:1}100%{transform:scale(2.6);opacity:0}}
+@keyframes uaFw{0%{transform:rotate(var(--a)) translateX(2px) scaleX(.3);opacity:1}55%{transform:rotate(var(--a)) translateX(var(--d)) scaleX(1);opacity:1}68%{opacity:.3}80%{opacity:.95}100%{transform:rotate(var(--a)) translateX(calc(var(--d) * 1.08)) scaleX(.4);opacity:0}}
+/* 彩带：从徽章后方向左上、右上喷射，旋转下落 */
+.ua-conf{position:absolute;left:150px;top:210px;z-index:1}
+.ua-conf i{position:absolute;left:0;top:0;border-radius:1px;opacity:0}
+.ua-anim.play .ua-conf i{animation-name:uaConf;animation-timing-function:cubic-bezier(.2,.7,.4,1);animation-fill-mode:both}
+@keyframes uaFade{0%{opacity:0}6%{opacity:1}87%{opacity:1}100%{opacity:0}}
+@keyframes uaBadge{0%{transform:scale(.2);opacity:0}60%{transform:scale(1.1);opacity:1}100%{transform:scale(1);opacity:1}}
+@keyframes uaSink{0%{transform:none}25%{transform:translateY(12px) scale(.97,.95) rotate(-2deg)}50%{transform:translateY(-4px) rotate(1.5deg)}75%{transform:translateY(2px) rotate(-.8deg)}100%{transform:none}}
+@keyframes uaShine{to{filter:drop-shadow(0 0 28px var(--ray)) brightness(1.12)}}
+/* LEVEL UP：前段在徽章下层（z-index 1），越过徽章后升到上层（z-index 6），回落停在徽章上沿 */
+@keyframes uaRise{0%{transform:translateY(156px) scale(.55);opacity:0;z-index:1}25%{opacity:1;z-index:1}55%{transform:translateY(-6px) scale(1);z-index:1}56%{z-index:6}75%{transform:translateY(-16px) scale(1.04);z-index:6}100%{transform:none;opacity:1;z-index:6}}
+@keyframes uaSweep{0%{background-position:160% 0,0 0}100%{background-position:-60% 0,0 0}}
+@keyframes uaSlam{0%{transform:translateX(-50%) skewX(-8deg) translateY(-40px) scale(3.6);opacity:.3;animation-timing-function:cubic-bezier(.6,0,.95,.5)}60%{transform:translateX(-50%) skewX(-8deg) scale(1);opacity:1;animation-timing-function:ease-out}72%{transform:translateX(-50%) skewX(-8deg) translateY(6px) scale(1.14,.8)}86%{transform:translateX(-50%) skewX(-8deg) translateY(-3px) scale(.97,1.05)}100%{transform:translateX(-50%) skewX(-8deg) scale(1);opacity:1}}
+@keyframes uaGhost{0%{transform:translateX(calc(-50% + var(--gx) * 2.4)) skewX(-8deg) scale(2.8);opacity:0}35%{opacity:var(--go)}100%{transform:translateX(-50%) skewX(-8deg) scale(1);opacity:0}}
+@keyframes uaShock{0%{transform:scale(.3);opacity:1}100%{transform:scale(2.6);opacity:0}}
+@keyframes uaShake{0%,100%{transform:none}15%{transform:translate(-9px,7px)}30%{transform:translate(8px,-6px)}45%{transform:translate(-6px,4px)}60%{transform:translate(5px,-3px)}80%{transform:translate(-2px,1px)}}
+@keyframes uaMet{0%{transform:rotate(var(--a)) translateX(14px) scaleX(.2);opacity:1}70%{opacity:1}100%{transform:rotate(var(--a)) translateX(var(--d)) scaleX(1);opacity:0}}
+@keyframes uaConf{0%{transform:translate(0,0) rotate(0);opacity:1}45%{transform:translate(var(--x1),var(--y1)) rotate(calc(var(--r) * .5));opacity:1}100%{transform:translate(var(--x2),var(--y2)) rotate(var(--r));opacity:0}}
+/* 段位（规则 N51）配色：--ray 主色（徽章光晕、冲击波、落地火花），--lvg 金属渐变，--stk 描边 */
+.ua-anim.t-iron{--ray:#b8bec5;--lvg:linear-gradient(180deg,#f4f6f8,#b9bfc6 45%,#5d6268 55%,#c9ced3);--stk:#1e2226}
+.ua-anim.t-bronze{--ray:#e7a86b;--lvg:linear-gradient(180deg,#fff1df,#f0b47a 45%,#9a5426 55%,#e5a06a);--stk:#3a1a06}
+.ua-anim.t-silver{--ray:#e3e9ef;--lvg:linear-gradient(180deg,#ffffff,#dfe5eb 45%,#7d8792 55%,#eef2f5);--stk:#1f2833}
+.ua-anim.t-gold{--ray:#f2c94c;--lvg:linear-gradient(180deg,#fffbe0,#ffd75e 45%,#a86b05 55%,#ffe28a);--stk:#3d2600}
+.ua-anim.t-plat{--ray:#bfe3f7;--lvg:linear-gradient(180deg,#ffffff,#d4f0ff 45%,#5f87a6 55%,#e6f6ff);--stk:#10283d}
+.ua-anim.t-diamond{--ray:#6fa8ff;--lvg:linear-gradient(180deg,#f2f8ff,#9cc8ff 45%,#1f4fc8 55%,#b9d6ff);--stk:#06143d}
+.ua-anim.t-star{--ray:#c08cff;--lvg:linear-gradient(180deg,#fff6cc,#f2c94c 40%,#9b5cf0 58%,#e2c6ff);--stk:#22073f}
+.ua-anim.t-glory{--ray:#ffcf5a;--lvg:linear-gradient(180deg,#fff6cc,#ffd75e 42%,#b3192c 58%,#ffcf6a);--stk:#3a0610}
+@media (prefers-reduced-motion:reduce){.ua-anim.play *{animation:none!important}.ua-met,.ua-fw,.ua-conf,.ua-gh,.ua-shock,.ua-spk{display:none}.ua-upw{z-index:6}}
+/* 段位颜色（规则 6，与 VIP中心一致）：徽章和动画勋章 */
+.tr-iron{background:radial-gradient(circle at 35% 30%,#666c72,#383c40 50%,#141618 92%)!important;color:#eef0f2!important;border:1.5px solid #050606}   /* 黑铁：深黑灰铸铁、文字浅色（用户 2026-10-29 追加，与 VIP中心一致） */
+.tr-bronze{background:linear-gradient(135deg,#fbe3cb,#b8713b 70%,#8a4e22)!important;color:#2e1405!important}
+.tr-silver{background:linear-gradient(135deg,#ffffff,#b9c1ca 70%,#8e98a3)!important;color:#18222d!important}
+.tr-gold{background:linear-gradient(135deg,#fff4cf,#d9a441 70%,#b07a1e)!important;color:#4a3008!important}
+.tr-plat{background:linear-gradient(135deg,#effffc,#7fd0c6 70%,#3f9f96)!important;color:#08332f!important}
+.tr-diamond{background:linear-gradient(135deg,#f4f2ff,#9db0ff 70%,#6d7cf0)!important;color:#121a52!important}
+.tr-star{background:radial-gradient(1.6px 1.6px at 22% 28%,#fff,transparent),radial-gradient(1.2px 1.2px at 72% 22%,#cfe0ff,transparent),radial-gradient(1.4px 1.4px at 60% 70%,#fff,transparent),radial-gradient(1px 1px at 32% 76%,#e6d9ff,transparent),linear-gradient(140deg,#2a3590,#24195e 55%,#0a0d2e)!important;color:#eef2ff!important;border:1.5px solid #8f9cff;box-shadow:0 0 10px rgba(143,156,255,.6)}   /* 星耀（用户 2026-10-29 追加）：深蓝紫星空 + 星点 */
+.tr-glory{background:radial-gradient(120% 90% at 20% 0%,#b3192c,#7a0e1e 45%,#3a0610)!important;color:#ffe08a!important;border:1.5px solid #f2c94c}   /* 荣耀改为金红（用户 2026-10-29） */
 </style>
 </head>
 <body>
@@ -52,50 +156,79 @@
   <div class="app" role="region" aria-label="手机画面">
     <div class="sb"><span>9:41</span><span>●●● 5G</span></div>
 
-    <!-- ============ 大厅 + 升级弹窗（单级 / 跨多级 / 强制审核） ============ -->
+    <!-- ============ 大厅（平台页面）：升级确认弹窗 / 待领取奖金通知 ============ -->
     <div class="view vn-lobby" id="vLobby">
-      <div class="topline">大厅</div>
+      <div class="topline" data-dev="D56" data-dev-inline>大厅</div>
       <div class="tiles"><div>Slot</div><div>Casino</div><div>Bingo</div><div>Poker</div><div>Arcade</div><div>Fishing</div></div>
-      <div class="vn-mask glow" id="upMask">
-        <div class="vn-dlg" role="dialog" aria-modal="true" aria-labelledby="upT" data-xclose>
-          <button type="button" class="ux glow" id="upX" aria-label="关闭" title="关闭">×</button>
+      <!-- 升级确认弹窗（规则 8，用户 2026-10-29）：「领取奖金」即领取本次合计；「查看权益」不领取、进 VIP中心打开该级详情；× 视为未领取，不再重复弹（每次升级只弹 1 次，当天没弹出的补弹 1 次），之后由待领取奖金通知提醒；跨多级只显示最终等级和合计 -->
+      <div class="vn-mask glow" id="upMask" hidden>
+        <div class="vn-dlg" role="dialog" aria-modal="true" aria-labelledby="upT">
+          <button type="button" class="ux glow" id="upX" data-dev="D45" aria-label="关闭" title="关闭">×</button>
           <h3 id="upT">恭喜升级！</h3>
-          <span class="bg" id="upBadge">VIP 5</span>
-          <p id="upLine">已升级到 VIP5</p>
-          <p class="amt" id="upAmt">升级奖金 ₱48 已到账</p>
-          <p class="lst" id="upList" hidden></p>
-          <div class="acts"><button type="button" class="sec" data-cancel id="upClose">知道了</button><button type="button" class="pri" id="upGo">查看权益</button></div>
+          <span class="bg" id="upBadge" data-dev="D38">VIP 5</span>
+          <p id="upLine" data-dev="D39">已升级到 VIP5</p>
+          <p class="amt" id="upAmt" data-dev="D40">升级奖金 ₱48</p>
+          <div class="vn-items glow" id="upList" data-dev="D41" hidden></div>
+          <p class="lst" id="upHint" data-dev="D42" hidden></p>
+          <div class="acts"><button type="button" class="sec" id="upGo" data-dev="D44">查看权益</button><button type="button" class="pri" id="upOk" data-dev="D43">领取奖金</button></div>
+        </div>
+      </div>
+      <!-- 待领取奖金通知（用户 2026-10-30 定，替代原登录提醒）：已登录状态每天首次进入平台原生页面时，有效期内未领取的升级、月度、生日奖金合并在一个弹窗里，逐行显示类别和金额 + 合计；「领取」一次领取全部，「查看权益」进 VIP中心，× 关闭 -->
+      <div class="vn-mask glow" id="rmMask" hidden>
+        <div class="vn-dlg" role="dialog" aria-modal="true" aria-labelledby="rmT">
+          <button type="button" class="ux glow" id="rmX" data-dev="D143" aria-label="关闭" title="关闭">×</button>
+          <h3 id="rmT">VIP 奖金待领取</h3>
+          <div class="vn-items glow" id="rmList" data-dev="D140"></div>
+          <div class="acts"><button type="button" class="sec" id="rmGo" data-dev="D142">查看权益</button><button type="button" class="pri" id="rmOk" data-dev="D141">领取</button></div>
         </div>
       </div>
     </div>
 
-    <!-- ============ 短信（月度奖金到账 / 生日前一天 / 生日当天 / 免打扰顺延） ============ -->
+    <!-- ============ 第三方游戏页（示意） ============ -->
+    <div class="view vn-game" id="vGame" hidden>
+      <div class="gbar"><button type="button" id="gBack" data-dev="D49">‹ 返回平台</button><span data-dev="D56" data-dev-inline>第三方游戏</span></div>
+      <div class="reel" aria-hidden="true">7 7 7</div>
+    </div>
+
+    <!-- 升级 3 秒提示动画（规则 8）：平台页、第三方游戏页都会弹，3 秒后自动关闭，不可交互、不领取；与「升级通知动画页面」同一实现（用户 2026-10-30），画面由脚本 UA 生成 -->
+    <div class="ua-anim glow" id="anim" hidden aria-live="polite"><div class="box"></div></div>
+
+    <!-- ============ 短信（奖金到账提醒 / 生日短信提醒；生日提醒发送时间点可选，用户 2026-10-30） ============ -->
     <div class="view vn-sms" id="vSms" hidden>
       <div class="hd"><b>789Bingo</b>短信</div>
       <div class="tm" id="smsTime">11-01 13:02</div>
-      <div class="bb" id="smsText"></div>
+      <div class="bb" id="smsText" data-dev="D50"></div>
     </div>
 
-    <!-- ============ 只推送（到账金额小于 ₱1） / 免打扰顺延的锁屏推送 ============ -->
+    <!-- ============ 只推送（金额小于 ₱1） / 免打扰顺延的锁屏推送 ============ -->
     <div class="view vn-lock" id="vLock" hidden>
       <div class="clk" id="lockClk">13:02</div><div class="dt" id="lockDt">11-01</div>
-      <div class="vn-push glow"><div class="ap"><span>789Bingo</span><span id="pushTm">现在</span></div><b id="pushT">VIP 月度奖金已到账</b><span id="pushB">10 月保级成功，₱0.50 已到账。</span></div>
+      <div class="vn-push glow" data-dev="D51"><div class="ap"><span>789Bingo</span><span id="pushTm">现在</span></div><b id="pushT">VIP 月度奖金待领取</b><span id="pushB">10 月达成 VIP1 保级投注，₱0.50 待领取，11-15 前有效。</span></div>
     </div>
 
-    <!-- ============ 站内信 + APP 推送 ============ -->
+    <!-- ============ 站内信 + APP 推送（奖金生成、可领取时发；领取到账后不再另发） ============ -->
     <div class="view vn-list" id="vInbox" hidden>
-      <div class="vn-push glow" style="margin:0 0 4px"><div class="ap"><span>789Bingo</span><span>现在</span></div><b>VIP 升级奖金已到账</b><span>升级到 VIP5，₱48 已到账。</span></div>
+      <div class="vn-push glow" data-dev="D51" style="margin:0 0 4px"><div class="ap"><span>789Bingo</span><span>现在</span></div><b>VIP 月度奖金待领取</b><span>10 月达成 VIP5 保级投注，₱38 待领取，11-15 前有效。</span></div>
       <div class="topline">站内信</div>
-      <div class="vn-msg glow"><b>VIP 升级奖金已到账</b><p>升级到 VIP5，₱48 已到账。</p><small>2026-10-27 15:20</small></div>
-      <div class="vn-msg glow"><b>VIP 月度奖金已到账</b><p>10 月保级成功，₱38 已到账。</p><small>2026-11-01 13:02</small></div>
-      <div class="vn-msg glow"><b>VIP 生日奖金已到账</b><p>生日快乐！₱488 已到账。</p><small>2026-10-13 10:21</small></div>
+      <div class="vn-msg glow" data-dev="D52"><b>VIP 月度奖金待领取</b><p>10 月达成 VIP5 保级投注，₱38 待领取，11-15 前有效。</p><small>2026-11-01 13:02</small></div>
+      <div class="vn-msg glow"><b>VIP 升级奖金待领取</b><p>升级到 VIP5，₱48 待领取，11-10 前有效。</p><small>2026-10-27 15:20</small></div>
+      <div class="vn-msg glow"><b>VIP 生日奖金待领取</b><p>生日快乐！₱488 待领取，10-27 前有效。</p><small>2026-10-13 00:00</small></div>
     </div>
 
-    <!-- ============ 交易记录 ============ -->
+    <!-- ============ 自动领取：到账站内信 + APP 推送（用户 2026-10-30；领取方式为「自动领取」的奖金生成即到账） ============ -->
+    <div class="view vn-list" id="vInboxAuto" hidden>
+      <div class="vn-push glow" data-dev="D51" style="margin:0 0 4px"><div class="ap"><span>789Bingo</span><span>现在</span></div><b>VIP 月度奖金已到账</b><span>10 月达成 VIP5 保级投注，₱38 已到账。</span></div>
+      <div class="topline">站内信</div>
+      <div class="vn-msg glow" data-dev="D53"><b>VIP 月度奖金已到账</b><p>10 月达成 VIP5 保级投注，₱38 已到账。</p><small>2026-11-01 13:02</small></div>
+      <div class="vn-msg glow"><b>VIP 升级奖金已到账</b><p>升级到 VIP5，₱48 已到账。</p><small>2026-10-27 15:20</small></div>
+      <div class="vn-msg glow"><b>VIP 生日奖金已到账</b><p>生日快乐！₱488 已到账。</p><small>2026-10-13 00:00</small></div>
+    </div>
+
+    <!-- ============ 交易记录（领取到账后生成） ============ -->
     <div class="view vn-list" id="vTxn" hidden>
-      <div class="topline"><a class="back" href="#up-one" aria-label="返回">‹</a>交易记录</div>
-      <div class="vn-tx glow"><div>VIP 月度奖金<small>2026-11-01 13:02 · 成功</small></div><span class="pl">+₱38.00</span></div>
-      <div class="vn-tx glow"><div>VIP 升级奖金<small>2026-10-27 15:20 · 成功</small></div><span class="pl">+₱48.00</span></div>
+      <div class="topline"><a class="back" href="#up-one" aria-label="返回" data-dev="D55">‹</a>交易记录</div>
+      <div class="vn-tx glow" data-dev="D54"><div>VIP 月度奖金<small>2026-11-01 13:05 · 成功</small></div><span class="pl">+₱38.00</span></div>
+      <div class="vn-tx glow"><div>VIP 升级奖金<small>2026-10-27 15:21 · 成功</small></div><span class="pl">+₱48.00</span></div>
       <div class="vn-tx glow"><div>VIP 生日奖金<small>2026-10-13 10:21 · 成功</small></div><span class="pl">+₱488.00</span></div>
     </div>
     <div class="toast" id="toast" role="status" hidden></div>
@@ -105,39 +238,55 @@
 
   <aside class="notes">
     <h2>VIP会员体系-v1.2-VIP通知页面</h2>
-    <p class="sub">升级弹窗、VIP 短信、到账站内信和 APP 推送、交易记录显示名。短信和推送为示意画面（真实环境由短信通道和系统推送送达）。带淡色光晕的是本需求新增的内容。</p>
+    <p class="sub">本页包含：升级 3 秒提示动画、升级确认弹窗（手动领取时点「领取奖金」领取升级奖金，自动领取时为到账通知）、待领取奖金通知（每天首次进入平台时弹出，替代原登录提醒）、VIP 短信（奖金到账提醒、生日短信提醒）、站内信和 APP 推送、交易记录显示名。短信和推送为示意画面，实际由短信通道和系统推送送达。带淡色光晕的是本需求新增内容。</p>
     <h3>模拟场景</h3>
     <div class="sim">
-      <button type="button" data-go="up-one"><span class="simtag">弹窗</span>升级弹窗 · 单级</button>
-      <button type="button" data-go="up-multi"><span class="simtag">弹窗</span>升级弹窗 · 跨多级</button>
-      <button type="button" data-go="up-audit"><span class="simtag">弹窗</span>升级弹窗 · 强制审核</button>
-      <button type="button" data-go="up-pending" class="glow"><span class="simtag">弹窗</span>升级弹窗 · 奖金发放中</button>
-      <button type="button" data-go="sms-monthly"><span class="simtag">短信</span>月度奖金到账短信</button>
-      <button type="button" data-go="sms-small"><span class="simtag">推送</span>到账金额小于 ₱1 只推送</button>
-      <button type="button" data-go="sms-bd-before"><span class="simtag">短信</span>生日提醒短信 · 前一天</button>
-      <button type="button" data-go="sms-bd-today"><span class="simtag">短信</span>生日提醒短信 · 当天</button>
-      <button type="button" data-go="inbox"><span class="simtag">站内信</span>到账站内信与 APP 推送</button>
+      <button type="button" data-go="up-anim" class="glow"><span class="simtag">升级</span>升级 3 秒动画（平台页）→ 动画结束弹确认弹窗</button>
+      <button type="button" data-go="up-anim-game" class="glow"><span class="simtag">升级</span>升级 3 秒动画（第三方游戏页）→ 点「返回平台」弹确认弹窗</button>
+      <button type="button" data-go="up-game-fb" class="glow"><span class="simtag">升级</span>第三方游戏页无法叠加动画 → 返回平台先播 3 秒动画再弹确认弹窗</button>
+      <button type="button" data-go="up-one" class="glow"><span class="simtag">升级</span>回到平台 · 升级确认弹窗 · 领取奖金 / 查看权益</button>
+      <button type="button" data-go="up-multi" class="glow"><span class="simtag">升级</span>跨多级确认弹窗（VIP0 → VIP3，只显示 VIP3 和合计）</button>
+      <button type="button" data-go="up-again" class="glow"><span class="simtag">升级</span>升级奖金未领取 · 次日首次进入平台 → 待领取通知</button>
+      <button type="button" data-go="up-kyc" class="glow"><span class="simtag">升级</span>完成 KYC 定级 · 3 秒动画 + 逐级列出补发奖金的确认弹窗</button>
+      <button type="button" data-go="login-remind" class="glow"><span class="simtag">通知</span>待领取通知 · 只有一种（月度奖金）</button>
+      <button type="button" data-go="rm-all" class="glow"><span class="simtag">通知</span>待领取通知 · 三种奖金都有</button>
+      <button type="button" data-go="rm-ok" class="glow"><span class="simtag">通知</span>待领取通知 · 点「领取」一次领完</button>
+      <button type="button" data-go="rm-kyc" class="glow"><span class="simtag">通知</span>待领取通知 · 未完成 KYC（KYC 限制关闭）</button>
+      <button type="button" data-go="sms-pay" class="glow"><span class="simtag">短信</span>奖金到账提醒（示例：月度奖金到账）</button>
+      <button type="button" data-go="sms-small"><span class="simtag">推送</span>金额小于 ₱1 不发到账短信</button>
+      <button type="button" data-go="sms-bd-today"><span class="simtag">短信</span>生日短信提醒（生日当天）</button>
+      <button type="button" data-go="auto-up" class="glow"><span class="simtag">自动领取</span>升级 3 秒动画 → 到账通知弹窗（无「领取奖金」）</button>
+      <button type="button" data-go="auto-inbox" class="glow"><span class="simtag">自动领取</span>到账站内信与 APP 推送（月度、升级、生日）</button>
+      <button type="button" data-go="auto-mix" class="glow"><span class="simtag">自动领取</span>混合设置：升级自动到账 + 月度待领取（当天不叠加待领取通知）</button>
+      <button type="button" data-go="auto-up-pause" class="glow"><span class="simtag">自动领取</span>升级奖金自动领取 · 风控命中 → 弹窗不提金额</button>
+      <button type="button" data-go="up-risk" class="glow"><span class="simtag">风控</span>手动领取 + 风控暂停 · 动画照常 → 弹窗不提金额</button>
+      <button type="button" data-go="rm-part" class="glow"><span class="simtag">自动领取</span>部分自动（月度自动）· 待领取通知只列升级、生日</button>
+      <button type="button" data-go="rm-none" class="glow"><span class="simtag">自动领取</span>三类都自动领取 · 不弹待领取通知</button>
+      <button type="button" data-go="inbox"><span class="simtag">站内信</span>待领取站内信与 APP 推送</button>
       <button type="button" data-go="dnd"><span class="simtag">推送</span>免打扰时段顺延</button>
       <button type="button" data-go="txn"><span class="simtag">记录</span>交易记录显示名</button>
     </div>
     <h3>规则批注</h3>
     <ol>
-      <li><b>升级弹窗</b>：只在实时升级后弹 1 次（大厅或 VIP中心）；游戏中升级的返回大厅后弹，离线升级的下次登录后弹；多次升级合并为 1 个。上线定级、KYC 定级、逐级恢复、风控暂停期间、老版本 App 不弹。右上角 × 等同「知道了」，「查看权益」进 VIP中心。<span class="ref">PRD 规则 N34 · F08-01 升级弹窗</span></li>
-      <li><b>跨多级</b>：显示「已从 VIP a 升级到 VIP b」（从 VIP0 升级的写「已从会员升级到 VIP b」，VIP0 前台显示「会员」）和合计金额，下方逐级列出；超过 5 级只列最高 5 级并写「等 n 个等级」。<span class="ref">PRD 5. 前台页面二 · F08-01 升级弹窗</span></li>
-      <li><b>强制审核</b>：金额行改为「升级奖金 ₱x 审核中，通过后到账」。<span class="ref">PRD 规则 N30 · F06-02 强制审核</span></li>
-      <li><b>升级时到账失败</b>：升级照常生效，奖金按规则自动重试；弹窗金额行改为「升级奖金发放中」。<span class="ref">PRD 第 9 章、规则 N29 · F08-01 升级弹窗</span></li>
-      <li><b>月度奖金到账短信</b>：模板「VIP 月度奖金到账」，金额写「₱」（只这一个模板例外，其他 VIP 短信写 PHP）；月度奖金实际到账时发，每人每月最多 1 条；到账金额小于 ₱1 只发推送、不发短信。<span class="ref">PRD 规则 N35、N39 · F08-02 VIP 短信</span></li>
-      <li><b>生日提醒短信</b>：前一天 10:00 发模板「VIP 生日提醒 · 前一天」（不写金额）；当天 10:00 对待领取的发「VIP 生日提醒 · 当天」（金额写 PHP）。风控暂停、体系关闭、未完成 KYC 不发。<span class="ref">PRD 规则 N36 · F08-02 VIP 短信</span></li>
-      <li><b>免打扰</b>：21:00:00 至次日 09:59:59（GMT+8）触发的短信和推送顺延到 10:00 发送，站内信即时生成。<span class="ref">PRD 规则 N38 · F08-02 VIP 短信</span></li>
-      <li><b>站内信与推送</b>：三类奖金实际到账时各发 1 条站内信和 1 条推送；待审核、暂停发放、驳回、作废、过期不发。<span class="ref">PRD 规则 N37 · F08-03 站内信与 APP 推送</span></li>
-      <li><b>交易记录</b>：类型显示「VIP 升级奖金」「VIP 月度奖金」「VIP 生日奖金」。<span class="ref">PRD 规则 N28 · F06-01 到账与流水</span></li>
+      <li><b>升级 3 秒提示动画</b>（用户 2026-10-29 定）：累计达到升级条件后，玩家无论在哪个页面（含第三方游戏页面）立即弹出，3 秒后自动关闭，不可交互、不领取；显示内容、时序和各段位效果见 <a href="VIP会员体系-升级通知动画页面.html">升级通知动画页面</a>。多次连续升级合并为一次，只显示最终升到的最高等级。动画期间断网照常 3 秒关闭。上线结算、降级后恢复、老版本 App 不弹；风控暂停期间照常弹，弹窗不提金额、没有「领取奖金」（用户 2026-10-31 定）。技术上无法在第三方游戏页面叠加动画时，游戏中不弹，玩家回到平台页面先播 3 秒动画，再弹确认弹窗（见场景「第三方游戏页无法叠加动画」）。<span class="ref">PRD 规则 N34 升级动画与确认弹窗 · F08-01 升级动画与确认弹窗</span></li>
+      <li><b>升级确认弹窗</b>（用户 2026-10-29 定）：玩家回到平台页面时弹出（离开第三方游戏回到平台任意页面；本来就在平台页面的，动画结束后弹）；点遮罩不关闭。显示徽章、「已升级到 VIPn」、「升级奖金 ₱x」和两个按钮：「领取奖金」领取本次合计、直接到账，toast「领取成功，已到账」后弹窗关闭；其他结果按 PRD 第 4 章「领取结果」表（原型未演示）：到账失败「领取失败，请重试」、弹窗保留可再点；部分失败「部分奖金领取失败，请重试」、只列失败的；已过期「奖金已过期」、风控暂停「暂不可领取，有疑问联系客服」、已被领取「奖金已领取」，弹窗关闭；「查看权益」不领取，进入 VIP中心、定位到升到的最高等级卡并打开其详情弹窗，可在弹窗里领取。右上角 × 视为未领取。弹出次数和未领取的处理见「未领取」。<span class="ref">PRD 规则 N34 升级动画与确认弹窗 · F08-01 升级动画与确认弹窗</span></li>
+      <li><b>跨多级</b>（用户 2026-10-29 定）：一次升多级或短时间内连续升级，动画和确认弹窗都只显示最终升到的最高等级（如「已升级到 VIP3」），金额只显示一个数字，为本次跨过的各级升级奖金合计；点「领取奖金」一次领完。后台仍按每一级分别生成记录。KYC 定级补发的确认弹窗逐级列出，见「完成 KYC 定级」。<span class="ref">PRD 规则 N9 升级奖金、N34 升级动画与确认弹窗</span></li>
+      <li><b>未领取</b>（点 × 或「查看权益」后没领、关闭 App、断网等；R8 未领取提醒，用户 2026-10-30 定）：升级确认弹窗每次升级只弹 1 次，当天没能弹出的，下次进入平台页面补弹 1 次。之后在有效期内未领取的，从次日起由「待领取奖金通知」每天提醒 1 次，直到领取或过期（后台「领奖有效期」默认 15 天，含升级当天；过期作废，该级不再生成）。VIP中心该等级卡和刻度显示小红点，也可在该级「查看详情」弹窗领取。<span class="ref">PRD 规则 N34 升级动画与确认弹窗、N52 领取与有效期、N56 待领取奖金通知</span></li>
+      <li><b>完成 KYC 定级</b>（用户 2026-10-29 定）：「KYC 限制」开启时完成 KYC，按累计定级，已达到各级的升级奖金补发为待领取（按当时配置金额；上线结算等级及以下不发），同样弹 3 秒动画和确认弹窗。确认弹窗<b>逐级列出</b>每一级的升级奖金（等级 + 金额），最后一行合计；正文「完成 KYC，已定级 VIPn」；按钮同普通升级（「领取奖金」一次领完、「查看权益」、×）。普通升级跨多级只显示最高等级和一个合计金额，不逐级列出。「KYC 限制」从开启改为关闭时不补发任何奖金：未定级的玩家按当时累计定级，记「不发放（KYC 限制关闭定级）」，不弹动画和确认弹窗、不发站内信（Q51 已定）。<span class="ref">PRD 规则 N23 KYC 限制开启（默认）、N25 ① KYC 限制切换、N34 升级动画与确认弹窗</span></li>
+      <li><b>待领取奖金通知</b>（R8 未领取提醒，用户 2026-10-30 定，替代原「登录提醒弹窗」）：已登录状态下每天首次进入平台原生页面（含登录后首次进入）时检查，有效期内存在未领取的升级奖金、月度奖金、生日奖金任一笔就弹出，每天最多 1 次（GMT+8 自然日）。生日奖金从生日当天开始提醒；已领取、已过期、风控暂停的不计入。多种奖金合并在一个弹窗：逐行「类别 + 金额」，最后一行合计。按钮：「领取」一次领取全部；「查看权益」进 VIP中心，在各等级「查看详情」里分别领取；× 关闭。升级当天已弹升级动画和确认弹窗的，当天不再叠加本通知，次日起仍未领取的照常提醒。未登录、老版本 App 不弹。KYC 按现有规则：「KYC 限制」开启时未完成 KYC 的玩家不参与 VIP、没有奖金；关闭时升级、月度奖金正常生成和领取，生日奖金仍须有 KYC 出生日期（规则 N21）。<span class="ref">PRD 规则 N56 待领取奖金通知 · F08-04 待领取奖金通知</span></li>
+      <li><b>奖金到账提醒短信</b>（用户 2026-10-30 定，替代原「月度奖金可领取短信」）：后台「奖金到账提醒」勾选时发送，取消勾选不发；模板在后台选择（默认「VIP 奖金到账」，正文仍称「升级奖金 / 月度奖金 / 生日奖金」）。只对领取方式为「自动领取」的奖金发送：该类奖金每笔自动到账时发 1 条，放行、补发直接到账同样发；<b>手动领取的奖金玩家领取到账时不发短信</b>；一次跨多级同时到账的升级奖金合并为 1 条，写合计；金额写「PHP」；没有「可领取提醒」短信。三种奖金都为手动领取（默认）时后台本项置灰。金额小于 ₱1、所选模板状态异常时不发；遵守免打扰时段。<span class="ref">PRD 规则 N35 奖金到账提醒短信、N39 短信金额写法、N54 短信模板状态异常 · F08-02 VIP 短信</span></li>
+      <li><b>生日短信提醒</b>（用户 2026-10-30 定）：后台「生日短信提醒」勾选时，按所选时间点给有生日奖金的玩家发 1 条：生日所在月 1 日（该月生日奖金生成后发）、生日前三天、生日前一天或生日当天（默认，10:00）；短信正文不写结算日期和时间；跨月按实际日期，免打扰时段顺延；生日为 1 日时，「1 日」与「当天」同一天只发 1 条。生日奖金从生日当天起可领，提前发送的只作提醒（模板默认「VIP 生日提醒」，金额写 PHP）。取消勾选、模板状态异常、风控暂停、体系关闭时不发；是否因未完成 KYC 不发按「KYC 限制」判断：开启时未完成 KYC 的不发，关闭时照常发。<span class="ref">PRD 规则 N36 生日短信提醒、N54 短信模板状态异常 · F08-02 VIP 短信</span></li>
+      <li><b>自动领取</b>（用户 2026-10-30 定；风控部分 2026-10-31 定）：后台按奖金类型分别设置领取方式（默认都为手动领取）。设为「自动领取」的奖金生成即到账（风控命中为暂停发放），没有待领取和有效期，不出现在待领取奖金通知里；三类都自动时不弹该通知。升级时 3 秒动画照常，之后弹到账通知（「升级奖金 ₱x 已到账」，只有「查看权益」和 ×）；恢复等级不播动画。月度奖金在每月初评定完成后、生日奖金在生日当天 00:00 后（「KYC 限制」开启时须已完成 KYC）到账。到账时各发 1 条站内信和推送（「VIP xx 奖金已到账」），勾选「奖金到账提醒」时另发短信（只对自动领取的奖金；手动领取的玩家领取到账时不发短信）。风控命中时弹窗不提金额，不发到账站内信和推送。混合设置时各奖金按各自方式处理。<span class="ref">PRD 规则 N52 领取与有效期、N53 领取方式</span></li>
+      <li><b>免打扰</b>：21:00:00 至次日 09:59:59（GMT+8）触发的短信和推送顺延到 10:00 发送，站内信即时生成。<span style="color:#C00000">※ 若目前平台已存在短信发送限制功能，此功能可不做</span>。<span class="ref">PRD 规则 N38 免打扰时段 · F08-02 VIP 短信</span></li>
+      <li><b>站内信与推送</b>：升级奖金、月度奖金生成待领取时，生日奖金在生日当天 00:00 可领取时，各发 1 条站内信和 1 条推送，写明截止日期：「VIP 升级奖金待领取」升级到 VIPn，₱x 待领取，MM-DD 前有效。／「VIP 月度奖金待领取」10 月达成 VIPk 保级投注，₱x 待领取，MM-DD 前有效。／「VIP 生日奖金待领取」生日快乐！₱x 待领取，MM-DD 前有效。领取到账后不再另发站内信；暂停发放、作废、过期不发。<span class="ref">PRD 规则 N37 站内信与 APP 推送 · F08-03 站内信与 APP 推送</span></li>
+      <li><b>交易记录</b>：玩家领取到账后生成，类型显示「VIP 升级奖金」「VIP 月度奖金」「VIP 生日奖金」。<span class="ref">PRD 第 5 章 F06-01 交易记录</span></li>
     </ol>
     <h3>评审待确认</h3>
     <ol>
-      <li><b>短信金额符号</b>：月度奖金到账短信用「₱」（原方案十六示例），其他用「PHP」（C-15）。<span class="ref">PRD 待确认 Q17</span></li>
-      <li><b>文案定稿</b>：弹窗、站内信、推送和生日短信英文为示意。<span class="ref">PRD 待确认 Q14</span></li>
+      <li><b>短信金额写法（已定，用户 10-30）</b>：「VIP 奖金到账」「VIP 生日提醒」两个短信的金额都写「PHP」，站内信和 APP 推送用「₱」（C-15 短信金额写法）。<span class="ref">PRD 规则 N39 短信金额写法、Q17 VIP 短信金额写法（已定）</span></li>
+      <li><b>文案定稿</b>：动画、弹窗、站内信、推送和短信的英文为示意。<span class="ref">PRD Q14 前台文案定稿（待确认）</span></li>
     </ol>
-    <div class="pager"><a href="VIP会员体系-VIP中心页面.html">← 上一页：VIP中心页面</a><span></span></div>
+    <div class="pager"><a href="VIP会员体系-VIP中心页面.html">← 上一页：VIP中心页面</a><a href="VIP会员体系-升级通知动画页面.html">下一页：升级通知动画页面 →</a></div>
   </aside>
 </div>
 </div>
@@ -149,45 +298,217 @@
 <script src="../../../assets/proto.js"></script>
 <script>
 (function () {
+  /* 段位（规则 6，与 VIP中心同一算法）：默认 VIP0 + VIP1–VIP24 + SUPER VIP，TOP = 25、中间 N = 24 */
+  /* 中间 6 段（用户 2026-10-29 追加「星耀」）：N < 6 每段 1 级；N ≥ 6：s = ⌈N ÷ 6⌉，星耀至白银各 s 级，余下给青铜；余下 < 1 时各段 ⌊N ÷ 6⌋ 级、余数从星耀往下各加 1 */
+  var TOP = 25, TIERS = ["bronze", "silver", "gold", "plat", "diamond", "star"];
+  function tierOf(i) {
+    if (i === 0) return "iron"; if (i === TOP) return "glory";
+    var n = TOP - 1, sz = [0, 0, 0, 0, 0, 0], j;
+    if (n < 6) for (j = 0; j < n; j++) sz[j] = 1;
+    else { var s = Math.ceil(n / 6); if (n - 5 * s >= 1) sz = [n - 5 * s, s, s, s, s, s]; else { var b = Math.floor(n / 6), r = n % 6; sz = [b, b, b, b, b, b]; for (j = 0; j < r; j++) sz[5 - j]++; } }
+    for (j = 0, n = 0; j < 6; j++) { n += sz[j]; if (i <= n) return TIERS[j]; }
+    return "star";
+  }
+  /* 升级 3 秒提示动画（与「升级通知动画页面」同一实现，用户 2026-10-30）：每次播放重新生成画面和粒子——
+     冷色流星 8–14 道、暖色焰火 5–6 发（每发 14 粒火花，徽章四周依次升空绽放）、彩带 26 片、落地火花 14 道；画面按 300 宽设计，按手机画面宽度等比缩放到 95% */
+  var UA = (function () {
+    var PAL = { iron: ["#b8bec5", "#6b7178", "#eef0f2"], bronze: ["#e7a86b", "#b8713b", "#ffe1c2"], silver: ["#e9eef3", "#9aa6b2", "#ffffff"], gold: ["#f2c94c", "#d99a1e", "#fff4c2"], plat: ["#bfe3f7", "#7fb6d6", "#f0fbff"], diamond: ["#6fa8ff", "#2f63e0", "#d8e8ff"], star: ["#f2c94c", "#9b5cf0", "#e9d6ff"], glory: ["#ffcf5a", "#c8202f", "#fff0c2"] };
+    var FW_POS = [[40, -40], [260, -40], [6, 232], [294, 232], [30, 402], [270, 402]];   /* 焰火位置（设计坐标）：左上、右上、左、右、左下、右下，避开徽章和文字主体 */
+    var COLD = ["#e8f6ff", "#7fd6ff", "#5aa0ff", "#9d8cff"], WARM = ["#fff1a8", "#ffc23d", "#ff7a2e", "#ff3d5a", "#ff86b0"];   /* 流星冷色、焰火暖色（用户 2026-10-30），不随段位 */
+    function rnd(a, b) { return a + Math.random() * (b - a); }
+    function mk(tag, cls, txt) { var e = document.createElement(tag); if (cls) e.className = cls; if (txt != null) e.textContent = txt; return e; }
+    function vars(e, o) { for (var p in o) e.style.setProperty(p, o[p]); }
+    function pick(a) { return a[Math.floor(Math.random() * a.length)]; }
+    function build(box, name, tier, src) {
+      var pal = PAL[tier] || PAL.gold, st = mk("div", "ua-stage"), i, j;
+      box.textContent = "";
+      /* 冷色流星：徽章弹出时向四周喷射，0.6–1 秒内消散（在焰火下层） */
+      var met = mk("div", "ua-met"), n = 8 + Math.floor(Math.random() * 7);
+      for (i = 0; i < n; i++) {
+        var m = mk("i"); vars(m, { "--a": rnd(0, 360) + "deg", "--d": rnd(120, 200) + "px", "--mc": pick(COLD) });
+        m.style.width = rnd(30, 66) + "px"; m.style.animationDuration = rnd(0.6, 1) + "s"; m.style.animationDelay = rnd(0, 0.12) + "s"; met.appendChild(m);
+      }
+      st.appendChild(met);
+      /* 暖色焰火：5–6 发，0.4–2.0 秒陆续绽放，火花中心偏白金 */
+      var pos = FW_POS.slice().sort(function () { return Math.random() - 0.5; }), nf = 5 + Math.floor(Math.random() * 2);
+      for (i = 0; i < nf; i++) {
+        var t = 0.4 + i * 0.32 + rnd(0, 0.08), fw = mk("div", "ua-fw"), col = pick(WARM);
+        fw.style.left = pos[i][0] + "px"; fw.style.top = pos[i][1] + "px"; fw.style.animationDelay = t + "s";
+        var rk = mk("i", "rk"); rk.style.setProperty("--mc", col); rk.style.animationDelay = (t - 0.28) + "s"; fw.appendChild(rk);
+        var fl = mk("s"); fl.style.setProperty("--mc", col); fl.style.animationDelay = t + "s"; fw.appendChild(fl);
+        for (j = 0; j < 14; j++) {
+          var b = mk("b"); vars(b, { "--a": (j * 360 / 14 + rnd(-8, 8)) + "deg", "--d": rnd(34, 52) + "px", "--mc": Math.random() < 0.25 ? "#fff6d5" : Math.random() < 0.75 ? col : pick(WARM) });
+          b.style.width = rnd(10, 18) + "px"; b.style.animationDelay = t + "s"; fw.appendChild(b);
+        }
+        st.appendChild(fw);
+      }
+      /* 彩带：LEVEL UP 升起时从徽章后方向左上、右上喷射 */
+      var conf = mk("div", "ua-conf"), cols = pal.concat(["#ff6b8b", "#5fd3ff", "#ffe066", "#8cff9e"]);
+      for (i = 0; i < 26; i++) {
+        var c = mk("i"), sd = i % 2 ? 1 : -1, x1 = sd * rnd(45, 150), y1 = -rnd(100, 180);
+        c.style.background = pick(cols);
+        if (Math.random() < 0.35) { c.style.width = "3px"; c.style.height = rnd(12, 18) + "px"; } else { c.style.width = rnd(5, 8) + "px"; c.style.height = rnd(7, 11) + "px"; }
+        vars(c, { "--x1": x1 + "px", "--y1": y1 + "px", "--x2": (x1 + sd * rnd(10, 45)) + "px", "--y2": (y1 + rnd(130, 210)) + "px", "--r": (sd * rnd(360, 900)) + "deg" });
+        c.style.animationDuration = rnd(0.9, 1.2) + "s"; c.style.animationDelay = (0.5 + rnd(0, 0.15)) + "s"; conf.appendChild(c);
+      }
+      st.appendChild(conf);
+      var bd = mk("img", "ua-bd"); bd.src = src; bd.alt = ""; st.appendChild(bd);
+      var uw = mk("div", "ua-upw"), up = mk("span", "ua-up"); up.appendChild(mk("b", "l1", "LEVEL")); up.appendChild(mk("b", "l2", "UP")); uw.appendChild(up); st.appendChild(uw);   /* 两行：LEVEL 在上、UP 在下（用户 2026-10-30） */
+      var lw = mk("div", "ua-lvw");
+      [[-2, ".3"], [-1, ".5"], [1, ".5"], [2, ".3"]].forEach(function (g) { var e = mk("span", "ua-gh", name); e.setAttribute("aria-hidden", "true"); vars(e, { "--gx": g[0] * 24 + "px", "--go": g[1] }); lw.appendChild(e); });
+      lw.appendChild(mk("span", "ua-lv", name));
+      lw.appendChild(mk("i", "ua-shock")); lw.appendChild(mk("i", "ua-shock s2"));
+      var spk = mk("div", "ua-spk");
+      for (i = 0; i < 14; i++) { var s = mk("i"); vars(s, { "--a": rnd(185, 355) + "deg", "--d": rnd(50, 120) + "px", "--mc": Math.random() < 0.5 ? pal[0] : "#fff3c4" }); s.style.width = rnd(12, 26) + "px"; spk.appendChild(s); }
+      lw.appendChild(spk); st.appendChild(lw); box.appendChild(st);
+    }
+    /* 文字适配：LEVEL 行宽约 77%（设计宽 300 中占 230，两行总高约 160，盖住徽章上沿约 15%），UP 为 LEVEL 的 1.15 倍字号；VIPn 拉宽 1.3 倍后最宽 240（约屏宽 77%，SUPER VIP 自动缩小） */
+    function fit(box) {
+      var l1 = box.querySelector(".ua-up .l1"), l2 = box.querySelector(".ua-up .l2"), w = l1.offsetWidth;
+      if (w) { var f1 = 58 * 230 / w; l1.style.fontSize = f1.toFixed(1) + "px"; l2.style.fontSize = (f1 * 1.15).toFixed(1) + "px"; }
+      var lv = box.querySelector(".ua-lv"), w2 = lv.offsetWidth;
+      if (w2 > 185) { var fs = (76 * 185 / w2).toFixed(1) + "px"; [].forEach.call(box.querySelectorAll(".ua-lv,.ua-gh"), function (e) { e.style.fontSize = fs; }); }
+    }
+    return {
+      play: function (a, name, tier, src) {
+        var box = a.querySelector(".box");
+        a.className = "ua-anim glow t-" + tier; a.hidden = false; build(box, name, tier, src); fit(box);
+        var k = Math.min(0.95 * a.clientWidth / 300, 0.92 * a.clientHeight / 380); box.style.transform = "scale(" + k.toFixed(3) + ")";
+        void a.offsetWidth; a.classList.add("play");
+      },
+      stop: function (a) { a.hidden = true; a.classList.remove("play"); }
+    };
+  })();
+  /* 确认弹窗数据：lv 最终等级、line 正文、amt 金额（跨多级为合计）、hint 下方小字 */
+  var UP = {
+    "up-one": { lv: 5, line: "已升级到 VIP5", amt: "升级奖金 ₱48" },
+    "up-multi": { lv: 3, line: "已升级到 VIP3", amt: "升级奖金 ₱54" },
+
+    /* KYC 定级补发：先弹 3 秒动画，确认弹窗逐级列出各级升级奖金 + 合计（用户 2026-10-29 已定），不显示单行金额 */
+    "up-kyc": { lv: 3, line: "完成 KYC，已定级 VIP3", items: [["VIP1", "₱8"], ["VIP2", "₱18"], ["VIP3", "₱28"]], sum: "₱54" },
+    "up-anim": { lv: 5, line: "已升级到 VIP5", amt: "升级奖金 ₱48" },
+    "up-anim-game": { lv: 5, line: "已升级到 VIP5", amt: "升级奖金 ₱48" },
+    /* 降级方案（用户 2026-10-29）：技术上无法在第三方游戏页面叠加动画时，游戏中不弹，回到平台页面先播 3 秒动画再弹确认弹窗 */
+    "up-game-fb": { lv: 5, line: "已升级到 VIP5", amt: "升级奖金 ₱48", fb: true },
+    /* 自动领取（用户 2026-10-30，后台「升级奖金领取方式」= 自动领取）：确认弹窗改为到账通知，只有「查看权益」和 ×；mix：升级自动、月度手动，关闭后弹待领取奖金通知（演示） */
+    "auto-up": { lv: 5, line: "已升级到 VIP5", amt: "升级奖金 ₱48 已到账", auto: true },
+    "auto-mix": { lv: 5, line: "已升级到 VIP5", amt: "升级奖金 ₱48 已到账", auto: true, mix: true },
+    "auto-up-pause": { lv: 5, line: "已升级到 VIP5", amt: "", auto: true },
+    "up-risk": { lv: 5, line: "已升级到 VIP5", amt: "", risk: true }   /* 手动领取 + 风控暂停：同样不提金额、没有「领取奖金」（用户 2026-10-31） */   /* 自动到账时风控命中：弹窗不提金额，只显示恭喜升级 VIPn（用户 2026-10-31 已定） */
+  };
   var NOTE = {
-    "sms-monthly": "11 月 1 日 13:00 结算，13:02 月度奖金到账，不在免打扰时段，立即发送。示例为 VIP14 保级成功。",
-    "sms-small": "到账金额小于 ₱1（示例 ₱0.50）：只发 APP 推送，不发短信。",
-    "sms-bd-before": "生日 10-13：10-12 10:00 发送；不写金额。",
-    "sms-bd-today": "生日 10-13：当天 10:00 发送；有效期 15 天至 10-27。",
-    "dnd": "示例：11-01 22:15 审核通过到账（10 月月度奖金，强制审核开启），处于 21:00–10:00 免打扰时段，推送和短信顺延到 11-02 10:00 发送；站内信 22:15 即时生成。",
-    "up-pending": "升级时到账接口失败：升级照常生效，奖金按规则自动重试，弹窗金额行显示「升级奖金发放中」。",
-    "inbox": "推送与站内信同文，点击进入 VIP中心。",
-    "txn": "交易记录为现有页面，本需求只新增三种类型的显示名。"
+    "up-anim": "平台页升级：先弹 3 秒提示动画（自动关闭、不可点），结束后弹升级确认弹窗，点「领取奖金」领取。",
+    "up-anim-game": "第三方游戏中升级：同样弹 3 秒提示动画，结束后停留在游戏；点左上角「‹ 返回平台」回到平台后弹升级确认弹窗。技术上无法在游戏页面叠加动画时，按「第三方游戏页无法叠加动画」场景处理。",
+    "up-game-fb": "降级方案（技术上无法在第三方游戏页面叠加动画时，用户 2026-10-29）：游戏中不弹；点「‹ 返回平台」回到平台页面后，先播 3 秒动画，再弹升级确认弹窗。",
+    "up-one": "示例 VIP4 → VIP5（单级）：「领取奖金」即领取、直接到账；「查看权益」进入 VIP中心并打开 VIP5 详情弹窗（不领取）；× 关闭视为未领取。",
+    "up-multi": "示例 VIP0 → VIP3（跨多级）：只显示最终等级 VIP3，金额为 VIP1–VIP3 升级奖金合计 ₱54（₱8 + ₱18 + ₱28），点「领取奖金」一次领完；后台按每级各生成 1 笔。",
+    "up-again": "升级当天点 × 没领取（10-27 升到 VIP5）：次日（10-28）首次进入平台原生页面弹「待领取奖金通知」，每天 1 次，直到领取或 11-10 过期；升级确认弹窗不再重复弹（用户 2026-10-30 定）。",
+    "rm-all": "升级奖金、月度奖金、生日奖金都待领取（生日当天）：合并在一个弹窗，逐行显示类别和金额，最后一行合计。",
+    "rm-ok": "点「领取」一次领取弹窗里的全部奖金，直接到账；风控暂停的不计入、不领取。演示：自动点「领取」。",
+    "rm-kyc": "「KYC 限制」关闭、玩家未完成 KYC：升级、月度奖金照常可领；没有 KYC 出生日期，不生成生日奖金（规则 N21），通知只列升级、月度两行。「KYC 限制」开启时未完成 KYC 的玩家不参与 VIP，没有奖金，不弹本通知。",
+    "up-kyc": "完成 KYC 时定级 VIP3：先弹 3 秒动画，再弹确认弹窗，逐级列出 VIP1 ₱8、VIP2 ₱18、VIP3 ₱28，最后一行合计 ₱54；点「领取奖金」一次领完（用户 2026-10-29 已定）。「KYC 限制」从开启改为关闭时不补发、不弹动画和确认弹窗（规则 N25 ①）。",
+    "login-remind": "已登录状态每天首次进入平台原生页面，有效期内有未领取的奖金时弹一次（示例：只有 10 月 VIP14 月度奖金 ₱1,350）；「领取」一次领完，「查看权益」进 VIP中心在详情里领取，× 关闭（用户 2026-10-30 定）。",
+    "sms-pay": "奖金到账提醒（后台勾选「奖金到账提醒」时发送，用户 2026-10-30）：只在设为自动领取的奖金自动到账时发，手动领取的玩家领取到账时不发；三项都手动领取时后台置灰、不发。示例：月度工资设为自动领取，10 月达成 VIP14 保级投注，11-01 月度奖金 ₱1,350 自动到账，不在免打扰时段，立即发送；正文不写结算时间。",
+    "sms-small": "到账金额小于 ₱1（示例 ₱0.50，月度奖金设为自动领取）：不发到账短信，只发到账 APP 推送和站内信。",
+    "sms-bd-today": "生日短信提醒（后台勾选「生日短信提醒」、发送时间点选「生日当天」时）：生日 10-13，当天 10:00 发送；示例为生日奖金手动领取，领奖有效期 15 天，至 10-27。发送时间点也可选生日所在月 1 日、生日前三天、生日前一天，提前发送的只作提醒（用户 2026-10-30）。",
+    "auto-up": "后台「升级奖金领取方式」= 自动领取：升级后先弹 3 秒动画，回到平台页面弹到账通知（徽章、「已升级到 VIP5」「升级奖金 ₱48 已到账」），只有「查看权益」和 ×，没有「领取奖金」；关闭后不再弹。",
+    "auto-inbox": "自动领取的奖金生成即到账：升级奖金在升级时、月度奖金在每月初评定完成后、生日奖金在生日当天 00:00 后（「KYC 限制」开启时须已完成 KYC）到账，各发 1 条到账站内信和推送；勾选「奖金到账提醒」时另发到账短信。",
+    "auto-up-pause": "升级奖金设为自动领取、到账时风控命中（如风险分 ≥ 70，用户 2026-10-31 已定）：升级 3 秒动画照常，回到平台页面弹窗只显示「恭喜升级！」和「已升级到 VIP5」，不提奖金金额和状态，只有「查看权益」和 ×；不发到账站内信和推送；放行后直接到账（规则 N32），不再补弹。",
+    "up-risk": "玩家处于风控暂停状态时升级（升级奖金手动领取，用户 2026-10-31）：照常播 3 秒动画，弹窗只显示「恭喜升级！」和「已升级到 VIP5」，不提金额，没有「领取奖金」，只有「查看权益」和 ×；不发站内信和推送；暂停的奖金不进待领取奖金通知；放行后恢复为待领取，不补弹。",
+    "rm-part": "部分自动（用户 2026-10-30「当后台对应奖金项领取方式选为自动领取时，前台通知页面将不显示该奖项信息」）：月度工资设为自动领取，月度奖金已自动到账、不出现在通知里；通知只列手动领取且待领取的升级奖金 ₱48、生日奖金 ₱88，合计 ₱136。",
+    "rm-none": "三类奖金都设为自动领取（用户 2026-10-30「若都为自动，将不显示通知弹窗」）：没有待领取奖金，每天首次进入平台不弹待领取奖金通知；升级时 3 秒动画照常显示，确认弹窗为到账通知（见「升级 3 秒动画 → 到账通知弹窗」）。",
+    "auto-mix": "混合设置（用户 2026-10-30：领取方式按奖金类型单独设置）：升级奖金自动、月度奖金手动。升级时弹到账通知；关闭后当天不再叠加待领取奖金通知，待领取的月度奖金从次日起由「待领取奖金通知」提示（通知样式见场景「部分自动」）。",
+    "dnd": "示例：11-01 22:15 运营放行（10 月月度奖金从暂停发放恢复为待领取，有效期不顺延），处于 21:00–10:00 免打扰时段，推送顺延到 11-02 10:00 发送；站内信 22:15 即时生成。",
+    "inbox": "推送与站内信同文，点击进入 VIP中心。领取到账后不再另发站内信。",
+    "txn": "交易记录为现有页面，本需求只新增三种类型的显示名；领取到账时生成。"
   };
   var SMS = {
-    "sms-monthly": ["11-01 13:02", "₱1,350 VIP 月度奖金已到账！登录 789Bingo 查看。"],
-    "sms-bd-before": ["10-12 10:00", "明天是你的生日！明天到 789Bingo VIP中心领取 VIP 生日奖金。"],
+    "sms-pay": ["11-01 13:02", "PHP1,350 VIP 月度奖金已到账！登录 789Bingo 查看。"],
     "sms-bd-today": ["10-13 10:00", "789Bingo 祝你生日快乐！PHP488 VIP 生日奖金请在 10 月 27 日 23:59（GMT+8）前到 VIP中心领取。"]
   };
-  var VIEWS = ["up-one", "up-multi", "up-audit", "up-pending", "sms-monthly", "sms-small", "sms-bd-before", "sms-bd-today", "inbox", "dnd", "txn"];
+  var VIEWS = ["up-anim", "up-anim-game", "up-game-fb", "up-one", "up-multi", "up-again", "up-kyc", "login-remind", "rm-all", "rm-ok", "rm-kyc", "sms-pay", "sms-small", "sms-bd-today", "auto-up", "auto-inbox", "auto-mix", "auto-up-pause", "up-risk", "rm-part", "rm-none", "inbox", "dnd", "txn"];
+  var animTimer = 0, cur = null;
   function $(id) { return document.getElementById(id); }
+  function setTier(el, lv) { el.className = el.className.replace(/\s*tr-\w+/g, "") + " tr-" + tierOf(lv); }
+  function showConfirm(u) {
+    setTier($("upBadge"), u.lv); $("upBadge").textContent = "VIP " + u.lv;
+    $("upLine").textContent = u.line; $("upAmt").textContent = u.amt || ""; $("upAmt").hidden = !u.amt;
+    /* 逐级列出（KYC 定级补发）：每行等级 + 金额，最后一行合计 */
+    var ls = $("upList"); ls.textContent = ""; ls.hidden = !u.items;
+    (u.items || []).concat(u.items ? [["合计", u.sum]] : []).forEach(function (r, i, a) {
+      var row = document.createElement("div"); if (i === a.length - 1) row.className = "sum";
+      var s1 = document.createElement("span"); s1.textContent = r[0]; var s2 = document.createElement("span"); s2.textContent = r[1];
+      row.appendChild(s1); row.appendChild(s2); ls.appendChild(row);
+    });
+    $("upHint").hidden = !u.hint; $("upHint").textContent = u.hint || "";
+    $("upOk").disabled = false; $("upOk").textContent = "领取奖金"; $("upOk").hidden = !!u.auto || !!u.risk;   /* 自动领取：到账通知，没有「领取奖金」 */
+    $("upMask").hidden = false; (u.auto ? $("upGo") : $("upOk")).focus();
+  }
+  /* 3 秒提示动画：结束后自动关闭；在平台页则接着弹确认弹窗，在游戏页则等返回平台 */
+  /* 与「升级通知动画页面」同一实现（用户 2026-10-30）：段位徽章 +「LEVEL UP」+ 等级名；动画播放中返回平台的，播完再弹确认弹窗 */
+  var animThen = null;
+  function playAnim(u, then) {
+    clearTimeout(animTimer);
+    var a = $("anim"), t = tierOf(u.lv);
+    UA.play(a, u.lv === TOP ? "SUPER VIP" : "VIP" + u.lv, t, "../../../assets/vip-badge-" + t + ".webp"); animThen = then || null;
+    animTimer = setTimeout(function () { UA.stop(a); var f = animThen; animThen = null; if (f) f(); }, 3000);
+  }
   function show(v) {
     if (VIEWS.indexOf(v) < 0) v = "up-one";
-    ["vLobby", "vSms", "vLock", "vInbox", "vTxn"].forEach(function (k) { $(k).hidden = true; });
-    if (v.indexOf("up-") === 0) {
-      $("vLobby").hidden = false; $("upMask").hidden = false;
-      if (v === "up-multi") { $("upBadge").textContent = "VIP 3"; $("upLine").textContent = "已从会员升级到 VIP3"; $("upAmt").textContent = "升级奖金合计 ₱54 已到账"; $("upList").hidden = false; $("upList").textContent = "VIP1 ₱8 · VIP2 ₱18 · VIP3 ₱28"; }
-      else { $("upBadge").textContent = "VIP 5"; $("upLine").textContent = "已升级到 VIP5"; $("upList").hidden = true; $("upAmt").textContent = v === "up-audit" ? "升级奖金 ₱48 审核中，通过后到账" : v === "up-pending" ? "升级奖金发放中" : "升级奖金 ₱48 已到账"; }
-    } else if (SMS[v]) { $("vSms").hidden = false; $("smsTime").textContent = SMS[v][0]; $("smsText").textContent = SMS[v][1]; }
+    clearTimeout(animTimer); animThen = null; $("anim").hidden = true; $("anim").classList.remove("play");
+    ["vLobby", "vGame", "vSms", "vLock", "vInbox", "vInboxAuto", "vTxn"].forEach(function (k) { $(k).hidden = true; });
+    $("upMask").hidden = true; $("rmMask").hidden = true;
+    cur = UP[v] || null;
+    if (v === "up-anim") { $("vLobby").hidden = false; playAnim(cur, function () { showConfirm(cur); }); }
+    else if (v === "up-anim-game") { $("vGame").hidden = false; playAnim(cur, null); }
+    else if (v === "up-game-fb") { $("vGame").hidden = false; }
+    else if (v === "up-kyc" || v === "auto-up" || v === "auto-mix" || v === "auto-up-pause" || v === "up-risk") { $("vLobby").hidden = false; playAnim(cur, function () { showConfirm(cur); }); }
+    else if (cur) { $("vLobby").hidden = false; showConfirm(cur); }
+    else if (v === "rm-none") { $("vLobby").hidden = false; }   /* 三类都为自动领取：没有待领取奖金，不弹通知（用户 2026-10-30） */
+    else if (RM[v]) { $("vLobby").hidden = false; showRm(RM[v]); if (v === "rm-ok") setTimeout(function () { $("rmOk").click(); }, 900); }
+    else if (SMS[v]) { $("vSms").hidden = false; $("smsTime").textContent = SMS[v][0]; $("smsText").textContent = SMS[v][1]; }
     else if (v === "sms-small" || v === "dnd") {
-      $("vLock").hidden = false;
-      if (v === "dnd") { $("lockClk").textContent = "10:00"; $("lockDt").textContent = "11-02"; $("pushTm").textContent = "现在"; $("pushT").textContent = "VIP 月度奖金已到账"; $("pushB").textContent = "10 月保级成功，₱1,350 已到账。"; }
-      else { $("lockClk").textContent = "13:02"; $("lockDt").textContent = "11-01"; $("pushTm").textContent = "现在"; $("pushT").textContent = "VIP 月度奖金已到账"; $("pushB").textContent = "10 月保级成功，₱0.50 已到账。"; }
+      $("vLock").hidden = false; $("pushTm").textContent = "现在"; $("pushT").textContent = v === "sms-small" ? "VIP 月度奖金已到账" : "VIP 月度奖金待领取";
+      if (v === "dnd") { $("lockClk").textContent = "10:00"; $("lockDt").textContent = "11-02"; $("pushB").textContent = "10 月达成 VIP14 保级投注，₱1,350 待领取，11-15 前有效。"; }
+      else { $("lockClk").textContent = "13:02"; $("lockDt").textContent = "11-01"; $("pushB").textContent = "10 月达成 VIP1 保级投注，₱0.50 已到账。"; }
     } else if (v === "inbox") $("vInbox").hidden = false;
+    else if (v === "auto-inbox") $("vInboxAuto").hidden = false;
     else if (v === "txn") $("vTxn").hidden = false;
-    var n = NOTE[v] || "升级弹窗示例：VIP4 → VIP5（单级）、VIP0（前台显示「会员」）→ VIP3（跨多级）。点「知道了」或 × 关闭；「查看权益」上线时进入 VIP中心。";
-    $("outNote").textContent = n;
+    $("outNote").textContent = "数据均为示例。" + (NOTE[v] || "");
     if (location.hash.slice(1) !== v) history.replaceState(null, "", "#" + v);
     if (window.self !== window.top) window.parent.postMessage({ type: "proto-view", view: v }, "*");
   }
-  $("upClose").onclick = function () { $("upMask").hidden = true; };
-  $("upX").onclick = function () { $("upMask").hidden = true; };   /* 右上角 × 等同「知道了」（PRD 规则 N34） */
-  $("upGo").onclick = function () { location.href = "VIP会员体系-VIP中心页面.html#vip5"; };
+  /* 「领取奖金」= 领取本次合计：直接到账后关闭；重复点击只处理一次 */
+  $("upOk").onclick = function () {
+    var b = this; if (b.disabled) return; b.disabled = true; b.textContent = "领取中…";
+    setTimeout(function () { $("upMask").hidden = true; P.toast("领取成功，已到账"); }, 600);
+  };
+  /* 「查看权益」：不领取，进入 VIP中心定位到升到的最高等级卡并打开详情弹窗；× 视为未领取，不再重复弹，之后由待领取奖金通知提醒 */
+  $("upGo").onclick = function () { if (cur) location.href = "VIP会员体系-VIP中心页面.html#" + (cur.lv === 5 ? "vip5" : "up3") + "~dtl" + cur.lv; };
+  $("upX").onclick = function () { $("upMask").hidden = true; };   /* 升级当天不再叠加待领取奖金通知，从次日起提醒（规则 N56 ⑤，D45） */
+  $("gBack").onclick = function () {
+    $("vGame").hidden = true; $("vLobby").hidden = false; if (!cur) return;
+    if (cur.fb) playAnim(cur, function () { showConfirm(cur); });
+    else if (!$("anim").hidden) animThen = function () { showConfirm(cur); };   /* 动画播放中返回平台：播完再弹 */
+    else showConfirm(cur);
+  };
+  /* 待领取奖金通知（用户 2026-10-30 定）：items 逐行类别 + 金额，sum 合计 */
+  var RM = {
+    "login-remind": { items: [["月度奖金", "₱1,350"]], sum: "₱1,350" },
+    "up-again": { items: [["升级奖金", "₱48"]], sum: "₱48" },
+    "rm-all": { items: [["升级奖金", "₱48"], ["月度奖金", "₱38"], ["生日奖金", "₱88"]], sum: "₱174" },
+    "rm-ok": { items: [["升级奖金", "₱48"], ["月度奖金", "₱38"], ["生日奖金", "₱88"]], sum: "₱174" },
+    "rm-kyc": { items: [["升级奖金", "₱48"], ["月度奖金", "₱38"]], sum: "₱86" },   /* 「KYC 限制」关闭、未完成 KYC：没有 KYC 出生日期，不生成生日奖金（规则 N21） */
+    "rm-part": { items: [["升级奖金", "₱48"], ["生日奖金", "₱88"]], sum: "₱136" }   /* 月度工资设为自动领取：该类不出现在通知里（用户 2026-10-30） */
+  };
+  function showRm(o) {
+    var ls = $("rmList"); ls.textContent = "";
+    o.items.concat([["合计", o.sum]]).forEach(function (r, i, a) { var row = document.createElement("div"); if (i === a.length - 1) row.className = "sum"; var s1 = document.createElement("span"); s1.textContent = r[0]; var s2 = document.createElement("span"); s2.textContent = r[1]; row.appendChild(s1); row.appendChild(s2); ls.appendChild(row); });
+    $("rmOk").disabled = false; $("rmOk").textContent = "领取"; $("rmMask").hidden = false; $("rmOk").focus();
+  }
+  $("rmOk").onclick = function () { var b = this; if (b.disabled) return; b.disabled = true; b.textContent = "领取中…"; setTimeout(function () { $("rmMask").hidden = true; P.toast("领取成功，已到账"); }, 600); };   /* 一次领取全部 */
+  $("rmX").onclick = function () { $("rmMask").hidden = true; };
+  $("rmGo").onclick = function () { location.href = "VIP会员体系-VIP中心页面.html#kept"; };   /* 「查看权益」：进入 VIP中心，玩家在各等级「查看详情」里分别领取 */
   window.addEventListener("hashchange", function () { show(location.hash.slice(1) || "up-one"); });
   document.addEventListener("click", function (e) { var b = e.target.closest("[data-go]"); if (b) { e.preventDefault(); show(b.dataset.go); } });
   show(location.hash.slice(1) || "up-one");

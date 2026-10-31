@@ -475,3 +475,340 @@ function isPubAdmin() {
   var loaded = document.readyState === "complete" ? Promise.resolve() : new Promise(function (r) { window.addEventListener("load", r); });
   Promise.all([loaded, document.fonts && document.fonts.ready ? document.fonts.ready : null]).then(function () { fitAll(true); });
 })();
+
+/* 研发说明标签（所有需求通用，需求包框架规范第 4 节「研发说明标签」）：原型里带 data-dev="编号" 的控件，开发和产品角色查看时，
+   在控件右侧（或列标题、表单标签文字后面）显示荧光绿小圆点；鼠标移上去展开成「研发说明·编号 控件名」标签；点击弹窗显示 assets/dev-notes.js（window.DEV_NOTES）里这条说明。
+   运营、报告角色（含产品在顶栏切换成的运营、报告视角）不显示。标签绝对定位、不占位置，不改变页面排版；英文化不翻译标签。
+   标签插在控件后面（表格单元格、列表项插在它里面的末尾），页面脚本不要依赖控件的下一个兄弟元素。 */
+(function () {
+  var role = window.NAV && NAV.role;
+  if (role !== "dev" && role !== "pdm") return;
+  var SRC = document.currentScript && document.currentScript.src;
+  var ITER = (/\/prototype\/(v\d+\.\d+|full)\//.exec(decodeURIComponent(location.pathname)) || [])[1] || "";
+  var FIELDS = [["what", "作用"], ["scene", "场景与状态"], ["result", "交互结果"], ["limit", "限制"], ["formula", "计算公式"], ["rules", "对应规则"]];
+  var INSIDE = /^(TD|TH|LI|DT|DD)$/;   /* 这些元素后面不能插兄弟节点，标签放在它们里面的末尾 */
+  function esc(s) { return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+  function isTag(n) { return n && n.nodeType === 1 && n.classList.contains("ui-devtag"); }
+  var tags = [], raf = 0;
+  /* 挂法（按「离被说明的东西最近、不遮挡」选，优先级：控件旁 → 示例状态旁 → 列标题后 → 区块标题后）：
+     ① 控件、示例状态元素 data-dev="D01"（按钮、状态标签、感叹号、角标、进度条、空状态文字等）：绿点紧贴在元素右侧、垂直居中（见 place），不占位置；
+        右侧没有空间时放在元素右上角内侧。元素隐藏、滚出可见区域、被弹窗盖住时绿点一起隐藏；同类元素共用一个编号，只在第一个可见的上显示。
+     ② 数据类说明挂列标题：data-dev 写在表格格子 td 上时，绿点自动挂到这一列表头文字后面（同一编号只挂一个）；也可以直接写在 th 上加 data-dev-inline。
+     ③ 表单项：输入框、下拉框、多行文本的绿点放在它的标签文字后面（label[for]、包住它的 label，或紧挨在它前面的标签文字元素）；单选、复选放在选项文字后面（同一组只挂一个）；
+        找不到标签文字时按 ① 放在输入框右侧。
+     ④ 标题挂法 data-dev-inline 或写多个编号 data-dev="D10 D11"：滚动区域、轮播里的控件和会被遮住的控件，把编号挂到这一块不滚动的标题、表头上，
+        绿点排在标题文字后面（行内显示，不隐藏），一个标题可以并排多个绿点，展开后带编号和控件名称。 */
+  var FIELD = /^(INPUT|SELECT|TEXTAREA)$/, AUTO = {};
+  function colHead(td) {   /* 格子所在列的表头单元格（按 colspan 算列号，取表头最后一行） */
+    var table = td.closest("table"), row = td.parentElement; if (!table || !row) return null;
+    var col = 0; for (var c = row.firstElementChild; c && c !== td; c = c.nextElementSibling) col += c.colSpan || 1;
+    var hr = table.tHead && table.tHead.rows.length ? table.tHead.rows[table.tHead.rows.length - 1] : (table.rows[0] !== row && table.rows[0].querySelector("th") ? table.rows[0] : null);
+    if (!hr) return null;
+    for (var i = 0, n = 0; i < hr.cells.length; i++) { if (col < n + (hr.cells[i].colSpan || 1)) return hr.cells[i] === td ? null : hr.cells[i]; n += hr.cells[i].colSpan || 1; }
+    return null;
+  }
+  function fieldLabel(el) {   /* 表单项的标签文字：返回 [宿主, 插在谁前面]；插在最后时第二项为 null */
+    var type = (el.getAttribute("type") || "").toLowerCase(), lab = el.closest("label");
+    if (type === "radio" || type === "checkbox") return lab ? [lab, null] : null;
+    if (el.id) { var lf = document.querySelector('label[for="' + el.id.replace(/"/g, '\\"') + '"]'); if (lf) return [lf, null]; }
+    if (lab) return [lab, el];
+    var p = el.previousElementSibling || (el.parentElement && el.parentElement.children.length === 1 && el.parentElement.previousElementSibling);
+    if (p && !p.matches(CLICKABLE) && !p.querySelector(CLICKABLE) && /\S/.test(p.textContent) && p.textContent.length <= 30) return [p, null];
+    return null;
+  }
+  var CLICKABLE = "a,button,input,select,textarea,label,summary,option,[role=button],[role=tab],[role=link],[role=checkbox],[role=radio],[onclick],[data-dev],.ui-devtag";
+  function make(el) {
+    var ids = String(el.getAttribute("data-dev") || "").trim().split(/\s+/).filter(Boolean); if (!ids.length) return;
+    var title = el.hasAttribute("data-dev-inline") || ids.length > 1, host = null, before = null;
+    if (!title && el.tagName === "TD") host = colHead(el);
+    else if (!title && FIELD.test(el.tagName)) { var fl = fieldLabel(el); if (fl) { host = fl[0]; before = fl[1]; } }
+    el._devTag = null;
+    ids.forEach(function (id) {
+      if (host) {   /* 挂到列标题、标签文字上：同一编号只挂一个 */
+        var old = AUTO[id];
+        if (old && old.isConnected) { if (!el._devTag) el._devTag = old; return; }
+      }
+      var d = (window.DEV_NOTES || {})[id], t = document.createElement("span");
+      t.className = "ui-devtag mini" + (title || host ? " inline" : "");
+      t.textContent = ids.length > 1 ? "研发说明·" + String((d && d.name) || id).replace(/[「」【】]/g, "").slice(0, 8) : "研发说明";
+      t.setAttribute("role", "button"); t.tabIndex = 0; t.title = "研发说明：" + id + (d && d.name ? " " + d.name : "");
+      t._for = el; t._id = id; if (!el._devTag) el._devTag = t;
+      if (title) { el.appendChild(t); hint(); }
+      else if (host) { host.insertBefore(t, before); AUTO[id] = t; hint(); }
+      else if (INSIDE.test(el.tagName)) { el.classList.add("ui-devhost"); el.appendChild(t); } else el.parentNode.insertBefore(t, el.nextSibling);
+      function open(e) { e.preventDefault(); e.stopPropagation(); show(id); }
+      t.addEventListener("click", open, true);
+      t.addEventListener("mouseenter", function () { raise(t); }); t.addEventListener("focus", function () { raise(t); });
+      t.addEventListener("mouseleave", function (e) { if (e.relatedTarget !== LIFT) drop(); }); t.addEventListener("blur", drop);
+      t.addEventListener("keydown", function (e) { if (e.key === "Enter" || e.key === " ") open(e); });
+      ["mousedown", "pointerdown", "touchstart"].forEach(function (ev) { t.addEventListener(ev, function (e) { e.stopPropagation(); }); });
+      tags.push(t);
+    });
+    /* 鼠标移到任何一个同编号的元素上，显示出来的那个绿点都变清晰 */
+    el.addEventListener("mouseenter", function () { tags.forEach(function (x) { if (ids.indexOf(x._id) >= 0) x.classList.add("on"); }); });
+    el.addEventListener("mouseleave", function () { tags.forEach(function (x) { if (ids.indexOf(x._id) >= 0) x.classList.remove("on"); }); });
+    /* 按住 Alt 点击控件也能打开说明（同类控件没显示绿点时也能用） */
+    if (!title) el.addEventListener("click", function (e) { if (e.altKey) { e.preventDefault(); e.stopPropagation(); show(ids[0]); } }, true);
+  }  /* 所有标签默认显示为绿点：看上去 8px，点击热区 16px；普通控件的绿点紧贴在控件右侧，挂到列标题、标签文字、区块标题上的绿点排在文字后面。
+     鼠标移到绿点上或键盘聚焦时，在 body 下的独立浮层（position:fixed，层级高于页面元素、低于研发说明弹窗）展开成完整标签「研发说明·编号 控件名」，
+     不被相邻的输入框、按钮、表格、卡片盖住；靠近视口边缘时往里收；鼠标在浮层上时保持展开，移开后收回绿点。点击绿点或展开的标签都打开说明，点击不传给下面的控件。
+     被页面弹窗盖住的绿点本身已隐藏、移不上去，所以浮层不会浮在页面弹窗上面。按住 Alt 点击控件也能打开说明。 */
+  var LIFT = null, liftFor = null;
+  function label(id) { var d = (window.DEV_NOTES || {})[id], n = d && d.name ? " " + String(d.name).replace(/[「」【】]/g, "") : ""; return "研发说明·" + id + (n.length > 17 ? n.slice(0, 16) + "…" : n); }
+  function raise(t) {
+    if (t.style.visibility === "hidden") return;
+    if (!LIFT) {
+      LIFT = document.createElement("span"); LIFT.className = "ui-devtag ui-devlift"; LIFT.setAttribute("role", "button");
+      LIFT.addEventListener("click", function (e) { e.preventDefault(); e.stopPropagation(); var id = liftFor && liftFor._id; drop(); if (id) show(id); }, true);
+      LIFT.addEventListener("mouseleave", function (e) { if (e.relatedTarget !== liftFor) drop(); });
+      ["mousedown", "pointerdown", "touchstart"].forEach(function (ev) { LIFT.addEventListener(ev, function (e) { e.stopPropagation(); }); });
+      document.body.appendChild(LIFT);
+    }
+    liftFor = t;
+    LIFT.textContent = label(t._id); LIFT.title = t.title; LIFT.style.display = "";
+    var r = t.getBoundingClientRect(), w = LIFT.offsetWidth, h = LIFT.offsetHeight;
+    var x = r.left, y = r.top + (r.height - h) / 2;   /* 从绿点位置向右展开，盖住绿点，鼠标直接落在浮层上 */
+    LIFT.style.left = Math.round(Math.max(4, Math.min(x, innerWidth - w - 4))) + "px";
+    LIFT.style.top = Math.round(Math.max(4, Math.min(y, innerHeight - h - 4))) + "px";
+  }
+  function drop() { if (LIFT) LIFT.style.display = "none"; liftFor = null; }
+  /* 图例：页面上有绿点时，在顶栏（原型画面外，不盖住原型、规则批注和模拟面板）常驻一条说明，前面放同色圆点。
+     只在开发、产品角色出现（本段开头已按角色返回）；内容不随英文化翻译，由这里按语言选择中文或英文；英文模式（发布站点 PROTO_LANG = "en"，或本地 ?lang=en）显示英文。没有顶栏时贴在页面左下角。 */
+  var hinted = false;
+  function hint() {
+    if (hinted) return; hinted = true;
+    var q = /[?&]lang=(en|zh)\b/.exec(location.search), mode = q && q[1];
+    try { mode = mode || sessionStorage.getItem("proto-lang"); } catch (e) {}
+    var en = (mode || window.PROTO_LANG || "zh") === "en";
+    var d = document.createElement("div"); d.className = "ui-devhint";
+    d.innerHTML = "<i></i><span>" + (en
+      ? "Green dots mark dev notes: not in development scope, for developer reference only. Hover to expand, click to view."
+      : "绿色圆点为研发说明标记，不在开发范围内，仅为给研发人员的信息提示；鼠标移入展开，点击查看说明") + "</span>";
+    d.title = d.textContent;
+    var bar = document.querySelector(".topbar"), crumb = bar && bar.querySelector(".crumb");
+    if (bar) { d.classList.add("in-bar"); bar.insertBefore(d, crumb ? crumb.nextSibling : null); }
+    else if (!document.documentElement.classList.contains("embedded")) document.body.appendChild(d);   /* 嵌在确认页等页面里的原型不显示，避免盖住原型 */
+  }  /* 普通控件的绿点：控件隐藏、滚出可见区域、被页面弹窗盖住时隐藏；否则紧贴在控件右侧。只改绿点自己的 left / top。返回是否显示。 */
+  function place(t) {
+    var el = t._for;
+    t.style.visibility = "hidden";
+    if (!el.getClientRects().length) return false;
+    var b = el.getBoundingClientRect(), clips = [{ left: 0, top: 0, right: innerWidth, bottom: innerHeight }];
+    /* 控件在可滚动区域里被滚出可见范围时，绿点也隐藏（绿点的定位基准可能在滚动区域外面，不会跟着裁切） */
+    for (var p = el.parentElement; p && p !== document.body; p = p.parentElement) {
+      if (getComputedStyle(p).overflow === "visible") continue;
+      var r = p.getBoundingClientRect();
+      if (b.bottom < r.top || b.top > r.bottom || b.right < r.left || b.left > r.right) return false;
+      clips.push(r);
+    }
+    /* 控件被页面自己的弹窗、遮罩盖住时（控件中心点最上层的元素和控件无关），绿点也隐藏，不透到弹窗上面 */
+    var cx = (b.left + b.right) / 2, cy = (b.top + b.bottom) / 2;
+    if (cx >= 0 && cy >= 0 && cx < innerWidth && cy < innerHeight) {
+      var hit = document.elementFromPoint(cx, cy);
+      if (hit && !el.contains(hit) && !hit.contains(el) && !(hit.closest && hit.closest("label") && hit.closest("label").contains(el))) return false;
+    }
+    /* 紧贴右侧、垂直居中：圆点左边离元素 3px（16px 热区左边比元素右边少 1px）；右侧压到别的可点元素、绿点或超出可见范围时，放在元素右上角内侧 */
+    var x = b.right - 1, y = (b.top + b.bottom) / 2 - 8;
+    if (!free(x + 4, y + 4, 8, 8, el, clips)) { x = b.right - 15; y = b.top - 1; }
+    t.style.left = "0px"; t.style.top = "0px";
+    var a = t.getBoundingClientRect();
+    t.style.left = Math.round(x - a.left) + "px";
+    t.style.top = Math.round(y - a.top) + "px";
+    t.style.visibility = "";
+    hint();
+    return true;
+  }
+  function free(x, y, w, h, el, clips) {   /* 这块区域在可见范围内，且没有压到别的可点元素和绿点 */
+    for (var i = 0; i < clips.length; i++) { var c = clips[i]; if (x < c.left || y < c.top || x + w > c.right || y + h > c.bottom) return false; }
+    var pts = [[x + 1, y + 1], [x + w - 1, y + 1], [x + 1, y + h - 1], [x + w - 1, y + h - 1], [x + w / 2, y + h / 2]];
+    for (var j = 0; j < pts.length; j++) {
+      var n = document.elementFromPoint(pts[j][0], pts[j][1]);
+      if (!n || el.contains(n) || (n.closest && n.closest(CLICKABLE) && !n.closest(CLICKABLE).contains(el))) return false;
+    }
+    return true;
+  }
+  function refresh() {
+    raf = 0;
+    if (!window.DEV_NOTES && document.querySelector("[data-dev]")) loadNotes();   /* 打开时没有、后来由脚本加出的 data-dev */
+    tags = tags.filter(function (t) { if (t._for.isConnected && t.isConnected) return true; if (t.isConnected) t.remove(); t._for._devTag = null; return false; });
+    [].forEach.call(document.querySelectorAll("[data-dev]"), function (el) { if (!el._devTag || !el._devTag.isConnected) { tags = tags.filter(function (t) { if (t._for !== el) return true; t.remove(); return false; }); make(el); } });   /* 一个标题的多个标签被页面重画掉一部分时，整组重建 */
+    /* 同类控件只显示一个标签：同一编号挂在多个控件上（列表每行的操作按钮、每张卡片上的同类按钮、同一组单选项）时，
+       按页面顺序只在第一个可见的控件上显示，其余不显示；标题挂法的标签不受影响，始终显示 */
+    var abs = tags.filter(function (t) { return !t.classList.contains("inline"); }), shown = {};
+    abs.forEach(function (t) { t.style.visibility = "hidden"; });   /* 先全部收起再逐个放，避免和上一轮自己的位置互相避让 */
+    abs.sort(function (x, y) { return x._for === y._for ? 0 : (x._for.compareDocumentPosition(y._for) & 4 ? -1 : 1); });
+    abs.forEach(function (t) { if (!shown[t._id] && place(t)) shown[t._id] = 1; });
+    if (liftFor && (!liftFor.isConnected || liftFor.style.visibility === "hidden")) drop();   /* 标签被隐藏（弹窗盖住、滚出）时浮层一起收起 */
+  }
+  function later() { if (!raf) raf = setTimeout(refresh, 40); }   /* 不用 requestAnimationFrame：后台或隐藏的标签页里它不执行，标签会停在旧位置 */
+  /* 弹窗 */
+  function prdHref(id) {
+    var p = window.DEV_NOTES_PRD; if (!p) return "";
+    return (window.NAV_ROOT || "") + String(p).replace("{iter}", ITER || "full") + "#dev-" + encodeURIComponent(id);
+  }
+  function show(id) {
+    var d = (window.DEV_NOTES || {})[id], mask = document.createElement("div"); mask.className = "ui-devpop-mask";
+    var h = '<div class="ui-devpop" role="dialog" aria-modal="true" aria-label="研发说明"><button type="button" class="x-close" aria-label="关闭" title="关闭">×</button>' +
+      '<div class="dp-k">研发说明 · ' + esc(id) + "</div>";
+    if (!d) h += '<h3>没有找到这条说明</h3><p class="dp-miss">assets/dev-notes.js 里没有编号「' + esc(id) + "」，请补上（PRD 附录 D 由它自动生成）。</p>";
+    else {
+      h += "<h3>" + esc(d.name || id) + "</h3>" + (d.page ? '<div class="dp-page">' + esc(d.page) + "</div>" : "") + "<dl>";
+      FIELDS.forEach(function (f) { if (d[f[0]]) h += "<dt>" + f[1] + '</dt><dd class="' + (f[0] === "formula" ? "dp-f" : "") + '">' + esc(d[f[0]]).replace(/\n/g, "<br>") + "</dd>"; });
+      h += "</dl>";
+      var href = prdHref(id); if (href) h += '<a class="dp-prd" href="' + esc(href) + '">在 PRD 中查看 ›</a>';
+    }
+    mask.innerHTML = h + "</div>";
+    function close() { mask.remove(); document.removeEventListener("keydown", esc2, true); }
+    function esc2(e) { if (e.key === "Escape") { e.stopPropagation(); close(); } }
+    mask.addEventListener("click", function (e) { if (e.target === mask || e.target.classList.contains("x-close")) close(); e.stopPropagation(); });
+    document.addEventListener("keydown", esc2, true);
+    document.body.appendChild(mask); mask.querySelector(".x-close").focus();
+  }
+  function start() {
+    refresh();
+    new MutationObserver(function (list) {
+      for (var i = 0; i < list.length; i++) {
+        var m = list[i];
+        if (isTag(m.target) || (m.target.closest && m.target.closest(".ui-devpop-mask"))) continue;
+        if (m.type === "childList" && [].every.call(m.addedNodes, isTag) && [].every.call(m.removedNodes, isTag)) continue;
+        later(); return;
+      }
+    }).observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ["class", "style", "hidden", "open", "data-dev"] });
+    window.addEventListener("resize", later); window.addEventListener("navtoggle", later); window.addEventListener("load", later);
+    document.addEventListener("scroll", function () { drop(); later(); }, true);   /* 手机画面、后台列表等滚动区域滚动时重新对齐（浮层先收起） */
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(later);
+  }
+  /* 说明数据：页面没有引用 dev-notes.js 时，按 nav.js 的地址自动加载同目录的 dev-notes.js（原型页面不用改）。
+     页面上没有 data-dev 时不加载（文档页、还没写研发说明的需求不会请求一个不存在的文件）；之后脚本加出 data-dev 时再加载。 */
+  var loading = false;
+  function loadNotes(done) {
+    if (window.DEV_NOTES || !SRC || loading) return done && done();
+    loading = true;
+    var s = document.createElement("script"); s.src = SRC.replace(/nav\.js(\?.*)?$/, "dev-notes.js"); s.onload = s.onerror = function () { if (done) done(); else later(); }; document.head.appendChild(s);
+  }
+  function ready() {
+    if (document.querySelector("[data-dev]")) loadNotes(start); else start();
+  }
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", ready); else ready();
+})();
+
+/* 编号链接（所有需求通用，生成内容规范第五章第 2 节「引用编号」）：需求资料（PRD、需求要点、开发自查清单、后台操作手册、客服 QA、需求修改总结、
+   原型规则批注等）里引用的编号，自动换成可点的编号按钮，点击弹出浮窗显示这条编号的内容，浮窗里「查看完整内容 ›」跳到 PRD 原位置。
+   - 规则 N、待确认 Q：PRD 里 <tr id="n3"> / <tr id="q2"> 那一行的 data-brief（没写时取第二列）；
+   - 功能点 F（F01、F01-01）：PRD 页面脚本里 FP 表的名称；
+   - 控件说明 D：assets/dev-notes.js 的控件名和作用（跳到 PRD 附录 D）。
+   内容统一从本迭代的 PRD 读取（PRD 页面直接读本页，其他页面读取 PRD 文件），PRD 里找不到的编号保持文字。当前角色看不到 PRD（运营）时不换。
+   不换的地方：标题、目录、链接、按钮、输入框、功能点标签 .fp、编号定义行自己的编号格（PRD 规则表、待确认表、附录 D，开发自查清单的功能点标题）、引用其他文档编号的 .no-ref、研发说明标记和弹窗。
+   让用户确认问题的页面（检查报告、问题确认页）不用编号链接；运营需求确认、文案确认页在引入 nav.js 前设置 window.NO_REF_LINKS = true 关闭。
+   页面自己（旧版 PRD 页面脚本）已经换好的 .ref-btn[data-ref] 按原来的方式处理，这里不重复。 */
+(function () {
+  if (window.NO_REF_LINKS || !window.NAV || !NAV.data) return;
+  var ROOT = window.NAV_ROOT || "", RE = /\b(N\d{1,3}|Q\d{1,3}|F\d{2}(?:-\d{2})?|D\d{2,3})\b/g;   /* 限制位数：订单号「D2026102214051234」之类长数字不会被当成编号 */
+  var SKIP = "h1,h2,h3,h4,a,button,input,textarea,select,script,style,code,pre,[contenteditable],.toc-full,.ref-pop,.vtag,.chg,.no-ref,.fp,.ui-devtag,.ui-devpop-mask,.ui-devhint,.sidenav,.topbar,.app,.code,.code2";   /* .code / .code2：开发自查清单里功能点自己的编号 */
+  var ITER = (/\/(?:prototype|docs)\/(v\d+\.\d+|full)\//.exec(decodeURIComponent(location.pathname)) || [])[1] || "";
+  /* 本迭代的 PRD：目录数据里文件名是「…需求开发PRD文档.html」的页面，多迭代优先选同一迭代目录下的 */
+  var prd = null;
+  (function walk(n) {
+    if (n.href && /需求开发PRD文档\.html$/.test(n.href) && (!prd || (ITER && n.href.indexOf("/" + ITER + "/") >= 0))) prd = n;
+    (n.children || []).forEach(walk);
+  })(NAV.data);
+  if (!prd || !NAV.can(prd)) return;
+  var PRD_URL = ROOT + prd.href, SRC = document.currentScript && document.currentScript.src;
+  var onPrd = new URL(PRD_URL, location.href).pathname === location.pathname;
+  var INDEX = null;
+  function text(el) { return el ? el.textContent.replace(/\s+/g, " ").trim() : ""; }
+  function build(root, src) {   /* 从 PRD 文档建编号索引：编号 → { brief, href } */
+    var idx = {}, base = onPrd ? "" : PRD_URL;
+    [].forEach.call(root.querySelectorAll("tr[id]"), function (tr) {
+      if (!/^[nq]\d+$/.test(tr.id)) return;
+      idx[tr.id.toUpperCase()] = { brief: tr.getAttribute("data-brief") || text(tr.cells[1]), href: base + "#" + tr.id };
+    });
+    var m = /var FP\s*=\s*\{([\s\S]*?)\};/.exec(src || ""), r = /"?(F\d{2}(?:-\d{2})?)"?\s*:\s*"((?:[^"\\]|\\.)*)"/g, x;
+    if (m) while ((x = r.exec(m[1]))) idx[x[1]] = { brief: x[2], href: base + "#" + x[1] };
+    var D = window.DEV_NOTES || {};
+    Object.keys(D).forEach(function (k) { var d = D[k]; idx[k] = { brief: (d.name || k) + (d.what ? "：" + d.what : ""), href: base + "#dev-" + k }; });
+    return idx;
+  }
+  function load(done) {
+    if (onPrd) {
+      var src = [].map.call(document.scripts, function (s) { return s.textContent; }).join("\n");
+      return done(build(document, src));
+    }
+    if (!window.fetch || location.protocol === "file:") return done(null);   /* 本地双击打开读不到 PRD，编号保持文字 */
+    /* 正文引用了控件说明 D 而页面没有加载 dev-notes.js 时，先加载它 */
+    if (!window.DEV_NOTES && SRC && /\bD\d{2,3}\b/.test(document.body.textContent)) {
+      var s = document.createElement("script"); s.src = SRC.replace(/nav\.js(\?.*)?$/, "dev-notes.js");
+      s.onload = s.onerror = function () { load(done); }; document.head.appendChild(s); return;
+    }
+    fetch(PRD_URL.split("#")[0], { cache: "no-cache" }).then(function (r) { return r.ok ? r.text() : ""; }).then(function (html) {
+      if (!html) return done(null);
+      done(build(new DOMParser().parseFromString(html, "text/html"), html));
+    }).catch(function () { done(null); });
+  }
+  function convert(root) {
+    if (!INDEX) return;
+    var walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT), texts = [];
+    while (walker.nextNode()) texts.push(walker.currentNode);
+    texts.forEach(function (t) {
+      var par = t.parentNode, s = t.nodeValue;
+      if (!par || !/[NQFD]\d/.test(s) || !par.closest || par.closest(SKIP)) return;
+      var td = par.closest("td"); if (td && td.cellIndex === 0 && /^([nq]\d+|dev-D\d+)$/.test(td.parentNode.id || "")) return;   /* 规则表、待确认表、附录 D 自己的编号格 */
+      var frag = document.createDocumentFragment(), last = 0, m, hit = false; RE.lastIndex = 0;
+      while ((m = RE.exec(s))) {
+        if (!INDEX[m[1]]) continue;
+        hit = true; frag.appendChild(document.createTextNode(s.slice(last, m.index)));
+        var b = document.createElement("button"); b.type = "button"; b.className = "ref-btn"; b.textContent = m[1]; b.setAttribute("data-code", m[1]);
+        b.title = "查看 " + m[1] + " 的内容"; frag.appendChild(b); last = m.index + m[0].length;
+      }
+      if (!hit) return;
+      frag.appendChild(document.createTextNode(s.slice(last))); par.replaceChild(frag, t);
+    });
+  }
+  var pop = null;
+  function close() { if (pop) { pop.remove(); pop = null; } }
+  document.addEventListener("click", function (e) {
+    var b = e.target.closest && e.target.closest(".ref-btn[data-code]");
+    if (!b) { if (pop && !pop.contains(e.target)) close(); return; }
+    e.preventDefault(); e.stopPropagation();
+    var code = b.getAttribute("data-code"), same = pop && pop.dataset.code === code; close(); if (same) return;
+    var it = INDEX && INDEX[code]; if (!it) return;
+    pop = document.createElement("div"); pop.className = "ref-pop"; pop.setAttribute("role", "tooltip"); pop.dataset.code = code;
+    var h = document.createElement("b"); h.textContent = code; pop.appendChild(h);
+    var p = document.createElement("p"); p.textContent = it.brief || "（这条编号还没写精炼描述）"; pop.appendChild(p);
+    var a = document.createElement("a"); a.href = it.href; a.textContent = "查看完整内容 ›"; a.onclick = close; pop.appendChild(a);
+    document.body.appendChild(pop);
+    var r = b.getBoundingClientRect(), w = pop.offsetWidth;
+    pop.style.left = Math.max(8, Math.min(r.left + scrollX, scrollX + innerWidth - w - 8)) + "px"; pop.style.top = (r.bottom + scrollY + 6) + "px";
+  }, true);
+  document.addEventListener("keydown", function (e) { if (e.key === "Escape") close(); });
+  var t = 0;
+  function start() {
+    load(function (idx) {
+      INDEX = idx; if (!INDEX) return;
+      convert(document.body);
+      /* 页面脚本后来画出的内容（开发自查清单、需求修改总结等）也换 */
+      new MutationObserver(function (list) {
+        if (list.every(function (m) { return [].every.call(m.addedNodes, function (n) { return n.nodeType === 1 && (n.classList.contains("ref-btn") || n.classList.contains("ref-pop")); }); })) return;
+        clearTimeout(t); t = setTimeout(function () { convert(document.body); }, 60);
+      }).observe(document.body, { childList: true, subtree: true });
+    });
+  }
+  /* 等页面脚本（含 dev-notes.js、旧版 PRD 自带的编号按钮脚本）跑完再换 */
+  if (document.readyState === "complete") start(); else window.addEventListener("load", start);
+})();
+
+/* 带锚点打开页面时的定位修正（所有需求通用）：浏览器先按网址里的 #锚点 滚动，之后表格自动列宽、字体加载、页面脚本画出内容会改变上方高度，
+   目标行被挤出视口。页面加载完成后、字体就绪后，以及 400ms、1200ms 时各再定位一次；用户自己滚动、点击或按键后不再干预。
+   PRD 附录 D 的 #dev-编号 由 PRD 页面自己定位（居中并高亮），这里跳过。 */
+(function () {
+  var moved = false;
+  ["wheel", "touchstart", "keydown", "mousedown"].forEach(function (ev) { window.addEventListener(ev, function () { moved = true; }, { passive: true, capture: true }); });
+  function go() {
+    if (moved || !location.hash || /^#dev-/.test(location.hash)) return;
+    var id; try { id = decodeURIComponent(location.hash.slice(1)); } catch (e) { id = location.hash.slice(1); }
+    var el = document.getElementById(id); if (el) el.scrollIntoView({ block: "start", behavior: "instant" });
+  }
+  function again() { go(); setTimeout(go, 400); setTimeout(go, 1200); if (document.fonts && document.fonts.ready) document.fonts.ready.then(go); }
+  if (document.readyState === "complete") again(); else window.addEventListener("load", again);
+  window.addEventListener("hashchange", function () { moved = false; setTimeout(go, 0); });
+})();
