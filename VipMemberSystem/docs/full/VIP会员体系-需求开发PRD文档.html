@@ -1,0 +1,1400 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>VIP会员体系-完整需求-需求开发PRD文档</title>
+<link rel="stylesheet" href="../../assets/style.css">
+<style>
+/* 3.3 冲突卡片 */
+.cf{border:1px solid #E3C9A0;border-left:4px solid #B5601A;border-radius:8px;background:#FFFCF6;padding:10px 12px;margin:10px 0}
+.cf h4{margin:0 0 8px;font-size:14.5px;color:#4A3410}
+.cf dl{display:grid;grid-template-columns:8em minmax(0,1fr);gap:5px 12px;margin:0;font-size:13.5px}
+.cf dt{font-weight:700;color:#6B4A12}
+.cf dd{margin:0;min-width:0;overflow-wrap:anywhere}
+.cf .dec{color:#C00000;font-weight:700}
+/* 开发技术备忘参考 */
+.memo-item{border:1px solid #D9D9D9;border-radius:8px;background:#FFFFFF;padding:10px 12px;margin:14px 0}
+.memo-item h4{margin:0 0 8px;font-size:14.5px;color:#222}
+.memo-item h4 .mno{display:inline-block;background:#16052F;color:#F0D291;border-radius:4px;padding:0 6px;margin-right:6px;font-size:12.5px}
+.memo-q,.memo-i,.memo-s{border-radius:4px;padding:8px 10px;margin:6px 0;font-size:13.5px;color:#222;overflow-wrap:anywhere}
+.memo-q{background:#FDECEC;border-left:4px solid #C62828}
+.memo-i{background:#FFF5E0;border-left:4px solid #C77700}
+.memo-s{background:#E9F6EC;border-left:4px solid #2E7D32}
+.memo-q b.lb{color:#B71C1C}.memo-i b.lb{color:#8A5300}.memo-s b.lb{color:#1B5E20}
+.src{display:inline-block;background:#ECECEC;color:#555;font-size:12px;line-height:1.6;padding:0 6px;border-radius:3px;margin:0 4px 2px 0;max-width:100%;white-space:normal;overflow-wrap:anywhere}
+tr.wd td{color:#8A8A8A}
+tr.grp td{background:#F4EFE6;color:#4A3410}
+@media (max-width:600px){.cf dl{grid-template-columns:minmax(0,1fr)}.cf dt{margin-top:4px}}
+@media print{.memo-q,.memo-i,.memo-s{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+</style>
+</head>
+<body>
+<div class="with-nav">
+<div id="fp-banner" class="fp-banner" hidden><span id="fp-text"></span><button type="button" id="fp-clear">清除标注</button></div>
+<div class="desk"><article class="paper" id="doc">
+
+<h1 class="doc-title">VIP会员体系-完整需求-需求开发PRD文档</h1>
+<div class="doc-meta"><span>版本：v1.0</span><span>日期：2026-10-12</span><span>平台：789Bingo（PH）</span><span>端：H5、iOS 原生、iOS Flutter、安卓 Flutter、管理后台</span><span>状态：确认中</span><span>时区：GMT+8</span></div>
+<hr class="doc-rule">
+
+<h2 id="ver">需求版本管理表</h2>
+<div class="tbl"><table id="vtable">
+<tr><th>版本号</th><th>时间</th><th>修改人</th><th>概述</th><th>涉及章节</th></tr>
+<tr data-v="v1.0" data-sum="创建VIP会员体系 v1.0"><td>v1.0</td><td>2026-10-12</td><td>Joshua</td><td class="w">创建VIP会员体系 v1.0</td><td>全文</td></tr>
+</table></div>
+
+<h2 id="toc">全文目录</h2>
+<nav class="toc-full" aria-label="全文目录"><ol id="toc-list"></ol></nav>
+
+<h2 id="c0">0. 本迭代范围</h2>
+<p>本 PRD 为「完整需求」迭代，包含 v1.0、v1.1 的全部内容和完整需求独有的功能。以产品方案「VIP 会员体系方案」（Claire，SharePoint 版本 5.0，2026-10-13 修改，含末尾「VIP等级逻辑补充」，以下简称「原方案」）和 Claire 2026-10-17 的答复（C-01–C-15）为准，等级、门槛、奖励金额沿用原方案；原方案没写到、由产品补充的规则在「起因」列注明「原文外补充」。实现方式按现有后台：普通会员（Level）配置留在【用户管理 › 会员等级】，新 VIP 的全部配置、记录和数据放在【用户管理 › VIP特权】（与旧版 VIP特权整合）。实体奖品的领取、审核、扣库存和发货由「实体奖品管理」需求负责，本需求只做「VIP 等级 → 奖品」的选择和活动库存预占（第 7 章）。VIP 的一切内容与活动配置并行存在、互不影响（0.1）。与其他章节冲突时，以本章为准。</p>
+<div class="tbl"><table>
+<tr><th>类别</th><th>本迭代包含</th><th>不包含 / 顺延</th></tr>
+<tr data-fp="F01 F10"><td>管理后台</td><td class="w">【用户管理 › VIP特权】分 3 个页签：VIP特权、会员福利、VIP数据报表。「VIP特权」页签分 4 个子页签：VIP等级配置（计算方式、VIP 成长值规则、VIP0 起始级别、VIP 等级表、新增 / 修改设定 / 关闭 / 开启等级、影响预览与复核）；VIP全局参数（VIP 体系状态、KYC 限制、流水、领取方式、手动领取有效期、预算、复核金额阈值、短信模板、免打扰时段、VIP 活动与福利新旧合并、注册天数 / 强制审核）；VIP奖励配置（升级 / 保级 / 生日奖励金额、VIP奖品配置）；下注限额与返水（按 VIP 等级）。「会员福利」页签：会员福利记录（改）。「VIP数据报表」页签分 4 个二级页签：VIP会员数据（新）、等级变动记录（新）、月度结算记录（新）、成长值记录（现有，不改）。【用户管理 › 会员等级】：会员等级配置（前台显示方式、等级表并入下注限额与返水、添加 / 修改 / 删除等级、场馆成长值倍数）、会员等级奖励配置（行跟随等级表、实体奖品表读平台库存）、活动奖励统计（只含 Level 奖励，中文显示）。【用户管理 › 会员】列表「VIP 等级」的显示和筛选（userLevelName）改取新 VIP 等级</td><td class="w">实体奖品库存、领取申请、审核、发货（实体奖品管理需求）</td></tr>
+<tr data-fp="F02 F03 F04 F06-06 F08-06 F01-08"><td>后端</td><td class="w">累计充值、累计有效投注、当月有效投注和 VIP 成长值统计；第一次开启时的存量初始化；完成 KYC 时定级；升级判定与升级奖励；每月 1 日保级结算、降级、降级后恢复；生日奖励；领取方式（自动 / 手动）、强制审核、注册天数；等级新增顺延与关闭重新归级；VIP0 沿用普通会员级别；账号状态处理；VIP 奖励独立账变类型「VIP 奖励」</td><td class="w">—</td></tr>
+<tr data-fp="F06"><td>C 端（H5、iOS 原生、iOS Flutter、安卓 Flutter）</td><td class="w">等级中心 VIP 段（不显示已关闭的 VIP 等级）：普通用户卡、VIP 等级卡、弧形刻度、奖励详情弹窗、VIP 奖励表、「?」VIP 规则弹窗、生日卡片和手动领取的待领取卡片、KYC 引导卡；不勾选沿用时「普通会员 / VIP」两个 tab；个人中心账号区显示等级并可进入等级中心</td><td class="w">前台显示实物奖品（实体奖品管理 v1.1）</td></tr>
+<tr data-fp="F07"><td>通知</td><td class="w">升级弹窗（含游戏中延后弹出）；保级奖励短信、生日前一天 / 当天提醒短信；VIP 现金奖励到账站内信和 APP 推送；短信 / 推送免打扰时段</td><td class="w">—</td></tr>
+<tr data-fp="F01-08"><td>旧版 VIP活动</td><td class="w">与新版合并、共用一个总开关：晋级礼金 → 升级奖励，生日礼金 → 生日奖励，提现倍数 → 流水倍数，领取时效 → 手动领取有效期；注册天数、强制审核保留可勾选</td><td class="w">新版的每周红包、专属红包、专属客服、极速出款（原文十四 VIP 主要权益，C-08「不用开发做」，本期不做）；开启后旧版这四项福利同样停止生成（规则 N70）</td></tr>
+<tr><td>其他</td><td class="w">—</td><td class="w">789games（只适用于 789Bingo，规则 N39）；实物采购、税费、上牌和 PAGCOR 报备（13.1 备注 1）</td></tr>
+</table></div>
+
+<h3 id="c0-1">0.1 总则与修改依据</h3>
+<div class="tbl"><table>
+<tr><th>事项</th><th>规则</th></tr>
+<tr id="c0-par"><td>VIP 与活动配置并行</td><td class="w">VIP 的一切内容（门槛、奖励、流水、发放、入账和账变、报表统计、通知、预算）与活动配置并行存在、互不影响；凡有类似牵连的问题，VIP 单独处理（规则 N53）。例外：总开关开启时停止生成旧版【活动配置 › VIP活动】的全部福利（晋级礼金、生日礼金、每周红包、专属红包），已生成的照常处理完（规则 N70），新 VIP 仍不读取、不复用旧版规则、报表和账变类型。</td></tr>
+<tr><td>修改依据的优先级</td><td class="w">原方案和 Claire 答复最高；产品决定在原文之外补充的内容标「原文外补充」。与 Jira 工单记录的现状、在途单、缺陷冲突的问题，正文不因此修改，写进<a href="#memo">开发技术备忘参考</a>。与后台现有功能的冲突集中写在 <a href="#c3-3">3.3</a>。</td></tr>
+<tr><td>普通会员（Level）与 VIP 的关系</td><td class="w">由【VIP特权】VIP0「沿用普通会员级别」决定（上线默认勾选）：勾选 = VIP 体系沿用普通会员机制，普通会员升到沿用的 LEVEL n 后再往上一级就是 VIP1；不勾选 = 两套独立体系，各自升级、各自发奖（规则 N56、N57）。</td></tr>
+<tr><td>实体奖品</td><td class="w">VIP 只负责「哪一级配什么奖品、从平台库存预占多少活动库存」（规则 N72，对 C-10 的调整为产品决定）；领取申请、审核、扣库存和发货在实体奖品管理需求处理。</td></tr>
+<tr><td>时间</td><td class="w">所有业务时间、定时任务、统计切点和页面时间一律按 GMT+8（Asia/Manila），不按服务器时区。唯一例外是 Level 段「场馆成长值倍数」的生效时间沿用现网执行时间（规则 N75）。</td></tr>
+</table></div>
+
+<h2 id="c1">1. 项目概述</h2>
+<div class="tbl"><table>
+<tr><th>项目</th><th>说明</th></tr>
+<tr><td>需求描述</td><td class="w">在【用户管理 › VIP特权】新建可配置的 VIP 体系（默认 VIP1–VIP24、SUPER VIP 共 25 级，可新增、可关闭）：按「累计金额」（累计充值 + 累计有效投注双门槛）或「成长值」实时升级并发放升级奖励；每月 1 日按上月整月有效投注（或新增成长值）保级、发保级奖励、未达标降 1 级，降级后可按条件恢复；生日当天按当前等级发生日奖励；奖励可配置为自动到账或手动领取，可开启强制审核。普通会员（Level）配置留在【会员等级】并做配套改造。C 端在等级中心展示 VIP 段。</td></tr>
+<tr><td>背景与目标</td><td class="w">建立面向中高价值玩家的 VIP 体系：用双门槛筛选真实充值玩家，用月度保级维持活跃，用升级、保级、生日奖励提升留存；同时把旧版 VIP特权、旧版 VIP活动与新版整合为一套配置和一个开关。依据：原方案、Claire 答复、产品决定。</td></tr>
+<tr><td>范围</td><td class="w"><b>做</b>：见第 0 章。<br><b>不做</b>：四项 VIP 权益（Fast Withdrawal、VIP Dedicated Support、Exclusive VIP Group、Exclusive VIP Promotions，C-08）；每周红包、专属红包；实体奖品的领取与发货；站内消息、交易记录等平台现有列表的改造。</td></tr>
+<tr><td>多端范围</td><td class="w">H5、iOS 原生、iOS Flutter、安卓 Flutter 做，各端数据以服务端为准、页面结构一致；管理后台做；PC 访问 H5 自适应。<b>老版本 App</b>（没有 VIP 段的旧包）：升级、保级奖励照常按领取方式处理，不弹升级弹窗；VIP 玩家仍显示 VIP 等级并提示更新 App；生日奖励和手动领取的奖励须到 H5 或新版本 App 领取（第 4 章）。</td></tr>
+<tr><td>时间与时区</td><td class="w">见 0.1「时间」。本需求页面列表的时间列在表格下方注明「表中时间均为 GMT+8」，导出文件时间列表头标「（GMT+8）」。定时任务按 GMT+8 执行的技术实现由后端确认（Q7）。</td></tr>
+</table></div>
+
+<h2 id="c2">2. 整体业务流程</h2>
+<h3 id="c2-1">2.1 主流程（玩家视角）</h3>
+<div class="flow">
+  <div class="fs key" data-fp="F01-01 F01-02 F01-04"><div class="no">1</div><div><b>运营配置并第一次开启</b>：【会员等级】核对普通会员级别和「前台显示方式」→【VIP特权 › VIP特权】页签：「VIP等级配置」选计算方式、设置 VIP0（沿用普通会员级别）、核对各级门槛和「不符合标准」的等级 →「VIP奖励配置」填奖励金额和 VIP 奖品 →「VIP全局参数」填流水、领取方式、短信模板等 → 导出「存量初始化预览」抽查 → 开启「VIP 体系状态」，系统按历史累计做存量初始化（2.3）。</div></div>
+  <div class="fa">↓</div>
+  <div class="fs" data-fp="F02-01 F02-02"><div class="no">2</div><div><b>KYC 与累计</b>：「KYC 限制」开启（默认）时，未完成 KYC 的玩家不参与 VIP 体系，完成 KYC 时按历史累计定级（KYC 前已达到的等级不发升级奖励）；关闭时等级、升级奖励和保级奖励不要求 KYC，生日奖励仍要求 KYC（规则 N76）。玩家充值成功、注单结算 → 系统累计「累计充值」「累计有效投注」「当月有效投注」和 VIP 成长值。</div></div>
+  <div class="fa">↓</div>
+  <div class="fs key" data-fp="F02-02 F02-03"><div class="no">3</div><div><b>升级</b>：达到更高 VIP 等级的升级标准 → 立即升级 → 每个首次到达的等级生成升级奖励（自动到账，或手动领取）→ 升级弹窗（<a href="#c3-2-2">3.2.2</a>）。</div></div>
+  <div class="fa">↓</div>
+  <div class="fs key" data-fp="F03-02 F03-03"><div class="no">4</div><div><b>月度保级</b>：每月最后一天 23:59:59 截止 → 次月 1 日按结算时当前等级考核上月整月：达到保级标准 → 保持（或恢复 1 级）并发保级奖励和短信；未达到 → 次月降 1 级（<a href="#c3-2-3">3.2.3</a>）。</div></div>
+  <div class="fa">↓</div>
+  <div class="fs" data-fp="F04-01 F04-02 F07-02"><div class="no">5</div><div><b>生日</b>：生日前一天和当天 10:00 发提醒短信 → 生日当天按当前 VIP 等级生成生日奖励 → 玩家在生日卡片或等级卡「查看详情」领取，有效期内有效（<a href="#c3-2-5">3.2.5</a>）。</div></div>
+</div>
+
+<h3 id="c2-2">2.2 月度结算分支（按结算时当前等级）</h3>
+<div class="brs">
+  <div class="bc" data-fp="F03-02"><h5>A - 达到当前等级保级标准</h5>
+    <div class="s"><b>保持当前等级</b><small>当月有升级的按升级后的新等级考核</small></div><div class="d">↓</div>
+    <div class="s"><b>发保级奖励</b><small>按领取方式到账或待领取；强制审核生效时先审核</small></div><div class="d">↓</div>
+    <div class="s"><b>发保级短信</b><small>结算发奖成功后；免打扰时段内顺延</small></div>
+  </div>
+  <div class="bc" data-fp="F03-03"><h5>B - 降过级且达到恢复条件</h5>
+    <div class="s"><b>次月恢复 1 级</b><small>达到「当前等级之上的下一个开启等级」的保级标准</small></div><div class="d">↓</div>
+    <div class="s"><b>照常发当前等级保级奖励</b><small>计入保级成功人数和恢复人数</small></div>
+  </div>
+  <div class="bc" data-fp="F03-03"><h5>C - 未达到保级标准</h5>
+    <div class="s"><b>不发保级奖励、不发短信</b><small>—</small></div><div class="d">↓</div>
+    <div class="s"><b>次月降 1 级</b><small>VIP1 未达到 → 不再是 VIP，变为普通用户（C-07）</small></div>
+  </div>
+  <div class="bc" data-fp="F03-03"><h5>D - VIP1 保级失败后的普通用户</h5>
+    <div class="s"><b>达到 VIP1 保级标准</b><small>次月回到 VIP1，不重发升级奖励</small></div><div class="d">↓</div>
+    <div class="s"><b>不发保级奖励</b><small>只计入恢复人数</small></div>
+  </div>
+</div>
+
+<h3 id="c2-3">2.3 VIP 体系状态分支</h3>
+<p class="tip">「VIP 体系状态」= 现有系统参数「新版VIP特权状态」，上线时置为关闭（第 12 章）；是否为第一次开启按「VIP 体系是否开启过」标记判断，不按参数值判断。开、关都要二次确认并在弹窗内填谷歌验证码，写操作日志（规则 N40、N46、N47、N67）。</p>
+<div class="brs">
+  <div class="bc" data-fp="F01-04"><h5>A - 第一次开启</h5>
+    <div class="s"><b>删除沿用级别之后的普通会员级别</b><small>只在 VIP0 勾选沿用、且 LEVEL n 不是最高级时</small></div><div class="d">↓</div>
+    <div class="s"><b>存量初始化</b><small>按历史累计算出每位参与 VIP 体系的会员（「KYC 限制」开启时只含 KYC 已通过的）的当前等级和历史最高等级</small></div><div class="d">↓</div>
+    <div class="s"><b>已到达的等级不发奖</b><small>记「不发放（存量初始化）」，不弹窗，以后也不补发（C-01）</small></div><div class="d">↓</div>
+    <div class="s"><b>开始实时判定</b><small>旧版 VIP活动的福利全部停止生成</small></div>
+  </div>
+  <div class="bc" data-fp="F01-04"><h5>B - 关闭</h5>
+    <div class="s"><b>选累计方式</b><small>继续累计 / 暂停累计 / 重新开启时初始化</small></div><div class="d">↓</div>
+    <div class="s"><b>逐类选已发放未领取奖励的处理</b><small>继续可领取 / 停止领取</small></div><div class="d">↓</div>
+    <div class="s"><b>停止判定和发放</b><small>不升级、不发奖、不结算、不生成生日奖励、不发 VIP 短信，事后不补</small></div>
+  </div>
+  <div class="bc" data-fp="F01-04"><h5>C - 再次开启</h5>
+    <div class="s"><b>按所选方式处理累计</b><small>继续 / 暂停：按当时累计判定一次升级并发奖；初始化：从 0 累计</small></div><div class="d">↓</div>
+    <div class="s"><b>恢复实时判定和结算</b><small>「继续可领取」的奖励保留到原有效期；「停止领取」的不恢复</small></div>
+  </div>
+</div>
+
+<h3 id="c2-4">2.4 系统时序（后端视角）</h3>
+<div class="tbl"><table>
+<tr><th>触发</th><th>执行方</th><th>动作</th></tr>
+<tr data-fp="F01-04"><td>第一次开启「VIP 体系状态」</td><td>后端</td><td class="w">按 VIP0 沿用设置删除 LEVEL n 之后的普通会员级别并重新判定这些玩家；按开启时刻历史累计做存量初始化（规则 N46），完成后开始实时判定</td></tr>
+<tr data-fp="F02-02"><td>玩家 KYC 审核通过（「KYC 限制」开启时）</td><td>后端</td><td class="w">按历史累计定级，KYC 前已达到的等级记「不发放（KYC 前已达到）」（规则 N66）</td></tr>
+<tr data-fp="F01-02 F02-02"><td>运营切换「KYC 限制」</td><td>后端</td><td class="w">开启 → 关闭：KYC 未通过的玩家按当前累计实时定级，关闭前已达到的等级记「不发放（KYC 限制关闭前已达到）」；关闭 → 开启：KYC 未通过的玩家不再参与 VIP 体系，未到账的奖励改为「暂停发放（风控）」（规则 N76）</td></tr>
+<tr data-fp="F02-01"><td>充值订单成功</td><td>后端</td><td class="w">累计充值 += 订单金额（只算自行充值）；VIP 成长值按充值比例增加；触发升级判定</td></tr>
+<tr data-fp="F02-01"><td>注单结算（含撤单）</td><td>后端</td><td class="w">增减累计有效投注、当月有效投注、VIP 成长值；触发升级判定</td></tr>
+<tr data-fp="F02-02 F02-03"><td>升级判定通过</td><td>后端</td><td class="w">更新当前等级和历史最高等级；每个首次到达的等级生成升级奖励；写等级变动记录；生成升级弹窗</td></tr>
+<tr data-fp="F02-05 F01-05"><td>运营保存 VIP 门槛、新增等级、切换计算方式</td><td>后端</td><td class="w">有门槛下调或新增、切换时先试算影响预览；需复核的进入待复核；生效后对全部会员重算一次升级（只升不降，规则 N9）</td></tr>
+<tr data-fp="F01-06"><td>运营保存 VIP0 沿用级别、【会员等级】修改 LEVEL n 的有效投注累计值</td><td>后端</td><td class="w">累计金额方式下，逐级比较各 VIP 等级累计有效投注与 VIP0，不高于的标为「不符合标准」；VIP 体系从未开启过时，开启中的这些等级随保存直接关闭；开启过时这些等级仍开启则拦截保存（规则 N56 ②）</td></tr>
+<tr data-fp="F01-05"><td>关闭某一 VIP 等级复核通过</td><td>后端</td><td class="w">该级玩家重新归级、发放上移等级的升级奖励、释放该级奖品剩余预占（规则 N61）</td></tr>
+<tr data-fp="F03-04"><td>每月 1 日 00:00（GMT+8）</td><td>后端定时任务</td><td class="w">按 <a href="#c3-2-4">3.2.4</a> 顺序结算上月</td></tr>
+<tr data-fp="F04-01 F07-02"><td>每日 00:00 / 10:00（GMT+8）</td><td>后端定时任务</td><td class="w">00:00 生成当天生日奖励（1 日生日的等结算完成后生成）；10:00 给当天生日和明天生日的玩家发提醒短信</td></tr>
+<tr data-fp="F07-03"><td>短信 / APP 推送触发时间落在免打扰时段</td><td>后端</td><td class="w">顺延到时段结束发送，发送时再判断一次发送条件（规则 N68）</td></tr>
+</table></div>
+
+<h2 id="c3">3. 业务规则</h2>
+<h3 id="c3-1">3.1 现状（不改动，仅作依据）</h3>
+<p>本节只记录后台和前台现有功能（来源：管理后台知识库、平台知识库、UAT 读取、2026-10-17 / 10-19 线上截图）。Jira 记录的在途状态和缺陷见<a href="#memo">开发技术备忘参考</a>。</p>
+<div class="tbl"><table data-fit>
+<tr><th>规则</th><th>说明</th><th>依据</th></tr>
+<tr><td>用户管理菜单</td><td class="w">【用户管理】菜单：投注站、大代理、代理、会员、子账号、会员代理标签配置、会员等级、VIP特权、KYC审核、会员资料修改审核</td><td>线上截图 2026-10-19</td></tr>
+<tr><td>会员等级（Level）</td><td class="w">【会员等级 › 会员等级配置】按「有效投注累计值」配置等级，只能新增或从末级往前删除；成长值 = 有效投注 × 场馆成长值倍数，倍数修改后次日 03:50 生效（管理后台知识库记为 UTC−4；主版知识库记用户管理已改为 UTC+8，时区以研发确认为准，3.3 冲突 09）；UAT 配到 LEVEL 60，LEVEL 30 = ₱600,000</td><td>管理后台知识库 4.1.5；平台知识库「会员等级」；UAT</td></tr>
+<tr><td>Level 奖励</td><td class="w">「会员等级奖励配置」：活动状态；等级 × 生日礼包金额 × 升级奖励金额；等级 × 实体奖品 × 数量。升级奖励到达后次日 0 点自动发放并弹窗；生日礼包生日当天起 15 天内在领取中心手动领取，联系客服审核后发放</td><td>线上截图 2026-10-17；平台知识库「会员等级」</td></tr>
+<tr><td>活动奖励统计</td><td class="w">筛选会员账号、奖励金额、奖励类型、发放状态、申请领取时间；「审核已发放金额」+「查询总计」；奖励类型、状态显示英文原始值</td><td>线上截图 2026-10-17</td></tr>
+<tr><td>旧版 VIP特权</td><td class="w">【用户管理 › VIP特权】：等级表 VIP0–VIP8（成长值最低要求、保级所需成长值、降级保留成长值比例）、场馆成长值倍数、按等级的单注 / 串关 / 单注冠军最大下注额、充值返水比例、单注最大返水；页签成长值记录、会员福利记录</td><td>管理后台知识库 4.1.6</td></tr>
+<tr><td>旧版 VIP活动</td><td class="w">【活动配置 › VIP活动】是旧版 VIP 的福利发放器：晋级礼金、每周红包（需求流水 / 金额）、生日礼金、专属红包、专属客服、极速出款；细节设定：提现倍数、注册天数、领取时效、强制审核；每周红包进入【派奖审核】。系统参数「新版VIP特权状态」为开关，QA 环境现值为 1（vipVersionStatus，管理后台知识库第 11 章），现在控制的功能资料未覆盖。会员接口 userLevelName 存旧版 VIP 等级（如 VIP3），vipLevelName 存 LEVEL；会员列表筛选有「用户等级」「VIP 等级」两项</td><td>管理后台知识库 4.1.6、4.10</td></tr>
+<tr><td>账号状态与风险分级</td><td class="w">编辑用户的状态：待审核、正常、冻结、停用、禁止投注、临时冻结；冻结或停用须选风控原因（含 Self-Exclusion）；超过 3 天未 KYC 自动临时冻结。风险分级「拦奖励、不拦游戏」：40–69 打标人工复核，70–89 拒绝新人类奖励，90 以上冻结</td><td>管理后台知识库「编辑用户」、11.1；平台知识库 3.1</td></tr>
+<tr><td>通知与报表</td><td class="w">活动彩金发放后发站内信「Reward Received」和 APP 推送「奖励到账」，营销中心另有「奖励金到账」短信；发放金额进入活动统计 → 活动报表 → 活动费用报表 → 平台报表「活动费用」→ 财务数据「活动总额」；短信模板在【公告管理 › 短信模板列表】</td><td>平台知识库 9.1；管理后台知识库 4.7、4.10、5.5</td></tr>
+<tr><td>流水稽核与预算告警</td><td class="w">【活动配置 › 流水稽核配置管理】按倍数和适用游戏配置；系统参数「流水打码范围 NEW」、全局「彩金流水仅计 Slot」；顶栏「预算告警」按活动预算计算</td><td>管理后台知识库 4.10、5.4、5.5</td></tr>
+<tr><td>游戏分类</td><td class="w">平台游戏大类：Slot、Casino、Poker、Bingo、Arcade、Fishing；平台已无体育类游戏。系统参数的首页分类另有 Perya、Sports、ESports（thirdGamesSort 含体育、电竞）</td><td>平台知识库（Crown Rush 后台游戏分类，增量 2026-10-12）；用户 2026-10-20；管理后台知识库系统参数</td></tr>
+<tr><td>KYC 状态</td><td class="w">【用户管理 › KYC审核】记录玩家的 KYC 审核状态；本需求只按 KYC 状态是否为「已认证」判定，不区分认证层级（用户 2026-10-26）；【系统参数 › KYC配置】另有提款相关的 KYC 开关，与本需求无关</td><td>管理后台知识库 4.1.7、KYC配置</td></tr>
+</table></div>
+
+<h3 id="c3-2">3.2 本需求规则</h3>
+<p>按主题分 10 小节。规则编号固定不变：撤回的规则保留编号并标「已撤回」；N56 起为新增。「起因」列写规则来源：原方案章节、Claire 答复编号、后台现状或「原文外补充」。</p>
+
+<h3 id="c3-2-1">3.2.1 名词与口径</h3>
+<div class="tbl"><table data-fit>
+<tr><th>名词</th><th>口径</th><th>功能点</th></tr>
+<tr data-fp="F02-01"><td>累计充值</td><td class="w">注册以来玩家自行充值成功到账的金额之和；不含后台人工加款、赠送彩金和活动奖励，不扣提款（C-09）</td><td><span class="fp">F02-01</span> 累计数据统计</td></tr>
+<tr data-fp="F02-01"><td>累计有效投注</td><td class="w">注册以来已结算注单的有效投注之和，只计 6 大类游戏（规则 N77），按结算时间归属，撤单扣回；不乘场馆成长值倍数</td><td><span class="fp">F02-01</span> 累计数据统计</td></tr>
+<tr data-fp="F03-01"><td>当月有效投注</td><td class="w">自然月（1 日 00:00:00 至最后一天 23:59:59，GMT+8）内结算的有效投注之和，口径同累计有效投注</td><td><span class="fp">F03-01</span> 当月有效投注统计</td></tr>
+<tr data-fp="F02-01"><td>VIP 成长值</td><td class="w">计算方式为「成长值」时使用：充值金额 × 充值比例 + Σ（6 大类各游戏分类有效投注 × 该分类比例），历史累计；「本月新增成长值」按自然月统计。与 Level 成长值（有效投注 × 场馆成长值倍数）是两套，各自累计、互不影响（规则 N59）</td><td><span class="fp">F02-01</span> 累计数据统计</td></tr>
+<tr data-fp="F02-02"><td>普通用户</td><td class="w">没有 VIP 等级的玩家：从未达到 VIP 最低开启等级，或 VIP1 保级失败（C-07）。前台按「前台显示方式」显示「普通用户」或「LEVEL n」（规则 N69）</td><td><span class="fp">F02-02</span> 升级判定</td></tr>
+<tr data-fp="F02-02"><td>当前等级 / 历史最高等级</td><td class="w">当前等级：玩家当前实际享受的 VIP 等级，保级失败会下降，用于保级、生日奖励、返水和限额。历史最高等级：玩家达到过的最高 VIP 等级，不下降，用于判断升级奖励是否已发；因等级关闭被重新归级降下来的玩家仍记原等级，后台显示「VIP13（已关闭）」</td><td><span class="fp">F02-02</span> 升级判定</td></tr>
+<tr data-fp="F01-01"><td>L 号、等级名称、等级配置 ID</td><td class="w">L 号：后台表格显示的顺位号 L1–LN（VIP0 为 L0），新增等级后自动重排。等级名称：前台显示的名称，默认 VIP1–VIP24、SUPER VIP，可改名。等级配置 ID：每个等级固定的 ID（如 CFG-26），不随顺位变化，后端按它判定和记录，后台悬停 L 号可查看。SUPER VIP 只是一个等级名称，不代表最高等级；最高等级 = 当前开启的最高 L 号（规则 N74）</td><td><span class="fp">F01-01</span> VIP 等级配置</td></tr>
+<tr data-fp="F01-06"><td>VIP0（起始级别）</td><td class="w">VIP 体系的起点标准，不是 VIP 等级：不设保级、不降级，不发 VIP 奖励，没有 VIP 返水和限额；VIP0 的玩家仍是普通用户。前台不出现「VIP0」，VIP1 前的「普通用户」卡即代表 VIP0（规则 N56）</td><td><span class="fp">F01-06</span> VIP0 与沿用普通会员级别</td></tr>
+<tr data-fp="F01-01"><td>开启等级 / 已关闭等级</td><td class="w">状态为「开启」的等级参与升级和恢复判定；「已关闭」的等级被跳过，但仍参与门槛递增校验，前台不显示（规则 N61、N62）。「不符合标准」：VIP0 勾选沿用、计算方式为累计金额时，累计有效投注不高于 VIP0（沿用的 LEVEL n）的等级，只能处于关闭状态，提高门槛后才能开启（规则 N56 ②）</td><td><span class="fp">F01-01</span> VIP 等级配置</td></tr>
+<tr data-fp="F01-04"><td>第一次开启 / 再次开启</td><td class="w">「VIP 体系是否开启过」标记为「否」时的那次开启为第一次开启，开启后标记改为「是」、不再改回；之后每次从关闭改为开启为再次开启。该标记为本需求新建，上线初值为「否」，不按系统参数「新版VIP特权状态」的值判断（第 12 章）</td><td><span class="fp">F01-04</span> VIP 体系状态与存量初始化</td></tr>
+<tr data-fp="F02-03"><td>VIP 奖励（账变类型）</td><td class="w">VIP 升级、保级、生日奖励入账使用的独立账变类型，不使用「活动金额」（规则 N35）</td><td><span class="fp">F02-03</span> 升级奖励发放</td></tr>
+<tr data-fp="F02-02"><td>KYC 已通过</td><td class="w">玩家在平台的 KYC 状态为「已认证」，不区分认证层级（用户 2026-10-26）。是否要求 KYC 由【VIP全局参数】「KYC 限制」开关决定：开启（默认）时 KYC 未通过的玩家不参与 VIP 体系；关闭时只有生日奖励要求 KYC（规则 N66、N76，对照见规则 N66 下表）</td><td><span class="fp">F02-02</span> 升级判定</td></tr>
+<tr data-fp="F02-01"><td>6 大类（VIP 计入游戏）</td><td class="w">Slot、Casino、Poker、Bingo、Arcade、Fishing。VIP 的累计有效投注、当月有效投注、VIP 成长值和 VIP 奖励流水只计这 6 大类游戏的有效投注；Perya、ESports、未分类等其他游戏不计入（规则 N77）</td><td><span class="fp">F02-01</span> 累计数据统计</td></tr>
+</table></div>
+
+<h3 id="c3-2-2">3.2.2 等级与升级</h3>
+<p>下表为原方案数值，作为后台默认配置（计算方式「累计金额」）。升级奖占比 = 升级奖励 ÷ 累计有效投注；保级奖占比 = 保级奖励 ÷ 每月保级投注。生日奖励原方案只列 9 个等级，未列出的等级默认沿用低一档金额，全部可由运营修改（C-06）。VIP 奖品默认按原方案十二配置（规则 N72），不含在占比内。</p>
+<div class="tbl"><table data-fp="F01-01" data-fit>
+<tr><th>等级</th><th>累计有效投注</th><th>累计充值</th><th>每月保级投注</th><th>升级奖励</th><th>升级奖占比</th><th>保级奖励</th><th>保级奖占比</th><th>生日奖励</th><th>默认 VIP 奖品</th></tr>
+<tr><td>VIP1</td><td>₱600K</td><td>₱50K</td><td>₱100K</td><td>₱100</td><td>0.0167%</td><td>₱50</td><td>0.050%</td><td>₱88</td><td>—</td></tr>
+<tr><td>VIP2</td><td>₱1M</td><td>₱80K</td><td>₱150K</td><td>₱120</td><td>0.0120%</td><td>₱80</td><td>0.053%</td><td>₱88</td><td>—</td></tr>
+<tr><td>VIP3</td><td>₱1.7M</td><td>₱120K</td><td>₱250K</td><td>₱150</td><td>0.0088%</td><td>₱100</td><td>0.040%</td><td>₱88</td><td>—</td></tr>
+<tr><td>VIP4</td><td>₱3M</td><td>₱200K</td><td>₱400K</td><td>₱180</td><td>0.0060%</td><td>₱120</td><td>0.030%</td><td>₱88</td><td>—</td></tr>
+<tr><td>VIP5</td><td>₱5.5M</td><td>₱350K</td><td>₱600K</td><td>₱220</td><td>0.0040%</td><td>₱150</td><td>0.025%</td><td>₱88</td><td>—</td></tr>
+<tr><td>VIP6</td><td>₱7M</td><td>₱500K</td><td>₱800K</td><td>₱300</td><td>0.0043%</td><td>₱200</td><td>0.025%</td><td>₱188</td><td>—</td></tr>
+<tr><td>VIP7</td><td>₱11M</td><td>₱750K</td><td>₱1.2M</td><td>₱350</td><td>0.0032%</td><td>₱300</td><td>0.025%</td><td>₱188</td><td>—</td></tr>
+<tr><td>VIP8</td><td>₱16M</td><td>₱1M</td><td>₱1.8M</td><td>₱450</td><td>0.0028%</td><td>₱400</td><td>0.022%</td><td>₱188</td><td>—</td></tr>
+<tr><td>VIP9</td><td>₱20M</td><td>₱1.5M</td><td>₱2.5M</td><td>₱600</td><td>0.0030%</td><td>₱500</td><td>0.020%</td><td>₱188</td><td>—</td></tr>
+<tr><td>VIP10</td><td>₱26M</td><td>₱2M</td><td>₱3M</td><td>₱800</td><td>0.0031%</td><td>₱600</td><td>0.020%</td><td>₱188</td><td>—</td></tr>
+<tr><td>VIP11</td><td>₱34M</td><td>₱3M</td><td>₱4M</td><td>₱1,000</td><td>0.0029%</td><td>₱800</td><td>0.020%</td><td>₱288</td><td>—</td></tr>
+<tr><td>VIP12</td><td>₱48M</td><td>₱4M</td><td>₱5M</td><td>₱1,200</td><td>0.0025%</td><td>₱1,000</td><td>0.020%</td><td>₱288</td><td>—</td></tr>
+<tr><td>VIP13</td><td>₱80M</td><td>₱5M</td><td>₱6M</td><td>₱1,500</td><td>0.0019%</td><td>₱1,200</td><td>0.020%</td><td>₱288</td><td>—</td></tr>
+<tr><td>VIP14</td><td>₱95M</td><td>₱6M</td><td>₱8M</td><td>₱2,000</td><td>0.0021%</td><td>₱1,500</td><td>0.019%</td><td>₱488</td><td>Samsung Z Flip7 FE</td></tr>
+<tr><td>VIP15</td><td>₱110M</td><td>₱7M</td><td>₱10M</td><td>₱2,400</td><td>0.0022%</td><td>₱1,800</td><td>0.018%</td><td>₱488</td><td>—</td></tr>
+<tr><td>VIP16</td><td>₱160M</td><td>₱9M</td><td>₱12M</td><td>₱2,800</td><td>0.0018%</td><td>₱2,200</td><td>0.018%</td><td>₱488</td><td>—</td></tr>
+<tr><td>VIP17</td><td>₱180M</td><td>₱10M</td><td>₱15M</td><td>₱3,000</td><td>0.0017%</td><td>₱3,000</td><td>0.020%</td><td>₱888</td><td>iPhone Pro Max</td></tr>
+<tr><td>VIP18</td><td>₱225M</td><td>₱12M</td><td>₱18M</td><td>₱3,800</td><td>0.0017%</td><td>₱4,000</td><td>0.022%</td><td>₱888</td><td>—</td></tr>
+<tr><td>VIP19</td><td>₱290M</td><td>₱15M</td><td>₱22M</td><td>₱4,500</td><td>0.0016%</td><td>₱5,000</td><td>0.023%</td><td>₱888</td><td>—</td></tr>
+<tr><td>VIP20</td><td>₱330M</td><td>₱18M</td><td>₱25M</td><td>₱5,000</td><td>0.0015%</td><td>₱6,000</td><td>0.024%</td><td>₱1,288</td><td>MacBook Pro</td></tr>
+<tr><td>VIP21</td><td>₱440M</td><td>₱22M</td><td>₱30M</td><td>₱7,000</td><td>0.0016%</td><td>₱8,000</td><td>0.027%</td><td>₱1,288</td><td>—</td></tr>
+<tr><td>VIP22</td><td>₱680M</td><td>₱30M</td><td>₱35M</td><td>₱10,000</td><td>0.0015%</td><td>₱12,000</td><td>0.034%</td><td>₱1,888</td><td>Rolex Explorer</td></tr>
+<tr><td>VIP23</td><td>₱920M</td><td>₱40M</td><td>₱40M</td><td>₱18,000</td><td>0.0020%</td><td>₱18,000</td><td>0.045%</td><td>₱1,888</td><td>—</td></tr>
+<tr><td>VIP24</td><td>₱1.45B</td><td>₱50M</td><td>₱50M</td><td>₱30,000</td><td>0.0021%</td><td>₱25,000</td><td>0.050%</td><td>₱2,888</td><td>Luxury Trip for Two</td></tr>
+<tr><td>SUPER VIP</td><td>₱2B</td><td>₱80M</td><td>₱60M</td><td>₱50,000</td><td>0.0025%</td><td>₱40,000</td><td>0.067%</td><td>₱5,888</td><td>Lexus NX350h</td></tr>
+</table></div>
+<p class="tip">K = 千，M = 百万，B = 十亿；后台按整数 ₱ 录入，例如 ₱600K 录入 600000。默认表中每级每月保级投注都小于同级累计有效投注，四个门槛字段逐级严格递增，满足规则 N62。</p>
+
+<div class="tbl"><table data-fit>
+<tr><th>编号</th><th>规则</th><th>起因</th><th>功能点</th></tr>
+<tr id="n1" data-brief="等级由普通会员级别（LEVEL）和 VIP 等级（默认 VIP1–VIP24、SUPER VIP 共 25 级，可新增、可关闭）组成，两者衔接按 VIP0「沿用普通会员级别」决定" data-fp="F02-02"><td>N1</td><td class="w">等级结构：普通会员级别（LEVEL 0 为系统初始等级，LEVEL 1 起由运营在【会员等级】配置）+ VIP 等级（默认 L1–L25：VIP1–VIP24、SUPER VIP，可新增、可关闭，等级数不限）。两者的衔接按 VIP0「沿用普通会员级别」：勾选见 N56，不勾选见 N57。前台是否显示 LEVEL n 由「前台显示方式」决定（N69）。只满足一个升级条件的玩家仍是普通用户（C-03）</td><td class="w">原文一；C-03；产品决定</td><td><span class="fp">F02-02</span> 升级判定</td></tr>
+<tr id="n2" data-brief="累计金额方式要求累计充值和累计有效投注都达到目标等级门槛，成长值方式要求 VIP 成长值达到门槛，门槛判断包含等于" data-fp="F02-02"><td>N2</td><td class="w">升级条件按全局「计算方式」（N58）：<b>累计金额</b>（默认）——累计充值 ≥ 目标等级累计充值，且累计有效投注 ≥ 目标等级累计有效投注，两项都按历史累计；<b>成长值</b>——VIP 成长值 ≥ 目标等级成长值最低要求。门槛判断包含等于。例：VIP20 要求累计充值 ₱18M、累计有效投注 ₱330M</td><td class="w">原文二、三；成长值方式为原文外补充</td><td><span class="fp">F02-02</span> 升级判定</td></tr>
+<tr id="n3" data-brief="累计数据每次变化后实时判定，达标等级高于历史最高等级时立即升级，否则只能在月度结算时恢复" data-fp="F02-02"><td>N3</td><td class="w">升级时机：累计数据每次变化后实时判定。达标等级（满足升级标准的最高开启等级，跳过已关闭等级）高于历史最高等级时，立即升到达标等级，当前等级和历史最高等级同步更新，不等月结，也不受「每月最多恢复 1 级」限制；达标等级不高于历史最高等级的（降过级的玩家、VIP1 保级失败的普通用户），不立即升级，只能在月度结算时按 N4、N16 恢复。判定按会员加锁，同一会员串行处理</td><td class="w">原文四「首次升级后立即获得」；C-02</td><td><span class="fp">F02-02</span> 升级判定</td></tr>
+<tr id="n4" data-brief="降级玩家当月有效投注达到当前等级之上下一个开启等级的保级标准时，次月恢复 1 级，最多恢复到历史最高等级" data-fp="F03-03"><td>N4</td><td class="w">降级后恢复：当前等级 &lt; 历史最高等级、且本月没有达到新等级条件的玩家，按月度结算处理：当月有效投注（成长值方式为本月新增成长值）达到「当前等级之上的下一个开启等级」的保级标准 → 次月恢复到该等级；只达到当前等级保级标准 → 次月保持；未达到 → 次月降 1 级。每月最多恢复 1 级，最多恢复到历史最高等级。恢复目标跳过已关闭等级；目标等级的升级奖励未领过的按 N5 发放，领过的不发（按等级配置 ID 判断）。恢复写等级变动记录，变动类型「恢复」、触发原因「月度结算」</td><td class="w">C-02；C-07；产品决定（跳过已关闭等级）</td><td><span class="fp">F03-03</span> 降级与恢复</td></tr>
+<tr id="n5" data-brief="首次到达某个 VIP 等级时生成该级升级奖励（自动到账或手动领取），每级终身一次；存量初始化、KYC 前已达到等情况记「不发放」，以后不补发" data-fp="F02-03"><td>N5</td><td class="w">升级奖励：首次到达某个 VIP 等级时生成该等级的升级奖励，按「领取方式」（N63）自动到账（默认）或待玩家手动领取；每级终身一次，以历史最高等级判断，降级后再升回、恢复不重复发放。唯一键：会员 + 等级配置 ID。以下等级生成「不发放」记录、占用唯一键、以后不补发：存量初始化时已到达（N46）、完成 KYC 前已达到（N66）、「KYC 限制」关闭前已达到（N76 ①）、门槛调整选「不发放差额 · A」（N45）、注册未满 n 天期间达到（N65）</td><td class="w">原文四；C-01；C-11</td><td><span class="fp">F02-03</span> 升级奖励发放</td></tr>
+<tr id="n6" data-brief="一次跨多级时直接升到最高达标等级，中间每个首次到达的等级各发一笔升级奖励，等级变动记录和升级弹窗只各一次" data-fp="F02-03"><td>N6</td><td class="w">一次跨多级（如 VIP3 直接达到 VIP6）：当前等级和历史最高等级直接到最高达标等级；中间每个首次到达的开启等级各生成一笔升级奖励，奖励记录逐级各一条；等级变动记录只写一条（VIP3 → VIP6）；升级弹窗只弹一次</td><td class="w">C-05</td><td><span class="fp">F02-03</span> 升级奖励发放</td></tr>
+<tr id="n7" data-brief="已撤回：实物的领取资格和发放由实体奖品管理需求负责，VIP 只配奖品和预占" class="wd" data-fp="F02-03"><td>N7</td><td class="w">已撤回（原「实物解锁」）：实物的领取资格和发放由实体奖品管理需求负责，VIP 只配奖品和预占（N72）</td><td class="w">C-10、C-12–C-14</td><td><span class="fp">F02-03</span> 升级奖励发放</td></tr>
+<tr id="n8" data-brief="撤单使累计低于已达门槛时，累计照常扣回，已升的等级不下调、已发奖励不追回（最终口径待确认）" data-fp="F02-01"><td>N8</td><td class="w">撤单使累计数据低于已达等级门槛：累计数据照常扣回；已升的当前等级和历史最高等级不下调，已发奖励不追回（最终口径待确认 Q17）；下一级升级按扣回后的累计判断</td><td class="w">边界补充</td><td><span class="fp">F02-01</span> 累计数据统计</td></tr>
+<tr id="n9" data-brief="门槛下调、新增等级或切换计算方式时先弹影响预览，预计发放超过复核金额阈值的须另一人复核通过才生效，生效后对全部会员立即重算" data-fp="F02-05"><td>N9</td><td class="w">门槛修改后的重算：修改设定、新增等级、切换计算方式时，如有门槛下调（累计有效投注、累计充值、成长值最低要求调低）或新增、切换，先弹影响预览「预计升级 N 人、预计发放升级奖励 ₱X」（按点击时刻试算，可导出名单），在预览弹窗内填谷歌验证码确认。预计发放金额 &gt; 复核金额阈值（阈值未填时 &gt; 0 即需复核）时进入「待复核」，由另一名有「复核 VIP 门槛」权限的人员复核通过后才生效（提交人不能复核自己的修改；复核弹窗按复核时刻重新试算；驳回不生效）。生效后立即按新门槛对全部会员重算一次，满足的立即升级并按 N5、N6 发奖；门槛上调不降级、不回收已发奖励。同一时间只有一条待复核，待复核期间不能修改 VIP 等级配置</td><td class="w">检查报告 C37（防误操作大额发放）</td><td><span class="fp">F02-05</span> 门槛修改后重算</td></tr>
+<tr id="n45" data-brief="门槛下调预览中勾选「不发放差额奖励」时，对新达标玩家二选一：A 继续累计（跨过的等级不发放）或 B 重置累计" data-fp="F02-05"><td>N45</td><td class="w">不发放差额奖励：影响预览弹窗内「不发放差额奖励」默认不勾选。勾选后对这次因门槛下调而新达标的玩家二选一：A「继续累计」——立即升到新门槛对应的等级，跨过的等级记「不发放（门槛调整）」并占用唯一键，以后不补发；B「重置初始化」——这次不升级，累计充值和累计有效投注从生效时刻起重新累计，以后达到新门槛正常升级领奖。选择和名单写操作日志</td><td class="w">检查报告 C37</td><td><span class="fp">F02-05</span> 门槛修改后重算</td></tr>
+<tr id="n10" data-brief="勾选沿用时 VIP 玩家不再领 Level 段奖励、返水只按 VIP 表；不勾选时两套独立，各自达标都可领" data-fp="F02-06"><td>N10</td><td class="w">Level 奖励与 VIP 奖励的关系：<b>勾选</b>沿用时，当前等级在 VIP 最低开启等级及以上的玩家不再领取 Level 段奖励（生日礼包、升级奖励、实体奖品），返水只按 VIP 返水表；<b>不勾选</b>时两套独立，Level 奖励 / 返水与 VIP 奖励 / 返水各自达标都可领（例：LEVEL 10 升级奖励 ₱10 + VIP2 升级奖励 ₱120，同时达到共可领 ₱130）。会员层级实时返水不受影响，单独核算</td><td class="w">检查报告第 18 条；产品决定</td><td><span class="fp">F02-06</span> 普通会员级别与 VIP 的衔接</td></tr>
+<tr id="n77" data-brief="VIP 只计 Slot、Casino、Poker、Bingo、Arcade、Fishing 6 大类游戏的有效投注，Perya、ESports 等不计入累计、保级、成长值和流水" data-fp="F02-01 F03-01 F01-07 F01-02"><td>N77</td><td class="w">计入游戏范围：VIP 只计 6 大类（Slot、Casino、Poker、Bingo、Arcade、Fishing）游戏的有效投注。Perya、ESports、未分类等其他游戏的投注不计入累计有效投注、当月有效投注（升级、保级、恢复都不计）、VIP 成长值（N59）和 VIP 奖励流水（N34）。与 Claire 原方案的差异：原方案二、三的升级、保级投注没有限定游戏类型，用户 2026-10-21 定只计 6 大类（3.3 冲突 18）</td><td class="w">用户 2026-10-21</td><td><span class="fp">F02-01</span> 累计数据统计</td></tr>
+</table></div>
+
+<h3 id="c3-2-3">3.2.3 保级、降级与恢复</h3>
+<div class="tbl"><table data-fit>
+<tr><th>编号</th><th>规则</th><th>起因</th><th>功能点</th></tr>
+<tr id="n11" data-brief="每月 1 日按结算时的当前等级考核上月有效投注，达到每月保级投注的次月保持并获得保级奖励" data-fp="F03-02"><td>N11</td><td class="w">保级只看当月有效投注（成长值方式只看本月新增成长值），不看充值。每月 1 日按结算时的当前等级考核上月整月：达到该级每月保级投注 → 次月保持并发该级保级奖励（按领取方式到账或待领取）。例：VIP20 当月达到 ₱25M → 次月保持 VIP20 并获得 ₱6,000</td><td class="w">原文五、七、八</td><td><span class="fp">F03-02</span> 保级判定与保级奖励</td></tr>
+<tr id="n12" data-brief="上月未达到保级标准的不发保级奖励，次月当前等级降 1 级，历史最高等级不变" data-fp="F03-03"><td>N12</td><td class="w">未达到：不发保级奖励，次月当前等级降 1 级（降到下一个开启等级），历史最高等级不变。例：VIP17 未达到 ₱15M → 次月降至 VIP16。成长值方式降级时按该级「降级保留成长值比例」保留成长值</td><td class="w">原文五、七</td><td><span class="fp">F03-03</span> 降级与恢复</td></tr>
+<tr id="n13" data-brief="每月最多降 1 级、最多恢复 1 级，不按当月流水一次性重算等级" data-fp="F03-03"><td>N13</td><td class="w">每月最多降 1 级、最多恢复 1 级，不按当月流水一次性重算等级。例：SUPER VIP 连续两个月未达标 → 依次降至 VIP24、VIP23</td><td class="w">原文六；C-02</td><td><span class="fp">F03-03</span> 降级与恢复</td></tr>
+<tr id="n14" data-brief="保级奖励每人每月最多一次；降级后恢复的当次照常发结算时当前等级的保级奖励" data-fp="F03-02"><td>N14</td><td class="w">保级奖励每月最多一次，唯一键：会员 + 结算月份。降级后恢复的当次，达到恢复条件必然也达到当前等级保级标准，照常发「结算时当前等级」的保级奖励，计入保级成功人数，恢复人数另计</td><td class="w">原文五、七；C-02</td><td><span class="fp">F03-02</span> 保级判定与保级奖励</td></tr>
+<tr id="n15" data-brief="当月有升级的按升级后的新等级考核保级；存量初始化、完成 KYC、关闭「KYC 限制」时定级的不算当月升级" data-fp="F03-02"><td>N15</td><td class="w">考核等级 = 结算时的当前等级：月内有升级的按升级后的新等级考核，达到即保持并发保级奖励，未达到次月降 1 级（C-04）。开启当月通过存量初始化、或当月完成 KYC 定级、「KYC 限制」关闭时定级得到的等级不算「当月有升级」，同样按整个自然月考核</td><td class="w">原文一、七、八；C-01；C-04</td><td><span class="fp">F03-02</span> 保级判定与保级奖励</td></tr>
+<tr id="n16" data-brief="VIP1 保级失败变为普通用户；之后某月有效投注达到 VIP1 每月保级投注，次月 1 日回到 VIP1，不重发升级奖励，当次不发保级奖励" data-fp="F03-03"><td>N16</td><td class="w">VIP1（最低开启等级）保级失败：不再是 VIP，变为普通用户，前台按「前台显示方式」显示（C-07）。这类玩家（历史最高 ≥ VIP1）某月有效投注达到 VIP1 每月保级投注 → 次月 1 日回到 VIP1，变动类型「恢复」；VIP1 升级奖励不重发；回到当次结算时没有当前等级，不发保级奖励，只计入恢复人数，不计入参与人数和保级成功人数</td><td class="w">C-02；C-07</td><td><span class="fp">F03-03</span> 降级与恢复</td></tr>
+</table></div>
+
+<h3 id="c3-2-4">3.2.4 每月结算</h3>
+<div class="tbl"><table data-fit>
+<tr><th>编号</th><th>规则</th><th>起因</th><th>功能点</th></tr>
+<tr id="n17" data-brief="每月最后一天 23:59:59（GMT+8）截止统计，次月 1 日 00:00 按固定顺序做保级、恢复、降级并发保级短信" data-fp="F03-04"><td>N17</td><td class="w">每月最后一天 23:59:59（GMT+8）截止统计，次月 1 日 00:00（GMT+8）结算。顺序：① 统计上月有效投注（或新增成长值）；② 按结算时当前等级判断是否达到保级标准；③ 达到的发保级奖励，其中降过级且达到恢复条件的次月恢复 1 级；④ 未达到的降 1 级；⑤ 判断 VIP1 保级失败后的普通用户是否回到 VIP1；⑥ 更新当前等级；⑦ 发保级短信（N41）</td><td class="w">原文八、十六</td><td><span class="fp">F03-04</span> 结算任务</td></tr>
+<tr id="n18" data-brief="月度结算只含截止时为 VIP 等级且参与 VIP 体系的会员（另判 VIP1 保级失败的普通用户能否恢复），结算后撤单不改已结算结果" data-fp="F03-04"><td>N18</td><td class="w">结算范围：截止时当前等级为 VIP 等级、参与 VIP 体系的会员（参与人数；「KYC 限制」开启时只含 KYC 已通过的，N66），以截止时刻的等级和当月数据为快照；另外判断 N16 的普通用户（只计恢复人数）。「KYC 限制」开启时 KYC 未通过的玩家不在范围内。结算完成后发生的撤单不修改已结算月份的结果。合计口径：参与人数 = 保级成功 + 降级 + 失败；保级奖励笔数 = 保级成功人数</td><td class="w">平台惯例补充；C-07；C-11</td><td><span class="fp">F03-04</span> 结算任务</td></tr>
+<tr id="n19" data-brief="月度结算按「会员 + 月份」幂等，单个会员失败自动重试 3 次，仍失败的标为失败，运营可重跑" data-fp="F03-04"><td>N19</td><td class="w">按「会员 + 月份」幂等，重复执行不重复发奖、不重复降级；单个会员失败不影响其他会员，自动重试 3 次，仍失败的在「月度结算记录」标为失败，运营可「重跑失败」</td><td class="w">平台惯例补充</td><td><span class="fp">F03-04</span> 结算任务</td></tr>
+<tr id="n20" data-brief="已撤回：发奖和发短信分开处理，已移入开发技术备忘参考" class="wd" data-fp="F03-04"><td>N20</td><td class="w">已撤回（原「发奖和发短信分开处理」），移入<a href="#m15">备忘 M15</a></td><td class="w">—</td><td><span class="fp">F03-04</span> 结算任务</td></tr>
+<tr id="n21" data-brief="结算开始后的新升级计入新月份，结算完成后当前等级取结算结果和新升级等级中较高者" data-fp="F03-04"><td>N21</td><td class="w">结算开始后（1 日 00:00 起）发生的新升级计入新月份；结算完成后当前等级取「结算结果」与「新升级后的等级」中较高者</td><td class="w">边界补充</td><td><span class="fp">F03-04</span> 结算任务</td></tr>
+<tr id="n22" data-brief="已撤回：结算前数据核对，已移入开发技术备忘参考" class="wd" data-fp="F03-04"><td>N22</td><td class="w">已撤回（原「结算前数据核对」），移入<a href="#m07">备忘 M07</a></td><td class="w">—</td><td><span class="fp">F03-04</span> 结算任务</td></tr>
+</table></div>
+
+<h3 id="c3-2-5">3.2.5 生日奖励</h3>
+<div class="tbl"><table data-fit>
+<tr><th>编号</th><th>规则</th><th>起因</th><th>功能点</th></tr>
+<tr id="n23" data-brief="生日奖励金额取生日当天 00:00 当前 VIP 等级的配置，金额为 0 不发；1 日生日的等保级结算完成后按结算后的等级生成" data-fp="F04-01"><td>N23</td><td class="w">金额：取「VIP奖励配置」该等级的生日奖励，全部可由运营配置；默认值见 3.2.2。按生日当天 00:00 的当前 VIP 等级发放，该等级金额为 0 时不发。生日在每月 1 日的玩家，等当天保级结算完成后按结算后的当前等级生成</td><td class="w">原文十；C-06</td><td><span class="fp">F04-01</span> 生日奖励生成</td></tr>
+<tr id="n24" data-brief="生日当天 00:00（GMT+8）前 KYC 已通过才发生日奖励（不受「KYC 限制」开关影响），当天及之后才通过的当年不发、不补" data-fp="F04-01"><td>N24</td><td class="w">条件：生日当天 00:00（GMT+8）之前 KYC 已通过（KYC 状态为已认证；不受「KYC 限制」开关影响，开关关闭时同样要求，N66、N76）；当天及之后才通过的当年不发、不补。生日取用户详情的「生日」字段（KYC 填写的出生日期）。修改生日：本自然年已生成过的当年不再生成；还没生成的按修改后的生日判断——修改后的生日在本年还没到的到当天生成，是修改当天或已经过去的当年不补发。领取时后端再校验一次 KYC，失败提示领取失败</td><td class="w">原文十；C-11；检查报告 C47、C52</td><td><span class="fp">F04-01</span> 生日奖励生成</td></tr>
+<tr id="n25" data-brief="生日奖励每人每个自然年一次，2 月 29 日生日的玩家非闰年在 2 月 28 日生成" data-fp="F04-01"><td>N25</td><td class="w">每年一次，唯一键：会员 + 自然年（GMT+8），同一自然年内无论等级如何变化只生成一条。2 月 29 日生日的玩家，非闰年在 2 月 28 日生成</td><td class="w">原文十</td><td><span class="fp">F04-01</span> 生日奖励生成</td></tr>
+<tr id="n26" data-brief="生日奖励默认手动领取，须在有效期（含生日当天共 x 天）内领取，过期作废；也可配置为生日当天自动到账" data-fp="F04-02"><td>N26</td><td class="w">领取：默认「手动领取」——生日当天生成「待领取」，玩家在等级中心生日卡片或当前等级卡「查看详情」弹窗点「领取」，两处状态同步；不进入领取中心，不需客服审核（强制审核生效时按 N64）。有效期 = 「手动领取有效期（天）」x，含生日当天共 x 天，截止「生日当天 + x − 1」那天 23:59:59（GMT+8），过期作废。例：10-13 生日、15 天，截止 10-27 23:59:59；10-28 全天显示「已过期」；10-29 00:00 起不再显示生日卡片。生日奖励也可配置为「自动领取」：生日当天自动到账，会员福利记录状态为「已发放」，生日卡片只显示到生日当天 23:59:59</td><td class="w">原文十；C-06；K02</td><td><span class="fp">F04-02</span> 生日奖励领取</td></tr>
+</table></div>
+
+<h3 id="c3-2-6">3.2.6 领取方式、强制审核、注册天数与 KYC</h3>
+<div class="tbl"><table data-fit>
+<tr><th>编号</th><th>规则</th><th>起因</th><th>功能点</th></tr>
+<tr id="n63" data-brief="升级、保级、生日奖励分别设置自动或手动领取；手动领取超过有效期（1–30 天，默认 15）作废，修改只影响之后生成的奖励" data-fp="F06-06 F01-02"><td>N63</td><td class="w">领取方式：升级、保级、生日奖励分别设置「自动领取（到账）/ 手动领取」，默认升级、保级自动，生日手动。自动：奖励生成即到账。手动：生成「待领取」，玩家在前台点「领取」才到账，超过「手动领取有效期」（1–30 天，默认 15，含生成当天）作废，状态「已过期」。修改领取方式和有效期只影响之后新生成的奖励；待领取期间玩家等级变化不影响已生成奖励的金额。一次跨多级产生的多笔待领取升级奖励合并为一张待领取卡片，点一次全部到账</td><td class="w">原文外补充（产品决定）</td><td><span class="fp">F06-06</span> 手动领取与待领取卡片</td></tr>
+<tr id="n64" data-brief="强制审核生效时 VIP 奖励须人工审核通过才到账并发审核到账短信；驳回不发放，前台显示「审核未通过，如有疑问请联系客服」" data-fp="F08-06 F01-08"><td>N64</td><td class="w">强制审核（细节设定，默认不生效）：生效后 VIP 奖励须人工审核通过才到账——自动领取的在到账前审核，手动领取的在玩家点「领取」后审核。审核通过：升级、保级为「已发放」，生日奖励手动领取的为「已领取」、自动领取的为「已发放」，并按奖励类别发送对应的「审核通过到账」短信模板（升级「VIP 升级奖励审核通过到账」、保级「VIP 保级奖励到账」、生日「VIP 生日奖励审核通过到账」，附录 D；审核时不填写短信内容，用户 2026-10-26）（到账金额小于 ₱1 时不发短信、只发 APP 推送，同 N41）；审核驳回：不发放、不发短信，驳回原因必填、只在后台显示，前台统一显示「审核未通过，如有疑问请联系客服」。前台「未通过」的显示期：手动领取的显示到原有效期结束，自动领取的从驳回当天起显示「手动领取有效期」天数，到期后不再显示。按奖励生成时刻的设定判断，修改不影响已生成的奖励。审核入口以后台配置为准（现有【派奖审核】或本需求审核列表，开发评估，Q29）</td><td class="w">旧版 VIP活动细节设定；产品决定</td><td><span class="fp">F08-06</span> 强制审核与审核短信</td></tr>
+<tr id="n65" data-brief="注册天数生效后注册满 n 天才可获得 VIP 奖励，未满期间的奖励记「不发放」且不补发，等级照常判定" data-fp="F01-08"><td>N65</td><td class="w">注册天数（细节设定，默认不生效）：生效并填 n（正整数）后，玩家注册满 n 天才可获得 VIP 升级、保级、生日奖励；等级照常判定；未满 n 天期间生成的奖励记「不发放（注册未满 n 天）」、占用唯一键，满 n 天后也不补发</td><td class="w">旧版 VIP活动细节设定；产品决定</td><td><span class="fp">F01-08</span> VIP 活动与福利（新旧合并）与细节设定</td></tr>
+<tr id="n66" data-brief="「KYC 已通过」= KYC 状态为已认证；「KYC 限制」开启时 KYC 未通过的玩家不参与 VIP 体系，完成 KYC 后按累计定级，之前已达到的等级不发升级奖励" data-fp="F02-02"><td>N66</td><td class="w">KYC 与 VIP 参与资格：「KYC 已通过」= 玩家在平台的 KYC 状态为「已认证」，不区分认证层级（用户 2026-10-26），对照见下表。是否要求 KYC 由【VIP全局参数】「KYC 限制」开关决定（N76）。<br>① 开启（默认）：KYC 未通过的玩家（审核中、未认证、拒绝、补充信息，以及账号状态为临时冻结（未 KYC）的）不参与 VIP 体系：没有 VIP 等级，不升级、不参加月结，不生成任何 VIP 奖励，不收 VIP 弹窗、通知和短信，不在 VIP会员数据中，前台显示为普通用户（按「前台显示方式」，N69）。KYC 通过时按历史累计用 N2 确定当前等级和历史最高等级，写一条变动类型「升级」、触发原因「完成 KYC」的记录；KYC 前已达到的等级记「不发放（KYC 前已达到）」，不弹升级弹窗、不发通知，以后不补发；之后新到达的等级正常发放。完成 KYC 时累计不足 VIP1 的仍是普通用户，不写变动记录。<br>② 关闭：VIP 等级、升级奖励、保级奖励不要求 KYC（<span style="color:#C00000;font-weight:700">※ 开关关闭时，等级、升级奖励、保级奖励不要求 KYC，与 Claire 答复 C-11「注册后完成kyc，才能享受所有的活动权益」不一致；关闭前须经老板或 Claire 确认（用户 2026-10-27 决定三个迭代都保留开关，默认开启，开启时与原文一致）。</span>），KYC 未通过的玩家与已通过的玩家一样参与 VIP 体系（定级、升级、月结、弹窗、通知和短信按各自规则）；账号状态为临时冻结（未 KYC）的按 N48「冻结」处理（等级照常计算，奖励暂停发放（风控））。生日奖励不受开关影响，始终要求生日当天 00:00（GMT+8）前 KYC 已通过（N24）。<br>③ 中途切换开关的处理见 N76</td><td class="w">C-11；C-01；用户 2026-10-26（KYC 限制改为开关）</td><td><span class="fp">F02-02</span> 升级判定</td></tr>
+<tr id="n76" data-brief="「KYC 限制」开关默认开启；关闭时等级、升级和保级奖励不要求 KYC（与 Claire 答复 C-11 不一致，关闭前须经老板或 Claire 确认），生日奖励始终要求 KYC" data-fp="F01-02 F02-02"><td>N76</td><td class="w">KYC 限制（VIP全局参数，开关，必填，默认开启）：开启 = KYC 未通过的玩家不参与 VIP 体系；关闭 = VIP 等级、升级奖励、保级奖励不要求 KYC；两种状态下生日奖励都要求 KYC（N66 KYC 与 VIP 参与资格、N24 生日奖励条件）。<span style="color:#C00000;font-weight:700">※ 开关关闭时，等级、升级奖励、保级奖励不要求 KYC，与 Claire 答复 C-11「注册后完成kyc，才能享受所有的活动权益」不一致；关闭前须经老板或 Claire 确认（用户 2026-10-27 决定三个迭代都保留开关，默认开启，开启时与原文一致）。</span>VIP奖品全局项「是否需要 KYC」是单独的配置，不受本开关影响，选「是」时要求 KYC 已通过（N72 VIP奖品配置）。<br>操作：点开关即弹确认弹窗（写明切换方向和影响，内填谷歌验证码），确定后立即生效，写操作日志（字段「KYC 限制」，值「开启 → 关闭」或「关闭 → 开启」）；取消、关闭弹窗或验证码错误时开关保持原状态、不写日志。不随「保存 VIP 全局参数」保存；按钮权限沿用「保存 VIP 全局参数」。VIP 体系关闭期间也可以切换，重新开启后按当时的开关状态判定。<br>切换只影响切换时刻之后的判定，已定的等级、已生成和已发放的奖励不追溯：<br>① 开启 → 关闭：KYC 未通过的玩家从关闭时刻起参与 VIP 体系，按关闭时刻的历史累计（N2）实时定级，确定当前等级和历史最高等级，写一条变动类型「升级」、触发原因「KYC 限制关闭」的记录；关闭前已达到的等级记「不发放（KYC 限制关闭前已达到）」、占用唯一键，不弹升级弹窗、不发通知，以后也不补发（与 N66「KYC 前已达到的等级不发放」同一思路）；之后新到达的等级正常发放，当月按整个自然月考核保级（N15）。累计不足 VIP1 的仍是普通用户，不写变动记录。<br>② 关闭 → 开启：KYC 未通过的玩家从开启时刻起不参与 VIP 体系，前台显示为普通用户（按「前台显示方式」，N69），不再生成新奖励，不参加之后的月度结算；已到账的奖励（已发放、已领取、已发放（补发））不追回；已生成、未到账的奖励（待领取、待审核）改为「暂停发放（风控）」（待审核的移出审核列表），按 N36 风控暂停处理：玩家完成 KYC 后由运营「放行」（自动领取的升级、保级奖励立即到账；手动领取的回到「待领取」，有效期从放行当天重新计算）或「作废」（必须填原因，不再发放），玩家完成 KYC 前不放行。玩家之后完成 KYC 时按 N66 ① 定级：不参与期间新到达的等级记「不发放（KYC 前已达到）」，已生成过记录的等级不重复生成。<br>依据：Claire 答复 C-11「注册后完成 KYC，才能享受所有的活动权益」（开关默认开启与之一致，关闭为运营可选项）；原文十「生日奖励需完成 KYC」</td><td class="w">用户 2026-10-26；C-11；原文十</td><td><span class="fp">F01-02</span> VIP 奖励与全局参数</td></tr>
+</table></div>
+<p>KYC 状态与 VIP 参与（规则 N66 KYC 与 VIP 参与资格、N76 KYC 限制；「已通过」= KYC 状态为已认证，用户 2026-10-26）：</p>
+<div class="tbl"><table data-fp="F02-02 F06-07" data-fit>
+<tr><th>KYC 状态</th><th>「KYC 限制」开启（默认）</th><th>「KYC 限制」关闭</th><th>等级中心 KYC 引导卡</th></tr>
+<tr><td>已认证</td><td>已通过，参与 VIP 体系</td><td>参与 VIP 体系</td><td class="w">不显示，正常显示 VIP 段</td></tr>
+<tr><td>审核中</td><td>未通过，不参与 VIP 体系</td><td class="w">参与（等级、升级奖励、保级奖励照常；生日奖励不生成）</td><td class="w">开启时：审核中文案，按钮「查看 KYC 进度」；关闭时不显示</td></tr>
+<tr><td>未认证、拒绝、补充信息</td><td>未通过，不参与 VIP 体系</td><td class="w">参与（等级、升级奖励、保级奖励照常；生日奖励不生成）</td><td class="w">开启时：未完成文案，按钮「去完成 KYC」；关闭时不显示</td></tr>
+</table></div>
+<p class="tip">账号为「临时冻结（未 KYC）」的：「KYC 限制」开启时按未完成处理；关闭时按 N48「冻结」处理（等级照常，奖励暂停发放（风控））。未完成文案：「完成 KYC 后即可加入 VIP 会员体系，享受之后的升级、保级和生日奖励。」；审核中文案：「你的 KYC 正在审核中，审核通过后即可加入 VIP 会员体系，享受之后的升级、保级和生日奖励。」（第 4 章）。</p>
+
+<h3 id="c3-2-7">3.2.7 VIP0、计算方式与等级配置</h3>
+<div class="tbl"><table data-fit>
+<tr><th>编号</th><th>规则</th><th>起因</th><th>功能点</th></tr>
+<tr id="n56" data-brief="VIP0 勾选沿用时，普通会员升到沿用的 LEVEL n 后再上一级就是 VIP1，开启时删除 LEVEL n 之后的级别；累计有效投注不高于 VIP0 的等级为「不符合标准」，只能关闭" data-fp="F01-06"><td>N56</td><td class="w"><b>VIP0 勾选「沿用普通会员级别」</b>（上线默认勾选）：VIP 体系沿用普通会员机制，普通会员逐级升到沿用的 LEVEL n 后再往上一级就是 VIP1（例：普通会员最高为 LEVEL 30 时第 31 级就是 VIP1，最高级以【会员等级】实际配置为准）。<br>① 选 LEVEL n：下拉列出 LEVEL 1 至当前最高级，默认当前最高级（即默认不删除级别），所有级别都可选，选择时不拦截。<br>② 标准与「不符合标准」：累计金额方式下 VIP0 累计有效投注 = LEVEL n 的有效投注累计值（只读）、累计充值 = 0；累计有效投注不高于 VIP0 的 VIP 等级（从 VIP1 起逐级判断，不比较累计充值）为「不符合标准」，只能处于关闭状态：点「开启」拦截，运营用「修改设定」把累计有效投注改到高于 VIP0（仍须满足 N62 逐级严格递增）后标记取消、该级仍为关闭，再按 N61 开启。开启中的等级在「修改设定」「新增等级」里改到不高于 VIP0 时拦截；已关闭的不符合标准等级可以「修改设定」。保存 VIP0（选 LEVEL n）或【会员等级】修改 LEVEL n 的有效投注累计值时不拦截选择，弹窗列出将不符合标准的等级：VIP 体系从未开启过 → 保存后开启中的这些等级直接关闭（没有玩家，不复核、不归级），写操作日志；VIP 体系开启过（含开启后又关闭）→ 这些等级仍处于开启时拦截保存，运营须先对它们点「关闭」走 N61 流程（影响预览、复核通过后重新归级），或先提高它们的门槛，再保存（Q36 已定）。从成长值切回累计金额时同样检查开启中的不符合标准等级，有则不能切换（N58）。成长值方式下 VIP0 成长值最低要求另行填写（必填），VIP1 成长值最低要求须大于 VIP0（保存时校验），不与 LEVEL n 比较，不使用「不符合标准」。<br>③ 删除：开启 VIP 体系时删除 LEVEL n+1 至最高级，这些级别上的玩家按存量初始化规则重新判定（N46）；开启前保存的只是选择。已开启后再改沿用级别，在弹窗内勾选「我已确认」并填谷歌验证码，保存即再删除一次；体系关闭期间改沿用只保存，重新开启时删除。取消沿用后已删除的级别不恢复。<br>④ 沿用期间【会员等级】不能在 LEVEL n 之后添加级别（不论体系是否开启、是否已执行删除）；在 LEVEL n 及以下插入或删除级别时沿用级别跟随 ±1；删除被沿用的级别本身时拦截。<br>⑤ N10 互斥、K03「达到 VIP 后不再按 Level 逻辑升级」只在勾选时适用</td><td class="w">产品决定（替代原 K04 两步删除、「会员最高等级与 VIP 最低等级互相限制」和 VIP 最低开启等级的保存拦截）</td><td><span class="fp">F01-06</span> VIP0 与沿用普通会员级别</td></tr>
+<tr id="n57" data-brief="VIP0 不勾选时普通会员和 VIP 是两套独立机制，不删除普通会员级别，两边奖励、返水各自达标都可领" data-fp="F01-06 F02-06"><td>N57</td><td class="w"><b>VIP0 不勾选</b>：普通会员级别（LEVEL）与 VIP 是两套独立机制、分别核算：普通会员按【会员等级】规则升级，VIP 按【VIP特权】规则升级；VIP0 不设标准，达到 VIP1 标准才成为 VIP；不删除任何普通会员级别（含 LEVEL 30 及以上），不比较两边门槛，也不限制【会员等级】添加级别；两边奖励、返水各自达标都可领（N10 例）。前台：个人中心账号区显示 VIP 级别，等级中心分「普通会员 / VIP」两个 tab（第 4 章）</td><td class="w">产品决定</td><td><span class="fp">F01-06</span> VIP0 与沿用普通会员级别</td></tr>
+<tr id="n58" data-brief="计算方式全局单选累计金额（默认）或成长值，两套门槛各存一份；切换前检查新方式门槛是否齐全，不齐全时拦截并列出缺项" data-fp="F01-01"><td>N58</td><td class="w">计算方式：全局单选「成长值 / 累计金额」，默认「累计金额」，所有 VIP 等级统一按所选方式判定升级、保级、恢复。累计金额：门槛为累计有效投注、累计充值、每月保级投注。成长值：门槛为成长值最低要求、保级所需成长值（每月）、降级保留成长值比例（%）。两种方式的门槛各存一套，切换不清空，切回时显示上次保存的值。切换时先检查新方式各级门槛是否齐全有效（不齐全弹「不能切换计算方式」并列出缺的等级和字段）；从成长值切回累计金额时，如 VIP0 勾选「沿用普通会员级别」，还检查开启中的等级是否不符合标准（累计有效投注不高于 VIP0 沿用的 LEVEL n，N56 ②），有则同样弹「不能切换计算方式」并逐个列出这些等级，运营先「修改设定」提高累计有效投注或关闭这些等级（VIP 体系开启过时按 N61 复核通过）后才能切换，不勾选时不检查；检查通过后弹影响预览、填谷歌验证码确认，按 N9 直接生效或进入待复核；切到成长值时须先保存 VIP 成长值规则。计算方式为成长值时，升级奖占比、保级奖占比显示「—」</td><td class="w">旧版 VIP0–VIP8 等级表与新版合并（产品决定）</td><td><span class="fp">F01-01</span> VIP 等级配置</td></tr>
+<tr id="n59" data-brief="成长值方式下按充值和 6 大类游戏有效投注的比例计 VIP 成长值，规则单独保存，未配齐时成长值门槛置灰" data-fp="F01-07"><td>N59</td><td class="w">VIP 成长值规则：只在计算方式 = 成长值时显示和生效，位于等级表上方；充值 ₱1 = x 成长值；按平台 6 大游戏分类（Slot、Casino、Poker、Bingo、Arcade、Fishing）各设「有效投注 ₱1 = x 成长值」；比例必填、≥ 0、最多 2 位小数；只设这 6 大类，Perya、ESports、未分类等其他游戏的投注不计成长值（N77）。单独「保存 VIP 成长值规则」（确认弹窗内填谷歌验证码），保存即生效。规则未配置齐时，修改设定、新增等级里的成长值门槛置灰，提示「请先设置 VIP 成长值规则」。Level 的「场馆成长值倍数」按场馆，与本规则互不相关；两套成长值各自累计</td><td class="w">产品决定；用户 2026-10-21（只计 6 大类）</td><td><span class="fp">F01-07</span> VIP 成长值规则</td></tr>
+<tr id="n60" data-brief="新增 VIP 等级时填插入位置和门槛，原该级及之后的等级顺延；新等级的奖励等配置未填前不发奖" data-fp="F01-05"><td>N60</td><td class="w">新增等级：表格上方「新增VIP等级」，填「新增到第几级」（L1 至当前最高等级 + 1；填最高 + 1 时加在最高级之上、不顺延）、当前计算方式的门槛（必填，输入框旁显示上下限）、另一方式门槛（选填）、等级名称（默认按新顺位生成如 VIP6，可改）和谷歌验证码；同弹窗显示顺延确认「原 Lk–LN 依次顺延为 Lk+1–LN+1」。校验通过后弹影响预览（按门槛下调处理），按 N9 生效或复核。生效后原该级及之后的等级 L 号 +1，默认名称 VIPn 随之改为 VIPn+1，自定义名称不变；VIP奖励配置、下注限额与返水、VIP奖品配置在相同位置生成该级条目，红字「未配置」——未配置期间该级不发升级 / 保级 / 生日奖励、返水按 0、下注限额按平台默认、没有可领取的奖品、不预占库存。玩家所在等级的配置 ID 不变，显示的名称随顺位变化；已越过新等级的玩家不补发。升级奖励记录显示生成时的等级，重新编号后显示为「VIP5（原 VIP4）」。已保存的等级不能删除，只能关闭；等级数不限</td><td class="w">产品决定</td><td><span class="fp">F01-05</span> 新增与关闭 VIP 等级</td></tr>
+<tr id="n61" data-brief="关闭等级须另一人复核，生效后升级和恢复跳过该级，该级玩家重新归级；归入更低等级的不发奖、不回收" data-fp="F01-05"><td>N61</td><td class="w">关闭等级：点「关闭」弹影响预览 → 在弹窗内填谷歌验证码「提交复核」→ 该级显示「关闭待复核」，仍按开启运行 → 另一名有「复核 VIP 门槛」权限的人员复核（不论金额一律复核，按复核时刻重新试算），通过后生效、驳回保持开启。生效时：升级和恢复判定跳过该级；该级玩家重新归级——当前 = 历史最高的按历史累计（成长值方式按成长值）归入所属开启等级，归入更低等级不发奖、不回收已发奖励；降过级的只上移到当前等级之上的下一个开启等级、不越级，该级升级奖励未领过的发放；每人写变动类型「重新归级」、触发原因「等级关闭」的记录；被降下来的玩家历史最高仍记原等级；该级奖品剩余预占自动释放。影响预览按实际去向列人数（按历史累计归入 VIPx n 人、降级玩家上移到 VIPy m 人、需发放升级奖励人数和金额），合计 = 该级当前人数。再次开启：确认弹窗内填谷歌验证码直接生效，不复核；该级配了奖品时先校验库存，可分配余量 ≥ 原剩余预占才开启并恢复预占，不足保持关闭并提示「当前奖品库存不足，请调整库存或更换奖励」；「不符合标准」的等级不能开启，提示「{等级} 不符合标准：累计有效投注须高于 VIP0（沿用 LEVEL n）的 {数值}，不符合标准的等级只能保持关闭；请先「修改设定」提高门槛（仍须逐级严格递增），或到「VIP0 修改设定」更换沿用级别」（N56 ②）。修改设定弹窗里改状态为关闭同样走复核，且不能同时改其他设定。前台不显示已关闭的等级（刻度、等级卡、VIP 奖励表都不显示，恢复目标和下一个未解锁等级都跳过）；「关闭待复核」期间仍按开启显示；历史最高等级已关闭的，前台「历史最高：VIP m」照常显示原等级名称、不加标记</td><td class="w">产品决定</td><td><span class="fp">F01-05</span> 新增与关闭 VIP 等级</td></tr>
+<tr id="n62" data-brief="门槛逐级严格递增（累计充值可相等），每级保级标准须小于本级升级标准；每月保级投注和保级奖励修改从下个自然月生效" data-fp="F01-01"><td>N62</td><td class="w">门槛校验（修改设定、新增等级、表格校验、切换计算方式四处一致，服务端同样校验）：累计有效投注 / 成长值最低要求 / 每月保级投注 / 保级所需成长值逐级严格递增（不得相等，已关闭等级也参与相邻比较）；VIP 等级与 VIP0 的比较按 N56 ②；累计充值逐级不减、可相等；每一级的保级标准须小于本级升级标准（累计金额：每月保级投注 &lt; 累计有效投注；成长值：保级所需成长值 &lt; 成长值最低要求），升级标准未填时保级框置灰；VIP0 规则按 N56；金额为 ≥ 0 的整数；等级名称必填、≤ 20 字符、不能重复。每月保级投注、保级奖励修改后从下一个自然月生效（次月 1 日对当月的结算用当月 1 日 00:00 的配置）；其他门槛生效后立即重算（N9）</td><td class="w">原文五；产品决定</td><td><span class="fp">F01-01</span> VIP 等级配置</td></tr>
+<tr id="n74" data-brief="SUPER VIP 只是可改名的等级名称；前台只有当前开启的最高等级用皇室紫卡面和角标" data-fp="F06-01"><td>N74</td><td class="w">SUPER VIP 只是等级名称，可改名，不作为最高等级标识；新增、关闭、修改、奖励、返水、奖品对它与其他等级同一规则。前台只有当前最高的已开启 VIP 等级用皇室紫卡面、紫金刻度，顶部角标「♛ 等级名称」；其他等级用 VIP 金色。新增更高等级后紫色移到新的最高级，最高级关闭后移到当前开启的最高级</td><td class="w">产品决定</td><td><span class="fp">F06-01</span> 等级卡与进度</td></tr>
+</table></div>
+
+<h3 id="c3-2-8">3.2.8 奖励入账、流水、风控与预算</h3>
+<div class="tbl"><table data-fit>
+<tr><th>编号</th><th>规则</th><th>起因</th><th>功能点</th></tr>
+<tr id="n34" data-brief="VIP 奖励流水单独配置：升级、保级、生日各自倍数（0–50，默认 1）和计入游戏范围，按发放时的设置记录，不适用低额自动清稽核" data-fp="F01-02"><td>N34</td><td class="w">流水：VIP 流水规则单独配置，与活动配置并行。① 倍数：升级、保级、生日奖励各自配置，0–50 的整数，默认 1（原文十一为 1 倍，可配为原文外补充）。② 计入范围：「VIP 流水计入游戏范围」默认「全部 6 大类」，可改为「指定游戏类型」（6 大类中至少选 1 项）；Perya、ESports、未分类等其他游戏的投注不计入 VIP 奖励流水（N77）；不受【活动配置 › 流水稽核配置管理】、「流水打码范围 NEW」和「彩金流水仅计 Slot」影响。③ 每笔奖励记录发放时的倍数和范围，之后修改不影响已发放的奖励。④ 低额自动清稽核：VIP 奖励的流水不适用低额自动清稽核（余额低于阈值时系统自动清除稽核，R7），未完成的 VIP 奖励流水不因余额低被自动清除；运营需要时可在后台手动清稽核（能否实现待开发确认 Q40，<a href="#m22">备忘 M22</a>）。前台不显示流水倍数</td><td class="w">原文十一；检查报告 K11；用户 2026-10-21（④）</td><td><span class="fp">F01-02</span> VIP 奖励与全局参数</td></tr>
+<tr id="n35" data-brief="VIP 现金奖励进平台余额，账变类型为独立的「VIP 奖励」，前台交易记录显示 VIP Upgrade / VIP Retain / VIP B-day" data-fp="F02-03"><td>N35</td><td class="w">入账：现金奖励进平台余额，账变类型为独立的「VIP 奖励」，不使用「活动金额」；备注 "VIP Upgrade Bonus"、"VIP Retention Bonus"、"VIP Birthday Bonus"；前台交易记录显示名 "VIP Upgrade"、"VIP Retain"、"VIP B-day"（须加入备注前缀映射，<a href="#m19">备忘 M19</a>）</td><td class="w">检查报告第 11 条；N53</td><td><span class="fp">F02-03</span> 升级奖励发放</td></tr>
+<tr id="n36" data-brief="账号状态命中「暂停发放」时等级照常计算、奖励记「暂停发放（风控）」，运营放行后到账或回到待领取，作废须填原因" data-fp="F08-05"><td>N36</td><td class="w">风控暂停：账号状态命中 N48 表中「暂停发放」时，等级照常计算，奖励记录照常生成并占用唯一键，状态「暂停发放（风控）」，不计入已发放金额，前台显示「待核验」。运营「放行」：自动领取的升级、保级奖励立即到账、改为「已发放」；生日奖励和手动领取的奖励回到「待领取」，有效期从放行当天重新计算原有效天数（截止「放行当天 + 天数 − 1」23:59:59）；放行后不补弹升级弹窗、不补发短信，到账推送按免打扰时段发送。运营「作废」：必须填原因，改为「已作废」，不再发放</td><td class="w">检查报告第 4 条、C04、C46</td><td><span class="fp">F08-05</span> 风控暂停与放行</td></tr>
+<tr id="n37" data-brief="原方案的四项 VIP 权益（快速提款、专属客服、专属群、专属活动）本期不开发，规则说明不写" data-fp="F01-08"><td>N37</td><td class="w">VIP 权益：原方案十四的 Fast Withdrawal、VIP Dedicated Support、Exclusive VIP Group、Exclusive VIP Promotions 本期不开发，规则说明不写（C-08）；旧版对应的专属客服、极速出款、每周红包、专属红包在「VIP 活动与福利（新旧合并）」置灰显示为本期不做</td><td class="w">原文十四；C-08</td><td><span class="fp">F01-08</span> VIP 活动与福利（新旧合并）与细节设定</td></tr>
+<tr id="n38" data-brief="VIP 奖励月度预算选填，按当月已发放金额计算，达到 70%、100% 时顶栏告警，到 100% 不停发" data-fp="F01-02"><td>N38</td><td class="w">预算：VIP 奖励月度预算（选填，原文外补充），按 VIP 奖励当月已发放金额计算，不占用活动预算；达到 70% 和 100% 时进入后台顶栏「预算告警」，达到 100% 不停发</td><td class="w">检查报告第 34 条</td><td><span class="fp">F01-02</span> VIP 奖励与全局参数</td></tr>
+<tr id="n39" data-brief="只适用于 789Bingo，VIP 配置、会员数据、结算任务按站点隔离（实现方式待确认）" data-fp="F01"><td>N39</td><td class="w">站点隔离：只适用于 789Bingo；VIP 配置、会员数据、结算任务按站点隔离（实现方式待确认 Q19）</td><td class="w">检查报告第 7 条</td><td><span class="fp">F01</span> VIP 配置（【用户管理 › VIP特权】）</td></tr>
+<tr id="n53" data-brief="VIP 与活动配置并行：不读取、不复用活动配置的规则、报表、账变类型和通知，也不计入任何活动的数据" data-fp="F01-02"><td>N53</td><td class="w">与活动配置并行：VIP 不读取、不复用活动配置的规则、报表、账变类型和通知配置；活动配置的修改不改变 VIP 的结果，VIP 的发放也不计入任何活动的数据</td><td class="w">用户 2026-10-13 总则</td><td><span class="fp">F01-02</span> VIP 奖励与全局参数</td></tr>
+<tr id="n54" data-brief="VIP 奖励按实际到账金额计入平台报表「活动费用」、财务数据「活动总额」和营销费用，不计入各活动的活动统计和报表" data-fp="F08-03"><td>N54</td><td class="w">报表口径（用户 2026-10-26 定方案 B）：VIP 升级、保级、生日奖励按实际到账金额计入平台报表「活动费用」「活动费用 / 平台流水%」、财务数据「活动总额」和平台营销费用口径（NGR 计算中的营销费用）；不计入各活动的「活动统计」、活动报表、活动费用报表（按活动、按活动目的统计的报表仍只统计活动配置里的活动，符合规则 N53「VIP 与活动配置并行」）。暂停发放、审核中、驳回、作废、不发放、待领取、已过期的金额不计入。另在【VIP特权 › 会员福利】会员福利记录（按类型汇总已发放金额）、【VIP特权 › VIP数据报表】月度结算记录（保级奖励总额、VIP 奖励总额、奖励占有效投注比，8.7），以及资金报表、会员账变记录中的「VIP 奖励」账变类型统计。是否计入代理 NGR 仍为待确认 Q21（VIP 奖励是否计入代理 NGR）</td><td class="w">检查报告 K12；知识库「营销费用：所有活动奖励的发放都要计入营销费用」；用户 2026-10-26（检查报告 R3-06）</td><td><span class="fp">F08-03</span> 会员福利记录（VIP 奖励记录）</td></tr>
+<tr id="n48" data-brief="各账号状态对等级、奖励和 VIP 短信的处理见下表，以奖励生成时刻的状态为准，同时命中多种按最严格的处理" data-fp="F08-05 F07-01 F07-02"><td>N48</td><td class="w">账号状态 × 奖励和短信见下表；「VIP 短信」指保级奖励短信、生日提醒短信和审核到账短信。状态以奖励生成时刻为准，同时命中多种按最严格的处理（暂停 &gt; 照常；不发 &gt; 照常）；生成后状态变化不改已生成记录，由运营放行或作废</td><td class="w">检查报告 C44、K13；C-11；风险分 40–69 与平台现行一致（3.1，用户 2026-10-21）</td><td><span class="fp">F08-05</span> 风控暂停与放行</td></tr>
+</table></div>
+<div class="tbl"><table data-fp="F08-05" data-fit>
+<tr><th>账号状态</th><th>等级计算</th><th>奖励发放</th><th>VIP 短信</th></tr>
+<tr><td>正常</td><td>照常</td><td class="w">照常</td><td class="w">照常</td></tr>
+<tr><td>KYC 未通过（「KYC 限制」开启时，含临时冻结（未 KYC））</td><td>不参与</td><td class="w">不参与 VIP 体系，不生成奖励（N66 ①）</td><td class="w">不发</td></tr>
+<tr><td>KYC 未通过（「KYC 限制」关闭时）</td><td>照常</td><td class="w">升级、保级奖励照常；生日奖励不生成（N24）；临时冻结（未 KYC）按下一行「冻结」处理（N66 ②）</td><td class="w">保级短信照常；生日提醒短信不发</td></tr>
+<tr><td>冻结、停用（风控原因不是 Self-Exclusion）</td><td>照常</td><td class="w">暂停发放（风控），复核后放行或作废（N36）</td><td class="w">不发；放行后不补发</td></tr>
+<tr><td>禁止投注</td><td>照常</td><td class="w">暂停发放（风控）</td><td class="w">不发</td></tr>
+<tr><td>自我排除：账号为停用或冻结，且风控原因为 Self-Exclusion</td><td>照常</td><td class="w">暂停发放（风控）；到期、账号恢复正常后由运营放行或作废</td><td class="w">不发；放行后不补发</td></tr>
+<tr><td>风险分 40–69（打标转人工复核）</td><td>照常</td><td class="w">照常发放，按平台现行规则打标转人工复核，不暂停（与现行风险分级「40–69 打标人工复核」一致，用户 2026-10-21）</td><td class="w">照常</td></tr>
+<tr><td>风险分 70 及以上</td><td>照常</td><td class="w">暂停发放（风控）；90 分以上按冻结处理</td><td class="w">不发</td></tr>
+<tr><td>未绑定手机号</td><td>照常</td><td class="w">照常</td><td class="w">不发（没有号码）</td></tr>
+</table></div>
+
+<h3 id="c3-2-9">3.2.9 体系状态、存量初始化与新旧合并</h3>
+<div class="tbl"><table data-fit>
+<tr><th>编号</th><th>规则</th><th>起因</th><th>功能点</th></tr>
+<tr id="n46" data-brief="第一次开启时先按 VIP0 设置删除级别，再按历史累计给参与玩家定级；已到达的等级记「不发放（存量初始化）」，不弹窗、不补发" data-fp="F01-04"><td>N46</td><td class="w">存量初始化：第一次开启时，系统先按 VIP0 沿用设置删除 LEVEL n 之后的普通会员级别，再按开启时刻的历史累计（N2）为每位参与 VIP 体系的会员（「KYC 限制」开启时只含 KYC 已通过的，N66）算出当前等级和历史最高等级（两者相同），每人写一条变动类型、触发原因都为「存量初始化」的记录；已到达的每个等级生成「不发放（存量初始化）」记录、占用唯一键，不弹升级弹窗，以后也不补发；完成后才开始实时判定，之后新到达的等级正常发放。初始化期间状态显示「初始化中」、不能关闭；中断时保持「初始化中」、按会员幂等续跑。第一次开启前可导出「存量初始化预览」（只试算、不写入）。因 VIP0 沿用被删除的级别（LEVEL n 之后，如现网 LEVEL 30–60）上的玩家：同时满足 VIP1 两项标准的进入对应的最高 VIP 等级、不补发升级奖励；只满足一项的为普通用户，Level 按累计有效投注重新判定、最高到保留的 LEVEL n；被删级别已领的奖励不收回、之后不再发；已发未领的被删级别生日礼包有效期内可领、过期作废不补发；Level 实体奖品按实体奖品管理处理。VIP 群、VIP 客服：开启后立即按当前 VIP 等级开放，不设过渡（原方案九「Current VIP Level … 用于 … VIP 客服 … 及其他 VIP 权益」、十四），本期不开发（C-08），由运营按 VIP 等级维护名单；被删级别上现在不是 VIP 的玩家不再享有</td><td class="w">C-01；C-03；C-07；C-10；产品决定</td><td><span class="fp">F01-04</span> VIP 体系状态与存量初始化</td></tr>
+<tr id="n40" data-brief="VIP 体系关闭期间不升级、不发奖、不月结、不生成生日奖励和短信，前台隐藏 VIP 段，事后不补" data-fp="F01-04"><td>N40</td><td class="w">「VIP 体系状态」关闭期间：不做升级判定、不发奖、不做月度结算（结算日落在关闭期间的月份不结算、不降级、不发保级奖励，事后不补）；不生成新的生日奖励，不发保级和生日短信（含「继续可领取」的生日奖励）。前台隐藏 VIP 段，原 VIP 玩家按普通会员处理，按「前台显示方式」显示「普通用户」或「LEVEL n」。已发放未领取的奖励按关闭时的选择处理（N67）。Level 奖励按 N10 处理</td><td class="w">检查报告第 14 条、C14</td><td><span class="fp">F01-04</span> VIP 体系状态与存量初始化</td></tr>
+<tr id="n47" data-brief="关闭 VIP 体系时必选累计方式（继续累计 / 暂停累计 / 重新开启时初始化），它决定关闭期间的累计和重新开启当月的保级考核" data-fp="F01-04"><td>N47</td><td class="w">关闭时选累计方式（必选）：① 继续累计：关闭期间照常统计，重新开启后按当时累计判定一次升级并发奖；② 暂停累计：关闭期间的充值和有效投注不计入，重新开启后在关闭前数值上继续累计并判定一次；③ 重新开启时初始化：重新开启时累计从 0 开始、不立即判定，等级和已领奖励记录保留。重新开启当月的保级考核：① 按整月，② 不含关闭期间，③ 从重新开启时刻起。VIP全局参数只读显示「本次关闭的累计方式」，关闭期间不能修改。Level 段成长值不受影响</td><td class="w">检查报告 C14</td><td><span class="fp">F01-04</span> VIP 体系状态与存量初始化</td></tr>
+<tr id="n67" data-brief="关闭 VIP 体系时，已发放未领取的奖励逐类选「继续可领取」或「停止领取」，不设默认值" data-fp="F01-04"><td>N67</td><td class="w">关闭时已发放未领取的奖励：选好累计方式点「下一步」，弹窗按品类列出关闭时刻已发放、玩家未领取完成的奖励及人数、金额（件数）：生日奖励（待领取）；手动领取的待领取升级奖励、保级奖励（各一类）；待审核的升级 / 保级 / 生日奖励（强制审核生效时）；VIP 实物奖品。运营逐类选「继续可领取 / 停止领取」，不设默认值，未选完提示「请选择处理方式」。没有的品类记为「无（…）」。继续可领取：关闭期间前台照常可领，有效期不变，重新开启后保留到原有效期结束。停止领取：前台不再显示，状态「停止领取（体系关闭）」、不计入已发放，重新开启后也不恢复；待审核奖励移出审核列表、不再审核；实物按实体奖品审核状态处理——已通过的照常发货扣库存，审核中的通过后照常发货、驳回或取消后释放预占，已驳回 / 已取消的和未申请的释放预占。之后进入确认弹窗（列出累计方式和每类选择，内填谷歌验证码），写操作日志（每类选择、人数、金额）。再次开启同样二次确认 + 谷歌验证码 + 日志；新产生的奖励资格按重新开启后的标准核算</td><td class="w">产品决定</td><td><span class="fp">F01-04</span> VIP 体系状态与存量初始化</td></tr>
+<tr id="n70" data-brief="新旧 VIP活动共用「VIP 体系状态」一个开关，开启后旧版 VIP活动的全部福利停止生成，关闭后也不恢复" data-fp="F01-08"><td>N70</td><td class="w">新旧 VIP活动合并：「VIP 体系状态」就是现有系统参数「新版VIP特权状态」，新旧共用这一个开关；上线时置为关闭，第一次开启按「VIP 体系是否开启过」标记判断（3.2.1、第 12 章）。开启：新版升级、保级、生日奖励生效；旧版【活动配置 › VIP活动】的全部福利（晋级礼金、生日礼金、每周红包、专属红包）停止生成，已生成的照常处理完（含【派奖审核】未审核的旧版每周红包）。关闭：新版不生成新奖励（N40），旧版 VIP活动不恢复。对应关系：晋级礼金 → 升级奖励；生日礼金 → 生日奖励；提现倍数 → 流水倍数；领取时效 → 手动领取有效期；保级奖励为新版独有；新版每周红包、专属红包、专属客服、极速出款本期不做（N37）；注册天数、强制审核保留，可单独生效（N64、N65）。将来开放旧版独有福利时，流水倍数和领取时效统一用新版全局参数</td><td class="w">产品决定；C-08</td><td><span class="fp">F01-08</span> VIP 活动与福利（新旧合并）与细节设定</td></tr>
+</table></div>
+
+<h3 id="c3-2-10">3.2.10 普通会员配置、返水、奖品、通知与前台显示</h3>
+<div class="tbl"><table data-fit>
+<tr><th>编号</th><th>规则</th><th>起因</th><th>功能点</th></tr>
+<tr id="n69" data-brief="前台显示方式（会员身份 / 会员等级）决定非 VIP 玩家显示「普通用户」还是 LEVEL n，VIP 玩家始终显示 VIP 等级" data-fp="F06-07 F10-02"><td>N69</td><td class="w">前台显示方式：【会员等级 › 会员等级配置】最上方单选「会员身份（普通会员）」（默认）/「会员等级（LEVEL n）」，必选其一。只影响前台非 VIP 玩家（普通用户、「KYC 限制」开启时未完成 KYC 的玩家、VIP 体系关闭期间的原 VIP 玩家，新旧版本 App 相同）：会员身份 → 只显示「普通用户」，所有普通会员等级内容（LEVEL 徽章、等级行、Level 升级弹窗等）隐藏；会员等级 → 显示 LEVEL n（显示等级名称），其他位置沿用平台现有显示规则。VIP 玩家始终显示 VIP 等级。底层 Level 照常累计和发奖。点未选中项弹确认（内填谷歌验证码），取消则恢复原选项；立即生效，写操作日志</td><td class="w">C-03；产品决定</td><td><span class="fp">F10-02</span> 前台显示方式</td></tr>
+<tr id="n75" data-brief="会员等级（Level）表从 LEVEL 1 开始，可添加、插入、修改、删除级别（至少保留 LEVEL 1），LEVEL 0 的限额与返水单独修改" data-fp="F10-01 F10-03 F10-04"><td>N75</td><td class="w">会员等级（Level）配置：① 表格从 LEVEL 1 开始（LEVEL 0 为系统初始等级、累计值 0，不在表中），列为级别、等级名称、有效投注累计值和 5 个限额与返水字段，只读；LEVEL 0 的限额与返水在表格上方单独修改。② 「+ 添加等级」：会员等级只能输入正整数（非数字自动过滤），范围 LEVEL 1 至最高级 + 1；输入已有级别 = 插在它前面，原级别及以上顺延 +1；累计值须大于 LEVEL k−1、小于原 LEVEL k（追加到最高级之后无上限）；插入到中间时再弹插入确认，取消回到填写弹窗、内容保留。③ 每行「修改」「删除」，任意级别可删，至少保留 LEVEL 1。④ 等级名称：添加时默认与级别一致（LEVEL n），可修改，必填、≤ 20 字符、全部级别内唯一（去首尾空格、不区分大小写，插入时按顺延后的名称比较）；「LEVEL + 数字」是默认名称格式，自定义名称不能用，只能填本级「LEVEL k」（= 恢复默认）；未改过的名称随级别顺延，自定义名称固定。⑤ 插入 / 删除时会员等级奖励配置、实体奖品、Level 返水跟随顺延 / 前移，新等级奖励为空待填，被删等级的数据一并删除。⑥ 添加、修改、删除、LEVEL 0 修改都在弹窗内填谷歌验证码，确认即生效，写操作日志；玩家 Level 按新门槛判定，沿用现有平台规则。⑦ 场馆成长值倍数（现有功能）放在本页签等级表下方，只用于 Level 成长值，修改后次日 03:50 生效（沿用平台现有执行时间，时区以研发确认为准，Q31），保存时填谷歌验证码，输入规则沿用线上。⑧ VIP0 勾选沿用时的限制见 N56 ④</td><td class="w">线上截图 2026-10-17；产品决定</td><td><span class="fp">F10-01</span> 会员等级配置表</td></tr>
+<tr id="n71" data-brief="VIP 和 Level 各有一套下注限额与返水；勾选沿用时 VIP 玩家只按 VIP 表、非 VIP 玩家只按 Level 表" data-fp="F01-09"><td>N71</td><td class="w">下注限额与返水：VIP 和 Level 各一套，互相独立。VIP 表在【VIP特权 › VIP特权 › 下注限额与返水】按 VIP 等级逐级配置（按等级配置 ID 存储），Level 表并在【会员等级】等级表里。字段：单注最大下注额、串关最大下注额、单注冠军最大下注额（正整数）、充值返水比例（%，必填，0–100，最多 2 位小数，填 0 = 不返水，显示两位小数如 0.20%）、单注最大返水（PHP，正整数）。不设返水开关；平台已无体育类游戏，不设体育返水比例。口径：勾选沿用时 VIP 玩家只按 VIP 表、非 VIP 玩家只按 Level 表；不勾选时两边分别核算，两边都有配置就两边都领。VIP0 没有 VIP 限额和返水，按普通用户规则。会员层级实时返水单独核算、与身份无关。与【游戏管理 › 返水设定】的对接由开发评估（Q30）。保存后只影响之后的投注。上线即按本规则执行，不沿用旧版 VIP0–VIP8 的下注限额与返水，也不迁移旧数据：上线前由运营在后台配置 VIP 表，并按新 VIP 数据调整 Level 表（下注限额与返水）的初始值（第 12 章「上线配置」）。旧版 VIP0–VIP8 的等级和成长值数据只读保留（【VIP特权 › VIP数据报表 › 成长值记录】照常可查），不参与新 VIP 的判定</td><td class="w">旧版 VIP特权格式；产品决定</td><td><span class="fp">F01-09</span> 下注限额与返水（按 VIP 等级）</td></tr>
+<tr id="n72" data-brief="每个 VIP 等级从平台库存选奖品并预占活动库存，预占不超过可分配余量，剩余预占为 0 时该等级不能再领" data-fp="F01-03"><td>N72</td><td class="w">VIP奖品配置：为每个 VIP 等级从平台库存（实体奖品管理 › 库存管理）选奖品并预占活动库存（预占数量 = 实体奖品管理的「活动库存」）。可分配余量 = 剩余库存 − 其他活动已占 − 本活动预占（各等级剩余预占之和），最小 0，按已保存的配置计算；余量为 0 的奖品置灰不可选（本行已选的除外）。预占数量为正整数，不少于已领取，不超过「已领取 + 可分配余量（不含本行）」；剩余预占 = 预占数量 − 已领取，为 0 时该等级不能再领此奖品。选「不设奖品」= 清除；更换或清除只释放剩余预占，已领取的按原奖品由实体奖品管理处理。全局项：是否需要 KYC（默认是；选「是」时要求 KYC 状态为已认证，不受【VIP全局参数】「KYC 限制」开关影响，N76）、领取方式（手动 / 自动，默认手动）、手动领取时间（天，正整数，天数以后台配置为准，Q28）、发放方式（审核发放 / 自动发放，默认审核发放），执行在实体奖品管理。默认奖品见 3.2.2。保存时服务端以保存时刻库存再校验。前台本期不显示实物</td><td class="w">原文十二；产品决定（对 C-10 的调整）</td><td><span class="fp">F01-03</span> VIP奖品配置</td></tr>
+<tr id="n73" data-brief="前台金额 ₱9,999 及以下显示完整金额，₱10,000 起用 K、百万起用 M、十亿起用 B，差额类向上取整；后台和短信用完整金额" data-fp="F06-01"><td>N73</td><td class="w">前台金额显示：₱9,999 及以下显示完整金额（₱2,888、₱488）；₱10,000 起用 K（₱12K、₱580K），₱1,000,000 起用 M，₱1,000,000,000 起用 B；最多两位小数、末尾 0 省略。确定金额（奖励、门槛）四舍五入到 0.01（₱1.05M、₱1.45B）；差额类（还差多少）先向上取整到 ₱1，再向上取整到 0.01（₱2,640,000 → ₱2.64M）；达到 1000 时进位到上一级单位（₱999,950 → ₱1M）。后台、短信正文和导出保持完整金额；短信金额写「PHP1,500」（无空格，C-15；例外：「VIP 保级奖励到账」模板按 Claire 原文十六示例写「₱」（用户 2026-10-27，此处不按 C-15））</td><td class="w">产品决定</td><td><span class="fp">F06-01</span> 等级卡与进度</td></tr>
+<tr id="n41" data-brief="保级奖励短信在月结发奖成功后按领取方式选模板发给获得保级奖励的玩家，每人每月最多 1 条，到账不足 ₱1 只发推送" data-fp="F07-01"><td>N41</td><td class="w">保级奖励短信：每月结算发奖成功后发给获得保级奖励的玩家（含恢复的玩家），每人每月最多 1 条；未保级、N48 不发短信的、保级奖励暂停发放的不发，放行后也不补发；落在免打扰时段的顺延（通常 1 日 10:00）。按该笔保级奖励生成时的领取方式选用模板（附录 D）：自动领取到账时发「VIP 保级奖励到账」，手动领取生成待领取时发「VIP 保级奖励可领取」；强制审核生效时在审核通过、实际到账时发「VIP 保级奖励到账」，审核中、驳回不发。发送失败计入月度结算记录短信失败数，不自动重发。账变短信门槛（规范通用规则，用户 2026-10-21 重申）：本次到账金额小于 ₱1 时不发短信，只发 APP 推送（推送同样按 N68 免打扰时段顺延）；等于或大于 ₱1 时短信和推送都发。本需求的 VIP 短信都是到账类，不涉及扣减类账变短信（短信文案移到附录 D，用户 2026-10-26）</td><td class="w">原文十六；C-15</td><td><span class="fp">F07-01</span> 保级奖励短信</td></tr>
+<tr id="n42" data-brief="已撤回：VIP 短信走营销短信通道，已移入开发技术备忘参考" class="wd" data-fp="F07-01"><td>N42</td><td class="w">已撤回（原「VIP 短信走营销短信通道」），移入<a href="#m13">备忘 M13</a></td><td class="w">—</td><td><span class="fp">F07-01</span> 保级奖励短信</td></tr>
+<tr id="n43" data-brief="生日前一天、当天 10:00（GMT+8）各发一条生日提醒短信，只发给能领到生日奖励的玩家；1 日生日的前一天用不写金额的模板" data-fp="F07-02"><td>N43</td><td class="w">生日提醒短信：生日前一天、当天各一条，10:00（GMT+8）发送；前一天按发送时刻的 KYC 和当前等级判断，当天按 N24 判断；只发给能领到生日奖励的玩家；N48 不发短信的玩家不发；VIP 体系关闭期间不发；当天 10:00 发送前已领取生日奖励的不发当天短信。生日在 1 日的玩家前一天照常发（按发送时刻的 KYC 和当前等级判断资格；当天结算可能改变等级，用不写金额和期限的「VIP 生日提醒 · 前一天 · 1 日生日」模板）（原文十；2026-10-26 按原始需求调整），1 日等级结算完成后按结算后的等级发当天短信（10:00 前完成的 10:00 发），没有资格的不发。2 月 29 日生日的玩家非闰年在 2 月 27 日、28 日发送。按生日奖励的领取方式和是否强制审核选用模板（附录 D）：前一天——手动领取「VIP 生日提醒 · 前一天 · 手动领取」、自动领取「VIP 生日提醒 · 前一天 · 自动领取」、强制审核 + 自动领取「VIP 生日提醒 · 前一天 · 强制审核 + 自动领取」；当天——手动领取「VIP 生日提醒 · 当天 · 手动领取」、自动领取「VIP 生日提醒 · 当天 · 自动领取」、强制审核 + 自动领取「VIP 生日提醒 · 当天 · 强制审核 + 自动领取」（照常提醒，原文十；2026-10-26 按原始需求调整），审核通过、实际到账时另发「VIP 生日奖励审核通过到账」（N64）；手动领取时强制审核不影响当天提醒短信。生日当天到账类短信按 N41 的账变短信门槛：到账金额小于 ₱1 时不发短信，只发 APP 推送（按 N68 顺延）（短信文案移到附录 D，用户 2026-10-26）</td><td class="w">原文十；产品决定</td><td><span class="fp">F07-02</span> 生日短信</td></tr>
+<tr id="n44" data-brief="跨多级升级只弹一次升级弹窗（最终等级和奖励合计），不在线或在第三方游戏中的回到原生页面再弹，不发放的等级不弹" data-fp="F06-04"><td>N44</td><td class="w">升级弹窗：一次跨多级只弹一次，显示最终等级和各级升级奖励合计（不发放的等级不计入）；升级时不在线、或在第三方游戏页面中的，回到平台原生页面（大厅、等级中心、个人中心等）时再弹，多条待弹的按现有弹窗优先级依次显示（<a href="#m14">备忘 M14</a>）；风控暂停不弹、放行后不补弹；存量初始化、KYC 前已达到、「KYC 限制」关闭前已达到、门槛调整不发放的等级不弹；老版本 App 不弹。前台不弹 Level 升级弹窗，只在「前台显示方式」= 会员等级时按现有平台规则弹；同一次判定 Level 和 VIP 都升级时只弹 VIP 升级弹窗。站内信即时生成，短信和 APP 推送按免打扰时段发送，不受玩家是否在游戏中影响</td><td class="w">平台惯例补充；检查报告第 13 条；C-03</td><td><span class="fp">F06-04</span> 升级弹窗</td></tr>
+<tr id="n55" data-brief="升级、保级、生日奖励实际到账时发站内信和 APP 推送（复用「奖励到账后」模板）；待领取、暂停发放、审核中等情况不发" data-fp="F07-03"><td>N55</td><td class="w">VIP 奖励到账通知：升级、保级、生日奖励实际到账时（自动到账、手动领取成功、风控放行到账、补发到账、审核通过到账），由 VIP 发放流程发站内信「Reward Received」（即时生成）和 APP 推送「奖励到账」（按免打扰时段）。生成待领取、放行回到待领取、暂停发放、审核中、驳回、「不发放」的都不发。营销中心「奖励金到账」短信不发；VIP 奖励不触发活动配置的任何通知（聊天室播报除外，见下）。APP 推送（用户 2026-10-26，检查报告 R3-07）：① 复用【消息推送】推送模板配置中现有的「奖励到账后」场景模板，模板变量能否带出 VIP 奖励类别（升级 / 保级 / 生日）和金额待 Q42（「奖励到账后」模板变量能否带出 VIP 奖励类别和金额）确认，不能时按模板现有通用文案发送；② 受【公告管理 › 消息推送 › app系统推送】「奖励金到账通知」开关控制：开关关闭时不发 VIP 到账推送，站内信照发；③ 每次推送照常写入【消息推送 › 推送记录】。聊天室播报（用户 2026-10-26，检查报告 R3-25）：VIP 升级、保级、生日奖励实际到账时参与聊天室「活动奖励播报」，按【聊天室管理】现有的播报阈值和规则判断（达到阈值即播报，阈值以聊天室管理配置为准）；审核中、暂停发放、驳回、「不发放」的不播报。</td><td class="w">检查报告 K10；N53；用户 2026-10-26（检查报告 R3-07、R3-25）</td><td><span class="fp">F07-03</span> 到账通知与免打扰时段</td></tr>
+<tr id="n68" data-brief="短信和 APP 推送免打扰时段默认 21:00–10:00（GMT+8），时段内触发的顺延到时段结束发送，站内信不受影响" data-fp="F07-03"><td>N68</td><td class="w">短信 / 推送免打扰时段（VIP全局参数）：默认生效、21:00–10:00（GMT+8，即 21:00:00–09:59:59），结束早于开始表示跨天；VIP 所有短信和 APP 推送（含风控放行、补发后的推送）触发时间落在时段内的，顺延到时段结束发送；站内信不受影响。顺延期间玩家状态变化（冻结、已领取、体系关闭等）的，实际发送时按 N43、N48、N55 再判断，不满足的不发、不补发。生效时开始、结束时间必填（HH:mm）、不能相同；随「保存 VIP 全局参数」保存，之后触发的按新时段处理。时段结束时集中发送的限流由开发评估。VIP 奖励到账的 APP 推送同样受免打扰时段限制、顺延发送，与平台现行运营规范「资金类推送不受免打扰限制」不同，用户 2026-10-21 已定（3.3 冲突 19）；到账金额小于 ₱1 时只发推送、不发短信（N41），推送同样顺延</td><td class="w">原文外补充（产品决定）；用户 2026-10-21</td><td><span class="fp">F07-03</span> 到账通知与免打扰时段</td></tr>
+<tr id="n27" data-brief="已撤回（N27–N33）：实物领取流程、收货信息、申请状态、库存扣减等由实体奖品管理需求负责" class="wd"><td>N27–N33</td><td class="w">已撤回（原实物领取流程、KYC 拦截、收货信息、申请状态、前台实物按钮、库存扣减、My Prize Claims），由实体奖品管理需求负责</td><td class="w">C-10、C-12–C-14</td><td>—</td></tr>
+<tr id="n49" data-brief="已撤回（N49–N52）：地址快照、库存告警、缺货处理、地址管理由实体奖品管理需求负责" class="wd"><td>N49–N52</td><td class="w">已撤回（原地址快照、库存告警、缺货处理、地址管理），由实体奖品管理需求负责</td><td class="w">C-10、C-12–C-14</td><td>—</td></tr>
+</table></div>
+
+<h3 id="c3-3">3.3 与后台知识库的冲突</h3>
+<p>已比对：789平台现状知识库.md（v23.1，同步至 2026-10-21 13:38）、jira单共享知识库-产品侧.md、789Bingo管理后台知识库.md、789Bingo平台知识库.md、Nustar_789Bingo_分析与竞品报告.md。每条的「决定」为最终结论。Jira 工单记录的现状和缺陷见<a href="#memo">开发技术备忘参考</a>。</p>
+
+<div class="cf" id="x01" data-fp="F02-03"><h4>冲突 01　升级奖励发放时机</h4><dl>
+<dt>本需求写法</dt><dd>按「领取方式」，默认自动领取 = 首次到达等级时立即到账（规则 N5、N63）</dd>
+<dt>后台现状</dt><dd>按后台配置，现网值待确认：平台知识库「会员等级」记 Level 升级奖励「到达等级后次日 0 点自动发放，并弹窗提示」；管理后台知识库 4.1.5 记「升级奖励发放方式」可配置；主版知识库记实时升级时触发（<a href="#m10">备忘 M10</a>）</dd>
+<dt>后果</dt><dd>后端如果复用现有次日发放任务，VIP 升级奖励会变成次日到账，与原方案「立即获得」不符</dd>
+<dt>建议</dt><dd>VIP 单独实现实时发放，不复用 Level 的次日发放任务</dd>
+<dt>决定</dt><dd class="dec">已定（K01）：默认自动领取、立即到账，可改为手动领取。开发备注：研发评估单独实时发放的实现方式</dd></dl></div>
+
+<div class="cf" id="x02" data-fp="F04-02"><h4>冲突 02　生日奖励的领取入口和审核</h4><dl>
+<dt>本需求写法</dt><dd>在等级中心生日卡片或等级卡「查看详情」领取，不进领取中心，不需客服审核（规则 N26）</dd>
+<dt>后台现状</dt><dd>Level 生日礼包「生日当天起 15 天内在领取中心手动领取，联系客服审核后发放」（平台知识库「会员等级」「活动奖励领取中心」）</dd>
+<dt>后果</dt><dd>Level 和 VIP 生日奖励的领取位置、是否审核不一致，客服流程两套</dd>
+<dt>建议</dt><dd>VIP 生日奖励按本需求写法，客服 QA 分开说明两套领取方式</dd>
+<dt>决定</dt><dd class="dec">已定（K02）：在等级中心领取，不进领取中心、不走派奖审核；强制审核生效时按规则 N64 审核</dd></dl></div>
+
+<div class="cf" id="x03" data-fp="F02-01"><h4>冲突 03　等级累计口径（场馆成长值倍数）</h4><dl>
+<dt>本需求写法</dt><dd>累计金额方式下 VIP 累计有效投注不乘场馆成长值倍数；成长值方式按「VIP 成长值规则」计算（规则 N58、N59）</dd>
+<dt>后台现状</dt><dd>Level 按成长值升级：成长值 = 有效投注 × 场馆成长值倍数，修改后次日 03:50 生效，时区以研发确认为准（管理后台知识库 4.1.5；3.3 冲突 09）</dd>
+<dt>后果</dt><dd>同一玩家 Level 进度和 VIP 进度口径不同，客服解释容易混淆</dd>
+<dt>建议</dt><dd>Level 和 VIP 两套成长值各自独立累计，客服 QA 写明两套口径</dd>
+<dt>决定</dt><dd class="dec">已定（K03）：两套互相独立。普通用户按 Level 逻辑升级；VIP0 勾选沿用时，玩家达到 VIP 最低开启等级后的升级、保级都按【VIP特权】设置，降回普通用户后回到 Level 逻辑；不勾选时两套各自累计、各自判定</dd></dl></div>
+
+<div class="cf" id="x04" data-fp="F01-06 F02-06"><h4>冲突 04　现网 LEVEL 30 及以上与 VIP 段重叠</h4><dl>
+<dt>本需求写法</dt><dd>按 VIP0「沿用普通会员级别」处理：勾选时沿用 LEVEL n（默认当前最高级），开启 VIP 体系时删除 LEVEL n 之后的级别，被删级别上的玩家按存量初始化规则重新判定；勾选期间不能在 LEVEL n 之后添加级别；累计有效投注不高于 LEVEL n 的 VIP 等级为「不符合标准」，只能关闭。不勾选时两套独立，不删除任何级别（规则 N56、N57、N46）</dd>
+<dt>后台现状</dt><dd>会员等级按「有效投注累计值」从 LEVEL 0 起配置；UAT 配到 LEVEL 60，LEVEL 30 = ₱600,000（与 VIP1 默认门槛相同），L30–L60 有生日礼包，L55、L60 配了实体奖品（管理后台知识库 4.1.5；UAT 读取）</dd>
+<dt>后果</dt><dd>勾选沿用时如果保留 LEVEL 30 及以上，玩家会同时升 LEVEL 30+ 和 VIP，两边奖励重复发放，违反规则 N10；累计有效投注不高于 LEVEL n 的 VIP 等级会被标为「不符合标准」并关闭（例：沿用 LEVEL 30 = ₱600,000 时默认 VIP1 被关闭）</dd>
+<dt>建议</dt><dd>勾选沿用时，运营在开启前核对被标为不符合标准的等级：需要这些等级开启的，改选更低的 LEVEL n（开启时由系统删除其后的级别）或调高这些等级的标准；不勾选时两套独立、奖励可叠加</dd>
+<dt>决定</dt><dd class="dec">已定：按本需求写法。LEVEL n 默认为当前会员最高级（默认不删除），选择时不拦截；不高于 VIP0 的 VIP 等级按规则 N56 ② 为不符合标准、只能关闭，提高门槛后才能开启。取消原「上线前运营手工删除 + 开启时系统兜底删除」两步处理，取消原「会员最高等级与 VIP 最低等级互相限制」和 VIP 最低开启等级的保存拦截</dd></dl></div>
+
+<div class="cf" id="x05" data-fp="F01-03 F10-04"><h4>冲突 05　实体奖品配置表的字段</h4><dl>
+<dt>本需求写法</dt><dd>VIP 奖品在【VIP特权 › VIP奖品配置】按等级选奖品、预占活动库存（规则 N72）；Level 实体奖品表改为「会员等级 / 实体奖品 / 发放库存 / 操作」，奖品读平台库存（8.2）</dd>
+<dt>后台现状</dt><dd>现有「会员等级奖励配置」实体奖品表为「等级 × 实体奖品 × 数量」（管理后台知识库 4.1.5）</dd>
+<dt>后果</dt><dd>需要实体奖品管理支持 VIP 和 Level 作为预占活动库存的来源，否则库存口径不一致</dd>
+<dt>建议</dt><dd>与实体奖品管理需求对齐来源登记、分配 / 释放活动库存接口和已领取件数回传（Q32）</dd>
+<dt>决定</dt><dd class="dec">已定：按本需求写法，依赖实体奖品管理 v1.1 能力</dd></dl></div>
+
+<div class="cf" id="x06" data-fp="F01"><h4>冲突 06　VIP 名称重名</h4><dl>
+<dt>本需求写法</dt><dd>新 VIP 等级默认 VIP1–VIP24、SUPER VIP；后台统一写「VIP 等级」</dd>
+<dt>后台现状</dt><dd>旧版 VIP特权有 VIP0–VIP8 等级表；会员接口 userLevelName 存旧版 VIP 等级（如 VIP3），vipLevelName 存 LEVEL；会员列表筛选有「用户等级」「VIP 等级」两项（管理后台知识库 4.1.6、第 11 章 queryviplist）</dd>
+<dt>后果</dt><dd>旧版等级和新版等级同名，运营、客服容易混淆</dd>
+<dt>建议</dt><dd>旧版等级表与新版合并为一套（规则 N58），后台只保留一套 VIP 等级</dd>
+<dt>决定</dt><dd class="dec">已定：旧版等级表与新版合并；【用户管理 › 会员】列表「VIP 等级」的显示和筛选（userLevelName）改取新 VIP 等级，「用户等级」（vipLevelName，LEVEL）不变（8.7；字段对应请研发确认，3.5）</dd></dl></div>
+
+<div class="cf" id="x07" data-fp="F01-08"><h4>冲突 07　活动参与门槛中的 VIP 等级</h4><dl>
+<dt>本需求写法</dt><dd>VIP 专属活动（Exclusive VIP Promotions）本期不做（规则 N37）</dd>
+<dt>后台现状</dt><dd>活动配置的会员等级字段存旧版 VIP 等级 ID（activeMemberLevel）（管理后台知识库第 11 章）</dd>
+<dt>后果</dt><dd>以后活动要按新 VIP 等级圈人时需要改造</dd>
+<dt>建议</dt><dd>本期不改造，以后开放 VIP 专属活动时另行需求（<a href="#m05">备忘 M05</a>）</dd>
+<dt>决定</dt><dd class="dec">已定：本期不改造</dd></dl></div>
+
+<div class="cf" id="x08" data-fp="F01-02"><h4>冲突 08　预算告警</h4><dl>
+<dt>本需求写法</dt><dd>VIP 奖励月度预算达到 70% 和 100% 时进顶栏「预算告警」（规则 N38）</dd>
+<dt>后台现状</dt><dd>顶栏预算告警按活动配置的预算计算（管理后台知识库 §5.5）</dd>
+<dt>后果</dt><dd>需要把 VIP 已发放金额接入预算告警数据源</dd>
+<dt>建议</dt><dd>后端接入数据源（<a href="#m08">备忘 M08</a>）</dd>
+<dt>决定</dt><dd class="dec">已定：按本需求写法</dd></dl></div>
+
+<div class="cf" id="x09" data-fp="F03-04"><h4>冲突 09　时区</h4><dl>
+<dt>本需求写法</dt><dd>业务时间全部为 GMT+8；结算切点为每月最后一天 23:59:59（GMT+8）</dd>
+<dt>后台现状</dt><dd>两份知识库说法不一：管理后台知识库 4.1.5 记容器 / 服务器时间 UTC−4，成长值倍数按 UTC−4 的 03:50 生效；主版知识库第 4 节「时区与周期」记后台的活动中心、报表、用户管理已从美东时间改为北京时间（UTC+8，Wiki PD/1156864，BB2025789-5191 已关闭），BB2025789-6880 修复说明写「后台时区已改为 UTC+8」，新站 GAM-121、GAM-123～126 时区统一改为 Asia/Manila。会员等级的场馆成长值倍数在【用户管理】下，以研发确认为准</dd>
+<dt>后果</dt><dd>定时任务按服务器时间配置时，结算会在菲律宾时间 1 日 12:00 才执行</dd>
+<dt>建议</dt><dd>定时任务和统计切点显式按 GMT+8 实现</dd>
+<dt>决定</dt><dd class="dec">已定：统一 GMT+8；场馆成长值倍数沿用现网执行时间（次日 03:50），时区以研发确认为准，确认前帮助和手册写「次日 03:50 生效（时区以研发确认为准）」（Q7、Q31）</dd></dl></div>
+
+<div class="cf" id="x11"><h4>冲突 11　旧版 VIP特权的「VIP活动」福利</h4><dl>
+<dt>本需求写法</dt><dd>新旧合并、共用一个总开关（规则 N70）</dd>
+<dt>后台现状</dt><dd>【活动配置 › VIP活动】发放晋级礼金、每周红包、生日礼金、专属红包、专属客服、极速出款，每周红包按旧版 VIP 等级发放并进入【派奖审核】；系统参数「新版VIP特权状态」（管理后台知识库 4.1.6），QA 环境现值为 1（vipVersionStatus，管理后台知识库第 11 章），现在控制的功能资料未覆盖</dd>
+<dt>后果</dt><dd>不合并时同一玩家可能同时拿到旧版生日礼金和新版生日奖励；旧版每周红包按已合并掉的旧等级继续生成，金额和发放对象不可控；生产现值如为 1，按参数值判断「第一次开启」会跳过存量初始化</dd>
+<dt>建议</dt><dd>开启新版时停止生成旧版全部福利；上线时把参数置为关闭，第一次开启按新建的「VIP 体系是否开启过」标记判断</dd>
+<dt>决定</dt><dd class="dec">已定：按规则 N70 合并，旧版晋级礼金、生日礼金、每周红包、专属红包全部停止生成，已生成的照常处理完；关闭时旧版不恢复。上线处理见第 12 章，生产现值待确认（Q37）</dd></dl></div>
+
+<div class="cf" id="x12" data-fp="F07-03"><h4>冲突 12　VIP 奖励入账是否触发平台通用到账通知</h4><dl>
+<dt>本需求写法</dt><dd>站内信和 APP 推送由 VIP 发放流程发送，「奖励金到账」短信不发（规则 N55）</dd>
+<dt>后台现状</dt><dd>活动彩金发放后自动发站内信、APP 推送，营销中心另有「奖励金到账」短信（平台知识库 9.1）</dd>
+<dt>后果</dt><dd>自动触发会导致保级奖励到账收到两条短信</dd>
+<dt>建议</dt><dd>按本需求写法</dd>
+<dt>决定</dt><dd class="dec">已定（K10）</dd></dl></div>
+
+<div class="cf" id="x13" data-fp="F01-02"><h4>冲突 13　VIP 奖励流水的游戏范围</h4><dl>
+<dt>本需求写法</dt><dd>VIP 流水单独配置，默认全部 6 大类，可指定 6 大类（规则 N34）</dd>
+<dt>后台现状</dt><dd>【活动配置 › 流水稽核配置管理】、「流水打码范围 NEW」、全局「彩金流水仅计 Slot」（管理后台知识库 4.10、5.4）</dd>
+<dt>后果</dt><dd>与活动规则混用会让玩家打流水后仍不能提现</dd>
+<dt>建议</dt><dd>VIP 单独配置，不受活动和全局设置影响</dd>
+<dt>决定</dt><dd class="dec">已定（K11）</dd></dl></div>
+
+<div class="cf" id="x14" data-fp="F08-03"><h4>冲突 14　VIP 奖励进入活动报表的口径</h4><dl>
+<dt>本需求写法</dt><dd>VIP 奖励不进各活动的活动统计、活动报表、活动费用报表；按实际到账金额计入平台报表「活动费用」、财务数据「活动总额」和平台营销费用（规则 N54，用户 2026-10-26 改，见冲突 21）</dd>
+<dt>后台现状</dt><dd>活动发放进入活动统计 → 活动报表 → 活动费用报表 → 平台报表 → 财务数据（管理后台知识库 4.10、5.5）</dd>
+<dt>后果</dt><dd>运营、财务需在 VIP 自己的记录里看 VIP 成本</dd>
+<dt>建议</dt><dd>按本需求写法</dd>
+<dt>决定</dt><dd class="dec">已定（K12）；平台总口径部分已按冲突 21 调整（用户 2026-10-26）</dd></dl></div>
+
+<div class="cf" id="x15" data-fp="F08-05"><h4>冲突 15　自我排除在后台的状态模型</h4><dl>
+<dt>本需求写法</dt><dd>自我排除 = 账号为停用或冻结，且风控原因为 Self-Exclusion（规则 N48）</dd>
+<dt>后台现状</dt><dd>自我排除不是独立状态，申请后账号变为停用，风控原因记 Self-Exclusion（平台知识库 3.1；管理后台知识库 11.1）</dd>
+<dt>后果</dt><dd>—</dd>
+<dt>建议</dt><dd>按本需求写法</dd>
+<dt>决定</dt><dd class="dec">已定（K13）</dd></dl></div>
+
+<div class="cf" id="x16"><h4>冲突 16　后台菜单</h4><dl>
+<dt>本需求写法</dt><dd>菜单按线上【用户管理】实际菜单（3.1）；编辑用户为【用户管理 › 会员】行操作</dd>
+<dt>后台现状</dt><dd>线上没有「会员列表」「会员层级」菜单（线上截图 2026-10-19）</dd>
+<dt>后果</dt><dd>—</dd>
+<dt>建议</dt><dd>原型菜单已按线上核对</dd>
+<dt>决定</dt><dd class="dec">已定：按线上菜单。原冲突 10「收货地址数量」随实物移出本需求，不再适用</dd></dl></div>
+
+<div class="cf" id="x17" data-fp="F02-02 F01-02"><h4>冲突 17　KYC「已通过」的口径与是否要求 KYC</h4><dl>
+<dt>本需求写法</dt><dd>「KYC 已通过」= KYC 状态为已认证，不区分认证层级；是否要求 KYC 由【VIP全局参数】「KYC 限制」开关决定，默认开启（规则 N66 KYC 与 VIP 参与资格、N76 KYC 限制）</dd>
+<dt>后台现状</dt><dd>【用户管理 › KYC审核】有多种审核状态，【系统参数 › KYC配置】另有提款相关的 KYC 开关（管理后台知识库 4.1.7）；VIP 没有单独的 KYC 配置</dd>
+<dt>后果</dt><dd>不写清「已通过」的口径，玩家可能被错误纳入或排除，生日奖励的 KYC 条件也会有争议；运营也无法按需要放开 KYC 要求</dd>
+<dt>建议</dt><dd>统一按「已认证」判定，新增「KYC 限制」开关，写清开启 → 关闭、关闭 → 开启的处理</dd>
+<dt>决定</dt><dd class="dec">已定（用户 2026-10-26）：改为「KYC 限制」开关（开启 / 关闭，默认开启），不区分认证层级，取消 2026-10-21 的认证层级单选；切换的处理见 N76，原待确认 Q39（切换后的生效口径）关闭</dd></dl></div>
+
+<div class="cf" id="x18" data-fp="F02-01 F01-07 F01-02"><h4>冲突 18　VIP 计入哪些游戏（含与 Claire 原文的差异）</h4><dl>
+<dt>本需求写法</dt><dd>只计 6 大类（Slot、Casino、Poker、Bingo、Arcade、Fishing）的有效投注；Perya、ESports、未分类等其他游戏不计入升级、保级、成长值和 VIP 奖励流水（规则 N77）</dd>
+<dt>后台现状</dt><dd>系统参数的首页分类为 Slot、Casino、Perya、Sports、ESports（thirdGamesSort 含体育、电竞，管理后台知识库）；平台游戏大类为 6 大类（3.1）。Claire 原方案二、三的升级、保级投注没有限定游戏类型</dd>
+<dt>后果</dt><dd>不写明时，Perya、电竞和未分类游戏的投注可能被错误计入或排除，运营和客服无法解释</dd>
+<dt>建议</dt><dd>写明只计 6 大类，其他游戏不计入</dd>
+<dt>决定</dt><dd class="dec">已定（用户 2026-10-21）：只计 6 大类。与 Claire 原文的差异：用户 2026-10-21 定只计 6 大类</dd></dl></div>
+
+<div class="cf" id="x19" data-fp="F07-03"><h4>冲突 19　VIP 到账推送是否受免打扰时段限制</h4><dl>
+<dt>本需求写法</dt><dd>VIP 所有短信和 APP 推送（含到账推送）落在免打扰时段（默认 21:00–10:00）内的，顺延到时段结束发送；到账金额小于 ₱1 时不发短信、只发推送，推送同样顺延（规则 N41、N68）</dd>
+<dt>后台现状</dt><dd>主版知识库记录：推送靠运营规范兜底，每天最多 1 条、09:00–22:00，资金类推送不受免打扰限制</dd>
+<dt>后果</dt><dd>VIP 到账推送属于资金类，与现行「资金类推送不受免打扰」不一致；两边的时间窗（22:00 和 21:00）也不同</dd>
+<dt>建议</dt><dd>VIP 到账推送作为例外，按本需求时段顺延</dd>
+<dt>决定</dt><dd class="dec">已定（用户 2026-10-21）：VIP 到账 APP 推送受免打扰时段限制（时段内顺延到时段结束），与平台现行「资金类推送不受免打扰」不同；到账金额小于 ₱1 不发短信、只发推送</dd></dl></div>
+
+<div class="cf" id="x21" data-fp="F08-03 F08-04"><h4>冲突 21　VIP 奖励是否计入营销费用</h4><dl>
+<dt>本需求写法</dt><dd>VIP 升级、保级、生日奖励按实际到账金额计入平台报表「活动费用」「活动费用 / 平台流水%」、财务数据「活动总额」和平台营销费用（NGR 计算中的营销费用）；不进按活动、按活动目的统计的活动统计、活动报表、活动费用报表（规则 N54）；月度结算记录另列「VIP 奖励总额」「奖励占有效投注比」（8.7）</dd>
+<dt>后台现状</dt><dd>789Bingo平台知识库第 1 章术语「营销费用」：所有活动奖励的发放都要计入营销费用；管理后台知识库 5.5：现网旧版 VIP活动、会员等级奖励都在活动费用链路（活动统计 → 活动报表 → 活动费用报表 → 平台报表 → 财务数据）里</dd>
+<dt>后果</dt><dd>原写法（不计入平台报表和财务数据）会让营销费用漏掉 VIP 奖励成本，活动费用 / 平台流水比偏低；按活动统计的报表若计入 VIP 奖励，又会和规则 N53「VIP 与活动配置并行」冲突</dd>
+<dt>建议</dt><dd>计入平台总口径，不进按活动统计的报表</dd>
+<dt>决定</dt><dd class="dec">已定（用户 2026-10-26，方案 B，检查报告 R3-06）：按规则 N54 计入平台总口径、不进按活动统计的报表；是否计入代理 NGR 仍待确认 Q21（VIP 奖励是否计入代理 NGR）</dd></dl></div>
+<h3 id="c3-4">3.4 依赖的现有后台配置和能力</h3>
+<div class="tbl"><table data-fit>
+<tr><th>配置项</th><th>菜单位置</th><th>测试环境值</th><th>本需求怎么用</th><th>关联功能点</th></tr>
+<tr data-fp="F10-01 F10-04 F10-05"><td>会员等级配置 / 奖励配置 / 活动奖励统计</td><td class="w">用户管理 › 会员等级</td><td class="w">UAT 配到 LEVEL 60，LEVEL 30 = ₱600,000</td><td class="w">改造见 8.2（规则 N69、N75）</td><td><span class="fp">F10</span> 普通会员等级</td></tr>
+<tr data-fp="F01"><td>VIP特权（旧版）、成长值记录、会员福利记录</td><td class="w">用户管理 › VIP特权</td><td class="w">旧版 VIP0–VIP8（资料未覆盖具体数值）</td><td class="w">与新版整合，见 8.3–8.7</td><td><span class="fp">F01</span> VIP 配置（【用户管理 › VIP特权】）</td></tr>
+<tr data-fp="F01-08"><td>旧版 VIP活动、系统参数「新版VIP特权状态」</td><td class="w">活动配置 › VIP活动；系统参数</td><td class="w">QA 环境「新版VIP特权状态」= 1</td><td class="w">规则 N70</td><td><span class="fp">F01-08</span> VIP 活动与福利（新旧合并）与细节设定</td></tr>
+<tr data-fp="F01-03 F10-04"><td>实体奖品库存（分配 / 释放活动库存、可分配余量、已领取件数）</td><td class="w">实体奖品管理 › 库存管理（实体奖品管理 v1.1）</td><td class="w">资料未覆盖</td><td class="w">VIP奖品配置、Level 实体奖品表、关闭等级和关闭体系时的预占释放（Q32）</td><td><span class="fp">F01-03</span> VIP奖品配置</td></tr>
+<tr data-fp="F08-06"><td>派奖审核</td><td class="w">活动配置 › 派奖审核</td><td class="w">资料未覆盖</td><td class="w">强制审核的审核入口候选（Q29）</td><td><span class="fp">F08-06</span> 强制审核与审核短信</td></tr>
+<tr data-fp="F01-09"><td>返水设定</td><td class="w">游戏管理 › 返水设定</td><td class="w">资料未覆盖</td><td class="w">VIP / Level 返水表的对接方式由开发评估（Q30）</td><td><span class="fp">F01-09</span> 下注限额与返水（按 VIP 等级）</td></tr>
+<tr data-fp="F07-01 F07-02"><td>短信模板列表、消息推送</td><td class="w">公告管理</td><td class="w">资料未覆盖</td><td class="w">新增 VIP 保级奖励、生日提醒模板；到账站内信和推送</td><td><span class="fp">F07-01</span> 保级奖励短信</td></tr>
+<tr data-fp="F01-02"><td>顶栏预算告警</td><td class="w">后台顶部状态栏</td><td class="w">资料未覆盖</td><td class="w">VIP 月度预算告警（N38）</td><td><span class="fp">F01-02</span> VIP 奖励与全局参数</td></tr>
+<tr data-fp="F02-01"><td>有效投注统计</td><td class="w">已结算注单有效投注</td><td class="w">—</td><td class="w">累计和当月有效投注（<a href="#m07">备忘 M07</a>）</td><td><span class="fp">F02-01</span> 累计数据统计</td></tr>
+<tr data-fp="F02-02 F08-05"><td>用户详情（KYC、生日、账号状态）</td><td class="w">用户管理 › 会员 › 编辑用户；KYC审核</td><td class="w">资料未覆盖</td><td class="w">N24、N48、N66</td><td><span class="fp">F02-02</span> 升级判定</td></tr>
+<tr data-fp="F06-07"><td>个人中心、等级中心、KYC 认证页</td><td class="w">C 端现有页面</td><td class="w">—</td><td class="w">个人中心账号区改造；等级中心扩展 VIP 段；KYC 引导跳现有认证页</td><td><span class="fp">F06-07</span> 个人中心与身份显示</td></tr>
+</table></div>
+<p><span class="warn-2">※ 测试环境值只用于测试和原型演示，上线前由运营按生产配置核对。生产配置资料未覆盖。</span></p>
+
+<h3 id="c3-5">3.5 需研发评估事项</h3>
+<p>原 4 条「按本需求写法，请研发评估」（K01–K04）均已定，结论见 3.3 冲突 01–04，后台原型不再显示「需确认」标签。仍需研发评估的事项：</p>
+<div class="tbl"><table>
+<tr><th>事项</th><th>本需求写法</th><th>状态</th></tr>
+<tr data-fp="F02-03"><td>升级奖励实时发放（K01）</td><td class="w">VIP 单独实时发放，不复用 Level 次日发放任务</td><td>开发备注</td></tr>
+<tr data-fp="F08-06"><td>强制审核的审核入口（Q29）</td><td class="w">审核通过、实际到账时须能按奖励类别发送对应的短信模板（附录 D；审核弹窗不填短信内容，用户 2026-10-26）</td><td>开发评估</td></tr>
+<tr data-fp="F01-09"><td>返水表与【游戏管理 › 返水设定】对接（Q30）</td><td class="w">规则 N71</td><td>开发评估</td></tr>
+<tr data-fp="F07-03"><td>免打扰时段结束时集中发送的限流</td><td class="w">规则 N68</td><td>开发评估</td></tr>
+<tr data-fp="F10-03"><td>场馆成长值倍数生效时间（Q31）</td><td class="w">次日 03:50，确认现网任务按哪个时区执行</td><td>研发确认</td></tr>
+<tr data-fp="F01-02"><td>VIP 奖励流水不适用低额自动清稽核（Q40）</td><td class="w">规则 N34 ④：VIP 奖励流水不被低额自动清稽核清除，运营可手动清稽核</td><td>研发确认</td></tr>
+<tr data-fp="F08-01"><td>【会员】列表 VIP 等级的字段对应</td><td class="w">「VIP 等级」列和筛选对应 userLevelName，改取新 VIP 等级；「用户等级」对应 vipLevelName（LEVEL），保持不变（8.7）</td><td>研发确认</td></tr>
+</table></div>
+
+<h2 id="c4">4. 前台页面一：等级中心（VIP 段）</h2>
+<p>原型：<a href="../../prototype/full/front/VIP会员体系-VIP中心页面.html">VIP中心页面</a>。在现有等级中心上扩展；前台不显示 Level 卡片、Level 刻度和 Level 奖励表。所有金额按规则 N73 显示；前台不显示百分比、不显示成长值字样和数值、不显示流水倍数。界面英文见附录 C。</p>
+<div class="tbl"><table>
+<tr><th>模块</th><th>功能与交互要求</th></tr>
+<tr data-fp="F06-01"><td><span class="fp">F06-01</span> 页头与徽章</td><td class="w">页头「等级中心」+「?」规则按钮。头像徽章：VIP 玩家显示等级名称（如「VIP 14」）；非 VIP 玩家按「前台显示方式」显示「普通用户」或「LEVEL n」（规则 N69）</td></tr>
+<tr data-fp="F06-01"><td><span class="fp">F06-01</span> 刻度</td><td class="w">弧形刻度：VIP1 前一个「普通用户」，之后为开启的 VIP 等级（已关闭等级不显示，规则 N61）；可左右滑动，打开时定位到当前等级（普通用户定位到「普通用户」）；选中等级在弧线最低处、上方白色 ▼，两侧逐级抬高变淡；当前等级亮金色、加粗、带发光和小圆点；点刻度切换到对应卡。刻度颜色：VIP 金色，当前最高开启等级紫金（规则 N74）</td></tr>
+<tr data-fp="F06-01"><td><span class="fp">F06-01</span> 普通用户卡</td><td class="w">VIP1 前的蓝色卡片，顶部角标「MEMBER」，徽章「普通用户」或「LEVEL n」。玩家为普通用户时是当前卡（「当前」标签），说明「达到 VIP1 即可成为 VIP 会员」；VIP1 保级失败的普通用户为「本月达到恢复条件即可回到 VIP1」；不显示保级。玩家为 VIP 时显示为已达成（绿色已达成图标 + 绿色满格进度条）。玩家当前 LEVEL 在「会员等级奖励配置」配了升级奖励或生日礼包（金额 &gt; 0）、且不受 N10 限制时，底部显示「查看详情」（弹窗见下方「奖励详情弹窗」，标题「普通用户奖励」或「LEVEL n 奖励」，只有升级奖励、生日礼包两行，发放口径沿用现有 Level 规则）</td></tr>
+<tr data-fp="F06-01"><td><span class="fp">F06-01</span> VIP 等级卡</td><td class="w">每个开启的 VIP 等级一张卡（已关闭等级没有卡片，规则 N61），可左右滑动或点相邻卡切换；卡片高度按内容自适应（最小 100px），纵向居中。VIP 卡香槟金渐变 + 流光 + 深金描边、顶部「VIP」角标；当前最高开启等级为皇室紫 + 金边金字、角标「♛ 等级名称」（N74）。状态标签：当前（Current）；已达成（低于当前等级，绿色已达成图标）；已解锁（高于当前等级但 ≤ 历史最高，即降级后的等级）；未解锁（锁图标）。卡片不显示到账状态。内容：<br>① <b>当前卡</b>：本月保级未达成 →「[保级]」+「投注还差 ₱X」+ 投注进度条（本月有效投注 ÷ 每月保级投注）；本月保级已达成且有下一级 → 切换为升级：上方一行「本月保级成功 ✓」，下面「[升级]」标签 + 升级进度，目标为下一级（同 ③，历史最高之上的下一个开启等级），进度条和数值与下一级未解锁卡完全一致（累计金额方式为投注、充值两条「x还差 ₱金额」+ 进度条，已满足的一项满格变绿 + 对勾；成长值方式为一条「升级进度」进度条）；已是当前开启的最高等级（如 SUPER VIP）、没有下一级 → 同一进度条满格变绿 +「本月保级成功」+ 绿色对勾（用户 2026-10-27）。降级玩家上方另有恢复说明：未达恢复「本月有效投注达到 ₱X 可在下月恢复到 VIPn」（X = 恢复目标的每月保级投注），已达恢复「已达到恢复条件，下月恢复到 VIPn ✓」，下一行「历史最高：VIP m」；保级达成后的升级目标同样是历史最高之上的下一个开启等级，不是恢复目标。<br>② <b>已达成 / 已解锁卡</b>：绿色满格进度条（右端等级名）。<br>③ <b>下一个未解锁等级</b>（历史最高之上的下一个开启等级）：投注、充值两条进度（「投注还差 ₱X」「充值还差 ₱Y」+ 进度条），已满足的一项满格变绿 + 圆形绿色对勾。<br>④ <b>更高的未解锁等级</b>：只显示「升级奖励 ₱x」「保级奖励 ₱y」两行。<br>⑤ <b>VIP1 恢复卡</b>（VIP1 保级失败的普通用户看 VIP1，已解锁）：恢复进度条（按 VIP1 每月保级投注）+ 还需投注金额 + 恢复说明 +「历史最高：VIP1」。<br>⑥ 计算方式 = 成长值：当前卡「[保级]」+ 一条「进度」进度条（本月新增成长值 ÷ 保级所需成长值），保级达成后切换为一条「升级进度」进度条（同 ①）；下一级卡一条「升级进度」进度条；恢复说明不写金额「本月达到恢复条件可在下月恢复到 VIPn」</td></tr>
+<tr data-fp="F06-05"><td><span class="fp">F06-05</span> 查看详情与奖励详情弹窗</td><td class="w">每张 VIP 卡底部横跨卡宽的「查看详情」按钮，只有中间选中卡的按钮可点（相邻卡上的按钮半透明，点击按切换到该卡处理），点击打开该等级奖励详情弹窗（埋点 vip_level_detail_view）。弹窗标题「{等级名} 奖励详情」，三列「奖金类别 / 金额 / 状态」，保级奖励金额写「₱x / 月」；底部小字随领取方式变化（默认「升级奖励、保级奖励自动到账；生日奖励可在生日卡片或此处领取。」）；右上角 ×、Esc、点遮罩关闭。状态：<br>① 升级奖励：等级 ≤ 历史最高 → 绿色对勾（已到账）；&gt; 历史最高 → 灰色锁（未解锁）；「不发放」的等级不显示该行；风控暂停中 →「待核验」；手动领取待领取 →「领取」按钮 + 截止时间，已过期 → 灰色沙漏。<br>② 保级奖励：当前等级卡——本月已达标 → 日历金勾 +「下月 1 日到账」（手动领取时「下月 1 日可领取」）；降级玩家同时达到恢复条件的另注「下月恢复到 VIPn」；未达标 → 进行中图标（本月进行中）；风控暂停中已达标 →「待核验」。非当前等级 → 灰色锁（成为当前等级后可获得）。保级奖励手动领取时，当前等级卡另有一行「上月保级奖励」（金额按结算时的等级）。<br>③ 生日奖励（金额为 0 的等级不显示）：当前等级——待领取 →「领取」按钮；已领取 → 绿色对勾；已过期 → 灰色沙漏；风控暂停 →「待核验」；不在生日期内 → 灰色锁（生日当天发放）。非当前等级 → 灰色锁（生日当天为该等级时可领取）。<br>④ 强制审核生效时：审核中 →「审核中」；驳回 →「未通过」+「审核未通过，如有疑问请联系客服」，显示期按规则 N64，到期后该行不显示。<br>⑤ 跨多级合并的待领取升级奖励：各级弹窗都保留「领取」，点一次全部领取，下方注「与 VIPa–VIPb 升级奖励一起领取」。<br>图标都带读屏说明（原状态文字）</td></tr>
+<tr data-fp="F04-02 F06-06"><td><span class="fp">F04-02</span> <span class="fp">F06-06</span> 生日卡片与待领取卡片</td><td class="w">显示在 VIP 段等级卡下方（VIP 体系关闭期间在普通用户卡下方）。<b>生日卡片</b>：「生日快乐！」、金额、「有效期至」日期、按钮「领取」。点「领取」只领生日奖励，按钮立即不可点（显示「…」）；成功提示「₱{amount} 生日奖励已到账。」，卡片和详情弹窗同时变为「已领取」（置灰，显示到有效期结束）；失败提示「领取失败，请重试。」，保留待领取（后端 KYC 兜底校验失败同样提示）。领取成功、失败都写会员操作日志（活动福利类「领取 VIP 福利」，记录奖励类型、等级、金额、结果，8.1，检查报告 R3-24）。已过期「已过期」（置灰，显示时间见规则 N26）；风控暂停「待核验」不可点；自动领取时按钮「已到账」不可点、说明「已自动到账」，只显示到生日当天 23:59:59。<b>待领取卡片</b>（升级 / 保级奖励为手动领取时）：标题「VIPn 升级奖励」或「上月保级奖励」、金额、「请在 m 月 d 日 23:59（GMT+8）前领取」、按钮「领取」；跨多级多笔合并为一张「VIPa–VIPb 升级奖励（n 笔）」，点一次全部到账；对应等级卡「查看详情」带小红点（生日奖励不加红点）；领取、成功、失败、过期、待核验的表现同生日卡片。强制审核生效时：手动领取点「领取」后提示「已提交领取，审核通过后到账。」、按钮灰色「审核中」；自动领取审核期间显示「审核中」「审核通过后到账」；驳回显示「未通过」+「审核未通过，如有疑问请联系客服」，显示期按 N64</td></tr>
+<tr data-fp="F06-02"><td><span class="fp">F06-02</span> VIP 奖励表</td><td class="w">4 列：VIP 等级、升级奖励、保级奖励、生日奖励，累计金额和成长值两种计算方式相同；不显示门槛（累计有效投注、累计充值、每月保级投注），门槛金额在「?」VIP 规则弹窗（累计金额方式）和等级卡进度上看（用户 2026-10-27）。数值取后台配置，0 显示「/」。表格不横向滚动（固定列宽、表头最多两行），限高约 9 行、表内滚动、表头固定；默认定位当前等级行居中、上方露出 3 个已达成等级（不足时停在顶部，普通用户停在顶部）；当前等级行高亮。奖励三列着色：已到账 / 已领取绿色；当前不能领取（未解锁、不发放、非当前等级、已过期、金额 0）灰色；进行中、待领取、待核验、审核中默认色。只显示开启的等级，已关闭等级不显示（规则 N61）</td></tr>
+<tr data-fp="F06-03"><td><span class="fp">F06-03</span> 「?」VIP 规则弹窗</td><td class="w">标题「VIP 规则」，打开时上报 vip_rules_view（level）。上半部分为当前选中等级的要求和奖励（累计有效投注、累计充值、每月保级投注、升级奖励、保级奖励、生日奖励〔有才显示〕；成长值方式不显示前三行门槛；普通用户卡不显示等级要求）；下半部分为 VIP 规则全文：内容与第 3 章一致，由运营定稿（14.1）；不写配置算不出的金额，奖励金额引用奖励表，等级要求引用本弹窗上半部分（奖励表已不显示门槛，用户 2026-10-27）；包含：双门槛升级、保级与降级、当月有升级按新等级考核、降级后恢复（含已关闭等级跳过）、VIP1 保级失败后回到 VIP1、生日奖励按生日当天的等级、升级 / 保级奖励到账方式、KYC 后才能加入且 KYC 前已达到的等级不发升级奖励（只在「KYC 限制」开启时显示，关闭时不显示这一条；生日奖励一条始终写明须完成 KYC），最后一条「如有疑问，请联系客服。」；不写流水倍数、四项 VIP 权益和存量初始化。成长值方式第 1、3、5、6、7 条换成不写门槛的版本；领取方式改为手动时第 2、3、8、9 条随之切换。样式：暖白底、深紫标题、右上角 ×、底部 Close、点遮罩、Esc 关闭</td></tr>
+<tr data-fp="F06-07"><td><span class="fp">F06-07</span> KYC 引导卡</td><td class="w">「KYC 限制」开启（默认）时，KYC 未通过的玩家（含临时冻结（未 KYC），对照见规则 N66 下表）进入等级中心只显示 KYC 引导卡：徽章「KYC」，标题「加入 VIP 会员体系」，说明「完成 KYC 后即可加入 VIP 会员体系，享受之后的升级、保级和生日奖励。」，按钮「去完成 KYC」（未认证、拒绝、补充信息、临时冻结（未 KYC）；直接跳现有 KYC 认证页，埋点 vip_kyc_guide_click）；KYC 审核中时说明「你的 KYC 正在审核中，审核通过后即可加入 VIP 会员体系，享受之后的升级、保级和生日奖励。」，按钮「查看 KYC 进度」。头像徽章按「前台显示方式」；不显示刻度、等级卡、奖励表、生日卡片；「?」只显示 VIP 规则。「KYC 限制」关闭时不显示引导卡，KYC 未通过的玩家与已通过的一样显示 VIP 段，但没有生日奖励、不显示生日卡片（N24）</td></tr>
+<tr data-fp="F06-07"><td><span class="fp">F06-07</span> 不勾选沿用时的两个 tab</td><td class="w">VIP0 不勾选「沿用普通会员级别」时，等级中心顶部分「普通会员 / VIP」两个 tab：「普通会员」tab 显示普通会员级别卡片（按「前台显示方式」显示 LEVEL n 或「普通用户」）和等级奖励「查看详情」，不显示 VIP 刻度、卡片、奖励表、生日卡片和「?」VIP 规则；「VIP」tab 为 VIP 段，VIP1 前的卡片只显示「普通用户」。两边奖励各自可领（N10），返水前台不展示。从个人中心进入时默认 VIP tab。体系关闭、老版本 App、未完成 KYC（「KYC 限制」开启时）时不显示 tab。勾选沿用（默认）时只有一页（本章其余各行）</td></tr>
+<tr data-fp="F01-04 F06-07"><td><span class="fp">F01-04</span> VIP 体系关闭期间</td><td class="w">隐藏 VIP 刻度、VIP 卡、VIP 奖励表和 VIP 规则；卡片区只有一张普通用户卡：「前台显示方式」= 会员身份 → 标签「普通用户」、说明「你当前为普通用户，暂不显示 VIP 等级、进度和奖励。」；= 会员等级 → 标签「LEVEL n」、说明「你当前为会员 LEVEL n」。运营选「继续可领取」的生日奖励和手动待领取奖励的卡片在普通用户卡下方（标题不带等级名），只能在卡片领取；选「停止领取」的不显示（N67）</td></tr>
+<tr data-fp="F06-07"><td>老版本 App</td><td class="w">VIP 玩家：徽章显示 VIP 等级，卡片区一行「当前等级 VIP n」+「请更新 App 查看 VIP 权益。」，不受「前台显示方式」影响，不显示刻度、卡片、奖励表和「?」；非 VIP 玩家显示普通用户卡（跟随「前台显示方式」）；「KYC 限制」开启时未完成 KYC 的另显示「完成 KYC 即可加入 VIP 会员体系。」。不弹升级弹窗；生日奖励和手动待领取奖励须到 H5 或新版本 App 领取</td></tr>
+<tr data-fp="F08-05"><td><span class="fp">F08-05</span> 风控暂停的显示</td><td class="w">暂停期间升级弹窗不弹；等级卡片不特别显示；生日卡片和待领取卡片按钮「待核验」不可点、不显示小红点；详情弹窗对应行「待核验」；奖励表对应格默认色。放行后按规则 N36 显示</td></tr>
+<tr data-fp="F06-01"><td>空和异常状态</td><td class="w">接口失败或超时（10 秒）：「加载失败，点击重试」，点击重新加载；未登录跳转登录；领取失败见上方生日卡片</td></tr>
+</table></div>
+
+<h2 id="c5">5. 前台页面二：通知与生日奖励</h2>
+<p>原型：<a href="../../prototype/full/front/VIP会员体系-VIP通知页面.html">VIP通知页面</a>。站内消息列表、交易记录列表为平台现有页面，本需求不改，只新增 VIP 类内容。</p>
+<div class="tbl"><table>
+<tr><th>模块</th><th>功能与交互要求</th></tr>
+<tr data-fp="F06-04"><td><span class="fp">F06-04</span> 升级弹窗</td><td class="w">标题「恭喜你！」；显示新等级、升级奖励（跨多级显示合计，按 N73，如 ₱11.7K）。升级奖励自动领取：到账说明「已到账」+ 按钮「知道了」；强制审核生效时改为「审核中，审核通过后到账」。手动领取：「可领取，请在 m 月 d 日 23:59（GMT+8）前领取」+ 按钮「去领取」（跳等级中心，埋点 vip_upgrade_popup_claim_click）和「知道了」。动效沿用现行 11 级及以上档（全屏 5 秒），游戏内静音。弹出时机和不弹的情况按规则 N44；展示时上报 vip_upgrade_popup_show</td></tr>
+<tr data-fp="F06-04"><td>Level 升级弹窗</td><td class="w">只在「前台显示方式」= 会员等级时，普通会员级别玩家 Level 升级按现有平台弹窗弹出；同一次判定 VIP 也升级时只弹 VIP 升级弹窗</td></tr>
+<tr data-fp="F04-02"><td><span class="fp">F04-02</span> 生日卡片</td><td class="w">见第 4 章；状态在 VIP中心和通知页共用</td></tr>
+<tr data-fp="F07-01"><td><span class="fp">F07-01</span> 保级奖励短信</td><td class="w">规则 N41；示例：1 日 00:05 结算完成 → 10:00 发送「VIP 保级奖励到账」模板（附录 D）</td></tr>
+<tr data-fp="F07-02"><td><span class="fp">F07-02</span> 生日提醒短信</td><td class="w">规则 N43；前一天、当天按生日奖励的领取方式和是否强制审核选用对应的「VIP 生日提醒」模板（附录 D）</td></tr>
+<tr data-fp="F07-03"><td><span class="fp">F07-03</span> 到账站内信和 APP 推送</td><td class="w">规则 N55、N68：站内信「奖励已到账」即时生成；APP 推送「奖励到账」复用现有「奖励到账后」推送模板，落在免打扰时段的顺延到时段结束，app系统推送「奖励金到账通知」开关关闭时不发推送（站内信照发），推送写入推送记录；到账金额达到聊天室播报阈值的参与「活动奖励播报」（用户 2026-10-26）</td></tr>
+<tr data-fp="F02-03"><td><span class="fp">F02-03</span> 交易记录显示名</td><td class="w">「VIP Upgrade」「VIP Retain」「VIP B-day」（规则 N35）</td></tr>
+<tr data-fp="F07-03"><td>示例时间线</td><td class="w">同一玩家：10-01 00:03 9 月结算为 VIP13，保级奖励 ₱1,200 到账，站内信即时、短信和推送 10:00 发；10-08 14:05 升到 VIP14，升级奖励 ₱2,000 到账并弹窗；10-12 10:00 发生日前一天提醒短信；10-13 00:00 生成 VIP14 生日奖励 ₱488（有效期至 10-27），10:00 当天短信，10:30 领取到账；11-01 00:05 10 月结算按 VIP14 达标，保级奖励 ₱1,500 到账，短信和推送 10:00 发</td></tr>
+</table></div>
+
+<h2 id="c6">6. 前台页面三：个人中心账号区</h2>
+<p>原型：<a href="../../prototype/full/front/VIP会员体系-VIP中心页面.html">VIP中心页面</a>（场景⑨c–⑨g，个人中心为现有页面，只改账号区）。勾选、不勾选「沿用普通会员级别」都适用。</p>
+<div class="tbl"><table>
+<tr><th>模块</th><th>功能与交互要求</th></tr>
+<tr data-fp="F06-07"><td><span class="fp">F06-07</span> 账号区等级显示</td><td class="w">VIP 玩家显示 VIP 等级名称（如「VIP 2」，不置灰）；没有 VIP 等级的玩家显示「普通用户」（「前台显示方式」= 会员等级时显示「LEVEL n」），旁边显示置灰的「VIP1」标识（表示尚未达到 VIP1）</td></tr>
+<tr data-fp="F06-07"><td><span class="fp">F06-07</span> 进入等级中心</td><td class="w">账号等级区域可点击，进入等级中心：勾选沿用时为一页；不勾选时为「普通会员 / VIP」两个 tab（第 4 章）。原「等级中心」入口行保留</td></tr>
+</table></div>
+
+<h2 id="c7">7. 实物奖品与地址管理（引用说明，非前台页面）</h2>
+<p>VIP 等级对应的实物奖品领取申请、审核、扣库存、发货、收货地址和「我的奖品申请」由「实体奖品管理」需求负责（Claire 答复 C-10、C-12–C-14），本需求不做前台实物页面和地址管理页面。本需求只负责：【VIP特权 › VIP奖品配置】按等级选奖品并预占活动库存（规则 N72）、关闭等级和关闭体系时的预占释放（N61、N67）、Level 实体奖品表读平台库存（8.2）。实体奖品管理需要提供的能力见 Q32；前台显示实物图片在实体奖品管理 v1.1 带入，本期不显示。</p>
+
+<h2 id="c8">8. 运营后台需求</h2>
+<h3 id="c8-1">8.1 菜单、权限和日志</h3>
+<div class="tbl"><table>
+<tr><th>功能</th><th>说明</th></tr>
+<tr data-fp="F01 F08 F10"><td>菜单</td><td class="w">【用户管理 › 会员等级】页签：会员等级配置（改）、会员等级奖励配置（改）、活动奖励统计（改，只含 Level 奖励）。【用户管理 › VIP特权】顶部 3 个页签：① VIP特权（改：4 个子页签 VIP等级配置 / VIP全局参数 / VIP奖励配置 / 下注限额与返水，切换不丢全局参数未保存的修改）；② 会员福利（改：会员福利记录，含领取、审核、补发、放行、作废）；③ VIP数据报表（新：4 个二级页签 VIP会员数据（新，有权限时默认）/ 等级变动记录（新）/ 月度结算记录（新）/ 成长值记录（现有，不改））。面包屑为「用户管理 › VIP特权 › 页签名」，有子页签或二级页签时再接其名称（如「用户管理 › VIP特权 › VIP数据报表 › 月度结算记录」）；现有的「成长值记录」页签移入 VIP数据报表，现有的「会员福利记录」页签改为「会员福利」页签。左侧【实体奖品管理 › 库存管理 / 发放管理】属于实体奖品管理需求。顶栏不显示「库存告急」「待派发奖品」。本文「VIP特权 › 子页签名」（如「VIP特权 › 下注限额与返水」）均指【用户管理 › VIP特权】顶部「VIP特权」页签下的子页签，全路径为「用户管理 › VIP特权 › VIP特权 › 子页签名」；子页签名一律写「VIP全局参数」（不带空格），按钮权限码「保存 VIP 全局参数」名称不变（检查报告 R3-14）</td></tr>
+<tr data-fp="F01"><td>名称</td><td class="w">后台各处的新 VIP 等级统一写「VIP 等级」，不加「（新）」；配置表首列显示 L 号，记录和数据页显示等级名称</td></tr>
+<tr data-fp="F01 F08"><td>权限</td><td class="w">查看权限：「VIP特权」「会员福利」两个页签沿用现有页签的查看权限（「会员福利」即原「会员福利记录」页签）；「VIP数据报表」的 4 个二级页签各一个查看权限（VIP会员数据、等级变动记录、月度结算记录为新增，成长值记录沿用现有权限），有任一二级页签权限即显示「VIP数据报表」页签，只显示有权限的二级页签，打开时默认第一个有权限的二级页签；4 个二级页签都没有权限时不显示「VIP数据报表」页签（已定，用户 2026-10-22）。「VIP特权」「会员福利」两个顶部页签同样只显示有查看权限的。用书签、跨页链接或地址（如 #settle、#changes）直接打开没有权限的页签或二级页签时，自动切到第一个有权限的；三个顶部页签都没有权限时显示平台现有的无权限提示。查看权限的授予和取消同样在重新登录后生效，期间接口按服务端权限校验，被拒绝时提示「无权限访问」（检查报告 R3-11）。按钮级权限码（服务端校验，授权后重新登录生效）按页签归属：<b>VIP特权</b>：「保存 VIP 配置」（修改设定、新增等级、开启 / 提交关闭等级、切换计算方式、保存 VIP 成长值规则、VIP0 修改设定）、「复核 VIP 门槛」（门槛复核和关闭等级复核）、「开关 VIP 体系状态」、「导出存量初始化预览」、「保存 VIP 全局参数」（VIP全局参数）、「保存 VIP奖品全局项」（VIP奖品全局项）；各表的「修改」「批量修改」沿用原整表保存按钮的权限码，码名不变（检查报告 R3-01）：VIP 奖励配置 →「保存 VIP 奖励配置」（本需求新增；原「保存 VIP 奖励与全局参数」改名为「保存 VIP 全局参数」后只管全局参数）、下注限额与返水 →「保存下注限额与返水」、VIP奖品配置 →「保存 VIP奖品配置」、细节设定（注册天数、强制审核）→「保存细节设定」；<b>会员福利</b>：「补发」「放行 / 作废」「导出」；「审核」的入口和权限待 Q29（强制审核的审核入口放在现有【派奖审核】还是本需求另建审核列表）评估后确定：放在会员福利页签时为本页签新增的「审核」按钮权限码，放进【派奖审核】时沿用派奖审核的现有权限（检查报告 R3-02）；<b>VIP数据报表</b>：「重跑失败」（月度结算记录）、「导出」（VIP会员数据、等级变动记录、月度结算记录），成长值记录的按钮沿用现有权限；<b>【会员等级】</b>：「保存会员等级配置」（前台显示方式、会员等级添加 / 修改 / 删除、LEVEL 0 限额与返水、场馆成长值倍数）、「导出」（活动奖励统计）。数据权限：VIP会员数据、等级变动记录、月度结算明细、会员福利记录、活动奖励统计的列表、汇总和导出沿用平台「VIP 线」数据权限，没有 VIP 线数据权限的账号查询和导出都看不到 VIP 线会员（「VIP 线」是按代理线划分的数据权限范围，与 VIP 等级无关，<a href="#m04">备忘 M04</a>）</td></tr>
+<tr data-fp="F01 F08"><td>谷歌验证码</td><td class="w">所有配置修改都在操作弹窗内直接填谷歌验证码，点「确定」一并校验，没有单独的验证码弹窗；为空提示「请输入谷歌验证码」，错误提示「谷歌验证码错误」，弹窗不关、内容保留。所有修改直接保存，没有暂存</td></tr>
+<tr data-fp="F01 F08"><td>操作日志</td><td class="w">以下操作写操作日志（操作人、时间 GMT+8、对象、修改前后值），按页签：<b>VIP特权</b>：VIP 等级修改设定、新增（含 L 号顺延范围和影响预览结果）、关闭提交与复核（含提交人、复核时刻试算、释放的预占）、开启；计算方式切换；VIP 成长值规则；VIP0 设置与级别删除；影响预览中的不发放差额选择和名单；门槛复核结果；VIP 体系状态开关（含累计方式和各类奖励处理选择）；VIP全局参数；细节设定；VIP 奖励配置、下注限额与返水、VIP奖品配置（逐行前后值）和奖品全局项；存量初始化。<b>会员福利</b>：补发、放行、作废、审核（含审核结果、驳回原因）。<b>VIP数据报表</b>：月度结算记录的结算重跑。<b>【会员等级】</b>：会员等级配置各项修改。<b>会员操作日志</b>（检查报告 R3-24）：玩家领取 VIP 奖励成功、失败都写会员操作日志，类型为活动福利类「领取 VIP 福利」，记录奖励类型、等级、金额、结果（成功 / 失败及原因）（生日奖励和手动领取的升级、保级奖励）</td></tr>
+<tr data-fp="F08"><td>导出</td><td class="w">会员福利记录（会员福利页签，含旧版记录，不加新旧列）、VIP会员数据、等级变动记录、月度结算记录（VIP数据报表页签）、活动奖励统计、存量初始化预览、影响预览名单按当前筛选导出全部数据，沿用平台异步导出，手机号打码；导出文件时间列表头标「（GMT+8）」，列名不随页面表头缩写变化；活动奖励统计导出语言随后台语言</td></tr>
+<tr data-fp="F08"><td>列表通用</td><td class="w">数据表单元格不换行，放不下时表格区域内横向滚动；长文本超过约 300px 单行省略、悬停看全文。列表分页：默认 20 条，可选 10 / 20 / 50 / 100（活动奖励统计沿用线上默认 10 条）；显示默认排序、共 N 条、页码、前往某页；排序相同时按 ID 兜底；改条数、筛选、重置后回第 1 页；编辑后停留当前页；删除后当前页为空回上一页；翻页期间有新数据不插入当前页；空列表「暂无数据」；加载失败「加载失败，点击重试」。配置表同样分页、保存时保存全部页；VIP0 行固定不计入分页；固定条数的小表（6 大游戏分类、成长值明细、关闭体系奖励品类、归级去向表）不分页。批量修改只作用于当前页勾选的行，翻页或改条数时清空勾选并提示「已翻页，原勾选的 N 条已清空」。各列表的分页和排序见下表「列表分页」</td></tr>
+</table></div>
+<p>列表分页（各列表都为页码分页；改条数、筛选、重置后回第 1 页，编辑后停留当前页；空列表「暂无数据」，加载失败「加载失败，点击重试」）：</p>
+<div class="tbl"><table id="c8-1-pg" data-fit>
+<tr><th>列表</th><th>每页条数</th><th>默认排序</th><th>导出</th></tr>
+<tr data-fp="F10-01"><td>会员等级配置表</td><td>20（10 / 20 / 50 / 100）</td><td class="w">级别升序</td><td>—</td></tr>
+<tr data-fp="F10-04"><td>会员等级奖励配置：生日礼包与升级奖励（左表）</td><td>20（10 / 20 / 50 / 100）</td><td class="w">级别升序</td><td>—</td></tr>
+<tr data-fp="F10-04"><td>会员等级奖励配置：实体奖品（右表）</td><td>20（10 / 20 / 50 / 100）</td><td class="w">添加时间正序 + ID 兜底</td><td>—</td></tr>
+<tr data-fp="F10-03"><td>场馆成长值倍数</td><td>20（10 / 20 / 50 / 100）</td><td class="w">沿用现有场馆顺序</td><td>—</td></tr>
+<tr data-fp="F10-05"><td>活动奖励统计</td><td>10（沿用线上）</td><td class="w">申请领取时间倒序 + 记录 ID 倒序</td><td>是</td></tr>
+<tr data-fp="F01-01"><td>VIP 等级配置表</td><td>20（10 / 20 / 50 / 100）</td><td class="w">等级号升序（配置 ID 兜底）；VIP0 行固定在表头下，不计入分页</td><td>—</td></tr>
+<tr data-fp="F01-08"><td>VIP 活动与福利（新旧合并）</td><td>20（10 / 20 / 50 / 100）</td><td class="w">旧版福利项固定顺序</td><td>—</td></tr>
+<tr data-fp="F01-02"><td>VIP 奖励配置</td><td>20（10 / 20 / 50 / 100）</td><td class="w">等级号升序（配置 ID 兜底）</td><td>—</td></tr>
+<tr data-fp="F01-03"><td>VIP奖品配置：平台库存 / 主表</td><td>20（10 / 20 / 50 / 100）</td><td class="w">平台库存按产品编号升序；主表按等级号升序（配置 ID 兜底）</td><td>—</td></tr>
+<tr data-fp="F01-09"><td>下注限额与返水</td><td>20（10 / 20 / 50 / 100）</td><td class="w">等级号升序（配置 ID 兜底）</td><td>—</td></tr>
+<tr data-fp="F08-03"><td>会员福利 › 会员福利记录</td><td>20（10 / 20 / 50 / 100）</td><td class="w">到账时间倒序（未到账按生成时间）+ 记录 ID 倒序</td><td>是</td></tr>
+<tr data-fp="F08-01"><td>VIP数据报表 › VIP会员数据</td><td>20（10 / 20 / 50 / 100）</td><td class="w">最近变动时间倒序 + 会员 ID 倒序</td><td>是</td></tr>
+<tr data-fp="F08-02"><td>VIP数据报表 › 等级变动记录</td><td>20（10 / 20 / 50 / 100）</td><td class="w">变动时间倒序 + 记录 ID 倒序</td><td>是</td></tr>
+<tr data-fp="F08-04"><td>VIP数据报表 › 月度结算记录</td><td>20（10 / 20 / 50 / 100）</td><td class="w">结算月份倒序 + 记录 ID 倒序</td><td>是</td></tr>
+<tr data-fp="F08-04"><td>结算明细（弹窗）</td><td>20（10 / 20 / 50 / 100）</td><td class="w">会员 ID 升序</td><td>—</td></tr>
+<tr data-fp="F08-01"><td>VIP数据报表 › 成长值记录（现有）</td><td>20（10 / 20 / 50 / 100）</td><td class="w">新增时间倒序 + 记录 ID 倒序</td><td>沿用现有</td></tr>
+<tr><td>固定小表：6 大游戏分类、成长值明细、关闭体系奖励品类、归级去向表、前台 VIP 奖励表、奖励详情弹窗</td><td>不分页</td><td class="w">固定顺序（行数固定，如 6 大游戏分类 6 行、成长值明细 6 + 3 行）</td><td>—</td></tr>
+</table></div>
+
+<h3 id="c8-2">8.2 会员等级（Level）</h3>
+<p>原型：<a href="../../prototype/full/admin/VIP会员体系-后台会员等级配置页面.html">后台会员等级配置页面</a>。版式以线上截图为准，以下只写改动。</p>
+<div class="tbl"><table>
+<tr><th>功能</th><th>说明</th></tr>
+<tr data-fp="F10-02"><td><span class="fp">F10-02</span> 前台显示方式</td><td class="w">「会员等级配置」页签最上方单选「会员身份（普通会员）」（默认）/「会员等级（LEVEL n）」（规则 N69）。点未选中项弹二次确认（内填谷歌验证码），取消恢复原选项；成功提示「前台显示方式已改为「…」」</td></tr>
+<tr data-fp="F10-01"><td><span class="fp">F10-01</span> 会员等级表</td><td class="w">列：级别、等级名称、有效投注累计值、单注最大下注额、串关最大下注额、单注冠军最大下注额、充值返水比例(%)、单注最大返水(PHP)、操作（修改 / 删除）；只读，左两列和操作列固定；表格上方显示「当前 LEVEL 1–N」和 LEVEL 0 限额与返水一行（可修改）。添加、修改、删除和校验按规则 N75；提示原文：「请输入会员等级」「会员等级只能输入正整数」「等级需连续：当前最高 LEVEL N，最多添加到 LEVEL N+1」「请输入有效投注累计值」「有效投注累计值只能输入 ≥ 0 的整数」「需大于 LEVEL k−1 的累计值 X」「需小于 原 LEVEL k 的累计值 Y」「请输入等级名称」「等级名称最多 20 个字符」「「LEVEL + 数字」是默认名称格式，只能用本级的「LEVEL k」；自定义名称请换其他名称」「等级名称「…」已被 LEVEL k 使用，等级名称需要唯一」；成功提示「已添加 / 已修改 / 已删除 LEVEL k」，无修改提示「未修改」</td></tr>
+<tr data-fp="F01-06 F10-01"><td><span class="fp">F01-06</span> VIP0 沿用级别提示与限制</td><td class="w">只在【VIP特权】VIP0 勾选「沿用普通会员级别」时，表格上方显示「【VIP特权】VIP0 沿用 LEVEL n：不能在 LEVEL n 之后添加级别；VIP 等级的累计有效投注不高于 LEVEL n 的有效投注累计值（当前 X）的，在【VIP特权】标为「不符合标准」并关闭，提高门槛后才能开启。」（成长值方式时不比较，只显示第一句）；「添加等级」只能加在 LEVEL n 及以下，输入 &gt; n 提示「已沿用 LEVEL n 作为 VIP0，不能在其后添加级别；如需添加请先在【VIP特权】修改沿用级别」；修改 LEVEL n 的累计值时，确认弹窗列出将不符合标准的 VIP 等级：VIP 体系从未开启过 → 保存后这些等级在【VIP特权】关闭；开启过且这些等级仍开启 → 拦截「VIP 体系已开启过：{等级} 的累计有效投注不高于 X，修改后会不符合标准。请先到【VIP特权】关闭这些等级（复核通过后重新归级）或提高它们的门槛，再修改本级」（规则 N56 ②）；删除被沿用的级别时弹「不能删除 LEVEL n」并引导去【VIP特权】；插入 / 删除 LEVEL n 以下的级别时确认框提示「插入（删除）后 VIP0 沿用的级别变为 LEVEL n±1」。执行删除后表格只到 LEVEL n，上方提示「LEVEL n+1 及以上已随 VIP0 沿用删除」。不勾选时以上提示和限制都不出现（规则 N56、N57）</td></tr>
+<tr data-fp="F10-03"><td><span class="fp">F10-03</span> 场馆成长值倍数</td><td class="w">等级表下方，场馆名称（只读）× 成长值倍数；保存弹窗内填谷歌验证码，成功提示「保存成功，次日 03:50 生效（时区以研发确认为准）」（规则 N75 ⑦）</td></tr>
+<tr data-fp="F10-04"><td><span class="fp">F10-04</span> 会员等级奖励配置</td><td class="w">活动状态（开启 / 关闭）不变。左表「级别 / 等级名称 / 生日礼包金额 / 升级奖励金额」：行固定跟随会员等级表（LEVEL 1 至最高级），不能新增删除，级别和名称只读，只填金额（≥ 0 的整数）；等级插入、删除、改名时自动同步，新等级金额为空待填。右表「会员等级 / 实体奖品 / 发放库存 / 操作」：「+ 新增实体奖品」、每行可删除；会员等级下拉取会员等级表；实体奖品下拉读【实体奖品管理 › 库存管理】，显示产品编号、名称、可用，可用为 0 置灰，悬停显示计算过程；发放库存为正整数；同一等级不能重复配同一奖品；保存时按奖品汇总，新增占用件数 ≤ 可用（可用 = 平台库存 − 其他活动已占 − Level 段已保存的占用，允许正好用完），任一奖品不满足整次失败；保存时调用实体「分配活动库存」，以实体返回为准；保存需谷歌验证码</td></tr>
+<tr data-fp="F10-05"><td><span class="fp">F10-05</span> 活动奖励统计</td><td class="w">只含 Level 奖励记录（VIP 奖励记录在【VIP特权 › 会员福利】的会员福利记录）。奖励类型、发放状态改中文显示（升级奖励 / 生日礼包；已发放（绿）/ 待审核（橙）/ 已驳回（红）），后台原始值不变、悬停可看；筛选项同步中文。合计分三项：发放总额 = 已发放总额 + 未发放总额（待审核 + 已驳回）；右上「查询总计」按当前筛选显示同样三项。导出：后台语言为简体中文导出中文值，English 导出英文值。每页默认 10 条</td></tr>
+</table></div>
+
+<h3 id="c8-3">8.3 VIP特权 › VIP等级配置</h3>
+<p>原型：<a href="../../prototype/full/admin/VIP会员体系-后台VIP特权配置页面.html">后台VIP特权配置页面</a>（子页签「VIP等级配置」）。</p>
+<div class="tbl"><table>
+<tr><th>功能</th><th>说明</th></tr>
+<tr data-fp="F01-01"><td><span class="fp">F01-01</span> 页面结构</td><td class="w">自上而下：标题「VIP 等级配置（当前 N 级）」；计算方式单选（规则 N58）；VIP 成长值规则区块（只在成长值时显示，规则 N59）；待复核提示条（有待复核时）；「新增VIP等级」按钮；VIP 等级表；错误汇总</td></tr>
+<tr data-fp="F01-01"><td><span class="fp">F01-01</span> VIP 等级表</td><td class="w">只读。列：VIP 等级（L 号，悬停显示「配置 ID：CFG-xx」）、等级名称、升级标准（先填）、保级标准（后填）、降级保留成长值比例（%，成长值方式）、状态（开启 / 已关闭 / 关闭待复核；不符合标准的已关闭等级另标红字「不符合标准」）、操作（修改设定、关闭或开启、待复核时为「复核」）。不符合标准的等级点「开启」拦截，提示「{等级} 不符合标准：累计有效投注须高于 VIP0（沿用 LEVEL n）的 {数值}，不符合标准的等级只能保持关闭；请先「修改设定」提高门槛（仍须逐级严格递增），或到「VIP0 修改设定」更换沿用级别」。累计金额方式显示累计有效投注、累计充值、每月保级投注；成长值方式显示成长值最低要求、保级所需成长值（每月）、降级保留成长值比例。金额千分位，未填红字「未配置」；已关闭的行置灰标「已关闭」；已保存数据不满足校验时单元格标红并汇总在表下。默认 25 行，数值见 3.2.2</td></tr>
+<tr data-fp="F01-06"><td><span class="fp">F01-06</span> VIP0 行</td><td class="w">表头下第一行固定为 L0 · VIP0（标签「起始级别」），标准随计算方式显示（不沿用时显示「—」），操作「修改设定」。修改设定弹窗：勾选框「沿用普通会员级别」+ LEVEL n 下拉（显示各级有效投注累计值，默认当前最高级，不置灰；选项后注明选此级别时将不符合标准的 VIP 等级）+ 成长值方式的 VIP0 成长值最低要求 + 谷歌验证码；选定后弹窗列出不符合标准的等级：VIP 体系从未开启过时「开启中的 VIPa、VIPb 保存后自动关闭」；开启过且仍有开启中的不符合标准等级时提示先「关闭」（影响预览、复核通过后重新归级）或提高门槛，「确定」拦截不保存；VIP 体系已开启时改级别须勾选「我已确认」（未勾选提示「请勾选确认删除」）并提示「会再删除一次 LEVEL n' 之后的级别」；体系关闭期间提示「重新开启 VIP 体系时删除」。VIP0 行下方的上线提示：勾选时「VIP0 不发 VIP 奖励；如需给 VIP0 奖励，请在【会员等级】普通会员对应等级（沿用的 LEVEL n）设置奖励」；不勾选时「未达到 VIP1 的玩家没有 VIP 等级，不发 VIP 奖励；普通会员级别的奖励和返水照【会员等级】配置发放，两边各自达标都可领取」。规则 N56、N57</td></tr>
+<tr data-fp="F01-05"><td><span class="fp">F01-05</span> 新增VIP等级</td><td class="w">规则 N60。弹窗字段：新增到第几级（L 号，旁注「范围 L1 ~ LN（当前最高 VIP 等级 + 1）；填 LN 时加在当前最高等级之上，不顺延」）、等级名称、当前计算方式门槛（必填，旁边显示上下限）、另一方式门槛（选填）、谷歌验证码；同弹窗显示顺延确认。校验提示：「请填写新增到第几级」「请输入正整数」「超出范围：请输入 1–N」「必填」「请输入 ≥ 0 的整数」「不在该位置的上下限内：须大于 X 且小于 Y」（累计充值为「不低于 X 且不高于 Y」）、「保级标准需小于升级标准」「请先设置 VIP 成长值规则」、等级名称三条；勾选沿用时新等级（开启状态）累计有效投注不高于 VIP0 拦截，提示同「修改设定」。有待复核时点按钮提示「有待复核的…，复核完成前不能修改 VIP 等级配置」</td></tr>
+<tr data-fp="F01-01"><td><span class="fp">F01-01</span> 修改设定</td><td class="w">弹窗：等级名称、当前计算方式门槛（必填）、另一方式门槛（选填）、计算方式（只读）、状态（开启 / 关闭）、谷歌验证码。确定即保存并写日志「修改设定 VIPn · 字段：前 → 后」；有门槛下调先弹影响预览（N9）。把状态改为关闭时走关闭复核，且不能同时改其他设定（提示「关闭等级要单独提交复核：请只改状态，或先保存其他修改再关闭」）。校验按规则 N62，提示原文：「{等级} 的{字段}需大于上一级 Lk {上一等级} 的 {数值}」「{等级} 的{字段}需小于下一级 Lk {下一等级} 的 {数值}」「{等级} 的{字段}不能低于 {上一等级}」（累计充值）、「保级标准需小于升级标准」、「等级名称必填」「等级名称不能超过 20 字符」「等级名称不能重复」；无修改提示「没有修改」。勾选沿用（累计金额方式）时：开启中的等级累计有效投注改到不高于 VIP0 拦截，提示「{等级} 不符合标准：累计有效投注须高于 VIP0（沿用 LEVEL n）的 {数值}，不符合标准的等级只能保持关闭；请先「修改设定」提高门槛（仍须逐级严格递增），或到「VIP0 修改设定」更换沿用级别」；已关闭的不符合标准等级可以修改，改到高于 VIP0 后标记取消、仍为关闭，需再点「开启」（规则 N56 ②）</td></tr>
+<tr data-fp="F01-05"><td><span class="fp">F01-05</span> 关闭与开启</td><td class="w">规则 N61。关闭影响预览列出：该级当前人数、按历史累计归入 VIPx 的人数、降级玩家上移到 VIPy 的人数、需发放升级奖励的人数和金额、释放的奖品预占；弹窗内提示「关闭须复核：…复核通过前仍按开启运行…」；提交后顶部提示「待复核 · 关闭等级」（提交人、提交时间、修改内容）。复核弹窗标题「复核关闭等级」，显示提交时预览和复核时刻重新试算，通过 / 驳回各需二次确认。开启：确认弹窗内填谷歌验证码；库存不足提示「当前奖品库存不足，请调整库存或更换奖励」；「不符合标准」的等级不能开启（见上方 VIP 等级表）</td></tr>
+<tr data-fp="F02-05"><td><span class="fp">F02-05</span> 影响预览与复核</td><td class="w">规则 N9、N45。预览弹窗：本次修改内容（新增等级时含「L 号顺延」）、预计升级人数、预计发放升级奖励、是否需要复核（复核金额阈值）、「导出预计升级名单」、「不发放差额奖励」勾选（勾选后必选 A / B）、谷歌验证码。待复核：页面顶部显示待复核内容；提交人复核提示「不能复核自己提交的修改」；待复核期间修改提示「有待复核的门槛修改，复核完成前不能修改 VIP 等级配置」。计算方式为成长值时原型不试算人数</td></tr>
+<tr data-fp="F01-01"><td><span class="fp">F01-01</span> 计算方式切换</td><td class="w">规则 N58：门槛不齐全弹「不能切换计算方式」（列出缺的等级和字段，只有「知道了」）；勾选沿用时从成长值切回累计金额，开启中的等级不符合标准也弹此窗，首行为「「累计金额」的门槛还不齐全或不符合标准，不能切换（共 N 处）」，逐条列出「{等级}：不符合标准，累计有效投注 {数值} 不高于 VIP0（沿用 LEVEL n）的 {数值}，请先提高门槛或关闭该等级」；切到成长值且规则未配齐时先弹「切换计算方式 · 请先设置 VIP 成长值规则」（弹窗内填比例和谷歌验证码，保存规则但不切换）；齐全后弹「切换计算方式 · 影响预览」，确认后生效或进入待复核，日志「计算方式：A → B」</td></tr>
+<tr data-fp="F01-07"><td><span class="fp">F01-07</span> VIP 成长值规则</td><td class="w">规则 N59。字段：充值金额与成长值的比例「充值 ₱1 = [ ] 成长值」；投注金额与成长值的比例（按游戏分类）：Slot、Casino、Poker、Bingo、Arcade、Fishing 各「有效投注 ₱1 = [ ] 成长值」（示例 1、0.5、0.5、1、0.8、0.8，充值 1）。校验提示「请填写」「请输入 ≥ 0 的数，最多 2 位小数」。「保存 VIP 成长值规则」→ 确认弹窗（列出前后值，内填谷歌验证码）</td></tr>
+</table></div>
+
+<h3 id="c8-4">8.4 VIP特权 › VIP全局参数</h3>
+<div class="tbl"><table>
+<tr><th>功能</th><th>说明</th></tr>
+<tr data-fp="F01-04"><td><span class="fp">F01-04</span> VIP 体系状态</td><td class="w">拨杆开关（开蓝 / 关灰，旁显状态文字，Tab + Enter / 空格可切换，初始化中置灰），旁注「= 系统参数「新版VIP特权状态」」。上线时为关闭；是否第一次开启按「VIP 体系是否开启过」标记判断（3.2.1）。点拨杆先弹确认弹窗，取消保持原状态。第一次开启：确认文案「将按历史累计充值和累计有效投注初始化全部会员的 VIP 等级；初始化时已到达的等级不发升级奖励；旧版 VIP活动的晋级礼金、生日礼金、每周红包、专属红包停止生成，已生成的照常处理完」，已勾选沿用且 LEVEL n 不是最高级时列出「将删除 LEVEL n+1 ~ 最高级」（只删一级时为「将删除 LEVEL n+1」）和「开启前请确认已导出 LEVEL n+1 ~ 最高级的配置备份」，内填谷歌验证码，期间显示「初始化中」。关闭：选累计方式（未选提示「请选择累计方式」）→「下一步」→ 已发放未领取的奖励逐类选择 →「上一步」可返回（已选保留）→ 确认弹窗（列出累计方式和每类选择，内填谷歌验证码）。再次开启：确认弹窗显示本次关闭的累计方式和各类选择，内填谷歌验证码。只读显示「本次关闭的累计方式」「已发放未领取的奖励（本次关闭）」（开启状态和从未开启时显示「—」，后面灰字注明「（关闭 VIP 体系后显示）」）。「导出存量初始化预览」只在第一次开启前可用。规则 N40、N46、N47、N67</td></tr>
+<tr data-fp="F01-02"><td><span class="fp">F01-02</span> 全局参数</td><td class="w">KYC 限制（开关，必填，开启 / 关闭，默认开启；点开关即弹确认弹窗、内填谷歌验证码，确定后立即生效并写操作日志，不随「保存 VIP 全局参数」保存，规则 N76）；升级 / 保级 / 生日奖励流水倍数（必填，0–50 的整数，默认 1；VIP 奖励流水不适用低额自动清稽核，规则 N34 ④）；VIP 流水计入游戏范围（全部 6 大类 / 指定游戏类型，指定时 6 大类至少选 1 项）；领取方式（升级、保级、生日各选「自动领取（到账）/ 手动领取」，必选）；手动领取有效期（天，必填，1–30 的整数，默认 15）；VIP 奖励月度预算（₱，选填，不填不限）；复核金额阈值（₱，≥ 0 的整数，选填，默认值以后台配置为准 Q23）；短信模板（只读说明，不在本页选择：各场景按规则 N41、N43、N64 自动选用【公告管理 › 短信模板列表】中的 VIP 模板，模板名称和初始内容见附录 D，用户 2026-10-26）；短信 / 推送免打扰时段（拨杆「生效」+ 开始、结束时间 HH:mm，默认生效、21:00 至 10:00）。校验提示：「请填写 0–50 的整数」「请填写 1–30 的整数」「请输入 ≥ 0 的整数」「请至少选择 1 个游戏类型」「请输入 HH:mm 格式的时间（00:00–23:59）」「开始时间和结束时间不能相同」。「保存 VIP 全局参数」只保存本区块，确认弹窗内填谷歌验证码；保存后立即生效，只影响之后新生成的奖励、短信和推送。流水倍数可配、月度预算、复核金额阈值、免打扰时段、KYC 限制开关为原文外补充（默认开启与 C-11 一致）</td></tr>
+<tr data-fp="F01-08"><td><span class="fp">F01-08</span> VIP 活动与福利（新旧合并）</td><td class="w">对照表列：旧版福利 / 设定、旧版现状、新版对应（依据）、合并后、状态 / 开关、操作。福利行：晋级礼金、生日礼金、保级奖励（新增）随总开关生效；每周红包（需求流水 / 金额）、专属红包、专属客服、极速出款为置灰的关闭拨杆（本期不做）。细节设定行：提现倍数、领取时效随总开关生效（以全局参数为准）；注册天数、强制审核两行可「修改」或勾选后「批量修改」，弹窗内拨杆「生效」+ 天数 n（注册天数生效时必填正整数，提示「请输入正整数」）+ 谷歌验证码，确定即保存，默认不生效（规则 N64、N65、N70）</td></tr>
+</table></div>
+
+<h3 id="c8-5">8.5 VIP特权 › VIP奖励配置、VIP奖品配置、下注限额与返水</h3>
+<div class="tbl"><table>
+<tr><th>功能</th><th>说明</th></tr>
+<tr data-fp="F01-02"><td><span class="fp">F01-02</span> 表格修改方式</td><td class="w">VIP 奖励配置、VIP奖品配置、下注限额与返水和细节设定四张表只读（金额千分位，比例带 %，未填红字「未配置」）。每行「修改」单项修改；每行前有勾选框，表头「全选」= 当前页全部行（部分勾选半选），勾选后上方提示「已选当前页 N 条」，「批量修改」弹窗逐行列出所选行，可用「统一填写」给一列填同一值后再逐行改。弹窗内逐字段红字提示，有错不关弹窗、滚到第一处错误；弹窗最下方填谷歌验证码，确定即保存，日志逐行记录前后值。表中没有 VIP0 行（旁边上线提示说明原因）；新增等级后在相同位置出现「未配置」行，上方提示「新增 VIPn 的奖励 / 返水 / 奖品未配置，请用『修改』补填」；已关闭等级行置灰、保留配置</td></tr>
+<tr data-fp="F01-02"><td><span class="fp">F01-02</span> VIP 奖励配置</td><td class="w">列：VIP 等级（L 号）、等级名称、升级奖励（₱）、升级奖占比、保级奖励（₱）、保级奖占比、生日奖励（₱）、操作。金额必填、≥ 0 的整数；占比只读自动计算（成长值方式显示「—」）。生日奖励填 0 = 该级不发。保级奖励从下一个自然月生效，其余立即生效、只影响之后生成的奖励</td></tr>
+<tr data-fp="F01-03"><td><span class="fp">F01-03</span> VIP奖品配置</td><td class="w">规则 N72。全局项（是否需要 KYC（选「是」时要求 KYC 状态为已认证，不受 VIP全局参数「KYC 限制」开关影响）、领取方式、手动领取时间（天，可留空，占位「天数待定」，填写须为正整数，选自动领取时置灰）、发放方式）用「保存 VIP奖品全局项」保存（确认弹窗内填谷歌验证码）。只读小表「平台库存」：产品编号、奖品名称、剩余库存、其他活动已占、本活动预占、可分配余量（悬停显示计算过程）。主表：VIP 等级、等级名称、奖品、预占数量、已领取、剩余预占、操作（修改）；修改弹窗奖品下拉首项「不设奖品」，选项「奖品名 · 可分配余量 n」，选中后预占数量默认 1，清除或更换时提示释放件数。校验提示：「请输入正整数」「不能少于已领取 n 件」「超过可分配余量，最多可预占 n 件」，批量修改按弹窗内所有行一起计算余量；无修改提示「没有修改」。关闭等级复核通过时剩余预占显示 0、标「已释放」</td></tr>
+<tr data-fp="F01-09"><td><span class="fp">F01-09</span> 下注限额与返水</td><td class="w">规则 N71。列：VIP 等级、等级名称、单注最大下注额、串关最大下注额、单注冠军最大下注额、充值返水比例(%)、单注最大返水(PHP)、操作。上线提示「返水比例必填，填 0 表示该级不返水。」。校验提示：「必填」「请输入 0–100 的数，最多 2 位小数」「请输入正整数」。未配置期间返水按 0、限额按平台默认。示例数值待运营出方案</td></tr>
+</table></div>
+
+<h3 id="c8-6">8.6 VIP特权 › 会员福利</h3>
+<p>原型：<a href="../../prototype/full/admin/VIP会员体系-后台会员福利页面.html">后台会员福利页面</a>。</p>
+<div class="tbl"><table>
+<tr><th>功能</th><th>说明</th></tr>
+<tr data-fp="F08-03"><td><span class="fp">F08-03</span> 页面结构</td><td class="w">【用户管理 › VIP特权】顶部第 2 个页签「会员福利」（原「会员福利记录」页签），面包屑「用户管理 › VIP特权 › 会员福利」；本页只有会员福利记录一张表，承接 VIP 奖励的领取、审核、补发、放行、作废。月度结算记录在「VIP数据报表」页签（8.7）</td></tr>
+<tr data-fp="F08-03"><td><span class="fp">F08-03</span> 会员福利记录</td><td class="w">新旧福利同表。列：会员名、福利类别、VIP 等级（生成时的等级，重新编号后显示「VIP5（原 VIP4）」）、状态、金额、币种（PHP）、日期讯息、到账时间、流水倍数、流水游戏范围、账变类型（新版固定「VIP 奖励」）、审核人、操作；筛选：会员名、福利类别（含「新版全部」「旧版全部」）、金额、状态、到账时间。福利类别：新版 VIP 升级奖励 / VIP 保级奖励 / VIP 生日奖励；旧版 晋级礼金 / 每周红包 / 生日礼金 / 专属红包（带「旧版」标签，整行浅灰，只供查询，操作「—」，VIP 等级显示旧版等级，流水两列「—」）。日期讯息：保级 = 结算月份，生日 = 生日日期，升级 = 到达等级日期（存量初始化 / KYC 定级为当天），旧版原样（每周红包显示周次）。到账时间：已到账显示到账时间；未到账显示红色「生成时间（原因）」，原因为不发放 / 暂停发放 / 发放失败 / 待领取 / 已过期 / 已作废等；放行或补发后到账显示蓝色「到账时间（放行）」「到账时间（补发）」。审核人：自动到账为「系统」，玩家领取为「玩家领取」，审核的为审核人。表格下方注明「表中时间均为 GMT+8」</td></tr>
+<tr data-fp="F08-03"><td><span class="fp">F08-03</span> 发放状态与汇总</td><td class="w">状态：已发放、已发放（补发）、待领取、已领取、已过期、暂停发放（风控）、发放失败、已作废、不发放（门槛调整 / 存量初始化 / KYC 前已达到 / KYC 限制关闭前已达到 / 注册未满 n 天）、待审核、审核驳回、停止领取（体系关闭）。自动领取到账的（含生日奖励自动领取）为「已发放」，玩家手动领取到账的为「已领取」。颜色：已发放、已领取、已发放（补发）绿色；暂停发放、待领取、待审核橙色；发放失败、已作废（删除线）、审核驳回红色；已过期浅灰；不发放、停止领取灰色。底部汇总已发放金额 = 新版（已发放 + 已领取 + 已发放（补发））+ 旧版（已发放），新版另按 3 个类别列出，按全部符合筛选的记录统计；其他状态都不计入。状态筛选「已发放」含补发</td></tr>
+<tr data-fp="F08-03"><td><span class="fp">F08-03</span> 补发</td><td class="w">「发放失败」可「补发」（二次确认）：按原唯一键重发，成功后直接到账，原记录改为「已发放（补发）」，记录操作人，不新增记录，补发后按钮消失。自动重试 3 次仍失败才需运营补发；生日奖励的发放失败为领取时入账失败</td></tr>
+<tr data-fp="F08-05"><td><span class="fp">F08-05</span> 放行 / 作废</td><td class="w">「暂停发放（风控）」可「放行」或「作废」，都需二次确认，作废必须填原因（规则 N36）</td></tr>
+<tr data-fp="F08-06"><td><span class="fp">F08-06</span> 审核</td><td class="w">「待审核」记录操作列「审核」，弹窗：审核结果（审核通过 / 审核驳回，默认通过）；驳回原因（驳回时必填，只在后台显示）；谷歌验证码。审核通过、实际到账时按奖励类别发送对应的「审核通过到账」短信模板（升级「VIP 升级奖励审核通过到账」、保级「VIP 保级奖励到账」、生日「VIP 生日奖励审核通过到账」，附录 D；审核时不填写短信内容，用户 2026-10-26）；驳回不发短信。通过后升级、保级为「已发放」，生日奖励手动领取的为「已领取」、自动领取的为「已发放」（规则 N64）</td></tr>
+</table></div>
+
+<h3 id="c8-7">8.7 VIP特权 › VIP数据报表</h3>
+<p>原型：<a href="../../prototype/full/admin/VIP会员体系-后台VIP数据报表页面.html">后台VIP数据报表页面</a>。</p>
+<div class="tbl"><table>
+<tr><th>功能</th><th>说明</th></tr>
+<tr data-fp="F08-01 F08-02 F08-04"><td><span class="fp">F08-01</span> 页面结构</td><td class="w">【用户管理 › VIP特权】顶部第 3 个页签「VIP数据报表」（新），下分 4 个二级页签：VIP会员数据（新）、等级变动记录（新）、月度结算记录（新）、成长值记录（现有，不改），按此顺序排列，打开页签默认显示第一个有查看权限的二级页签（4 个都有权限时为「VIP会员数据」）；二级页签在本页内切换，面包屑「用户管理 › VIP特权 › VIP数据报表 › 二级页签名」。各二级页签的查看权限和按钮权限见 8.1</td></tr>
+<tr data-fp="F08-01"><td><span class="fp">F08-01</span> VIP会员数据</td><td class="w">只列参与 VIP 体系（「KYC 限制」开启时只含 KYC 已通过的，N66）、有 VIP 等级或曾经是 VIP 的会员。筛选：会员账号、当前 VIP 等级（多选）、历史最高 VIP 等级（多选）、本月是否已达保级。列（表头缩写，表格下方注明含义和时间为 GMT+8）：会员账号、当前等级（降级的红字「↓」，退出 VIP 段显示「—（退出 VIP 段，普通用户）」）、历史最高等级（已关闭等级显示「VIP13（已关闭）」）、累计充值、累计有效投注、本月有效投注、本月保级要求（降级玩家下方小字「恢复目标 VIPx · 需 ₱x」，跳过已关闭等级时注明）、本月保级进度（向下取整，未达标最多 99%）、最近变动时间。成长值方式：隐藏累计充值、累计有效投注，显示「成长值」（蓝色可点）和「本月新增成长值」，保级要求和进度按成长值计算</td></tr>
+<tr data-fp="F08-01"><td><span class="fp">F08-01</span> 成长值明细弹窗</td><td class="w">点成长值数值打开：顶部显示会员账号、当前等级、当前成长值、该级成长值最低要求、本月新增 / 保级所需成长值；「月份」下拉（全部（历史累计）/ 各月 / 更早）；表格按 6 大游戏分类各一行（比例、有效投注、成长值）+「充值」一行（充值金额、比例、成长值）+「降级扣减」一行（负数，按所选月份内每次降级按「降级保留成长值比例」扣减的成长值合计，没有降级为 0）+「合计」。选「全部」时：各分类成长值 + 充值成长值 − 降级扣减 = 当前成长值；有效投注按结算时间归属月份，撤单扣回</td></tr>
+<tr data-fp="F08-02"><td><span class="fp">F08-02</span> 等级变动记录</td><td class="w">筛选：会员账号、变动类型、变动时间。列：会员账号、变动类型（升级 / 保级成功 / 降级 / 恢复 / 退出 VIP 段 / 存量初始化 / 重新归级，重新归级下方注明升 / 降）、变动前等级、变动后等级、变动后最高等级、触发原因（充值 / 结算投注 / 门槛重算 / 门槛重算（不发放差额）/ 月度结算 / 开关开启 / 存量初始化 / 完成 KYC / KYC 限制关闭 / 等级关闭）、累计充值、累计有效投注、当月有效投注（只在保级成功、降级、恢复、退出 VIP 段时显示，其他「—」）、变动时间。成长值方式显示变动时的成长值和当月新增成长值。一次跨多级只写一条；不参与 VIP 体系期间没有记录（N66）</td></tr>
+<tr data-fp="F08-04"><td><span class="fp">F08-04</span> 月度结算记录</td><td class="w">每月一行：结算月份、开始时间、完成时间、参与人数、保级成功人数、恢复人数、降级人数、保级奖励总额、VIP 奖励总额、奖励占有效投注比、短信成功 / 失败、失败人数、状态（进行中 / 完成 / 部分失败）。「VIP 奖励总额」：结算月份（该月 1 日 00:00:00 至月末 23:59:59，GMT+8）内实际到账的 VIP 升级、保级、生日奖励合计（₱），按到账时间归月：含补发、放行、审核通过后到账的；不含暂停发放、审核中、驳回、作废、不发放、待领取和已过期的。保级奖励按到账时间计入，与「保级奖励总额」（本次结算生成、次月 1 日到账）口径不同。「奖励占有效投注比」：VIP 奖励总额 ÷ 本次结算参与会员（参与人数口径）该月有效投注合计 × 100%，保留 4 位小数；有效投注合计为 0 时显示「-」。用于看 VIP 奖励成本，对应原方案第二节「升级奖占比 / 保级奖占比」的成本口径。两列随「导出」一起导出（用户 2026-10-26，检查报告 R3-06）。操作：查看明细、重跑失败（无失败时不可点，重跑中「进行中」不可点）。明细：会员账号、考核等级、当月有效投注、每月保级投注、结算结果（保级成功 / 恢复 / 降级 / 退出 VIP 段 / 失败）、结算后等级、保级奖励（₱）、短信结果、失败原因。人数口径按规则 N18、N16（例：2026-09 参与 1,286 = 保级成功 742 + 降级 541 + 失败 3；恢复 13 = 12 名降级玩家恢复（含在保级成功内）+ 1 名普通用户回到 VIP1）。VIP 体系关闭期间的结算日不生成记录</td></tr>
+<tr data-fp="F08-01"><td>成长值记录（现有）</td><td class="w">【VIP特权 › VIP数据报表 › 成长值记录】（原【VIP特权】下的「成长值记录」页签，移入本页签）功能原样保留，只记录 Level 成长值；VIP 的累计数据和等级变动见 VIP会员数据、等级变动记录。本期不提供 VIP 累计数据（累计充值、累计有效投注、当月有效投注）和 VIP 成长值的人工调整入口，成长值记录现有的「修改会员成长值」只改 Level 成长值；VIP 数据需要修正时（如投诉补偿、数据修复）提技术工单处理（用户 2026-10-21）</td></tr>
+<tr data-fp="F08-01"><td>【用户管理 › 会员】VIP 等级</td><td class="w">会员列表「VIP 等级」列和「VIP 等级」筛选对应 userLevelName（现存旧版 VIP0–VIP8），改取新 VIP 等级：显示玩家当前 VIP 等级名称，筛选项为新 VIP 等级，不再读取旧版等级。「用户等级」列和筛选对应 vipLevelName（LEVEL），保持不变（3.3 冲突 06；字段对应由研发确认，3.5）</td></tr>
+</table></div>
+
+<h3 id="c8-8">8.8 帮助提示内容</h3>
+<p>后台各「?」帮助按钮的上线文案（精炼版：一两句写清是什么、怎么填）。第一列为帮助键名，与原型 <code>data-h</code> 完全一致，按页面分组；原型「?」帮助从本节整块同步，不手改。共 102 条。</p>
+<div class="tbl"><table>
+<tr><th>数据项 / 操作</th><th>说明内容</th></tr>
+<tr class="grp"><td colspan="2"><b>用户管理 › 会员等级（后台会员等级配置页面）</b></td></tr>
+<tr><td>前台显示方式</td><td class="w">决定前台怎样显示非 VIP 玩家（普通用户、「KYC 限制」开启时未完成 KYC 的玩家、VIP 体系关闭期间的原 VIP 玩家）：选「会员身份」只显示「普通用户」，选「会员等级」显示 LEVEL n，默认「会员身份」；VIP 玩家始终显示 VIP 等级。只影响前台显示，切换时填谷歌验证码，立即生效。</td></tr>
+<tr><td>单注 / 串关 / 单注冠军最大下注额（Level）</td><td class="w">该 Level 等级玩家单笔投注的最高金额（PHP，正整数），单注、串关、单注冠军分别限制。</td></tr>
+<tr><td>充值返水比例(%)（Level）</td><td class="w">该 Level 等级的充值返水比例（%），必填，0–100，最多 2 位小数；填 0 表示该级不返水。</td></tr>
+<tr><td>单注最大返水(PHP)（Level）</td><td class="w">该 Level 等级单笔投注可以得到的返水上限（PHP，正整数），必填。</td></tr>
+<tr><td>场馆成长值倍数（Level）</td><td class="w">现有功能：按场馆设置倍数，只用于普通用户的 Level 成长值（有效投注 × 倍数），修改后次日 03:50 生效（沿用平台现有执行时间，时区以研发确认为准）；和【VIP特权】的 VIP 成长值规则互不影响。保存时填谷歌验证码。</td></tr>
+<tr><td>VIP0 沿用级别</td><td class="w">只在【VIP特权】VIP0 勾选「沿用普通会员级别」时出现：不能在沿用的 LEVEL n 之后添加级别；修改 LEVEL n 后，累计有效投注不高于它的 VIP 等级标为「不符合标准」并关闭（VIP 体系开启过时须先在【VIP特权】关闭这些等级或提高门槛）。不勾选时两套独立，不限制。</td></tr>
+<tr><td>添加等级</td><td class="w">输入级别和有效投注累计值；输入已有级别时插在它前面，原级别依次顺延。勾选沿用 LEVEL n 时只能加在 LEVEL n 及以下，不勾选不限制。确认时填谷歌验证码，立即生效。</td></tr>
+<tr><td>下注限额与返水（按 Level 等级）</td><td class="w">按 Level 等级配置下注限额和返水，在添加或修改等级的弹窗里维护，LEVEL 0 在表格上方单独修改，确认时填谷歌验证码。勾选「沿用普通会员级别」时 VIP 玩家只按 VIP 返水表，不勾选时两边都有配置就两边都领；与【游戏管理 › 返水设定】的对接以后台配置为准。</td></tr>
+<tr class="grp"><td colspan="2"><b>用户管理 › VIP特权 › VIP特权（后台VIP特权配置页面）</b></td></tr>
+<tr><td>计算方式</td><td class="w">全局单选，各 VIP 等级按此判定升级和保级，默认「累计金额」：累计有效投注、累计充值都达到才升级，按每月保级投注保级；「成长值」按成长值最低要求升级，按每月新增成长值保级。切换前须补齐新方式门槛（切到成长值先保存成长值规则；勾选沿用时切回累计金额，开启的等级须高于 VIP0），确认时填谷歌验证码。</td></tr>
+<tr><td>VIP 成长值规则（单独保存）</td><td class="w">计算方式为「成长值」时显示：成长值 = 充值金额 × 充值比例 + Σ（各游戏分类有效投注 × 该分类比例），比例 ≥ 0、最多 2 位小数。先保存本规则才能填各级成长值门槛；点「保存 VIP 成长值规则」并填谷歌验证码保存，和 Level 成长值互不影响。</td></tr>
+<tr><td>游戏分类（VIP 成长值）</td><td class="w">按平台游戏分类分别设置成长值比例，只有 Slot、Casino、Poker、Bingo、Arcade、Fishing 6 大类；Perya、ESports、未分类等其他游戏的投注不计成长值。</td></tr>
+<tr><td>VIP 等级（级别号）</td><td class="w">显示等级顺位号 L1–LN（VIP0 显示 L0），新增等级后自动重排；系统按等级配置 ID 判定（悬停 L 号可查看），顺位变化不影响已有记录。</td></tr>
+<tr><td>等级名称（配置 ID）</td><td class="w">前台显示的等级名称，默认 VIP1–VIP24、SUPER VIP；必填，最多 20 个字符，不能重复。改名不影响等级判定和历史记录。</td></tr>
+<tr><td>降级保留成长值比例（%）</td><td class="w">计算方式为「成长值」时使用：玩家降级后保留降级前成长值的比例，0–100 的整数（如填 50 就保留 50%）。</td></tr>
+<tr><td>等级状态（开启 / 关闭）</td><td class="w">开启：参与升级判定。关闭：升级和恢复判定跳过该级，该级玩家按累计归入开启的等级（降级不发奖、不收回已发奖励），须另一名有复核权限的人员复核后生效。再次开启不用复核，奖品库存不足不能开启；不符合标准（累计有效投注不高于沿用的 LEVEL n）只能关闭，提高门槛后才能开启；关闭后仍参与门槛递增校验。</td></tr>
+<tr><td>等级操作</td><td class="w">「修改设定」：在弹窗里改名称、门槛和状态，填谷歌验证码，点「确定」即保存（门槛下调先弹影响预览，需要复核的进入待复核）。「关闭」：看影响预览后提交复核，通过后生效；「开启」：填谷歌验证码直接生效。新增用表格上方「新增VIP等级」；已保存的等级不能删除，只能关闭。</td></tr>
+<tr><td>累计有效投注（门槛，严格递增）</td><td class="w">升级门槛之一：玩家注册以来已结算注单的有效投注总和（只计 6 大类游戏，撤单扣回），单位 ₱，整数。必须大于上一级、小于下一级；勾选沿用时还须高于 VIP0，否则该级不符合标准、只能关闭；保存后立即按新门槛重算，已升级的不回收。</td></tr>
+<tr><td>累计充值（门槛，可相等）</td><td class="w">升级门槛之一：玩家注册以来自行充值成功到账的金额总和，不含后台人工加款、赠送彩金和活动奖励，不扣提款；要和累计有效投注同时达到才升级。逐级不能减少，可以和相邻级相等（可以多级都是 0）。</td></tr>
+<tr><td>每月保级投注（保级标准）</td><td class="w">计算方式为「累计金额」时的保级标准：每月 1 日按玩家当前等级考核上月整月（GMT+8）的有效投注，达到就保级并发保级奖励，没达到次月降 1 级。要先填同级的累计有效投注，并且小于它，逐级严格递增；修改后从下一个自然月生效。</td></tr>
+<tr><td>成长值最低要求</td><td class="w">计算方式为「成长值」时升到该级需要的成长值（历史累计），≥ 0 的整数；必须大于上一级、小于下一级（VIP1 要大于 VIP0）。</td></tr>
+<tr><td>保级所需成长值（每月）</td><td class="w">计算方式为「成长值」时的保级标准：每月 1 日考核上月整月新增的成长值，达到就保级并发保级奖励，没达到次月降 1 级。≥ 0 的整数，逐级严格递增；要先填同级的成长值最低要求，并且小于它。</td></tr>
+<tr><td>VIP0（起始级别）</td><td class="w">VIP 体系的起点标准，不设保级，不发 VIP 奖励，玩家仍按普通用户处理，前台不显示 VIP0。勾选沿用时 VIP0 就是沿用的 LEVEL n，奖励在【会员等级】该级设置；不勾选时两套独立。点「修改设定」设置，填谷歌验证码后保存。</td></tr>
+<tr><td>沿用普通会员级别</td><td class="w">默认勾选。勾选：选一个 LEVEL n 作为 VIP0（默认当前最高级），不能在 LEVEL n 之后添加级别；累计有效投注不高于 LEVEL n 的 VIP 等级标为「不符合标准」并关闭，提高门槛后才能开启。不勾选：两套独立，各按各自设置升级，奖励和返水各自达标都可领取，不做比较。</td></tr>
+<tr><td>新增到第几级</td><td class="w">新等级要插入的位置（L 号），正整数，范围 L1 至「当前最高等级 + 1」；原来这一级及之后的等级依次后移，填「当前最高等级 + 1」时加在最高级之上。门槛要大于前一级、小于原来这一级（累计充值可以相等），输入框旁显示上下限。</td></tr>
+<tr><td>影响预览</td><td class="w">保存前按当前累计数据试算本次操作的预计升级人数和预计发放的升级奖励，实际以生效时刻为准。</td></tr>
+<tr><td>待复核 / 复核</td><td class="w">预计发放金额超过「复核金额阈值」的门槛修改，以及关闭等级，都要由另一名有复核权限的人员复核通过才生效，提交人不能复核自己的修改；待复核期间不能修改 VIP 等级配置。</td></tr>
+<tr><td>不发放差额奖励</td><td class="w">只对这次因门槛下调而新达标的玩家生效，默认不勾选（正常发放）。勾选后选 A「继续累计」（立即升级，跨过的等级不发升级奖励，以后也不补发）或 B「重置初始化」（这次不升级，累计从生效时起重新计算，以后达到新门槛正常升级领奖）。</td></tr>
+<tr><td>VIP 体系状态（关闭期间显示）</td><td class="w">VIP 体系总开关，默认关闭。第一次开启时按历史累计为全部会员初始化等级（已达到的等级不发升级奖励）；关闭时要选累计方式和未领取奖励的处理方式，关闭期间不判定、不发奖、不结算，事后不补，原 VIP 玩家前台按【会员等级】的「前台显示方式」显示。开、关都要二次确认并填谷歌验证码。</td></tr>
+<tr><td>VIP 体系状态与旧版 VIP活动</td><td class="w">这个开关就是现有的系统参数「新版VIP特权状态」，上线时置为关闭。开启后新版升级、保级、生日奖励生效，旧版【活动配置 › VIP活动】的晋级礼金、生日礼金、每周红包、专属红包全部停止生成（已生成的照常处理完）；关闭后旧版 VIP活动也不恢复。</td></tr>
+<tr><td>存量初始化预览</td><td class="w">第一次开启前可以导出，按导出时的累计数据试算每位会员的当前等级和历史最高等级，只供抽查，不写入数据；正式初始化按开启时刻计算。</td></tr>
+<tr><td>累计方式（本次关闭）</td><td class="w">关闭 VIP 体系时必选，这里只读显示。继续累计：关闭期间照常统计；暂停累计：关闭期间的充值和投注不计入；重新开启时初始化：累计从 0 重新开始，等级和已领奖励记录保留。</td></tr>
+<tr><td>已发放未领取的奖励（本次关闭）</td><td class="w">关闭 VIP 体系时按奖励类别逐类选择（手动领取的待领取升级、保级奖励单独一类），这里只读显示。继续可领取：关闭期间仍可领取，有效期不变；停止领取：前台不再显示，待审核的不再审核，重新开启后也不恢复；实物奖品按实体奖品管理的审核状态处理。</td></tr>
+<tr><td>KYC 限制</td><td class="w">是否要求玩家完成 KYC（KYC 状态为已认证）才能参与 VIP 体系，默认开启。开启：未完成 KYC 的玩家不参与 VIP 体系、显示为普通用户，完成 KYC 前已达到的等级不发升级奖励。关闭：等级、升级奖励、保级奖励不要求 KYC，关闭前已达到的等级不发升级奖励。生日奖励始终要求生日当天 00:00（GMT+8）前完成 KYC。重新开启后，未完成 KYC 的玩家不再参与，未到账的奖励改为暂停发放，完成 KYC 后由运营放行或作废；已到账的不追回。切换时填谷歌验证码，立即生效。</td></tr>
+<tr><td>流水倍数（原文外补充）</td><td class="w">奖励到账后要完成的投注倍数，0–50 的整数，默认 1；修改只影响之后新发放的奖励。VIP 奖励流水不适用低额自动清稽核，需要时由运营手动清稽核。</td></tr>
+<tr><td>VIP 流水计入游戏范围（6 大类）</td><td class="w">VIP 奖励的流水由哪些游戏的有效投注计入：默认「全部 6 大类」，也可选「指定游戏类型」，在 Slot、Casino、Poker、Bingo、Arcade、Fishing 中至少选 1 项；其他游戏不计入。不受活动流水稽核和全局「流水打码范围」影响，修改只影响之后新发放的奖励。</td></tr>
+<tr><td>领取方式（VIP 奖励）</td><td class="w">按升级、保级、生日奖励分别选择，必选。自动领取：奖励生成就到账；手动领取：玩家在前台点「领取」才到账，超过「手动领取有效期」就作废。默认升级、保级为自动领取，生日为手动领取；修改只影响之后新生成的奖励。</td></tr>
+<tr><td>手动领取有效期（天）</td><td class="w">所有「手动领取」奖励的可领取天数，1–30 的整数，默认 15：从奖励生成当天（生日奖励是生日当天）起共 x 天，到「生成当天 + x − 1」那天的 23:59:59（GMT+8）截止，过期作废。修改只影响之后新生成的奖励。</td></tr>
+<tr><td>VIP 奖励月度预算（原文外补充）</td><td class="w">选填，单位 ₱。按 VIP 奖励当月已发放的金额计算，不占用活动预算；达到 70% 和 100% 时在顶栏告警，不会自动停发。</td></tr>
+<tr><td>复核金额阈值（原文外补充）</td><td class="w">选填，₱ 整数：门槛下调的预计发放金额超过这个值时要复核；不填时，凡是有预计发放的门槛下调都要复核。关闭等级一律要复核，不受这个值影响。默认值以后台配置为准。</td></tr>
+<tr><td>短信模板（VIP）</td><td class="w">VIP 短信按场景自动选用【公告管理 › 短信模板列表】中的 VIP 模板（模板名称和初始内容见 PRD 附录 D），本页不选择；模板内容由运营在短信模板列表维护，修改模板不需要改需求。到账金额小于 ₱1 不发短信；暂停发放（冻结、停用、禁止投注、自我排除、风险分 70 分及以上）、不参与 VIP 体系（「KYC 限制」开启时未完成 KYC）、没有绑定手机号的玩家不发；免打扰时段内触发的顺延发送。</td></tr>
+<tr><td>短信 / 推送免打扰时段</td><td class="w">VIP 短信和 APP 推送（含到账推送）的免打扰时段（GMT+8），默认生效，21:00 至 10:00，结束早于开始表示跨天；时段内触发的顺延到结束时间发送，站内信不受影响；到账推送另受【公告管理 › 消息推送 › app系统推送】「奖励金到账通知」开关控制，关闭时不发（用户 2026-10-26）。生效时开始、结束时间必填（HH:mm），不能相同；点「保存 VIP 全局参数」保存。</td></tr>
+<tr><td>VIP 活动与福利（新旧合并）</td><td class="w">列出旧版【活动配置 › VIP活动】的福利和细节设定，以及在新版里怎样对应和合并；已并入新版的福利随「VIP 体系状态」生效，「注册天数」「强制审核」可以单独勾选生效（默认不生效）。</td></tr>
+<tr><td>单项修改 / 批量修改</td><td class="w">单项修改：点该行「修改」，在弹窗里修改。批量修改：勾选当前页的行后点「批量修改」，在弹窗里逐行修改，或用「统一填写」给某一列统一填值；填谷歌验证码，点「确定」即保存；翻页会清空已勾选的行。</td></tr>
+<tr><td>注册天数（生效）</td><td class="w">勾选「生效」并填 n（正整数）后，玩家注册满 n 天才能获得 VIP 升级、保级、生日奖励（等级照常判定）；未满 n 天期间的奖励记为「不发放」，满 n 天后也不补发。默认不生效；点该行「修改」，在弹窗里保存。</td></tr>
+<tr><td>强制审核（生效）</td><td class="w">勾选「生效」后，VIP 奖励要人工审核通过才到账：自动领取的在到账前审核，手动领取的在玩家点「领取」后审核；驳回不发放；到账短信在审核通过、到账时才发。默认不生效；点该行「修改」，在弹窗里保存。</td></tr>
+<tr><td>升级奖励（领取方式）</td><td class="w">玩家首次到达该等级时生成，每级终身一次，降级后再升回不重发；按「领取方式」自动到账，或由玩家手动领取（过期作废）；「KYC 限制」开启时完成 KYC 之前已达到的等级不发，关闭「KYC 限制」之前已达到的等级也不发。</td></tr>
+<tr><td>升级奖占比 / 保级奖占比（计算方式）</td><td class="w">只读：升级奖励 ÷ 累计有效投注，保级奖励 ÷ 每月保级投注；计算方式为「成长值」时显示「—」。</td></tr>
+<tr><td>保级奖励（领取方式）</td><td class="w">每月 1 日结算时，对上月完成保级投注的玩家按结算时的当前等级生成，按「领取方式」自动到账，或由玩家手动领取（过期作废），每月最多一次。</td></tr>
+<tr><td>生日奖励（1 日生日）</td><td class="w">按玩家生日当天的当前 VIP 等级生成（生日在每月 1 日的，按当天保级结算后的等级生成），每年一次，生日当天 00:00（GMT+8）前要完成 KYC（不受「KYC 限制」开关影响）；默认由玩家在等级中心手动领取（可在「领取方式」改为自动），过期作废。填 0 表示该等级不发。</td></tr>
+<tr><td>VIP奖品配置</td><td class="w">为每个 VIP 等级选择实体奖品，并从平台库存中预占活动库存；可分配余量为 0 的奖品显示但置灰不可选。领取、审核、扣库存和发货在实体奖品管理里处理；新增等级自动加一行「未配置」，未配置的等级没有可领取的奖品。</td></tr>
+<tr><td>VIP奖品全局项</td><td class="w">对所有等级的 VIP 奖品生效。是否需要 KYC：默认「是」，选「是」时要求 KYC 状态为已认证（不受「KYC 限制」开关影响）；领取方式：手动领取要在「手动领取时间」内自己提交（天数以后台配置为准），自动领取在到达等级时自动生成领取申请；发放方式：审核发放要审核通过才发货，自动发放直接进入待发货。</td></tr>
+<tr><td>平台库存（VIP奖品配置）</td><td class="w">只读，取自实体奖品管理的库存管理，按已保存的配置计算。可分配余量 = 剩余库存 − 其他活动已占 − 本活动预占（最小为 0），为 0 的奖品在下拉里置灰不可选。</td></tr>
+<tr><td>奖品（VIP奖品配置）</td><td class="w">下拉列出平台库存中的奖品和可分配余量，余量为 0 的显示但置灰不可选；选「不设奖品」就是清除。更换或清除时，释放本行剩余的预占，已经领取的件数不受影响。</td></tr>
+<tr><td>预占数量</td><td class="w">该等级为所选奖品预占的活动库存件数，正整数；不能少于已领取的件数，也不能超过「已领取 + 可分配余量」。</td></tr>
+<tr><td>已领取</td><td class="w">该等级玩家已经提交领取的件数（驳回或取消的不计），只读。</td></tr>
+<tr><td>剩余预占</td><td class="w">剩余预占 = 预占数量 − 已领取，只读；为 0 时该等级不能再领取这个奖品。</td></tr>
+<tr><td>下注限额与返水（按 VIP 等级）</td><td class="w">按 VIP 等级逐级配置下注限额和返水，新增等级自动加一行「未配置」（补填前返水按 0、限额按平台默认）。勾选「沿用普通会员级别」时 VIP 玩家只按本表返水，不勾选时与 Level 返水两边都有配置就两边都领。返水比例必填，填 0 表示不返水；和【游戏管理 › 返水设定】的对接以后台配置为准。</td></tr>
+<tr><td>单注 / 串关 / 单注冠军最大下注额</td><td class="w">该等级玩家单笔投注的最高金额（PHP，正整数），单注、串关、单注冠军分别限制。</td></tr>
+<tr><td>充值返水比例(%)</td><td class="w">该等级的充值返水比例（%），必填，0–100，最多 2 位小数；填 0 表示该级不返水。</td></tr>
+<tr><td>单注最大返水(PHP)</td><td class="w">该等级单笔投注可以得到的返水上限（PHP，正整数），必填。</td></tr>
+<tr class="grp"><td colspan="2"><b>用户管理 › VIP特权 › 会员福利（后台会员福利页面）</b></td></tr>
+<tr><td>福利类别（新旧同表）</td><td class="w">新旧福利记录同表：新版为 VIP 升级、保级、生日奖励；旧版（带「旧版」标签）为晋级礼金、每周红包、生日礼金、专属红包，只供查询，不能操作。Level 段的奖励记录在【会员等级 › 活动奖励统计】查看。</td></tr>
+<tr><td>发放状态（含补发）</td><td class="w">包括已发放、已发放（补发）、待领取 / 已领取 / 已过期（生日奖励和手动领取的奖励）、暂停发放（风控）、发放失败、已作废、不发放、待审核、审核驳回、停止领取（体系关闭）。筛选「已发放」含补发；已发放金额只计已发放、已发放（补发）和已领取。</td></tr>
+<tr><td>日期讯息（新旧同表）</td><td class="w">保级奖励显示结算月份（如 2026-09），生日奖励显示生日日期，升级奖励显示到达等级的日期；旧版记录按原样显示（如每周红包显示周次）。</td></tr>
+<tr><td>到账时间（含审核）</td><td class="w">已到账的显示到账时间；未到账的显示红色「生成时间（未到账原因）」；放行或补发后到账的显示蓝色「到账时间（放行）」「到账时间（补发）」。时间为 GMT+8。</td></tr>
+<tr><td>VIP 等级（生成时等级）</td><td class="w">奖励生成时的等级：升级奖励是到达的等级，保级奖励是考核等级，生日奖励是生日当天的当前等级；等级重新编号后显示为「当前名称（原名称）」，如「VIP5（原 VIP4）」。</td></tr>
+<tr><td>流水倍数（奖励记录）</td><td class="w">这笔奖励发放时的流水倍数；之后修改全局参数，不影响已发放的记录。</td></tr>
+<tr><td>流水游戏范围（奖励记录）</td><td class="w">这笔奖励发放时的流水计入游戏范围（全部 6 大类或所选游戏类型）；之后修改，不影响已发放的记录。</td></tr>
+<tr><td>账变类型</td><td class="w">VIP 奖励入账使用独立的账变类型「VIP 奖励」，不计入活动金额和各活动的活动报表、活动费用报表；按实际到账金额计入平台报表「活动费用」、财务数据「活动总额」和平台营销费用（规则 N54，用户 2026-10-26）。</td></tr>
+<tr><td>补发（含生日）</td><td class="w">只对「发放失败」的奖励重新发放一次，成功后直接到账，状态改为「已发放（补发）」，不新增记录；到账推送落在免打扰时段内的，顺延到时段结束再发。</td></tr>
+<tr><td>放行 / 作废</td><td class="w">处理「暂停发放（风控）」的奖励：放行后升级、保级奖励立即到账，生日奖励回到待领取，从放行时起重新计算有效期（不补弹窗、不补短信）；作废要填原因，奖励不再发放。</td></tr>
+<tr><td>审核（到账短信）</td><td class="w">「强制审核」生效时处理待审核奖励，选通过或驳回并填谷歌验证码。通过：奖励到账，并按奖励类别发送对应的「审核通过到账」短信模板（模板在【公告管理 › 短信模板列表】维护）；驳回：不发放、不发短信，原因必填。审核入口和权限待 Q29（强制审核的审核入口放在现有【派奖审核】还是本需求另建审核列表）评估后确定：放在会员福利页签时需要本页签的「审核」按钮权限，放进【派奖审核】时沿用派奖审核的现有权限。</td></tr>
+<tr class="grp"><td colspan="2"><b>用户管理 › VIP特权 › VIP数据报表（后台VIP数据报表页面）</b></td></tr>
+<tr><td>当前 VIP 等级</td><td class="w">玩家当前享受的 VIP 等级，保级失败会下降；保级、生日奖励和权益都按它判断。</td></tr>
+<tr><td>历史最高 VIP 等级（含已关闭等级）</td><td class="w">玩家达到过的最高 VIP 等级，不会下降，用来判断升级奖励是否已经发过；因等级关闭被重新归级的玩家仍记原等级，显示如「VIP13（已关闭）」。</td></tr>
+<tr><td>累计充值 / 累计有效投注（数据页）</td><td class="w">玩家注册以来截至查询时的累计值，口径和【VIP特权】的同名门槛相同；VIP 体系关闭期间选「暂停累计」的不含关闭期间，选「重新开启时初始化」的从重新开启时算起。</td></tr>
+<tr><td>成长值（数据页）</td><td class="w">计算方式为「成长值」时显示：会员当前的成长值（历史累计），点数值可以查看成长值明细；退出 VIP 段的普通用户显示「—」。成长值按【VIP特权】的 VIP 成长值规则计算，前台不显示。</td></tr>
+<tr><td>本月有效投注</td><td class="w">本自然月（GMT+8）已结算注单的有效投注合计（只计 6 大类游戏），撤单扣回，用于保级考核。</td></tr>
+<tr><td>本月新增成长值</td><td class="w">计算方式为「成长值」时显示：本自然月 1 日 00:00（GMT+8）起到查询时新增的成长值，保级时拿它和当前等级的保级所需成长值比较。</td></tr>
+<tr><td>每月保级投注（含恢复目标）</td><td class="w">玩家当前等级的每月保级投注（计算方式为成长值时是保级所需成长值）；降级的玩家在下方小字显示「恢复目标 VIPx · 需 ₱x」（目标是当前等级之上的下一个开启等级），本月达到就次月恢复到这一级。</td></tr>
+<tr><td>本月保级进度（按计算方式）</td><td class="w">本月有效投注 ÷ 当前等级的每月保级投注（成长值方式为本月新增成长值 ÷ 保级所需成长值），向下取整，没达标的最多显示 99%。</td></tr>
+<tr><td>最近等级变动时间</td><td class="w">该会员最近一次等级变动的时间（GMT+8），包括升级、保级成功、降级、恢复、退出 VIP 段、存量初始化和重新归级。</td></tr>
+<tr><td>变动类型（含重新归级）</td><td class="w">升级（含完成 KYC 时定级、「KYC 限制」关闭时定级）、保级成功、降级、恢复（降级后达到恢复条件，次月回升）、退出 VIP 段（VIP1 保级失败）、存量初始化（第一次开启时按历史累计定级）、重新归级（等级关闭并复核通过后重新归入开启的等级）。不参与 VIP 体系期间没有变动记录。</td></tr>
+<tr><td>变动后等级</td><td class="w">这次变动后玩家的当前 VIP 等级。</td></tr>
+<tr><td>变动后最高等级</td><td class="w">这次变动后玩家的历史最高 VIP 等级（不会下降）。</td></tr>
+<tr><td>触发原因（含等级关闭）</td><td class="w">引起这次变动的原因：充值、结算投注、门槛重算、门槛重算（不发放差额）、月度结算、开关开启、存量初始化、完成 KYC、KYC 限制关闭、等级关闭（关闭某一级并复核通过后重新归级）。</td></tr>
+<tr><td>成长值（变动时）</td><td class="w">计算方式为「成长值」时显示：变动发生时该会员的成长值（历史累计）。</td></tr>
+<tr><td>当月有效投注（月度结算时）</td><td class="w">变动类型为保级成功、降级、恢复、退出 VIP 段时，显示被考核月份（GMT+8）的有效投注合计；其他类型显示「—」。</td></tr>
+<tr><td>当月新增成长值（月度结算时）</td><td class="w">计算方式为「成长值」时显示：变动类型为保级成功、降级、恢复、退出 VIP 段时，显示被考核月份（GMT+8）新增的成长值；其他类型显示「—」。</td></tr>
+<tr><td>成长值明细月份</td><td class="w">选「全部」显示历史累计：各分类成长值 + 充值成长值 − 降级扣减 = 当前成长值；选某个月显示该月（GMT+8，本月截至统计时）新增的成长值和降级扣减，有效投注按结算时间计入月份，撤单扣回。</td></tr>
+<tr><td>结算月份</td><td class="w">这次月度结算考核的自然月（GMT+8）。</td></tr>
+<tr><td>参与人数</td><td class="w">结算时当前等级为 VIP1 及以上的会员数（不参与 VIP 体系的不计），等于保级成功、降级、失败三项人数之和。</td></tr>
+<tr><td>保级成功人数</td><td class="w">达到当前等级每月保级投注的人数，等于保级奖励笔数。</td></tr>
+<tr><td>降级人数</td><td class="w">本次结算降级的人数，含 VIP1 保级失败、退出 VIP 段的人数。</td></tr>
+<tr><td>恢复人数</td><td class="w">这次结算中恢复的人数：降级玩家恢复到当前等级之上的下一个开启等级（同时计入保级成功人数），以及 VIP1 保级失败后的普通用户回到 VIP1（不计入参与人数和保级成功人数）。</td></tr>
+<tr><td>保级奖励总额</td><td class="w">该月结算生成的保级奖励中已到账的合计（₱）：只计已发放、已领取、已发放（补发），不含待领取、已过期、待审核、审核驳回、暂停发放、发放失败和不发放。</td></tr>
+<tr><td>VIP 奖励总额</td><td class="w">结算月份（该月 1 日 00:00:00 至月末 23:59:59，GMT+8）内实际到账的 VIP 升级、保级、生日奖励合计（₱），按到账时间归月：含补发、放行、审核通过后到账的；不含暂停发放、审核中、驳回、作废、不发放、待领取和已过期的。保级奖励按到账时间计入，与「保级奖励总额」（本次结算生成、次月 1 日到账）口径不同。</td></tr>
+<tr><td>奖励占有效投注比</td><td class="w">VIP 奖励总额 ÷ 本次结算参与会员（参与人数口径）该月有效投注合计 × 100%，保留 4 位小数；有效投注合计为 0 时显示「-」。用于看 VIP 奖励成本，对应原方案第二节「升级奖占比 / 保级奖占比」的成本口径。</td></tr>
+<tr><td>短信成功 / 失败</td><td class="w">该月保级奖励短信发送成功和失败的条数，失败的不自动重发；按账号状态不发短信的不计入。</td></tr>
+<tr><td>失败人数</td><td class="w">自动重试 3 次后仍结算失败、等待「重跑失败」的会员数。</td></tr>
+<tr><td>结算状态</td><td class="w">进行中、完成、部分失败（有会员自动重试 3 次后仍失败，可以点「重跑失败」）。</td></tr>
+<tr><td>重跑失败</td><td class="w">只对失败的会员重新结算，已成功的不会重复发奖或降级；没有失败的会员时不能点。</td></tr>
+<tr><td>考核等级</td><td class="w">这次结算考核时玩家的当前 VIP 等级（当月有升级的，按升级后的等级）。</td></tr>
+<tr><td>每月保级投注</td><td class="w">考核等级的每月保级投注：上月整月（GMT+8）的有效投注达到就保级并发保级奖励，没达到次月降 1 级；降级的玩家达到当前等级之上的下一个开启等级的保级投注，次月恢复到这一级。</td></tr>
+</table></div>
+
+<h2 id="c9">9. 数据埋点</h2>
+<h3 id="c9-1">9.1 分析目标</h3>
+<p>衡量 VIP 段的曝光和参与：等级中心浏览、等级卡切换、奖励详情查看、升级弹窗曝光和去领取、手动领取和生日奖励领取、KYC 引导转化。</p>
+<h3 id="c9-2">9.2 公共参数</h3>
+<div class="tbl"><table>
+<tr><th>参数</th><th>含义</th><th>取值说明</th></tr>
+<tr><td>user_id</td><td class="w">会员 ID</td><td class="w">平台会员 ID；未登录为空</td></tr>
+<tr><td>platform</td><td class="w">端</td><td class="w">H5 / iOS 原生 / iOS Flutter / 安卓 Flutter</td></tr>
+<tr><td>app_version</td><td class="w">App 版本号</td><td class="w">App 端填版本号；H5 为空</td></tr>
+<tr><td>current_level</td><td class="w">当前等级</td><td class="w">VIP 等级名称；普通用户为 "regular"</td></tr>
+<tr><td>highest_level</td><td class="w">历史最高等级</td><td class="w">VIP 等级名称，无则为空</td></tr>
+<tr><td>event_time</td><td class="w">事件时间</td><td class="w">GMT+8</td></tr>
+</table></div>
+<h3 id="c9-3">9.3 事件清单</h3>
+<div class="tbl"><table data-fit>
+<tr><th>事件名</th><th>触发时机</th><th>事件参数</th><th>端</th><th>功能点</th></tr>
+<tr data-fp="F06-01"><td>vip_center_view</td><td class="w">进入等级中心且展示 VIP 段</td><td class="w">—</td><td>全部 C 端</td><td><span class="fp">F06-01</span> 等级卡与进度</td></tr>
+<tr data-fp="F06-01"><td>vip_card_swipe</td><td class="w">切换等级卡</td><td class="w">target_level（切换后卡片的等级名称，如「VIP1」；普通用户卡为 "regular"）</td><td>全部 C 端</td><td><span class="fp">F06-01</span> 等级卡与进度</td></tr>
+<tr data-fp="F06-05"><td>vip_level_detail_view</td><td class="w">打开等级卡奖励详情弹窗</td><td class="w">level</td><td>全部 C 端</td><td><span class="fp">F06-05</span> 奖励详情弹窗</td></tr>
+<tr data-fp="F06-03"><td>vip_rules_view</td><td class="w">打开「?」VIP 规则弹窗</td><td class="w">level（当前选中卡片的等级名称，如「VIP14」；普通用户卡为 "regular"）</td><td>全部 C 端</td><td><span class="fp">F06-03</span> 规则说明</td></tr>
+<tr data-fp="F04-02 F06-06"><td>vip_bonus_claim_click</td><td class="w">点生日卡片、待领取卡片或详情弹窗的「领取」</td><td class="w">bonus_type（up / rv / bd）、level；跨多级合并时另带 levels</td><td>全部 C 端</td><td><span class="fp">F06-06</span> 手动领取与待领取卡片</td></tr>
+<tr data-fp="F06-04"><td>vip_upgrade_popup_show</td><td class="w">升级弹窗展示</td><td class="w">from_level、to_level、bonus、is_offline</td><td>全部 C 端</td><td><span class="fp">F06-04</span> 升级弹窗</td></tr>
+<tr data-fp="F06-04"><td>vip_upgrade_popup_claim_click</td><td class="w">升级弹窗「去领取」（手动领取时）</td><td class="w">bonus_type（up）、level</td><td>全部 C 端</td><td><span class="fp">F06-04</span> 升级弹窗</td></tr>
+<tr data-fp="F06-07"><td>vip_kyc_guide_click</td><td class="w">KYC 引导卡点「去完成 KYC」/「查看 KYC 进度」</td><td class="w">kyc_status</td><td>全部 C 端</td><td><span class="fp">F06-07</span> 个人中心与身份显示</td></tr>
+</table></div>
+<p class="tip">「全部 C 端」= H5、iOS 原生、iOS Flutter、安卓 Flutter。vip_kyc_guide_click、vip_rules_view 是否保留、游戏中延后弹出时 is_offline 的取值（建议新增 delay_reason：离线 / 游戏中）待定（Q33）。</p>
+<h3 id="c9-4">9.4 运营看板指标</h3>
+<div class="tbl"><table>
+<tr><th>指标</th><th>口径</th><th>阈值</th></tr>
+<tr data-fp="F08-01"><td>各等级人数分布</td><td class="w">按当前等级、历史最高等级统计人数（VIP会员数据）</td><td class="w">资料未覆盖</td></tr>
+<tr data-fp="F08-04"><td>月度保级率</td><td class="w">保级成功人数 ÷ 参与人数（月度结算记录）</td><td class="w">资料未覆盖</td></tr>
+<tr data-fp="F08-04"><td>恢复人数</td><td class="w">月度结算记录「恢复人数」</td><td class="w">资料未覆盖</td></tr>
+<tr data-fp="F08-03"><td>各类奖励发放金额</td><td class="w">会员福利记录新版已发放金额，按类型</td><td class="w">月度预算 70% / 100%（规则 N38）</td></tr>
+<tr data-fp="F06-06"><td>手动领取率、过期率</td><td class="w">已领取 ÷（已领取 + 已过期 + 待领取），按类型</td><td class="w">资料未覆盖</td></tr>
+</table></div>
+<h3 id="c9-5">9.5 实施要求</h3>
+<ul><li>沿用现有前端埋点上报方式；上报失败不影响页面功能。服务端埋点通道资料未覆盖。</li></ul>
+
+<h2 id="c10">10. 接口与异常</h2>
+<div class="tbl"><table data-fit>
+<tr><th>场景</th><th>处理方式</th><th>用户提示</th></tr>
+<tr data-fp="F02-02"><td>充值和结算消息并发到达</td><td class="w">按会员加锁串行；升级奖励唯一键防重复</td><td>—</td></tr>
+<tr data-fp="F02-03"><td>升级 / 保级奖励发放失败</td><td class="w">记「发放失败」，自动重试 3 次；仍失败由运营在会员福利记录「补发」</td><td>—</td></tr>
+<tr data-fp="F04-02 F06-06"><td>玩家领取（生日 / 手动领取）失败</td><td class="w">保留待领取，可重试；入账失败的记「发放失败」可补发</td><td>「领取失败，请重试。」</td></tr>
+<tr data-fp="F04-02 F06-06"><td>重复点击领取</td><td class="w">按钮点击后立即不可点；服务端按唯一键幂等</td><td>—</td></tr>
+<tr data-fp="F04-02 F06-06"><td>领取时已过期 / 已被另一端领取</td><td class="w">不发放，刷新为最新状态</td><td>按最新状态显示</td></tr>
+<tr data-fp="F03-04"><td>月度结算中断</td><td class="w">按「会员 + 月份」幂等重跑（N19）</td><td>—</td></tr>
+<tr data-fp="F07-01"><td>短信发送失败</td><td class="w">记入月度结算记录短信失败数，不自动重发；发奖与发短信不在同一事务（<a href="#m15">备忘 M15</a>）</td><td>—</td></tr>
+<tr data-fp="F01-04"><td>存量初始化失败或中断</td><td class="w">状态保持「初始化中」，按会员幂等续跑；全部完成前不做升级判定、不发奖</td><td>后台显示「初始化中」</td></tr>
+<tr data-fp="F01-04"><td>关闭体系时未选累计方式或奖励处理方式</td><td class="w">不能下一步 / 不能确认；服务端同样校验</td><td>「请选择累计方式」「请选择处理方式」</td></tr>
+<tr data-fp="F02-05"><td>待复核期间再次修改 VIP 等级配置</td><td class="w">不保存；服务端同样拦截</td><td>「有待复核的门槛修改，复核完成前不能修改 VIP 等级配置」</td></tr>
+<tr data-fp="F02-05"><td>提交人复核自己的修改</td><td class="w">不允许；服务端同样拦截</td><td>「不能复核自己提交的修改」</td></tr>
+<tr data-fp="F01-05"><td>再次开启等级时奖品库存不足</td><td class="w">保持关闭</td><td>「当前奖品库存不足，请调整库存或更换奖励」</td></tr>
+<tr data-fp="F01-03 F10-04"><td>保存 VIP 奖品 / Level 实体奖品时库存已变化</td><td class="w">以保存时刻库存重新校验，不满足整次失败；Level 实体奖品以实体「分配活动库存」返回为准</td><td>超过可分配余量的提示</td></tr>
+<tr data-fp="F01-06"><td>保存 VIP0 或修改 LEVEL n 使开启中的 VIP 等级不高于 VIP0</td><td class="w">VIP 体系从未开启过：保存，这些等级直接关闭并写日志；开启过：拦截，须先关闭（N61 复核）或提高门槛（N56 ②，Q36 已定）；服务端同样校验</td><td>弹窗列出受影响等级；开启过时提示先关闭或提高门槛</td></tr>
+<tr data-fp="F01-01 F01-06"><td>勾选沿用时从成长值切回累计金额，有开启中的等级不高于 VIP0</td><td class="w">拦截，不切换；运营先提高门槛或关闭这些等级（N58、N56 ②）；不勾选时不检查；服务端同样校验</td><td>「不能切换计算方式」弹窗逐条列出「{等级}：不符合标准，累计有效投注 {数值} 不高于 VIP0（沿用 LEVEL n）的 {数值}，请先提高门槛或关闭该等级」</td></tr>
+<tr data-fp="F01-06"><td>开启「不符合标准」的等级；把开启中的等级门槛改到不高于 VIP0</td><td class="w">拦截；服务端同样拦截</td><td>「{等级} 不符合标准：累计有效投注须高于 VIP0（沿用 LEVEL n）的 {数值}，不符合标准的等级只能保持关闭；请先「修改设定」提高门槛（仍须逐级严格递增），或到「VIP0 修改设定」更换沿用级别」</td></tr>
+<tr data-fp="F07-01 F07-02 F08-06"><td>VIP 奖励到账金额小于 ₱1</td><td class="w">不发到账短信；站内信即时生成，APP 推送照常发送、落在免打扰时段的顺延（N41、N68）</td><td>—</td></tr>
+<tr data-fp="F07-03"><td>免打扰顺延期间玩家状态变化</td><td class="w">实际发送时再判断，不满足的不发、不补发（N68）</td><td>—</td></tr>
+<tr data-fp="F06-01"><td>等级中心接口失败或超时（10 秒）</td><td class="w">显示重试</td><td>「加载失败，点击重试」</td></tr>
+<tr data-fp="F08-05"><td>账号状态命中暂停发放</td><td class="w">奖励记为「暂停发放（风控）」（N36、N48）</td><td>前台「待核验」</td></tr>
+<tr data-fp="F06-07"><td>老版本 App</td><td class="w">不显示 VIP 段，奖励照常按领取方式处理（第 4 章）</td><td>「请更新 App 查看 VIP 权益。」</td></tr>
+<tr data-fp="F01-01"><td>谷歌验证码为空或错误</td><td class="w">不保存，弹窗不关、内容保留</td><td>「请输入谷歌验证码」「谷歌验证码错误」</td></tr>
+<tr data-fp="F01-02 F02-02"><td>「KYC 限制」开启 → 关闭</td><td class="w">KYC 未通过的玩家从关闭时刻起参与 VIP 体系，按当前累计实时定级；关闭前已达到的等级记「不发放（KYC 限制关闭前已达到）」，以后不补发；生日奖励仍要求 KYC（N76 ①）</td><td>不弹升级弹窗</td></tr>
+<tr data-fp="F01-02 F02-02 F08-05"><td>「KYC 限制」关闭 → 开启</td><td class="w">KYC 未通过的玩家从开启时刻起不参与 VIP 体系，不再生成新奖励；已到账的不追回；待领取、待审核的改为「暂停发放（风控）」，完成 KYC 后由运营放行或作废（N76 ②、N36）</td><td>显示为普通用户和 KYC 引导卡</td></tr>
+<tr data-fp="F01-02"><td>切换「KYC 限制」时取消、关闭弹窗或谷歌验证码错误</td><td class="w">开关保持原状态，不写日志；验证码错误提示「谷歌验证码错误」，弹窗不关</td><td>—</td></tr>
+<tr data-fp="F06-07"><td>KYC 由审核中变为拒绝或补充信息</td><td class="w">仍未通过，不参与 VIP 体系；引导卡按钮由「查看 KYC 进度」改为「去完成 KYC」（N66 下表）</td><td>未完成文案</td></tr>
+<tr data-fp="F02-01 F03-01"><td>玩家投注 Perya、ESports 或未分类游戏</td><td class="w">不计入累计有效投注、当月有效投注、VIP 成长值和 VIP 奖励流水（N77）</td><td>—</td></tr>
+<tr data-fp="F01-02"><td>余额低于低额自动清稽核阈值时 VIP 奖励流水未完成</td><td class="w">VIP 奖励流水不被自动清除（N34 ④）；运营需要时手动清稽核（Q40）</td><td>—</td></tr>
+<tr data-fp="F08-01"><td>VIP 累计数据或 VIP 成长值有误</td><td class="w">本期没有人工调整入口，提技术工单修正（8.7）</td><td>—</td></tr>
+<tr data-fp="F08"><td>后台列表加载失败</td><td class="w">点击重试</td><td>「加载失败，点击重试」</td></tr>
+</table></div>
+
+<h2 id="c11">11. 验收标准</h2>
+<h3 id="c11-1">11.1 验收条目</h3>
+<ol>
+<li data-fp="F02-02"><span class="fp">F02-02</span> 累计金额方式：累计有效投注 ₱600,000、累计充值 ₱49,999 不升级；充值到 ₱50,000 立即升到 VIP1，升级奖励 ₱100 立即到账；累计充值 ₱50,000、累计有效投注 ₱599,999 不升级。</li>
+<li data-fp="F02-02"><span class="fp">F02-02</span> 降级玩家历史最高 VIP20、当前 VIP18，累计只达到 VIP19 的升级标准：不立即升级，按月度结算恢复；累计达到 VIP21 的升级标准：立即升到 VIP21，发 VIP21 升级奖励，不受每月最多恢复 1 级限制（C-02）。</li>
+<li data-fp="F02-03"><span class="fp">F02-03</span> 一次从 VIP3 达到 VIP6：VIP4、5、6 升级奖励各一条共 ₱700；等级变动记录一条 VIP3 → VIP6；弹窗只弹一次显示 ₱700。同一会员同一等级配置 ID 只有一条升级奖励记录。</li>
+<li data-fp="F06-06"><span class="fp">F06-06</span> 升级奖励改为手动领取后新升级的玩家：生成待领取卡片和小红点，领取后到账；超过有效期显示「已过期」、不再可领；修改前已到账的记录不变。跨级三笔合并一张卡片，点一次全部到账。</li>
+<li data-fp="F08-06"><span class="fp">F08-06</span> 强制审核生效：自动领取的升级奖励显示「审核中」，审核通过后到账并发对应的「审核通过到账」短信模板（附录 D）；驳回不发放、前台显示「审核未通过，如有疑问请联系客服」，后台可见驳回原因；审核弹窗只选审核结果、填驳回原因和谷歌验证码，不填短信内容（用户 2026-10-26）。</li>
+<li data-fp="F01-08"><span class="fp">F01-08</span> 注册天数生效 n = 7：注册第 3 天达到 VIP1 → 记「不发放（注册未满 7 天）」，满 7 天后不补发；第 8 天达到 VIP2 正常发放。</li>
+<li data-fp="F02-02 F06-07"><span class="fp">F02-02</span> 「KYC 限制」开启（默认），未完成 KYC 的玩家累计已达 VIP3：没有 VIP 等级，等级中心只显示 KYC 引导卡，不生成奖励、不收短信；完成 KYC 后定为 VIP3，VIP1–VIP3 记「不发放（KYC 前已达到）」、不弹窗，之后升到 VIP4 正常发 ₱180。</li>
+<li data-fp="F02-05"><span class="fp">F02-05</span> VIP2 门槛下调到玩家当前累计以下并保存：先弹影响预览；预计发放金额 &gt; 复核金额阈值时进入待复核，复核前不升级；提交人复核被拦截；另一人通过后玩家升到 VIP2 并发 ₱120。选「不发放差额 · A」时记「不发放（门槛调整）」；选「B」时累计从生效时刻重新累计。绕过前端直接调接口同样拦截。</li>
+<li data-fp="F01-01"><span class="fp">F01-01</span> 门槛校验：VIP5 累计有效投注等于 VIP4 不能保存；VIP5 累计充值等于 VIP4 可以保存；某级每月保级投注 ≥ 本级累计有效投注不能保存；升级标准为空时保级框置灰；已关闭的 VIP13 仍参与 VIP12 / VIP14 的递增比较；等级名称重复不能保存。</li>
+<li data-fp="F01-01"><span class="fp">F01-01</span> 计算方式：成长值门槛不齐全时切换被拦截并列出缺的等级；成长值规则未保存时成长值门槛置灰；切到成长值后玩家按成长值升级、保级，前台不出现成长值字样和数值，「?」VIP 规则弹窗不显示门槛；切回累计金额显示上次保存的门槛；先把 LEVEL 29 的有效投注累计值改为 1,200,000（演示值），勾选沿用 LEVEL 29、计算方式为成长值、VIP1（600,000）和 VIP2（1,000,000）开启中时，点「累计金额」被拦截并列出 VIP1、VIP2，提高门槛或关闭后才能切换；不勾选时不做此项检查。</li>
+<li data-fp="F01-05"><span class="fp">F01-05</span> 新增等级到 L6：原 VIP6–SUPER VIP 依次顺延，默认名称随之改为 VIP7…，SUPER VIP 名称不变；三张表在 L6 生成「未配置」行，未配置期间该级不发奖、返水 0；原在 VIP6 的玩家显示为 VIP7，不补发新 L6 升级奖励；旧升级记录显示「VIP7（原 VIP6）」。填「当前最高等级 + 1」时加在最高级之上、不顺延。</li>
+<li data-fp="F01-05"><span class="fp">F01-05</span> 关闭 VIP13：提交后显示「关闭待复核」、仍按开启运行；复核通过后，当前 = 历史最高 = VIP13 的玩家按历史累计归入 VIP12（不发奖），历史最高显示「VIP13（已关闭）」；降过级在 VIP13 的玩家上移到 VIP14（已领过 VIP14 升级奖励不再发）；VIP13 奖品剩余预占释放；变动记录「重新归级 · 等级关闭」。之后 VIP12 玩家的恢复目标为 VIP14。再次开启时库存不足保持关闭。</li>
+<li data-fp="F01-06"><span class="fp">F01-06</span> 勾选沿用 LEVEL 29：开启中的 VIP1 累计有效投注改为 ≤ LEVEL 29 的累计值时被拦截；【会员等级】不能添加 LEVEL 30，插入 LEVEL 10 后沿用级别变为 LEVEL 30；删除 LEVEL 29（被沿用）被拦截；VIP 玩家不再领 Level 奖励、只按 VIP 返水表返水。沿用 LEVEL 29 而现网配到 LEVEL 60 时，开启 VIP 体系后 LEVEL 30–60 被删除，这些玩家按 N46 重新判定。</li>
+<li data-fp="F01-06 F02-06"><span class="fp">F01-06</span> 不勾选沿用：不删除任何 LEVEL，不比较两边门槛，【会员等级】可在任意位置添加；玩家同时为 LEVEL 10 与 VIP2 时两边升级奖励都发（₱10 + ₱120 = ₱130），返水两边都领；前台个人中心显示「VIP 2」，等级中心有「普通会员 / VIP」两个 tab。</li>
+<li data-fp="F10-02"><span class="fp">F10-02</span> 前台显示方式 = 会员身份：普通会员玩家徽章「普通用户」，不弹 Level 升级弹窗；改为会员等级（填谷歌验证码）后显示「LEVEL 28」并按现有规则弹 Level 弹窗；VIP 玩家两种设置下都显示 VIP 等级。</li>
+<li data-fp="F10-01"><span class="fp">F10-01</span> 会员等级添加：输入「abc」被过滤；输入已有 LEVEL 5 时插在其前、原 LEVEL 5 及以上顺延，取消插入确认回到填写弹窗且内容保留；自定义名称「LEVEL 99」被拦截，填本级「LEVEL k」视为默认名称；名称与其他级别重复被拦截；只剩 LEVEL 1 时不能删除。</li>
+<li data-fp="F03-02"><span class="fp">F03-02</span> VIP20 当月有效投注刚好 ₱25,000,000：次月 1 日仍为 VIP20，保级奖励 ₱6,000 到账，免打扰时段内结算的保级短信 10:00 发送。月中刚升到 VIP14 的玩家按 VIP14 考核，达标照常发 VIP14 保级奖励。</li>
+<li data-fp="F03-03"><span class="fp">F03-03</span> VIP17 当月 ₱14,999,999：不发奖励不发短信，次月 VIP16，历史最高仍 VIP17；SUPER VIP 连续两月未达标依次降为 VIP24、VIP23；VIP1 未达标变为普通用户。</li>
+<li data-fp="F03-03"><span class="fp">F03-03</span> 降级玩家 VIP16（最高 VIP17）当月有效投注 ₱15,200,000：发 VIP16 保级奖励 ₱2,200，次月恢复 VIP17，计入保级成功和恢复人数；只达到 ₱12,000,000 时保持 VIP16 并发奖。VIP1 保级失败的普通用户当月 ₱118,000 → 次月回到 VIP1，不发保级奖励、不重发升级奖励，只计恢复人数。</li>
+<li data-fp="F03-04"><span class="fp">F03-04</span> 结算执行两次，奖励、降级、恢复只发生一次；月末 23:59:59（GMT+8）前结算的注单计入当月；参与人数 = 保级成功 + 降级 + 失败。</li>
+<li data-fp="F04-01"><span class="fp">F04-01</span> 生日前一天 KYC 已通过的 VIP14 玩家，生日当天生成 ₱488 待领取；当天才通过 KYC 的不生成、不补；同年第二次不生成；1 日生日、当天结算从 VIP14 降到 VIP13 的按 VIP13 生成 ₱288；前一天收到不写金额的提醒短信（N43）。</li>
+<li data-fp="F04-02"><span class="fp">F04-02</span> 10-13 生日、有效期 15 天：生日卡片或详情弹窗任一处领取后两处都变「已领取」；未领取时 10-28 全天显示「已过期」，10-29 00:00 起不显示生日卡片；当天 10:00 前已领取的不发当天短信。</li>
+<li data-fp="F08-05"><span class="fp">F08-05</span> 冻结账号升级 → 「暂停发放（风控）」，不计入已发放，无弹窗；放行后升级奖励到账、不补弹窗；生日奖励 3-10 放行（有效期 15 天）→ 回到待领取，截止 3-24 23:59:59。自我排除期间不发 VIP 短信；未绑定手机号奖励照常、不发短信。</li>
+<li data-fp="F01-04"><span class="fp">F01-04</span> 第一次开启：累计已达 VIP6 的存量玩家直接为 VIP6，VIP1–VIP6 记「不发放（存量初始化）」、不弹窗；之后达到 VIP7 正常发 ₱350；开启当月按整月考核、达标发保级奖励。旧版晋级礼金、生日礼金、每周红包、专属红包停止生成，【派奖审核】中已生成未审核的旧版每周红包照常审核。部署后「新版VIP特权状态」为关闭、「VIP 体系是否开启过」为否；第一次开启后标记为是，再次开启不重做存量初始化。</li>
+<li data-fp="F01-04"><span class="fp">F01-04</span> 关闭体系：累计方式和每类奖励都必选；生日奖励选「继续可领取」的关闭期间仍可在普通用户卡下方领取到原有效期，选「停止领取」的不显示、状态「停止领取（体系关闭）」、重新开启后不恢复；待审核选「停止领取」的移出审核列表；关闭期间不结算、不发 VIP 短信。再次开启需验证码，选「继续累计」的立即按累计判定升级。</li>
+<li data-fp="F07-03"><span class="fp">F07-03</span> 22:18 自动到账的升级奖励：站内信即时生成，APP 推送次日 10:00 发送；顺延期间账号被冻结的推送不发。保级奖励到账时只收到 1 条 VIP 短信，不收到营销中心「奖励金到账」短信。到账金额 ₱0.99 只收到 APP 推送、不收到短信；₱1.00 短信和推送都收到（N41 账变短信门槛）。</li>
+<li data-fp="F06-04"><span class="fp">F06-04</span> 玩家在第三方游戏中升级：不弹窗，回到大厅后弹出；离线时升级下次进入补弹；跨多级只弹一次。</li>
+<li data-fp="F06-01"><span class="fp">F06-01</span> 前台金额：₱9,999 显示完整，₱12,000 显示 ₱12K，差额 ₱2,640,000 显示 ₱2.64M，₱999,950 差额显示 ₱1M；进度 99.99% 进度条按 99% 显示，不显示百分比；只有当前最高开启等级为紫色卡面，新增 L26 后紫色移到 L26。</li>
+<li data-fp="F01-03"><span class="fp">F01-03</span> VIP奖品配置：可分配余量为 0 的奖品置灰；预占数量少于已领取或超过「已领取 + 可分配余量」不能保存；更换奖品只释放剩余预占。</li>
+<li data-fp="F01-09"><span class="fp">F01-09</span> 返水比例留空不能保存，填 0 该级不返水，显示为 0.00%；新增等级未补填前返水按 0、下注限额按平台默认。</li>
+<li data-fp="F08-03"><span class="fp">F08-03</span> 发放一笔 VIP 升级奖励后，资金报表和会员账变显示「VIP 奖励」；各活动的活动报表、活动费用报表不增加，平台报表「活动费用」和财务「活动总额」按到账金额增加（规则 N54，用户 2026-10-26）；月度结算记录该月「VIP 奖励总额」增加；会员福利记录新版已发放金额增加。「发放失败」补发后为「已发放（补发）」、到账时间蓝色「（补发）」、计入已发放。</li>
+<li data-fp="F01-02"><span class="fp">F01-02</span> 全局「彩金流水仅计 Slot」开启、VIP 流水范围为全部 6 大类时，玩家用 Casino 投注可以完成 VIP 奖励流水；改为只选 Slot 后新发的奖励只计 Slot，之前发的不变。</li>
+<li data-fp="F01-06"><span class="fp">F01-06</span> 先把 LEVEL 29 的有效投注累计值改为 ₱1,200,000（演示值），VIP 体系从未开启过、VIP0 沿用 LEVEL 29：LEVEL n 下拉没有置灰项；保存时提示 VIP1、VIP2 将不符合标准，保存后两级「已关闭 · 不符合标准」，前台不显示；点 VIP1「开启」被拦截；VIP2 累计有效投注改为 ₱1,300,000 后标记消失、仍为关闭，点「开启」后开启。VIP 体系开启过时，同样的保存或【会员等级】修改 LEVEL 29 为 ₱600,000 被拦截，提示先关闭这些等级（复核通过后重新归级）或提高门槛。</li>
+<li data-fp="F06-01 F06-02"><span class="fp">F06-01</span> 关闭 VIP13 复核通过后：前台刻度、等级卡、VIP 奖励表都不显示 VIP13，下一个未解锁等级和恢复目标跳过 VIP13；历史最高为 VIP13 的玩家仍显示「历史最高：VIP13」；「关闭待复核」期间前台照常显示。</li>
+<li data-fp="F04-02"><span class="fp">F04-02</span> 生日奖励改为自动领取：生日当天自动到账，会员福利记录状态「已发放」、审核人「系统」；强制审核生效时审核通过后为「已发放」。</li>
+<li data-fp="F08-01"><span class="fp">F08-01</span> 【用户管理 › 会员】列表：VIP 等级列显示玩家当前新 VIP 等级名称，按新 VIP 等级筛选结果正确，不再出现旧版 VIP0–VIP8；「用户等级」列和筛选仍为 LEVEL。</li>
+<li data-fp="F08-01"><span class="fp">F08-01</span> 成长值方式下降过级的玩家：成长值明细选「全部」时，各分类成长值 + 充值成长值 − 降级扣减 = 当前成长值。</li>
+<li data-fp="F08"><span class="fp">F08</span> 没有 VIP 线数据权限的账号查询和导出 VIP会员数据、等级变动记录、月度结算明细、会员福利记录：看不到 VIP 线会员。</li>
+<li data-fp="F08"><span class="fp">F08</span> 【用户管理 › VIP特权】顶部依次为 VIP特权、会员福利、VIP数据报表 3 个页签，面包屑随页签和子页签变化；「VIP数据报表」只显示有查看权限的二级页签，默认打开第一个有权限的（4 个都有权限时为 VIP会员数据），4 个二级页签都没有权限时不显示该页签（已定，用户 2026-10-22）。</li>
+<li data-fp="F08"><span class="fp">F08</span> 只有「月度结算记录」查看权限的账号用地址 #changes 直接打开「等级变动记录」：自动切到「月度结算记录」；三个顶部页签都没有查看权限的账号打开 #settle：显示平台现有的无权限提示；登录期间被取消查看权限：重新登录前接口被拒绝并提示「无权限访问」，重新登录后对应页签不再显示（检查报告 R3-11）。</li>
+<li data-fp="F08"><span class="fp">F08</span> 后台列表分页：改每页条数回到第 1 页；删除末页最后一条回到上一页；批量修改勾选在翻页后清空并提示；导出不受分页限制。</li>
+<li data-fp="F02-02 F06-07"><span class="fp">F02-02</span> 「KYC 限制」开启（默认）：KYC 审核中的玩家等级中心显示审核中文案和「查看 KYC 进度」；未认证、拒绝、补充信息的显示「去完成 KYC」；都没有 VIP 等级、不生成奖励。</li>
+<li data-fp="F01-02 F02-02 F06-07"><span class="fp">F01-02</span> 开启 → 关闭：点开关弹确认弹窗，填谷歌验证码确定后开关变为关闭，日志写「KYC 限制 开启 → 关闭」；KYC 未完成、累计已达 VIP14 的玩家立即定为 VIP14，VIP1–VIP14 记「不发放（KYC 限制关闭前已达到）」、不弹窗、以后不补发，等级中心不再显示 KYC 引导卡；之后升到 VIP15 正常发放升级奖励并弹窗。取消弹窗或验证码填错时开关保持开启、不写日志。</li>
+<li data-fp="F04-01 F02-02"><span class="fp">F04-01</span> 「KYC 限制」关闭期间：KYC 未完成的 VIP14 玩家升级、保级奖励照常；生日当天不生成生日奖励、不发生日提醒短信、不显示生日卡片；生日当天 00:00（GMT+8）前完成 KYC 的照常生成。</li>
+<li data-fp="F01-02 F02-02 F08-05"><span class="fp">F01-02</span> 关闭 → 开启：确认并填谷歌验证码后日志写「KYC 限制 关闭 → 开启」；KYC 未完成的 VIP14 玩家前台显示为普通用户和 KYC 引导卡，不再生成新奖励、不参加月结；已到账的升级奖励不追回；手动领取、未领取的升级奖励改为「暂停发放（风控）」；完成 KYC 后按历史累计重新定级，运营放行后该笔奖励回到「待领取」、有效期从放行当天重新计算，或由运营作废（填原因）。</li>
+<li data-fp="F01-03"><span class="fp">F01-03</span> VIP奖品全局项「是否需要 KYC」为「是」时，「KYC 限制」关闭也要求 KYC 已认证。</li>
+<li data-fp="F02-01 F03-01 F01-07 F01-02"><span class="fp">F02-01</span> 玩家投注 Perya ₱10,000：累计有效投注、当月有效投注和 VIP 成长值都不增加，也不计入 VIP 奖励流水；同额投注 Slot 全部计入。</li>
+<li data-fp="F01-02"><span class="fp">F01-02</span> 玩家领到 ₱100 VIP 升级奖励（1 倍流水）后余额降到低额自动清稽核阈值以下：VIP 奖励流水不被自动清除，仍须完成 ₱100 流水才能提现；运营手动清稽核后流水清除（实现方式以开发确认为准，Q40）。</li>
+<li data-fp="F07-03"><span class="fp">F07-03</span> 22:30 到账 ₱0.50 的 VIP 奖励：不发短信，站内信即时生成，APP 推送次日 10:00 发送。</li>
+<li data-fp="F08-01"><span class="fp">F08-01</span> VIP会员数据、成长值明细弹窗和成长值记录：没有调整 VIP 累计数据或 VIP 成长值的入口；成长值记录的「修改会员成长值」只改 Level 成长值。</li>
+<li data-fp="F06-01 F06-03"><span class="fp">F06-01</span> 埋点：切换到 VIP1 卡上报 vip_card_swipe，target_level 为「VIP1」；打开「?」规则弹窗上报 vip_rules_view，level 为当前选中卡片的等级名称。</li>
+</ol>
+<h3 id="c11-2">11.2 跨端验收矩阵</h3>
+<div class="tbl"><table data-fit>
+<tr><th>验收项</th><th>功能点</th><th>H5</th><th>iOS 原生</th><th>iOS Flutter</th><th>安卓 Flutter</th><th>后台</th></tr>
+<tr data-fp="F06-01 F06-02 F06-03 F06-05"><td class="w">等级中心 VIP 段、详情弹窗、奖励表、规则弹窗（第 4 章）</td><td><span class="fp">F06</span></td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>—</td></tr>
+<tr data-fp="F06-07"><td class="w">个人中心账号区、两个 tab（第 4、6 章）</td><td><span class="fp">F06-07</span></td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>—</td></tr>
+<tr data-fp="F06-04"><td class="w">升级弹窗、游戏中延后、补弹</td><td><span class="fp">F06-04</span></td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>—</td></tr>
+<tr data-fp="F04-02 F06-06"><td class="w">生日卡片、待领取卡片、领取与审核状态</td><td><span class="fp">F04-02</span> <span class="fp">F06-06</span></td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td></tr>
+<tr data-fp="F02-01 F02-02 F02-03 F02-05 F02-06 F01-05"><td class="w">升级、KYC 定级、重算、新增与关闭等级</td><td><span class="fp">F02</span> <span class="fp">F01-05</span></td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td></tr>
+<tr data-fp="F03-01 F03-02 F03-03 F03-04"><td class="w">月度结算、降级与恢复</td><td><span class="fp">F03</span></td><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td></tr>
+<tr data-fp="F07-01 F07-02 F07-03"><td class="w">短信、站内信、推送、免打扰</td><td><span class="fp">F07</span></td><td>—</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td></tr>
+<tr data-fp="F01-01 F01-02 F01-03 F01-04 F01-05 F01-06 F01-07 F01-08 F01-09 F10-01 F10-02 F10-03 F10-04 F10-05"><td class="w">VIP特权四个子页签、会员等级配置</td><td><span class="fp">F01</span> <span class="fp">F10</span></td><td>—</td><td>—</td><td>—</td><td>—</td><td>✓</td></tr>
+<tr data-fp="F08-01 F08-02 F08-03 F08-04 F08-05 F08-06"><td class="w">数据、记录、补发、放行作废、审核</td><td><span class="fp">F08</span></td><td>—</td><td>—</td><td>—</td><td>—</td><td>✓</td></tr>
+<tr data-fp="F06-07"><td class="w">老版本 App：VIP 玩家显示 VIP 等级、不弹窗、奖励照常</td><td><span class="fp">F06-07</span></td><td>—</td><td>✓</td><td>✓</td><td>✓</td><td>—</td></tr>
+</table></div>
+
+<h2 id="c12">12. 上线方式</h2>
+<ul>
+<li>依赖：实体奖品管理 v1.1 提供 VIP / Level 作为预占活动库存来源的能力后，VIP奖品配置和 Level 实体奖品表才能保存（Q32）；实体奖品管理 v1.0 先于本需求上线。</li>
+<li>部署前：后端确认生产环境系统参数「新版VIP特权状态」的现值和它现在控制的功能（QA 环境现值为 1，Q37）；上线脚本把它置为关闭，并新建「VIP 体系是否开启过」标记（初值为「否」），第一次开启按这个标记判断，不按参数值判断（3.2.1）。旧版 VIP0–VIP8 的等级和成长值数据只读保留，不参与新 VIP 判定（规则 N71）。</li>
+<li>上线配置（用户 2026-10-21 定：上线即按本需求新规则执行，不沿用、不迁移旧版 VIP0–VIP8 的返水和限额）：上线前运营在后台配置 ① VIP 等级与门槛（【VIP特权 › VIP等级配置】）；② VIP 奖励与 VIP 奖品（【VIP奖励配置】）；③ VIP 下注限额与返水（【VIP特权 › 下注限额与返水】）；④ 按新 VIP 数据调整 Level 表的下注限额与返水初始值（【会员等级 › 会员等级配置】，含 LEVEL 0）；⑤ VIP全局参数和短信模板。配置完成前不开启 VIP 体系。</li>
+<li>权限授权（检查报告 R3-03）：上线前管理员在【权限管理】给运营、客服、财务等角色授予「VIP数据报表」3 个新二级页签（VIP会员数据、等级变动记录、月度结算记录）的查看权限和 8.1 列出的各按钮权限码；后端确认「成长值记录」「会员福利记录」原有权限在菜单调整后（成长值记录移入 VIP数据报表，会员福利记录改为「会员福利」页签）对原角色继续生效。现有权限体系是否支持页签和二级页签的查看权限，待 Q41（页签级查看权限是否支持及替代方案）确认。授权完成前不开启 VIP 体系。</li>
+<li>「VIP 体系状态」部署后为关闭；建议某月 1 日 00:00（GMT+8）第一次开启。</li>
+<li>开启前：备份【会员等级】和旧版 VIP特权现行配置；VIP0 勾选沿用且 LEVEL n 不是最高级时，运营在【会员等级】导出 LEVEL n+1 至最高级的全部配置（含生日礼包、升级奖励、实体奖品配置，如现网 LEVEL 55 / LEVEL 60 的实体奖品）并存档，存档完成后才能第一次开启（删除不可恢复）；核对「前台显示方式」；决定 VIP0 是否沿用和沿用的 LEVEL n（LEVEL n 默认当前最高级；累计有效投注不高于 LEVEL n 的 VIP 等级为「不符合标准」并关闭，需要开启的，改选更低的 LEVEL n 或提高这些等级的门槛；第一次开启后再出现不符合标准的开启中等级时，须先走关闭复核，所以应在第一次开启前定好；开启时系统删除 LEVEL n 之后的级别，不需要运营手工删除）；核对计算方式、25 级门槛、奖励、VIP 奖品、全局参数（含 KYC 限制，默认开启）、领取方式、短信模板、免打扰时段、返水；导出「存量初始化预览」抽查 20 个玩家。</li>
+<li>第一次开启：系统按 VIP0 设置删除级别、做存量初始化（规则 N46）；完成后核对等级变动记录中的「存量初始化」记录、会员福利记录中的「不发放（存量初始化）」。</li>
+<li>同步支付层级 Tier VIP（与「用户提款风控规则升级」需求的上线顺序依赖见<a href="#c13">第 13 章</a>风险表）：第一次开启、存量初始化完成后，按存量初始化后的当前 VIP 等级重新同步一次 Tier VIP 名单——当前 VIP 等级 ≥ VIP1 的会员在 Tier VIP，原 Level ≥ 30 但未达 VIP1 的移出；之后等级变动时同步支付层级，降为普通用户的移出、回到 Default layer，具体实现方式由后端评估。</li>
+<li>上线后核对：抽查 20 个玩家的累计数据与等级；首个 1 日结算后核对月度结算记录、会员福利记录与资金明细；确认旧版 VIP活动的晋级礼金、生日礼金、每周红包、专属红包已停止生成；抽查 20 个玩家的返水比例和下注限额，与运营在后台的配置一致；用无权限、部分权限的账号各登录一次，核对三个顶部页签和「VIP数据报表」4 个二级页签的显示与默认页签（8.1，检查报告 R3-03）。</li>
+<li>回滚：关闭「VIP 体系状态」（选累计方式和奖励处理方式，规则 N47、N67）；已发奖励不回收；已删除的普通会员级别不恢复；旧版 VIP活动不恢复。</li>
+</ul>
+
+<h2 id="c13">13. 风险与依赖</h2>
+<div class="tbl"><table data-fit>
+<tr><th>风险或依赖</th><th>等级</th><th>应对</th></tr>
+<tr><td class="w">VIP0 勾选沿用时 LEVEL n 选错，开启时删除的普通会员级别（含生日礼包、实体奖品配置）不能恢复</td><td>高</td><td class="w">开启前导出 LEVEL n+1 至最高级的配置备份（第 12 章）；开启确认弹窗列出将删除的级别并提示确认已备份；开启前导出预览抽查；默认 LEVEL n 为最高级（不删除）</td></tr>
+<tr><td class="w">生产环境「新版VIP特权状态」现值如为 1，部署后会被当作已开启，跳过存量初始化、停发旧版福利，老玩家逐级补发升级奖励；直接改为 0 又可能关掉它现在控制的线上功能</td><td>高</td><td class="w">部署前由后端确认现值和控制的功能（Q37）；上线脚本置为关闭，另建「是否开启过」标记判断第一次开启（第 12 章）</td></tr>
+<tr><td class="w">在途需求 BB2025789-6954「789bingo 返水与充返转盘抽奖活动」（P0，预期 11-13 上线）同改返水口径，可能与 VIP 返水冲突或重复发放</td><td>中</td><td class="w">排期前与该需求对齐返水口径和优先级（<a href="#m21">备忘 M21</a>）</td></tr>
+<tr><td class="w">删除 LEVEL n 之后的级别后，原 LEVEL 30 及以上、现在不是 VIP 的玩家失去 VIP 群和 VIP 客服（现行 L30 及以上开放，备忘 M18），可能引发客诉</td><td>高</td><td class="w">按 Claire 原方案：开启后 VIP 群、VIP 客服按当前 VIP 等级开放、不设过渡（规则 N46）；运营开启前按 VIP 等级准备名单，客服按客服 QA 第 25 条回复</td></tr>
+<tr><td class="w">VIP0 默认沿用当前最高级（如 UAT 的 LEVEL 60）时，低端 VIP 等级不高于 VIP0 被关闭，玩家直接从更高的 VIP 等级起步</td><td>高</td><td class="w">保存 VIP0 时列出受影响等级；开启前按第 12 章核对沿用级别和不符合标准的等级</td></tr>
+<tr><td class="w">依赖实体奖品管理 v1.1（预占来源、分配 / 释放活动库存、已领取件数回传）</td><td>高</td><td class="w">Q32；未就绪时 VIP 奖品配置不开放</td></tr>
+<tr><td class="w">门槛误操作、新增或关闭等级导致大额升级奖励发放或大量玩家归级</td><td>高</td><td class="w">影响预览、复核金额阈值、关闭一律复核、不发放差额奖励（N9、N45、N61）</td></tr>
+<tr><td class="w">原方案存投比随等级放宽，对冲刷流水易冲到高等级</td><td>高</td><td class="w">强制审核可开启；风控暂停（N36、N48）；上线后监控高等级存投比</td></tr>
+<tr><td class="w">不勾选沿用时 Level 与 VIP 奖励、返水叠加，成本上升</td><td>中</td><td class="w">运营按两套配置分别核算预算；VIP 月度预算告警（N38）</td></tr>
+<tr><td class="w">每月 1 日集中结算；免打扰时段结束时集中发送短信和推送</td><td>中</td><td class="w">分批、幂等、可重跑（N19）；发送限流由开发评估</td></tr>
+<tr><td class="w">存量玩家迁移、KYC 前等级不补发引发客诉</td><td>中</td><td class="w">规则说明最后一条引导联系客服；客服 QA 话术</td></tr>
+<tr><td class="w">有效投注数据缺口导致该升不升、该保被降</td><td>中</td><td class="w"><a href="#m07">备忘 M07</a></td></tr>
+<tr><td class="w">与「用户提款风控规则升级」需求的 Tier VIP 迁移有上线顺序依赖：该需求把「VIP 等级 ≥ 30 级」的玩家批量调到支付层级 Tier VIP；本需求第一次开启 VIP 体系时删除 沿用的 LEVEL n 之后的普通会员级别（N56），之后按 Level ≥ 30 已查不到玩家，迁移名单可能为空或口径错，高价值玩家的提款风控豁免失效</td><td>中</td><td class="w">两个需求分开做，依赖由本需求处理（用户 2026-10-26）。提款风控需求上线时按「VIP 等级 ≥ 30」做存量迁移，不管本需求何时开启。本需求开启后 Tier VIP 名单口径（用户 2026-10-26 定，依据原文九：Current VIP Level「用于保级要求、保级奖励、VIP客服、快速提款、专属活动及其他VIP权益」）：当前 VIP 等级 ≥ VIP1 的会员在 Tier VIP；降为普通用户后移出，回到 Default layer。第一次开启 VIP 体系时，按存量初始化后的当前 VIP 等级重新同步一次 Tier VIP 名单（原 Level ≥ 30 但未达 VIP1 的移出）；之后等级变动时同步支付层级，具体实现方式由后端评估</td></tr>
+</table></div>
+<h3 id="c13-1">13.1 本期不处理的问题（备注）</h3>
+<div class="tbl"><table>
+<tr><th>编号</th><th>问题</th><th>不处理的影响</th></tr>
+<tr><td>备注 1</td><td class="w">实物采购价、奖品税由谁承担、Lexus NX350h 上牌和保险、是否需向 PAGCOR 报备（实物发放在实体奖品管理需求）</td><td class="w">预算无法确定；可能引发客诉或合规风险。<span class="warn-2">※ 第一位玩家领取 VIP14 奖品之前必须有结论</span></td></tr>
+</table></div>
+
+<h2 id="c14">14. 待确认事项</h2>
+<div class="tbl"><table data-fit>
+<tr><th>编号</th><th>事项</th><th>负责人</th><th>状态</th></tr>
+<tr id="q7" data-brief="待确认：结算切点和定时任务按 GMT+8 执行的技术实现"><td>Q7</td><td class="w">结算切点和定时任务按 GMT+8 执行的技术实现</td><td>后端</td><td>待确认</td></tr>
+<tr id="q17" data-brief="待确认：撤单使累计低于已达门槛时，等级和已发奖励是否回退（本版不回退）"><td>Q17</td><td class="w">撤单使累计低于已达门槛时，等级和已发奖励是否回退（本版不回退）</td><td>产品、风控</td><td>待确认</td></tr>
+<tr id="q19" data-brief="待确认：VIP 配置、数据和结算任务按站点隔离的实现方式"><td>Q19</td><td class="w">VIP 配置、数据和结算任务按站点隔离的实现方式</td><td>后端</td><td>待确认</td></tr>
+<tr id="q21" data-brief="部分已定：VIP 奖励按实际到账金额计入平台活动费用和营销费用、不计入各活动统计；是否计入代理 NGR 由财务确认"><td>Q21</td><td class="w">VIP 奖励是否计入代理 NGR（已定：按实际到账金额计入平台报表「活动费用」、财务数据「活动总额」和平台营销费用，不计入各活动的活动统计、活动报表、活动费用报表，规则 N54，用户 2026-10-26）</td><td>财务</td><td>部分已定</td></tr>
+<tr id="q23" data-brief="待确认：复核金额阈值的默认值（页面写「以后台配置为准」）"><td>Q23</td><td class="w">复核金额阈值的默认值（页面写「以后台配置为准」）</td><td>运营</td><td>待确认</td></tr>
+<tr id="q28" data-brief="待确认：VIP奖品全局项「手动领取时间（天）」的天数（页面可留空）"><td>Q28</td><td class="w">VIP奖品全局项「手动领取时间（天）」的天数（页面可留空，以后台配置为准）</td><td>运营</td><td>待确认</td></tr>
+<tr id="q29" data-brief="开发评估：强制审核用现有【派奖审核】增加 VIP 福利类别，还是由本需求另建审核列表"><td>Q29</td><td class="w">强制审核的审核入口：现有【派奖审核】增加 VIP 福利类别并在审核通过到账时发送对应的短信模板（附录 D），或由本需求另建审核列表</td><td>开发</td><td>开发评估</td></tr>
+<tr id="q30" data-brief="开发评估：VIP / Level 下注限额与返水表怎样对接【游戏管理 › 返水设定】；正式数值由运营出方案"><td>Q30</td><td class="w">VIP / Level 下注限额与返水表与【游戏管理 › 返水设定】的对接方式；正式数值由运营出方案</td><td>开发、运营</td><td>开发评估</td></tr>
+<tr id="q31" data-brief="待确认：现网场馆成长值倍数任务按哪个时区执行；确认前帮助和手册写「时区以研发确认为准」"><td>Q31</td><td class="w">现网场馆成长值倍数任务按哪个时区执行（管理后台知识库记 03:50 UTC−4；主版知识库记用户管理已改为 UTC+8）；确认前帮助和手册写「次日 03:50 生效（时区以研发确认为准）」</td><td>研发</td><td>待确认</td></tr>
+<tr id="q37" data-brief="待确认：生产环境系统参数「新版VIP特权状态」的现值和它现在控制的功能，上线脚本置为关闭前须确认"><td>Q37</td><td class="w">生产环境系统参数「新版VIP特权状态」（vipVersionStatus）的现值和现在控制的功能（QA 环境现值为 1）；上线脚本按第 12 章置为关闭前须确认，避免关掉现有线上功能</td><td>后端</td><td>待确认</td></tr>
+<tr id="q38" data-brief="待确认：旧版等级合并后，活动、实时返水、公告、聊天室等引用的旧 VIP 等级 ID 怎样映射到新 VIP 等级"><td>Q38</td><td class="w">旧版等级表合并后，已配置活动引用的旧 VIP 等级 ID（activeMemberLevel）和实时返水适用层级（regular 至 VIP10，BB2025789-1414）怎样映射：保留旧 ID / 迁移到新 VIP 等级（<a href="#m05">备忘 M05</a>）；另有三处按旧等级定向的功能一并确认：公告配置按「用户等级」定向、聊天室发图权限的 VIP 门槛、消费类活动「可参与的会员层级」（VIP6–VIP10）。映射原则按原文九：VIP 客服、快速提款、专属活动等 VIP 权益按当前 VIP 等级判断，迁移后统一取当前 VIP 等级，后端只确认旧 ID 与新等级的对应方式</td><td>后端</td><td>待确认</td></tr>
+<tr class="wd"><td>Q39</td><td class="w">已关闭（用户 2026-10-26）：KYC 改为「KYC 限制」开关，不区分认证层级；切换后的生效口径按 N76 ①（开启 → 关闭：按当前累计实时定级，关闭前已达到的等级不发放）、②（关闭 → 开启：不再参与，未到账的暂停发放，已到账的不追回）执行</td><td>产品、后端</td><td>已关闭</td></tr>
+<tr id="q40" data-brief="待确认：能否把 VIP 奖励流水排除出低额自动清稽核，以及后台手动清稽核能否作用于 VIP 奖励流水"><td>Q40</td><td class="w">VIP 奖励流水不适用低额自动清稽核（R7），运营可手动清稽核（N34 ④）：请开发确认能否把 VIP 奖励流水从自动清除中排除，以及后台手动清稽核能否作用于 VIP 奖励流水（<a href="#m22">备忘 M22</a>）</td><td>开发</td><td>待确认</td></tr>
+<tr id="q41" data-brief="待确认：现有权限体系是否支持页签和二级页签的查看权限，不支持时用什么替代方案"><td>Q41</td><td class="w">现有权限体系（角色 → 权限组 → 菜单 / 按钮权限，管理后台知识库 4.13.1）是否支持页签和二级页签的查看权限（8.1：「VIP数据报表」3 个新二级页签各一个查看权限）；不支持时的替代方案（如把二级页签的查询接口作为按钮权限控制）（检查报告 R3-03）</td><td>后端</td><td>待确认</td></tr>
+<tr id="q42" data-brief="待确认：复用的「奖励到账后」推送模板变量能否带出 VIP 奖励类别和金额，不能时按模板通用文案发送"><td>Q42</td><td class="w">VIP 奖励到账 APP 推送复用现有「奖励到账后」推送模板（规则 N55「VIP 奖励到账通知」，用户 2026-10-26）：该模板的变量能否带出 VIP 奖励类别（升级 / 保级 / 生日）和金额；不能时按模板现有通用文案发送</td><td>后端</td><td>待确认</td></tr>
+<tr id="q32" data-brief="对齐中：与实体奖品管理对齐预占活动库存来源、分配和释放接口、可分配余量查询、已领取件数回传等能力"><td>Q32</td><td class="w">与实体奖品管理对齐：VIP、Level 作为预占活动库存来源；分配 / 释放活动库存接口（保存时以返回为准）；可分配余量查询；各等级已领取件数回传；剩余预占为 0 不可领；关闭等级 / 关闭体系时审核中实物的扣减方式；前台实物图片规格</td><td>产品、实体奖品管理</td><td>对齐中</td></tr>
+<tr id="q33" data-brief="待确认：埋点 vip_kyc_guide_click、vip_rules_view 是否保留，以及游戏中延后弹出时 is_offline 的取值"><td>Q33</td><td class="w">埋点：vip_kyc_guide_click、vip_rules_view（打开 VIP 规则弹窗，参数 level）是否保留；游戏中延后弹出时 is_offline 取值（建议新增 delay_reason）</td><td>产品、数据</td><td>待确认</td></tr>
+<tr id="q34" data-brief="待确认：会员福利记录中旧版记录的账变类型和流水倍数怎样显示"><td>Q34</td><td class="w">会员福利记录中旧版记录的账变类型、流水倍数显示方式（原型：「活动金额（旧版）」「—」）</td><td>产品</td><td>待确认</td></tr>
+<tr id="q35" data-brief="待确认：现有系统修改 Level 门槛后是否重算存量玩家的 Level"><td>Q35</td><td class="w">现有系统修改 Level 门槛后是否重算存量玩家 Level（本版沿用现有平台规则，资料未覆盖）</td><td>后端</td><td>待确认</td></tr>
+<tr class="wd"><td>Q1–Q6、Q8–Q16、Q18、Q20、Q22、Q24–Q27、Q36</td><td class="w">已关闭：Q1 回升规则（C-02，N4）；Q2 Level 30 及以上（N56、N57）；Q3 存量过渡（C-01，N46）；Q4 月中升级考核（C-04，N15）；Q5 跨级逐级（C-05）；Q6 生日金额和有效期（C-06，N23、N26）；Q8 VIP1 保级失败（C-07，N16）；Q9 【会员】列表 VIP 等级改取新 VIP 等级（3.3 冲突 06、8.7）；Q10 四项权益（C-08 不做）；Q11 累计充值（C-09）；Q12 不乘倍数（K03）；Q13 短信 PHP（C-15）；Q14 实物（移至实体奖品管理）；Q15 KYC（C-11，N66）；Q16 关闭等级跳过（N61）；Q18 生日领取（K02）；Q20 已撤回；Q22 实物分步上线（不适用）；Q24 冲突决定（3.3）；Q25 奖品图片（实体奖品管理）；Q26 库存汇总（实体奖品管理）；Q27 前台不显示已关闭等级（N61）；Q36 VIP 体系开启过时保存 VIP0 或修改 LEVEL n 使开启中的等级不符合标准 → 拦截保存，须先关闭或提高门槛（N56 ②）</td><td>—</td><td>已关闭</td></tr>
+</table></div>
+
+<h3 id="c14-1">14.1 未定文案清单</h3>
+<div class="tbl"><table data-fit>
+<tr><th>文案位置</th><th>示意文案</th><th>负责人</th><th>状态</th></tr>
+<tr><td>前台全部英文（附录 C 中标「（示意）」的条目）</td><td class="w">见附录 C。本次打包带示意英文：发布站点和开发参考的标「（示意）」的英文均未定稿，上线前由运营定稿，开发按定稿英文实现</td><td>运营</td><td>上线前定稿</td></tr>
+<tr><td>等级中心「?」VIP 规则全文（含成长值版本、手动领取版本）</td><td class="w">按第 3 章撰写，金额引用奖励表</td><td>运营</td><td>待定稿</td></tr>
+<tr><td>升级弹窗标题、到账说明、手动领取说明</td><td class="w">「恭喜你！」；「已到账」；「可领取，请在 m 月 d 日 23:59（GMT+8）前领取」；「审核中，审核通过后到账」</td><td>运营</td><td>待定稿</td></tr>
+<tr><td>VIP 短信模板（规则 N41、N43、N64）</td><td class="w">见附录 D「短信模板」（模板名称、场景、变量、中英文内容和状态）</td><td>运营</td><td>附录 D 中标「待运营定稿」的待定稿</td></tr>
+<tr><td>后台弹出提示</td><td class="w">以原型为准</td><td>运营</td><td>待定稿</td></tr>
+</table></div>
+
+<h2 id="c15">15. 各角色协作 Tips</h2>
+<div class="roles-cards">
+  <div class="rc" style="--c:#C89A3C"><h4>设计</h4><ul><li>先出文案表（14.1、附录 C）。</li><li>普通用户卡蓝色、VIP 卡香槟金、当前最高开启等级皇室紫；图标（已到账对勾、灰锁、沙漏、进行中、日历金勾、待核验）正式出图。</li><li>金额按规则 N73，前台不出现百分比和成长值。</li></ul></div>
+  <div class="rc" style="--c:#6A2BB8"><h4>前端</h4><ul><li>金额、门槛、状态、计算方式、领取方式都取接口；奖励表固定 4 列，「?」弹窗的门槛行随计算方式显示或隐藏。</li><li>「领取」「去领取」防重复点击；只有中间卡的「查看详情」可点。</li><li>第三方游戏中不弹升级弹窗，回到原生页面再弹。</li><li>按 H5、iOS 原生、iOS Flutter、安卓 Flutter 分别验收。</li></ul></div>
+  <div class="rc" style="--c:#1560A8"><h4>后端</h4><ul><li>开发前先读<a href="#memo">开发技术备忘参考</a>。</li><li>唯一键：升级「会员 + 等级配置 ID」、保级「会员 + 月份」、生日「会员 + 年」；不发放的记录同样占用唯一键。</li><li>VIP 累计、VIP 成长值和 Level 成长值分开存；两种计算方式的门槛各存一套。</li><li>短信、推送走免打扰顺延队列，发送时再判断条件；发奖与短信分事务。</li></ul></div>
+  <div class="rc" style="--c:#1B7A4C"><h4>测试</h4><ul><li>门槛刚好等于、严格递增、跨多级、月末前后、结算重复执行、预览和复核、不发放差额 A / B。</li><li>VIP0 勾选 / 不勾选两套口径；新增、关闭等级与归级；手动领取、强制审核、注册天数。</li><li>免打扰时段边界 21:00:00 / 09:59:59。</li></ul></div>
+  <div class="rc" style="--c:#B5601A"><h4>运营</h4><ul><li>开启前按第 12 章核对；特别确认 VIP0 是否沿用和 LEVEL n。</li><li>每月 1 日上午看「VIP数据报表 › 月度结算记录」；待审核奖励及时审核。</li><li>关闭体系前想好每类未领取奖励的处理。</li></ul></div>
+  <div class="rc" style="--c:#8A1020"><h4>客服</h4><ul><li>先在「VIP数据报表 › VIP会员数据」看当前等级、历史最高等级和恢复目标。</li><li>存量初始化、KYC 前达到的等级不补发；审核驳回原因在「会员福利」页签的会员福利记录查看。口径见客服 QA。</li></ul></div>
+</div>
+
+<h2 id="appA">附录 A 评审清单核对</h2>
+<p>表一：知识库「通用需求评审清单」12 项。</p>
+<div class="tbl"><table>
+<tr><th>项</th><th>结论</th><th>位置</th></tr>
+<tr><td>1. 合规</td><td class="w">未完成 KYC 不参与（「KYC 限制」开启时）；生日 KYC；自我排除不发奖不发短信；实物报备为备注 1</td><td>N24、N48、N66；13.1</td></tr>
+<tr><td>2. 资金</td><td class="w">唯一键；流水；风控暂停、补发、放行、作废；强制审核；预算告警；影响预览和复核；存量初始化和 KYC 前不补发</td><td>N5、N9、N14、N25、N34–N38、N45、N46、N64、N66；8.6</td></tr>
+<tr><td>3. 口径</td><td class="w">GMT+8；累计充值、累计有效投注、VIP 成长值；前台金额取整；关闭期间累计方式</td><td>3.2.1；N47、N73</td></tr>
+<tr><td>4. 防刷与风控</td><td class="w">账号状态处理；强制审核；注册天数</td><td>N36、N48、N64、N65</td></tr>
+<tr><td>5. 多端范围</td><td class="w">四个 C 端、后台；老版本 App</td><td>第 1、4 章；11.2</td></tr>
+<tr><td>6. 后台配套</td><td class="w">开关、权限、日志、导出、分页、生效时间、复核、帮助提示</td><td>第 8 章</td></tr>
+<tr><td>7. 系统约束</td><td class="w">复用会员等级、VIP特权、短信模板、消息推送、有效投注统计、预算告警、实体奖品库存；VIP 与活动并行</td><td>3.3；3.4</td></tr>
+<tr><td>8. 性能</td><td class="w">按会员加锁；结算分批、幂等、可重跑；门槛重算；存量初始化续跑；免打扰集中发送限流</td><td>N3、N9、N19、N46、N68</td></tr>
+<tr><td>9. 安全</td><td class="w">按钮级权限码；三个页签和 VIP数据报表 4 个二级页签的查看权限（8.1，上线授权见第 12 章）；谷歌验证码；复核不能自审</td><td>8.1；N9、N61</td></tr>
+<tr><td>10. 上线方式</td><td class="w">开关、预览、初始化、核对、回滚</td><td>第 12 章</td></tr>
+<tr><td>11. 验收</td><td class="w">边界、跨级、月末、重复执行、风控、短信、初始化、两套口径</td><td>第 11 章</td></tr>
+<tr><td>12. 工单规范</td><td class="w">资料未覆盖（尚未建 Jira 工单）；拆单方式见备忘 M09</td><td>—</td></tr>
+</table></div>
+<p>表二：8 类异常边界（生成内容规范第五章第 0 节）。</p>
+<div class="tbl"><table>
+<tr><th>类别</th><th>本需求处理位置</th></tr>
+<tr><td>边界值</td><td class="w">门槛等于和差 ₱1；严格递增与累计充值可相等；保级 &lt; 升级；有效期 1–30 天；流水 0–50；返水 0–100 两位小数；等级名称 ≤ 20 字符（N62、N71、N75、8.4）</td></tr>
+<tr><td>时间</td><td class="w">月末切点（N17）；1 日生日（N23、N43）；2 月 29 日（N25、N43）；有效期含生成当天（N26、N63）；免打扰跨天（N68）；配置生效时间（N62）</td></tr>
+<tr><td>异常</td><td class="w">第 10 章；存量初始化中断；领取失败；库存不足</td></tr>
+<tr><td>并发与重复</td><td class="w">按会员加锁（N3）；唯一键（N5、N14、N25）；结算幂等（N19）；领取防重复（第 4 章）；复核单条（N9）</td></tr>
+<tr><td>状态</td><td class="w">体系关闭（N40、N67）；待复核（N9、N61）；奖励各状态（8.6）；等级开启 / 关闭（N61）</td></tr>
+<tr><td>用户与权限</td><td class="w">未登录；未 KYC（N66）；账号状态（N48）；后台权限（8.1）</td></tr>
+<tr><td>端与版本</td><td class="w">四个 C 端和老版本 App（第 1、4 章）</td></tr>
+<tr><td>数据</td><td class="w">存量初始化与删除级别（N46、N56）；撤单（N8）；累计方式（N47）；重新编号（N60）；归级（N61）</td></tr>
+</table></div>
+
+<h2 id="appB">附录 B 原型对照表</h2>
+<div class="tbl"><table data-fit>
+<tr><th>原型页面</th><th>功能点</th><th>可演示的交互</th><th>是否模拟</th></tr>
+<tr data-fp="F10-01 F10-02 F10-03 F10-04 F10-05 F01-06"><td><a href="../../prototype/full/admin/VIP会员体系-后台会员等级配置页面.html">后台会员等级配置页面</a></td><td><span class="fp">F10</span> <span class="fp">F01-06</span></td><td class="w">前台显示方式、会员等级添加 / 修改 / 删除（含插入顺延、名称校验）、限额与返水、VIP0 沿用限制、场馆成长值倍数、会员等级奖励配置（实体奖品读库存）、活动奖励统计中文显示与三项合计</td><td class="w">是：共享模拟状态</td></tr>
+<tr data-fp="F01-01 F01-02 F01-03 F01-04 F01-05 F01-06 F01-07 F01-08 F01-09 F02-05"><td><a href="../../prototype/full/admin/VIP会员体系-后台VIP特权配置页面.html">后台VIP特权配置页面</a></td><td><span class="fp">F01</span> <span class="fp">F02-05</span></td><td class="w">四个子页签；计算方式切换、VIP 成长值规则、VIP0、新增VIP等级、修改设定、关闭复核与归级预览、开启库存校验、影响预览与复核、VIP 体系状态开关与关闭流程、全局参数（含 KYC 限制开关、确认弹窗与日志；VIP 奖励流水与低额自动清稽核的「待确认」标签，发布模式隐藏）、领取方式、免打扰、新旧合并与细节设定、单项 / 批量修改、VIP奖品配置、下注限额与返水；顶部三个页签跳转</td><td class="w">是：试算结果、复核人为模拟</td></tr>
+<tr data-fp="F06-01 F06-02 F06-03 F06-05 F06-06 F06-07 F04-02"><td><a href="../../prototype/full/front/VIP会员体系-VIP中心页面.html">VIP中心页面</a></td><td><span class="fp">F06</span> <span class="fp">F04-02</span></td><td class="w">普通用户卡、四种等级卡、详情弹窗、奖励表、规则弹窗、生日卡片和待领取卡片、手动领取 / 强制审核 / 风控各状态、KYC 引导（KYC 状态：已认证、审核中、未认证、拒绝、补充信息；「KYC 限制」开 / 关下未完成 KYC 玩家的定级差异，场景②v）、体系关闭、老版本 App、计算方式切换、两个 tab、个人中心账号区、卡面颜色</td><td class="w">是：右侧场景和模拟操作</td></tr>
+<tr data-fp="F06-04 F04-02 F07"><td><a href="../../prototype/full/front/VIP会员体系-VIP通知页面.html">VIP通知页面</a></td><td><span class="fp">F06-04</span> <span class="fp">F07</span></td><td class="w">升级弹窗（单级、跨级、补弹、游戏中、手动领取、强制审核）、Level 升级弹窗、生日卡片各状态、保级与生日短信各版本、到账站内信与推送、交易记录显示名、示例时间线</td><td class="w">是：短信只展示示例</td></tr>
+<tr data-fp="F08-03 F08-05 F08-06"><td><a href="../../prototype/full/admin/VIP会员体系-后台会员福利页面.html">后台会员福利页面</a></td><td><span class="fp">F08-03</span> <span class="fp">F08-05</span> <span class="fp">F08-06</span></td><td class="w">「会员福利」页签：会员福利记录（新旧同表、各状态、补发、放行、作废、审核、重新编号显示）</td><td class="w">是：示例数据</td></tr>
+<tr data-fp="F08-01 F08-02 F08-04"><td><a href="../../prototype/full/admin/VIP会员体系-后台VIP数据报表页面.html">后台VIP数据报表页面</a></td><td><span class="fp">F08-01</span> <span class="fp">F08-02</span> <span class="fp">F08-04</span></td><td class="w">「VIP数据报表」页签的 4 个二级页签：VIP会员数据（降级、恢复目标、已关闭等级）、成长值列与明细、等级变动记录（7 种类型、10 种原因）、重新归级、月度结算记录与明细、重跑失败、成长值记录（现有）；按二级页签查看权限显示（模拟面板「设置账号权限」勾选，检查报告 R3-12）</td><td class="w">是：示例数据</td></tr>
+</table></div>
+
+<h2 id="appC">附录 C 前台文案中英对照</h2>
+<p>制作需求时前台原型画面用中文；打包前把画面里的每一条中文和英文写进 <code>assets/proto-en.js</code>，发布站点的前台原型按此表显示英文（需求包框架规范第 4 节「原型语言」）。本表由页面自动读取对照表生成，不手写；开发按英文列实现界面文案；英文后标「（示意）」的为未定稿英文（14.1）。</p>
+<div class="tbl"><table id="enTable"><tr><th>序号</th><th>中文（原型制作用）</th><th>英文（界面实际文案）</th></tr></table></div>
+
+<h2 id="appD">附录 D 短信模板（在后台【短信模板列表】中添加的模板）</h2>
+<p>本附录列出 VIP 用到的全部短信模板（用户 2026-10-26）。模板内容由运营在【公告管理 › 短信模板列表】维护，修改模板不需要改需求；本附录内容为上线时需要添加的初始模板。何时发送、发给谁、不发的条件、免打扰顺延和账变短信门槛见规则 N41（保级奖励短信）、N43（生日提醒短信）、N64（强制审核）、N68（短信 / 推送免打扰时段），其他章节只写「使用模板：模板名称」。金额写「PHP」、无空格（C-15）；例外：「VIP 保级奖励到账」模板按 Claire 原文十六示例写「₱」（用户 2026-10-27，此处不按 C-15）。变量：{VIPLevel} 等级名称，{UpgradeBonus} 升级奖励金额，{RetentionBonus} 保级奖励金额，{BirthdayBonus} 生日奖励金额，{Deadline} 领取截止时间（中文写「m 月 d 日 23:59（GMT+8）」；英文写「23:59 {Mon} {d} (GMT+8)」，{Mon} 为英文月份缩写，例「23:59 Oct 27 (GMT+8)」）。英文标「（示意）」的未定稿，上线前由运营在文案确认页定稿。</p>
+<div class="tbl"><table id="smsTplTable" data-fit>
+<tr><th>模板名称</th><th>使用场景</th><th>变量</th><th>中文内容</th><th>英文内容</th><th>状态</th></tr>
+<tr><td>VIP 保级奖励到账</td><td class="w">保级奖励自动到账（每月结算发奖后）；强制审核生效时保级奖励审核通过、实际到账（N41、N64）</td><td class="w">{VIPLevel}、{RetentionBonus}（原文十六；示例只用到 {RetentionBonus}）</td><td class="w">₱{RetentionBonus} VIP 保级奖励已到账！登录 789Bingo 查看奖励。</td><td class="w">₱{RetentionBonus} VIP Retention Bonus credited! Log in to 789Bingo to check your reward.</td><td class="w">英文已定（与原文十六示例一致，含「₱」，用户 2026-10-27）；中文待运营定稿</td></tr>
+<tr><td>VIP 保级奖励可领取</td><td class="w">保级奖励为手动领取，月度结算生成待领取后（N41）</td><td class="w">{RetentionBonus}、{Deadline}</td><td class="w">PHP{RetentionBonus} VIP 保级奖励已可领取！请在 {Deadline} 前到等级中心领取。</td><td class="w">PHP{RetentionBonus} VIP Retention Bonus ready! Claim it in Level Center by {Deadline}.（示意）</td><td class="w">待运营定稿</td></tr>
+<tr><td>VIP 生日提醒 · 前一天 · 手动领取</td><td class="w">生日前一天 10:00，生日奖励为手动领取（N43）</td><td class="w">{BirthdayBonus}、{Deadline}</td><td class="w">你的 PHP{BirthdayBonus} VIP 生日奖励明天可领取！请在 {Deadline} 前到等级中心领取。使用旧版 App？请更新 App 或登录 789Bingo 网站领取。</td><td class="w">Your PHP{BirthdayBonus} VIP Birthday Bonus will be ready to claim tomorrow! Claim it in Level Center by {Deadline}. Using an older app? Update it or log in on the 789Bingo website to claim.（示意）</td><td class="w">待运营定稿</td></tr>
+<tr><td>VIP 生日提醒 · 前一天 · 自动领取</td><td class="w">生日前一天 10:00，生日奖励为自动领取、强制审核不生效（N43）</td><td class="w">{BirthdayBonus}</td><td class="w">你的 PHP{BirthdayBonus} VIP 生日奖励将于明天自动到账！登录 789Bingo 查看奖励。</td><td class="w">Your PHP{BirthdayBonus} VIP Birthday Bonus will be credited tomorrow! Log in to 789Bingo to check your reward.（示意）</td><td class="w">待运营定稿</td></tr>
+<tr><td>VIP 生日提醒 · 前一天 · 强制审核 + 自动领取</td><td class="w">生日前一天 10:00，生日奖励为自动领取且强制审核生效（N43）</td><td class="w">{BirthdayBonus}</td><td class="w">明天是你的生日，PHP{BirthdayBonus} VIP 生日奖励审核通过后到账，登录 789Bingo 查看。</td><td class="w">Tomorrow is your birthday! Your PHP{BirthdayBonus} VIP Birthday Bonus will be credited once approved. Log in to 789Bingo to check your reward.（示意）</td><td class="w">待运营定稿</td></tr>
+<tr><td>VIP 生日提醒 · 前一天 · 1 日生日</td><td class="w">生日在每月 1 日的玩家，前一天 10:00；当天结算可能改变等级，不写金额和期限（N43）</td><td class="w">无</td><td class="w">明天是你的生日！你的 VIP 生日奖励按明天月度结算后的 VIP 等级发放，届时登录 789Bingo 查看。</td><td class="w">Tomorrow is your birthday! Your VIP Birthday Bonus will be based on your VIP level after tomorrow's monthly settlement. Log in to 789Bingo to check.（示意）</td><td class="w">待运营定稿</td></tr>
+<tr><td>VIP 生日提醒 · 当天 · 手动领取</td><td class="w">生日当天 10:00，生日奖励为手动领取（N43）</td><td class="w">{BirthdayBonus}、{Deadline}</td><td class="w">789Bingo 祝你生日快乐！你的 PHP{BirthdayBonus} VIP 生日奖励已可领取。请在 {Deadline} 前到等级中心领取。使用旧版 App？请更新 App 或登录 789Bingo 网站领取。</td><td class="w">Happy Birthday from 789Bingo! Your PHP{BirthdayBonus} VIP Birthday Bonus is ready to claim in Level Center by {Deadline}. Using an older app? Update it or log in on the 789Bingo website to claim.（示意）</td><td class="w">待运营定稿</td></tr>
+<tr><td>VIP 生日提醒 · 当天 · 自动领取</td><td class="w">生日当天 10:00，生日奖励为自动领取（已到账）、强制审核不生效（N43）</td><td class="w">{BirthdayBonus}</td><td class="w">789Bingo 祝你生日快乐！你的 PHP{BirthdayBonus} VIP 生日奖励已到账！登录 789Bingo 查看奖励。</td><td class="w">Happy Birthday from 789Bingo! Your PHP{BirthdayBonus} VIP Birthday Bonus has been credited! Log in to 789Bingo to check your reward.（示意）</td><td class="w">待运营定稿</td></tr>
+<tr><td>VIP 生日提醒 · 当天 · 强制审核 + 自动领取</td><td class="w">生日当天 10:00，生日奖励为自动领取且强制审核生效、奖励审核中（N43）</td><td class="w">{BirthdayBonus}</td><td class="w">789Bingo 祝你生日快乐！你的 PHP{BirthdayBonus} VIP 生日奖励审核中，审核通过后到账！登录 789Bingo 查看奖励。</td><td class="w">Happy Birthday from 789Bingo! Your PHP{BirthdayBonus} VIP Birthday Bonus is under review and will be credited once approved! Log in to 789Bingo to check your reward.（示意）</td><td class="w">待运营定稿</td></tr>
+<tr><td>VIP 升级奖励审核通过到账</td><td class="w">强制审核生效时，升级奖励审核通过、实际到账（N64）</td><td class="w">{VIPLevel}、{UpgradeBonus}</td><td class="w">恭喜升级到 {VIPLevel}！PHP{UpgradeBonus} VIP 升级奖励已到账！登录 789Bingo 查看奖励。</td><td class="w">Congrats on reaching {VIPLevel}! PHP{UpgradeBonus} VIP Upgrade Bonus credited! Log in to 789Bingo to check your reward.（示意）</td><td class="w">中文已定（用户 2026-10-22）；英文待运营定稿</td></tr>
+<tr><td>VIP 生日奖励审核通过到账</td><td class="w">强制审核生效时，生日奖励审核通过、实际到账（手动领取的在玩家领取后审核，N64）</td><td class="w">{BirthdayBonus}、{VIPLevel}</td><td class="w">789Bingo 祝你生日快乐！PHP{BirthdayBonus} {VIPLevel} 生日奖励已到账！登录 789Bingo 查看奖励。</td><td class="w">Happy Birthday from 789Bingo! PHP{BirthdayBonus} {VIPLevel} Birthday Bonus credited! Log in to 789Bingo to check your reward.（示意）</td><td class="w">中文已定（用户 2026-10-22）；英文待运营定稿</td></tr>
+</table></div>
+
+<h2 id="memo">开发技术备忘参考</h2>
+<p>本章收录与 Jira 工单记录的现状、在途单、缺陷有关的问题。按 0.1 的修改依据优先级，这些内容不改变正文需求，只供开发、测试评估技术方案和排期时参考；需要改需求的，由产品评估后再改正文。资料来源为主版知识库（789平台现状知识库 v23.1，截至 2026-10-21 13:38 同步），状态以 Jira 为准。实物相关条目（M01–M03、M20）随实物移到实体奖品管理需求，只保留记录。</p>
+
+<div class="memo-item" id="m01"><h4><span class="mno">M01</span>Crown Rush 分批上线（本需求已不依赖）</h4>
+<div class="memo-q"><b class="lb">问题</b>：Crown Rush 分三批交付，实体奖品库存、物流信息、实体发放在其第一、二批上线。<span class="src">BB2025789-6618</span><span class="src">BB2025789-6685 评论（10-12）</span></div>
+<div class="memo-i"><b class="lb">对本需求的影响</b>：实物领取、收货地址和发货已移到实体奖品管理需求，本需求只依赖实体奖品管理 v1.1 的预占活动库存能力（Q32）。</div>
+<div class="memo-s"><b class="lb">建议</b>：排期时以实体奖品管理需求的上线计划为准。</div></div>
+
+<div class="memo-item" id="m02"><h4><span class="mno">M02</span>Crown Rush 物流信息现行规则（本需求已不涉及）</h4>
+<div class="memo-q"><b class="lb">问题</b>：物流信息每账号一份，修改需短信验证。<span class="src">BB2025789-6685</span></div>
+<div class="memo-i"><b class="lb">对本需求的影响</b>：VIP 不再做收货信息和地址管理，由实体奖品管理需求处理。</div>
+<div class="memo-s"><b class="lb">建议</b>：无。</div></div>
+
+<div class="memo-item" id="m03"><h4><span class="mno">M03</span>收货手机号打码规则差异（本需求已不涉及）</h4>
+<div class="memo-q"><b class="lb">问题</b>：平台通用打码与 Crown Rush 物流信息打码规则不同。<span class="src">BB2025789-6685</span></div>
+<div class="memo-i"><b class="lb">对本需求的影响</b>：VIP 不再展示收货手机号；导出文件中的会员手机号按平台通用规则打码。</div>
+<div class="memo-s"><b class="lb">建议</b>：无。</div></div>
+
+<div class="memo-item" id="m04"><h4><span class="mno">M04</span>VIP 线数据权限</h4>
+<div class="memo-q"><b class="lb">问题</b>：平台有「VIP 线」数据权限：没有数据权限的后台账号不能看 VIP 线会员的数据，已整改约 30 项（会员、稽核、提款、资金、日志、KYC、短信、风控、顶部概览、对局等）。「VIP 线」是按代理线划分的数据权限范围，与本需求的 VIP 等级无关。<span class="src">BB2025789-5192</span></div>
+<div class="memo-i"><b class="lb">对本需求的影响</b>：本需求新增的 VIP会员数据、等级变动记录、月度结算明细，以及改造的活动奖励统计、实体发放（VIP 来源）都按会员展示数据，不处理时可能让无权限账号在新页签和导出中看到 VIP 线会员。正文 8.1「权限」已写明沿用 VIP 线数据权限，11.1 和自查清单已加越权验收。</div>
+<div class="memo-s"><b class="lb">建议</b>：按 8.1 实现；页面文案避免把「VIP 线」和「VIP 等级」混称。</div></div>
+
+<div class="memo-item" id="m05"><h4><span class="mno">M05</span>活动参与门槛的 VIP 等级取旧版等级</h4>
+<div class="memo-q"><b class="lb">问题</b>：后台活动配置的会员等级字段存的是旧版 VIP 等级 ID（activeMemberLevel）；消费类活动「可参与的会员层级」是普通至至尊会员和 VIP6–VIP10；实时返水适用会员层级为 regular 至 VIP10。<span class="src">BB2025789-6129</span><span class="src">BB2025789-1414</span><span class="src">BB2025789-6702</span><span class="src">管理后台知识库第 11 章</span></div>
+<div class="memo-i"><b class="lb">对本需求的影响</b>：VIP 专属活动本期不做（C-08），不改造；旧版等级表与新版合并后，读取旧版等级 ID 的地方取值来源会变化；【会员】列表 VIP 等级已定改取新 VIP 等级（8.7）。</div>
+<div class="memo-s"><b class="lb">建议</b>：后端排查其他读取旧版 VIP 等级 ID 的功能（已配置活动的参与层级、实时返水适用层级），随【会员】列表改造一起处理；映射方式（保留旧 ID / 迁移）见待确认 Q38。另需一并排查：【公告管理 › 公告配置】按「用户等级」定向、聊天室发图权限的 VIP 门槛（管理后台知识库 4.16）。映射原则按原文九：VIP 客服、快速提款、专属活动等 VIP 权益按当前 VIP 等级（Current VIP Level）判断，这些引用迁移后统一取当前 VIP 等级。</div></div>
+
+<div class="memo-item" id="m06"><h4><span class="mno">M06</span>旧版 VIP活动与新版合并</h4>
+<div class="memo-q"><b class="lb">问题</b>：活动列表中的「VIP活动」是旧版 VIP 的福利发放器，系统参数「新版VIP特权状态」为开关。产品已定新旧合并、共用一个开关（规则 N70）。<span class="src">管理后台知识库 4.1.6</span></div>
+<div class="memo-i"><b class="lb">对本需求的影响</b>：开启新版时须停止生成旧版晋级礼金、生日礼金，已生成的照常处理；旧版历史记录在会员福利记录同表展示。</div>
+<div class="memo-s"><b class="lb">建议</b>：上线前确认生产「VIP活动」的开启状态和未处理的派奖审核记录。</div></div>
+
+<div class="memo-item" id="m07"><h4><span class="mno">M07</span>有效投注的统计来源与数据缺口</h4>
+<div class="memo-q"><b class="lb">问题</b>：① 10 月有效投注少约 1167 条：月索引模板没定义金额字段类型导致映射冲突，批量错误处理器配置错误，记录被丢弃且没进死信队列；知识库记录其影响包括提现流水校验、VIP、返利可能少算。② 有效投注结算后写入 fund_bet_valid → outbox → Kafka（fund_bet_valid_delta）；提现流水校验仍读 ES 副本。③ 单钱包取消、重结算历史上不回退有效流水，已先补 7 个撤单入口。④ 转账钱包：知识库记录转账钱包路径已退役，厂商投注是否实时计入资料未覆盖。⑤ 容器时区 UTC−4，按天、按月建索引集中在菲律宾时间中午。<span class="src">BB2025789-6594</span><span class="src">BB2025789-6693</span><span class="src">BB2025789-6546</span><span class="src">BB2025789-6567</span><span class="src">BB2025789-6722</span></div>
+<div class="memo-i"><b class="lb">对本需求的影响</b>：累计有效投注和当月有效投注少算，会导致该升级的不升级、该保级的被降级。原 PRD 规则 N22「结算前数据核对」（已撤回）是针对这一点加的。</div>
+<div class="memo-s"><b class="lb">建议</b>：VIP 统计取结算有效投注链路（Kafka 消息），不读 ES 副本；确认撤单入口全部回退后再上线。可选的结算前核对（原 N22）：A ＝ VIP 统计的全部会员上月有效投注合计，B ＝ 注单库按结算时间（GMT+8）汇总的上月有效投注；差异率 ＝ |A − B| ÷ B，≤ 0.1% 通过；B 为 0 时 A 也必须为 0，否则判为未通过；未通过时暂停结算并告警，由运营和技术确认后手动启动。是否加入正文由产品评估。</div></div>
+
+<div class="memo-item" id="m08"><h4><span class="mno">M08</span>预算告警的阈值和数据源</h4>
+<div class="memo-q"><b class="lb">问题</b>：现有顶栏预算告警：开启中的活动已领达到预算 70% 时告警，一期只覆盖新盈利、盈利、消费、新 / 老转盘；比例是系统参数，改为 999 即关闭；预算告警明细的查看权限比顶部计数更严。数据源按活动配置的已发放金额对比活动总预算，不含 VIP 奖励。<span class="src">BB2025789-5857</span></div>
+<div class="memo-i"><b class="lb">对本需求的影响</b>：正文 N38 按用户决定保持「70% 和 100% 告警」写法（3.3 冲突 08）。VIP 奖励要接入数据源；运营改了全局阈值后 VIP 的 70% 不跟随。</div>
+<div class="memo-s"><b class="lb">建议</b>：后端把 VIP 当月已发放金额接入预算告警数据源；明细权限沿用现有规则；如需跟随系统参数，由产品另行评估。</div></div>
+
+<div class="memo-item" id="m09"><h4><span class="mno">M09</span>安卓即 Flutter 包与老版本 App</h4>
+<div class="memo-q"><b class="lb">问题</b>：2026-08 起客户端迁移到 Flutter：安卓的 Flutter 版本已上线，iOS 的 Flutter 版本还在 UAT，iOS 1.2.x 是原生包；部分老包没有强更机制；2026-09 起移动端子任务只建「IOS/Flutter」。<span class="src">主版知识库「平台画像 · 客户端」「通用需求评审清单」第 5、12 条</span></div>
+<div class="memo-i"><b class="lb">对本需求的影响</b>：正文按用户决定写为 H5、iOS 原生、iOS Flutter、安卓 Flutter 四端，并规定老版本 App 的处理。</div>
+<div class="memo-s"><b class="lb">建议</b>：建工单时按 H5 / 后台前端、IOS/Flutter、iOS 原生、后端拆子任务；iOS Flutter 跟随其上线时间验收；老包不强更时按第 1 章处理。</div></div>
+
+<div class="memo-item" id="m10"><h4><span class="mno">M10</span>Level 升级奖发放时机的两种说法</h4>
+<div class="memo-q"><b class="lb">问题</b>：平台知识库记 Level 升级奖励「到达等级后次日 0 点自动发放」；主版知识库记「VIP 实时升级时触发」生日和升级奖励（2026-04 前已上线）；管理后台知识库 4.1.5 记「升级奖励发放方式」可配置。<span class="src">BB2025789-3762</span><span class="src">管理后台知识库 4.1.5</span><span class="src">平台知识库「会员等级」</span></div>
+<div class="memo-i"><b class="lb">对本需求的影响</b>：VIP 按领取方式默认立即到账（N5），不受影响；Level 段发放沿用现状，但开发复用现有发放逻辑前需确认生产实际是哪一种。</div>
+<div class="memo-s"><b class="lb">建议</b>：后端查生产代码确认 Level 段发放时机，VIP 段单独实现实时发放（3.3 冲突 01）。</div></div>
+
+<div class="memo-item" id="m11"><h4><span class="mno">M11</span>生日奖现行唯一键含等级</h4>
+<div class="memo-q"><b class="lb">问题</b>：现行生日奖的唯一键是「用户 + 等级 + 生日 + 年」。<span class="src">BB2025789-3762</span></div>
+<div class="memo-i"><b class="lb">对本需求的影响</b>：键里包含等级，同一年内换等级可能重复生成；正文 N25 按原方案「每年一次」写为「会员 + 自然年」唯一。</div>
+<div class="memo-s"><b class="lb">建议</b>：VIP 生日奖励单独建唯一键「会员 + 自然年（GMT+8）」，不复用现行键；Level 段生日礼包不改。</div></div>
+
+<div class="memo-item" id="m12"><h4><span class="mno">M12</span>领取中心的落地情况</h4>
+<div class="memo-q"><b class="lb">问题</b>：主版知识库把「领取中心」列为已否决或未落地；平台知识库记录有「活动奖励领取中心（Bonus）」页面和「所有活动手动领取都跳领取中心」的原则。<span class="src">BB2025789-2836</span><span class="src">平台知识库「活动奖励领取中心」</span></div>
+<div class="memo-i"><b class="lb">对本需求的影响</b>：VIP 生日奖励在等级中心领取（3.3 冲突 02），不依赖领取中心；生产如有领取中心，不能把 VIP 生日奖励展示在里面。</div>
+<div class="memo-s"><b class="lb">建议</b>：冲突 02 已定（在等级中心领取），前端只需确认生产领取中心不展示 VIP 生日奖励。</div></div>
+
+<div class="memo-item" id="m13"><h4><span class="mno">M13</span>营销短信首行和按运营商分流</h4>
+<div class="memo-q"><b class="lb">问题</b>：账变 / 营销短信第一行显示「ID:09****后4位」。营销短信按运营商分流（Smart 号段走 Smart 账号，Globe / Dito 走 M360）于 10-12 18:52 验收通过、完成；10-13 记录的升级单 BB2025789-6858 未写入 -6541 要求的 SQL 和定时任务，生产生效时间资料未覆盖。SMPP 按运营商分流后端认定为新需求。「₱」不在短信基础字符集里，单条上限会从 160 字符降到 70 字符。<span class="src">BB2025789-2714</span><span class="src">BB2025789-6541</span><span class="src">BB2025789-6233</span><span class="src">BB2025789-6858</span></div>
+<div class="memo-i"><b class="lb">对本需求的影响</b>：原 PRD 规则 N42（已撤回）要求 VIP 短信走营销通道、字数按「首行 + 模板」合计。不考虑首行时，模板长度和拆条数估算会偏少，短信费用偏高。</div>
+<div class="memo-s"><b class="lb">建议</b>：后端确认 VIP 短信走的通道和是否自动加首行；运营配置模板时按「首行 + 模板」估算字数；短信金额已定写 PHP（Claire 答复 C-15）。</div></div>
+
+<div class="memo-item" id="m14"><h4><span class="mno">M14</span>登录后弹窗顺序</h4>
+<div class="memo-q"><b class="lb">问题</b>：现行弹窗优先级为 21 岁 → 登录送白名单 → 登录送 → 砸金蛋 → 负盈利 → 转盘，关一个弹一个；安卓首次安装后登录出现过金蛋弹窗先于 21 岁弹窗的缺陷（10-13 已转故障验证）。Crown Rush 第一批新增「每日首次登录弹窗」，排在第几资料未覆盖。<span class="src">BB2025789-3442</span><span class="src">BB2025789-6855</span><span class="src">BB2025789-6685</span></div>
+<div class="memo-i"><b class="lb">对本需求的影响</b>：原 PRD 规则 N44 写的「排在 21 岁弹窗和条款之后、活动弹窗之前」已撤回，正文改为沿用平台现有弹窗优先级。VIP 升级弹窗如果插错位置，可能挤掉 21 岁 / 协议弹窗。</div>
+<div class="memo-s"><b class="lb">建议</b>：把 VIP 升级弹窗排在 21 岁和协议弹窗之后、活动类弹窗之前，与 Crown Rush 每日弹窗一起由产品确认在优先级表中的位置；四端分别验证。</div></div>
+
+<div class="memo-item" id="m15"><h4><span class="mno">M15</span>发奖与短信同事务导致回滚</h4>
+<div class="memo-q"><b class="lb">问题</b>：充值活动的 10% 赠送和短信在同一个数据库事务里，短信发送失败会把赠送一起回滚；10-08 以「6611 已修复」关闭，评论追问的「是否覆盖全部充值触发的活动发奖」未答复；-6613 也记录过奖励通知失败导致事务只能回滚。<span class="src">BB2025789-6783</span><span class="src">BB2025789-6611</span><span class="src">BB2025789-6613</span></div>
+<div class="memo-i"><b class="lb">对本需求的影响</b>：原 PRD 规则 N20「发奖和发短信分开处理，短信失败不回退奖励」已撤回。若 VIP 保级奖励沿用同类写法，短信失败会撤销已发的保级奖励。</div>
+<div class="memo-s"><b class="lb">建议</b>：VIP 发奖和发短信放在不同事务，短信失败只记录失败数，不影响奖励状态；测试用例加「短信失败时奖励仍到账」。</div></div>
+
+<div class="memo-item" id="m16"><h4><span class="mno">M16</span>789games 新 VIP</h4>
+<div class="memo-q"><b class="lb">问题</b>：789games 另有新 VIP 体系需求（待定排期），补充需求为 2 月按 2/1–2/14、2/15 至月底两段处理，即半月考核；与本需求按自然月考核不同。<span class="src">T5-13（原 GAM-7）</span></div>
+<div class="memo-i"><b class="lb">对本需求的影响</b>：原 N39 写的「789games 的新 VIP（T5-13，按半月考核）另行设计」已从正文删除，正文只写「只适用于 789Bingo，按站点隔离」。</div>
+<div class="memo-s"><b class="lb">建议</b>：后端设计 VIP 配置、数据和结算任务时按站点隔离，结算周期做成可配置，避免以后 789games 接入时重构（Q19）。</div></div>
+
+<div class="memo-item" id="m17"><h4><span class="mno">M17</span>789bingo H5 主页与 VIP 会员页向 App 对齐</h4>
+<div class="memo-q"><b class="lb">问题</b>：在途待办：789bingo 的 H5 主页和 VIP 会员页要更新、向 App 版本对齐，描述为空，具体范围资料未覆盖。<span class="src">T5-18</span></div>
+<div class="memo-i"><b class="lb">对本需求的影响</b>：可能和本需求同改 H5 的等级中心 / VIP 页面。原风险条目和待确认 Q20 已撤回。</div>
+<div class="memo-s"><b class="lb">建议</b>：H5 前端排期时确认 T5-18 的范围，同一页面合并开发、避免互相覆盖。</div></div>
+
+<div class="memo-item" id="m18"><h4><span class="mno">M18</span>VIP 群和 VIP 客服的现行开放范围</h4>
+<div class="memo-q"><b class="lb">问题</b>：现行 L30 及以上开放 VIP 群和 VIP 客服；L10–L60 有生日礼金和升级奖金。<span class="src">BB2025789-2891</span><span class="src">BB2025789-3475</span><span class="src">BB2025789-3884</span><span class="src">BB2025789-3982</span><span class="src">BB2025789-6546</span></div>
+<div class="memo-i"><b class="lb">对本需求的影响</b>：四项 VIP 权益本期不做（C-08），现行 VIP 群和客服的开放范围本需求不改；勾选沿用时删除 LEVEL n 之后的级别后，按 Level 判断开放范围的现行逻辑可能受影响。</div>
+<div class="memo-s"><b class="lb">建议</b>：已定（用户 2026-10-21，按 Claire 原方案九、十四）：开启后按当前 VIP 等级开放、不设过渡，由运营维护（规则 N46）；客服话术见客服 QA 第 25 条。</div></div>
+
+<div class="memo-item" id="m19"><h4><span class="mno">M19</span>奖励在前台的显示名</h4>
+<div class="memo-q"><b class="lb">问题</b>：前台 Bonus 类型名称按备注前缀匹配，匹配不到时显示 "Platform promotion bonus"。<span class="src">BB2025789-6618 分析</span></div>
+<div class="memo-i"><b class="lb">对本需求的影响</b>：N35 的三个备注没有加入前缀映射时，前台交易记录会统一显示 "Platform promotion bonus"。</div>
+<div class="memo-s"><b class="lb">建议</b>：前后端把 "VIP Upgrade Bonus"、"VIP Retention Bonus"、"VIP Birthday Bonus" 加入前缀映射，分别显示 "VIP Upgrade"、"VIP Retain"、"VIP B-day"。</div></div>
+
+<div class="memo-item" id="m20"><h4><span class="mno">M20</span>实体奖品菜单（本需求已不涉及）</h4>
+<div class="memo-q"><b class="lb">问题</b>：原计划新建「实物奖品管理」一级菜单；现由实体奖品管理需求负责【实体奖品管理 › 库存管理 / 发放管理】。<span class="src">BB2025789-6618</span><span class="src">BB2025789-6685</span></div>
+<div class="memo-i"><b class="lb">对本需求的影响</b>：本需求后台左侧菜单显示该分组，入口和功能由实体奖品管理需求实现。</div>
+<div class="memo-s"><b class="lb">建议</b>：无。</div></div>
+
+<div class="memo-item" id="m21"><h4><span class="mno">M21</span>在途返水需求 -6954</h4>
+<div class="memo-q"><b class="lb">问题</b>：新 P0 故事「789bingo 返水与充返转盘抽奖活动」10-19 评审通过进入开发，预期 11-13 上线，PRD 在 Wiki，内容资料未覆盖。<span class="src">BB2025789-6954</span></div>
+<div class="memo-i"><b class="lb">对本需求的影响</b>：两个需求同时改返水口径；本需求规则 N71「勾选沿用时 VIP 玩家只按 VIP 返水表」可能与新返水活动冲突或重复发放。</div>
+<div class="memo-s"><b class="lb">建议</b>：排期前与该需求对齐返水口径、叠加关系和上线先后（第 13 章风险）。</div></div>
+
+<div class="memo-item" id="m22"><h4><span class="mno">M22</span>低额自动清稽核与 VIP 奖励流水</h4>
+<div class="memo-q"><b class="lb">问题</b>：平台在余额（钱包余额与非单钱包三方余额之和）低于阈值时自动清除稽核（低额自动清稽核 R7，只在单一钱包厂商投注时触发）；线上故障记录只进出 YGR 捕鱼游戏、不下注，打码就被清掉，推测与 R7 有关，根因和修复资料未覆盖；后台「即时流水稽核查询」可手动通过，曾有手动清稽核失败的缺陷。<span class="src">BB2025789-6020</span><span class="src">BB2025789-6813</span><span class="src">BB2025789-6612</span></div>
+<div class="memo-i"><b class="lb">对本需求的影响</b>：VIP 奖励的流水如果被自动清除，等于免流水提现，是资金口子。用户 2026-10-21 已定：VIP 奖励流水不适用低额自动清稽核，运营可手动清稽核（规则 N34 ④）。</div>
+<div class="memo-s"><b class="lb">建议</b>：开发评估 VIP 奖励流水与 R7 的隔离方式和手动清稽核入口（Q40）；测试覆盖余额低于阈值、进出捕鱼游戏不下注两种场景。</div></div>
+
+</article></div>
+</div>
+<script>window.NAV_ROOT = "../../";</script>
+<script src="../../assets/nav-data.js"></script>
+<script src="../../assets/nav.js"></script>
+<script src="../../assets/proto-en.js"></script>
+<script>
+(function () {
+  /* 功能点名称（与开发自查清单保持一致） */
+  var FP = {
+    F01: "VIP 配置（【用户管理 › VIP特权】）", "F01-01": "VIP 等级配置", "F01-02": "VIP 奖励与全局参数", "F01-03": "VIP奖品配置", "F01-04": "VIP 体系状态与存量初始化", "F01-05": "新增与关闭 VIP 等级", "F01-06": "VIP0 与沿用普通会员级别", "F01-07": "VIP 成长值规则", "F01-08": "VIP 活动与福利（新旧合并）与细节设定", "F01-09": "下注限额与返水（按 VIP 等级）",
+    F02: "升级判定与升级奖励", "F02-01": "累计数据统计", "F02-02": "升级判定", "F02-03": "升级奖励发放", "F02-05": "门槛修改后重算", "F02-06": "普通会员级别与 VIP 的衔接",
+    F03: "月度保级结算", "F03-01": "当月有效投注统计", "F03-02": "保级判定与保级奖励", "F03-03": "降级与恢复", "F03-04": "结算任务",
+    F04: "生日奖励", "F04-01": "生日奖励生成", "F04-02": "生日奖励领取",
+    F06: "前台等级中心", "F06-01": "等级卡与进度", "F06-02": "VIP 奖励表", "F06-03": "规则说明", "F06-04": "升级弹窗", "F06-05": "奖励详情弹窗", "F06-06": "手动领取与待领取卡片", "F06-07": "个人中心与身份显示",
+    F07: "短信与到账通知", "F07-01": "保级奖励短信", "F07-02": "生日短信", "F07-03": "到账通知与免打扰时段",
+    F08: "后台数据与记录（【VIP特权】会员福利、VIP数据报表页签）", "F08-01": "VIP会员数据", "F08-02": "等级变动记录", "F08-03": "会员福利记录（VIP 奖励记录）", "F08-04": "月度结算记录", "F08-05": "风控暂停与放行", "F08-06": "强制审核与审核短信",
+    F10: "普通会员等级（【用户管理 › 会员等级】）", "F10-01": "会员等级配置表", "F10-02": "前台显示方式", "F10-03": "场馆成长值倍数", "F10-04": "会员等级奖励配置", "F10-05": "活动奖励统计（普通会员）"
+  };
+  var doc = document.getElementById("doc");
+
+  /* 子功能点锚点：第一处相关内容 */
+  Object.keys(FP).forEach(function (code) {
+    if (code.length === 3 || document.getElementById(code)) return;
+    var el = [].filter.call(doc.querySelectorAll('[data-fp~="' + code + '"]'), function (e) { var f = e.querySelector(".fp"); return f && f.textContent === code; })[0] ||
+      doc.querySelector('[data-fp~="' + code + '"]');
+    if (!el) return;
+    if (!el.id) { el.id = code; return; }
+    var a = document.createElement("span"); a.id = code;
+    (el.tagName === "TR" ? el.cells[0] : el).prepend(a);
+  });
+  /* 大功能点（如 F01）没有单独位置时，锚到它第一处相关内容 */
+  Object.keys(FP).forEach(function (code) {
+    if (code.length !== 3 || document.getElementById(code)) return;
+    var el = doc.querySelector('[data-fp~="' + code + '"]') || doc.querySelector('[data-fp^="' + code + '-"]');
+    if (!el) return;
+    var s = document.createElement("span"); s.id = code; (el.tagName === "TR" ? el.cells[0] : el).prepend(s);
+  });
+
+  /* 全文目录：按正文 h2 / h3 自动生成 */
+  var list = document.getElementById("toc-list"), sub = null;
+  doc.querySelectorAll("h2, h3").forEach(function (h) {
+    if (h.id === "toc" || !h.id) return;
+    var li = document.createElement("li"), a = document.createElement("a");
+    a.href = "#" + h.id; a.textContent = h.textContent; li.appendChild(a);
+    if (h.tagName === "H2") { list.appendChild(li); sub = document.createElement("ol"); li.appendChild(sub); }
+    else if (sub) sub.appendChild(li);
+  });
+  list.querySelectorAll("ol").forEach(function (o) { if (!o.children.length) o.remove(); });
+
+  /* 版本标注（v1.0 首版没有标注；以后的版本沿用这段逻辑） */
+  var rows = [].slice.call(document.querySelectorAll("#vtable tr[data-v]"));
+  /* 最新版本按版本号判断（不依赖表格的排列顺序） */
+  function vnum(v) { var m = /(\d+)\.(\d+)/.exec(v || ""); return m ? (+m[1]) * 1000 + (+m[2]) : -1; }
+  var latest = rows.reduce(function (a, r) { return vnum(r.dataset.v) > vnum(a) ? r.dataset.v : a; }, rows[0].dataset.v), sum = {};
+  rows.forEach(function (r) { sum[r.dataset.v] = r.dataset.sum; });
+  doc.querySelectorAll(".vmark").forEach(function (m) { if (m.dataset.v !== latest) m.classList.add("old"); });
+  var tip = null;
+  function hideTip() { if (tip) { tip.remove(); tip = null; } }
+  doc.querySelectorAll(".vtag").forEach(function (t) {
+    if (t.dataset.v !== latest) t.classList.add("old");
+    t.tabIndex = 0;
+    function show(e) {
+      if (e) e.stopPropagation();
+      hideTip();
+      tip = document.createElement("div"); tip.className = "vtip"; tip.textContent = t.dataset.v + "：" + (sum[t.dataset.v] || "");
+      document.body.appendChild(tip);
+      var r = t.getBoundingClientRect();
+      tip.style.left = Math.max(8, Math.min(r.left + scrollX, innerWidth - 370)) + "px"; tip.style.top = (r.bottom + scrollY + 6) + "px";
+    }
+    t.addEventListener("mouseenter", show); t.addEventListener("click", show); t.addEventListener("focus", show);
+    t.addEventListener("mouseleave", hideTip);
+  });
+  document.addEventListener("click", hideTip);
+  /* 涉及章节（生成内容规范第五章第 3 节）：按项数折叠，不分新旧版本——3 项以内直接列出；超过 3 项只显示「查看详细（共 N 项）」，点开后清单末尾有「收起」 */
+  document.querySelectorAll("[data-chg]").forEach(function (b) {
+    var ul = document.getElementById(b.dataset.chg); if (!ul) return;
+    var n = ul.querySelectorAll("li:not(.chg-fold)").length;
+    if (n <= 3) { ul.hidden = false; b.hidden = true; return; }
+    b.textContent = "查看详细（共 " + n + " 项）"; ul.hidden = true;
+    var fold = document.createElement("li"); fold.className = "chg-fold";
+    var fb = document.createElement("button"); fb.type = "button"; fb.className = "linkbtn"; fb.textContent = "收起";
+    fb.onclick = function () { ul.hidden = true; b.hidden = false; b.focus(); };
+    fold.appendChild(fb); ul.appendChild(fold);
+    b.onclick = function () { ul.hidden = false; b.hidden = true; };
+  });
+
+  /* 附录 C 前台文案中英对照：读取 assets/proto-en.js（window.PROTO_EN）自动生成 */
+  (function () {
+    var t = document.getElementById("enTable"), D = window.PROTO_EN || {}, keys = Object.keys(D); if (!t) return;
+    if (!keys.length) { var r0 = t.insertRow(); var c0 = r0.insertCell(); c0.colSpan = 3; c0.className = "w"; c0.textContent = "还没有填写英文对照（打包前在 assets/proto-en.js 填写）。"; return; }
+    keys.forEach(function (k, i) { var r = t.insertRow(); r.insertCell().textContent = i + 1; var a = r.insertCell(); a.className = "w"; a.textContent = k; var b = r.insertCell(); b.className = "w"; b.textContent = D[k]; });
+  })();
+
+  /* 引用编号按钮（生成内容规范第五章第 2 节「引用编号」）：正文里引用的规则「N数字」、待确认事项「Q数字」，页内有对应的 #nX / #qX 行时，
+     自动换成按钮（不用手写）；点按钮弹出浮窗，显示该行 data-brief 的精炼描述和「查看完整内容」。规则表、待确认表第一列的编号本身，以及标题、目录、链接里的不换。 */
+  (function () {
+    var RE = /\b([NQ])(\d+)\b/g, SKIP = "h1,h2,h3,h4,a,button,script,style,.toc-full,.ref-pop,.vtag,.chg,.no-ref";   /* 引用其他文档的编号用 <span class="no-ref">…</span> 包起来，不换成按钮 */
+    var walker = document.createTreeWalker(doc, NodeFilter.SHOW_TEXT), texts = [];
+    while (walker.nextNode()) texts.push(walker.currentNode);
+    texts.forEach(function (t) {
+      var par = t.parentNode, s = t.nodeValue;
+      if (!par || !/[NQ]\d/.test(s) || par.closest(SKIP)) return;
+      var td = par.closest("td"); if (td && td.cellIndex === 0 && /^[nq]\d+$/.test(td.parentNode.id || "")) return;
+      var frag = document.createDocumentFragment(), last = 0, m, hit = false; RE.lastIndex = 0;
+      while ((m = RE.exec(s))) {
+        var tg = document.getElementById(m[1].toLowerCase() + m[2]); if (!tg) continue;
+        hit = true; frag.appendChild(document.createTextNode(s.slice(last, m.index)));
+        var b = document.createElement("button"); b.type = "button"; b.className = "ref-btn"; b.textContent = m[0]; b.setAttribute("data-ref", tg.id);
+        b.title = "查看 " + m[0] + " 的内容"; frag.appendChild(b); last = m.index + m[0].length;
+      }
+      if (!hit) return;
+      frag.appendChild(document.createTextNode(s.slice(last))); par.replaceChild(frag, t);
+    });
+    var pop = null;
+    function close() { if (pop) { pop.remove(); pop = null; } }
+    doc.addEventListener("click", function (e) {
+      var b = e.target.closest && e.target.closest(".ref-btn"); if (!b) return;
+      e.stopPropagation(); var same = pop && pop.dataset.ref === b.getAttribute("data-ref"); close(); if (same) return;
+      var tg = document.getElementById(b.getAttribute("data-ref")); if (!tg) return;
+      var brief = tg.getAttribute("data-brief") || (tg.cells && tg.cells[1] ? tg.cells[1].textContent.replace(/\s+/g, " ").trim() : "");
+      pop = document.createElement("div"); pop.className = "ref-pop"; pop.setAttribute("role", "tooltip"); pop.dataset.ref = tg.id;
+      var h = document.createElement("b"); h.textContent = b.textContent; pop.appendChild(h);
+      var pp = document.createElement("p"); pp.textContent = brief || "（这一行还没写精炼描述 data-brief）"; pop.appendChild(pp);
+      var a = document.createElement("a"); a.href = "#" + tg.id; a.textContent = "查看完整内容 ›"; a.onclick = close; pop.appendChild(a);
+      document.body.appendChild(pop);
+      var r = b.getBoundingClientRect(), w = pop.offsetWidth;
+      pop.style.left = Math.max(8, Math.min(r.left + scrollX, scrollX + innerWidth - w - 8)) + "px"; pop.style.top = (r.bottom + scrollY + 6) + "px";
+    });
+    document.addEventListener("click", function (e) { if (pop && !pop.contains(e.target)) close(); });
+    document.addEventListener("keydown", function (e) { if (e.key === "Escape") close(); });
+  })();
+  /* 表格自动列宽（生成内容规范第五章第 2 节「表格排版」，参考「用户提款风控规则升级」需求包）：带 data-fit 的表，
+     表格宽度等于正文宽度、不出现水平滚动；从有富余的列把宽度挪给撑高行的列，直到整张表的高度不能再降低。单元格允许换行，不会溢出或重叠。
+     没写 <colgroup> 时自动补上。打开页面、窗口大小变化、目录栏展开收起、字体加载完成后各算一次 */
+  (function () {
+    function cols(tbl) {
+      var cs = tbl.querySelectorAll("col"); if (cs.length) return cs;
+      var first = tbl.rows[0]; if (!first) return cs;
+      var n = 0; [].forEach.call(first.cells, function (c) { n += c.colSpan || 1; });
+      var g = document.createElement("colgroup"); for (var i = 0; i < n; i++) g.appendChild(document.createElement("col"));
+      tbl.insertBefore(g, tbl.firstChild); return tbl.querySelectorAll("col");
+    }
+    function fit(tbl, force) {
+      var cl = cols(tbl); if (!cl.length) return;
+      var n = cl.length, W = tbl.parentNode.clientWidth; if (!W) return;
+      /* 宽度和上次计算时一样就不重算（列宽已经设好），避免窗口事件、切换标签时卡顿（2026-10-26，来源「客服系统待回复列表优化」实测） */
+      if (!force && tbl._fitW === W) return;
+      tbl._fitW = W;
+      var MIN = 44, STEP = Math.max(4, Math.round(W / 120));
+      var rows = [].slice.call(tbl.rows), len = [];
+      for (var c = 0; c < n; c++) { var m = 1; rows.forEach(function (r) { var cell = r.cells[c]; if (cell && cell.colSpan === 1) m = Math.max(m, cell.textContent.trim().length); }); len.push(Math.sqrt(m)); }
+      /* 每列下限：不会折行的元素（功能点标签 .fp、.nw、code、nobr）不能被挤出单元格（2026-10-26，来源「实体奖品管理」） */
+      var mn = []; for (var k = 0; k < n; k++) mn.push(MIN);
+      rows.forEach(function (r) { for (var k = 0; k < r.cells.length && k < n; k++) { var cell = r.cells[k]; if (cell.colSpan !== 1) continue; [].forEach.call(cell.querySelectorAll(".fp,.nw,.ui-nw,code,nobr"), function (e) { mn[k] = Math.max(mn[k], e.offsetWidth + 18); }); } });
+      var sum = len.reduce(function (a, b) { return a + b; }, 0), w = len.map(function (l, i) { return Math.max(mn[i], Math.floor(W * l / sum)); });
+      var cells = [].slice.call(tbl.querySelectorAll("th,td")), rg = document.createRange();
+      /* 评分 = 表格总高度为主，各单元格文字高度之和为辅：先压最高的行，同高时也让其他格子少折行 */
+      function apply() { var s = w.reduce(function (a, b) { return a + b; }, 0); for (var i = 0; i < n; i++) cl[i].style.width = (w[i] / s * 100).toFixed(3) + "%"; var t = 0; cells.forEach(function (x) { rg.selectNodeContents(x); t += rg.getBoundingClientRect().height; }); return tbl.offsetHeight * 1000 + t; }
+      var best = apply(), guard = 0, improved = true;
+      while (improved && guard++ < 150) {
+        improved = false; var move = null;
+        /* 每轮同时试 1、2、4、8 倍步长，取评分下降最多的一次：一格要少折一行常要挪 20px 以上，只试单步会停在原处（2026-10-26，来源「用户提款风控规则升级」） */
+        [1, 2, 4, 8].forEach(function (k) {
+          var d = STEP * k;
+          for (var to = 0; to < n; to++) for (var from = 0; from < n; from++) {
+            if (to === from || w[from] - d < mn[from]) continue;
+            w[from] -= d; w[to] += d; var h = apply();
+            if (h < best - 0.5) { best = h; move = [from, to, d]; }
+            w[from] += d; w[to] -= d;
+          }
+        });
+        if (move) { w[move[0]] -= move[2]; w[move[1]] += move[2]; improved = true; }
+        apply();
+      }
+    }
+    function fitAll(force) { doc.querySelectorAll("table[data-fit]").forEach(function (t) { fit(t, force === true); }); }
+    var tm = 0; function later() { clearTimeout(tm); tm = setTimeout(fitAll, 150); }
+    window.addEventListener("resize", later); window.addEventListener("navtoggle", later);
+    /* 打开页面只算一次：等页面和字体都加载完（字体会改变文字宽度），不在脚本执行、字体就绪、load 时各算一遍 */
+    var loaded = document.readyState === "complete" ? Promise.resolve() : new Promise(function (r) { window.addEventListener("load", r); });
+    Promise.all([loaded, document.fonts && document.fonts.ready ? document.fonts.ready : null]).then(function () { fitAll(true); });
+  })();
+  /* 荧光粉：只在网址以 #功能点编号 结尾时出现（来自开发自查清单） */
+  var banner = document.getElementById("fp-banner"), hits = [], pos = -1;
+  function report() { try { if (parent !== window) parent.postMessage({ type: "prd-hits", total: hits.length, pos: pos }, "*"); } catch (e) {} }
+  function clearHit() { doc.querySelectorAll(".fp-hit,.fp-cur").forEach(function (e) { e.classList.remove("fp-hit", "fp-cur"); }); hits = []; pos = -1; banner.hidden = true; }
+  function go(i) {
+    if (!hits.length) return;
+    pos = (i + hits.length) % hits.length;
+    hits.forEach(function (h) { h.classList.remove("fp-cur"); });
+    hits[pos].classList.add("fp-cur");
+    hits[pos].scrollIntoView({ block: "center" });
+    report();
+  }
+  function applyHit() {
+    var code = decodeURIComponent(location.hash.slice(1));
+    clearHit();
+    if (!/^F\d{2}(-\d{2})?$/.test(code) || !FP[code]) { report(); return; }
+    doc.querySelectorAll("[data-fp]").forEach(function (e) {
+      if (e.dataset.fp.split(/\s+/).some(function (c) { return c === code || c.indexOf(code + "-") === 0; })) { e.classList.add("fp-hit"); hits.push(e); }
+    });
+    var big = code.slice(0, 3);
+    document.getElementById("fp-text").textContent = "正在查看：" + (code.length > 3 ? big + " " + FP[big] + " › " + code + " " + FP[code] : code + " " + FP[code]) + "（共标出 " + hits.length + " 处）";
+    banner.hidden = false;
+    go(0);
+  }
+  document.getElementById("fp-clear").onclick = function () { clearHit(); history.replaceState(null, "", location.pathname); report(); };
+  window.addEventListener("message", function (e) {
+    var d = e.data || {};
+    if (d.type === "prd-step") go(pos + d.dir);
+    if (d.type === "prd-show") { if (location.hash === "#" + d.code) applyHit(); else location.hash = d.code; }
+  });
+  window.addEventListener("hashchange", applyHit);
+  applyHit();
+})();
+</script>
+</body>
+</html>

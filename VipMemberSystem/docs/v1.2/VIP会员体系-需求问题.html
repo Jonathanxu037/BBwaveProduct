@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>VIP会员体系-v1.2-需求问题</title>
+<link rel="stylesheet" href="../../assets/style.css">
+<style>
+.rq-intro{font-size:14px;line-height:1.8}
+.rq-sum{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:14px 0}
+.rq-sum div{border:1px solid #e4dfeb;border-radius:10px;padding:8px 12px;background:#faf8fc}.rq-sum b{display:block;font-size:20px;color:#4A2A7A}
+.rq-card{border:1px solid #e4dfeb;border-radius:12px;margin:12px 0;overflow:hidden;background:#fff}
+.rq-hd{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:9px 14px;background:#f6f2fb;border-bottom:1px solid #e4dfeb}
+.rq-id{font-weight:800;color:#4A2A7A}.rq-tt{font-weight:700;flex:1 1 260px}
+.rq-it{font-size:12px;padding:1px 8px;border-radius:10px;background:#efedf2;color:#5f5a66;white-space:nowrap}
+.rq-st{font-size:12px;padding:1px 8px;border-radius:10px;background:#fff2cc;color:#7a4b00;white-space:nowrap}
+.rq-bd{display:grid;grid-template-columns:1fr 1fr;gap:0}
+.rq-bd>div{padding:9px 14px;min-width:0;overflow-wrap:anywhere;font-size:14px;line-height:1.7}
+.rq-o{background:#fff8ea;border-right:1px solid #e4dfeb}.rq-c{background:#eef4fd}
+.rq-lb{display:block;font-size:12px;font-weight:800;margin-bottom:2px}.rq-o .rq-lb{color:#7a4b00}.rq-c .rq-lb{color:#1d4f8c}
+.rq-ft{padding:8px 14px;border-top:1px solid #e4dfeb;font-size:14px;line-height:1.7;overflow-wrap:anywhere}
+.rq-ft b{color:#4A2A7A}
+@media (max-width:640px){.rq-bd{grid-template-columns:1fr}.rq-o{border-right:0;border-bottom:1px solid #e4dfeb}}
+/* 排版优化 2026-10-31 */
+.paper{line-height:1.8}
+.paper .tbl{overflow-x:visible}
+.paper th{background:var(--panel);white-space:normal}
+.paper td,.paper td:first-child{white-space:normal;word-break:break-word;overflow-wrap:anywhere}
+.paper tbody tr:nth-child(even)>td{background:#FAF8FC}
+.paper .eg{background:#F6F8FB;border:1px solid #E3E8EF;border-radius:6px;padding:9px 12px;margin:10px 0;font-size:12.5px}
+.paper .note{background:#FFF8F2;border-left:4px solid #C89A3C;padding:8px 12px;margin:10px 0;border-radius:0 4px 4px 0;font-size:12.5px}
+.paper .note.warn{border-left-color:#C00000;background:#FFF5F5}
+.paper .rq-bd ul{margin:2px 0 0;padding-left:18px}
+.paper .rq-bd li{margin:2px 0}
+.paper .rq-ft{background:#FCFBFD}
+</style></head>
+<body>
+<div class="with-nav">
+<div class="desk"><article class="paper">
+
+<h1 class="doc-title">VIP会员体系-v1.2-需求问题</h1>
+<div class="doc-meta"><span>整理日期：2026-10-27（GMT+8）</span><span>更新：2026-10-31（第 11 批决定）</span><span>状态：供 Claire 知悉，必要时确认</span></div>
+<div class="rq-sum"><div><b>12</b>问题合计</div></div>
+<hr class="doc-rule">
+
+<h2 id="g2">一、原文没有写到、由需求补充的规则，供知悉</h2>
+<p class="rq-intro">以下规则原文和答复均未规定，由产品在需求中补充；如有不同意见，请写明调整建议。</p>
+<div class="note">「原文」指原始需求文档；「C-xx」为 Claire 答复编号；「N」开头为 PRD 规则编号，「Q」开头为 PRD 待确认问题编号。</div>
+
+<div class="rq-card" id="E-10"><div class="rq-hd"><span class="rq-id">E-10</span><span class="rq-tt">月度工资按当月达到保级投注的最高等级 k 发放</span><span class="rq-it">v1.2</span></div>
+<div class="rq-bd"><div class="rq-o"><span class="rq-lb">原始需求</span>原文七：保级奖励每月发放一次，完成当前等级当月保级有效投注才能获得；v1.2 方案未写明月度工资是否以保级为前提。</div><div class="rq-c"><span class="rq-lb">需求现在的写法</span><ul><li>升级、保级、月度工资（即保级工资）分别核算。</li><li>月度工资按 k 级生成：k = 当月有效投注达到保级投注的最高等级，不超过历史最高；k = VIP0 不发。</li><li>未保级也发 k 级月度工资，次月只降 1 级；降级玩家 k 高于考核等级时，次月直接恢复到 k，可一次恢复多级。</li><li>考核等级 = 月末 23:59:59 的当前等级；当月升级的按升级后等级考核（C-04 月中升级按新等级考核）。</li><li>与原文七「完成当前等级保级才能获得」不同，以用户决定为准。</li></ul></div></div>
+<div class="rq-ft"><b>已定</b>：按 k 级发放（用户 10-29 定；PRD 规则 N14 月度工资等级 k、N15 未保级与降级、N16 降级后恢复、N17 VIP0）</div></div>
+
+<div class="rq-card" id="E-12"><div class="rq-hd"><span class="rq-id">E-12</span><span class="rq-tt">有效投注计入平台所有游戏</span><span class="rq-it">v1.2</span></div>
+<div class="rq-bd"><div class="rq-o"><span class="rq-lb">原始需求</span>原文只写「累计有效投注」「当月有效投注」，未限定游戏类型。</div><div class="rq-c"><span class="rq-lb">需求现在的写法</span><ul><li>平台运营的所有游戏的有效投注都计入，不分游戏类别；累计和当月口径相同。</li><li>平台自算有效投注，同账号或关联账号同局对押、同场对立盘口的注单不计入；投注月份归属见 PRD 规则 N4「有效投注」。</li></ul></div></div>
+<div class="rq-ft"><b>已定</b>：所有游戏都计入（用户 10-30 定，Q4「有效投注计入哪些游戏」）；计算口径和排除对押（用户 10-31 定，Q48「有效投注口径」）</div></div>
+
+<div class="rq-card" id="E-13"><div class="rq-hd"><span class="rq-id">E-13</span><span class="rq-tt">上线时按历史累计定级，已到达的等级不发升级奖金</span><span class="rq-it">v1.2</span></div>
+<div class="rq-bd"><div class="rq-o"><span class="rq-lb">原始需求</span>C-01 上线前奖励处理：之前的奖励不发，后续是否调整未定。</div><div class="rq-c"><span class="rq-lb">需求现在的写法</span><ul><li>第一次开启 VIP 体系时，只按截至开启时刻的累计有效投注和累计充值定级（两项同时满足的最高等级），不参考原 LEVEL 和旧版 VIP 等级（用户 10-28 定）。</li><li>已到达的等级不发升级奖金、不弹升级弹窗，以后也不补发；之后新到达的等级正常发放。</li><li>v1.2 门槛降低，上线结算达标人数明显增加，上线前出影响预览。</li></ul></div></div>
+<div class="rq-ft"><b>请确认</b>：v1.2 方案数值下是否仍按 C-01「之前的奖励不发」执行</div></div>
+
+<div class="rq-card" id="E-14"><div class="rq-hd"><span class="rq-id">E-14</span><span class="rq-tt">生日奖金金额按生日所在月份 1 日结算后的等级确定，生日当天起领取</span><span class="rq-it">v1.2</span></div>
+<div class="rq-bd"><div class="rq-o"><span class="rq-lb">原始需求</span>原文十：按生日当天的当前 VIP 等级发放；生日前一天、生日当天各发短信提醒，x 日后过期。C-06 生日奖金配置：由运营自行配置。</div><div class="rq-c"><span class="rq-lb">需求现在的写法</span><ul><li>金额：生日所在月份的月度结算（默认 1 日 13:00）完成时，按结算后的等级生成，金额固定，之后升降级不变（用户 10-29 定）。</li><li>资格：只认第一次 KYC 审核通过时的出生日期，没有的不生成（「KYC 限制」关闭时也一样）；修改生日的当年和次年不生成；同一 KYC 身份的多个账号同一自然年只有 1 个账号能生成（用户 10-31 定）。</li><li>领取：生日当天 00:00 起在 VIP中心当前等级的「查看详情」弹窗领取；1 日生日的结算完成后可领；2 月 29 日生日在非闰年 2 月 28 日起可领。设为自动领取时生日当天 00:00 后到账。</li><li>有效期：按「领奖有效期」（三种奖金共用，默认 15 天，可设 1–20 天），含生日当天，过期不能领（用户 10-30 定）。</li><li>短信：取消固定的生日前一天短信；后台勾选「生日短信提醒」时，按所选时间点发 1 条：生日所在月 1 日（结算完成后）、生日前三天、前一天或当天（默认当天 10:00）（规则 N36 生日短信提醒，用户 10-30 定）。</li></ul></div></div>
+<div class="rq-ft"><b>请确认</b>：是否同意生日奖金按生日所在月份 1 日结算后的等级确定<br><b>已定</b>：生日资格（用户 10-31 定，Q47「同 KYC 多账号的生日奖金」、Q66「撤单与生日字段」，PRD 规则 N21「资格与生成」）</div></div>
+
+<div class="rq-card" id="E-15"><div class="rq-hd"><span class="rq-id">E-15</span><span class="rq-tt">撤单使累计低于门槛时，等级和已到账奖金不回退</span><span class="rq-it">v1.2</span></div>
+<div class="rq-bd"><div class="rq-o"><span class="rq-lb">原始需求</span>原文三只写升级看历史累计，未写撤单扣回后的处理。</div><div class="rq-c"><span class="rq-lb">需求现在的写法</span><ul><li>撤单扣回累计有效投注和注单所属月份的当月有效投注；当前等级、历史最高等级不下调，已结算月份不重算，已到账奖金不追回。</li><li>累计低于某级门槛时，该级未领取的升级奖金系统作废（说明「撤单」）。</li><li>单人单月撤单扣回的有效投注超过 ₱100,000 时转人工复核，期间该玩家未领取的 VIP 奖金暂停发放，由运营放行或作废。</li></ul></div></div>
+<div class="rq-ft"><b>已定</b>：等级和已到账奖金不回退；未领取的升级奖金作废、大额撤单人工复核（用户 10-31 定，Q66「撤单与生日字段」，PRD 规则 N5「撤单与回退」）</div></div>
+
+<div class="rq-card" id="E-16"><div class="rq-hd"><span class="rq-id">E-16</span><span class="rq-tt">完成 KYC 时补发已达到等级的升级奖金；「KYC 限制」切换的处理</span><span class="rq-it">v1.2</span></div>
+<div class="rq-bd"><div class="rq-o"><span class="rq-lb">原始需求</span>原文四：首次升级至对应 VIP 等级后立即获得升级现金奖励；C-11 KYC 要求：完成 KYC 才能享受权益；原文未写完成 KYC 后是否补发。</div><div class="rq-c"><span class="rq-lb">需求现在的写法</span><ul><li>「KYC 限制」开启：完成 KYC 时按累计定级，此前已达到的每个等级各补发一次升级奖金（按完成 KYC 时的配置生成待领取；命中风控则暂停发放）；未完成 KYC 期间的月度工资和生日奖金不补；上线结算等级及以下不发。</li><li>开启 → 关闭：不给之前因未完成 KYC 而未定级的玩家补发任何奖金；这些玩家按关闭时刻的累计定级，已达到的等级不发升级奖金、不弹窗（用户 10-31 定）；之后新达到的等级照常发放。</li><li>关闭 → 开启：未完成 KYC 的玩家等级冻结、未领取的奖金暂停；完成 KYC 后恢复冻结时的等级，不按累计重新定级（避免绕过月度结算的恢复规则）；冻结期间累计超过历史最高的，升到新等级并照常生成升级奖金。</li></ul></div></div>
+<div class="rq-ft"><b>已定</b>：完成 KYC 时补发（用户 10-29 定；PRD 规则 N23「KYC 限制开启」）<br><b>已定</b>：开启改关闭不补发（用户 10-31 定，Q50「「KYC 限制」开启改关闭时是否补发」，PRD 规则 N25「KYC 限制切换」）<br><b>已定</b>：开启改关闭时未定级玩家立即按累计定级、不发升级奖金（用户 10-31 定，Q51「「KYC 限制」开启改关闭时，未定级玩家的等级怎么处理」，PRD 规则 N25「KYC 限制切换」）</div></div>
+
+<div class="rq-card" id="E-17"><div class="rq-hd"><span class="rq-id">E-17</span><span class="rq-tt">不设奖金审核；风控暂停</span><span class="rq-it">v1.2</span></div>
+<div class="rq-bd"><div class="rq-o"><span class="rq-lb">原始需求</span>原文四：升级奖励立即获得；原文未写审核和风控。</div><div class="rq-c"><span class="rq-lb">需求现在的写法</span><ul><li>不设审核：后台没有「强制审核」开关，奖金没有「待审核」「已驳回」状态；三种奖金由玩家手动领取，领取即到账（用户 10-29 定）。</li><li>风控暂停：账号冻结、自我排除、风险分 ≥ 70、禁止投注、临时冻结时等级照算，奖金暂停发放、不能领取、不发 VIP 通知，由运营放行（恢复待领取）或作废；风险分 40–69 照常到账；停用、注销的账号不生成奖金、不参与结算，未到账的奖金全部作废。升级时照常播 3 秒动画，弹窗只显示「恭喜升级！已升级到 VIPn」，不提金额（用户 10-31 定）。</li></ul></div></div>
+<div class="rq-ft"><b>已定</b>：① 不设审核（用户 10-29 定、10-31 维持，PRD 规则 N30「不设审核」，Q45「大额奖金是否设审核」）<br><b>已定</b>：② 风控暂停的触发范围（用户 10-30 定，Q12 风控暂停的触发范围）</div></div>
+
+<div class="rq-card" id="E-18"><div class="rq-hd"><span class="rq-id">E-18</span><span class="rq-tt">VIP 体系关闭期间和再次开启</span><span class="rq-it">v1.2</span></div>
+<div class="rq-bd"><div class="rq-o"><span class="rq-lb">原始需求</span>原文未写体系关闭。</div><div class="rq-c"><span class="rq-lb">需求现在的写法</span><ul><li>关闭期间：累计照常；停止升级、结算、生成新奖金和通知，事后不补（结算时间处于关闭状态的月份不结算）；已生成未领取的升级奖金、月度工资、生日奖金在原有效期内仍可领取（用户 10-29 定）。</li><li>再次开启：按当前累计有效投注和累计充值重新核算全部玩家的等级（只升不降，历史最高同步）；关闭期间达到的等级记「不发放（重新开启核算）」，不发升级奖金，不弹升级动画和确认弹窗（用户 10-30 定）。</li></ul></div></div>
+<div class="rq-ft"><b>已定</b>：关闭期间达到的新等级，重新开启后不发升级奖金（用户 10-30 定，Q13 VIP 体系关闭后再次开启、Q44 再次开启重新核算等级）</div></div>
+
+<div class="rq-card" id="E-19"><div class="rq-hd"><span class="rq-id">E-19</span><span class="rq-tt">短信和推送免打扰时段</span><span class="rq-it">v1.2</span></div>
+<div class="rq-bd"><div class="rq-o"><span class="rq-lb">原始需求</span>原文十六：次月 1 日保级结算及奖励发放成功后触发。</div><div class="rq-c"><span class="rq-lb">需求现在的写法</span><ul><li>21:00:00 至次日 09:59:59（GMT+8）触发的 VIP 短信和 APP 推送顺延到 10:00 发送，其他时段立即发送；站内信即时生成。</li><li>取消「月度工资可领取」短信，改为「奖金到账提醒」短信：后台勾选时，只在设为自动领取的奖金自动到账时发（如月度工资在结算完成时到账）；手动领取的到账不发（规则 N35 奖金到账提醒短信，用户 10-30 定）。</li><li>VIP 短信通过平台现有短信功能发送，不单独开发（用户 10-31 定，Q53「VIP 短信是否单独开发」）。</li></ul></div></div>
+<div class="rq-ft"><b>请确认</b>：是否同意</div></div>
+
+<div class="rq-card" id="E-20"><div class="rq-hd"><span class="rq-id">E-20</span><span class="rq-tt">前台规则显示流水倍数</span><span class="rq-it">v1.2</span></div>
+<div class="rq-bd"><div class="rq-o"><span class="rq-lb">原始需求</span>原文十一：升级、保级、生日奖励需 1 倍奖金流水（Bonus Turnover）；未写前台是否显示。</div><div class="rq-c"><span class="rq-lb">需求现在的写法</span>前台（含规则、通知、短信、英文）不显示流水要求及任何与流水有关的内容；后台「流水倍数」参数保留。</div></div>
+<div class="rq-ft"><b>已定</b>：不显示（用户 10-30、10-31 定，Q15「前台是否显示流水要求」、Q60「前台不显示流水」）</div></div>
+
+<div class="rq-card" id="E-21"><div class="rq-hd"><span class="rq-id">E-21</span><span class="rq-tt">上线时原 LEVEL 和旧版 VIP 未到账的奖励一律作废</span><span class="rq-it">v1.2</span></div>
+<div class="rq-bd"><div class="rq-o"><span class="rq-lb">原始需求</span>C-01 上线前奖励处理：之前的奖励不发（针对上线时已到达的 VIP 等级）；原文和其他答复未写原 LEVEL、旧版 VIP 未领取奖励的处理。</div><div class="rq-c"><span class="rq-lb">需求现在的写法</span><ul><li>版本发布时以下未到账奖励一律作废、不能再领：原 LEVEL 的升级奖励、生日礼包（含待领取、待审核）；旧版 VIP 的会员福利（含旧版 VIP活动中未领取或待派奖审核的晋级礼金、每周红包、生日礼金、专属红包）。</li><li>已到账的不追回；作废的不补发、不折算到新 VIP；上线前导出待作废清单留档，供客服查询（用户 10-28 定）。</li></ul></div></div>
+<div class="rq-ft"><b>请确认</b>：是否同意</div></div>
+
+<div class="rq-card" id="E-22"><div class="rq-hd"><span class="rq-id">E-22</span><span class="rq-tt">去掉旧版 VIP 体系（VIP特权菜单、「新版VIP特权状态」和旧版 VIP活动）</span><span class="rq-it">v1.2</span></div>
+<div class="rq-bd"><div class="rq-o"><span class="rq-lb">原始需求</span>原文和 C-01～C-15 答复均未写旧版 VIP特权的处理。</div><div class="rq-c"><span class="rq-lb">需求现在的写法</span>旧版 VIP 体系由本需求完全替换，上线后不再存在（用户 10-29 定）：<ul><li>【用户管理 › VIP特权】菜单整个去掉：旧版成长值等级 VIP0–VIP8、成长值和场馆成长值倍数、保级成长值、下注限额与返水、成长值记录、会员福利记录都不再使用，数据不迁移。</li><li>系统参数「新版VIP特权状态」去掉；VIP 体系开关改为【VIP会员等级配置 › VIP会员等级奖励配置】顶部的「VIP领取奖励」（由「活动状态」改名）。</li><li>【活动配置 › 活动列表】中依赖旧 VIP 等级的「VIP活动」一并去掉。</li></ul></div></div>
+<div class="rq-ft"><b>请确认</b>：是否同意；原按旧版 VIP 等级生效的下注限额与返水随之取消，是否需要另行安排</div></div>
+
+</article></div>
+</div>
+<script>window.NAV_ROOT = "../../";</script>
+<script src="../../assets/nav-data.js"></script>
+<script src="../../assets/nav.js"></script>
+</body>
+</html>
