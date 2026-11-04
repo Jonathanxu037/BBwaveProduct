@@ -1,0 +1,1538 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>VIP会员体系-v1.2-后台VIP会员等级配置页面</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<link rel="stylesheet" href="../../../assets/vip.css">
+<style>
+/* 按现网【用户管理 › 会员等级】页面样式（卡片式页签、细线表格、单选行、右对齐分页） */
+.lv-tags{display:flex;gap:6px;padding:6px 12px;background:#fff;border-bottom:1px solid #EBEEF5}
+.lv-tags span{display:inline-flex;align-items:center;gap:6px;height:24px;padding:0 8px;border:1px solid #DCDFE6;border-radius:3px;font-size:12px;color:#606266;background:#fff}
+.lv-tags span.on{border-color:#409EFF;color:#409EFF}
+.lv-tags i{font-style:normal;color:#C0C4CC}
+.bo-menu .i.gone{display:none}
+.lv-wrap{padding:12px}
+.lv-card{background:#fff;border:1px solid #DCDFE6;box-shadow:0 2px 4px rgba(0,0,0,.08)}
+.lv-hd{display:flex;background:#F5F7FA;border-bottom:1px solid #E4E7ED}
+.lv-hd [role=tab]{padding:0 18px;height:38px;line-height:38px;font-size:13px;color:#909399;cursor:pointer;border-right:1px solid transparent;border-left:1px solid transparent;margin-bottom:-1px}
+.lv-hd [role=tab]:first-child{border-left:0}
+.lv-hd [role=tab]:hover{color:#409EFF}
+.lv-hd [role=tab][aria-selected=true]{color:#409EFF;background:#fff;border-right-color:#DCDFE6;border-left-color:#DCDFE6}
+.lv-bd{padding:16px 18px 20px}
+.lv-h{font-size:15px;font-weight:700;color:#303133;margin:4px 0 12px}
+.lv-sub{color:#409EFF;font-size:13px;font-weight:700;margin:16px 0 8px}
+table.lv-t{border-collapse:collapse;font-size:12px;color:#606266;background:#fff}
+table.lv-t th,table.lv-t td{border:1px solid #EBEEF5;padding:6px 10px;text-align:center;font-weight:400}
+table.lv-t th{color:#909399;height:40px}
+table.lv-t td{height:34px}
+table.lv-t input{width:120px;height:28px;border:1px solid #DCDFE6;border-radius:3px;padding:0 8px;font:inherit;color:#606266;box-sizing:border-box}
+table.lv-t input.s{width:96px}
+table.lv-t input:disabled{background:#F5F7FA;color:#C0C4CC;cursor:not-allowed}
+table.lv-t input.bad{border-color:#F56C6C;background:#FEF0F0}
+.lv-save{margin-top:14px}
+.lv-op{all:unset;color:#409EFF;cursor:pointer;font-size:12px}.lv-op:hover{color:#66B1FF}.lv-op:disabled{color:#C0C4CC;cursor:not-allowed}.lv-op.del{color:#F56C6C;margin-right:8px}.lv-op.del:hover{color:#F78989}.lv-op.del:disabled{color:#C0C4CC}
+.lv-op:focus-visible{outline:2px solid #409EFF;outline-offset:2px}
+table.lv-t tr.lv-new td{background:#ECF5FF}
+/* 实体奖品表置灰（Q21）：与奖金表左右并排，同现网 */
+.lv-pair{display:flex;gap:16px;align-items:flex-start;flex-wrap:wrap}
+.lv-grey{position:relative;flex:1;min-width:260px;opacity:.5;filter:grayscale(1);pointer-events:none;user-select:none}
+.lv-grey td{color:#909399}
+.lv-greytag{position:absolute;right:0;top:-22px;font-size:12px;color:#909399;border:1px solid #DCDFE6;border-radius:3px;padding:0 6px;background:#F5F7FA}.lv-btn{height:32px;padding:0 16px;border-radius:3px;border:1px solid #409EFF;background:#409EFF;color:#fff;font-size:12px;cursor:pointer;font-family:inherit}
+.lv-btn.w{background:#fff;color:#409EFF;border-color:#B3D8FF}
+.lv-btn:disabled{opacity:.5;cursor:not-allowed}
+.lv-row{display:flex;flex-wrap:nowrap;align-items:center;gap:12px;min-height:34px;font-size:13px;color:#606266;margin:4px 0;white-space:nowrap}
+.lv-row > *{flex:none;white-space:nowrap}
+/* 奖励规则区（用户 2026-10-30）：左侧标题定宽 170px（按最长标题「升级奖金领取方式 ?」），右侧内容对齐同一竖线，不换行不重叠 */
+.lv-row .fl{width:170px;flex:none;white-space:nowrap}
+.lv-row label{white-space:nowrap}
+.lv-row label{display:inline-flex;align-items:center;gap:5px;cursor:pointer}
+.lv-row input[type=radio]{accent-color:#409EFF;margin:0}
+.lv-row input.bo-inp{height:30px;width:140px}
+.lv-row select.bo-inp{height:30px;width:220px}
+.lv-red{color:#C00000;font-weight:700;font-size:12px}
+.lv-ferr{color:#F56C6C;font-size:12px}
+.lv-lock{background:#FDF6EC;border:1px solid #F5DAB1;color:#B88230;padding:7px 12px;border-radius:4px;font-size:12.5px;margin:0 0 10px;max-width:640px}
+.lv-err{background:#FEF0F0;border:1px solid #FBC4C4;color:#F56C6C;padding:7px 12px;border-radius:4px;font-size:12.5px;margin:10px 0 0;max-width:640px}
+.lv-filter{display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;font-size:13px;color:#606266;margin-bottom:14px}
+.lv-filter .it{display:inline-flex;align-items:center;gap:8px}
+.lv-filter .bo-inp{height:30px;font-size:12px}
+.lv-range{display:inline-flex;align-items:center;border:1px solid #DCDFE6;border-radius:3px;height:30px;padding:0 6px;gap:6px;background:#fff}
+.lv-range input{border:0;font:inherit;font-size:12px;color:#606266;width:118px;height:26px}
+.lv-panel{border:1px solid #EBEEF5;border-radius:4px;padding:12px}
+.lv-tot{display:flex;justify-content:flex-end;align-items:center;gap:10px;font-size:13px;color:#303133;margin-bottom:10px}
+.lv-tot b{color:#F56C6C;font-weight:400}
+table.lv-l{width:100%}
+table.lv-l td.sum{background:#F5F7FA}
+.st-ok{color:#67C23A}.st-wait{color:#409EFF}.st-warn{color:#E6A23C}.st-bad{color:#F56C6C}.st-off{color:#909399}
+.st-why{display:block;font-size:11px;color:#909399;margin-top:2px;max-width:150px;margin-left:auto;margin-right:auto}
+.lv-ops{display:flex;flex-wrap:wrap;justify-content:center;gap:2px 8px}
+.lv-ops button{all:unset;cursor:pointer;color:#409EFF;font-size:12px}
+.lv-pg{display:flex;justify-content:flex-end;align-items:center;flex-wrap:wrap;gap:8px;margin-top:14px;font-size:13px;color:#606266}
+.lv-pg select{height:28px;border:1px solid #DCDFE6;border-radius:3px;font:inherit;font-size:12px;color:#606266}
+.lv-pg button{all:unset;cursor:pointer;min-width:24px;text-align:center;font-size:13px;color:#303133;font-weight:700}
+.lv-pg button[aria-current=page]{color:#409EFF}
+.lv-pg button:disabled{color:#C0C4CC;cursor:not-allowed}
+.lv-pg input{width:44px;height:26px;border:1px solid #DCDFE6;border-radius:3px;text-align:center;font:inherit}
+.lv-empty{color:#909399;padding:26px 0}
+.v12-dlgw{width:min(560px,94vw)}
+.bo-dlg table{border-collapse:collapse;width:100%;font-size:12.5px}.bo-dlg th,.bo-dlg td{border:1px solid #EBEEF5;padding:4px 6px;text-align:left}
+.bo-dlg textarea{width:100%;min-height:70px;box-sizing:border-box;font:inherit;border:1px solid #DCDFE6;border-radius:4px;padding:6px}
+.v12-row2{display:flex;gap:8px;justify-content:flex-end}
+.v12-ferr{color:#F56C6C;font-size:12px}
+.v12-warn{background:#FDF6EC;border:1px solid #F5DAB1;color:#B88230;padding:6px 10px;border-radius:4px;font-size:12.5px}
+.v12-err{background:#FEF0F0;border:1px solid #FBC4C4;color:#F56C6C;padding:8px 12px;border-radius:4px;font-size:13px}
+.v12-tip{font-size:12px;color:#909399}
+/* 结算记录（用户 2026-10-30 第 9 批）：未到账金额浅色；到账核算三行；可点数字 */
+.st-lt{color:#C0C4CC}
+.lv-from{display:flex;align-items:center;gap:12px;background:#ECF5FF;border:1px solid #D9ECFF;color:#409EFF;border-radius:4px;padding:6px 12px;font-size:12.5px;margin:0 0 10px}
+.lv-from b{font-weight:600}
+/* 等级变更明细：每类一行、行高统一、不换行；类别靠左、人数靠右（用户 2026-10-30） */
+#dChg .bo-dlg{width:auto;min-width:420px}
+#dChg table{width:100%;border-collapse:collapse}
+#dChg td{white-space:nowrap;height:30px;padding:0 10px;border-bottom:1px solid #EBEEF5;font-size:13px;text-align:left}
+#dChg td:last-child{text-align:right}
+#dChg .chg-ft{white-space:nowrap}
+/* 表格列宽按实际内容收窄（用户 2026-10-30「标题列中时间取消（GMT+8）的内容，根据实际显示缩短列宽」）：字号 12px、左右留白 6px；表头不换行；时间格一行显示，其他格可换行 */
+#sList table.lv-l th,#sList table.lv-l td,#sSettle table.lv-l th,#sSettle table.lv-l td{padding:6px!important;font-size:12px!important}
+#sList table.lv-l th,#sSettle table.lv-l th{white-space:nowrap!important}
+#sList table.lv-l td,#sSettle table.lv-l td{white-space:normal!important}
+#sList table.lv-l td.tm,#sSettle table.lv-l td.tm{white-space:nowrap!important}
+#sList table.lv-l td.ds{text-align:left;color:#909399;line-height:1.5;min-width:110px;max-width:200px}
+/* 部分完成（用户 2026-10-30）：有单人结算失败时列表状态为橙色「部分完成」，可点；明细中未完成的失败行红色显示 */
+.st-part{color:#E6A23C;cursor:pointer;text-decoration:underline}
+.sd-fail td{color:#F56C6C}
+.sd-fail td .lv-op{color:#409EFF}
+.st-acc{font-size:12px;line-height:1.55;white-space:nowrap;text-align:left}
+.st-acc b{font-weight:400;color:#909399;margin-right:4px}
+.lv-lnk{color:#409EFF;cursor:pointer;background:none;border:0;padding:0;font:inherit;text-decoration:underline}
+/* 短信模板状态异常（用户 2026-10-30）：红色感叹号；下拉里异常模板红色显示 */
+.v12-wic{display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;border-radius:50%;background:#F56C6C;color:#fff;font:700 12px/1 Arial,sans-serif;font-style:normal;margin-left:6px;vertical-align:middle;flex:none}
+.v12-wic[hidden]{display:none}
+select.bad-sel{color:#F56C6C!important;border-color:#F56C6C!important}
+option.bad{color:#F56C6C}
+/* 页签右上角：待审批、操作日志（规则 N58、PRD 7.1） */
+.lv-acts{display:flex;justify-content:flex-end;align-items:center;gap:8px;margin:-6px 0 10px;font-size:12px;color:#606266}
+.lv-acts .lv-btn{height:28px;padding:0 12px}
+.lv-acts .lv-btn b{color:#F56C6C;font-weight:600}
+.v12-wide{width:min(860px,96vw)}
+.v12-wide .lv-filter{margin-bottom:10px}
+.bo-dlg .v12-ga{display:flex;align-items:center;gap:8px;margin-top:8px;font-size:12.5px}
+.ap-own{color:#C0C4CC;cursor:not-allowed}
+</style>
+</head>
+<body>
+<div class="with-nav">
+<div class="adm-stage">
+  <div class="bo">
+    <div class="bo-top1"><span class="bo-time">当前时间: <b>2026/10/28 02:20:00 -04:00</b></span><span class="sp bo-fs" aria-hidden="true">⛶</span><span class="bo-lang">👤简体中文</span><span class="bo-user">👤 <span>运营账号A ▾</span></span></div>
+    <div class="bo-top2"><div class="bo-stats"><span class="bo-bell" aria-hidden="true">🔔</span><span>在线人数: <em class="c-r">13</em></span><span>当日注册: <em class="c-y">10</em></span><span>当日充值成功: <em class="c-y">15</em></span><span>提款: <b class="bo-n g">0</b></span><span>风控审核: <b class="bo-n g">0</b></span></div></div>
+    <div class="bo-body">
+      <nav class="bo-menu" aria-label="后台菜单">
+        <div class="mt">菜单 <span aria-hidden="true">☰</span></div>
+        <div class="g"><i>▤</i>个人中心</div>
+        <div class="g open"><i>▤</i>用户管理<i class="v12-wic" role="img" aria-label="短信模板状态异常" title="短信模板状态异常" hidden id="wMg">!</i></div>
+        <div class="sub">
+          <div class="i">投注站</div><div class="i">大代理</div><div class="i">代理</div><div class="i">会员</div><div class="i">子账号</div><div class="i">会员代理标签配置</div><a class="i on" href="#levels">VIP会员等级配置<i class="v12-wic" role="img" aria-label="短信模板状态异常" title="短信模板状态异常" hidden id="wMi">!</i></a><div class="i">KYC审核</div><div class="i">会员资料修改审核</div>
+        </div>
+        <div class="g"><i>▤</i>财务管理</div><div class="g"><i>▤</i>提现管理</div><div class="g"><i>▤</i>活动配置</div><div class="g"><i>▤</i>公告管理</div><div class="g"><i>▤</i>系统管理</div>
+      </nav>
+      <div class="bo-main">
+        <div class="bo-crumb">位置 › 用户管理 › <b>VIP会员等级配置</b></div>
+        <div class="lv-tags" aria-hidden="true"><span>会员 <i>×</i></span><span class="on">VIP会员等级配置 <i>×</i></span></div>
+        <div class="lv-wrap">
+        <div class="lv-card">
+          <div class="lv-hd" data-dev="D57" role="tablist" aria-label="会员等级页签">
+            <span role="tab" tabindex="0" aria-selected="true" data-go="levels" id="tab-levels">VIP会员等级配置</span>
+            <span role="tab" tabindex="0" aria-selected="false" data-go="global" id="tab-global">VIP会员等级奖励配置<i class="v12-wic" role="img" aria-label="短信模板状态异常" title="短信模板状态异常" hidden id="wTab">!</i></span>
+            <span role="tab" tabindex="0" aria-selected="false" data-go="list" id="tab-list">活动奖励统计</span>
+            <span role="tab" tabindex="0" aria-selected="false" data-go="settle" id="tab-settle" class="glow">VIP月度结算记录</span>
+          </div>
+          <div class="lv-bd">
+          <!-- 4 个页签共用：右上角「待审批」「操作日志」（规则 N58、PRD 7.1） -->
+          <div class="lv-acts glow">
+            <span class="ui-nw"><button class="lv-btn w" type="button" id="apBtn" data-dev="D158">待审批（<b id="apN">0</b>）</button><i class="qm" tabindex="0" data-h="待审批">?</i></span>
+            <button class="lv-btn w" type="button" id="logBtn" data-dev="D159">操作日志</button>
+          </div>
+
+          <!-- ============ 页签 1：会员等级配置 ============ -->
+          <section id="sLevels" role="tabpanel" aria-labelledby="tab-levels" hidden>
+            <div class="lv-h">VIP会员等级配置</div>
+            <div class="lv-lock" id="lockBar" data-dev="D65" role="status" hidden>月度结算进行中，结算完成后才能修改等级配置</div>            <table class="lv-t glow" id="lvTable">
+              <thead><tr>
+                <th style="width:110px" data-dev="D58" data-dev-inline><span class="ui-nw">会员等级<i class="qm" tabindex="0" data-h="会员等级">?</i></span></th>
+                <th data-dev="D59" data-dev-inline><span class="ui-nw">累计有效投注<i class="qm" tabindex="0" data-h="累计有效投注">?</i></span></th>
+                <th data-dev="D60" data-dev-inline><span class="ui-nw">累计充值<i class="qm" tabindex="0" data-h="累计充值">?</i></span></th>
+                <th data-dev="D61" data-dev-inline><span class="ui-nw">保级投注<i class="qm" tabindex="0" data-h="保级投注">?</i></span></th>
+                <th style="width:80px" data-dev="D62 D63 D64"><span class="ui-nw">操作<i class="qm" tabindex="0" data-h="新增等级">?</i></span></th>
+              </tr></thead>
+              <tbody id="lvBody"></tbody>
+            </table>
+            <div class="lv-err" id="lvErr" role="alert" hidden></div>
+            <div class="lv-save"><button class="lv-btn" type="button" id="lvSave" data-dev="D66">保存</button></div>
+            <p class="ui-reqnote">现网「会员等级配置」改造：列由「会员等级｜有效投注累计值｜操作」改为「会员等级｜累计有效投注｜累计充值｜保级投注」，每行输入框直接修改，表格下方「保存」（位置同现网）。默认 26 行（VIP0 + VIP1–SUPER VIP）；保留现网「操作」列：VIP0 行「新增」，最高一级 SUPER VIP 行「删除」（同现网只能从末级删除）；VIP0 一行全 0 只读（PRD 7.2、规则 N1「等级档位」）。保存、新增、删除等级须谷歌验证码，达到审批条件的提交后待审批（规则 N58「第二人审批」）。数据均为示例。</p>
+          </section>
+
+          <!-- ============ 页签 2：会员等级奖励配置 ============ -->
+          <section id="sGlobal" role="tabpanel" aria-labelledby="tab-global" hidden>
+            <div class="lv-row"><span class="fl"><span class="ui-nw" data-dev="D67" data-dev-inline>VIP领取奖励<i class="qm" tabindex="0" data-h="VIP领取奖励">?</i></span></span>
+              <label><input type="radio" name="rSys" value="1"> 开启</label><label><input type="radio" name="rSys" value="0" checked> 关闭</label></div>
+            <div class="lv-sub">VIP会员等级奖励规则</div>
+            <div class="lv-row"><span class="fl"><span class="ui-nw" data-dev="D68" data-dev-inline>KYC 限制<i class="qm" tabindex="0" data-h="KYC 限制">?</i></span></span>
+              <label><input type="radio" name="rKyc" value="1" checked> 开启</label><label><input type="radio" name="rKyc" value="0"> 关闭</label></div>
+            <!-- 领取方式：按奖金类型单独设置，默认都为手动领取（用户 2026-10-30）；切换经确认框即时生效、写操作日志 -->
+            <div class="lv-row glow" id="cmUp"><span class="fl"><span class="ui-nw" data-dev="D69" data-dev-inline>升级奖金领取方式<i class="qm" tabindex="0" data-h="领取方式">?</i></span></span>
+              <label><input type="radio" name="rClaimUp" value="auto"> 自动领取</label><label><input type="radio" name="rClaimUp" value="manual" checked> 手动领取</label></div>
+            <div class="lv-row glow" id="cmMon"><span class="fl"><span class="ui-nw">月度工资领取方式<i class="qm" tabindex="0" data-h="领取方式">?</i></span></span>
+              <label><input type="radio" name="rClaimMon" value="auto"> 自动领取</label><label><input type="radio" name="rClaimMon" value="manual" checked> 手动领取</label></div>
+            <div class="lv-row glow" id="cmBd"><span class="fl"><span class="ui-nw">生日奖金领取方式<i class="qm" tabindex="0" data-h="领取方式">?</i></span></span>
+              <label><input type="radio" name="rClaimBd" value="auto"> 自动领取</label><label><input type="radio" name="rClaimBd" value="manual" checked> 手动领取</label></div>
+            <div class="lv-row glow"><span class="fl"><span class="ui-nw">领奖有效期<i class="qm" tabindex="0" data-h="领奖有效期（天）">?</i></span></span>
+              <input class="bo-inp" id="gDays" data-dev="D70" value="15" inputmode="numeric" aria-label="领奖有效期（天）" style="width:120px"><span>天</span><span class="lv-ferr" id="eDays"></span></div>
+            <div class="lv-row glow"><span class="fl"><span class="ui-nw">月度结算时间<i class="qm" tabindex="0" data-h="月度结算时间">?</i></span></span>
+              <span>每月</span><select class="bo-inp" id="gStD" data-dev="D155" aria-label="结算日" style="width:72px"></select><span>日</span><select class="bo-inp" id="gStH" aria-label="结算时" style="width:68px"></select><span>:</span><select class="bo-inp" id="gStM" aria-label="结算分" style="width:68px"></select><span class="v12-tip">GMT+8</span></div>
+            <div class="lv-row glow"><span class="fl"><span class="ui-nw">结算告警时间<i class="qm" tabindex="0" data-h="结算告警时间">?</i></span></span>
+              <span>结算开始后</span><input class="bo-inp" id="gAlarm" data-dev="D157" value="30" inputmode="numeric" aria-label="结算告警时间（分钟）" style="width:80px"><span>分钟仍未完成时告警</span><span class="lv-ferr" id="eAlarm"></span></div>
+            <div class="lv-row"><span class="fl"><span class="ui-nw">流水倍数<i class="qm" tabindex="0" data-h="流水倍数">?</i></span></span>
+              <input class="bo-inp" id="gTurn" data-dev="D71" value="1" inputmode="numeric" aria-label="流水倍数" style="width:120px"><span>倍</span><span class="lv-ferr" id="eTurn"></span></div>
+            <div class="lv-row glow"><span class="fl"><span class="ui-nw">免打扰时段<i class="qm" tabindex="0" data-h="免打扰时段">?</i></span></span>
+              <input class="bo-inp" type="time" id="gDndS" data-dev="D72" value="21:00" aria-label="免打扰开始" style="width:120px"><span>至</span><input class="bo-inp" type="time" id="gDndE" value="10:00" aria-label="免打扰结束" style="width:120px"><span class="v12-tip">GMT+8，可跨天</span><span style="color:#F56C6C;margin-left:12px;white-space:nowrap">※ 若目前平台已存在短信发送限制功能，此功能可不做</span></div>
+            <!-- 短信设置（用户 2026-10-30）：两行「勾选框 + 短信模板」；勾选才发送，未勾选时模板下拉置灰；勾选但未选模板时保存提示「请选择短信模板」 -->
+            <div class="lv-row glow" id="smsBdRow"><span class="fl"><span class="ui-nw" data-dev="D73" data-dev-inline>生日短信提醒<i class="qm" tabindex="0" data-h="生日短信提醒">?</i></span></span>
+              <label><input type="checkbox" id="cBd" checked> 发送</label><select class="bo-inp" id="bdWhen" data-dev="D131" aria-label="生日短信发送时间" style="width:150px"><option value="m1">生日所在月 1 日</option><option value="d3">生日前三天</option><option value="d1">生日前一天</option><option value="d0" selected>生日当天</option></select><select class="bo-inp" id="t3" data-dev="D75" aria-label="生日短信提醒模板"><option value="">未选择</option><option>VIP 生日提醒</option><option>VIP 奖金到账</option><option>周末活动通知</option></select><i class="v12-wic" role="img" aria-label="短信模板状态异常" title="短信模板状态异常" hidden id="wT3" data-dev="D132">!</i><span class="lv-ferr" id="eT3"></span></div>
+            <div class="lv-row glow" id="smsPayRow"><span class="fl"><span class="ui-nw" data-dev="D74" data-dev-inline>奖金到账提醒<i class="qm" tabindex="0" data-h="奖金到账提醒">?</i></span></span>
+              <label><input type="checkbox" id="cPay"> 发送</label><select class="bo-inp" id="t1" aria-label="奖金到账提醒模板"><option value="">未选择</option><option>VIP 生日提醒</option><option>VIP 奖金到账</option><option>周末活动通知</option></select><i class="v12-wic" role="img" aria-label="短信模板状态异常" title="短信模板状态异常" hidden id="wT1">!</i><span class="lv-ferr" id="eT1"></span><span class="v12-tip" id="payTip" hidden>全部手动领取时无到账短信</span></div>
+            <div class="lv-row glow"><span class="fl"></span><span class="v12-tip">模板来源：公告管理 → 短信模板列表，仅显示类型为「个人」的模板（示例名，用户 2026-10-30）</span></div>
+            <div class="lv-sub">VIP会员等级奖励配置</div>
+            <div class="lv-lock" id="rwLockBar" data-dev="D65" role="status" hidden>月度结算进行中，结算完成后才能修改等级配置</div>
+            <div class="lv-pair">
+            <table class="lv-t glow" id="rwTable">
+              <thead><tr>
+                <th style="width:110px" data-dev="D58" data-dev-inline><span class="ui-nw">会员等级<i class="qm" tabindex="0" data-h="会员等级">?</i></span></th>
+                <th data-dev="D76" data-dev-inline><span class="ui-nw">升级奖金<i class="qm" tabindex="0" data-h="升级奖金">?</i></span></th>
+                <th data-dev="D77" data-dev-inline><span class="ui-nw">月度工资<i class="qm" tabindex="0" data-h="月度工资">?</i></span></th>
+                <th data-dev="D78" data-dev-inline><span class="ui-nw">生日奖金<i class="qm" tabindex="0" data-h="生日奖金">?</i></span></th>
+              </tr></thead>
+              <tbody id="rwBody"></tbody>
+            </table>
+            <!-- 实体奖品表（用户 2026-10-28 Q21：保留，本期不做，置灰显示）：位置同现网右表，全部不可操作 -->
+            <div class="lv-grey" aria-disabled="true">
+              <div class="lv-greytag">本期不做</div>
+              <table class="lv-t">
+                <thead><tr><th style="width:90px">会员等级</th><th>实体奖品</th><th style="width:60px">数量</th><th style="width:60px">操作</th></tr></thead>
+                <tbody><tr><td colspan="4" style="height:68px">已有实体奖品配置和发放记录保留，本期不可新增、修改或发放</td></tr></tbody>
+              </table>
+              <div class="lv-save"><button class="lv-btn w" type="button" data-dev="D79" disabled>新增</button></div>
+            </div>
+            </div>
+            <div class="lv-err" id="rwErr" role="alert" hidden></div>
+            <div class="lv-save"><button class="lv-btn" type="button" id="rwSave" data-dev="D80">保存</button> <span class="lv-ferr" id="eSave"></span></div>
+            <p class="ui-reqnote">现网「会员等级奖励配置」改造（PRD 7.3）：自上而下为「VIP领取奖励」（VIP 体系开关）→「VIP会员等级奖励规则」→ 奖金表「会员等级｜升级奖金｜月度工资｜生日奖金」（行与门槛表一一对应，无「操作」列；右侧实体奖品表置灰，本期不做）→ 底部「保存」。规则区：KYC 限制；升级奖金、月度工资、生日奖金三项领取方式（自动领取 / 手动领取，默认手动领取）；领奖有效期（三种奖金共用，默认 15 天，1–20）；月度结算时间；结算告警时间；流水倍数；免打扰时段；生日短信提醒、奖金到账提醒（勾选框 + 短信模板）。「VIP领取奖励」「KYC 限制」、三项领取方式经确认框即时生效；其他项随底部「保存」保存，奖金表、流水倍数有修改时须谷歌验证码，达到审批条件的提交后待审批（规则 N58「第二人审批」）。</p>
+          </section>
+
+          <!-- ============ 页签 3：活动奖励统计 ============ -->
+          <section id="sList" role="tabpanel" aria-labelledby="tab-list" hidden>
+            <!-- 来源提示（用户 2026-10-30「有关联的跳转数据要统一」）：从其他页签跳来时显示来源和带入的筛选，「‹ 返回」回到来源页原位置和原筛选 -->
+            <div class="lv-from" id="fromBar" data-dev="D153" hidden><span>来自：<b id="fromTxt"></b></span><button class="lv-btn w" type="button" id="fromBack">‹ 返回</button></div>
+            <div class="lv-filter">
+              <span class="it">会员账号:<input class="bo-inp" id="fAcc" data-dev="D81" style="width:150px" placeholder="请输入账号" aria-label="会员账号"></span>
+              <span class="it">奖励金额:<input class="bo-inp" id="fAmt" data-dev="D82" style="width:120px" placeholder="请输入" aria-label="奖励金额"></span>
+              <span class="it"><span class="ui-nw">奖励类型<i class="qm" tabindex="0" data-h="奖励类型">?</i></span>:<select class="bo-inp glow" id="fType" data-dev="D83" style="width:130px" aria-label="奖励类型"><option value="">全部</option><option>升级奖金</option><option>月度工资</option><option>生日奖金</option><option>等级调整补偿</option></select></span>
+              <span class="it"><span class="ui-nw">发放状态<i class="qm" tabindex="0" data-h="发放状态">?</i></span>:<select class="bo-inp glow" id="fSt" data-dev="D84" style="width:150px" aria-label="发放状态"><option value="">全部</option><option>待领取</option><option>已到账</option><option>已过期</option><option>暂停发放（风控）</option><option>已作废</option><option>不发放</option><option>发放失败</option></select></span>
+              <span class="it"><span class="ui-nw">结算月份<i class="qm" tabindex="0" data-h="结算月份（统计）">?</i></span>:<input type="month" class="bo-inp" id="fAm" data-dev="D133" style="width:150px" aria-label="结算月份"></span>
+              <span class="it"><span class="ui-nw">生成时间<i class="qm" tabindex="0" data-h="生成时间">?</i></span>:<span class="lv-range"><span aria-hidden="true">📅</span><input type="date" id="fFrom" data-dev="D85" value="2026-10-22" aria-label="开始日期">~<input type="date" id="fTo" value="2026-10-28" aria-label="结束日期"></span></span>
+              <button class="lv-btn" type="button" id="fSearch" data-dev="D86">🔍 搜索</button><button class="lv-btn w" type="button" id="expBtn" data-dev="D87">导出</button><span class="v12-tip">时间均为 GMT+8</span>
+            </div>
+            <div class="lv-panel">
+              <div class="lv-tot"><span class="ui-nw" style="margin-right:auto"><button class="lv-btn w glow" type="button" id="bvBtn" data-dev="D160">整批作废</button><i class="qm" tabindex="0" data-h="整批作废">?</i></span><span><span class="ui-nw">已发放金额<i class="qm" tabindex="0" data-h="已发放金额">?</i></span>: <b id="totAmt">0</b></span><button class="lv-btn" type="button" id="totBtn" data-dev="D88">查询总计</button></div>
+              <table class="lv-t lv-l glow">
+                <thead><tr><th>会员账号</th><th>会员等级</th><th data-dev="D89" data-dev-inline><span class="ui-nw">生成时间<i class="qm" tabindex="0" data-h="生成时间">?</i></span></th><th><span class="ui-nw">奖励类型<i class="qm" tabindex="0" data-h="奖励类型">?</i></span></th><th>奖励金额</th><th data-dev="D90" data-dev-inline><span class="ui-nw">申请领取时间<i class="qm" tabindex="0" data-h="申请领取时间">?</i></span></th><th data-dev="D91" data-dev-inline><span class="ui-nw">发放时间<i class="qm" tabindex="0" data-h="发放时间">?</i></span></th><th><span class="ui-nw">状态<i class="qm" tabindex="0" data-h="发放状态">?</i></span></th><th data-dev="D149" data-dev-inline><span class="ui-nw">说明<i class="qm" tabindex="0" data-h="说明">?</i></span></th><th data-dev="D93" data-dev-inline><span class="ui-nw">操作人<i class="qm" tabindex="0" data-h="操作人">?</i></span></th><th style="min-width:120px" data-dev="D94 D95 D96">操作</th></tr></thead>
+                <tbody id="tb"></tbody>
+              </table>
+              <div class="lv-pg" role="navigation" aria-label="分页">
+                <span>Total <span id="pgTotal">0</span></span>
+                <select id="pgSize" data-dev="D98" aria-label="每页条数"><option value="10" selected>10/page</option><option value="20">20/page</option><option value="50">50/page</option></select>
+                <button type="button" id="pgPrev" aria-label="上一页">‹</button><span id="pgNums"></span><button type="button" id="pgNext" aria-label="下一页">›</button>
+                <label>Go to <input id="pgGo" inputmode="numeric" aria-label="前往页码" value="1"></label>
+              </div>
+            </div>
+            <p class="ui-reqnote">现网「活动奖励统计」改造（PRD 7.4）：筛选、汇总、表格列、合计行、分页的位置和样式同现网。奖励类型：升级奖金 / 月度工资 / 生日奖金 / 等级调整补偿（列表显示中文）；发放状态 7 种；会员等级显示 VIP 等级名。不设审核：汇总「已发放金额」，列「发放时间」「操作人」。新增「生成时间」列，时间筛选按生成时间；「申请领取时间」= 玩家领取时间，未领取显示「-」；「发放时间」= 实际到账时间。截止时间、不发放 / 暂停发放 / 作废原因、补发对应的原记录、「补发待审批」「放行待审批」在状态后的「说明」列显示。时间均为 GMT+8，在筛选栏右侧统一注明。操作列按状态显示放行、作废、补发、重试；列表上方「整批作废」（规则 N32「放行」、N33「作废与补发」、N58「第二人审批」）。数据均为示例。</p>
+          </section>
+
+          <!-- ============ 页签 4：VIP月度结算记录（用户 2026-10-28 Q23：补回月度结算记录查询，其他 5 项不补） ============ -->
+          <section id="sSettle" role="tabpanel" aria-labelledby="tab-settle" hidden>
+            <div id="stMain">
+              <div class="lv-filter">
+                <span class="it"><span class="ui-nw">结算月份<i class="qm" tabindex="0" data-h="结算月份">?</i></span>:<span class="lv-range"><input type="month" id="stFrom" data-dev="D99" value="2026-04" aria-label="开始月份">~<input type="month" id="stTo" value="2026-09" aria-label="结束月份"></span></span>
+                <span class="it">结算状态:<select class="bo-inp" id="stSt" data-dev="D100" style="width:120px" aria-label="结算状态"><option value="">全部</option><option>已完成</option><option>部分完成</option><option>结算中</option><option>结算失败</option></select></span>
+                <button class="lv-btn" type="button" id="stSearch" data-dev="D101">🔍 搜索</button><span class="v12-tip">时间均为 GMT+8</span>
+              </div>
+              <div class="lv-panel">
+                <table class="lv-t lv-l glow">
+                  <thead><tr><th><span class="ui-nw">结算月份<i class="qm" tabindex="0" data-h="结算月份">?</i></span></th><th>结算执行时间</th><th><span class="ui-nw">结算状态<i class="qm" tabindex="0" data-h="结算状态">?</i></span></th><th data-dev="D103" data-dev-inline>参与人数</th><th data-dev="D150" data-dev-inline><span class="ui-nw">升级<i class="qm" tabindex="0" data-h="升级（结算）">?</i></span></th><th data-dev="D151" data-dev-inline><span class="ui-nw">等级变更<i class="qm" tabindex="0" data-h="等级变更（结算）">?</i></span></th><th>保级成功</th><th><span class="ui-nw">恢复<i class="qm" tabindex="0" data-h="恢复">?</i></span></th><th>降级</th><th>其中降为 VIP0</th><th>结算失败</th><th data-dev="D144" data-dev-inline><span class="ui-nw">已到账<i class="qm" tabindex="0" data-h="已到账（结算）">?</i></span></th><th data-dev="D106" data-dev-inline>操作</th></tr></thead>
+                  <tbody id="stBody"></tbody>
+                </table>
+                <div class="lv-pg"><span>Total <span id="stTotal">0</span></span></div>
+              </div>
+            </div>
+            <div id="stDtl" hidden>
+              <div class="lv-row" style="margin-bottom:10px"><button class="lv-btn w" type="button" id="stBack" data-dev="D107">‹ 返回</button><b id="stDtlT" style="color:#303133">2026-09 结算明细</b></div>
+              <div class="lv-filter">
+                <span class="it">会员账号:<input class="bo-inp" id="sdAcc" data-dev="D108" style="width:150px" placeholder="请输入账号" aria-label="会员账号"></span>
+                <span class="it">考核等级:<select class="bo-inp" id="sdLv" style="width:120px" aria-label="考核等级"><option value="">全部</option></select></span>
+                <span class="it">结算结果:<select class="bo-inp" id="sdRes" style="width:130px" aria-label="结算结果"><option value="">全部</option><option>保级成功</option><option>恢复</option><option>降级</option><option>降为 VIP0</option><option>未完成</option></select></span>
+                <button class="lv-btn" type="button" id="sdSearch" data-dev="D109">🔍 搜索</button><button class="lv-btn w" type="button" id="sdExp" data-dev="D110">导出</button>
+              </div>
+              <div class="lv-panel">
+                <table class="lv-t lv-l glow">
+                  <thead><tr><th>会员账号</th><th><span class="ui-nw">考核等级<i class="qm" tabindex="0" data-h="考核等级">?</i></span></th><th>历史最高等级</th><th>当月有效投注</th><th>保级投注</th><th data-dev="D111" data-dev-inline><span class="ui-nw">月度工资等级<i class="qm" tabindex="0" data-h="月度工资等级">?</i></span></th><th data-dev="D112" data-dev-inline><span class="ui-nw">结算结果<i class="qm" tabindex="0" data-h="结算结果">?</i></span></th><th>结算后等级</th><th data-dev="D136" data-dev-inline><span class="ui-nw">月度工资<i class="qm" tabindex="0" data-h="金额显示">?</i></span></th><th><span class="ui-nw">生日奖金<i class="qm" tabindex="0" data-h="金额显示">?</i></span></th><th data-dev="D137" data-dev-inline><span class="ui-nw">到账核算<i class="qm" tabindex="0" data-h="到账核算（明细）">?</i></span></th><th data-dev="D156" data-dev-inline><span class="ui-nw">失败原因<i class="qm" tabindex="0" data-h="失败原因">?</i></span></th><th data-dev="D138" data-dev-inline>操作</th></tr></thead>
+                  <tbody id="sdBody"></tbody>
+                </table>
+                <div class="lv-pg" role="navigation" aria-label="明细分页"><span>Total <span id="sdTotal">0</span></span><select data-dev="D114" aria-label="每页条数"><option selected>10/page</option><option>20/page</option><option>50/page</option></select><button type="button" aria-label="上一页" disabled>‹</button><span class="on">1</span><button type="button" aria-label="下一页" disabled>›</button></div>
+              </div>
+            </div>
+            <p class="ui-reqnote">新增页签（PRD 7.5，Q23 只补回月度结算记录查询）：每月结算时间（默认 1 日 13:00，GMT+8）结算开始后生成一行，按结算月份倒序；点「明细」查看当月每位参与玩家的结算结果，可按账号、考核等级、结果筛选并导出。发放状态只在「活动奖励统计」维护，放行、作废、补发也在那里处理。列表「已到账」数字可点，跳到活动奖励统计并带上结算月份等筛选；明细有「生日奖金」「到账核算」（应到账 / 实际到账 / 未领取），金额已到账正常显示、未到账浅色显示，没有显示「-」；「查看记录」跳到活动奖励统计（该会员 + 结算月份）。有单人结算失败时状态为橙色「部分完成」（可点，进入明细只看「未完成」行），失败行红色，操作列「重新结算」「完成」；整次失败为「结算失败」，操作列「重新结算」补跑（规则 N19「结算任务」）。结算口径：k = 当月有效投注达到保级投注的最高等级（不超过历史最高）；k = 考核等级为保级成功，k 更高为恢复，k 更低为降 1 级；都按 k 级生成月度工资，k 为 VIP0 不生成。参与人数 = 保级成功 + 恢复 + 降级 + 结算失败。数据均为示例。</p>
+          </section>
+          </div>
+        </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 弹窗：影响预览（页签 1、2 保存时） ============ -->
+  <div class="bo-mask" id="dPrev" hidden><div class="bo-dlg v12-dlgw glow" role="dialog" aria-modal="true" aria-labelledby="dPrevT">
+    <h4 id="dPrevT"><span class="ui-nw">影响预览<i class="qm" tabindex="0" data-h="影响预览">?</i></span></h4>
+    <table><tbody>
+      <tr><td>修改内容</td><td id="pWhat">VIP1 累计充值：₱2,000 → ₱1,500</td></tr>
+      <tr id="pNewRow" hidden><td>新等级奖金</td><td>
+        <label>升级奖金 ₱<input class="bo-inp" id="pNb0" data-dev="D116" value="0" inputmode="decimal" style="width:96px" aria-label="新等级升级奖金"></label>
+        <label>月度工资 ₱<input class="bo-inp" id="pNb1" value="0" inputmode="decimal" style="width:96px" aria-label="新等级月度工资"></label>
+        <label>生日奖金 ₱<input class="bo-inp" id="pNb2" value="0" inputmode="decimal" style="width:96px" aria-label="新等级生日奖金"></label>
+        <div class="v12-ferr" id="pNbErr" role="alert"></div></td></tr>
+      <tr><td id="pUpL">门槛下调后将立即升级</td><td id="pUp" data-dev="D115">1,284 人；升级奖金合计 ₱10,272.00</td></tr>
+      <tr><td>保级投注 / 月度工资变化</td><td id="pSet">无</td></tr>
+      <tr><td>生日奖金变化</td><td id="pBonus">无</td></tr>
+      <tr><td>奖金变动比例与影响金额</td><td id="pAp">无</td></tr>
+      <tr id="pSegRow" hidden><td>前台段位</td><td id="pSeg"></td></tr>
+    </tbody></table>
+    <div class="v12-tip" id="pTip">确认后才保存；上调门槛不降级、已生成的奖金不变、已到账的不追回。</div>
+    <label class="v12-ga">谷歌验证码 <input class="bo-inp" id="pGa" data-dev="D163" maxlength="6" inputmode="numeric" style="width:120px" placeholder="6 位数字" aria-label="谷歌验证码"></label>
+    <div class="v12-ferr" id="pGaErr" role="alert"></div>
+    <div class="v12-row2"><button class="bo-btn" type="button" data-dev="D118" data-cancel>取消</button><button class="bo-btn q" type="button" id="pOk" data-dev="D117">确认保存</button></div>
+  </div></div>
+
+  <!-- ============ 弹窗：删除等级确认（用户 2026-10-28） ============ -->
+  <div class="bo-mask" id="dDel" hidden><div class="bo-dlg v12-dlgw glow" role="dialog" aria-modal="true" aria-labelledby="dDelT">
+    <h4 id="dDelT">删除等级</h4>
+    <table><tbody>
+      <tr><td>删除</td><td id="delWhat">SUPER VIP</td></tr>
+      <tr><td>该等级玩家</td><td id="delWho" data-dev="D119"></td></tr>
+      <tr><td>等级名变化</td><td id="delName">-</td></tr>
+      <tr><td>前台段位</td><td id="delSeg"></td></tr>
+    </tbody></table>
+    <div class="v12-tip">删除后立即生效，不能撤销；该等级未到账的奖金照常处理，已发奖金不追回；表格里未保存的修改会丢失。</div>
+    <label class="v12-ga">谷歌验证码 <input class="bo-inp" id="delGa" maxlength="6" inputmode="numeric" style="width:120px" placeholder="6 位数字" aria-label="谷歌验证码"></label>
+    <div class="v12-ferr" id="delGaErr" role="alert"></div>
+    <div class="v12-row2"><button class="bo-btn" type="button" data-dev="D118" data-cancel>取消</button><button class="bo-btn q" type="button" id="delOk" data-dev="D120">确认删除</button></div>
+  </div></div>
+
+  <!-- ============ 弹窗：开关确认（VIP领取奖励 / KYC 限制） ============ -->
+  <div class="bo-mask" id="dSw" hidden><div class="bo-dlg v12-dlgw glow" role="dialog" aria-modal="true" aria-labelledby="dSwT">
+    <h4 id="dSwT">关闭 KYC 限制</h4>
+    <div id="dSwBody" data-dev="D121"></div>
+    <label id="gaRow">谷歌验证码 <input class="bo-inp" id="gaCode" data-dev="D122" maxlength="6" inputmode="numeric" style="width:120px" placeholder="6 位数字" aria-label="谷歌验证码"></label>
+    <div class="v12-ferr" id="gaErr" role="alert"></div>
+    <div class="v12-row2"><button class="bo-btn" type="button" data-dev="D118" data-cancel>取消</button><button class="bo-btn q" type="button" id="swOk" data-dev="D123">确认</button></div>
+  </div></div>
+
+  <!-- ============ 弹窗：放行 / 作废 / 补发 / 导出（不设审核，用户 2026-10-29） ============ -->
+  <div class="bo-mask" id="dRel" hidden><div class="bo-dlg v12-dlgw glow" role="dialog" aria-modal="true" aria-labelledby="dRelT">
+    <h4 id="dRelT"><span class="ui-nw">放行<i class="qm" tabindex="0" data-h="放行">?</i></span></h4>
+    <table><tbody id="relInfo"></tbody></table>
+    <div class="v12-warn" id="relWarn">该会员仍处于风控暂停状态，请解除后再放行</div>
+    <div class="v12-warn" id="relKyc" hidden>原因为 KYC 限制的，玩家完成 KYC 前不建议放行</div>
+    <div class="v12-warn" id="relAp" hidden>单笔 ≥ ₱5,000，提交后须另一个有审批权限的账号通过才放行</div>
+    <label>备注（选填）<textarea id="relWhy" data-dev="D124" maxlength="200"></textarea></label>
+    <div class="v12-row2"><button class="bo-btn" type="button" data-dev="D118" data-cancel>取消</button><button class="bo-btn q" type="button" id="relOk" data-dev="D125">确认放行</button></div>
+  </div></div>
+  <div class="bo-mask" id="dVoid" hidden><div class="bo-dlg v12-dlgw glow" role="dialog" aria-modal="true" aria-labelledby="dVoidT">
+    <h4 id="dVoidT"><span class="ui-nw">作废<i class="qm" tabindex="0" data-h="作废">?</i></span></h4>
+    <table><tbody id="voidInfo"></tbody></table>
+    <label>作废原因（必填，1–200 字）<textarea id="voidWhy" data-dev="D126" maxlength="200"></textarea></label>
+    <div class="v12-ferr" id="voidErr" role="alert"></div>
+    <div class="v12-row2"><button class="bo-btn" type="button" data-dev="D118" data-cancel>取消</button><button class="bo-btn q" type="button" id="voidOk" data-dev="D127">确认作废</button></div>
+  </div></div>
+  <div class="bo-mask" id="dRe" hidden><div class="bo-dlg v12-dlgw glow" role="dialog" aria-modal="true" aria-labelledby="dReT">
+    <h4 id="dReT"><span class="ui-nw">补发<i class="qm" tabindex="0" data-h="补发">?</i></span></h4>
+    <table><tbody id="reInfo"></tbody></table>
+    <p style="margin:0;font-size:12.5px">补发将生成一条新记录（「说明」列注明「补发：原记录」），确认后直接到账；每条原记录只能补发 1 次，补发失败只能「重试」。</p>
+    <div class="v12-warn" id="reSame" hidden>作废和补发不能由同一账号操作</div>
+    <div class="v12-warn" id="reAp" hidden>单笔 ≥ ₱5,000，提交后须另一个有审批权限的账号通过才补发</div>
+    <label>补发原因（必填，1–200 字）<textarea id="reWhy" data-dev="D128" maxlength="200"></textarea></label>
+    <div class="v12-ferr" id="reErr" role="alert"></div>
+    <div class="v12-row2"><button class="bo-btn" type="button" data-dev="D118" data-cancel>取消</button><button class="bo-btn q" type="button" id="reOk" data-dev="D129">确认补发</button></div>
+  </div></div>
+  <!-- ============ 弹窗：模板异常停发确认（用户 2026-10-30 第 9 批 R5） ============ -->
+  <div class="bo-mask" id="dSmsStop" hidden><div class="bo-dlg v12-dlgw glow" role="dialog" aria-modal="true" aria-labelledby="dSmsStopT">
+    <h4 id="dSmsStopT">停止发送短信</h4>
+    <p style="margin:0">以下短信将停止发送：<b id="smsStopList"></b>，确定吗？</p>
+    <div class="v12-tip">确定后保存，该行模板异常提示（红色感叹号）解除；以后需要发送时，重新勾选并选择有效的个人模板。</div>
+    <div class="v12-row2"><button class="bo-btn" type="button" id="smsStopNo" data-dev="D118">取消</button><button class="bo-btn q" type="button" id="smsStopOk" data-dev="D139">确定</button></div>
+  </div></div>
+  <!-- ============ 弹窗：结算失败行「完成」（用户 2026-10-30） ============ -->
+  <div class="bo-mask" id="dDone" hidden><div class="bo-dlg v12-dlgw glow" role="dialog" aria-modal="true" aria-labelledby="dDoneT">
+    <h4 id="dDoneT">完成结算</h4>
+    <p style="margin:0">会员：<b id="doneWho"></b></p>
+    <div class="v12-warn">请确认技术已完成该玩家的补结算。标记完成只做确认，不修改玩家数据。</div>
+    <label>备注（选填）<textarea id="doneWhy" data-dev="D148" maxlength="200"></textarea></label>
+    <div class="v12-ferr" id="doneErr" role="alert"></div>
+    <div class="v12-row2"><button class="bo-btn" type="button" id="doneNo" data-dev="D118">取消</button><button class="bo-btn q" type="button" id="doneOk" data-dev="D147">确认完成</button></div>
+  </div></div>
+  <!-- ============ 弹窗：等级变更明细（用户 2026-10-30，只读） ============ -->
+  <div class="bo-mask" id="dChg" hidden><div class="bo-dlg v12-dlgw glow" role="dialog" aria-modal="true" aria-labelledby="chgT" data-dev="D152">
+    <button type="button" class="x-close" id="chgX" aria-label="关闭" title="关闭">×</button>
+    <h4 id="chgT">等级变更明细</h4>
+    <table><tbody id="chgBody"></tbody></table>
+    <div class="v12-tip chg-ft">同一玩家可能计入多类，各类之和可大于总人数</div>
+  </div></div>
+  <div class="bo-mask" id="dExp" hidden><div class="bo-dlg v12-dlgw glow" role="dialog" aria-modal="true" aria-labelledby="dExpT">
+    <h4 id="dExpT">导出</h4>
+    <p style="margin:0">将导出当前筛选条件下的全部 <b id="expN">0</b> 条记录（不受分页限制），格式 CSV，列与列表一致（含「说明」列）。超过 10 万行时改为后台生成，完成后在【数据报表 › 报表下载】下载（沿用现网）。</p>
+    <div class="v12-row2"><button class="bo-btn" type="button" data-dev="D118" data-cancel>取消</button><button class="bo-btn q" type="button" id="expOk" data-dev="D130">确认导出</button></div>
+  </div></div>
+  <!-- ============ 弹窗：待审批（规则 N58） ============ -->
+  <div class="bo-mask" id="dAp" hidden><div class="bo-dlg v12-wide glow" role="dialog" aria-modal="true" aria-labelledby="dApT">
+    <button type="button" class="x-close" id="apX" aria-label="关闭" title="关闭">×</button>
+    <h4 id="dApT"><span class="ui-nw">待审批<i class="qm" tabindex="0" data-h="待审批">?</i></span></h4>
+    <table><thead><tr><th>提交时间</th><th>提交人</th><th>内容</th><th>审批条件</th><th>失效时间</th><th>操作</th></tr></thead><tbody id="apBody"></tbody></table>
+    <label class="v12-ga">谷歌验证码 <input class="bo-inp" id="apGa" maxlength="6" inputmode="numeric" style="width:120px" placeholder="6 位数字" aria-label="谷歌验证码"></label>
+    <div class="v12-ferr" id="apErr" role="alert"></div>
+    <div class="v12-tip">提交人不能审批自己的提交；24 小时未处理自动失效，按驳回处理。</div>
+  </div></div>
+  <!-- ============ 弹窗：操作日志（PRD 7.1，只读） ============ -->
+  <div class="bo-mask" id="dLog" hidden><div class="bo-dlg v12-wide glow" role="dialog" aria-modal="true" aria-labelledby="dLogT">
+    <button type="button" class="x-close" id="logX" aria-label="关闭" title="关闭">×</button>
+    <h4 id="dLogT">操作日志</h4>
+    <div class="lv-filter">
+      <span class="it">操作时间:<span class="lv-range"><input type="date" id="lgFrom" value="2026-10-22" aria-label="开始日期">~<input type="date" id="lgTo" value="2026-10-28" aria-label="结束日期"></span></span>
+      <span class="it">操作人:<input class="bo-inp" id="lgWho" style="width:110px" aria-label="操作人"></span>
+      <span class="it">操作类型:<select class="bo-inp" id="lgType" style="width:110px" aria-label="操作类型"><option value="">全部</option><option>配置修改</option><option>新增等级</option><option>删除等级</option><option>开关切换</option><option>放行</option><option>作废</option><option>整批作废</option><option>补发</option><option>重试</option><option>重新结算</option><option>完成</option><option>审批</option><option>全量重算</option></select></span>
+      <span class="it">对象:<input class="bo-inp" id="lgObj" style="width:140px" placeholder="会员账号 / 记录 ID / 等级" aria-label="对象"></span>
+      <button class="lv-btn" type="button" id="lgSearch">🔍 搜索</button><span class="v12-tip">时间均为 GMT+8</span>
+    </div>
+    <table><thead><tr><th>操作时间</th><th>操作人</th><th>模块</th><th>操作类型</th><th>对象</th><th>修改内容</th><th>原因</th></tr></thead><tbody id="lgBody"></tbody></table>
+    <div class="lv-pg"><span>Total <span id="lgTotal">0</span></span><select aria-label="每页条数"><option selected>10/page</option><option>20/page</option><option>50/page</option></select></div>
+  </div></div>
+  <!-- ============ 弹窗：整批作废（规则 N33 ④） ============ -->
+  <div class="bo-mask" id="dBv" hidden><div class="bo-dlg v12-dlgw glow" role="dialog" aria-modal="true" aria-labelledby="dBvT">
+    <h4 id="dBvT"><span class="ui-nw">整批作废<i class="qm" tabindex="0" data-h="整批作废">?</i></span></h4>
+    <table><thead><tr><th></th><th>时间</th><th>操作</th><th>未领取</th></tr></thead><tbody id="bvBody"></tbody></table>
+    <label>作废原因（必填，1–200 字）<textarea id="bvWhy" maxlength="200"></textarea></label>
+    <label class="v12-ga">谷歌验证码 <input class="bo-inp" id="bvGa" maxlength="6" inputmode="numeric" style="width:120px" placeholder="6 位数字" aria-label="谷歌验证码"></label>
+    <div class="v12-ferr" id="bvErr" role="alert"></div>
+    <div class="v12-row2"><button class="bo-btn" type="button" data-cancel>取消</button><button class="bo-btn q" type="button" id="bvOk">确认作废</button></div>
+  </div></div>
+  <!-- ============ 弹窗：重新结算（规则 N19） ============ -->
+  <div class="bo-mask" id="dRs" hidden><div class="bo-dlg v12-dlgw glow" role="dialog" aria-modal="true" aria-labelledby="dRsT">
+    <h4 id="dRsT"><span class="ui-nw">重新结算<i class="qm" tabindex="0" data-h="重新结算">?</i></span></h4>
+    <p style="margin:0" id="rsWhat"></p>
+    <div class="v12-tip">按考核月生效的配置补结算，写操作日志。</div>
+    <div class="v12-row2"><button class="bo-btn" type="button" id="rsNo">取消</button><button class="bo-btn q" type="button" id="rsOk" data-dev="D161">确认重新结算</button></div>
+  </div></div>
+
+  <aside class="notes adm-notes">
+    <h2>VIP会员体系-v1.2-后台VIP会员等级配置页面</h2>
+    <p class="sub">【用户管理 › 会员等级】按现网页面改造（用户 10-28 定）。同一页面 4 个页签：VIP会员等级配置、VIP会员等级奖励配置、活动奖励统计、VIP月度结算记录（新增）；布局、控件、表格和分页同现网；去掉【用户管理 › VIP特权】菜单。带淡色光晕的是本需求新增或改造的控件。数据均为示例。</p>
+    <h3>模拟场景</h3>
+    <div class="sim">
+      <button type="button" data-go="levels"><span class="simtag">VIP会员等级配置</span>门槛表</button>
+      <button type="button" data-go="add"><span class="simtag">VIP会员等级配置</span>新增等级（SUPER VIP 顺延）</button>
+      <button type="button" data-go="add-save"><span class="simtag">VIP会员等级配置</span>新增等级 · 保存时填写奖金</button>
+      <button type="button" data-go="del"><span class="simtag">VIP会员等级配置</span>删除最高一级（次高级改名 SUPER VIP）</button>
+      <button type="button" data-go="invalid"><span class="simtag">VIP会员等级配置</span>门槛递增校验不通过</button>
+      <button type="button" data-go="preview"><span class="simtag">VIP会员等级配置</span>保存 · 影响预览</button>
+      <button type="button" data-go="locked"><span class="simtag">VIP会员等级配置</span>结算期间禁止修改</button>
+      <button type="button" data-go="locked-fail"><span class="simtag">VIP会员等级配置</span>结算失败 · 补跑完成前锁定</button>
+      <button type="button" data-go="locked-recalc" class="glow"><span class="simtag">VIP会员等级配置</span>等级重算进行中 · 锁定</button>
+      <button type="button" data-go="ap-submit" class="glow"><span class="simtag">VIP会员等级配置</span>保存达到审批条件 → 已提交审批</button>
+      <button type="button" data-go="ap-list" class="glow"><span class="simtag">待审批</span>待审批弹窗 · 通过 / 驳回</button>
+      <button type="button" data-go="log" class="glow"><span class="simtag">操作日志</span>操作日志弹窗（筛选 + 只读列表）</button>
+      <button type="button" data-go="global"><span class="simtag">奖励配置</span>奖金表与奖励规则</button>
+      <button type="button" data-go="rw-invalid"><span class="simtag">奖励配置</span>参数取值不合法</button>
+      <button type="button" data-go="rw-locked"><span class="simtag">奖励配置</span>结算期间奖金表锁定</button>
+      <button type="button" data-go="st-change" class="glow"><span class="simtag">奖励配置</span>修改月度结算时间 → 确认框显示下次结算时间</button>
+      <button type="button" data-go="st-locked" class="glow"><span class="simtag">奖励配置</span>结算期间不能修改月度结算时间</button>
+      <button type="button" data-go="turn-zero" class="glow"><span class="simtag">奖励配置</span>流水倍数改为 0 → 谷歌验证码 + 第二人审批</button>
+      <button type="button" data-go="sys-on"><span class="simtag">奖励配置</span>开启 · 第一次（上线结算）</button>
+      <button type="button" data-go="sys-reon"><span class="simtag">奖励配置</span>开启 · 再次开启</button>
+      <button type="button" data-go="sys-off"><span class="simtag">奖励配置</span>关闭VIP领取奖励</button>
+      <button type="button" data-go="kyc-off"><span class="simtag">奖励配置</span>关闭 KYC 限制</button>
+      <button type="button" data-go="kyc-on"><span class="simtag">奖励配置</span>开启 KYC 限制</button>
+      <button type="button" data-go="sms-notpl"><span class="simtag">奖励配置</span>短信 · 勾选但未选模板</button>
+      <button type="button" data-go="sms-empty" class="glow"><span class="simtag">奖励配置</span>短信 · 没有个人模板</button>
+      <button type="button" data-go="sms-invalid" class="glow"><span class="simtag">奖励配置</span>短信 · 生日提醒模板被删除或改为群发</button>
+      <button type="button" data-go="sms-invalid2" class="glow"><span class="simtag">奖励配置</span>短信 · 两行模板都异常（升级奖金为自动领取）</button>
+      <button type="button" data-go="claim-all-manual" class="glow"><span class="simtag">奖励配置</span>领取方式全部手动 → 奖金到账提醒置灰</button>
+      <button type="button" data-go="claim-up-auto"><span class="simtag">奖励配置</span>领取方式 · 升级奖金改为自动领取</button>
+      <button type="button" data-go="claim-mix"><span class="simtag">奖励配置</span>领取方式 · 升级自动、月度和生日手动</button>
+      <button type="button" data-go="claim-up-manual"><span class="simtag">奖励配置</span>领取方式 · 改回手动领取</button>
+      <button type="button" data-go="list"><span class="simtag">奖励统计</span>列表</button>
+      <button type="button" data-go="total"><span class="simtag">奖励统计</span>查询总计</button>
+      <button type="button" data-go="kyc-fill"><span class="simtag">奖励统计</span>KYC 定级补发</button>
+      <button type="button" data-go="list-auto"><span class="simtag">奖励统计</span>自动领取记录（申请领取时间 = 到账时间）</button>
+      <button type="button" data-go="list-month"><span class="simtag">奖励统计</span>月度工资（10-01 生成，已领 / 已过期）</button>
+      <button type="button" data-go="release"><span class="simtag">奖励统计</span>放行（恢复为待领取）</button>
+      <button type="button" data-go="release-exp"><span class="simtag">奖励统计</span>放行 · 已过期直接到账</button>
+      <button type="button" data-go="release-risk" class="glow"><span class="simtag">奖励统计</span>放行 · 玩家仍在风控暂停，不能放行</button>
+      <button type="button" data-go="void"><span class="simtag">奖励统计</span>作废</button>
+      <button type="button" data-go="reissue"><span class="simtag">奖励统计</span>补发</button>
+      <button type="button" data-go="reissue-same" class="glow"><span class="simtag">奖励统计</span>补发 · 作废和补发同一账号 → 拦截</button>
+      <button type="button" data-go="reissue-ap" class="glow"><span class="simtag">奖励统计</span>补发 ≥ ₱5,000 → 待审批</button>
+      <button type="button" data-go="release-ap" class="glow"><span class="simtag">奖励统计</span>放行 ≥ ₱5,000 → 待审批</button>
+      <button type="button" data-go="retry" class="glow"><span class="simtag">奖励统计</span>补发记录发放失败 → 重试</button>
+      <button type="button" data-go="batch-void" class="glow"><span class="simtag">奖励统计</span>整批作废（24 小时内的批次）</button>
+      <button type="button" data-go="list-why" class="glow"><span class="simtag">奖励统计</span>说明列：系统作废、撤单复核、不发放新原因</button>
+      <button type="button" data-go="export"><span class="simtag">奖励统计</span>导出</button>
+      <button type="button" data-go="empty"><span class="simtag">奖励统计</span>空列表</button>
+      <button type="button" data-go="settle"><span class="simtag">月度结算记录</span>列表</button>
+      <button type="button" data-go="settle-dtl"><span class="simtag">月度结算记录</span>结算明细</button>
+      <button type="button" data-go="settle-fail"><span class="simtag">月度结算记录</span>结算失败 → 「重新结算」补跑</button>
+      <button type="button" data-go="settle-resettle" class="glow"><span class="simtag">月度结算记录</span>未完成行「重新结算」→ 再点「完成」</button>
+      <button type="button" data-go="settle-part" class="glow"><span class="simtag">月度结算记录</span>部分完成 → 明细只看结算失败行（红色）</button>
+      <button type="button" data-go="settle-chg" class="glow"><span class="simtag">月度结算记录</span>点「等级变更」人数 → 各类变更人数</button>
+      <button type="button" data-go="settle-done" class="glow"><span class="simtag">月度结算记录</span>失败行点「完成」→ 全部完成后变「已完成」</button>
+      <button type="button" data-go="settle-notyet" class="glow"><span class="simtag">月度结算记录</span>技术未补结算时点「完成」→ 不能完成</button>
+      <button type="button" data-go="settle-jump" class="glow"><span class="simtag">月度结算记录</span>明细「查看记录」→ 活动奖励统计（该会员 + 结算月份）</button>
+      <button type="button" data-go="list-am" class="glow"><span class="simtag">奖励统计</span>结算月份筛选（2026-09，含三类奖金）</button>
+      <button type="button" data-go="sms-stop" class="glow"><span class="simtag">奖励配置</span>短信 · 异常行不勾选保存 → 停发确认</button>
+    </div>
+    <p class="ui-reqnote">谷歌验证码演示值：123456，其他值提示错误。</p>
+    <h3>规则批注</h3>
+    <ol>
+      <li><b>页面范围</b>：4 个页签在同一页面切换；去掉【用户管理 › VIP特权】菜单和系统参数「新版VIP特权状态」。原方案的 VIP 会员数据、等级变动记录查询页不补回，数据保留在数据库；操作日志改为各页签右上角「操作日志」弹窗查询。<span class="ref">PRD 7.1、规则 N47 去掉旧版 VIP（VIP特权）、Q23 原方案后台功能是否补回（已定）、Q65 资金防护 · F09-05 权限与操作日志</span></li>
+      <li><b>等级档位</b>：两张等级表默认 26 行（VIP0 + VIP1–SUPER VIP）；等级名按位置自动生成，不能手改。VIP0（等级值 0，前台、后台都显示「VIP0」）整行为 0、只读、不能删除；只有最高一级 SUPER VIP 可删除。<span class="ref">PRD 规则 N1 等级档位 · F01-01 VIP 等级配置表</span></li>
+      <li><b>新增等级</b>：点 VIP0 行「新增」，表格最下方加一行，新行名为 SUPER VIP，原 SUPER VIP 改名为 VIP25（以此类推）。新行三项门槛必填，且大于上一级；保存前可点「取消」去掉。一次只能新增 1 行，不设等级数量上限。点「保存」后在影响预览里填写新等级的升级奖金、月度工资、生日奖金（默认 0，0–9,999,999.99，最多 2 位小数，不合法时标红、不能确认），填谷歌验证码「确认保存」后门槛和奖金一起生效（达到审批条件的审批通过后生效）。保存后全部玩家按新配置重算等级：重算前历史最高那一级的升级奖金未领取的系统作废，生成 1 笔不超过原金额的「等级调整补偿」（待领取；该等级已有记录的不生成）；领过被删等级升级奖金的玩家，到达的第 1 个新增等级不发；不弹窗、不发站内信。<span class="ref">PRD 规则 N49 新增等级、N55 新增和删除等级后的等级重算 · F01-04 新增与删除等级</span></li>
+      <li><b>删除等级</b>：只有 SUPER VIP 行显示「删除」，确认框写明删除内容、该等级玩家人数和处理、等级名变化，填谷歌验证码「确认删除」后立即生效、不能撤销：原次高级改名为 SUPER VIP，两张表同步删除该行。被删等级的玩家改为新的 SUPER VIP；降级玩家的历史最高按累计重新确定；记「等级配置调整」，不算降级、不显示 BACK、不弹窗、不发站内信；未领取的升级奖金系统作废，按规则 N55「新增、删除等级后的等级重算」生成等级调整补偿；已发奖金不追回。只剩 1 个 VIP 等级、有未保存的新增行或结算期间，不能删除。<span class="ref">PRD 规则 N50 删除等级、N55 新增和删除等级后的等级重算 · F01-04 新增与删除等级</span></li>
+      <li><b>前台段位</b>：新增、删除等级保存后，前台段位按新的等级数立即重新分配；影响预览和删除确认框提示「前台段位将按新的等级数重新分配」并列出新分段。VIP0 固定「黑铁」，SUPER VIP 固定「荣耀」；中间 N 级（VIP1 至次高级，默认 N = 24）分为青铜、白银、黄金、铂金、钻石、星耀 6 段：
+        <br>· N &lt; 6：从青铜起每段 1 级；
+        <br>· N ≥ 6：s = N ÷ 6 向上取整，星耀、钻石、铂金、黄金、白银各 s 级（从高往低），剩下 N − 5s 级给青铜；
+        <br>· 若 N − 5s &lt; 1（N = 7–10、13–15、19、20、25）：各段先分 N ÷ 6 向下取整级，余数从星耀往下各多 1 级。
+        <br>例：N = 24 → 每段 4 级（青铜 VIP1–4、白银 VIP5–8、黄金 VIP9–12、铂金 VIP13–16、钻石 VIP17–20、星耀 VIP21–24）；N = 25 → 星耀 5 级（VIP21–25），其余各 4 级；N = 27 → 青铜 2 级，其余各 5 级。<span class="ref">PRD 规则 N51 前台段位层级、Q27 段位分配算法（已决定）</span></li>
+      <li><b>VIP月度结算记录</b>：第 4 个页签；除明细「重新结算」「完成」和列表「重新结算」外只读；发放状态只在活动奖励统计维护。
+        <br>· <b>列表</b>：每月一行，列为结算月份、执行时间、状态、参与人数、升级、等级变更、保级成功、恢复、降级、其中降为 VIP0、结算失败、已到账；生日奖金、到账核算只在明细显示。参与人数 = 保级成功 + 恢复 + 降级 + 结算失败。
+        <br>· <b>升级</b>：结算月份内实时升级和 KYC 定级的去重人数（一人多次升级、跨多级或两类都有都算 1 人）；「KYC 限制」开启时 KYC 定级计入完成 KYC 的那个月；不含上线结算、等级配置调整、结算恢复；不计入参与人数，结算失败时也照常显示，不可点击。
+        <br>· <b>等级变更</b>：结算月份内等级发生变化的去重人数，含实时升级、KYC 定级、上线结算、等级配置调整（升 / 降）、本结算月份的恢复和降级，保级成功不算；点人数弹出各类人数，同一玩家可计入多类。
+        <br>· <b>已到账</b>：该结算月份三类奖金（升级奖金、月度工资、生日奖金）已到账的笔数和金额，含补发到账；点数字跳到活动奖励统计（结算月份 + 已到账 + 奖励类型全部），两边笔数、金额一致。
+        <br>· <b>状态</b>：有单人结算失败时为橙色「部分完成」（可点击，失败人数看「结算失败」列），点击进入该月明细并筛选结算结果「未完成」；整次结算每 30 分钟自动重试、最多 3 次仍失败为「结算失败」，操作列「重新结算」补跑，补跑完成前等级配置锁定。
+        <br>· <b>明细</b>：列出当月每位参与玩家的考核等级、历史最高、当月有效投注、保级投注、月度工资等级（k）、结算结果、结算后等级、月度工资、生日奖金（已到账正常显示，未到账浅色，没有「-」）、到账核算（应到账 / 实际到账 / 未领取）、失败原因、「查看记录」（跳活动奖励统计：该会员 + 结算月份）；可筛选、导出。
+        <br>· <b>重新结算与完成</b>：未完成行红色显示，操作列「重新结算」（确认框，按考核月生效的配置补结算，写操作日志，成功后提示「补结算完成，请确认」）和「完成」（备注选填）；确认后该行显示补结算后的实际结果（绿色，小字「手动完成 · 操作人 · 时间」），列表失败人数减 1，减到 0 时状态变为「已完成」。没有补结算结果时提示「该玩家尚未补结算，不能完成」。「完成」只做确认标记，不改玩家数据；补结算生成的月度工资按正常规则生成待领取。
+        <br>· <b>告警</b>：结算开始后 N 分钟（「结算告警时间」，默认 30）仍未完成时向技术和运营告警，单人重试结束后另发汇总告警。<span class="ref">PRD 7.5、规则 N14–N19 月度结算</span></li>
+      <li><b>月度结算口径</b>：k = 当月有效投注达到保级投注的最高等级（不超过历史最高 H，一级都没达到为 VIP0），C = 考核等级。k ≥ C：次月等级 = k（k = C 为保级成功，k &gt; C 为恢复，可一次恢复多级）；k &lt; C：次月降 1 级。三种情况都按 k 级生成待领取的月度工资，k = VIP0 不生成。明细示例：H = C = VIP5、投注 ₱30,000 → 降为 VIP4、发 VIP2 ₱12；H = VIP5、C = VIP2：₱80,000 → 恢复 VIP4、发 ₱28，₱180,000 → 恢复 VIP5（不超过 H）、发 ₱38；C = VIP0、H = VIP3、₱45,000 → 恢复 VIP3、发 ₱18。<span class="ref">PRD 规则 N14 月度工资等级 k 与保级成功、N15 未保级与降级、N16 降级后恢复、N17 VIP0</span></li>
+      <li><b>表内修改与保存</b>：在输入框直接修改，点表格下方「保存」一次提交整张表；门槛表、奖金表保存须谷歌验证码，影响预览试算完成前「确认保存」置灰。升级奖金、生日奖金按生成时配置；保级投注、月度工资的修改从下一个自然月起生效，不影响本月考核。两人同时保存时，后保存的提示「配置已被他人修改，请刷新后重试」（门槛表、奖金表、等级列表共用一个版本号）。<span class="ref">PRD 7.2、规则 N11 门槛修改后的重算、N43 配置生效时间 · F01-02 表内修改与保存</span></li>
+      <li><b>递增校验</b>：累计有效投注、累计充值、保级投注每级必须大于低一级（VIP1 &gt; 0）；不通过时出错的输入框标红，列出全部出错等级，不保存。奖金不要求递增。<span class="ref">PRD 7.2 · F01-03 递增校验与影响预览</span></li>
+      <li><b>影响预览</b>：门槛或奖金有变化时，保存前先试算（试算中显示「试算中，请稍候」），列出修改内容、门槛下调后将立即升级的人数和升级奖金合计、保级投注和月度工资从下一个自然月起生效、生日奖金变化的等级和人数、各级奖金变动比例和影响金额（达到审批条件的标出）。门槛下调、新增等级触发的升级奖金和等级调整补偿一律先待领取（自动领取也一样），24 小时内可在活动奖励统计「整批作废」。<span class="ref">PRD 规则 N11 门槛修改后的重算、N33 ④ 整批作废 · F01-03 递增校验与影响预览</span></li>
+      <li><b>第二人审批</b>：门槛表、奖金表保存时任一级奖金变动超 ±50% 或试算影响金额超 ₱100,000、结算时刻前 3 天内改保级投注或月度工资、单笔 ≥ ₱5,000 的补发和放行、流水倍数改为 0，提交后提示「已提交审批」，配置旧值仍生效，奖金记录状态不变（「说明」列写「补发待审批」「放行待审批」）。另一个有「审批」权限的账号在页签右上角「待审批」弹窗「通过」或「驳回」（须谷歌验证码），通过才生效；提交人不能审批自己的提交；同一配置有待审批时不能再提交，提示「有待审批的修改，请先处理」；24 小时未处理自动失效。<span class="ref">PRD 规则 N58 第二人审批</span></li>
+      <li><b>操作日志</b>：4 个页签右上角「操作日志」弹窗，按操作时间（默认近 7 天）、操作人、操作类型、对象（会员账号 / 记录 ID / 等级）筛选，只读，写法「字段：旧值 → 新值」；全量重算完成后写一条汇总（触发操作、处理人数、奖金笔数和金额）。<span class="ref">PRD 7.1、规则 N59 全量重算任务</span></li>
+      <li><b>结算期间与重算期间锁定</b>：从月度结算时间（默认 1 日 13:00）起至结算完成，门槛表和奖金表的输入框置灰，门槛表「新增」「删除」「保存」不可用；奖励配置页签的「VIP领取奖励」「KYC 限制」、三项领取方式、领奖有效期和月度结算时间也不能修改；状态变为「部分完成」即解锁；整次结算失败时锁定到补跑完成，提示「上月结算失败，补跑完成后才能修改等级配置」；流水倍数、免打扰时段、结算告警时间和短信设置仍可保存。上线结算、再次开启、下调门槛、增删等级、KYC 限制切换触发的全量重算执行中，同样锁定，提示「等级重算进行中，完成后才能修改」。<span class="ref">PRD 规则 N44 结算期间禁止修改、N59 全量重算任务 · F01-02 表内修改与保存</span></li>
+      <li><b>VIP领取奖励（= VIP 体系开关）</b>：上线时关闭。
+        <br>· <b>第一次开启</b>：立即执行上线结算——按累计定级，写入初始数值（含当月有效投注）；已到达的等级不发升级奖金、不弹窗；为生日在上线当天及以后（同月）的玩家生成生日奖金；不发月度工资。次月结算时间（默认 1 日 13:00）照常结算上线当月。上线结算只有这一次，生成的记录归上线当月；结算记录不新增行，上线当月一行同时包含上线结算和次月月度结算的数据。确认框里的人数和金额为示意数，正式环境按试算结果显示。
+        <br>· <b>再次开启</b>：按当前累计重新核算全部玩家的等级（只升不降，历史最高同步）；关闭期间达到的等级记「不发放（重新开启核算）」，不发升级奖金、不弹动画；确认框显示预计升级人数，试算完成后才能确认。
+        <br>· <b>关闭</b>：停止生成新奖金，已生成未领取的在原有效期内仍可领取。
+        <br>开、关都要确认框和谷歌验证码，写操作日志。旧版 VIP 体系（含旧版「VIP活动」）已由本需求替换。<span class="ref">PRD 规则 N26 VIP 体系开关与上线结算、N27 VIP 体系关闭与再次开启、N48 v1.2 旧奖励作废 · F02-01 VIP 体系开关与上线结算</span></li>
+      <li><b>KYC 限制</b>：默认开启。开启时，未完成 KYC 的玩家在完成 KYC 时按累计定级，补发已达到等级的升级奖金（生成待领取，「说明」列注明「KYC 定级补发」）；上线结算等级及以下记「不发放（上线结算）」；月度工资、生日奖金不补。开启 → 关闭：不补发任何奖金；未定级的玩家按当时累计定级，已达到的等级记「不发放（KYC 限制关闭定级）」，不弹动画和确认弹窗、不发站内信；之后新达到的等级照常发奖；生日奖金仍须有 KYC 出生日期。切换经确认框和谷歌验证码后即时生效，不需要点「保存」。<span class="ref">PRD 规则 N23 KYC 限制开启（默认）、N24 KYC 限制关闭、N25 KYC 限制切换 · F02-02 KYC 限制开关</span></li>
+      <li><b>不设审核、领取方式</b>：没有审核节点。
+        <br>· <b>手动领取</b>（默认）：三种奖金生成「待领取」记录，玩家领取即到账，流水倍数按奖金生成时的值。升级奖金在升级确认弹窗点「领取奖金」或在对应等级卡「查看详情」弹窗里领取；月度工资、生日奖金在当前等级卡「查看详情」弹窗里领取。
+        <br>· <b>领奖有效期</b> N 天：三种奖金共用（默认 15，1–20，按生成时配置）；升级奖金从升级当天、月度工资从结算完成当天、生日奖金从生日当天起算，含起算当天，至第 N 天 23:59:59（GMT+8）。到期为「已过期」，不能再领、不能补发，该级升级奖金视为已占用。
+        <br>· <b>风控</b>：生成时或领取时处于风控暂停的，记为「暂停发放（风控）」，不能领取；风控暂停时升级照常播 3 秒动画，弹窗只显示「恭喜升级！已升级到 VIPn」，不提金额。
+        <br>· <b>自动领取</b>：按奖金类型单独设置。设为自动领取的，新生成的该类奖金直接到账（风控命中为暂停发放），没有待领取和有效期，「申请领取时间」= 到账时间；切换只影响之后新生成的奖金；门槛下调、新增等级触发的升级奖金和等级调整补偿仍先待领取。<span class="ref">PRD 规则 N30 不设审核、N31 风控暂停、N52 领取与有效期、N53 领取方式</span></li>
+      <li><b>参数取值</b>：领奖有效期整数 1–20（默认 15）；流水倍数整数 0–50（修改须谷歌验证码，改为 0 须第二人审批）；结算告警时间整数 10–240 分钟（默认 30）；不合法时标红、不保存。
+        <br>· <b>短信模板</b>：「生日短信提醒」「奖金到账提醒」勾选时必须选模板，否则提示「请选择短信模板」、不保存；未勾选时模板下拉置灰、不发送。下拉只列【公告管理 › 短信模板列表】中类型为「个人」的模板；没有时显示「暂无可用模板，请先创建个人短信模板」，勾选后不能保存。VIP 短信沿用平台现有短信功能发送，本需求只定义发送时机和模板选择。
+        <br>· <b>模板异常</b>：已选模板被删除或改为群发（系统实时检测）时，下拉中该项红色显示「状态异常」，该行自动取消勾选、停止发送；控件旁、「VIP会员等级奖励配置」页签、左侧菜单「VIP会员等级配置」和「用户管理」显示红色感叹号（多行异常各自显示）。解除方式二选一：重新选有效模板并勾选保存；或保持不勾选直接保存（先弹确认「以下短信将停止发送：…，确定吗？」）。两行都处理完后，页签和菜单的感叹号消失。
+        <br>· <b>奖金到账提醒</b>：三种领取方式都为手动时自动取消勾选并置灰；任一项改为自动后恢复可选，保持未勾选。
+        <br>· <b>生日短信提醒</b>发送时间点：生日所在月 1 日 / 前三天 / 前一天 / 当天（默认当天）。<span class="ref">PRD 7.3、规则 N19 ⑥ 告警、N35 奖金到账提醒短信、N36 生日短信提醒 ·F02-03 流水与奖金有效期</span></li>
+      <li><b>活动奖励统计</b>：时间均为 GMT+8，不随后台顶部时区（−04:00）；筛选栏右侧注明「时间均为 GMT+8」，列名不再标注；各列按内容收窄，表头不换行。
+        <br>· <b>筛选</b>：奖励类型含「等级调整补偿」；生成时间默认近 7 天；结算月份三类奖金都参与——月度工资、生日奖金取生成它的那次月度结算的结算月份（生日奖金即生日所在月的上一个月），升级奖金取生成时间所在自然月；两者可同时使用，从结算记录跳来时生成时间留空。
+        <br>· <b>列表</b>：按生成时间倒序，每页默认 10 条（可选 10 / 20 / 50）。「申请领取时间」= 玩家领取时间，未领取显示「-」；「发放时间」= 实际到账时间；截止时间和各类原因显示在「说明」列（多条分行，没有显示「-」）。
+        <br>· <b>合计</b>：「合计」为本页奖励金额合计；「查询总计」按当前筛选统计全部页的已到账金额（「已发放金额」）。<span class="ref">PRD 7.4、7.6 · F09-01 活动奖励统计</span></li>
+      <li><b>放行、作废、补发、重试、整批作废</b>：按状态显示在操作列——放行：暂停发放（风控）；作废：待领取、暂停发放（风控）、发放失败（原记录）；补发：人工作废、发放失败的原记录（系统作废、已有替代记录、「已过期」「不发放」、玩家仍在风控暂停的不显示）；重试：发放失败的补发记录。
+        <br>· 放行后恢复为「待领取」，有效期不顺延；放行时已过有效期的直接到账。补发生成新记录直接到账，每条原记录最多 1 次。单笔 ≥ ₱5,000 的放行、补发提交后待审批。
+        <br>· 作废分人工作废（填原因）和系统作废（等级配置调整 / 撤单 / 账号停用 / 注销）；同一记录的作废和补发不能由同一账号操作，提示「作废和补发不能由同一账号操作」。
+        <br>· 暂停原因（账号冻结 / 自我排除 / 风险分 ≥ 70 / 禁止投注 / 临时冻结 / KYC 限制开启（未完成 KYC）/ 撤单复核）和不发放原因（上线结算 / 重新开启核算 / KYC 限制关闭定级 / 已领被删等级 / 同 KYC 已领）显示在「说明」列；原因为 KYC 限制的，放行时提示玩家完成 KYC 前不建议放行。
+        <br>· <b>整批作废</b>：列表上方按钮，弹窗列出 24 小时内门槛下调、新增等级生成的批次（时间、操作、未领取笔数和金额），选批次、填原因和谷歌验证码后作废其中未领取的升级奖金和等级调整补偿，记人工作废；已领取的不追回。
+        <br>· 记录状态已变时提示「记录状态已变化，请刷新」。操作人：玩家领取和系统处理显示 SYSTEM，放行、作废、补发、重试显示后台账号。<span class="ref">PRD 规则 N29 到账失败、N32 放行、N33 作废与补发、N58 第二人审批 · F06-03 风控暂停与人工处理</span></li>
+    </ol>
+    <h3>评审待确认</h3>
+    <ol>
+      <li><b>新增、删除等级的限制与通知（已决定，用户 10-30）</b>：限制见规则批注「新增等级」「删除等级」；新增、删除后不发站内信，玩家有疑问联系客服。重算细节已决定：新旧等级按配置 ID 对应；降级中的玩家不因重算回升，仍靠月度结算恢复。<span class="ref">PRD Q24 新增 / 删除等级的限制与通知、Q32 新增和删除等级后重算等级的细节（已决定）</span></li>
+      <li><b>后台取值范围（已定，用户 10-30）</b>：流水倍数 0–50、领奖有效期 1–20 天（默认 15）、奖金最多 2 位小数。<span class="ref">PRD Q16 后台取值范围（已定）</span></li>
+      <li><b>KYC 限制开关（已定，用户 10-30）</b>：保留开关，默认开启，关闭须经老板或 Claire 确认；开启时三类奖金都要求完成 KYC；关闭时等级、升级奖金、月度工资不要求，生日奖金仍须有 KYC 出生日期，关闭时不补发任何奖金。关闭时未定级玩家立即按累计定级、不发升级奖金（Q51 已定，用户 10-31）。<span class="ref">PRD Q18 KYC 限制开关（已定）</span></li>
+      <li><b>风控暂停的触发范围（已定，用户 10-30）</b>：账号冻结、自我排除、风险分 ≥ 70、禁止投注、临时冻结暂停发放；风险分 40–69 照常到账；风险分在生成、领取、放行、自动到账、补发时实时判定；停用、注销的账号存量奖金全部系统作废。<span class="ref">PRD Q12 风控暂停的触发范围（已定）</span></li>
+      <li><b>领奖有效期、领取位置（已定，用户 10-29）</b>：三种奖金共用「领奖有效期」，默认 15 天（1–20）；在等级卡「查看详情」弹窗里领取，升级奖金也可在升级确认弹窗点「领取奖金」领取。<span class="ref">PRD Q25 领奖有效期与领取位置（已定）</span></li>
+      <li><b>段位分配算法（已决定，用户 10-30）</b>：见规则批注「前台段位」。<span class="ref">PRD Q27 段位分配算法（已决定）</span></li>
+      <li><b>活动奖励统计按生成时间筛选（已决定，用户 10-30）</b>：「申请领取时间」改为玩家领取时间后，未领取记录没有该时间，所以增加「生成时间」列并按它筛选。<span class="ref">PRD Q29 待领取提醒和活动奖励统计筛选（已决定）</span></li>
+    </ol>
+    <div class="pager"><a href="../front/VIP会员体系-VIP通知页面.html">← 上一页：VIP通知页面</a><span></span></div>
+  </aside>
+</div>
+</div>
+<script>window.NAV_ROOT = "../../../";</script>
+<script src="../../../assets/nav-data.js"></script>
+<script src="../../../assets/nav.js"></script>
+<script src="../../../assets/vip.js"></script>
+<script>
+(function () {
+  /* 「?」帮助文字：与 PRD 7.7「帮助提示内容」逐字一致 */
+  var HELP = {
+    "会员等级": "VIP0（等级值 0）为未达到 VIP1 的玩家（含从未到达 VIP1 的和从 VIP1 降级的），前台、后台都显示「VIP0」，数值固定为 0，不可修改、不能删除；VIP1–SUPER VIP 默认 25 个 VIP 等级可修改。可在「操作」列新增等级（加在最下方，名为 SUPER VIP，原 SUPER VIP 顺延为 VIP25），或删除最高一级 SUPER VIP（原次高级改名为 SUPER VIP）。",
+    "新增等级": "点 VIP0 行「新增」在最下方加一行新的最高级 SUPER VIP，原 SUPER VIP 顺延改名为 VIP25；新行门槛必填且大于上一级，保存前可「取消」；保存时在影响预览里一起填写新等级的升级奖金、月度工资、生日奖金（默认 0）；一次只能新增 1 行，不设等级数量上限；保存须谷歌验证码。新增、删除等级保存后，全部玩家按新配置重新计算等级：重算前历史最高那一级的升级奖金未领取的作废，改发 1 笔不超过原金额的等级调整补偿（该等级已有记录的不发）；领过被删等级升级奖金的玩家，到达的第 1 个新增等级不发升级奖金；不发站内信；前台段位按新的等级数重新分配。",
+    "累计有效投注": "自注册起的平台自算有效投注合计（赢取 Min(赢额, 本金)，输取投注 − 派彩），含平台所有游戏，排除同账号或关联账号对押、对立盘口的注单。整数，须大于低一级。",
+    "累计充值": "沿用平台现有累计充值口径。整数，须大于低一级。",
+    "保级投注": "当月（GMT+8 自然月）有效投注达到此值即达到该级保级。月度结算取达到的最高等级 k（不超过历史最高）：k 不低于当前等级时次月为 k，低于时降 1 级；都按 k 级生成月度工资。整数，须大于低一级；修改从下一个自然月起生效。",
+    "升级奖金": "首次到达该等级时生成待领取记录，每级终身一次；玩家点升级确认弹窗的「领取奖金」或在该等级卡「查看详情」弹窗里领取，到期未领即过期、不再生成。0–9,999,999.99，填 0 不发。",
+    "月度工资": "每月结算时间（默认 1 日 13:00，GMT+8）结算后，按当月有效投注达到保级投注的最高等级（不超过历史最高）生成该级金额的待领取记录，降级的玩家也有；玩家登录后在当前等级卡「查看详情」弹窗里领取。0–9,999,999.99，填 0 不发；修改从下一个自然月起生效。",
+    "生日奖金": "生日所在月份结算后按等级生成，生日当天起在当前等级卡「查看详情」弹窗里领取；生日只认第一次 KYC 审核通过的出生日期，同一 KYC 身份同年只发 1 个账号。0–9,999,999.99，填 0 不发。",
+    "影响预览": "保存前试算：门槛下调后将立即升级的人数和生成待领取的升级奖金合计，以及本月结算受影响的人数；新增、删除等级时另列前台段位的重新分配结果。",
+    "VIP领取奖励": "即 VIP 体系开关。开启后实时定级、生成奖金、结算；第一次开启时立即执行上线结算：按累计有效投注和累计充值定级、写入初始数值（含当月有效投注），已到达的等级不发升级奖金，为生日在上线当天及以后（同月）的玩家生成生日奖金，不发月度工资，次月结算时间（默认 1 日 13:00）照常结算上线当月；再次开启时按当前累计重新核算全部玩家等级（只升不降，历史最高同步），关闭期间达到的等级不发升级奖金、不弹动画。关闭期间停止定级、生成奖金和结算，事后不补；已生成未领取的在原有效期内仍可领取。",
+    "KYC 限制": "开启（默认）：未完成 KYC 的玩家不参与 VIP，完成 KYC 时按累计定级，补发已达到等级的升级奖金（生成待领取；上线结算等级及以下不发；月度工资、生日奖金不补）。关闭：等级、升级奖金、月度工资不要求 KYC，生日奖金仍须有 KYC 出生日期；关闭时未定级的玩家按当时累计定级，不补发升级奖金，之后新达到的等级照常发。",
+    "流水倍数": "奖金到账后须完成「奖金 × 倍数」的有效投注才能提款，按奖金生成时的倍数。整数 0–50，默认 1，0 表示无流水要求；修改须谷歌验证码，改为 0 须第二人审批。前台不显示任何与流水有关的内容。",
+    "领取方式": "升级奖金、月度工资、生日奖金各自设置，默认都为「手动领取」（用户 2026-10-30）。手动领取：生成「待领取」，玩家在领奖有效期内领取，过期作废；升级奖金点升级确认弹窗的「领取奖金」或在对应等级卡「查看详情」弹窗里领取，月度工资、生日奖金在当前等级卡「查看详情」弹窗里领取。自动领取：生成即到账（风控命中为暂停发放），没有待领取和有效期，前台不显示「领取」按钮和红点，发到账通知；升级时确认弹窗改为到账通知；生日奖金在生日当天 00:00 后到账，「KYC 限制」开启时须已完成 KYC。切换只影响之后新生成的奖金，已生成未领取的按生成时的方式处理；切换要确认，写操作日志。三项都为「手动领取」时「奖金到账提醒」自动取消勾选并置灰（没有到账短信）。",
+    "月度结算时间": "每月几号几点几分（GMT+8）开始月度结算，结算上一个自然月（考核范围固定为上月 1 日 00:00:00 至月末 23:59:59，不随结算日变化）。默认每月 1 日 13:00；日期只能选 1–28 日。点「保存」时弹确认框显示下次结算时间，确认后从下一个还没到的结算时间点开始生效：本月已结算过的从下月生效；本月还没结算、且新时间已过的，保存后 5 分钟内触发本月结算。结算进行中（含整次失败待补跑）不能修改。月度工资和生日奖金在结算完成时生成；建议避开大促和免打扰时段。",
+    "结算告警时间": "结算开始后 N 分钟仍未完成时向技术和运营告警；单人重试结束后另发汇总告警。整数 10–240，默认 30。",
+    "领奖有效期（天）": "升级奖金、月度工资、生日奖金三种奖金共用的可领取天数，含起算当天，至最后一天 23:59:59（GMT+8）。起算：升级奖金从升级当天、月度工资从结算完成当天、生日奖金从生日当天。按奖金生成时的值；如 11-01 13:00 结算生成的月度工资、15 天，有效至 11-15 23:59:59。到期未领取的变为「已过期」，不能再领取，过期的升级奖金该级不再生成。整数 1–20，默认 15。",
+    "免打扰时段": "此时段内触发的 VIP 短信和 APP 推送顺延到结束时刻发送，站内信不受影响。默认 21:00–10:00（GMT+8），可跨天；开始 = 结束表示不设免打扰。",
+    "生日短信提醒": "勾选后按所选时间点（生日所在月 1 日 / 前三天 / 前一天 / 当天，默认当天）给有生日奖金的玩家发 1 条短信，只作提醒；「生日所在月 1 日」在结算完成后发，其余 10:00 发，遵守免打扰时段；沿用平台现有短信功能。模板只能选「个人」类型，被删除或改为群发时标「状态异常」并停发，重新选择并保存或确认停发后解除。默认勾选、生日当天、模板「VIP 生日提醒」。",
+    "奖金到账提醒": "勾选后，设为「自动领取」的奖金每笔自动到账时发 1 条短信（该类奖金放行、补发直接到账同样发）；手动领取的奖金在玩家领取到账时不发短信。三种奖金的领取方式都为「手动领取」时没有到账短信，本项自动取消勾选并置灰；任一项改为自动领取后恢复可选，但保持未勾选，需重新勾选并保存。金额小于 ₱1 只发推送；遵守免打扰时段。取消勾选不发。模板选择和状态异常的处理同「生日短信提醒」。默认未勾选（默认三项都为手动领取，用户 2026-10-30）。",
+    "奖励类型": "升级奖金、月度工资、生日奖金、等级调整补偿（新增、删除等级重算时生成，按升级奖金领取）。",
+    "结算月份": "指被结算的投注月份（GMT+8 自然月），次月结算时间（默认 1 日 13:00）执行结算，例如 2026-09 于 2026-10-01 13:00 结算；不是结算执行的月份（执行时间见「结算执行时间」列）。",
+    "升级（结算）": "该结算月份内实时升级和 KYC 定级的玩家人数，按人去重（多次升级、跨多级、两类都有都算 1 人）；不含上线结算、等级重算、结算恢复；与结算无关，不计入参与人数，结算失败时也照常显示。只显示人数，不可点击。",
+    "等级变更（结算）": "该结算月份内等级发生变化的玩家人数，按人去重：一人多次、多类变化都只算 1 人。包括：结算月份（GMT+8 自然月）内的实时升级、KYC 定级（含补发）、上线结算、新增或删除等级后的重算（升 / 降），以及本结算月份的月度结算结果（恢复、降级，含降为 VIP0）——月度结算在次月结算时间（默认 1 日 13:00）执行，但属于本结算月份，所以计入。保级成功不算变更。点人数弹出各类人数；同一玩家可能出现在多个类别，各类相加可能大于本列人数。",
+    "结算月份（统计）": "按结算月份查：月度工资为该结算月份的结算生成的；生日奖金为该结算月份的结算时生成的（即生日在下一个月的玩家）；升级奖金为生成时间在该自然月内的（用户 2026-10-30）。三类奖金都参与筛选；可与生成时间一起用，不选则不限。上线结算（仅首次开启时一次）生成的记录归上线当月。",
+    "结算状态": "已完成：结算和月度工资生成都已完成；部分完成：有单人结算失败（橙色，可点击，失败人数看「结算失败」列），点击进入明细只看「未完成」的玩家，逐个点「重新结算」补结算后点「完成」，全部完成后变为「已完成」，部分完成时等级配置不锁；结算中：正在执行，期间等级配置锁定；结算失败：整次结算每 30 分钟自动重试、最多 3 次仍失败，已通知技术，修复后点「重新结算」补跑，玩家结果以补跑为准，补跑完成前等级配置保持锁定。",
+    "恢复": "降级中的玩家（考核等级低于历史最高，含 VIP0）本次结算恢复了等级的人数：月度工资等级 k 高于考核等级时次月直接到 k，可一次恢复多级，最多到历史最高。",
+    "已到账（结算）": "该结算月份三类奖金中已到账的笔数和金额：升级奖金（生成时间在该自然月的）、月度工资（该结算月份的结算生成的）、生日奖金（该结算月份的结算时生成的）；到账方式含自动发放、手动领取、补发到账；不含待领取、已过期、暂停发放（风控）、已作废未补发、发放失败。随领取实时更新。点数字跳到活动奖励统计（结算月份 + 状态「已到账」+ 奖励类型全部），筛选出的笔数和「查询总计」金额与本列一致。上线当月同时包含上线结算（仅首次开启时一次）的数据。",
+    "失败原因": "单人结算未完成的原因分类，由技术写入：投注数据未就绪、注单回滚或作废、账号状态变化、并发冲突、等级配置对不上、数据异常、写入超时，或「其他」（见 PRD 7.5.1）；只在结算结果为「未完成」的行显示，其他行显示「-」；点「完成」后保留原因。原因分类为常见情况，以技术实际为准。",
+    "到账核算（明细）": "该玩家本批的应到账 = 月度工资 + 生日奖金；实际到账 = 已到账（含补发）；未领取 = 应到账 − 实际到账。",
+    "金额显示": "本批结算生成的金额：已到账正常显示，未到账（待领取、已过期、暂停发放、已作废、发放失败）浅色显示，鼠标悬停看状态；没有显示「-」。状态以活动奖励统计为准。",
+    "考核等级": "月底时玩家的当前等级（C），按它判断保级成功、恢复或降级。",
+    "月度工资等级": "当月有效投注达到保级投注的最高等级 k，不超过历史最高等级；一级都没达到时为 VIP0。按 k 级金额生成月度工资，VIP0 不生成。",
+    "结算结果": "k 等于考核等级：保级成功，次月不变；k 高于考核等级：恢复，次月为 k；k 低于考核等级：降级，次月降 1 级（VIP1 降为 VIP0）；未完成：单人结算失败、待技术补结算，结算结果和结算后等级显示「未完成」（下方浅色显示预计结果），技术补结算后点「完成」显示实际结果（用户 2026-10-30）。",
+    "发放状态": "待领取、已到账（已领取）、已过期、暂停发放（风控）、已作废（人工 / 系统）、不发放（上线结算 / 重新开启核算 / KYC 限制关闭定级 / 已领被删等级 / 同 KYC 已领）、发放失败（自动领取到账失败、放行时直接到账失败、补发到账失败）。待领取、暂停发放的截止时间，以及不发放、暂停发放、作废、补发的原因和 KYC 定级补发的来源，在「说明」列显示（用户 2026-10-30）。",
+    "说明": "状态的补充信息，多条分行显示，没有时显示「-」：待领取、暂停发放、已过期的截止时间；领取方式（点升级确认弹窗「领取奖金」/ 在详情弹窗领取 / 自动领取）；来源「KYC 定级补发」；不发放原因（上线结算 / 重新开启核算 / KYC 限制关闭定级 / 已领被删等级 / 同 KYC 已领）；暂停发放原因（账号冻结 / 自我排除 / 风险分 ≥ 70 / 禁止投注 / 临时冻结 / KYC 限制开启（未完成 KYC）/ 撤单复核）；放行原因；作废类型和原因（人工作废 + 原因；系统作废：等级配置调整 / 撤单 / 账号停用 / 注销）；补发对应的原记录；补发待审批、放行待审批。导出时单独一列。",
+    "生成时间": "奖金记录生成时刻（GMT+8）：升级奖金为升级时刻（KYC 定级补发为完成 KYC 的时刻），月度工资为结算生成时刻，生日奖金为生日所在月份月度结算生成的时刻（生日当天起可领）。筛选默认近 7 天（含当天）；不填会员账号时最长 31 天。",
+    "申请领取时间": "玩家领取的时间（GMT+8）：升级奖金为点升级确认弹窗「领取奖金」或在等级卡「查看详情」弹窗里领取的时间，月度工资、生日奖金为在「查看详情」弹窗里领取的时间；未领取显示「-」。",
+    "发放时间": "实际到账时间：玩家领取到账、放行时已过期直接到账、补发到账的时刻；未到账显示「-」。",
+    "操作人": "玩家领取和系统处理的显示 SYSTEM；放行、作废、补发显示操作的后台账号。",
+    "已发放金额": "点「查询总计」后，按当前筛选条件统计全部页中状态为「已到账」的奖励金额合计；未点击时显示 0。",
+    "放行": "解除「暂停发放（风控）」：生成时为手动领取的恢复为待领取，有效期不顺延，放行时已过有效期的直接到账；生成时为自动领取的直接到账。玩家仍处于风控暂停状态时不能放行（原因为「撤单复核」的不算）；单笔 ≥ ₱5,000 须第二人审批。",
+    "作废": "把未到账的奖金（待领取、暂停发放（风控）、发放失败）作废，不再发放，必须填写原因（人工作废）；系统按规则作废的为系统作废（等级配置调整、撤单、账号停用 / 注销），不能补发。",
+    "补发": "对人工作废、发放失败的原记录重新发放 1 次，生成新记录并直接到账，「说明」列注明原记录，必须填写原因；补发失败只能「重试」该补发记录。系统作废、已有替代记录、资金已入账、「已过期」「不发放」、玩家仍处于风控暂停的不能补发；作废和补发不能由同一账号操作；单笔 ≥ ₱5,000 须第二人审批。",
+    "整批作废": "门槛下调、新增等级这一次保存触发生成的升级奖金和「等级调整补偿」，24 小时内可按批次整批作废其中未领取的记录，须填原因和谷歌验证码；已领取的不追回。",
+    "重新结算": "对单人结算「未完成」的玩家或整次「结算失败」的月份按考核月生效的配置补结算，写操作日志；完成后单人行仍需点「完成」确认。",
+    "待审批": "单级奖金变动超 ±50% 或试算影响超 ₱100,000 的配置保存、结算前 3 天内改保级投注或月度工资、单笔 ≥ ₱5,000 的补发和放行、流水倍数改为 0，须另一个有审批权限的账号通过后才生效；提交人不能审批自己的提交，24 小时未处理自动失效。"
+  };
+  [].forEach.call(document.querySelectorAll(".qm[data-h]"), function (q) { q.setAttribute("data-tip", HELP[q.dataset.h] || ""); });
+  window.V12_HELP = HELP;
+
+  function $(id) { return document.getElementById(id); }
+  function fmt(n, dec) { return Number(n).toLocaleString("en-US", { maximumFractionDigits: dec ? 2 : 0 }); }
+  function msg(t, bad) { var m = document.createElement("div"); m.className = "bo-msg " + (bad ? "err" : "ok"); m.setAttribute("role", bad ? "alert" : "status"); m.textContent = t; document.body.appendChild(m); setTimeout(function () { m.remove(); }, 2000); }
+
+  /* PRD 7.2 默认值：[等级, 累计有效投注, 累计充值, 保级投注, 升级奖金, 月度工资, 生日奖金] */
+  var LV = [["VIP0",0,0,0,0,0,0],["VIP1",10000,2000,5000,8,6,88],["VIP2",50000,10000,20000,18,12,88],["VIP3",100000,20000,40000,28,18,88],["VIP4",250000,50000,80000,38,28,88],["VIP5",500000,100000,100000,48,38,88],["VIP6",1000000,250000,150000,68,48,188],["VIP7",2000000,500000,300000,108,68,188],["VIP8",4000000,1000000,500000,288,88,188],["VIP9",12000000,3000000,1000000,588,200,188],["VIP10",24000000,6000000,3000000,888,400,188],["VIP11",30000000,10000000,5000000,1088,600,288],["VIP12",45000000,15000000,8000000,1288,800,288],["VIP13",60000000,20000000,10000000,1488,1100,288],["VIP14",75000000,25000000,12000000,1688,1350,488],["VIP15",90000000,30000000,15000000,1888,1800,488],["VIP16",100000000,50000000,20000000,2288,2000,488],["VIP17",120000000,60000000,25000000,2888,2600,888],["VIP18",140000000,72000000,30000000,3688,2800,888],["VIP19",160000000,88000000,35000000,5288,4200,888],["VIP20",180000000,180000000,38000000,6288,5000,1288],["VIP21",250000000,250000000,40000000,15888,10000,1288],["VIP22",400000000,400000000,50000000,30888,20000,1888],["VIP23",600000000,600000000,55000000,40888,30000,1888],["VIP24",800000000,800000000,58000000,68888,40000,2888],["SUPER VIP",1000000000,1000000000,60000000,118888,100000,5888]];
+  var COLS = ["累计有效投注", "累计充值", "保级投注", "升级奖金", "月度工资", "生日奖金"];
+  var state = { locked: false, lockFail: false, recalc: false, rwLocked: false, turn: 1, alarm: 30, sys: false, sysEver: false, kyc: true, claim: { up: "manual", mon: "manual", bd: "manual" } };
+  /* 领取方式按奖金类型单独设置（用户 2026-10-30）：radio 名 → 奖金键、显示名 */
+  var CLAIM = { rClaimUp: ["up", "升级奖金"], rClaimMon: ["mon", "月度工资"], rClaimBd: ["bd", "生日奖金"] };
+
+  /* 两张表：lv = VIP会员等级配置（COLS 0–2），rw = VIP会员等级奖励配置（COLS 3–5）；每行输入框，表下「保存」 */
+  /* 新增等级（PRD 规则 N49）：VIP0 行「新增」在门槛表最下方加一行，新行名为 SUPER VIP，原 SUPER VIP 顺延为 VIP25——等级名按位置生成；
+     新行保存前可「取消」，一次只能新增 1 行，不设等级数量上限（用户 2026-10-30）；新等级奖金在保存时的影响预览里一起填写（默认 0） */
+  var draft = false, MAXVIP = Infinity;   /* 不设等级数量上限（用户 2026-10-30，Q24 已决定） */
+  function rowsOf(gk) { return LV.length + (gk === "lv" && draft ? 1 : 0); }
+  function nm(i, n) { return i === 0 ? "VIP0" : i === n - 1 ? "SUPER VIP" : "VIP" + i; }
+  function drawTbl(gk) {
+    var cols = gk === "lv" ? [0, 1, 2] : [3, 4, 5], b = $(gk === "lv" ? "lvBody" : "rwBody"), lock = gk === "lv" ? state.locked : state.rwLocked, n = rowsOf(gk);
+    b.textContent = "";
+    for (var i = 0; i < n; i++) {
+      var r = LV[i], isNew = i >= LV.length, name = nm(i, n);
+      var tr = b.insertRow(); tr.insertCell().textContent = name; if (isNew) tr.className = "lv-new";
+      cols.forEach(function (k) {
+        var c = tr.insertCell(), inp = document.createElement("input");
+        inp.value = isNew ? "" : r[k + 1]; inp.dataset.row = i; inp.dataset.col = k; inp.className = gk === "rw" ? "s" : "";
+        inp.setAttribute("aria-label", name + " " + COLS[k]); inp.inputMode = gk === "lv" ? "numeric" : "decimal";
+        if (isNew) inp.placeholder = "必填";
+        inp.disabled = i === 0 || lock || (gk === "lv" && draft && !isNew); if (i === 0) inp.title = "VIP0 固定为 0，不可修改"; else if (gk === "lv" && draft && !isNew) inp.title = "新增等级须单独保存，请先保存或取消新增的等级";   /* R15：有未保存的新增行时其他门槛置灰 */
+        c.appendChild(inp);
+      });
+      if (gk === "lv") {
+        var oc = tr.insertCell();
+        if (i > 0 && !isNew && i === LV.length - 1) {   /* 只有最高一级显示「删除」（同现网只能从末级删除，PRD 规则 N50） */
+          var db = document.createElement("button"); db.type = "button"; db.className = "lv-op del"; db.textContent = "删除"; db.dataset.del = i;
+          db.disabled = lock || draft || LV.length <= 2; db.title = LV.length <= 2 ? "至少保留 1 个 VIP 等级" : draft ? "请先保存或取消新增的等级" : "";
+          oc.appendChild(db);
+        }
+        if (i === 0 || isNew) {
+          var ob = document.createElement("button"); ob.type = "button"; ob.className = "lv-op";
+          if (i === 0) { ob.textContent = "新增"; ob.id = "lvAdd"; ob.disabled = draft || lock || LV.length - 1 >= MAXVIP; if (LV.length - 1 >= MAXVIP) ob.title = "最多 " + MAXVIP + " 个 VIP 等级"; else if (draft) ob.title = "一次只能新增 1 个等级，请先保存或取消"; }
+          else { ob.textContent = "取消"; ob.id = "lvAddX"; }
+          oc.appendChild(ob);
+        }
+      }
+    }
+    var lb = $(gk === "lv" ? "lockBar" : "rwLockBar"); lb.hidden = !lock;
+    lb.textContent = state.recalc ? "等级重算进行中，完成后才能修改" : state.lockFail ? "上月结算失败，补跑完成后才能修改等级配置" : "月度结算进行中，结算完成后才能修改等级配置";
+    if (gk === "lv") $("lvSave").disabled = lock;
+    if (gk === "rw") { ["rSys", "rKyc", "rClaimUp", "rClaimMon", "rClaimBd"].forEach(function (n) { [].forEach.call(document.getElementsByName(n), function (x) { x.disabled = lock; }); }); $("gDays").disabled = lock && !state.recalc; ["gStD", "gStH", "gStM"].forEach(function (id) { $(id).disabled = lock && !state.recalc; }); if (lock) lb.textContent = state.recalc ? "等级重算进行中，完成后才能修改（门槛表、奖金表、新增删除等级、VIP领取奖励、KYC 限制、领取方式）" : "月度结算进行中，结算完成后才能修改（奖金表、VIP领取奖励、KYC 限制、领取方式、领奖有效期、月度结算时间）"; }   /* 结算和补结算按考核月生效的配置执行（规则 N44）；全量重算执行中的锁定范围见规则 N59 */
+  }
+  $("lvBody").addEventListener("click", function (e) {
+    var b = e.target.closest(".lv-op"); if (!b || b.disabled) return;
+    if (b.dataset.del) { openDel(+b.dataset.del); return; }
+    draft = b.id === "lvAdd"; drawTbl("lv"); $("lvErr").hidden = true;
+    if (draft) { var f = $("lvBody").querySelector("tr.lv-new input"); f.focus(); f.scrollIntoView({ block: "nearest" }); }
+  });
+  /* 删除等级（PRD 规则 N50，同现网只能从末级删除）：只有最高一级 SUPER VIP 可删；VIP0 不能删；至少保留 1 个 VIP 等级；
+     删除后原次高级改名为 SUPER VIP，其他等级名不变；该级玩家当前等级改为低一级（新的 SUPER VIP），不算降级、不弹窗；升级奖金按 N55 ③；删除即生效，写操作日志 */
+  /* 前台段位（用户 2026-10-29，算法 Q27 已决定；同日追加「星耀」，中间改为 6 段）：VIP0 黑铁、最高级荣耀固定；中间 N 级分青铜、白银、黄金、铂金、钻石、星耀 6 段。
+     N < 6：从青铜起每段 1 级；N ≥ 6：s = ceil(N/6)，星耀、钻石、铂金、黄金、白银各 s 级，剩余 N − 5s 给青铜；
+     N − 5s < 1 时改为各段 floor(N/6) 级，余数从星耀往下各多 1 级 */
+  function segTxt(vipCount) {
+    var N = vipCount - 1, SEG = ["青铜", "白银", "黄金", "铂金", "钻石", "星耀"], c = [0, 0, 0, 0, 0, 0], i;
+    if (N < 6) { for (i = 0; i < N; i++) c[i] = 1; }
+    else { var s = Math.ceil(N / 6); if (N - 5 * s >= 1) c = [N - 5 * s, s, s, s, s, s]; else { var b = Math.floor(N / 6), r = N % 6; c = [b, b, b, b, b, b]; for (i = 0; i < r; i++) c[5 - i]++; } }
+    var out = [], from = 1;
+    c.forEach(function (k, j) { if (!k) return; out.push(SEG[j] + " " + (k === 1 ? "VIP" + from : "VIP" + from + "–" + (from + k - 1))); from += k; });
+    return "前台段位将按新的等级数重新分配：VIP0 黑铁；" + out.join("、") + "；SUPER VIP 荣耀";
+  }
+  var delIdx = 0;
+  function openDel(i) {
+    delIdx = i; var n = LV.length, after = n - 1;
+    $("delWhat").textContent = nm(i, n) + "（累计有效投注 ₱" + fmt(LV[i][1]) + "、累计充值 ₱" + fmt(LV[i][2]) + "）";
+    var newTop = LV[i - 1], comp = Math.min(newTop[4], LV[i][4]);   /* 等级调整补偿 = min(新配置金额, 被作废金额)（规则 N55 ③） */
+    $("delWho").textContent = "3 人，当前等级改为低一级，即新的 SUPER VIP；降级玩家的历史最高按累计重新确定；不算降级、不弹窗；其中 1 人 SUPER VIP 升级奖金未领取，系统作废，生成 1 笔等级调整补偿 ₱" + fmt(comp, true) + "（待领取；新 SUPER VIP 已有升级奖金记录的不生成）";
+    $("delGa").value = ""; $("delGaErr").textContent = "";
+    var ch = [];
+    for (var k = 1; k < n; k++) { if (k === i) continue; var nk = k < i ? k : k - 1; if (nm(k, n) !== nm(nk, after)) ch.push(nm(k, n) + " → " + nm(nk, after)); }   /* 删最高级时，原次高级改名 SUPER VIP 也要列出 */
+    $("delName").textContent = ch.length ? (ch.length > 3 ? ch.slice(0, 2).join("；") + "；… " + ch[ch.length - 1] + "（共 " + ch.length + " 个）" : ch.join("；")) : "无";
+    $("delSeg").textContent = segTxt(n - 2);   /* 删除后 VIP 等级数 = n − 2（去掉 VIP0 和被删行） */
+    showDlg("dDel");
+  }
+  $("delOk").onclick = function () {
+    if ($("delGa").value !== "123456") { $("delGaErr").textContent = "谷歌验证码错误"; return; }
+    var name = nm(delIdx, LV.length);
+    logIt("VIP会员等级配置", "删除等级", name, "删除 " + name + "（累计有效投注 ₱" + fmt(LV[delIdx][1]) + "、累计充值 ₱" + fmt(LV[delIdx][2]) + "）");
+    LV.splice(delIdx, 1); LV.forEach(function (r, i) { r[0] = nm(i, LV.length); });
+    hideAll(); drawTbl("lv"); drawTbl("rw"); $("lvErr").hidden = true; msg("已删除 " + name + "，已写操作日志");
+  };
+  function readTbl(gk) { var out = {}; [].forEach.call($(gk === "lv" ? "lvBody" : "rwBody").querySelectorAll("input"), function (el) { out[el.dataset.row + "_" + el.dataset.col] = el; }); return out; }
+  function validateTbl(gk) {
+    var map = readTbl(gk), errs = [], cols = gk === "lv" ? [0, 1, 2] : [3, 4, 5], n = rowsOf(gk);
+    Object.keys(map).forEach(function (k) { map[k].classList.remove("bad"); });
+    cols.forEach(function (c) {
+      for (var i = 1; i < n; i++) {
+        var el = map[i + "_" + c], v = el.value.trim(), num = Number(v);
+        if (v === "") { errs.push(nm(i, n) + " 的" + COLS[c] + "为必填"); el.classList.add("bad"); continue; }
+        if (c < 3) {
+          if (!/^\d+$/.test(v) || num < 1 || num > 99999999999) { errs.push(nm(i, n) + " 的" + COLS[c] + "须为 1 至 99,999,999,999 的整数"); el.classList.add("bad"); continue; }
+          var low = i > 1 ? Number(map[(i - 1) + "_" + c].value) : 0;
+          if (num <= low) { errs.push(nm(i, n) + " 的" + COLS[c] + "须大于 " + nm(i - 1, n) + "（₱" + fmt(low) + "）"); el.classList.add("bad"); }
+        } else if (!/^\d+(\.\d{1,2})?$/.test(v) || num > 9999999.99) { errs.push(nm(i, n) + " 的" + COLS[c] + "须为 0 至 9,999,999.99，最多 2 位小数"); el.classList.add("bad"); }
+      }
+    });
+    return errs;
+  }
+  function diffTbl(gk) {
+    var map = readTbl(gk), cols = gk === "lv" ? [0, 1, 2] : [3, 4, 5], d = [];
+    for (var i = 1; i < LV.length; i++) cols.forEach(function (c) { var nv = Number(map[i + "_" + c].value); if (nv !== LV[i][c + 1]) d.push({ i: i, c: c, o: LV[i][c + 1], n: nv }); });
+    return d;
+  }
+  var pending = null, apNeed = null, trialing = false, trialT = 0, prevCtx = null;
+  /* 影响预览（PRD 7.2、规则 N11、N43、N58）：试算完成前「确认保存」置灰；填谷歌验证码确认；达到审批条件的提交后待审批 */
+  function openPreview(gk, d, turn) {
+    var n = rowsOf(gk), add = gk === "lv" && draft, nv = null;
+    if (add) { var mp = readTbl("lv"), L = LV.length; nv = [Number(mp[L + "_0"].value), Number(mp[L + "_1"].value), Number(mp[L + "_2"].value)]; }
+    var addTxt = add ? "新增 SUPER VIP（累计有效投注 ₱" + fmt(nv[0]) + "、累计充值 ₱" + fmt(nv[1]) + "、保级投注 ₱" + fmt(nv[2]) + "）；原 SUPER VIP 改名为 " + nm(LV.length - 1, n) : "";
+    $("pNewRow").hidden = !add; $("pNbErr").textContent = ""; $("pGa").value = ""; $("pGaErr").textContent = "";
+    ["pNb0", "pNb1", "pNb2"].forEach(function (id) { $(id).value = "0"; $(id).classList.remove("bad"); $(id).style.borderColor = ""; });
+    $("pUpL").textContent = add ? "重新计算等级" : "门槛下调后将立即升级";
+    var chgTxt = d.slice(0, 4).map(function (x) { return nm(x.i, n) + " " + COLS[x.c] + "：₱" + fmt(x.o, x.c >= 3) + " → ₱" + fmt(x.n, x.c >= 3); }).join("；") + (d.length > 4 ? "；等共 " + d.length + " 项" : "");
+    if (turn) chgTxt = [chgTxt, "流水倍数：" + turn.o + " → " + turn.n + " 倍"].filter(Boolean).join("；");
+    $("pWhat").textContent = addTxt || chgTxt ? [addTxt, chgTxt].filter(Boolean).join("；") : "VIP1 累计充值：₱2,000 → ₱1,500";
+    var down = d.some(function (x) { return x.c < 2 && x.n < x.o; }), keep = d.filter(function (x) { return x.c === 2 || x.c === 4; }), bd = d.filter(function (x) { return x.c === 5; });
+    $("pSet").textContent = keep.length ? keep.map(function (x) { return LV[x.i][0] + " " + COLS[x.c]; }).join("、") + "：从下一个自然月（2026-11）起生效，不影响本月考核" : "无";
+    $("pBonus").textContent = bd.length ? bd.map(function (x) { return LV[x.i][0] + " 生日奖金（当前 " + (120 + x.i * 7) + " 人）"; }).join("；") : "无";
+    $("pSegRow").hidden = !add; if (add) $("pSeg").textContent = segTxt(LV.length);   /* 新增后 VIP 等级数 = LV.length（原 LV.length − 1 再加 1） */
+    prevCtx = { gk: gk, d: d, turn: turn, add: add, down: down };
+    pending = function () {
+      d.forEach(function (x) { LV[x.i][x.c + 1] = x.n; });
+      if (turn) { state.turn = turn.n; $("gTurn").value = turn.n; }
+      if (add) { LV.push(["", nv[0], nv[1], nv[2], Number($("pNb0").value), Number($("pNb1").value), Number($("pNb2").value)]); LV.forEach(function (r, i) { r[0] = nm(i, LV.length); }); draft = false; }
+    };
+    /* 试算：完成前「确认保存」置灰，显示「试算中，请稍候」 */
+    trialing = true; $("pOk").disabled = true; $("pTip").textContent = "试算中，请稍候"; $("pUp").textContent = "-"; $("pAp").textContent = "-";
+    var tk = ++trialT;
+    setTimeout(function () { if (tk !== trialT) return; trialing = false; $("pTip").textContent = "确认后才保存；上调门槛不降级、已生成的奖金不变、已到账的不追回。"; prevCalc(); if ($("pNewRow").hidden || checkNb()) $("pOk").disabled = false; }, 800);
+    showDlg("dPrev");
+  }
+  /* 试算结果与审批判断（规则 N58 ①ⓐ ⓓ）：任一级奖金变动超 ±50%、试算影响金额超 ₱100,000、流水倍数改为 0 */
+  function prevCalc() {
+    var c = prevCtx; if (!c) return;
+    var why = [], parts = [], amt = 0;
+    if (c.gk === "lv") {
+      if (c.add) { var comp = Math.min(Number($("pNb0").value) || 0, LV[LV.length - 1][4]); amt = comp; $("pUp").textContent = "保存后全部玩家按新配置重新计算等级：3 人已达到新 SUPER VIP 门槛，将升到新 SUPER VIP；其中 1 人原等级升级奖金未领取，" + (comp ? "作废后生成 1 笔等级调整补偿（待领取）、合计 ₱" + fmt(comp, true) : "作废；新等级升级奖金为 0，不生成等级调整补偿") + "；0 人领过被删等级的升级奖金，不发；不弹窗"; }
+      else if (c.down) { amt = 10272; $("pUp").textContent = "1,284 人；生成待领取升级奖金合计 ₱10,272（自动领取时也先待领取，24 小时内可整批作废）"; }
+      else $("pUp").textContent = "0 人";
+    } else $("pUp").textContent = "不涉及";
+    c.d.filter(function (x) { return x.c >= 3; }).forEach(function (x) {
+      var r = x.o ? (x.n - x.o) / x.o : (x.n ? Infinity : 0), pct = r === Infinity ? "新设" : (r >= 0 ? "+" : "") + Math.round(r * 100) + "%", big = Math.abs(r) > 0.5;
+      amt += Math.abs(x.n - x.o) * (120 + x.i * 7);
+      parts.push(LV[x.i][0] + " " + COLS[x.c] + " " + pct + (big ? "（超过 ±50%，须审批）" : ""));
+      if (big) why.push(LV[x.i][0] + " " + COLS[x.c] + " " + pct + "，超过 ±50%");
+    });
+    if (amt > 100000) why.push("影响金额 ₱" + fmt(amt, true) + "，超过 ₱100,000");
+    if (c.turn && c.turn.n === 0) why.push("流水倍数改为 0");
+    parts.push("影响金额约 ₱" + fmt(amt, true) + (amt > 100000 ? "（超过 ₱100,000，须审批）" : ""));
+    if (c.turn && c.turn.n === 0) parts.push("流水倍数改为 0（须审批）");
+    $("pAp").textContent = parts.join("；");
+    apNeed = why.length ? why.join("；") : null;
+  }
+  /* 新等级奖金（PRD 规则 N49）：0–9,999,999.99，最多 2 位小数，必填；不合法时标红、「确认保存」不可用 */
+  function checkNb() {
+    var bad = [];
+    ["pNb0", "pNb1", "pNb2"].forEach(function (id, k) { var v = $(id).value.trim(), ok = /^\d+(\.\d{1,2})?$/.test(v) && Number(v) <= 9999999.99; $(id).style.borderColor = ok ? "" : "#F56C6C"; if (!ok) bad.push(["升级奖金", "月度工资", "生日奖金"][k]); });
+    $("pNbErr").textContent = bad.length ? bad.join("、") + "须为 0 至 9,999,999.99，最多 2 位小数" : "";
+    $("pOk").disabled = !!bad.length || trialing; if (!bad.length && !trialing) prevCalc(); return !bad.length;
+  }
+  ["pNb0", "pNb1", "pNb2"].forEach(function (id) { $(id).addEventListener("input", checkNb); });
+  /* 同一配置有待审批时不能再提交（规则 N58 ③） */
+  function apBusy(cfg) { return AP.some(function (a) { return a.cfg === cfg; }); }
+  $("lvSave").onclick = function () {
+    var e = validateTbl("lv"); $("lvErr").hidden = !e.length; $("lvErr").textContent = e.join("；");
+    if (e.length) return;
+    var d = diffTbl("lv"); if (!d.length && !draft) { msg("没有修改"); return; }
+    if (apBusy("lv")) { msg("有待审批的修改，请先处理", true); return; }
+    pendBack = "levels"; openPreview("lv", d, null);
+  };
+  function checkParams() {
+    var ok = true, t = $("gTurn").value.trim(), al = $("gAlarm").value.trim();
+    $("eTurn").textContent = /^\d+$/.test(t) && +t <= 50 ? "" : (ok = false, "流水倍数须为 0–50 的整数");
+    $("eAlarm").textContent = /^\d+$/.test(al) && +al >= 10 && +al <= 240 ? "" : (ok = false, "结算告警时间须为 10–240 的整数");
+    $("gAlarm").style.borderColor = $("eAlarm").textContent ? "#F56C6C" : "";
+    /* 领奖有效期：三种奖金共用（用户 2026-10-29），整数 1–20，默认 15 */
+    [["gDays", "eDays", "领奖有效期"]].forEach(function (p) {
+      var v = $(p[0]).value.trim();
+      $(p[1]).textContent = /^\d+$/.test(v) && +v >= 1 && +v <= 20 ? "" : (ok = false, p[2] + "须为 1–20 的整数");
+      $(p[0]).style.borderColor = $(p[1]).textContent ? "#F56C6C" : "";
+    });
+    $("gTurn").style.borderColor = $("eTurn").textContent ? "#F56C6C" : "";
+    return ok;
+  }
+  /* 月度结算时间（用户 2026-10-30）：每月 [1–28] 日 [时]:[分]（GMT+8），默认 1 日 13:00；保存时弹确认框显示下次结算时间，确认后生效；结算进行中锁定 */
+  var ST_CFG = { d: 1, h: 13, m: 0 }, stOk = false;
+  (function () {
+    function fill(id, from, to, cur) { var s = $(id); for (var i = from; i <= to; i++) { var o = document.createElement("option"); o.value = i; o.textContent = id === "gStD" ? String(i) : String(i).padStart(2, "0"); if (i === cur) o.selected = true; s.appendChild(o); } }
+    fill("gStD", 1, 28, 1); fill("gStH", 0, 23, 13); fill("gStM", 0, 59, 0);
+  })();
+  function stVal() { return { d: +$("gStD").value, h: +$("gStH").value, m: +$("gStM").value }; }
+  function stTxt(c) { return c.d + " 日 " + String(c.h).padStart(2, "0") + ":" + String(c.m).padStart(2, "0"); }
+  /* 下次结算时间：本月（2026-10）已结算 2026-09，所以从下月生效：2026-11-dd hh:mm 结算 2026-10 */
+  function stNext(c) { return "2026-11-" + String(c.d).padStart(2, "0") + " " + String(c.h).padStart(2, "0") + ":" + String(c.m).padStart(2, "0"); }
+  function stReset() { $("gStD").value = ST_CFG.d; $("gStH").value = ST_CFG.h; $("gStM").value = ST_CFG.m; }  /* 模板异常行不勾选保存：先确认停发（用户 2026-10-30 第 9 批 R5） */
+  var smsStopOk = false;
+  $("smsStopOk").onclick = function () { $("dSmsStop").hidden = true; smsStopOk = true; $("rwSave").click(); };
+  $("smsStopNo").onclick = function () { $("dSmsStop").hidden = true; };
+  $("rwSave").onclick = function () {
+    var e = state.rwLocked ? [] : validateTbl("rw"), okP = checkParams();
+    $("rwErr").hidden = !e.length; $("rwErr").textContent = e.join("；");
+    if (e.length || !okP) return;
+    /* 短信：勾选但未选模板时提示「请选择短信模板」，不保存（用户 2026-10-30） */
+    var smsBad = false;
+    /* 模板只取【公告管理 › 短信模板列表】中类型为「个人」的模板（用户 2026-10-30）：没有个人模板、未选择、已选模板失效（被删除或改为群发类型）时该行标红、不保存 */
+    [["cBd", "t3", "eT3"], ["cPay", "t1", "eT1"]].forEach(function (s) { var sel = $(s[1]), on = $(s[0]).checked, none = !sel.querySelector('option:not([value=""])'), op = sel.options[sel.selectedIndex], bad = !on ? "" : none ? "暂无可用模板，请先创建个人短信模板" : !sel.value ? "请选择短信模板" : op && op.getAttribute("data-bad") ? "模板状态异常，请重新选择" : ""; $(s[2]).textContent = bad; sel.style.borderColor = bad ? "#F56C6C" : ""; if (bad) smsBad = true; });
+    $("eSave").textContent = "";
+    if (smsBad) { syncSms(); return; }
+    var stopRows = [["cBd", "t3", "生日短信提醒"], ["cPay", "t1", "奖金到账提醒"]].filter(function (s) { return TPLBAD[s[1]] && !$(s[0]).checked; });
+    if (stopRows.length && !smsStopOk) { $("smsStopList").textContent = stopRows.map(function (s) { return s[2]; }).join(" / "); showDlg("dSmsStop"); return; }
+    smsStopOk = false;
+    /* 模板异常的行：保存成功即解除（用户 2026-10-30 定：重新选择有效模板并勾选保存，或保持不勾选保存表示不再发送，任选其一）；异常模板从下拉移除 */
+    [["cBd", "t3"], ["cPay", "t1"]].forEach(function (s) { if (TPLBAD[s[1]]) { TPLBAD[s[1]] = false; var sel = $(s[1]), wasBad = sel.options[sel.selectedIndex] && sel.options[sel.selectedIndex].getAttribute("data-bad"); [].forEach.call(sel.querySelectorAll("option[data-bad]"), function (o) { o.remove(); }); if (wasBad) sel.selectedIndex = 0; } });
+    if (!TPLBAD.t3 && !TPLBAD.t1) tplOdd = false;
+    syncSms();
+    /* 月度结算时间有修改：先弹确认框显示下次结算时间（用户 2026-10-30） */
+    var sv = stVal();
+    if (!state.rwLocked && (sv.d !== ST_CFG.d || sv.h !== ST_CFG.h || sv.m !== ST_CFG.m) && !stOk) { openSw("st-time"); return; }
+    if (stOk) { ST_CFG = sv; stOk = false; msg("保存成功，已写操作日志（月度结算时间：每月 " + stTxt(sv) + "）"); }
+    state.alarm = +$("gAlarm").value;   /* 结算告警时间随「保存」保存，不需要谷歌验证码 */
+    var d = state.rwLocked ? [] : diffTbl("rw"), tn = +$("gTurn").value, turn = tn !== state.turn ? { o: state.turn, n: tn } : null;
+    if (!d.length && !turn) { msg("保存成功"); return; }
+    if (apBusy("rw")) { msg("有待审批的修改，请先处理", true); return; }
+    pendBack = "global";
+    if (d.length) openPreview("rw", d, turn); else openSw("turn");   /* 奖金表、流水倍数有修改时须谷歌验证码（规则 N58） */
+  };
+  var pendBack = "levels";
+  $("pOk").onclick = function () {
+    if (trialing || (!$("pNewRow").hidden && !checkNb())) return;
+    if ($("pGa").value !== "123456") { $("pGaErr").textContent = "谷歌验证码错误"; return; }
+    prevCalc(); var what = $("pWhat").textContent, mod = prevCtx && prevCtx.gk === "lv" ? "VIP会员等级配置" : "VIP会员等级奖励配置";
+    if (apNeed) {   /* 达到审批条件：提交后待审批，旧配置继续生效（规则 N58） */
+      var p0 = pending, nb = [$("pNb0").value, $("pNb1").value, $("pNb2").value];   /* 新等级奖金按提交时填写的值，审批通过时写入 */
+      AP.unshift({ t: NOW, who: ME, cfg: prevCtx.gk, mod: mod, what: what, why: apNeed, apply: function () { if (p0) { $("pNb0").value = nb[0]; $("pNb1").value = nb[1]; $("pNb2").value = nb[2]; p0(); } } });
+      if (prevCtx.add) { draft = false; }
+      logIt(mod, "配置修改", "-", what, "提交审批（" + apNeed + "）");
+      pending = null; hideAll(); drawTbl("lv"); drawTbl("rw"); syncAp(); msg("已提交审批，审批通过后生效"); go(pendBack); return;
+    }
+    if (pending) pending(); pending = null;
+    logIt(mod, prevCtx && prevCtx.add ? "新增等级" : "配置修改", "-", what);
+    hideAll(); drawTbl("lv"); drawTbl("rw"); $("lvErr").hidden = true; $("rwErr").hidden = true; msg("保存成功，已写操作日志"); go(pendBack);
+  };
+
+  /* 单选开关：VIP领取奖励、KYC 限制——经确认 + 谷歌验证码即时生效（不设审核，原「强制审核」开关去掉，用户 2026-10-29） */
+  var swMode = "kyc-off";
+  function openSw(mode) {
+    swMode = mode; $("gaCode").value = ""; $("gaErr").textContent = ""; $("swOk").disabled = false;
+    var t = $("dSwT"), b = $("dSwBody");
+    $("gaRow").hidden = mode.indexOf("claim:") === 0 || mode === "st-time";
+    if (mode === "st-time") { var c = stVal(); t.textContent = "修改月度结算时间"; b.innerHTML = "<p>月度结算时间将由「每月 " + stTxt(ST_CFG) + "」改为「每月 " + stTxt(c) + "」（GMT+8）。</p><p><b>下次结算时间：" + stNext(c) + "</b>（结算 2026-10；本月对 2026-09 的结算已完成，从下月生效）。</p><p class=\"v12-tip\">考核范围仍为上一个自然月；本月还没结算、且新时间已过的，保存后 5 分钟内触发本月结算。</p>"; showDlg("dSw"); return; }
+    /* 领取方式切换（用户 2026-10-30）：mode = "claim:<radio 名>:<auto|manual>"；只影响切换后新生成的该类奖金，已生成未领取的按生成时的方式处理；确认后即时生效、写操作日志，不需要谷歌验证码 */
+    if (mode.indexOf("claim:") === 0) {
+      var cp = mode.split(":"), nm = CLAIM[cp[1]][1], auto = cp[2] === "auto";
+      t.textContent = "修改" + nm + "领取方式";
+      b.innerHTML = auto
+        ? '<p>将「' + nm + '领取方式」由「手动领取」改为「自动领取」。</p><p>确认后新生成的' + nm + '直接到账（风控命中的为「暂停发放（风控）」），不再有「待领取」和领奖有效期；玩家不需要点「领取」，前台该奖金行显示「已到账」，并按现有通知规则发到账通知。</p><p class="v12-tip">只影响确认后新生成的' + nm + '；已生成、未领取的仍按生成时的方式处理（在原有效期内由玩家领取，过期作废）。</p>'
+        : '<p>将「' + nm + '领取方式」由「自动领取」改为「手动领取」。</p><p>确认后新生成的' + nm + '为「待领取」，玩家在领奖有效期内到 VIP中心「查看详情」弹窗领取，过期作废。</p><p class="v12-tip">只影响确认后新生成的' + nm + '；已自动到账的不受影响。</p>';
+      showDlg("dSw"); return;
+    }
+    /* 流水倍数修改（规则 N28、N58）：须谷歌验证码；改为 0 须第二人审批 */
+    if (mode === "turn") { var tn = +$("gTurn").value; t.textContent = "修改流水倍数"; b.innerHTML = "<p>流水倍数将由「" + state.turn + " 倍」改为「" + tn + " 倍」，按奖金生成时的值，已生成的奖金不变。</p>" + (tn === 0 ? '<div class="v12-warn">改为 0 须第二人审批，提交后审批通过才生效。</div>' : ""); showDlg("dSw"); return; }
+    /* KYC 限制切换（PRD 7.3、规则 N25）：开启 → 关闭不补发任何奖金 */
+    if (mode === "kyc-off") { t.textContent = "关闭 KYC 限制"; b.innerHTML = '<p>关闭后，未完成 KYC 的玩家按当前累计定级，不补发升级奖金；之后新达到的等级照常发奖，等级、升级奖金、月度工资不再要求 KYC，生日奖金仍须有 KYC 出生日期。</p>'; }
+    else if (mode === "kyc-on") { t.textContent = "开启 KYC 限制"; b.innerHTML = '<p>开启后，未完成 KYC 的玩家等级冻结，未到账的奖金改为「暂停发放（风控）」；完成 KYC 后恢复等级，冻结期间累计达到更高等级的直接升级并生成升级奖金。</p>'; }
+    else if (mode === "sys-on") {
+      t.textContent = "开启VIP领取奖励";
+      b.innerHTML = '<p>这是第一次开启，将立即执行上线结算：按累计有效投注和累计充值为 18,620 名玩家定级（不参考原 LEVEL 和旧版 VIP 等级），写入当月有效投注等初始数值；已到达的等级不发升级奖金、不弹升级弹窗，以后也不补发；为本月生日的 1,236 名玩家生成生日奖金，合计 ₱187,368.00；不发本月月度工资。</p><p>次月结算时间（默认 1 日 13:00） 照常结算本月（按本月整月有效投注考核）。</p>';
+    }
+    else if (mode === "sys-reon") {
+      /* 再次开启（PRD 规则 N27，Q13 已定）：按当前累计重新核算全部玩家等级（只升不降），关闭期间达到的等级不发升级奖金、不弹动画（Q44 已定）；显示试算结果 */
+      t.textContent = "开启VIP领取奖励";
+      b.innerHTML = '<p>将按当前累计有效投注和累计充值重新核算全部玩家的等级（只升不降，历史最高同步）：预计 326 人升级；关闭期间达到的等级不发升级奖金、不弹升级动画，记「不发放（重新开启核算）」。</p><p class="v12-tip">人数为试算结果，试算完成后才能确认。</p>';
+    }
+    else if (mode === "sys-off") { t.textContent = "关闭VIP领取奖励"; b.innerHTML = '<p>关闭期间停止升级、结算、生成奖金和 VIP 通知，事后不补；累计照常统计，已生成未领取的奖金在原有效期内仍可领取。</p>'; }
+    showDlg("dSw");
+  }
+  $("swOk").onclick = function () {
+    if (swMode === "st-time") { stOk = true; hideAll(); $("rwSave").click(); return; }
+    if (swMode.indexOf("claim:") === 0) {
+      var cp = swMode.split(":"); state.claim[CLAIM[cp[1]][0]] = cp[2];
+      hideAll(); syncSw(); msg("已生效，已写操作日志（" + CLAIM[cp[1]][1] + "领取方式：" + (cp[2] === "auto" ? "手动领取 → 自动领取" : "自动领取 → 手动领取") + "）"); go("global"); return;
+    }
+    if ($("gaCode").value !== "123456") { $("gaErr").textContent = "谷歌验证码错误"; return; }
+    if (swMode === "turn") {
+      var tn = +$("gTurn").value, txt = "流水倍数：" + state.turn + " → " + tn + " 倍";
+      if (tn === 0) { var o = state.turn; AP.unshift({ t: NOW, who: ME, cfg: "rw", mod: "VIP会员等级奖励配置", what: txt, why: "流水倍数改为 0", apply: function () { state.turn = 0; $("gTurn").value = 0; } }); $("gTurn").value = o; logIt("VIP会员等级奖励配置", "配置修改", "流水倍数", txt, "提交审批（流水倍数改为 0）"); hideAll(); syncAp(); msg("已提交审批，审批通过后生效"); go("global"); return; }
+      state.turn = tn; logIt("VIP会员等级奖励配置", "配置修改", "流水倍数", txt); hideAll(); msg("保存成功，已写操作日志"); go("global"); return;
+    }
+    if (swMode === "kyc-off") state.kyc = false; else if (swMode === "kyc-on") state.kyc = true;
+    else if (swMode === "sys-on" || swMode === "sys-reon") { state.sys = true; state.sysEver = true; } else if (swMode === "sys-off") state.sys = false;
+    var swTxt = { "kyc-off": "KYC 限制：开启 → 关闭", "kyc-on": "KYC 限制：关闭 → 开启", "sys-on": "VIP领取奖励：关闭 → 开启", "sys-reon": "VIP领取奖励：关闭 → 开启", "sys-off": "VIP领取奖励：开启 → 关闭" }[swMode];
+    if (swTxt) logIt("VIP会员等级奖励配置", "开关切换", swTxt.split("：")[0], swTxt);
+    hideAll(); syncSw(); msg("已生效，已写操作日志"); go("global");
+  };
+  function syncSw() {
+    function set(name, on) { [].forEach.call(document.getElementsByName(name), function (r) { r.checked = (r.value === "1") === on; }); }
+    set("rSys", state.sys); set("rKyc", state.kyc);
+    Object.keys(CLAIM).forEach(function (nm) { [].forEach.call(document.getElementsByName(nm), function (r) { r.checked = r.value === state.claim[CLAIM[nm][0]]; }); });
+    /* 领取方式联动（用户 2026-10-30）：三项都为手动领取时没有到账短信——「奖金到账提醒」自动取消勾选并置灰；任一项改为自动领取后恢复可选，但保持未勾选，需运营重新勾选保存 */
+    var allMan = state.claim.up === "manual" && state.claim.mon === "manual" && state.claim.bd === "manual";
+    if (allMan) { $("cPay").checked = false; $("cPay").disabled = true; } else $("cPay").disabled = false;
+    $("payTip").hidden = !allMan; syncSms();
+  }
+  /* 短信模板下拉（用户 2026-10-30）：选项为短信模板列表中的个人类型模板（示例名）；特殊场景（无个人模板、模板失效）改过选项后，回到奖励配置时恢复 */
+  var TPL0 = $("t1").innerHTML, tplOdd = false, TPLBAD = { t3: false, t1: false };
+  function resetTpl() { $("t3").innerHTML = TPL0; $("t1").innerHTML = TPL0; $("t3").selectedIndex = 1; $("t1").selectedIndex = 2; tplOdd = false; TPLBAD.t3 = TPLBAD.t1 = false; $("eT3").textContent = ""; $("eT1").textContent = ""; $("t3").style.borderColor = ""; $("t1").style.borderColor = ""; $("bdWhen").value = "d0"; }
+  /* 模板状态异常（用户 2026-10-30）：已选模板在短信模板列表被删除或改为「群发」类型时，系统实时检测（模板变更时）并标为异常——
+     下拉里该项红色「状态异常」，该行自动取消勾选、停止发送；控件旁、「VIP会员等级奖励配置」页签、左侧菜单「VIP会员等级配置」及上级「用户管理」显示红色感叹号；
+     多行异常时各行各显示，页签和菜单只要有一行异常就显示；重新选择有效模板并勾选保存，或保持不勾选直接保存（不再发送），任选其一该行解除；全部解除后感叹号全部消失 */
+  function markBad(id, idx) {
+    var sel = $(id), o = sel.options[idx], b = document.createElement("option");
+    b.value = "x-" + id; b.textContent = o.textContent + "（状态异常）"; b.className = "bad"; b.setAttribute("data-bad", "1");
+    sel.replaceChild(b, o); sel.selectedIndex = idx; TPLBAD[id] = true; tplOdd = true;
+    $(id === "t3" ? "cBd" : "cPay").checked = false;   /* 自动切换为未勾选，不再发送 */
+  }
+  function syncSms() {
+    [["cBd", "t3", "eT3", "wT3"], ["cPay", "t1", "eT1", "wT1"]].forEach(function (s) {
+      var sel = $(s[1]), on = $(s[0]).checked, op = sel.options[sel.selectedIndex], badSel = !!(op && op.getAttribute("data-bad"));
+      sel.disabled = !on; sel.classList.toggle("bad-sel", badSel); $(s[3]).hidden = !TPLBAD[s[1]];
+      if (!on) { $(s[2]).textContent = TPLBAD[s[1]] ? "模板状态异常，已停止发送；重新选择有效模板并勾选后保存，或不勾选直接保存（不再发送）" : ""; sel.style.borderColor = ""; }
+    });
+    $("bdWhen").disabled = !$("cBd").checked;
+    var any = TPLBAD.t3 || TPLBAD.t1; $("wTab").hidden = !any; $("wMg").hidden = !any; $("wMi").hidden = !any;
+  }
+  resetTpl();
+  document.addEventListener("change", function (e) {
+    if (e.target.id === "cBd" || e.target.id === "cPay" || e.target.id === "t3" || e.target.id === "t1") { syncSms(); return; }
+    var n = e.target.name;
+    if (CLAIM[n]) { var v = e.target.value; syncSw(); openSw("claim:" + n + ":" + v); return; }
+    if (n !== "rSys" && n !== "rKyc") return;
+    var on = e.target.value === "1"; syncSw();
+    if (n === "rSys") go(on ? (state.sysEver ? "sys-reon" : "sys-on") : "sys-off");
+    if (n === "rKyc") go(on ? "kyc-on" : "kyc-off");
+  });
+
+  /* 活动奖励统计：[会员账号, 会员等级, 生成时间, 奖励类型, 奖励金额, 发放时间, 状态, 操作人, 原因, 风控中, 已补发, 申请领取时间, 截止时间]
+     不设审核（PRD 规则 N30）、三种奖金都由玩家手动领取（用户 2026-10-29）：发放状态 7 种；三种奖金共用领奖有效期，含起算当天 15 天（默认，用户 2026-10-29）；
+     申请领取时间 = 玩家领取时间（升级奖金为点升级确认弹窗「领取奖金」或在等级卡「查看详情」弹窗里领取），发放时间 = 实际到账时间；KYC 定级补发也生成待领取（PRD 规则 N23、N25） */
+  var NOW = "2026-10-28 14:21:00";
+  function rec(acc, lv, gen, type, amt, claim, paid, st, op, why, dl, risk) { return [acc, lv, gen, type, amt, paid, st, op, why, risk || 0, 0, claim, dl || "-"]; }
+  var BASE = [
+    /* 2026-09 结算月份（10-01 结算）示例：pl***23 生日奖金待领取（月度工资记录见下方原有示例）（用户 2026-10-30 第 9 批：结算明细「查看记录」跳转演示） */
+    rec("pl***23", "VIP6", "2026-10-01 13:00:00", "生日奖金", 188, "-", "-", "待领取", "SYSTEM", "", "2026-11-03 23:59:59"),
+    /* 2026-09 自然月的升级奖金示例（wa***08 一次跨 2 级有 2 条记录，所以记录数多于「升级」列人数）；其他月份见 UPR */
+    rec("wa***08", "VIP4", "2026-09-18 21:04:12", "升级奖金", 38, "2026-09-18 21:05:00", "2026-09-18 21:05:00", "已到账", "SYSTEM", "点升级确认弹窗「领取奖金」领取（跨 2 级一次领取）", "2026-10-02 23:59:59"),
+    rec("wa***08", "VIP3", "2026-09-18 21:04:12", "升级奖金", 28, "2026-09-18 21:05:00", "2026-09-18 21:05:00", "已到账", "SYSTEM", "点升级确认弹窗「领取奖金」领取（跨 2 级一次领取）", "2026-10-02 23:59:59"),
+    rec("ki***72", "VIP2", "2026-09-05 10:22:40", "升级奖金", 18, "-", "-", "已过期", "SYSTEM", "", "2026-09-19 23:59:59"),
+    rec("pl***23", "VIP8", "2026-10-28 13:45:10", "升级奖金", 288, "2026-10-28 13:46:02", "2026-10-28 13:46:02", "已到账", "SYSTEM", "点升级确认弹窗「领取奖金」领取（跨 2 级一次领取）", "2026-11-11 23:59:59"),
+    rec("pl***23", "VIP7", "2026-10-28 13:45:10", "升级奖金", 108, "2026-10-28 13:46:02", "2026-10-28 13:46:02", "已到账", "SYSTEM", "点升级确认弹窗「领取奖金」领取（跨 2 级一次领取）", "2026-11-11 23:59:59"),
+    rec("au***31", "VIP4", "2026-10-28 11:30:00", "升级奖金", 38, "2026-10-28 11:30:00", "2026-10-28 11:30:00", "已到账", "SYSTEM", "自动领取（生成即到账）", "-"),
+    rec("au***31", "VIP3", "2026-10-28 11:30:00", "升级奖金", 28, "2026-10-28 11:30:00", "2026-10-28 11:30:00", "已到账", "SYSTEM", "自动领取（生成即到账）", "-"),
+    rec("mx***07", "VIP9", "2026-10-28 12:10:02", "升级奖金", 588, "-", "-", "待领取", "-", "", "2026-11-11 23:59:59"),
+    rec("an***19", "VIP14", "2026-10-01 13:00:00", "生日奖金", 488, "-", "-", "待领取", "-", "", "2026-11-11 23:59:59"),
+    rec("ga***33", "VIP1", "2026-10-01 13:00:00", "生日奖金", 88, "2026-10-27 10:32:08", "2026-10-27 10:32:08", "已到账", "SYSTEM", "在详情弹窗领取", "2026-11-10 23:59:59"),
+    rec("fa***28", "VIP2", "2026-10-26 18:00:00", "升级奖金", 18, "-", "-", "不发放", "SYSTEM", "KYC 限制关闭定级"),   /* KYC 限制开启 → 关闭：按当时累计定级，不补发（规则 N25） */
+    /* 第 11 批新增示例：系统作废、撤单复核、不发放新原因（规则 N5、N31、N33、N55） */
+    rec("tr***41", "VIP5", "2026-10-27 22:10:00", "升级奖金", 48, "-", "-", "已作废", "SYSTEM", "系统作废：撤单"),
+    rec("cx***29", "VIP7", "2026-10-27 18:40:00", "升级奖金", 108, "-", "-", "暂停发放（风控）", "-", "撤单复核", "2026-11-10 23:59:59", 1),
+    rec("nq***83", "VIP4", "2026-10-26 08:00:00", "升级奖金", 38, "-", "-", "已作废", "SYSTEM", "系统作废：账号停用"),
+    rec("dl***66", "SUPER VIP", "2026-10-27 15:00:00", "升级奖金", 118888, "-", "-", "不发放", "SYSTEM", "已领被删等级"),
+    /* 第二人审批示例（规则 N58）：ro***33 补发待审批（运营账号C 提交）；hi***45 放行待审批（本账号提交）；zo***50 可放行（≥ ₱5,000 → 待审批）；me***17 本账号作废（不能由本账号补发） */
+    (function () { var r = rec("ro***33", "VIP20", "2026-10-26 20:00:00", "升级奖金", 6288, "-", "-", "已作废", "运营账号B", "人工作废：重复账号核查（示例）", "2026-11-09 23:59:59"); r[14] = "补发"; return r; })(),
+    (function () { var r = rec("hi***45", "VIP19", "2026-10-27 16:10:00", "升级奖金", 5288, "-", "-", "暂停发放（风控）", "-", "风险分 ≥ 70（已解除）", "2026-11-10 23:59:59", 0); r[14] = "放行"; return r; })(),
+    rec("zo***50", "VIP20", "2026-10-27 09:20:00", "升级奖金", 6288, "-", "-", "暂停发放（风控）", "-", "风险分 ≥ 70（已解除）", "2026-11-10 23:59:59", 0),
+    rec("me***17", "VIP6", "2026-10-25 20:30:00", "升级奖金", 68, "-", "-", "已作废", "运营账号A", "人工作废：信息核对中（示例）", "2026-11-08 23:59:59"),
+    rec("ya***38", "VIP19", "2026-10-24 21:15:00", "升级奖金", 5288, "-", "-", "已作废", "运营账号B", "人工作废：重复账号核查（示例）", "2026-11-07 23:59:59"),
+    rec("el***15", "VIP4", "2026-10-26 09:12:30", "升级奖金", 38, "-", "-", "待领取", "-", "KYC 定级补发（完成 KYC 时定级）", "2026-11-09 23:59:59"),
+    rec("el***15", "VIP3", "2026-10-26 09:12:30", "升级奖金", 28, "-", "-", "待领取", "-", "KYC 定级补发（完成 KYC 时定级）", "2026-11-09 23:59:59"),
+    rec("el***15", "VIP2", "2026-10-26 09:12:30", "升级奖金", 18, "-", "-", "不发放", "SYSTEM", "上线结算"),
+    rec("jo***88", "VIP10", "2026-10-25 15:20:00", "升级奖金", 888, "-", "-", "暂停发放（风控）", "-", "风险分 ≥ 70", "2026-11-08 23:59:59", 1),
+    /* 上线结算（2026-04-01 00:00 第一次开启，用户 2026-10-30「上线这次结算归为当前月，仅这一次为特殊结算」）：为 4 月生日的玩家按上线结算后的等级生成生日奖金，结算月份 = 2026-04（唯一例外） */
+    (function () { var r = rec("pe***62", "VIP4", "2026-04-01 00:00:00", "生日奖金", 88, "2026-04-16 11:05:20", "2026-04-16 11:05:20", "已到账", "SYSTEM", "上线结算；在详情弹窗领取", "2026-04-29 23:59:59"); r[13] = "2026-04"; return r; })(),
+    (function () { var r = rec("bu***77", "VIP1", "2026-04-01 00:00:00", "生日奖金", 88, "-", "-", "已过期", "-", "上线结算；未领取", "2026-05-06 23:59:59"); r[13] = "2026-04"; return r; })(),    rec("pa***19", "VIP6", "2026-10-24 10:00:00", "升级奖金", 68, "-", "-", "暂停发放（风控）", "-", "风险分 ≥ 70（已解除）", "2026-11-07 23:59:59", 0),   /* 风控已解除、可放行的示例（R08） */
+    rec("da***77", "VIP10", "2026-10-25 15:00:00", "升级奖金", 888, "-", "-", "不发放", "SYSTEM", "上线结算"),
+    rec("ki***56", "VIP4", "2026-10-24 18:30:00", "升级奖金", 38, "-", "-", "暂停发放（风控）", "-", "KYC 限制开启（未完成 KYC）", "2026-11-07 23:59:59"),
+    rec("lu***62", "VIP7", "2026-10-24 15:22:01", "升级奖金", 108, "-", "-", "已作废", "运营账号B", "人工作废：同设备多账号（示例）", "2026-11-07 23:59:59"),
+    rec("be***44", "VIP3", "2026-10-23 13:05:12", "升级奖金", 28, "-", "-", "发放失败", "运营账号A", "补发：原记录 2026-10-21 人工作废；到账失败（示例）"),
+    rec("ce***09", "VIP8", "2026-10-23 11:00:00", "升级奖金", 288, "-", "2026-10-23 11:00:00", "已到账", "运营账号A", "补发：原记录 2026-10-22 人工作废（示例）"),
+    rec("ce***09", "VIP8", "2026-10-22 13:05:01", "升级奖金", 288, "-", "-", "已作废", "运营账号B", "人工作废：重复账号（示例）", "2026-11-05 23:59:59"),
+    /* 等级配置调整（规则 N55 ③）：删除最高一级后，sv***01 重算前历史最高 SUPER VIP 的升级奖金未领取 → 系统作废；为重算后的历史最高（新 SUPER VIP，原 VIP24）生成 1 笔等级调整补偿 = min(₱68,888, ₱118,888) */
+    (function () { var o = rec("sv***01", "SUPER VIP", "2026-10-20 09:00:00", "升级奖金", 118888, "-", "-", "已作废", "SYSTEM", "系统作废：等级配置调整", "2026-11-03 23:59:59"); o[10] = 1; return o; })(),
+    rec("sv***01", "SUPER VIP", "2026-10-27 15:00:00", "等级调整补偿", 68888, "-", "-", "待领取", "-", "等级配置调整（删除 SUPER VIP）：原 SUPER VIP 升级奖金 ₱118,888 未领取；新 SUPER VIP 没有升级奖金记录（示例：当时该级配置为 0），补偿 = min(₱68,888, ₱118,888)", "2026-11-10 23:59:59"),
+    rec("ol***12", "VIP3", "2026-10-22 09:00:00", "升级奖金", 28, "-", "-", "已过期", "-", "未领取（示例：当时领奖有效期配置为 3 天）", "2026-10-24 23:59:59"),
+    rec("ri***30", "VIP6", "2026-10-01 13:00:00", "生日奖金", 188, "-", "-", "暂停发放（风控）", "-", "风险分 ≥ 70", "2026-10-22 23:59:59", 1),   /* Q34 示例 ③：月度 ₱48 已过期、生日 ₱188 风控暂停 → 236 / 0 / 236 */
+    /* 2026-09 月度工资（10-01 13:00 结算生成，有效至 10-15），与「VIP月度结算记录」2026-09 明细的奖金状态一致 */
+    rec("pl***23", "VIP6", "2026-10-01 13:00:00", "月度工资", 48, "2026-10-01 20:15:33", "2026-10-01 20:15:33", "已到账", "SYSTEM", "在详情弹窗领取", "2026-10-15 23:59:59"),
+    rec("ma***88", "VIP12", "2026-10-01 13:00:00", "月度工资", 800, "2026-10-02 09:01:47", "2026-10-02 09:01:47", "已到账", "SYSTEM", "在详情弹窗领取", "2026-10-15 23:59:59"),
+    rec("ke***42", "VIP3", "2026-10-01 13:00:00", "月度工资", 18, "-", "-", "暂停发放（风控）", "-", "风险分 ≥ 70（已解除）", "2026-10-15 23:59:59", 0),
+    rec("ry***19", "VIP10", "2026-10-01 13:00:00", "月度工资", 400, "-", "-", "已过期", "-", "未领取", "2026-10-15 23:59:59"),
+    rec("li***90", "SUPER VIP", "2026-10-01 13:00:00", "月度工资", 100000, "2026-10-01 13:20:05", "2026-10-01 13:20:05", "已到账", "SYSTEM", "在详情弹窗领取", "2026-10-15 23:59:59"),
+    rec("su***05", "VIP4", "2026-10-01 13:00:00", "月度工资", 12, "2026-10-03 21:40:12", "2026-10-03 21:40:12", "已到账", "SYSTEM", "在详情弹窗领取（VIP2 月度工资）", "2026-10-15 23:59:59"),
+    rec("jo***07", "VIP8", "2026-10-01 13:00:00", "月度工资", 88, "-", "-", "已过期", "-", "未领取", "2026-10-15 23:59:59"),
+    rec("da***33", "VIP14", "2026-10-01 13:00:00", "月度工资", 800, "2026-10-06 11:08:30", "2026-10-06 11:08:30", "已到账", "SYSTEM", "在详情弹窗领取（VIP12 月度工资）", "2026-10-15 23:59:59"),
+    rec("re***52", "VIP4", "2026-10-01 13:00:00", "月度工资", 28, "-", "-", "已过期", "-", "未领取", "2026-10-15 23:59:59"),
+    rec("ho***61", "VIP5", "2026-10-01 13:00:00", "月度工资", 38, "2026-10-02 18:22:51", "2026-10-02 18:22:51", "已到账", "SYSTEM", "在详情弹窗领取", "2026-10-15 23:59:59"),
+    rec("vo***26", "VIP3", "2026-10-01 13:00:00", "月度工资", 18, "2026-10-04 08:45:19", "2026-10-04 08:45:19", "已到账", "SYSTEM", "在详情弹窗领取", "2026-10-15 23:59:59")
+  ];
+  var ROWS = [], reissued = {};
+  function build() {
+    ROWS = BASE.map(function (r) { return r.slice(); });
+    for (var i = 0; i < 12; i++) { var g = "2026-10-2" + (2 + i % 6) + " 0" + (i % 9) + ":10:00", c = "2026-10-2" + (2 + i % 6) + " 0" + (i % 9) + ":12:30"; ROWS.push(rec("pl***" + (40 + i), "VIP" + (i % 5 + 1), g, "升级奖金", [8, 18, 28, 38, 48][i % 5], c, c, "已到账", "SYSTEM", i % 2 ? "在详情弹窗领取" : "点升级确认弹窗「领取奖金」领取", ["2026-11-05", "2026-11-06", "2026-11-07", "2026-11-08", "2026-11-09", "2026-11-10"][i % 6] + " 23:59:59")); }
+    ROWS.sort(function (a, b) { return a[2] < b[2] ? 1 : a[2] > b[2] ? -1 : 0; });
+  }
+  build();
+  var CLS = { "已到账": "st-ok", "待领取": "st-wait", "暂停发放（风控）": "st-warn", "发放失败": "st-bad", "已作废": "st-off", "已过期": "st-off", "不发放": "st-off" };
+  var cur = null, empty = false, PG = { size: 10, page: 1 };
+  var Q = { acc: "", amt: "", type: "", st: "", from: "2026-10-22", to: "2026-10-28", am: "" };
+  /* 结算月份（用户 2026-10-30）：月度工资、生日奖金 = 生成它的那次结算的结算月份（生成时间所在月的上一个月）；升级奖金 = 生成时间所在的自然月；三类奖金都参与筛选 */
+  function amOf(s) { var y = +s.slice(0, 4), m = +s.slice(5, 7) - 1; if (m === 0) { y--; m = 12; } return y + "-" + String(m).padStart(2, "0"); }
+  function amOfR(r) { return r[13] || (r[3] === "升级奖金" ? r[2].slice(0, 7) : amOf(r[2])); }   /* r[13]：补发、补结算生成的记录沿用原结算月份 */
+  /* 从结算记录跳来：带上筛选条件，生成时间留空 */
+  /* 统一跳转（用户 2026-10-30）：带入的筛选写进筛选控件（看得见、可清除）；记下来源（页签、明细月份和筛选、滚动位置）供「‹ 返回」恢复 */
+  var FROM = null, JUMPING = false, BACKING = null;
+  function jumpList(o) {
+    FROM = { label: o.src || "", detail: !$("stDtl").hidden ? sdMonth : "", sd: [$("sdAcc").value, $("sdLv").value, $("sdRes").value], y: window.scrollY };
+    $("fAcc").value = o.acc || ""; $("fAmt").value = ""; $("fType").value = o.type || ""; $("fSt").value = o.st || ""; $("fFrom").value = ""; $("fTo").value = ""; $("fAm").value = o.am || "";
+    Q = { acc: o.acc || "", amt: "", type: o.type || "", st: o.st || "", from: "", to: "", am: o.am || "" }; PG.page = 1; empty = false; JUMPING = true; go("list");
+  }
+  function filtered() {
+    if (empty) return [];
+    return ROWS.filter(function (r) { var d = r[2].slice(0, 10); return (!Q.acc || r[0] === Q.acc) && (!Q.amt || Number(Q.amt) === r[4]) && (!Q.type || r[3] === Q.type) && (!Q.st || r[6] === Q.st) && (!Q.from || d >= Q.from) && (!Q.to || d <= Q.to) && (!Q.am || amOfR(r) === Q.am); });
+  }
+  function draw() {
+    var data = filtered(), n = Math.max(1, Math.ceil(data.length / PG.size)); PG.page = Math.min(Math.max(1, PG.page), n);
+    var tb = $("tb"); tb.textContent = "";
+    var page = data.slice((PG.page - 1) * PG.size, PG.page * PG.size), dvSt = false;   /* 研发说明 D92 只挂在第一个状态标签上（用户 2026-10-30：挂在示例状态旁） */
+    if (!page.length) { var c0 = tb.insertRow().insertCell(); c0.colSpan = 11; c0.className = "lv-empty"; c0.textContent = "No Data"; }
+    page.forEach(function (r) {
+      var tr = tb.insertRow();
+      [r[0], r[1], r[2], r[3], fmt(r[4], true), r[11], r[5]].forEach(function (x, k) { var c = tr.insertCell(); c.textContent = x; if (k === 2 || k === 5 || k === 6) c.className = "tm"; });   /* 时间格一行显示 */
+      var st = tr.insertCell(), sp = document.createElement("span"); sp.className = CLS[r[6]] || ""; sp.textContent = r[6]; if (!dvSt) { sp.setAttribute("data-dev", "D92"); dvSt = true; } st.appendChild(sp);
+      /* 「说明」列（用户 2026-10-30「活动奖励统计里再状态后加一列叫说明，后面单独显示现在状态里面的灰字说明」）：截止时间（待领取、暂停发放、已过期）、原因、来源等，多条分行，没有显示「-」 */
+      var ds = tr.insertCell(), notes = []; ds.className = "ds";
+      if (r[12] && r[12] !== "-" && ["待领取", "暂停发放（风控）", "已过期"].indexOf(r[6]) >= 0) notes.push("截止 " + r[12]);
+      if (r[8]) notes.push(r[8]);
+      if (r[14]) notes.push(r[14] + "待审批");   /* 规则 N58：提交审批后记录状态不变，说明列写「补发待审批」「放行待审批」 */
+      if (!notes.length) ds.textContent = "-"; else notes.forEach(function (x) { var d = document.createElement("div"); d.textContent = x; ds.appendChild(d); });
+      tr.insertCell().textContent = r[7];
+      var op = tr.insertCell(), box = document.createElement("div"); box.className = "lv-ops"; op.appendChild(box);
+      function btn(t, v) { var b = document.createElement("button"); b.type = "button"; b.textContent = t; b.onclick = function () { cur = r; go(v); }; box.appendChild(b); }
+      /* 操作列（规则 N32、N33）：补发只对人工作废、发放失败的原记录；系统作废、已有替代记录、玩家仍在风控暂停、待审批中的不显示；补发记录发放失败只显示「重试」 */
+      var isRe = String(r[8]).indexOf("补发：") === 0, wait = !!r[14];
+      if (r[6] === "暂停发放（风控）" && !wait) btn("放行", "release");
+      if (!isRe && !wait && ["待领取", "暂停发放（风控）", "发放失败"].indexOf(r[6]) >= 0) btn("作废", "void");
+      if (!isRe && !wait && !r[10] && !r[9] && !reissued[ROWS.indexOf(r)] && ((r[6] === "已作废" && String(r[8]).indexOf("人工作废") === 0) || r[6] === "发放失败")) btn("补发", "reissue");
+      if (isRe && r[6] === "发放失败") { var rb = document.createElement("button"); rb.type = "button"; rb.textContent = "重试"; rb.setAttribute("data-dev", "D162"); rb.onclick = function () { r[6] = "已到账"; r[5] = NOW; r[7] = ME; logIt("活动奖励统计", "重试", r[0], r[3] + " ₱" + fmt(r[4], true) + "：发放失败 → 已到账"); draw(); msg("重试成功，已到账，已写操作日志"); }; box.appendChild(rb); }
+    });
+    if (page.length) { var sr = tb.insertRow(); var a = sr.insertCell(); a.textContent = "合计"; a.className = "sum"; for (var k = 0; k < 10; k++) { var c = sr.insertCell(); c.className = "sum"; if (k === 3) c.setAttribute("data-dev", "D97"); if (k === 3) c.textContent = fmt(page.reduce(function (s, x) { return s + x[4]; }, 0), true); } }
+    $("pgTotal").textContent = data.length;
+    var nb = $("pgNums"); nb.textContent = "";
+    for (var i = 1; i <= n; i++) { var b = document.createElement("button"); b.type = "button"; b.textContent = i; if (i === PG.page) b.setAttribute("aria-current", "page"); b.onclick = (function (k) { return function () { PG.page = k; draw(); }; })(i); nb.appendChild(b); }
+    $("pgPrev").disabled = PG.page <= 1; $("pgNext").disabled = PG.page >= n; $("pgGo").value = PG.page;
+  }
+  $("pgPrev").onclick = function () { PG.page--; draw(); };
+  $("pgNext").onclick = function () { PG.page++; draw(); };
+  $("pgSize").onchange = function () { PG.size = +this.value; PG.page = 1; draw(); };
+  $("pgGo").onkeydown = function (e) { if (e.key === "Enter") { var v = parseInt(this.value, 10); PG.page = isNaN(v) ? PG.page : v; draw(); } };
+  $("fSearch").onclick = function () { Q = { acc: $("fAcc").value.trim(), amt: $("fAmt").value.trim(), type: $("fType").value, st: $("fSt").value, from: $("fFrom").value, to: $("fTo").value, am: $("fAm").value }; empty = false; PG.page = 1; $("totAmt").textContent = "0"; draw(); };
+  $("totBtn").onclick = function () { $("totAmt").textContent = fmt(filtered().filter(function (r) { return r[6] === "已到账"; }).reduce(function (s, x) { return s + x[4]; }, 0), true); };
+  $("expBtn").onclick = function () { go("export"); };
+  $("expOk").onclick = function () { hideAll(); go("list"); msg("已导出 " + filtered().length + " 条记录（CSV）"); };
+
+  function info(id, r) { var tb = $(id); tb.textContent = ""; [["会员账号", r[0]], ["会员等级", r[1]], ["奖励类型", r[3]], ["奖励金额", "₱" + fmt(r[4], true)], ["截止时间", r[12] + (r[12] !== "-" && r[12] < NOW ? "（已过期）" : "")], ["当前状态", r[6] + (r[6] === "暂停发放（风控）" && r[8] ? "（" + r[8] + "）" : "")]].forEach(function (x) { var tr = tb.insertRow(); tr.insertCell().textContent = x[0]; tr.insertCell().textContent = x[1]; }); }
+  function findRow(st) { return ROWS.filter(function (r) { return r[6] === st && !r[10] && !r[14] && !reissued[ROWS.indexOf(r)] && String(r[8]).indexOf("补发：") !== 0; })[0]; }
+  /* 可补发的原记录（规则 N33 ②）：人工作废或发放失败，无替代记录，玩家不在风控暂停，不在待审批 */
+  function canRe(r) { return !r[10] && !r[9] && !r[14] && !reissued[ROWS.indexOf(r)] && String(r[8]).indexOf("补发：") !== 0 && ((r[6] === "已作废" && String(r[8]).indexOf("人工作废") === 0) || r[6] === "发放失败"); }
+  function done(t) { hideAll(); go("list"); msg(t); }
+  /* 放行（PRD 规则 N32）：恢复为待领取，有效期不顺延；放行时已过有效期的直接到账；生成时为自动领取的直接到账；玩家仍处于风控暂停时不能放行；单笔 ≥ ₱5,000 须第二人审批（规则 N58） */
+  function doRelease(r, op) {
+    var exp = r[12] !== "-" && r[12] < NOW; r[7] = op; r[14] = 0;
+    if (exp) { r[6] = "已到账"; r[5] = NOW; r[8] = "放行：已过有效期，直接到账"; } else { r[6] = "待领取"; r[8] = "放行：有效期不顺延"; }
+    logIt("活动奖励统计", "放行", r[0], r[3] + " ₱" + fmt(r[4], true) + "：暂停发放（风控）→ " + r[6]);
+    return exp ? "已放行，已过有效期，直接到账" : "已放行，恢复为待领取";
+  }
+  function doReissue(r, why, op) {
+    reissued[ROWS.indexOf(r)] = 1; r[10] = 1; r[14] = 0;
+    var nr = rec(r[0], r[1], NOW, r[3], r[4], "-", NOW, "已到账", op, "补发：原记录 " + r[2] + "；" + why); nr[13] = amOfR(r); ROWS.unshift(nr);   /* 补发直接到账，不需玩家领取 */
+    logIt("活动奖励统计", "补发", r[0], r[3] + " ₱" + fmt(r[4], true) + "：补发到账", why);
+  }
+  $("relOk").onclick = function () { if (this.disabled) return;
+    if (cur[4] >= 5000) { cur[14] = "放行"; AP.unshift({ t: NOW, who: ME, mod: "活动奖励统计", what: "放行 " + cur[0] + " " + cur[3] + " ₱" + fmt(cur[4], true), why: "单笔 ≥ ₱5,000", acc: cur[0], kind: "放行" }); logIt("活动奖励统计", "放行", cur[0], cur[3] + " ₱" + fmt(cur[4], true), "提交审批（单笔 ≥ ₱5,000）"); syncAp(); done("已提交审批，审批通过后放行"); return; }
+    done(doRelease(cur, ME));
+  };
+  $("voidOk").onclick = function () { var w = $("voidWhy").value.trim(); if (!w) { $("voidErr").textContent = "请填写作废原因（1–200 字）"; return; } logIt("活动奖励统计", "作废", cur[0], cur[3] + " ₱" + fmt(cur[4], true) + "：" + cur[6] + " → 已作废", w); cur[6] = "已作废"; cur[8] = "人工作废：" + w; cur[7] = ME; done("已作废，已写操作日志"); };
+  $("reOk").onclick = function () {
+    if (this.disabled) return;
+    var w = $("reWhy").value.trim(); if (!w) { $("reErr").textContent = "请填写补发原因（1–200 字）"; return; }
+    if (cur[4] >= 5000) { cur[14] = "补发"; AP.unshift({ t: NOW, who: ME, mod: "活动奖励统计", what: "补发 " + cur[0] + " " + cur[3] + " ₱" + fmt(cur[4], true), why: "单笔 ≥ ₱5,000", acc: cur[0], kind: "补发", note: w }); logIt("活动奖励统计", "补发", cur[0], cur[3] + " ₱" + fmt(cur[4], true), "提交审批（单笔 ≥ ₱5,000）：" + w); syncAp(); done("已提交审批，审批通过后补发"); return; }
+    doReissue(cur, w, ME); done("已补发，已生成新记录");
+  };
+
+  /* ============ 第二人审批（规则 N58）：页签右上角「待审批」弹窗；提交人不能审批自己的；通过须谷歌验证码 ============ */
+  var ME = "运营账号A";
+  var AP = [
+    { t: "2026-10-28 13:50:00", who: "运营账号A", mod: "活动奖励统计", what: "放行 hi***45 升级奖金 ₱5,288", why: "单笔 ≥ ₱5,000", acc: "hi***45", kind: "放行" },
+    { t: "2026-10-28 10:05:00", who: "运营账号C", mod: "活动奖励统计", what: "补发 ro***33 升级奖金 ₱6,288（原记录人工作废）", why: "单笔 ≥ ₱5,000", acc: "ro***33", kind: "补发", note: "重复账号核查后确认可补发" }
+  ];
+  function addH(s, h) { var d = new Date(s.replace(" ", "T") + "Z"); d.setUTCHours(d.getUTCHours() + h); return d.toISOString().slice(0, 19).replace("T", " "); }
+  function syncAp() { $("apN").textContent = AP.length; }
+  function drawAp() {
+    var tb = $("apBody"); tb.textContent = "";
+    if (!AP.length) { var c0 = tb.insertRow().insertCell(); c0.colSpan = 6; c0.className = "lv-empty"; c0.textContent = "No Data"; }
+    AP.forEach(function (a, i) {
+      var tr = tb.insertRow();
+      [a.t, a.who, a.mod + " · " + a.what, a.why, addH(a.t, 24)].forEach(function (x) { tr.insertCell().textContent = x; });
+      var oc = tr.insertCell(), own = a.who === ME;
+      ["通过", "驳回"].forEach(function (lab) { var b = document.createElement("button"); b.type = "button"; b.className = "lv-op" + (own ? " ap-own" : ""); b.style.marginRight = "8px"; b.textContent = lab; b.disabled = own; if (own) b.title = "不能审批自己的提交"; b.onclick = function () { apDo(i, lab === "通过"); }; oc.appendChild(b); });
+    });
+    syncAp();
+  }
+  function apDo(i, ok) {
+    var a = AP[i]; if (!a || a.who === ME) return;
+    if ($("apGa").value !== "123456") { $("apErr").textContent = "谷歌验证码错误"; return; }
+    var r = a.acc ? ROWS.filter(function (x) { return x[0] === a.acc && x[14] === a.kind; })[0] : null;
+    if (ok) { if (a.apply) a.apply(); if (r) { if (a.kind === "放行") doRelease(r, a.who); else doReissue(r, a.note || "", a.who); } }
+    else if (r) r[14] = 0;
+    logIt(a.mod, "审批", a.acc || "-", a.what + "：" + (ok ? "通过" : "驳回"));
+    AP.splice(i, 1); $("apErr").textContent = ""; drawAp(); drawTbl("lv"); drawTbl("rw"); draw();
+    msg(ok ? "已通过，已生效，已写操作日志" : "已驳回，已写操作日志");
+  }
+  function openAp() { $("apGa").value = ""; $("apErr").textContent = ""; drawAp(); showDlg("dAp"); }
+  $("apBtn").onclick = openAp; $("apX").onclick = function () { $("dAp").hidden = true; };
+
+  /* ============ 操作日志（PRD 7.1）：4 个页签右上角；按操作时间（默认近 7 天）、操作人、操作类型、对象筛选；只读 ============ */
+  var LOG = [
+    ["2026-10-28 13:50:00", "运营账号A", "活动奖励统计", "放行", "hi***45", "升级奖金 ₱5,288", "提交审批（单笔 ≥ ₱5,000）"],
+    ["2026-10-28 10:05:00", "运营账号C", "活动奖励统计", "补发", "ro***33", "升级奖金 ₱6,288", "提交审批（单笔 ≥ ₱5,000）：重复账号核查后确认可补发"],
+    ["2026-10-27 15:00:00", "SYSTEM", "VIP会员等级配置", "全量重算", "-", "触发：删除等级 SUPER VIP；处理 18,620 人；生成等级调整补偿 1 笔 ₱68,888", "-"],
+    ["2026-10-26 11:20:05", "运营账号A", "VIP会员等级奖励配置", "开关切换", "KYC 限制", "KYC 限制：关闭 → 开启", "-"],
+    ["2026-10-25 09:12:40", "运营账号B", "VIP会员等级奖励配置", "配置修改", "VIP5", "VIP5 月度工资：₱36 → ₱38", "-"],
+    ["2026-10-24 15:22:01", "运营账号B", "活动奖励统计", "作废", "lu***62", "升级奖金 ₱108：待领取 → 已作废", "同设备多账号（示例）"],
+    ["2026-10-23 11:00:00", "运营账号A", "活动奖励统计", "补发", "ce***09", "升级奖金 ₱288：补发到账", "重复账号（示例）"],
+    ["2026-10-22 09:30:00", "运营账号B", "VIP会员等级配置", "配置修改", "VIP3", "VIP3 累计有效投注：₱110,000 → ₱100,000", "-"]
+  ];
+  function logIt(mod, type, obj, chg, why) { LOG.unshift([NOW, ME, mod, type, obj || "-", chg || "-", why || "-"]); }
+  function drawLog() {
+    var f = $("lgFrom").value, t = $("lgTo").value, w = $("lgWho").value.trim(), ty = $("lgType").value, ob = $("lgObj").value.trim();
+    var rows = LOG.filter(function (x) { var d = x[0].slice(0, 10); return (!f || d >= f) && (!t || d <= t) && (!w || x[1].indexOf(w) >= 0) && (!ty || x[3] === ty) && (!ob || x[4].indexOf(ob) >= 0 || x[5].indexOf(ob) >= 0); });
+    var tb = $("lgBody"); tb.textContent = "";
+    if (!rows.length) { var c0 = tb.insertRow().insertCell(); c0.colSpan = 7; c0.className = "lv-empty"; c0.textContent = "No Data"; }
+    rows.slice(0, 10).forEach(function (x) { var tr = tb.insertRow(); x.forEach(function (v) { tr.insertCell().textContent = v; }); });
+    $("lgTotal").textContent = rows.length;
+  }
+  function openLog() { $("lgFrom").value = "2026-10-22"; $("lgTo").value = "2026-10-28"; $("lgWho").value = ""; $("lgType").value = ""; $("lgObj").value = ""; drawLog(); showDlg("dLog"); }
+  $("logBtn").onclick = openLog; $("logX").onclick = function () { $("dLog").hidden = true; }; $("lgSearch").onclick = drawLog;
+
+  /* ============ 整批作废（规则 N33 ④）：24 小时内门槛下调、新增等级生成的升级奖金批次 ============ */
+  var BV = [
+    { t: "2026-10-28 11:00:00", op: "门槛下调（VIP3 累计有效投注：₱100,000 → ₱90,000）", n: 18, amt: 504 },
+    { t: "2026-10-27 16:30:00", op: "门槛下调（VIP2 累计充值：₱10,000 → ₱8,000）", n: 25, amt: 450 }
+  ];
+  function openBv() {
+    var tb = $("bvBody"); tb.textContent = ""; $("bvWhy").value = ""; $("bvGa").value = ""; $("bvErr").textContent = "";
+    if (!BV.length) { var c0 = tb.insertRow().insertCell(); c0.colSpan = 4; c0.className = "lv-empty"; c0.textContent = "24 小时内没有可整批作废的批次"; }
+    BV.forEach(function (b, i) { var tr = tb.insertRow(), c = tr.insertCell(), rd = document.createElement("input"); rd.type = "radio"; rd.name = "bvSel"; rd.value = i; rd.setAttribute("aria-label", "选择批次 " + b.t); c.appendChild(rd); [b.t, b.op, fmt(b.n) + " 笔 / ₱" + fmt(b.amt, true)].forEach(function (x) { tr.insertCell().textContent = x; }); });
+    $("bvOk").disabled = !BV.length; showDlg("dBv");
+  }
+  $("bvBtn").onclick = openBv;
+  $("bvOk").onclick = function () {
+    var sel = document.querySelector('input[name="bvSel"]:checked'), w = $("bvWhy").value.trim();
+    if (!sel) { $("bvErr").textContent = "请选择批次"; return; }
+    if (!w) { $("bvErr").textContent = "请填写作废原因（1–200 字）"; return; }
+    if ($("bvGa").value !== "123456") { $("bvErr").textContent = "谷歌验证码错误"; return; }
+    var b = BV.splice(+sel.value, 1)[0];
+    logIt("活动奖励统计", "整批作废", "-", b.op + "：未领取 " + fmt(b.n) + " 笔 / ₱" + fmt(b.amt, true) + " → 已作废", w);
+    hideAll(); msg("已作废 " + fmt(b.n) + " 笔，合计 ₱" + fmt(b.amt, true) + "，已写操作日志");
+  };
+
+  /* VIP月度结算记录（PRD 7.5）示例数据（用户 2026-10-30 第 382 条）：每月的参与人数、保级成功、恢复、降级、其中降为 VIP0、结算失败、升级、等级变更、已到账
+     全部由下面的结算明细示例（SDM）和活动奖励统计示例记录（ROWS）现算，三处自洽：
+     参与人数 = 明细行数 = 保级成功 + 恢复 + 降级 + 未完成；升级 = 当月升级奖金记录的去重会员数（不含 KYC 定级补发、上线结算、等级配置调整）；
+     等级变更 = 各类变更会员的去重人数；已到账 = 该结算月份三类奖金中已到账的记录（含补发到账），与跳转后的 Total 和「查询总计」一致 */
+  var ST = [["2026-09", "2026-10-01 13:00:00", "已完成"], ["2026-08", "2026-09-01 13:00:00", "已完成"], ["2026-07", "2026-08-01 13:00:00", "已完成"],
+            ["2026-06", "2026-07-01 13:00:00", "已完成"], ["2026-05", "2026-06-01 13:00:00", "已完成"], ["2026-04", "2026-05-01 13:00:00", "已完成"]];
+  function lnk(txt, o) { var b = document.createElement("button"); b.type = "button"; b.className = "lv-lnk"; b.textContent = txt; b.onclick = function () { jumpList(o); }; return b; }
+  function accCell(c, due, arr, lnkO, lab2) { c.className = "st-acc"; if (!due) { c.textContent = "-"; return; } [["应到账", due], [lab2 || "已到账", arr], ["未领取", due - arr]].forEach(function (x, i) { var d = document.createElement("div"), b = document.createElement("b"); b.textContent = x[0]; d.appendChild(b); var v = "₱" + fmt(x[1], true); if (i === 1 && lnkO) d.appendChild(lnk(v, lnkO)); else d.appendChild(document.createTextNode(v)); c.appendChild(d); }); }
+  /* 明细：[会员账号, 考核等级 C, 历史最高等级 H, 当月有效投注, 保级投注（C 级）, 月度工资等级 k, 结果, 结算后等级, 月度工资, 月度工资状态]
+     保级投注默认值：VIP1 5,000、VIP2 20,000、VIP3 40,000、VIP4 80,000、VIP5 100,000、VIP6 150,000、VIP7 300,000、VIP8 500,000、VIP9 1,000,000、VIP10 3,000,000、VIP12 8,000,000、VIP15 15,000,000 */
+  var SD = [["pl***23", "VIP6", "VIP6", 182400, 150000, "VIP6", "保级成功", "VIP6", 48, "已到账"],
+            ["ma***88", "VIP12", "VIP12", 9120000, 8000000, "VIP12", "保级成功", "VIP12", 800, "已到账"],
+            ["ke***42", "VIP3", "VIP3", 52000, 40000, "VIP3", "保级成功", "VIP3", 18, "暂停发放（风控）"],
+            ["ry***19", "VIP10", "VIP11", 3260000, 3000000, "VIP10", "保级成功", "VIP10", 400, "已过期"],
+            ["li***90", "SUPER VIP", "SUPER VIP", 61500000, 60000000, "SUPER VIP", "保级成功", "SUPER VIP", 100000, "已到账"],
+            ["su***05", "VIP5", "VIP5", 30000, 100000, "VIP2", "降级", "VIP4", 12, "已到账"],
+            ["jo***07", "VIP9", "VIP9", 640000, 1000000, "VIP8", "降级", "VIP8", 88, "已过期"],
+            ["da***33", "VIP15", "VIP15", 9800000, 15000000, "VIP12", "降级", "VIP14", 800, "已到账"],
+            ["to***18", "VIP4", "VIP4", 3200, 80000, "VIP0", "降级", "VIP3", 0, "-"],
+            ["an***51", "VIP1", "VIP1", 1200, 5000, "VIP0", "降为 VIP0", "VIP0", 0, "-"],
+            ["re***52", "VIP2", "VIP5", 80000, 20000, "VIP4", "恢复", "VIP4", 28, "已过期"],
+            ["ho***61", "VIP2", "VIP5", 180000, 20000, "VIP5", "恢复", "VIP5", 38, "已到账"],
+            ["vo***26", "VIP0", "VIP3", 45000, 0, "VIP3", "恢复", "VIP3", 18, "已到账"]];
+  function lvi(n) { for (var i = 0; i < LV.length; i++) if (LV[i][0] === n) return i; return -1; }
+  /* 按规则 N14–N16 由考核等级 C、历史最高 H、当月有效投注算出 k、结算结果、结算后等级和月度工资；st = 月度工资记录的状态（「补发」= 原记录已作废、已补发到账） */
+  function P(acc, C, H, bet, st) {
+    var c = lvi(C), h = lvi(H), k = 0, res, af;
+    for (var i = 1; i <= h; i++) if (bet >= LV[i][3]) k = i;
+    if (k > c) { res = "恢复"; af = k; } else if (k === c) { res = "保级成功"; af = c; } else { af = c - 1; res = af ? "降级" : "降为 VIP0"; }
+    return [acc, C, H, bet, LV[c][3], LV[k][0], res, LV[af][0], k ? LV[k][5] : 0, k ? st : "-"];
+  }
+  /* 各结算月份的明细示例（2026-08 另有 2 名单人结算失败的玩家，见 SD_FAIL） */
+  var SDM = {
+    "2026-09": SD.concat([P("wa***08", "VIP4", "VIP4", 96000, "已到账"), P("ki***72", "VIP2", "VIP2", 24000, "已过期"), P("ga***33", "VIP1", "VIP1", 6000, "已到账"),
+                          P("an***19", "VIP14", "VIP14", LV[lvi("VIP14")][3] + 600000, "已到账"), P("ri***30", "VIP6", "VIP6", 160000, "已过期")]),
+    "2026-08": [P("ca***11", "VIP5", "VIP5", 128000, "已到账"), P("mi***36", "VIP3", "VIP3", 46500, "已过期"), P("jy***02", "VIP7", "VIP7", 352000, "补发"),
+                P("ro***47", "VIP4", "VIP4", 52000, "暂停发放（风控）"), P("ne***25", "VIP1", "VIP1", 2400, ""), P("sa***63", "VIP2", "VIP6", 168000, "已到账"),
+                P("bo***58", "VIP3", "VIP3", 62000, "已到账"), P("fe***90", "VIP4", "VIP4", 45000, "已到账"), P("gi***04", "VIP2", "VIP2", 21000, "已到账")],
+    "2026-07": [P("ka***14", "VIP6", "VIP6", 155000, "补发")   /* Q34 示例 ②：月度 ₱48 作废后补发到账 → 48 / 48 / 0 */, P("li***27", "VIP2", "VIP2", 31000, "已过期"), P("ze***81", "VIP8", "VIP8", 540000, "已到账"),
+                P("qu***39", "VIP5", "VIP5", 64000, "已过期"), P("ty***70", "VIP3", "VIP5", 112000, "已到账"), P("do***45", "VIP1", "VIP1", 6800, "已作废"),
+                P("hu***66", "VIP2", "VIP2", 26000, "已到账"), P("mo***12", "VIP5", "VIP5", 104000, "已到账")],
+    "2026-06": [P("ve***08", "VIP4", "VIP4", 88000, "已到账"), P("ha***52", "VIP7", "VIP7", 305000, "暂停发放（风控）"), P("ni***19", "VIP3", "VIP3", 18000, "已过期"),
+                P("pa***73", "VIP1", "VIP4", 85000, "补发"), P("yu***31", "VIP2", "VIP2", 3000, ""), P("xi***40", "VIP5", "VIP5", 70000, "已到账"),
+                P("ja***95", "VIP1", "VIP1", 9000, "已到账"), P("co***57", "VIP3", "VIP3", 41000, "已过期")],
+    "2026-05": [P("ge***21", "VIP8", "VIP8", 610000, "已到账"), P("ow***63", "VIP5", "VIP5", 133000, "已到账"), P("iv***17", "VIP2", "VIP4", 58000, "已过期"),
+                P("ul***84", "VIP6", "VIP6", 99000, "已到账"), P("ar***29", "VIP1", "VIP1", 1500, ""), P("ev***48", "VIP3", "VIP3", 47000, "已到账"),
+                P("ch***36", "VIP2", "VIP2", 22000, "暂停发放（风控）")],
+    "2026-04": [P("st***01", "VIP2", "VIP2", 36000, "已到账"), P("vi***88", "VIP3", "VIP3", 28000, "已过期"), P("bu***77", "VIP1", "VIP1", 5600, "补发"),
+                P("wi***53", "VIP2", "VIP2", 20500, "已到账"), P("pe***62", "VIP4", "VIP4", 160000, "已到账")]
+  };
+  /* 单人结算失败的明细行（只在有失败人数的月份出现，示例 2026-08） */
+  var SD_FAIL = [["wu***14", "VIP7", "VIP7", 420000, 300000, "-", "未完成", "未完成", 0, "-"], ["te***71", "VIP2", "VIP2", 26000, 20000, "-", "未完成", "未完成", 0, "-"]];
+  /* 部分完成的处理（用户 2026-10-30）：技术补结算后，运营在明细点「完成」确认标记；FIX = 补结算后的实际结果 [k, 结果, 结算后等级, 月度工资, 状态]；READY = 技术是否已补结算（未补结算时不能完成） */
+  var FAIL0 = JSON.stringify(SD_FAIL);
+  var FREASON = { "wu***14": "并发冲突", "te***71": "投注数据未就绪" };   /* 失败原因示例（由技术写入，Q35 ③） */
+  var FIX = { "wu***14": ["VIP7", "保级成功", "VIP7", 68, "待领取"], "te***71": ["VIP2", "保级成功", "VIP2", 12, "待领取"] }, READY = { "wu***14": true, "te***71": true }, doneRow = null;
+  function resetFail(notyet) { SD_FAIL = JSON.parse(FAIL0); ROWS = ROWS.filter(function (x) { return !x.fix; }); READY["te***71"] = !notyet; }
+  var stFail = false, sdMonth = "";
+  /* 本批结算生成的生日奖金：{ 结算月份: { 会员账号: 状态 } }，金额按结算后等级的生日奖金（用户 2026-10-30 第 9 批 R4） */
+  var BDM = {
+    "2026-09": { "pl***23": "待领取", "ma***88": "已到账", "li***90": "已到账", "su***05": "已过期", "ho***61": "已到账", "ga***33": "已到账", "an***19": "待领取", "ri***30": "暂停发放（风控）" },
+    "2026-08": { "ca***11": "已到账", "sa***63": "不发放" }, "2026-07": { "ty***70": "已到账" },   /* PRD 7.5.3 示例 ④：sa***63 生日奖金「不发放（同 KYC 已领）」，不计入应到账 */ "2026-06": { "ve***08": "已到账" },
+    "2026-05": { "ge***21": "已到账", "ev***48": "已过期" }, "2026-04": { "st***01": "已到账" }
+  };
+  var BDAMT = { "li***90": 5888, "ma***88": 288 };   /* 等级配置之外的示例金额（SUPER VIP、VIP12） */
+  /* 各月升级奖金示例（实时升级、KYC 定级补发、等级配置调整、上线结算）：[会员账号, 等级, 生成时间, 状态, 说明, 到账时间] */
+  var UPR = [
+    ["bo***58", "VIP2", "2026-08-12 19:40:21", "已到账", "点升级确认弹窗「领取奖金」领取（跨 2 级一次领取）", "2026-08-12 19:41:05"], ["bo***58", "VIP3", "2026-08-12 19:40:21", "已到账", "点升级确认弹窗「领取奖金」领取（跨 2 级一次领取）", "2026-08-12 19:41:05"],
+    ["fe***90", "VIP4", "2026-08-03 22:10:05", "已过期", ""],
+    ["gi***04", "VIP1", "2026-08-20 16:05:44", "已过期", "KYC 定级补发（完成 KYC 时定级）"], ["gi***04", "VIP2", "2026-08-20 16:05:44", "已过期", "KYC 定级补发（完成 KYC 时定级）"],
+    ["hu***66", "VIP1", "2026-07-09 14:22:10", "已到账", "在详情弹窗领取", "2026-07-09 18:03:40"], ["hu***66", "VIP2", "2026-07-09 14:22:10", "已到账", "在详情弹窗领取", "2026-07-09 18:03:40"],
+    ["mo***12", "VIP5", "2026-07-15 10:00:00", "已到账", "门槛下调后实时升级；在详情弹窗领取", "2026-07-15 20:11:26"],
+    ["xi***40", "VIP5", "2026-06-02 21:18:37", "已到账", "点升级确认弹窗「领取奖金」领取", "2026-06-02 21:19:02"],
+    ["ja***95", "VIP1", "2026-06-21 08:50:12", "已过期", ""],
+    ["co***57", "VIP3", "2026-06-11 15:31:08", "已到账", "KYC 定级补发（完成 KYC 时定级）；在详情弹窗领取", "2026-06-11 16:00:47"],
+    ["ev***48", "VIP1", "2026-05-14 20:03:55", "已到账", "点升级确认弹窗「领取奖金」领取（跨 3 级一次领取）", "2026-05-14 20:04:30"], ["ev***48", "VIP2", "2026-05-14 20:03:55", "已到账", "点升级确认弹窗「领取奖金」领取（跨 3 级一次领取）", "2026-05-14 20:04:30"], ["ev***48", "VIP3", "2026-05-14 20:03:55", "已到账", "点升级确认弹窗「领取奖金」领取（跨 3 级一次领取）", "2026-05-14 20:04:30"],
+    ["ch***36", "VIP2", "2026-05-26 11:47:19", "暂停发放（风控）", "KYC 定级补发（完成 KYC 时定级）；风险分 ≥ 70"],
+    ["st***01", "VIP1", "2026-04-01 00:00:00", "不发放", "上线结算"], ["st***01", "VIP2", "2026-04-01 00:00:00", "不发放", "上线结算"],
+    ["vi***88", "VIP1", "2026-04-01 00:00:00", "不发放", "上线结算"], ["vi***88", "VIP2", "2026-04-01 00:00:00", "不发放", "上线结算"], ["vi***88", "VIP3", "2026-04-01 00:00:00", "不发放", "上线结算"],
+    ["bu***77", "VIP1", "2026-04-01 00:00:00", "不发放", "上线结算"], ["wi***53", "VIP1", "2026-04-01 00:00:00", "不发放", "上线结算"],
+    ["wi***53", "VIP2", "2026-04-18 17:26:40", "已到账", "点升级确认弹窗「领取奖金」领取", "2026-04-18 17:27:15"],
+    ["pe***62", "VIP1", "2026-04-01 00:00:00", "不发放", "上线结算"], ["pe***62", "VIP2", "2026-04-01 00:00:00", "不发放", "上线结算"], ["pe***62", "VIP3", "2026-04-01 00:00:00", "不发放", "上线结算"], ["pe***62", "VIP4", "2026-04-01 00:00:00", "不发放", "上线结算"]
+  ];
+  function nx(m, d) { var y = +m.slice(0, 4), mo = +m.slice(5, 7) + 1; if (mo > 12) { y++; mo = 1; } return y + "-" + String(mo).padStart(2, "0") + "-" + d; }   /* 结算月份 m 的下一个月的某天 */
+  function addD(s, n) { var d = new Date(s.slice(0, 10) + "T00:00:00Z"); d.setUTCDate(d.getUTCDate() + n); return d.toISOString().slice(0, 10) + " 23:59:59"; }   /* 领奖有效期 15 天（含起算当天） */
+  /* 生成各月示例记录：明细里每位玩家的月度工资、生日奖金和各月升级奖金，在活动奖励统计都有对应记录（会员账号、等级、金额、状态一致）；已有的不重复生成 */
+  (function () {
+    function has(acc, type, m) { return BASE.some(function (x) { return x[0] === acc && x[3] === type && amOfR(x) === m; }); }
+    function add(acc, lv, gen, type, amt, st, paid, dl, m) {
+      if (st === "已到账") BASE.push(rec(acc, lv, gen, type, amt, paid, paid, st, "SYSTEM", "在详情弹窗领取", dl));
+      else if (st === "已过期") BASE.push(rec(acc, lv, gen, type, amt, "-", "-", st, "-", "未领取", dl));
+      else if (st === "待领取") BASE.push(rec(acc, lv, gen, type, amt, "-", "-", st, "-", "", dl));
+      else if (st === "暂停发放（风控）") BASE.push(rec(acc, lv, gen, type, amt, "-", "-", st, "-", "风险分 ≥ 70", dl, 1));
+      else if (st === "不发放") BASE.push(rec(acc, lv, gen, type, amt, "-", "-", st, "SYSTEM", "同 KYC 已领", "-"));   /* 生日奖金：同一 KYC 身份同年已由另一账号生成（规则 N21） */
+      else if (st === "已作废") BASE.push(rec(acc, lv, gen, type, amt, "-", "-", st, "运营账号B", "人工作废：同设备多账号（示例）", dl));
+      else if (st === "补发") {
+        var o = rec(acc, lv, gen, type, amt, "-", "-", "已作废", "运营账号B", "人工作废：重复账号核查（示例）", dl); o[10] = 1; BASE.push(o);
+        var t = nx(m, "10 11:00:00"), n = rec(acc, lv, t, type, amt, "-", t, "已到账", "运营账号A", "补发：原记录 " + gen + " 人工作废（示例）"); n[13] = m; BASE.push(n);
+      }
+    }
+    Object.keys(SDM).forEach(function (m) {
+      var gen = nx(m, "01 13:00:00");
+      SDM[m].forEach(function (r, i) {
+        if (r[8] && !has(r[0], "月度工资", m)) add(r[0], r[5], gen, "月度工资", r[8], r[9], nx(m, "0" + (2 + i % 7) + " " + ["10:15:00", "20:41:09", "09:02:33", "13:36:50"][i % 4]), nx(m, "15 23:59:59"), m);
+        var b = (BDM[m] || {})[r[0]], amt = BDAMT[r[0]] || (lvi(r[7]) > 0 ? LV[lvi(r[7])][6] : 0);
+        if (b && amt && !has(r[0], "生日奖金", m)) add(r[0], r[7], gen, "生日奖金", amt, b, nx(m, "12 10:20:00"), nx(m, "25 23:59:59"), m);
+      });
+    });
+    UPR.forEach(function (u) {
+      var amt = LV[lvi(u[1])][4], dl = u[3] === "不发放" ? "-" : addD(u[2], 14), op = u[3] === "已到账" || u[3] === "不发放" ? "SYSTEM" : "-";
+      BASE.push(rec(u[0], u[1], u[2], "升级奖金", amt, u[5] || "-", u[5] || "-", u[3], op, u[4], dl, u[3] === "暂停发放（风控）" ? 1 : 0));
+    });
+    build();
+  })();
+  /* 升级奖金记录归类：上线结算 / KYC 定级（含补发）/ 等级配置调整（升）/ 实时升级；补发记录不重复计 */
+  function upCat(x) { var w = x[8] || ""; return w.indexOf("补发：") === 0 || w.indexOf("KYC 限制关闭") >= 0 ? "" : w.indexOf("上线结算") >= 0 ? "on" : w.indexOf("KYC 定级") >= 0 ? "kyc" : w.indexOf("等级配置调整") >= 0 ? "cfg" : "up"; }
+  /* 某结算月份的统计：nul = 整次结算失败（结算相关人数不计） */
+  function stat(m, nul) {
+    var rows = nul ? [] : (SDM[m] || []).concat(m === "2026-08" ? SD_FAIL : []);
+    var o = { n: rows.length, keep: 0, res: 0, dn: 0, v0: 0, fail: 0, sets: { up: {}, kyc: {}, on: {}, cfg: {}, res: {}, dn: {} } };
+    rows.forEach(function (r) { var s = r[6]; if (s === "保级成功") o.keep++; else if (s === "恢复") { o.res++; o.sets.res[r[0]] = 1; } else if (s === "降级" || s === "降为 VIP0") { o.dn++; o.sets.dn[r[0]] = 1; if (s === "降为 VIP0") o.v0++; } else if (s === "未完成") o.fail++; });
+    ROWS.forEach(function (x) { if (x[3] === "升级奖金" && amOfR(x) === m) { var c = upCat(x); if (c) o.sets[c][x[0]] = 1; } });
+    var all = {}; Object.keys(o.sets).forEach(function (k) { Object.keys(o.sets[k]).forEach(function (a) { all[a] = 1; }); });
+    o.chg = Object.keys(all).length; var uk = {}; Object.keys(o.sets.up).concat(Object.keys(o.sets.kyc)).forEach(function (a) { uk[a] = 1; }); o.up = Object.keys(uk).length; o.rt = Object.keys(o.sets.up).length;   /* 「升级」列 = 实时升级 ∪ KYC 定级（按玩家去重，用户 2026-10-30） */
+    var arr = ROWS.filter(function (x) { return x[6] === "已到账" && amOfR(x) === m; }); o.aN = arr.length; o.aA = arr.reduce(function (s, x) { return s + x[4]; }, 0);
+    return o;
+  }
+  function stCls(s) { return s === "已完成" || s === "已到账" ? "st-ok" : s === "结算中" ? "st-wait" : s === "结算失败" ? "st-bad" : s === "暂停发放（风控）" ? "st-warn" : "st-off"; }
+  function drawSettle() {
+    var b = $("stBody"); b.textContent = ""; var dvSt2 = false, dvPart = false;   /* D102 挂在第一个结算状态标签上 */
+    ST.forEach(function (r0, ri) {
+      var m = r0[0], nul = stFail && ri === 0, o = stat(m, nul), st = nul ? "结算失败" : o.fail ? "部分完成" : r0[2];   /* 有单人结算失败：部分完成（用户 2026-10-30） */
+      var tr = b.insertRow();
+      [m, r0[1]].forEach(function (v, k) { var c = tr.insertCell(); c.textContent = v; if (k === 1) c.className = "tm"; });
+      var sc = tr.insertCell(), sp = document.createElement("span"); sp.className = st === "部分完成" ? "st-part" : stCls(st); sp.textContent = st; if (st === "部分完成") { if (!dvPart) { sp.setAttribute("data-dev", "D145"); dvPart = true; } sp.setAttribute("role", "button"); sp.tabIndex = 0; sp.title = "点击查看结算失败的玩家"; sp.onclick = (function (mm) { return function () { $("sdAcc").value = ""; $("sdLv").value = ""; $("sdRes").value = "未完成"; openSd(mm); $("stDtlT").textContent = mm + " 结算明细 · 来自：VIP月度结算记录 · 部分完成（已筛选结算结果「未完成」）"; }; })(m); } else if (!dvSt2) { sp.setAttribute("data-dev", "D102"); dvSt2 = true; } sc.appendChild(sp);
+      /* 状态下方不显示小字（用户 2026-10-30）：失败人数看「结算失败」列；整次失败的说明放在鼠标悬停提示 */
+      if (st === "结算失败") sp.title = "已自动重试 3 次，已通知技术，修复后补跑";
+      tr.insertCell().textContent = nul ? "-" : fmt(o.n);
+      /* 升级（用户 2026-10-30）：结算月份内实时升级的去重人数，结算前已发生、与结算结果独立（整次结算失败也照常显示），不可点击 */
+      tr.insertCell().textContent = fmt(o.up);
+      /* 等级变更（用户 2026-10-30）：去重人数，点击弹出各类人数 */
+      var cg = tr.insertCell(), cb = document.createElement("button"); cb.type = "button"; cb.className = "lv-lnk"; cb.textContent = fmt(o.chg); cb.onclick = (function (mm, nn) { return function () { openChg(mm, chgOf(mm, nn)); }; })(m, nul); cg.appendChild(cb);
+      [o.keep, o.res, o.dn, o.v0, o.fail].forEach(function (v) { tr.insertCell().textContent = nul ? "-" : fmt(v); });
+      /* 已到账（用户 2026-10-30）：该结算月份三类奖金中所有已到账的（含补发到账；升级奖金按生成时间所在月），按活动奖励统计的示例记录现算，与跳转后的筛选结果一致 */
+      var ca = tr.insertCell(); if (nul) ca.textContent = "-"; else ca.appendChild(lnk(fmt(o.aN) + " 笔 / ₱" + fmt(o.aA, true), { st: "已到账", am: m, src: "VIP月度结算记录 " + m + " · 已到账" }));
+      var oc = tr.insertCell();
+      if (!nul) { var ob = document.createElement("button"); ob.type = "button"; ob.className = "lv-op"; ob.textContent = "明细"; ob.dataset.m = m; oc.appendChild(ob); }
+      else { var rb = document.createElement("button"); rb.type = "button"; rb.className = "lv-op"; rb.textContent = "重新结算"; rb.onclick = (function (mm) { return function () { openRs({ month: mm }); }; })(m); oc.appendChild(rb); }   /* 整次结算失败：「重新结算」补跑（规则 N19 ③） */
+    });
+    if (!ST.length) { var er = b.insertRow(), ec = er.insertCell(); ec.colSpan = 13; ec.textContent = "No Data"; ec.style.color = "#909399"; }
+    $("stTotal").textContent = ST.length;
+  }
+  /* 明细的月度工资、生日奖金按活动奖励统计的记录显示（与「查看记录」一致）：已到账正常显示、未到账浅色、没有「-」；作废后补发到账的按已到账显示 */
+  function bonusOf(acc, type, m) {
+    var rs = ROWS.filter(function (x) { return x[0] === acc && x[3] === type && amOfR(x) === m; });
+    var org = rs.filter(function (x) { return (x[8] || "").indexOf("补发：") !== 0; })[0]; if (!org) return null;
+    var re = rs.filter(function (x) { return (x[8] || "").indexOf("补发：") === 0; })[0];
+    return { amt: org[4], st: re ? re[6] + "（补发）" : org[6], arr: rs.reduce(function (s, x) { return s + (x[6] === "已到账" ? x[4] : 0); }, 0) };
+  }
+  function drawSd() {
+    var a = $("sdAcc").value.trim(), lv = $("sdLv").value, rs = $("sdRes").value;
+    var src = (SDM[sdMonth] || []).concat(sdMonth === "2026-08" ? SD_FAIL : []);
+    var rows = src.filter(function (r) { return (!a || r[0].indexOf(a) >= 0) && (!lv || r[1] === lv) && (!rs || r[6] === rs); });
+    var b = $("sdBody"); b.textContent = "";
+    var dvDone = false, dvFail = false;
+    rows.forEach(function (r) {
+      var tr = b.insertRow(), fail = r[6] === "未完成"; if (fail) tr.className = "sd-fail";   /* 未完成的失败行红色显示（用户 2026-10-30） */
+      [r[0], r[1], r[2], "₱" + fmt(r[3]), r[1] === "VIP0" ? "-" : "₱" + fmt(r[4]), r[5], r[6], r[7]].forEach(function (v) { tr.insertCell().textContent = v; });
+      if (fail) { var fc = tr.cells[6]; fc.textContent = ""; var fs = document.createElement("span"); fs.textContent = r[6]; if (!dvFail) { fs.setAttribute("data-dev", "D154"); dvFail = true; } fc.appendChild(fs); }   /* 研发说明 D154 挂在第一个「未完成」示例状态上：未完成的定义、常见原因和处理（用户 2026-10-30） */
+      if (fail && FIX[r[0]]) { var pc = document.createElement("span"); pc.className = "st-why st-lt"; pc.textContent = "预计：" + FIX[r[0]][1]; tr.cells[6].appendChild(pc); }   /* 未完成：下方浅色显示预计结果（用户 2026-10-30） */
+      if (r.done) { var rc = tr.cells[6]; rc.textContent = ""; var ok = document.createElement("span"); ok.className = "st-ok"; ok.textContent = r[6]; rc.appendChild(ok); var dn = document.createElement("span"); dn.className = "st-why"; dn.textContent = r.done; rc.appendChild(dn); }
+      var due = 0, arr = 0;
+      ["月度工资", "生日奖金"].forEach(function (t) { var x = bonusOf(r[0], t, sdMonth), c = tr.insertCell(); if (!x) { c.textContent = "-"; return; } due += x.st === "不发放" ? 0 : x.amt;   /* 不发放不计入应到账（Q34） */ arr += x.arr; var s = document.createElement("span"); s.textContent = "₱" + fmt(x.amt, true); s.title = x.st; if (!x.arr) s.className = "st-lt"; c.appendChild(s); });
+      accCell(tr.insertCell(), due, arr, null, "实际到账");
+      var frc = tr.insertCell(); frc.textContent = FREASON[r[0]] || "-"; if (FREASON[r[0]]) frc.className = r.done ? "st-lt" : "";   /* 失败原因（Q35 ③ 已定，用户 2026-10-30）：只在未完成行显示，完成后保留 */
+      var oc = tr.insertCell(); if (fail) { var rsb = document.createElement("button"); rsb.type = "button"; rsb.className = "lv-op"; rsb.style.marginRight = "8px"; rsb.textContent = "重新结算"; rsb.onclick = (function (row) { return function () { openRs({ row: row }); }; })(r); oc.appendChild(rsb); var fb = document.createElement("button"); fb.type = "button"; fb.className = "lv-op"; fb.textContent = "完成"; if (!dvDone) { fb.setAttribute("data-dev", "D146"); dvDone = true; } fb.onclick = (function (row) { return function () { openDone(row); }; })(r); oc.appendChild(fb); } else { var vb = document.createElement("button"); vb.type = "button"; vb.className = "lv-op"; vb.textContent = "查看记录"; vb.onclick = (function (acc) { return function () { jumpList({ acc: acc, am: sdMonth, src: "VIP月度结算记录 " + sdMonth + " 结算明细 · " + acc + " · 查看记录" }); }; })(r[0]); oc.appendChild(vb); }
+    });
+    if (!rows.length) { var er = b.insertRow(), ec = er.insertCell(); ec.colSpan = 13; ec.textContent = "No Data"; ec.style.color = "#909399"; }
+    $("sdTotal").textContent = rows.length;
+  }
+  /* 「完成」：确认技术已补结算后标记；未补结算的不能完成（用户 2026-10-30） */
+  /* 等级变更各类人数：由明细和升级奖金记录现算（实时升级与 KYC 定级去重后 = 「升级」列；「KYC 限制」关闭时的 KYC 定级补发只补奖金、等级当时已按实时升级计入，不再计入；结算恢复 / 降级 = 「恢复」「降级」列；总数为去重人数） */
+  function chgOf(m, nul) {
+    var o = stat(m, nul), n = function (k) { return Object.keys(o.sets[k]).length; };
+    var cats = [["实时升级", o.rt], ["KYC 定级（含补发）", n("kyc")], ["上线结算", n("on")], ["等级配置调整（升）", n("cfg")], ["等级配置调整（降）", 0], ["结算恢复", n("res")], ["结算降级", n("dn"), "（其中降为 VIP0 " + fmt(o.v0) + "）"]];
+    return { cats: cats, total: o.chg };
+  }
+  function openChg(m, c) {
+    $("chgT").textContent = m + " 等级变更明细（共 " + fmt(c.total) + " 人）";
+    var tb = $("chgBody"); tb.textContent = "";
+    c.cats.forEach(function (x) { var tr = tb.insertRow(); tr.insertCell().textContent = x[0]; tr.insertCell().textContent = fmt(x[1]) + " 人" + (x[2] || ""); });   /* 每类一行，类别靠左、人数靠右，同一行显示（用户 2026-10-30） */
+    showDlg("dChg");
+  }  function openDone(row) { doneRow = row; $("doneWho").textContent = row[0] + "（考核等级 " + row[1] + "）"; $("doneWhy").value = ""; $("doneErr").textContent = ""; showDlg("dDone"); }
+  function openSd(m) { sdMonth = m; $("stMain").hidden = true; $("stDtl").hidden = false; $("stDtlT").textContent = m + " 结算明细"; drawSd(); }
+  (function () { var s = $("sdLv"); LV.forEach(function (r, i) { if (i) { var o = document.createElement("option"); o.textContent = r[0]; s.appendChild(o); } }); })();
+  $("stBody").addEventListener("click", function (e) { var b = e.target.closest("[data-m]"); if (b) openSd(b.dataset.m); });
+  $("doneOk").onclick = function () {
+    var r = doneRow; if (!r) return;
+    if (!READY[r[0]]) { $("doneErr").textContent = "该玩家尚未补结算，不能完成"; return; }
+    var x = FIX[r[0]]; r[5] = x[0]; r[6] = x[1]; r[7] = x[2]; r[8] = x[3]; r[9] = x[4]; r.done = "手动完成 · 运营账号A · " + NOW;
+    var nr = rec(r[0], x[0], NOW, "月度工资", x[3], "-", "-", x[4], "-", "补结算生成（2026-08 结算）", "2026-11-11 23:59:59"); nr[13] = "2026-08"; nr.fix = 1; ROWS.unshift(nr);   /* 补结算生成的月度工资记入原结算月份；列表人数由明细现算 */
+    logIt("VIP月度结算记录", "完成", r[0], sdMonth + " 结算结果：未完成 → " + x[1], $("doneWhy").value.trim());
+    hideAll(); $("sdRes").value = ""; drawSd();   /* 完成后取消「结算失败」筛选，让刚完成的行以绿色显示 */ drawSettle(); msg(stat("2026-08").fail ? "已标记完成，已写操作日志" : "已标记完成，该月结算已全部完成");
+  };
+  $("doneNo").onclick = function () { $("dDone").hidden = true; };
+  /* 重新结算（规则 N19 ②③④）：单人「未完成」行或整次「结算失败」的月份，按考核月生效的配置补结算，确认框 + 写操作日志 */
+  var rsCtx = null;
+  function openRs(o) {
+    rsCtx = o;
+    $("rsWhat").textContent = o.month ? "对 " + o.month + " 整次结算补跑；补跑完成后状态变为「已完成」，玩家结果以补跑为准，补跑完成前等级配置保持锁定。" : "对 " + o.row[0] + "（考核等级 " + o.row[1] + "）补结算 " + sdMonth + "；成功后再点「完成」确认。";
+    showDlg("dRs");
+  }
+  $("rsNo").onclick = function () { $("dRs").hidden = true; };
+  $("rsOk").onclick = function () {
+    var o = rsCtx; $("dRs").hidden = true; if (!o) return;
+    if (o.month) { stFail = false; logIt("VIP月度结算记录", "重新结算", o.month, "整次结算补跑：结算失败 → 已完成"); drawSettle(); msg("补跑完成，状态已变为「已完成」，已写操作日志"); return; }
+    READY[o.row[0]] = true; logIt("VIP月度结算记录", "重新结算", o.row[0], sdMonth + " 单人补结算完成"); msg("补结算完成，请确认");
+  };
+  $("fromBack").onclick = function () { if (!FROM) return; BACKING = FROM; FROM = null; go("settle"); };
+  $("chgX").onclick = function () { $("dChg").hidden = true; };
+  $("stBack").onclick = function () { $("stMain").hidden = false; $("stDtl").hidden = true; };
+  $("stSearch").onclick = drawSettle; $("sdSearch").onclick = drawSd;
+  $("sdExp").onclick = function () { msg("已导出当前筛选的 " + $("sdTotal").textContent + " 条明细（CSV）"); };
+  /* 视图切换 */
+  var VIEWS = { levels: "levels", add: "levels", "add-save": "levels", del: "levels", invalid: "levels", preview: "levels", locked: "levels", "locked-fail": "levels", global: "global", "rw-invalid": "global", "rw-locked": "global", "st-change": "global", "st-locked": "global", "kyc-off": "global", "kyc-on": "global", "sys-on": "global", "sys-reon": "global", "sys-off": "global", "claim-up-auto": "global", "claim-mix": "global", "claim-up-manual": "global", "sms-notpl": "global", "sms-empty": "global", "sms-invalid": "global", "sms-invalid2": "global", "claim-all-manual": "global", list: "list", "list-auto": "list", total: "list", "kyc-fill": "list", "list-month": "list", release: "list", "release-exp": "list", "release-risk": "list", void: "list", reissue: "list", export: "list", empty: "list", settle: "settle", "settle-dtl": "settle", "settle-fail": "settle", "settle-part": "settle", "settle-done": "settle", "settle-chg": "settle", "settle-notyet": "settle", "settle-jump": "settle", "list-am": "list", "sms-stop": "global", "locked-recalc": "levels", "ap-submit": "global", "ap-list": "levels", log: "levels", "turn-zero": "global", "reissue-same": "list", "reissue-ap": "list", "release-ap": "list", retry: "list", "batch-void": "list", "list-why": "list", "settle-resettle": "settle" };
+  var SEC = { levels: "sLevels", global: "sGlobal", list: "sList", settle: "sSettle" };
+  var DLGS = ["dPrev", "dDel", "dSw", "dRel", "dVoid", "dRe", "dExp", "dSmsStop", "dDone", "dChg", "dAp", "dLog", "dBv", "dRs"];
+  function hideAll() { DLGS.forEach(function (id) { $(id).hidden = true; }); }
+  function showDlg(id) { $(id).hidden = false; }
+  function show(view) {
+    if (!VIEWS[view]) view = "levels";
+    var sub = VIEWS[view];
+    Object.keys(SEC).forEach(function (k) { $(SEC[k]).hidden = k !== sub; });
+    [].forEach.call(document.querySelectorAll(".lv-hd [role=tab]"), function (b) { b.setAttribute("aria-selected", b.dataset.go === sub ? "true" : "false"); });
+    hideAll();
+    state.recalc = view === "locked-recalc"; state.locked = view === "locked" || view === "locked-fail" || state.recalc; state.lockFail = view === "locked-fail"; state.rwLocked = view === "rw-locked" || view === "st-locked" || state.recalc; draft = view === "add" || view === "add-save";
+    if (view !== "rw-invalid" && $("gTurn").value === "51") { $("gDays").value = "15"; }
+    if (view !== "rw-invalid") { $("gTurn").value = state.turn; $("gAlarm").value = state.alarm; }
+    drawTbl("lv"); drawTbl("rw"); syncSw(); syncSms(); syncAp();
+    $("lvErr").hidden = true; $("rwErr").hidden = true; $("eTurn").textContent = ""; $("gTurn").style.borderColor = ""; $("eAlarm").textContent = ""; $("gAlarm").style.borderColor = "";
+    [["gDays", "eDays"]].forEach(function (p) { $(p[1]).textContent = ""; $(p[0]).style.borderColor = ""; });
+    if (view === "del") openDel(LV.length - 1);
+    if (view === "add-save") { var mp = readTbl("lv"), L = LV.length, lst = LV[L - 1]; mp[L + "_0"].value = lst[1] + 500000000; mp[L + "_1"].value = lst[2] + 500000000; mp[L + "_2"].value = lst[3] + 20000000; $("lvSave").click(); }
+    if (view === "invalid") { readTbl("lv")["5_1"].value = "50000"; $("lvSave").click(); }
+    if (view === "preview") { readTbl("lv")["1_1"].value = "1500"; $("lvSave").click(); }
+    if (view !== "st-change") stReset();
+    if (view === "st-change") { $("gStD").value = 5; $("gStH").value = 2; $("gStM").value = 0; $("rwSave").click(); }
+    if (view === "rw-invalid") { $("gTurn").value = "51"; $("gDays").value = "21"; $("gAlarm").value = "5"; $("rwSave").click(); $("gTurn").value = "51"; }
+    if (view === "turn-zero") { $("gTurn").value = "0"; $("rwSave").click(); }   /* 流水倍数改为 0：谷歌验证码 + 第二人审批（规则 N58） */
+    if (view === "ap-submit") { readTbl("rw")["5_4"].value = "80"; $("rwSave").click(); }   /* VIP5 月度工资 ₱38 → ₱80（+111%，超过 ±50%） */
+    if (view === "ap-list") openAp();
+    if (view === "log") openLog();
+    if (view === "sms-notpl" || view === "sms-empty" || view === "sms-invalid" || view === "sms-invalid2") { resetTpl(); $("cBd").checked = true; }
+    if (view === "claim-all-manual") { state.claim = { up: "manual", mon: "manual", bd: "manual" }; syncSw(); }   /* 三项都手动领取：奖金到账提醒置灰 */
+    if (view === "sms-invalid2") { state.claim = { up: "auto", mon: "manual", bd: "manual" }; syncSw(); }
+    if (view === "sms-notpl") { $("t3").value = ""; syncSms(); $("rwSave").click(); }
+    else if (view === "sms-empty") { $("t3").innerHTML = $("t1").innerHTML = '<option value="">暂无可用模板，请先创建个人短信模板</option>'; tplOdd = true; syncSms(); $("rwSave").click(); }   /* 模板为空：没有个人模板 */
+    else if (view === "sms-invalid") { markBad("t3", 1); syncSms(); }   /* 生日提醒模板被删除或改为群发类型 */
+    else if (view === "sms-invalid2") { markBad("t3", 1); markBad("t1", 2); syncSms(); }   /* 两行都异常 */
+    else if (view === "sms-stop") { resetTpl(); markBad("t3", 1); syncSms(); $("rwSave").click(); }   /* 模板异常行保持不勾选保存 → 停发确认（R5） */
+    else if (sub === "global" && (tplOdd || !$("t1").value || !$("t3").value)) resetTpl();
+    if (["kyc-off", "kyc-on", "sys-on", "sys-reon", "sys-off"].indexOf(view) >= 0) openSw(view);
+    /* 领取方式（用户 2026-10-30）：升级奖金改为自动领取 / 混合设置（升级自动、月度和生日手动）/ 改回手动 */
+    if (view === "claim-up-auto") { state.claim.up = "manual"; syncSw(); openSw("claim:rClaimUp:auto"); }
+    if (view === "claim-mix") { state.claim = { up: "auto", mon: "manual", bd: "manual" }; syncSw(); }
+    if (view === "claim-up-manual") { state.claim.up = "auto"; syncSw(); openSw("claim:rClaimUp:manual"); }
+    if (sub === "settle") {
+      stFail = view === "settle-fail"; $("stMain").hidden = false; $("stDtl").hidden = true; drawSettle();
+      if (view === "settle-dtl") openSd(ST[0][0]);
+      if (!BACKING && (view === "settle" || view === "settle-part" || view === "settle-done" || view === "settle-notyet" || view === "settle-resettle")) resetFail(view === "settle-notyet" || view === "settle-resettle");
+      if (view === "settle-part" || view === "settle-done" || view === "settle-notyet" || view === "settle-resettle") { $("sdAcc").value = ""; $("sdLv").value = ""; $("sdRes").value = "未完成"; openSd("2026-08"); }
+      if (view === "settle-done" || view === "settle-notyet") openDone(SD_FAIL[view === "settle-notyet" ? 1 : 0]);
+      if (view === "settle-jump") { openSd(ST[0][0]); }
+      if (view === "settle-chg") openChg(ST[0][0], chgOf(ST[0][0]));
+    }
+    if (sub === "list") {
+      empty = view === "empty"; if (empty) PG.page = 1;
+      /* KYC 定级补发：按账号筛出 el***15，看补发记录和上线结算记录（PRD 规则 N23、N26） */
+      if (view === "list-am") { $("fAcc").value = ""; $("fAm").value = "2026-09"; $("fFrom").value = ""; $("fTo").value = ""; $("fType").value = ""; $("fSt").value = ""; Q = { acc: "", amt: "", type: "", st: "", from: "", to: "", am: "2026-09" }; PG.page = 1; }
+      else if (view !== "list" && Q.am) { $("fAm").value = ""; Q.am = ""; $("fFrom").value = Q.from = "2026-10-22"; $("fTo").value = Q.to = "2026-10-28"; }
+      if (view === "kyc-fill") { $("fAcc").value = "el***15"; Q.acc = "el***15"; PG.page = 1; }
+      else if (view === "list-auto") { $("fAcc").value = "au***31"; Q.acc = "au***31"; PG.page = 1; }   /* 自动领取的记录：申请领取时间 = 到账时间（用户 2026-10-30） */
+      else if (view === "retry") { $("fAcc").value = "be***44"; Q.acc = "be***44"; $("fFrom").value = Q.from = ""; $("fTo").value = Q.to = ""; PG.page = 1; }   /* 补发记录发放失败 → 操作列「重试」 */
+      else if ((Q.acc === "el***15" && $("fAcc").value === "el***15") || (Q.acc === "au***31" && $("fAcc").value === "au***31") || (Q.acc === "be***44" && $("fAcc").value === "be***44")) { $("fAcc").value = ""; Q.acc = ""; if (!Q.from) { $("fFrom").value = Q.from = "2026-10-22"; $("fTo").value = Q.to = "2026-10-28"; } }
+      if (view === "list-why") { $("fType").value = Q.type = "升级奖金"; $("fFrom").value = Q.from = "2026-10-26"; $("fTo").value = Q.to = "2026-10-27"; $("pgSize").value = "20"; PG.size = 20; PG.page = 1; }   /* 说明列：系统作废（撤单 / 账号停用）、撤单复核、不发放（KYC 限制关闭定级 / 已领被删等级） */
+      else if (Q.from === "2026-10-26" && Q.to === "2026-10-27") { $("fFrom").value = Q.from = "2026-10-22"; $("fTo").value = Q.to = "2026-10-28"; $("fType").value = Q.type = ""; $("pgSize").value = "10"; PG.size = 10; }
+      /* 月度工资（10-01 生成）：按生成时间 10-01 至 10-07、奖励类型「月度工资」筛选，看已领取 / 已过期 / 暂停发放 */
+      if (view === "list-month" || view === "release-exp" || view === "release-risk") { $("fFrom").value = Q.from = "2026-10-01"; $("fTo").value = Q.to = view === "release-exp" ? "2026-10-28" : "2026-10-07"; if (view === "list-month") { $("fType").value = Q.type = "月度工资"; } PG.page = 1; }
+      else if (Q.from === "2026-10-01") { $("fFrom").value = Q.from = "2026-10-22"; $("fTo").value = Q.to = "2026-10-28"; $("fType").value = Q.type = ""; }
+      if (view !== "total") $("totAmt").textContent = "0";
+      draw();
+      if (view === "total") $("totBtn").click();
+      if (view === "release-exp") { cur = ROWS.filter(function (r) { return r[6] === "暂停发放（风控）" && r[12] < NOW; })[0]; view = "release"; }
+      if (view === "release-risk") { cur = ROWS.filter(function (r) { return r[6] === "暂停发放（风控）" && r[9]; })[0]; view = "release"; }   /* 玩家仍处于风控暂停：「确认放行」置灰（R08 方案 A） */
+      else if (view === "release-ap") { cur = ROWS.filter(function (r) { return r[0] === "zo***50" && r[6] === "暂停发放（风控）" && !r[14]; })[0] || null; view = "release"; }   /* ≥ ₱5,000 放行 → 待审批 */
+      else if (view === "release" && (!cur || cur[6] !== "暂停发放（风控）")) cur = ROWS.filter(function (r) { return r[6] === "暂停发放（风控）" && !r[9] && !r[14] && r[4] < 5000 && r[12] >= NOW && String(r[8]).indexOf("KYC 限制") !== 0; })[0] || null;   /* 放行时已过有效期 → 直接到账（ke***42 月度工资） */
+      if (view === "release") { if (!cur || cur[6] !== "暂停发放（风控）") cur = findRow("暂停发放（风控）"); if (cur) { info("relInfo", cur); $("relWarn").hidden = !cur[9]; $("relOk").disabled = !!cur[9];   /* 仍处于风控暂停：不允许放行（R08 方案 A，用户 2026-10-30） */ $("relKyc").hidden = String(cur[8]).indexOf("KYC 限制") !== 0; $("relAp").hidden = cur[4] < 5000; showDlg("dRel"); } }
+      if (view === "void") { if (!cur || ["待领取", "暂停发放（风控）", "发放失败"].indexOf(cur[6]) < 0) cur = findRow("发放失败") || findRow("待领取"); if (cur) { info("voidInfo", cur); $("voidWhy").value = ""; $("voidErr").textContent = ""; showDlg("dVoid"); } }
+      if (view === "reissue-same") { cur = ROWS.filter(function (r) { return r[0] === "me***17" && canRe(r); })[0] || null; view = "reissue"; }   /* 本账号作废的记录：不能由本账号补发 */
+      else if (view === "reissue-ap") { cur = ROWS.filter(function (r) { return r[0] === "ya***38" && canRe(r); })[0] || null; view = "reissue"; }   /* ≥ ₱5,000 补发 → 待审批 */
+      else if (view === "reissue" && (!cur || !canRe(cur))) cur = ROWS.filter(function (r) { return canRe(r) && r[7] !== ME && r[4] < 5000; })[0] || null;
+      if (view === "reissue") { if (cur) { info("reInfo", cur); $("reWhy").value = ""; $("reErr").textContent = ""; var same = cur[7] === ME; $("reSame").hidden = !same; $("reOk").disabled = same; $("reAp").hidden = cur[4] < 5000; showDlg("dRe"); } }
+      if (view === "batch-void") openBv();
+      if (view === "export") { $("expN").textContent = filtered().length; showDlg("dExp"); }
+    }
+    /* 来源提示：只在跳转进入活动奖励统计时显示；返回时恢复来源页的明细、筛选和滚动位置 */
+    if (sub === "list" && JUMPING) { $("fromBar").hidden = false; $("fromTxt").textContent = FROM.label; } else { $("fromBar").hidden = true; if (!BACKING) FROM = null; }
+    JUMPING = false;
+    if (BACKING) { var bk = BACKING; BACKING = null; if (bk.detail) { $("sdAcc").value = bk.sd[0]; $("sdLv").value = bk.sd[1]; $("sdRes").value = bk.sd[2]; openSd(bk.detail); } setTimeout(function () { window.scrollTo(0, bk.y); }, 0); }
+    if (location.hash.slice(1) !== view) history.replaceState(null, "", "#" + view);
+    if (window.self !== window.top) window.parent.postMessage({ type: "proto-view", view: view }, "*");
+  }
+  function go(v) { if (location.hash.slice(1) === v) show(v); else location.hash = v; }
+  document.addEventListener("click", function (e) {
+    var c = e.target.closest("[data-cancel]"); if (c) { e.preventDefault(); pending = null; var v = location.hash.slice(1); go(VIEWS[v] || "levels"); return; }
+    var b = e.target.closest("[data-go]"); if (b) { e.preventDefault(); if (b.closest(".sim")) cur = null; go(b.dataset.go); }
+  });
+  document.addEventListener("keydown", function (e) { var t = e.target.closest && e.target.closest(".lv-hd [role=tab]"); if (t && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); go(t.dataset.go); } });
+  window.addEventListener("hashchange", function () { show(location.hash.slice(1) || "levels"); });
+  show(location.hash.slice(1) || "levels");
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,643 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>VIP会员体系-v1.2-版本需求说明</title>
+<link rel="stylesheet" href="../../assets/style.css">
+<style>
+/* 版本需求说明 2026-10-31：本页样式只作用于 .paper 内 */
+.paper{line-height:1.7;--c-up:#2F6FDB;--c-st:#7A4BC2;--c-bn:#1E9A66;--c-nt:#D9821A;--c-cf:#5E6E82;--c-rk:#D14343;--bd:#E4DFEB;--zebra:#FAF8FC}
+.paper .vs-one{font-size:17px;font-weight:700;line-height:1.7;margin:10px 0 4px;padding:12px 16px;border-radius:10px;background:var(--panel);border-left:4px solid var(--title,#4A2A7A)}
+.paper h2{scroll-margin-top:70px}
+.paper .vs-h3{position:relative;padding-left:12px;margin:22px 0 8px;font-size:15px}
+.paper .vs-h3::before{content:"";position:absolute;left:0;top:3px;bottom:3px;width:4px;border-radius:2px;background:var(--bar,#4A2A7A)}
+/* 流程图 */
+.paper .vf-wrap{margin:10px 0 6px;border:1px solid var(--bd);border-radius:12px;background:#fff;padding:8px}
+.paper .vf-wrap svg{display:block;width:100%;height:auto}
+.paper .vf-tip{display:none;font-size:12px;color:#8a8296;margin:4px 0 0}
+.paper .vf-leg{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:13px;margin:8px 0 2px}
+.paper .vf-leg span{display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+.paper .vf-leg i{display:inline-block;width:14px;height:14px;border-radius:4px;border:2px solid var(--k);background:#fff}
+.paper .vf-leg i.f{background:var(--k)}
+.paper .vf-leg svg{width:34px;height:10px}
+.paper .vf-leg b{font-weight:700;color:#5f5a66;margin-right:2px}
+/* 业务点卡片 */
+.paper .bp-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin:12px 0}
+.paper .bp{border:1px solid var(--bd);border-radius:12px;background:#fff;padding:12px 14px;min-width:0;font-size:13.5px;line-height:1.7}
+.paper .bp h3{position:relative;margin:0 0 8px;padding-left:12px;font-size:15px;line-height:1.5}
+.paper .bp h3::before{content:"";position:absolute;left:0;top:2px;bottom:2px;width:4px;border-radius:2px;background:var(--bar)}
+.paper .bp h3 small{font-weight:400;font-size:11.5px;color:#8a8296;margin-left:6px}
+.paper .bp-k{margin:4px 0}
+.paper .bp-k>b,.paper .bp-ref>b{display:inline-block;font-size:12px;font-weight:800;color:var(--bar);margin-right:6px}
+.paper .bp ul{margin:2px 0 6px;padding-left:18px}
+.paper .bp li{margin:1px 0}
+.paper .bp-ref{margin:6px 0 0;font-size:12.5px;color:#5f5a66}
+.paper .c-up{--bar:var(--c-up)}.paper .c-st{--bar:var(--c-st)}.paper .c-bn{--bar:var(--c-bn)}.paper .c-nt{--bar:var(--c-nt)}.paper .c-cf{--bar:var(--c-cf)}.paper .c-rk{--bar:var(--c-rk)}
+/* 表格 */
+.paper .vs-t{width:100%;border-collapse:collapse;table-layout:fixed;margin:6px 0 4px;font-size:13px;line-height:1.65}
+.paper .vs-t th,.paper .vs-t td{border:1px solid var(--bd);padding:5px 8px;text-align:left;vertical-align:top;white-space:normal;word-break:break-word;overflow-wrap:anywhere}
+.paper .vs-t th{background:var(--panel);color:#4A2A7A;font-weight:800}
+.paper .vs-t tbody tr:nth-child(even)>td{background:var(--zebra)}
+.paper .vs-t td:first-child,.paper .vs-t td:first-child{white-space:normal}
+.paper .vs-t.sc col.a{width:46%}
+.paper .vs-t.kv col.a{width:24%}.paper .vs-t.kv col.c{width:22%}
+.paper .vs-t.qa col.a{width:15%}.paper .vs-t.qa col.c{width:17%}.paper .vs-t.qa col.d{width:15%}
+.paper .vs-t.ls col.a{width:8%}.paper .vs-t.ls col.c{width:26%}
+.paper .st-open{color:#a32626;font-weight:700}
+.paper .vs-note{font-size:12.5px;color:#5f5a66;margin:4px 0 10px}
+@media (max-width:760px){
+  .paper .bp-grid{grid-template-columns:1fr}
+  .paper .vf-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .paper .vf-wrap svg{min-width:720px}
+  .paper .vf-tip{display:block}
+  .paper .vs-t.kv col.a{width:30%}.paper .vs-t.kv col.c{width:24%}
+  .paper .vs-t.qa col.a{width:18%}.paper .vs-t.qa col.c{width:20%}.paper .vs-t.qa col.d{width:18%}
+}
+</style></head>
+<body>
+<div class="with-nav">
+<div class="desk"><article class="paper">
+
+<h1 class="doc-title">VIP会员体系-v1.2-版本需求说明</h1>
+<div class="doc-meta"><span>更新日期：2026-10-31（GMT+8）</span><span>适用：v1.2</span><span>依据：需求开发PRD文档 v1.2（2026-10-31），规则和数值以 PRD 为准</span></div>
+<hr class="doc-rule">
+
+<h2 id="s1">一、一句话概述</h2>
+<p class="vs-one">把现网会员等级改造为 VIP 体系：累计双门槛实时升级，按月保级或降级，玩家领取升级、月度、生日三类奖金。</p>
+
+<h2 id="s2">二、业务流程图</h2>
+<div class="vf-wrap">
+<svg class="no-ref" viewBox="0 0 1220 452" role="img" aria-labelledby="vfT" xmlns="http://www.w3.org/2000/svg" font-family="inherit">
+<title id="vfT">VIP 会员体系业务流程图：中间一行为主流程，上方为后台配置、结算异常和通知分支，下方为升级弹窗、KYC 和风控分支</title>
+<defs>
+  <marker id="aUp" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2F6FDB"/></marker>
+  <marker id="aSt" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#7A4BC2"/></marker>
+  <marker id="aBn" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#1E9A66"/></marker>
+  <marker id="aNt" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#D9821A"/></marker>
+  <marker id="aCf" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5E6E82"/></marker>
+  <marker id="aRk" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#D14343"/></marker>
+</defs>
+
+<!-- 连线：只用水平线和竖直线，转角为二次曲线小圆角；实线 = 主流程，虚线 = 异常、特殊或可选流程 -->
+<g fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+  <!-- 主流程 -->
+  <path d="M110,222 H132" stroke="#2F6FDB" marker-end="url(#aUp)"/>
+  <path d="M232,222 H254" stroke="#2F6FDB" marker-end="url(#aUp)"/>
+  <path d="M354,222 H376" stroke="#7A4BC2" marker-end="url(#aSt)"/>
+  <path d="M476,222 H498" stroke="#7A4BC2" marker-end="url(#aSt)"/>
+  <path d="M598,222 H620" stroke="#1E9A66" marker-end="url(#aBn)"/>
+  <path d="M720,222 H742" stroke="#1E9A66" marker-end="url(#aBn)"/>
+  <path d="M842,222 H864" stroke="#1E9A66" marker-end="url(#aBn)"/>
+  <path d="M964,222 H986" stroke="#1E9A66" marker-end="url(#aBn)"/>
+  <path d="M1086,222 H1108" stroke="#D9821A" stroke-dasharray="6 4" marker-end="url(#aNt)"/>
+  <!-- 后台配置 -->
+  <path d="M60,58 V200" stroke="#5E6E82" marker-end="url(#aCf)"/>
+  <path d="M232,36 H254" stroke="#5E6E82" stroke-dasharray="6 4" marker-end="url(#aCf)"/>
+  <path d="M232,126 H274 Q282,126 282,118 V58" stroke="#5E6E82" stroke-dasharray="6 4" marker-end="url(#aCf)"/>
+  <path d="M326,58 V200" stroke="#5E6E82" stroke-dasharray="6 4" marker-end="url(#aCf)"/>
+  <path d="M426,58 V200" stroke="#5E6E82" stroke-dasharray="6 4" marker-end="url(#aCf)"/>
+  <!-- 结算异常 -->
+  <path d="M548,200 V148" stroke="#7A4BC2" stroke-dasharray="6 4" marker-end="url(#aSt)"/>
+  <path d="M598,126 H662 Q670,126 670,134 V200" stroke="#7A4BC2" stroke-dasharray="6 4" marker-end="url(#aSt)"/>
+  <!-- 通知 -->
+  <path d="M792,200 V148" stroke="#D9821A" stroke-dasharray="6 4" marker-end="url(#aNt)"/>
+  <path d="M914,200 V58" stroke="#D9821A" stroke-dasharray="6 4" marker-end="url(#aNt)"/>
+  <!-- 过期 -->
+  <path d="M936,200 V134 Q936,126 944,126 H986" stroke="#1E9A66" stroke-dasharray="6 4" marker-end="url(#aBn)"/>
+  <!-- 升级奖金与弹窗 -->
+  <path d="M326,244 V310 Q326,318 334,318 H376" stroke="#1E9A66" marker-end="url(#aBn)"/>
+  <path d="M476,318 H498" stroke="#D9821A" marker-end="url(#aNt)"/>
+  <path d="M598,318 H620" stroke="#D9821A" marker-end="url(#aNt)"/>
+  <path d="M720,318 H884 Q892,318 892,310 V244" stroke="#1E9A66" marker-end="url(#aBn)"/>
+  <!-- KYC 与风控 -->
+  <path d="M182,244 V384" stroke="#D14343" stroke-dasharray="6 4" marker-end="url(#aRk)"/>
+  <path d="M232,406 H274 Q282,406 282,398 V244" stroke="#D14343" stroke-dasharray="6 4" marker-end="url(#aRk)"/>
+  <path d="M936,244 V398 Q936,406 944,406 H986" stroke="#D14343" stroke-dasharray="6 4" marker-end="url(#aRk)"/>
+  <path d="M1036,384 V244" stroke="#D14343" stroke-dasharray="6 4" marker-end="url(#aRk)"/>
+</g>
+
+<!-- 连线说明 -->
+<g font-size="14" fill="#5f5a66" text-anchor="middle" style="paint-order:stroke" stroke="#fff" stroke-width="4">
+  <text x="55" y="132" text-anchor="end" font-size="13">首次开启</text>
+  <text x="630" y="116">重新结算</text>
+  <text x="965" y="116">逾期</text>
+  <text x="806" y="308">未领取</text>
+  <text x="257" y="440">完成KYC</text>
+  <text x="963" y="396">风控</text>
+  <text x="1046" y="322" text-anchor="start">放行补发</text>
+</g>
+
+<!-- 节点：主流程为实心，分支为浅底；颜色 = 业务类型 -->
+<g font-size="19" text-anchor="middle" font-weight="700">
+  <!-- 主流程 -->
+  <g><title>上线结算：首次开启时按累计定级、写入初始数值，已到达等级不发升级奖金（N26）</title><rect x="10" y="200" width="100" height="44" rx="10" fill="#7A4BC2"/><text x="60" y="229" fill="#fff">上线结算</text></g>
+  <g><title>累计达标：累计有效投注和累计充值同时达到门槛（N7）</title><rect x="132" y="200" width="100" height="44" rx="10" fill="#2F6FDB"/><text x="182" y="229" fill="#fff">累计达标</text></g>
+  <g><title>实时升级：超过历史最高即升级，可跨多级（N8）</title><rect x="254" y="200" width="100" height="44" rx="10" fill="#2F6FDB"/><text x="304" y="229" fill="#fff">实时升级</text></g>
+  <g><title>月度结算：按上月有效投注结算（N12、N13）</title><rect x="376" y="200" width="100" height="44" rx="10" fill="#7A4BC2"/><text x="426" y="229" fill="#fff">月度结算</text></g>
+  <g><title>等级评定：保级 / 恢复 / 降 1 级（N14–N17）</title><rect x="498" y="200" width="100" height="44" rx="10" fill="#7A4BC2"/><text x="548" y="229" fill="#fff">等级评定</text></g>
+  <g><title>月度工资：按 k 级生成，k = VIP0 不发（N14）</title><rect x="620" y="200" width="100" height="44" rx="10" fill="#1E9A66"/><text x="670" y="229" fill="#fff">月度工资</text></g>
+  <g><title>生日奖金：生日所在月结算后按等级生成（N21）</title><rect x="742" y="200" width="100" height="44" rx="10" fill="#1E9A66"/><text x="792" y="229" fill="#fff">生日奖金</text></g>
+  <g><title>待领取：手动领取的奖金，领奖有效期默认 15 天（N52）</title><rect x="864" y="200" width="100" height="44" rx="10" fill="#1E9A66"/><text x="914" y="229" fill="#fff">待领取</text></g>
+  <g><title>领取到账：玩家领取或自动领取到账，生成流水（N28、N53）</title><rect x="986" y="200" width="100" height="44" rx="10" fill="#1E9A66"/><text x="1036" y="229" fill="#fff">领取到账</text></g>
+  <g><title>到账短信：只对自动领取的奖金到账时发，后台勾选才发（N35）</title><rect x="1108" y="200" width="100" height="44" rx="10" fill="#FDF2E3" stroke="#D9821A" stroke-width="2"/><text x="1158" y="229" fill="#9A5A0C">到账短信</text></g>
+  <!-- 上方：后台配置 -->
+  <g><title>体系开关：「VIP领取奖励」，默认关闭；再次开启时按当前累计重新核算（N26、N27）</title><rect x="10" y="14" width="100" height="44" rx="10" fill="#EEF1F5" stroke="#5E6E82" stroke-width="2"/><text x="60" y="43" fill="#3F4B5B">体系开关</text></g>
+  <g><title>增删等级：只在最高一级增删，保存后全部玩家重算（N49、N50、N55）</title><rect x="132" y="14" width="100" height="44" rx="10" fill="#EEF1F5" stroke="#5E6E82" stroke-width="2"/><text x="182" y="43" fill="#3F4B5B">增删等级</text></g>
+  <g><title>全量重算：上线结算、再次开启、下调门槛、增删等级、KYC 切换都按此任务执行（N59）</title><rect x="254" y="14" width="100" height="44" rx="10" fill="#EEF1F5" stroke="#5E6E82" stroke-width="2"/><text x="304" y="43" fill="#3F4B5B">全量重算</text></g>
+  <g><title>结算时间：每月 1–28 日可配，默认 1 日 13:00（N12）</title><rect x="376" y="14" width="100" height="44" rx="10" fill="#EEF1F5" stroke="#5E6E82" stroke-width="2"/><text x="426" y="43" fill="#3F4B5B">结算时间</text></g>
+  <g><title>门槛奖金：门槛下调触发重算升级；保级投注、月度工资次月生效（N11、N43）</title><rect x="132" y="104" width="100" height="44" rx="10" fill="#EEF1F5" stroke="#5E6E82" stroke-width="2"/><text x="182" y="133" fill="#3F4B5B">门槛奖金</text></g>
+  <!-- 上方：结算异常、通知、过期 -->
+  <g><title>结算未完成：单人重试 3 次仍失败，技术补结算后运营点「完成」（N19）</title><rect x="498" y="104" width="100" height="44" rx="10" fill="#F3EEFA" stroke="#7A4BC2" stroke-width="2"/><text x="548" y="133" fill="#5A3296">结算未完成</text></g>
+  <g><title>生日短信：后台勾选才发，时间点可选（N36）</title><rect x="742" y="104" width="100" height="44" rx="10" fill="#FDF2E3" stroke="#D9821A" stroke-width="2"/><text x="792" y="133" fill="#9A5A0C">生日短信</text></g>
+  <g><title>待领通知：每天首次进入平台弹 1 次（N56）</title><rect x="864" y="14" width="100" height="44" rx="10" fill="#FDF2E3" stroke="#D9821A" stroke-width="2"/><text x="914" y="43" fill="#9A5A0C">待领通知</text></g>
+  <g><title>过期作废：超过领奖有效期变为「已过期」，不能补发（N52）</title><rect x="986" y="104" width="100" height="44" rx="10" fill="#E7F5EE" stroke="#1E9A66" stroke-width="2"/><text x="1036" y="133" fill="#136B46">过期作废</text></g>
+  <!-- 下方：升级奖金与弹窗 -->
+  <g><title>升级奖金：每级终身一次，跨多级逐级生成（N9）</title><rect x="376" y="296" width="100" height="44" rx="10" fill="#E7F5EE" stroke="#1E9A66" stroke-width="2"/><text x="426" y="325" fill="#136B46">升级奖金</text></g>
+  <g><title>升级动画：任何页面弹 3 秒（N34）</title><rect x="498" y="296" width="100" height="44" rx="10" fill="#FDF2E3" stroke="#D9821A" stroke-width="2"/><text x="548" y="325" fill="#9A5A0C">升级动画</text></g>
+  <g><title>确认弹窗：回到平台页面弹出，「领取奖金」可直接领取（N34）</title><rect x="620" y="296" width="100" height="44" rx="10" fill="#FDF2E3" stroke="#D9821A" stroke-width="2"/><text x="670" y="325" fill="#9A5A0C">确认弹窗</text></g>
+  <!-- 下方：KYC 与风控 -->
+  <g><title>KYC 限制：开启时未完成 KYC 只累计、不定级（N23）</title><rect x="132" y="384" width="100" height="44" rx="10" fill="#FBEAEA" stroke="#D14343" stroke-width="2"/><text x="182" y="413" fill="#A32626">KYC限制</text></g>
+  <g><title>风控暂停：冻结、风险分 ≥ 70 等，奖金暂停发放，运营放行或作废（N31–N33）</title><rect x="986" y="384" width="100" height="44" rx="10" fill="#FBEAEA" stroke="#D14343" stroke-width="2"/><text x="1036" y="413" fill="#A32626">风控暂停</text></g>
+</g>
+</svg>
+</div>
+<p class="vf-tip">手机上可左右滑动查看完整流程图。</p>
+<div class="vf-leg">
+  <span><b>颜色</b></span>
+  <span style="--k:#2F6FDB"><i class="f"></i>升级</span>
+  <span style="--k:#7A4BC2"><i class="f"></i>月度结算</span>
+  <span style="--k:#1E9A66"><i class="f"></i>奖金领取</span>
+  <span style="--k:#D9821A"><i></i>通知</span>
+  <span style="--k:#5E6E82"><i></i>后台配置</span>
+  <span style="--k:#D14343"><i></i>风控 / KYC</span>
+</div>
+<div class="vf-leg">
+  <span><b>线型</b></span>
+  <span><svg viewBox="0 0 34 10" aria-hidden="true"><path d="M2,5 H32" stroke="#5f5a66" stroke-width="2.2"/></svg>实线：主流程</span>
+  <span><svg viewBox="0 0 34 10" aria-hidden="true"><path d="M2,5 H32" stroke="#5f5a66" stroke-width="2.2" stroke-dasharray="6 4"/></svg>虚线：异常、特殊或可选流程</span>
+  <span><b>节点</b>实心 = 主流程，浅底 = 分支；鼠标悬停看说明</span>
+</div>
+
+<h2 id="s3">三、业务点说明</h2>
+<p class="vs-note">每张卡片固定 4 项：作用、逻辑、场景 → 方案、依据。金额为默认配置（PRD 7.2），时间均为 GMT+8。</p>
+<div class="bp-grid">
+
+<div class="bp c-rk"><h3>参与范围</h3>
+<p class="bp-k"><b>作用</b>界定谁算玩家、谁参与 VIP。</p>
+<div class="bp-k"><b>逻辑</b><ul>
+<li>玩家：前台有账号、能正常充值和游戏的账户。</li>
+<li>参与条件：体系开启；「KYC 限制」开启时须已通过 KYC。</li>
+<li>结算资格按月末 23:59:59 快照判定。</li>
+</ul></div>
+<table class="vs-t sc"><colgroup><col class="a"><col></colgroup><thead><tr><th>场景</th><th>方案</th></tr></thead><tbody>
+<tr><td>正常（含风险分 40–69）</td><td>全部照常</td></tr>
+<tr><td>冻结、自我排除、风险分 ≥ 70、禁止投注、临时冻结</td><td>等级照算，奖金暂停发放</td></tr>
+<tr><td>停用、注销</td><td>不计算、不结算，存量奖金系统作废</td></tr>
+<tr><td>从未到达 VIP1 的 VIP0</td><td>只累计升级，不参与月结</td></tr>
+</tbody></table>
+<p class="bp-ref"><b>依据</b>N57 玩家与参与范围 · N13 考核等级 · N31 风控暂停</p></div>
+
+<div class="bp c-up"><h3>等级与段位</h3>
+<p class="bp-k"><b>作用</b>定义等级档位、命名和前台分段。</p>
+<div class="bp-k"><b>逻辑</b><ul>
+<li>默认 VIP1–VIP24、SUPER VIP 共 25 级；未达 VIP1 为 VIP0（门槛、奖金固定 0）。</li>
+<li>等级名按位置生成，最高一级始终叫 SUPER VIP；记录按等级 ID 关联。</li>
+<li>每人存当前等级和历史最高 H：当前可降，H 只升不降。</li>
+<li>段位：VIP0 黑铁、最高级荣耀，中间分青铜至星耀 6 段（默认每段 4 级）。</li>
+</ul></div>
+<table class="vs-t sc"><colgroup><col class="a"><col></colgroup><thead><tr><th>场景</th><th>方案</th></tr></thead><tbody>
+<tr><td>新增 1 级（中间 25 级）</td><td>星耀 5 级，其余各 4 级</td></tr>
+<tr><td>增删等级后</td><td>段位立即重分，不通知玩家</td></tr>
+<tr><td>段位变化</td><td>不影响门槛、奖金和权益</td></tr>
+</tbody></table>
+<p class="bp-ref"><b>依据</b>N1 等级档位 · N2 当前与历史最高 · N51 前台段位层级</p></div>
+
+<div class="bp c-up"><h3>累计口径与撤单</h3>
+<p class="bp-k"><b>作用</b>统一升级、保级使用的投注和充值口径。</p>
+<div class="bp-k"><b>逻辑</b><ul>
+<li>累计充值：沿用平台现有口径。</li>
+<li>有效投注：赢取 Min(赢额, 本金)，输取投注 − 派彩；所有游戏都计入，不乘倍数。</li>
+<li>排除同账号或关联账号对押、对立盘口。</li>
+<li>当月有效投注按注单结算时间归月；结算开始后才入库的上月注单计入当月。</li>
+</ul></div>
+<table class="vs-t sc"><colgroup><col class="a"><col></colgroup><thead><tr><th>场景</th><th>方案</th></tr></thead><tbody>
+<tr><td>撤单</td><td>扣累计；所属月未结算的同时扣当月</td></tr>
+<tr><td>撤单后累计低于已达门槛</td><td>等级不降；该级未领升级奖金系统作废</td></tr>
+<tr><td>单人单月撤单扣回 &gt; ₱100,000</td><td>告警，未领奖金暂停（撤单复核）</td></tr>
+<tr><td>10-31 23:50 结算、11-01 14:00 入库</td><td>计入 11 月，10 月不重算</td></tr>
+</tbody></table>
+<p class="bp-ref"><b>依据</b>N3 累计充值 · N4 有效投注 · N5 撤单与回退</p></div>
+
+<div class="bp c-up"><h3>实时升级</h3>
+<p class="bp-k"><b>作用</b>累计达标即升级，不等月结。</p>
+<div class="bp-k"><b>逻辑</b><ul>
+<li>累计有效投注、累计充值同时 ≥ 某级门槛才算达到。</li>
+<li>每次充值成功、注单结算后实时判定。</li>
+<li>达到的等级 &gt; H 时，当前和 H 同时升，可一次跨多级。</li>
+<li>降级后累计仍够 H 及以下，不立即升回，只能月结恢复。</li>
+</ul></div>
+<table class="vs-t sc"><colgroup><col class="a"><col></colgroup><thead><tr><th>场景</th><th>方案</th></tr></thead><tbody>
+<tr><td>累计 ₱10,000 / ₱1,999</td><td>不升级</td></tr>
+<tr><td>再充 ₱1</td><td>升 VIP1，生成 ₱8 待领取</td></tr>
+<tr><td>当前 VIP4、H = VIP5，累计够 VIP5</td><td>不升回，等月结</td></tr>
+<tr><td>累计够 H + 1</td><td>立即升级，只发新等级奖金</td></tr>
+<tr><td>结算期间升级</td><td>照常升级；结算结果取较高者</td></tr>
+</tbody></table>
+<p class="bp-ref"><b>依据</b>N7 升级条件 · N8 实时升级 · N10 降级后不立即升回 · N18 结算期间的实时升级</p></div>
+
+<div class="bp c-rk"><h3>KYC 限制</h3>
+<p class="bp-k"><b>作用</b>控制未完成 KYC 的玩家能否参与。</p>
+<div class="bp-k"><b>逻辑</b><ul>
+<li>开启（默认）：未通过 KYC 只累计，不定级、不发奖、不结算。</li>
+<li>完成 KYC：按累计定级，补发已达等级的升级奖金；期间月度工资、生日奖金不补。</li>
+<li>关闭：等级和奖金不要求 KYC，生日奖金仍须 KYC 出生日期；关闭前须老板或 Claire 确认。</li>
+<li>开 → 关：未定级玩家按累计定级，不补发、不弹窗（Q51 已定）。</li>
+<li>关 → 开：未完成 KYC 的冻结等级，未到账奖金暂停；完成 KYC 后解冻。</li>
+<li>切换须二次确认 + 谷歌验证码。</li>
+</ul></div>
+<table class="vs-t sc"><colgroup><col class="a"><col></colgroup><thead><tr><th>场景</th><th>方案</th></tr></thead><tbody>
+<tr><td>累计 ₱260,000 / ₱52,000 完成 KYC</td><td>定 VIP4，补发 ₱92，逐级列出</td></tr>
+<tr><td>上线时够 VIP2，到 VIP4 才完成 KYC</td><td>只补 VIP3、VIP4 共 ₱66</td></tr>
+<tr><td>冻结期间累计达更高级</td><td>解冻后升级并发奖，暂停奖金恢复待领取</td></tr>
+<tr><td>体系关闭时切换</td><td>只记开关值，重开时按当时值处理</td></tr>
+</tbody></table>
+<p class="bp-ref"><b>依据</b>N23 KYC 限制开启 · N24 KYC 限制关闭 · N25 KYC 限制切换</p></div>
+
+<div class="bp c-st"><h3>上线结算</h3>
+<p class="bp-k"><b>作用</b>首次开启时一次性定级，作为后续起点。</p>
+<div class="bp-k"><b>逻辑</b><ul>
+<li>只按开启时刻累计定级，不参考原 LEVEL 和旧版 VIP。</li>
+<li>已到达等级记「不发放（上线结算）」，以后不补。</li>
+<li>写入初始数值，含当月有效投注（从 1 日起算）。</li>
+<li>为生日在上线当天及以后（同月）的玩家生成生日奖金。</li>
+<li>不发月度工资、不降级、不弹动画、不发站内信。</li>
+</ul></div>
+<table class="vs-t sc"><colgroup><col class="a"><col></colgroup><thead><tr><th>场景</th><th>方案</th></tr></thead><tbody>
+<tr><td>累计 ₱120,000 / ₱25,000</td><td>定 VIP3，不发升级奖金</td></tr>
+<tr><td>累计 ₱120,000 / ₱19,999</td><td>定 VIP2</td></tr>
+<tr><td>10-28 上线，生日 10-30 / 10-05</td><td>10-30 生成；10-05 不补</td></tr>
+<tr><td>上线时未完成 KYC</td><td>只记上线结算等级，完成 KYC 时只补更高等级</td></tr>
+<tr><td>次月结算</td><td>照常结算上线当月（含开启前投注）；建议 5 日前开启</td></tr>
+</tbody></table>
+<p class="bp-ref"><b>依据</b>N26 VIP 体系开关与上线结算 · N23 KYC 限制开启 · Q38、Q39</p></div>
+
+<div class="bp c-st"><h3>月度结算</h3>
+<p class="bp-k"><b>作用</b>按上月有效投注评定次月等级和月度工资。</p>
+<div class="bp-k"><b>逻辑</b><ul>
+<li>考核等级 C = 月末 23:59:59 的当前等级；当月升级的按新等级考核整月。</li>
+<li>k = 当月有效投注达到保级投注的最高等级，不超过 H。</li>
+<li>k = C 保级；k &gt; C 恢复到 k（可多级）；k &lt; C 降 1 级。</li>
+<li>每月最多降 1 级，VIP1 降为 VIP0；H 不变。</li>
+<li>恢复不发升级奖金、不弹动画；每人每月只结算一次。</li>
+</ul></div>
+<table class="vs-t sc"><colgroup><col class="a"><col></colgroup><thead><tr><th>场景</th><th>方案</th></tr></thead><tbody>
+<tr><td>C = H = VIP5，投注 ₱100,000</td><td>保持 VIP5，工资 ₱38</td></tr>
+<tr><td>同上，投注 ₱30,000</td><td>降 VIP4，得 VIP2 工资 ₱12</td></tr>
+<tr><td>同上，投注 ₱3,000</td><td>降 VIP4，不发工资</td></tr>
+<tr><td>C = VIP2、H = VIP5，投注 ₱80,000</td><td>恢复 VIP4，工资 ₱28</td></tr>
+<tr><td>同上，投注 ₱150,000</td><td>恢复 VIP5（不超过 H），₱38</td></tr>
+<tr><td>C = VIP0、H = VIP3，投注 ₱25,000</td><td>恢复 VIP2，₱12</td></tr>
+<tr><td>结算前已实时升到 VIP7</td><td>保持 VIP7，工资仍按 k</td></tr>
+</tbody></table>
+<p class="bp-ref"><b>依据</b>N13 考核等级 · N14 月度工资等级 k 与保级 · N15 降级 · N16 降级后恢复 · N17 VIP0 · N18 结算期间的实时升级</p></div>
+
+<div class="bp c-cf"><h3>结算时间配置</h3>
+<p class="bp-k"><b>作用</b>后台设定每月结算时刻。</p>
+<div class="bp-k"><b>逻辑</b><ul>
+<li>每月 [1–28] 日 时:分，默认 1 日 13:00。</li>
+<li>考核范围固定为上一自然月，不随结算日变。</li>
+<li>从下一个未到的结算时间点生效；保存弹确认框，不需谷歌验证码。</li>
+<li>结算中（含整次失败待补跑）不能改。</li>
+</ul></div>
+<table class="vs-t sc"><colgroup><col class="a"><col></colgroup><thead><tr><th>场景</th><th>方案</th></tr></thead><tbody>
+<tr><td>10-28 改为每月 5 日 02:00</td><td>11-05 02:00 结算 10 月</td></tr>
+<tr><td>本月未结算且新时间已过</td><td>保存后 5 分钟内触发</td></tr>
+<tr><td>结算日 10 日，生日 11-05</td><td>11-10 结算后生成，立即可领</td></tr>
+<tr><td>结算日 10 日，生日 11-20</td><td>11-10 生成，11-20 起可领</td></tr>
+</tbody></table>
+<p class="bp-ref"><b>依据</b>N12 统计周期与结算时刻 · N21 资格与生成 · Q43</p></div>
+
+<div class="bp c-st"><h3>结算未完成</h3>
+<p class="bp-k"><b>作用</b>处理单人或整次结算失败。</p>
+<div class="bp-k"><b>逻辑</b><ul>
+<li>单人失败：当天每 30 分钟重试 1 次，最多 3 次；仍失败记「未完成」，等级不变、不发工资，状态「部分完成」。</li>
+<li>整次失败：自动重试 3 次，仍失败为「结算失败」，技术修复后「重新结算」补跑；补跑前配置锁定。</li>
+<li>补结算按考核月生效的配置；工资、生日奖金有效期从补结算完成当天起算。</li>
+<li>结算开始 + 30 分钟（可配 10–240）未完成告警，重试结束后再发汇总告警。</li>
+<li>下月结算前须补完；跨月未补只阻塞该玩家。</li>
+</ul></div>
+<table class="vs-t sc"><colgroup><col class="a"><col></colgroup><thead><tr><th>场景</th><th>方案</th></tr></thead><tbody>
+<tr><td>单人未完成</td><td>技术补结算 → 运营点「完成」</td></tr>
+<tr><td>未补结算就点「完成」</td><td>提示不能完成，不标记</td></tr>
+<tr><td>状态「部分完成」</td><td>等级配置解锁</td></tr>
+<tr><td>失败期间前台</td><td>照常显示结算前数据</td></tr>
+</tbody></table>
+<p class="bp-ref"><b>依据</b>N19 结算任务 · N44 结算期间禁止修改 · 7.5.1 结算未完成的常见原因</p></div>
+
+<div class="bp c-bn"><h3>升级奖金</h3>
+<p class="bp-k"><b>作用</b>首次到达某级的一次性奖励。</p>
+<div class="bp-k"><b>逻辑</b><ul>
+<li>跨多级逐级生成，每级 1 笔，终身一次（会员 + 等级 ID）。</li>
+<li>降级后再达、过期未领都不再生成；金额为 0 不生成。</li>
+<li>门槛下调、新增等级触发的（含等级调整补偿）一律先待领取，24 小时内可整批作废。</li>
+</ul></div>
+<table class="vs-t sc"><colgroup><col class="a"><col></colgroup><thead><tr><th>场景</th><th>方案</th></tr></thead><tbody>
+<tr><td>VIP0 一次升到 VIP3</td><td>3 笔 ₱8 + ₱18 + ₱28，弹窗合计 ₱54，一次领取</td></tr>
+<tr><td>KYC 定级补发</td><td>逐级列出；上线结算等级及以下不补</td></tr>
+<tr><td>增删等级重算，原等级奖金未领</td><td>作废，补 1 笔等级调整补偿（≤ 原金额）</td></tr>
+<tr><td>领过被删等级奖金</td><td>到达的第 1 个新增等级不发</td></tr>
+</tbody></table>
+<p class="bp-ref"><b>依据</b>N9 升级奖金 · N11 门槛修改后的重算 · N23 KYC 限制开启 · N55 增删等级后的重算</p></div>
+
+<div class="bp c-bn"><h3>月度工资<small>前台称「月度奖金」</small></h3>
+<p class="bp-k"><b>作用</b>每月按投注档位发放的保级工资。</p>
+<div class="bp-k"><b>逻辑</b><ul>
+<li>按 k 级金额生成，保级、恢复、降级都发；k = VIP0 不发。</li>
+<li>每人每月最多 1 笔（会员 + 结算月份）。</li>
+<li>保级投注和金额按考核月份的配置；修改次月生效。</li>
+<li>结算完成时生成，有效期从当天起算。</li>
+</ul></div>
+<table class="vs-t sc"><colgroup><col class="a"><col></colgroup><thead><tr><th>场景</th><th>方案</th></tr></thead><tbody>
+<tr><td>VIP5 投注 ₱99,999</td><td>降 VIP4，得 VIP4 ₱28</td></tr>
+<tr><td>VIP1 投注 ₱4,999</td><td>降 VIP0，不发</td></tr>
+<tr><td>设为自动领取</td><td>结算完成即到账</td></tr>
+</tbody></table>
+<p class="bp-ref"><b>依据</b>N14 月度工资等级 k 与保级 · N43 配置生效时间 · N53 领取方式</p></div>
+
+<div class="bp c-bn"><h3>生日奖金</h3>
+<p class="bp-k"><b>作用</b>每年一次的生日福利。</p>
+<div class="bp-k"><b>逻辑</b><ul>
+<li>生日所在月结算完成时，按结算后等级生成；之后升降不改金额。</li>
+<li>条件：有 KYC 出生日期；结算后 ≥ VIP1 且金额 &gt; 0；体系开启。</li>
+<li>只认首次 KYC 通过的出生日期；改生日的当年和次年不发。</li>
+<li>同一 KYC 身份同年只发 1 个账号（先生成的，同批取注册最早）。</li>
+<li>生日当天 00:00 起可领；每人每年 1 笔。</li>
+</ul></div>
+<table class="vs-t sc"><colgroup><col class="a"><col></colgroup><thead><tr><th>场景</th><th>方案</th></tr></thead><tbody>
+<tr><td>生日 10-13，结算后 VIP14</td><td>₱488，10-13 至 10-27 可领</td></tr>
+<tr><td>结算后降为 VIP5</td><td>按 VIP5 发 ₱88</td></tr>
+<tr><td>生日在 1 日</td><td>结算前显示「待发放」，结算后可领</td></tr>
+<tr><td>结算后为 VIP0，或结算后才完成 KYC</td><td>当年不生成、不补</td></tr>
+<tr><td>2 月 29 日生日</td><td>非闰年按 2 月 28 日</td></tr>
+</tbody></table>
+<p class="bp-ref"><b>依据</b>N20 金额 · N21 资格与生成 · N22 领取与有效期</p></div>
+
+<div class="bp c-bn"><h3>领取方式与有效期</h3>
+<p class="bp-k"><b>作用</b>规定三类奖金怎么到账、多久有效。</p>
+<div class="bp-k"><b>逻辑</b><ul>
+<li>三类各设手动 / 自动，默认手动；切换只影响之后新生成的。</li>
+<li>手动：生成待领取，在等级卡「查看详情」弹窗领取；升级奖金也可在确认弹窗领取。</li>
+<li>有效期共用 N 天（默认 15，1–20），含起算当天至第 N 天 23:59:59；过期不能领、不补发。</li>
+<li>起算：升级当天、结算完成当天、生日当天。</li>
+<li>自动：生成即到账，无待领取、无有效期；生日奖金生日当天 00:00 到账。</li>
+<li>不设审核；重复点击、多端只成功 1 次；到账失败保持待领取。</li>
+</ul></div>
+<table class="vs-t sc"><colgroup><col class="a"><col></colgroup><thead><tr><th>场景</th><th>方案</th></tr></thead><tbody>
+<tr><td>11-01 升级 ₱48 未领</td><td>11-15 23:59:59 前可领；过期后 VIP5 不再生成</td></tr>
+<tr><td>领取时到账失败</td><td>提示重试，仍待领取</td></tr>
+<tr><td>升级自动、月度手动</td><td>升级为到账通知，工资仍需领取</td></tr>
+<tr><td>体系关闭</td><td>已生成的在有效期内仍可领</td></tr>
+</tbody></table>
+<p class="bp-ref"><b>依据</b>N22 领取与有效期 · N29 到账失败 · N30 不设审核 · N52 领取与有效期 · N53 领取方式</p></div>
+
+<div class="bp c-rk"><h3>风控暂停与人工处理</h3>
+<p class="bp-k"><b>作用</b>拦截风险账号的奖金，由运营人工处理。</p>
+<div class="bp-k"><b>逻辑</b><ul>
+<li>触发：账号冻结（含自我排除）、风险分 ≥ 70、禁止投注、临时冻结；40–69 照常。</li>
+<li>等级照算；奖金为「暂停发放（风控）」，不发通知，事后不补。</li>
+<li>解除后不自动恢复，运营逐条放行或作废。</li>
+<li>放行：手动领取的恢复待领取（有效期不顺延，已过期直接到账）；自动领取的直接到账。</li>
+<li>补发：只对人工作废、发放失败的原记录，最多 1 次，直接到账。</li>
+<li>作废和补发不能同一账号；单笔 ≥ ₱5,000 放行、补发须第二人审批。</li>
+</ul></div>
+<table class="vs-t sc"><colgroup><col class="a"><col></colgroup><thead><tr><th>场景</th><th>方案</th></tr></thead><tbody>
+<tr><td>风险分 75 时升级</td><td>播动画；弹窗只显示等级，不提金额</td></tr>
+<tr><td>玩家仍在风控中</td><td>不能放行、不能补发</td></tr>
+<tr><td>系统作废、已过期、不发放</td><td>无「补发」，接口也拒绝</td></tr>
+<tr><td>发放失败但资金已入账</td><td>不能补发</td></tr>
+<tr><td>补发 ₱6,888</td><td>待审批，第二人通过后到账</td></tr>
+</tbody></table>
+<p class="bp-ref"><b>依据</b>N29 到账失败 · N31 风控暂停 · N32 放行 · N33 作废与补发 · N58 第二人审批</p></div>
+
+<div class="bp c-nt"><h3>通知与弹窗</h3>
+<p class="bp-k"><b>作用</b>告知升级和待领奖金，引导领取。</p>
+<div class="bp-k"><b>逻辑</b><ul>
+<li>升级：任何页面（含第三方游戏）弹 3 秒动画，回到平台页面弹确认弹窗（领取奖金 / 查看权益 / ×）。</li>
+<li>跨多级、连续升级只显示最终等级和合计；每次升级只弹 1 次，没弹出的下次补弹。</li>
+<li>待领通知：每天首次进入平台原生页面弹 1 次，合并手动领取的待领奖金；升级当天不叠加。</li>
+<li>站内信、推送：生成待领取时发（含截止日）；自动到账时发到账通知。</li>
+<li>弹窗顺序：强制公告 &gt; VIP 弹窗 &gt; 活动弹窗，同时只显示一个。</li>
+</ul></div>
+<table class="vs-t sc"><colgroup><col class="a"><col></colgroup><thead><tr><th>场景</th><th>方案</th></tr></thead><tbody>
+<tr><td>第三方游戏页无法叠加</td><td>回到平台先播动画再弹窗</td></tr>
+<tr><td>升级奖金自动领取</td><td>确认弹窗改为到账通知</td></tr>
+<tr><td>风控暂停</td><td>弹窗只显示等级，不发站内信、推送</td></tr>
+<tr><td>三类都自动领取</td><td>不弹待领通知</td></tr>
+<tr><td>上线结算、月结恢复、增删等级重算、老版本 App</td><td>不弹动画和弹窗</td></tr>
+</tbody></table>
+<p class="bp-ref"><b>依据</b>N34 升级动画与确认弹窗 · N37 站内信与 APP 推送 · N56 待领取奖金通知 · N46 老版本 App</p></div>
+
+<div class="bp c-nt"><h3>短信</h3>
+<p class="bp-k"><b>作用</b>发奖金到账和生日提醒短信。</p>
+<div class="bp-k"><b>逻辑</b><ul>
+<li>沿用平台现有短信功能，只定发送时机和模板。</li>
+<li>到账提醒：只对自动领取的奖金到账时发，跨多级合并 1 条；全部手动时置灰。</li>
+<li>生日提醒：默认勾选，时间点可选（月 1 日 / 前三天 / 前一天 / 当天，默认当天），10:00 发。</li>
+<li>金额写「PHP」；&lt; ₱1 不发；免打扰 21:00–10:00 顺延。</li>
+<li>模板只能选「个人」类型；被删除或改群发 → 状态异常、自动停发。</li>
+</ul></div>
+<table class="vs-t sc"><colgroup><col class="a"><col></colgroup><thead><tr><th>场景</th><th>方案</th></tr></thead><tbody>
+<tr><td>手动领取到账</td><td>不发短信</td></tr>
+<tr><td>21:30 自动到账</td><td>短信次日 10:00 发，站内信即时</td></tr>
+<tr><td>风控暂停、体系关闭、未完成 KYC（限制开启）</td><td>生日短信不发</td></tr>
+<tr><td>模板状态异常</td><td>重选并保存，或确认停发后解除</td></tr>
+</tbody></table>
+<p class="bp-ref"><b>依据</b>N35 奖金到账提醒短信 · N36 生日短信提醒 · N38 免打扰时段 · N39 短信金额写法 · N54 短信模板状态异常</p></div>
+
+<div class="bp c-cf"><h3>新增和删除等级</h3>
+<p class="bp-k"><b>作用</b>运营调整等级数量。</p>
+<div class="bp-k"><b>逻辑</b><ul>
+<li>新增：加在最高一级之上，名为 SUPER VIP，原 SUPER VIP 改名 VIPn；一次 1 级、不设上限、单独保存。</li>
+<li>新等级三项奖金在影响预览里填写（默认 0）。</li>
+<li>删除：只能删最高一级，立即生效、不能撤销；至少保留 1 个 VIP 等级。</li>
+<li>保存后全部玩家重算：不弹窗、不发站内信、不算降级。</li>
+<li>结算期间、重算期间不能增删。</li>
+</ul></div>
+<table class="vs-t sc"><colgroup><col class="a"><col></colgroup><thead><tr><th>场景</th><th>方案</th></tr></thead><tbody>
+<tr><td>原最高级奖金已领，累计够新等级</td><td>升到新等级，不发新等级奖金</td></tr>
+<tr><td>原最高级 ₱118,888 未领，新等级 ₱188,888</td><td>原记录作废，补偿 ₱118,888 待领取</td></tr>
+<tr><td>删除最高级，降级玩家 H 被删</td><td>H 下调为累计能满足的最高级（不低于当前）</td></tr>
+<tr><td>删后再新增</td><td>领过被删级奖金者，首个新增级不发</td></tr>
+</tbody></table>
+<p class="bp-ref"><b>依据</b>N49 新增等级 · N50 删除等级 · N55 增删等级后的重算 · N59 全量重算任务</p></div>
+
+<div class="bp c-cf"><h3>门槛和奖金修改</h3>
+<p class="bp-k"><b>作用</b>调整门槛、保级投注和三类奖金金额。</p>
+<div class="bp-k"><b>逻辑</b><ul>
+<li>门槛三列逐级严格递增，整数 1–99,999,999,999；奖金 0–9,999,999.99。</li>
+<li>保存前影响预览试算，完成后才能保存；须谷歌验证码。</li>
+<li>门槛下调：全量重算升级（只升不降），奖金先待领取。</li>
+<li>门槛上调：已达等级不降，已发不追回。</li>
+<li>保级投注、月度工资次月生效；升级、生日奖金和流水倍数按生成时。</li>
+<li>须第二人审批：奖金变动超 ±50%、影响 &gt; ₱100,000、结算前 72 小时改保级投注或工资、流水倍数改 0。</li>
+</ul></div>
+<table class="vs-t sc"><colgroup><col class="a"><col></colgroup><thead><tr><th>场景</th><th>方案</th></tr></thead><tbody>
+<tr><td>VIP5 累计充值改为 = VIP4</td><td>标红，不保存</td></tr>
+<tr><td>10-15 改 VIP5 保级投注</td><td>10 月仍按旧值，11 月起按新值</td></tr>
+<tr><td>VIP5 升级奖金 ₱48 → ₱80</td><td>+67%，待审批</td></tr>
+<tr><td>结算期间修改</td><td>输入框置灰</td></tr>
+<tr><td>两人同时保存</td><td>后者提示刷新，不覆盖</td></tr>
+</tbody></table>
+<p class="bp-ref"><b>依据</b>N11 门槛修改后的重算 · N43 配置生效时间 · N44 结算期间禁止修改 · N58 第二人审批</p></div>
+
+<div class="bp c-cf"><h3>体系开关与再次开启</h3>
+<p class="bp-k"><b>作用</b>控制 VIP 体系整体运行。</p>
+<div class="bp-k"><b>逻辑</b><ul>
+<li>「VIP领取奖励」即体系开关，默认关闭；开关都须确认 + 谷歌验证码。</li>
+<li>首次开启：执行上线结算。</li>
+<li>关闭期间：累计照常；停止升级、结算、发奖和通知，事后不补；已生成未领的在有效期内仍可领。</li>
+<li>再次开启：按当前累计重核全部玩家（只升不降），关闭期间到达的等级不发奖、不弹动画。</li>
+</ul></div>
+<table class="vs-t sc"><colgroup><col class="a"><col></colgroup><thead><tr><th>场景</th><th>方案</th></tr></thead><tbody>
+<tr><td>结算时刻体系处于关闭</td><td>该月不结算，事后不补</td></tr>
+<tr><td>关闭期间累计达 VIP6</td><td>重开定 VIP6，记「不发放（重新开启核算）」</td></tr>
+<tr><td>上线后需回滚</td><td>关闭体系；已到账不追回</td></tr>
+</tbody></table>
+<p class="bp-ref"><b>依据</b>N26 VIP 体系开关与上线结算 · N27 关闭与再次开启 · 第 11 章回滚</p></div>
+
+<div class="bp c-cf"><h3>旧体系替换</h3>
+<p class="bp-k"><b>作用</b>用新 VIP 替换原 LEVEL 和旧版 VIP。</p>
+<div class="bp-k"><b>逻辑</b><ul>
+<li>【会员等级】改名「VIP会员等级配置」，Level Center 改为 VIP中心。</li>
+<li>去掉【VIP特权】、系统参数「新版VIP特权状态」和旧版「VIP活动」。</li>
+<li>版本发布时旧体系未到账奖励一律作废，已到账不追回；作废清单导出留档。</li>
+<li>旧等级不迁移、不换算；历史记录保留；实体奖品本期不做（置灰）。</li>
+<li>VIP 等级不同步支付层级。</li>
+</ul></div>
+<table class="vs-t sc"><colgroup><col class="a"><col></colgroup><thead><tr><th>场景</th><th>方案</th></tr></thead><tbody>
+<tr><td>原 LEVEL 生日礼包待领取</td><td>作废，不补发</td></tr>
+<tr><td>旧版 VIP 下注限额、返水</td><td>不再生效</td></tr>
+<tr><td>老版本 App</td><td>入口指向 VIP中心，不弹动画和通知</td></tr>
+</tbody></table>
+<p class="bp-ref"><b>依据</b>N40 替换原会员等级 · N41 支付层级不同步 · N46 老版本 App · N47 去掉旧版 VIP · N48 旧奖励作废</p></div>
+
+<div class="bp c-cf"><h3>后台报表</h3>
+<p class="bp-k"><b>作用</b>供运营核对奖金和结算结果。</p>
+<div class="bp-k"><b>逻辑</b><ul>
+<li>活动奖励统计：按会员、类型、状态、结算月份、生成时间筛选；放行、作废、补发、重试、整批作废、导出。</li>
+<li>奖金状态 7 种：待领取、已到账、已过期、暂停发放（风控）、已作废、不发放、发放失败。</li>
+<li>VIP月度结算记录：每月一行，含参与、升级、等级变更、保级、恢复、降级、失败人数和已到账；明细可筛选、导出、重新结算、完成。</li>
+<li>时间统一 GMT+8；VIP会员数据、等级变动本期无查询页，由技术查库。</li>
+</ul></div>
+<table class="vs-t sc"><colgroup><col class="a"><col></colgroup><thead><tr><th>场景</th><th>方案</th></tr></thead><tbody>
+<tr><td>点「已到账 n 笔 / ₱x」</td><td>跳活动奖励统计，笔数和金额一致</td></tr>
+<tr><td>点「部分完成」</td><td>进明细，只看未完成</td></tr>
+<tr><td>两人同时处理一条</td><td>后者提示刷新，不执行</td></tr>
+</tbody></table>
+<p class="bp-ref"><b>依据</b>F09-01 活动奖励统计 · F09-04 VIP月度结算记录 · N33 作废与补发 · Q23</p></div>
+
+<div class="bp c-nt"><h3>前台显示原则</h3>
+<p class="bp-k"><b>作用</b>统一前台可见内容的边界。</p>
+<div class="bp-k"><b>逻辑</b><ul>
+<li>不显示结算状态、日期和时间；结算期间显示结算前数据，完成后静默更新。</li>
+<li>不显示任何流水内容。</li>
+<li>等级、k、进度、对勾、段位、红点由服务端下发；时间按 GMT+8。</li>
+<li>奖金只在「查看详情」弹窗领取，卡上只显示小红点。</li>
+<li>门槛 ≥ ₱1,000 用 K / M / B 缩写，当前值向下取整；统一叫「VIP0」「月度奖金」。</li>
+</ul></div>
+<table class="vs-t sc"><colgroup><col class="a"><col></colgroup><thead><tr><th>场景</th><th>方案</th></tr></thead><tbody>
+<tr><td>未登录</td><td>登录引导，等级和奖金表照常看</td></tr>
+<tr><td>未完成 KYC</td><td>KYC 引导，等级全部未解锁</td></tr>
+<tr><td>风控暂停</td><td>提示「部分 VIP 奖金暂未发放」</td></tr>
+<tr><td>体系关闭</td><td>「VIP 暂未开放」，有待领奖金仍可领</td></tr>
+<tr><td>接口超时 10 秒</td><td>「加载失败，点击重试」</td></tr>
+</tbody></table>
+<p class="bp-ref"><b>依据</b>N12 统计周期与结算时刻（⑤）· N42 前台金额显示 · Q59、Q60 · 4.3 前台数据项</p></div>
+
+</div>
+
+<h2 id="s4">四、关键点汇总</h2>
+
+<h3 class="vs-h3" style="--bar:#2F6FDB">① 关键规则与数值</h3>
+<table class="vs-t kv"><colgroup><col class="a"><col><col class="c"></colgroup><thead><tr><th>项目</th><th>规则 / 数值</th><th>依据</th></tr></thead><tbody>
+<tr><td>VIP 等级数</td><td>默认 25 级（VIP1–VIP24、SUPER VIP）+ VIP0；可增删，不设上限，至少 1 级</td><td>N1、N49、N50</td></tr>
+<tr><td>升级门槛（累计有效投注 / 累计充值）</td><td>VIP1 ₱10,000 / ₱2,000；VIP5 ₱500,000 / ₱100,000；SUPER VIP ₱1,000,000,000 / ₱1,000,000,000</td><td>7.2 默认值</td></tr>
+<tr><td>保级投注</td><td>VIP1 ₱5,000；VIP5 ₱100,000；SUPER VIP ₱60,000,000</td><td>7.2 默认值</td></tr>
+<tr><td>升级奖金</td><td>VIP1 ₱8；VIP5 ₱48；SUPER VIP ₱118,888；全部合计 ₱305,400</td><td>7.2、3.3</td></tr>
+<tr><td>月度工资</td><td>VIP1 ₱6；VIP5 ₱38；SUPER VIP ₱100,000</td><td>7.2 默认值</td></tr>
+<tr><td>生日奖金</td><td>VIP1–VIP5 ₱88；VIP6–VIP10 ₱188 … VIP24 ₱2,888；SUPER VIP ₱5,888</td><td>N20</td></tr>
+<tr><td>取值范围</td><td>门槛整数 1–99,999,999,999，逐级严格递增；奖金 0–9,999,999.99，填 0 不发</td><td>7.2、7.3</td></tr>
+<tr><td>领奖有效期</td><td>默认 15 天（1–20），含起算当天至第 N 天 23:59:59；三类共用</td><td>N52、Q25</td></tr>
+<tr><td>领取方式</td><td>三类各自手动 / 自动，默认都手动</td><td>N53、Q30</td></tr>
+<tr><td>月度结算时间</td><td>默认每月 1 日 13:00（可选 1–28 日）；考核上一自然月</td><td>N12、Q43</td></tr>
+<tr><td>结算重试</td><td>单人当天每 30 分钟 1 次、最多 3 次；整次自动重试 3 次</td><td>N19、Q35</td></tr>
+<tr><td>结算告警时间</td><td>结算开始 + 30 分钟（10–240 可配），重试结束另发汇总</td><td>N19、Q52</td></tr>
+<tr><td>流水倍数</td><td>默认 1（0–50），按生成时固定；改 0 须审批；前台不显示</td><td>N28、Q60</td></tr>
+<tr><td>免打扰时段</td><td>21:00–10:00，短信和推送顺延，站内信即时</td><td>N38</td></tr>
+<tr><td>短信门槛</td><td>到账金额 &lt; ₱1 不发短信；短信金额写「PHP」</td><td>N35、N39</td></tr>
+<tr><td>风控暂停</td><td>冻结、自我排除、风险分 ≥ 70、禁止投注、临时冻结；40–69 照常</td><td>N31、Q12</td></tr>
+<tr><td>第二人审批</td><td>奖金变动超 ±50% 或影响 &gt; ₱100,000；结算前 72 小时改保级投注或工资；单笔 ≥ ₱5,000 放行、补发；流水倍数改 0；24 小时未审批失效</td><td>N58、Q65</td></tr>
+<tr><td>撤单复核</td><td>单人单月撤单扣回 &gt; ₱100,000 转人工</td><td>N5、Q66</td></tr>
+<tr><td>整批作废</td><td>门槛下调、新增等级生成的升级奖金和等级调整补偿，24 小时内可整批作废</td><td>N33</td></tr>
+<tr><td>唯一键</td><td>升级：会员 + 等级 ID；工资：会员 + 结算月份；生日：会员 + 年份</td><td>N9、N14、N21</td></tr>
+<tr><td>默认开关</td><td>体系「VIP领取奖励」关闭；「KYC 限制」开启；生日短信勾选；到账短信未勾选</td><td>第 12 章、N36、N35</td></tr>
+<tr><td>段位</td><td>默认每段 4 级：青铜 VIP1–4 … 星耀 VIP21–24；VIP0 黑铁、SUPER VIP 荣耀</td><td>N51</td></tr>
+<tr><td>分页与超时</td><td>超过 40 级前台等级表分页（每页 20 级）；前台接口超时 10 秒</td><td>7.6、第 9 章</td></tr>
+<tr><td>上线方式</td><td>版本照常发布、开关默认关闭；调好首轮配置再开启；不灰度</td><td>N26、Q6、Q55</td></tr>
+</tbody></table>
+
+<h3 class="vs-h3" style="--bar:#D14343">② 未完全确认的问题</h3>
+<table class="vs-t qa"><colgroup><col class="a"><col><col class="c"><col class="d"></colgroup><thead><tr><th>编号</th><th>内容</th><th>由谁确认</th><th>状态</th></tr></thead><tbody>
+<tr><td>Q14</td><td>前台文案、VIP 规则全文和短信英文定稿（文案确认页逐条定稿，不设期限）</td><td>运营</td><td class="st-open">待确认</td></tr>
+
+<tr><td>14.1</td><td>VIP 规则全文（4.1）；规则第 9 条在全手动、全自动、混合三种领取方式下的中英文</td><td>运营</td><td class="st-open">待定稿</td></tr>
+<tr><td>14.1</td><td>短信模板「VIP 奖金到账」「VIP 生日提醒」英文</td><td>运营</td><td class="st-open">待定稿</td></tr>
+<tr><td>14.1</td><td>升级动画、确认弹窗（含到账通知）、待领通知、站内信、推送文案</td><td>运营</td><td class="st-open">待定稿</td></tr>
+<tr><td>14.1</td><td>后台各页面提示（以原型为准）</td><td>运营</td><td class="st-open">待定稿</td></tr>
+<tr><td>4.2</td><td>等级表「?」奖金领取规则弹窗全文（文案确认 T12）</td><td>运营</td><td class="st-open">待确认</td></tr>
+<tr><td>资料未覆盖</td><td>「VIP领取奖励」、风险分的测试环境值；上线前按生产配置核对（3.5）</td><td>运营</td><td class="st-open">待核对</td></tr>
+<tr><td>资料未覆盖</td><td>原 LEVEL、旧版 VIP 历史记录的查询方式，需要时技术查库（第 11 章）</td><td>研发</td><td class="st-open">待确认</td></tr>
+</tbody></table>
+<p class="vs-note">Q 表其余 68 条（Q1–Q13、Q15–Q69）状态均为「已定」或「已决定」。</p>
+
+<h3 class="vs-h3" style="--bar:#D9821A">③ 需运营确认</h3>
+<table class="vs-t ls"><colgroup><col class="a"><col><col class="c"></colgroup><thead><tr><th>#</th><th>事项</th><th>依据</th></tr></thead><tbody>
+<tr><td>1</td><td>在「文案确认」页逐条定稿前台文案、规则、短信和推送英文</td><td>Q14、14.1</td></tr>
+<tr><td>2</td><td>开启前调好首轮配置：门槛、奖金、领取方式、领奖有效期、短信、月度结算时间</td><td>N26、Q6、第 12 章</td></tr>
+<tr><td>3</td><td>核对上线结算预览和首次结算试算（各级人数、金额），与产品确认后开启；尽量每月 5 日前开启</td><td>第 11 章、Q38</td></tr>
+<tr><td>4</td><td>在【短信模板列表】添加 2 个「个人」类型模板，并在奖励配置里选择</td><td>第 6 章、Q41</td></tr>
+<tr><td>5</td><td>按生日短信发送时间点和领取方式选用合适的模板</td><td>Q31</td></tr>
+<tr><td>6</td><td>按现有方式配置 VIP 推送：待领取 3 类、到账 3 类，跳转 VIP中心</td><td>3.5、第 12 章</td></tr>
+<tr><td>7</td><td>在【活动目的管理】给「VIP会员体系」标「留存」</td><td>N45</td></tr>
+<tr><td>8</td><td>关闭「KYC 限制」前取得老板或 Claire 确认</td><td>N24、Q18</td></tr>
+<tr><td>9</td><td>各级保级投注和月度工资金额拉开差距，避免削弱保级动力</td><td>第 13 章</td></tr>
+<tr><td>10</td><td>首次月度结算值守：结算开始后 30 分钟内确认「已完成」，并核对工资笔数和金额</td><td>第 12 章</td></tr>
+<tr><td>11</td><td>上线后第一周每日核对到账合计与资金明细，看领取率、过期率</td><td>第 12 章、8.4</td></tr>
+<tr><td>12</td><td>上线前按生产配置核对测试环境值</td><td>3.5</td></tr>
+</tbody></table>
+
+<h3 class="vs-h3" style="--bar:#5E6E82">④ 需研发确认</h3>
+<table class="vs-t ls"><colgroup><col class="a"><col><col class="c"></colgroup><thead><tr><th>#</th><th>事项</th><th>依据</th></tr></thead><tbody>
+<tr><td>1</td><td>各端第三方游戏页、平台页的定义；3 秒动画能否叠加在第三方游戏页上</td><td>N34、Q61、第 13 章</td></tr>
+<tr><td>2</td><td>是否有实时推送通道；没有时进入平台页面拉取待弹事件</td><td>第 5 章弹窗时序</td></tr>
+<tr><td>3</td><td>允许的最长结算时长</td><td>N19</td></tr>
+<tr><td>4</td><td>全量重算任务的预计规模和最长耗时</td><td>N59</td></tr>
+<tr><td>5</td><td>老版本 App 是否需要发新包</td><td>N46、Q58</td></tr>
+<tr><td>6</td><td>超过 40 级时刻度、等级卡轮播的分页加载方式（前端评估）</td><td>7.6、Q63</td></tr>
+<tr><td>7</td><td>撤单、改单的识别来源和时效（确认后补写进 PRD）</td><td>N4</td></tr>
+<tr><td>8</td><td>平台是否已有短信发送时段限制：有则沿用，删去免打扰顺延</td><td>N38</td></tr>
+<tr><td>9</td><td>短信、推送沿用现有能力：模板、次数上限、发送记录、失败重试</td><td>N35、Q53</td></tr>
+<tr><td>10</td><td>新增 3 个账变类型的编码分配</td><td>N28</td></tr>
+<tr><td>11</td><td>单人结算失败原因分类的写入（以实际排查为准）</td><td>7.5.1、Q35</td></tr>
+<tr><td>12</td><td>上线前历史累计回算并抽查（每档至少 5 人）、导出上线结算预览和旧奖励待作废清单</td><td>第 11 章、N48</td></tr>
+<tr><td>13</td><td>本期无 VIP会员数据、等级变动查询页，客服核查依赖技术查库</td><td>7.5.4、Q23</td></tr>
+</tbody></table>
+
+</article></div>
+</div>
+<script>window.NAV_ROOT = "../../";</script>
+<script src="../../assets/nav-data.js"></script>
+<script src="../../assets/nav.js"></script>
+</body>
+</html>

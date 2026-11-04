@@ -1,0 +1,1716 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>VIP会员体系-v1.1-后台会员等级配置页面</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<link rel="stylesheet" href="../../../assets/vip.css">
+<style>
+.bo-tabs{flex-wrap:wrap}.bo-tabs span{cursor:pointer}.bo-tabs span:hover{color:#409EFF}
+.qm{cursor:pointer}.qm:hover::after,.qm:focus::after{content:none}.qm:hover,.qm[aria-expanded=true]{background:#909399}
+.qm-pop{position:absolute;z-index:130;width:max-content;max-width:300px;background:#303133;color:#fff;font-size:12px;line-height:1.6;padding:8px 10px;border-radius:4px;box-shadow:0 2px 12px rgba(0,0,0,.2);font-family:"Microsoft YaHei",sans-serif;white-space:normal}
+.bo-msg.info{background:#F4F4F5;border:1px solid #E9E9EB;color:#909399}
+.bo-inp.bad{border-color:#F56C6C}
+.dlg-body{display:grid;gap:10px;max-height:72vh;overflow:auto}
+.blk{margin:10px 0 14px;padding:2px 10px 10px}
+.lv td{padding:6px;vertical-align:top}.lv th{padding:8px 6px}
+.lv input.bo-inp{height:28px;width:118px;padding:0 6px}.lv input.nm{width:100px}.lv input.sm{width:86px}
+.lv td .ferr{display:block;white-space:normal;max-width:170px;margin-top:2px}
+.lv tr.off td{background:#FAFAFA;color:#C0C4CC}.lv tr.off input{color:#C0C4CC}
+.lv td.ro{color:#909399;padding-top:11px}
+.sw{display:inline-flex;align-items:center;gap:6px;cursor:pointer;color:#606266;font-size:12.5px;margin-top:5px;border:0;background:none;padding:0;font-family:inherit}
+.sw i{width:32px;height:16px;border-radius:8px;background:#DCDFE6;position:relative;display:inline-block}
+.sw i::after{content:"";position:absolute;left:2px;top:2px;width:12px;height:12px;border-radius:50%;background:#fff;transition:left .2s}
+.sw.on i{background:#409EFF}.sw.on i::after{left:18px}
+.errsum{margin:8px 0 0;padding:8px 12px;background:#FEF0F0;border:1px solid #FDE2E2;border-radius:3px;color:#F56C6C;font-size:12.5px}
+.errsum ul{margin:4px 0 0;padding-left:18px}
+.vip-cnt{font-size:12px;color:#909399}
+.scroll{max-height:340px;overflow:auto;max-width:420px}
+.mx{display:inline-block;margin-left:6px;font-size:12px;color:#E6A23C;white-space:normal}
+.btnrow{display:flex;gap:10px;align-items:center;margin:10px 0 4px;flex-wrap:wrap}
+.pend{margin:8px 0 4px;padding:10px 12px;background:#FDF6EC;border:1px solid #F5DAB1;border-radius:3px;font-size:12.5px;color:#8A5A12;line-height:1.7}
+.pend b{color:#E6A23C}
+.kv{display:grid;grid-template-columns:150px 1fr;gap:4px 10px;font-size:12.5px;background:#FAFBFC;border:1px solid #EBEEF5;border-radius:3px;padding:8px 12px}
+.kv>span:nth-child(odd){color:#909399}
+.vip-big{font-size:15px;font-weight:700;color:#333}
+.need{color:#E6A23C;font-weight:700}.noneed{color:#52C41A;font-weight:700}
+.opt{display:grid;gap:6px;padding:8px 10px;border:1px dashed #DCDFE6;border-radius:3px}
+.opt .rd{align-items:flex-start;line-height:1.6}
+.cb{display:inline-flex;align-items:center;gap:6px;cursor:pointer;color:#333}
+.stv{font-weight:700}.stv.on{color:#52C41A}.stv.off{color:#909399}
+#log li{font-size:12px}
+.bo-menu a.i{display:block;text-decoration:none;cursor:pointer}.bo-menu a.i:hover{color:#409EFF}.bo-menu a.i.on:hover{color:#fff}.bo-menu .i3{padding-left:40px}
+.kq{display:inline-flex;align-items:center;margin-left:6px;padding:0 6px;height:18px;line-height:18px;border-radius:3px;background:#F56C6C;color:#fff;font-size:11px;font-weight:700;cursor:pointer;border:1px solid #F56C6C;font-family:inherit;white-space:nowrap;vertical-align:middle}
+.kq:hover{background:#E04848}.kq.done{background:#FEF0F0;color:#F56C6C}.kq.done:hover{background:#FDE2E2}
+.kd{display:grid;grid-template-columns:120px 1fr;gap:6px 10px;font-size:12.5px;line-height:1.7}
+.kd>b{color:#909399;font-weight:400}.kd>span{color:#333}
+.lvc{display:grid;gap:8px;padding:6px 0}
+.lvc .frow{margin:0}
+.lvhint{font-size:12px;color:#909399;line-height:1.6}
+.gts{display:flex;flex-wrap:wrap;gap:4px 14px;margin-top:6px}
+.lnk{color:#409EFF;cursor:pointer;text-decoration:none}
+.bo-menu .i.ext{display:block;color:#909399;cursor:default;font-size:12.5px}.bo-menu .i.ext:hover{color:#909399}
+/* 会员等级三个页签版式照线上截图（用户 2026-10-17） */
+.flab{color:#606266;font-size:12.5px}
+.empty{text-align:center;color:#909399;padding:28px 0!important}
+.lvt th{text-align:center}.lvt td.c{text-align:center}.lvt td.ro.c{padding-top:6px;vertical-align:middle}
+.lvt td{vertical-align:middle}.lvt input.bo-inp.w{width:200px}.lvt input.bo-inp.m{width:84px}.lvt input.bo-inp.s{width:52px}
+.rwg .lvt input.bo-inp.w{width:124px}
+.lvt .lvp{display:inline-flex;align-items:center;gap:6px;white-space:nowrap;color:#606266}
+.bo-btn.link:disabled{color:#C0C4CC;cursor:not-allowed}
+.scroll{max-width:560px;max-height:440px}
+.rwg{display:grid;grid-template-columns:repeat(auto-fit,minmax(380px,1fr));gap:12px;align-items:start}
+.scroll2{max-height:440px;overflow:auto}
+.tot{display:flex;justify-content:flex-end;align-items:center;gap:10px;margin:0 0 8px;font-size:13px;color:#333}.tot b{color:#F56C6C}
+.stt th,.stt td{text-align:center;white-space:nowrap}.stt tr.total td{background:#F5F7FA}
+.s-pass{color:#52C41A}.s-pend{color:#E6A23C}.s-rej{color:#F56C6C}
+/* 状态颜色需高于模板 .adm-stage .bo td 的默认字色（用户 2026-10-19：已发放绿 / 待审核橙 / 已驳回红） */
+.adm-stage .bo td.s-pass{color:#52C41A}.adm-stage .bo td.s-pend{color:#E6A23C}.adm-stage .bo td.s-rej{color:#F56C6C}
+.bo-content .pager{display:flex;justify-content:flex-end;gap:8px;align-items:center;margin-top:10px;font-size:12px;color:#606266}
+/* 前台显示方式单选（用户 2026-10-19，同日改为单选「前台显示方式」） */
+.lvsw{display:flex;flex-wrap:wrap;align-items:center;gap:6px 14px;margin:2px 0 10px;padding:8px 12px;border:1px solid #EBEEF5;border-radius:3px;background:#FAFBFC}
+.lvsw .fl{font-weight:700;color:#333;font-size:13px}
+.lvsw .sw{margin-top:0;font-size:13px;color:#333}
+.lvsw .vip-cnt{flex:1 1 320px;line-height:1.6}
+/* 前台显示方式单选（用户 2026-10-19 改：原两态开关改为单选按钮，放在「会员等级配置」页签最上面） */
+.lvsw .rdo{display:inline-flex;gap:18px;flex-wrap:wrap}.lvsw .rdo label{display:inline-flex;align-items:center;gap:5px;cursor:pointer;font-size:13px;color:#333}.lvsw .rdo input{margin:0;accent-color:#409EFF;cursor:pointer}.lvsw .rdo label.on{color:#409EFF;font-weight:700}
+/* Level 返水与下注限额（按 Level 等级）：用户 2026-10-19；列格式同 VIP特权页「下注限额与返水（按 VIP 等级）」 */
+.stsum{display:flex;flex-wrap:wrap;gap:4px 18px}.stsum b{color:#F56C6C}
+/* 等级表与「下注限额与返水」合并为一张表（用户 2026-10-19）：容器内横向 / 纵向滚动，表头固定，「级别」「等级名称」固定在左，「操作」固定在右 */
+.lvwrap{max-height:520px;overflow:auto;border:1px solid #EBEEF5;border-radius:3px}
+.adm-stage .bo #lvTbl{min-width:1240px;border-collapse:separate;border-spacing:0}
+.adm-stage .bo #lvTbl th,.adm-stage .bo #lvTbl td{border-width:0 1px 1px 0;background:#fff;vertical-align:middle;padding:6px 8px}
+.adm-stage .bo #lvTbl th{position:sticky;top:0;z-index:2;white-space:normal;line-height:1.35;min-width:104px}
+.adm-stage .bo #lvTbl .fx1{position:sticky;left:0;z-index:1;width:56px;min-width:56px;max-width:56px}
+.adm-stage .bo #lvTbl .fx2{position:sticky;left:56px;z-index:1;width:150px;min-width:150px;max-width:150px;white-space:normal;text-align:left;box-shadow:2px 0 4px rgba(0,0,0,.06)}
+.adm-stage .bo #lvTbl .fxr{position:sticky;right:0;z-index:1;width:96px;min-width:96px;box-shadow:-2px 0 4px rgba(0,0,0,.06)}
+.adm-stage .bo #lvTbl th.fx1,.adm-stage .bo #lvTbl th.fx2,.adm-stage .bo #lvTbl th.fxr{z-index:3}
+.adm-stage .bo #lvTbl td.num{text-align:right}
+.adm-stage .bo #lvTbl td.nil{color:#F56C6C}
+.lv0{margin:0 0 8px;padding:6px 12px;border:1px solid #EBEEF5;border-radius:3px;background:#FAFBFC;font-size:12.5px;color:#606266;line-height:1.7}
+.lv0 .nil{color:#F56C6C}
+.rbsec{margin:4px 0 8px;padding-top:8px;border-top:1px dashed #DCDFE6;font-weight:700;color:#333;font-size:13px}
+.dlg-body input.bo-inp:disabled{background:#F5F7FA;color:#C0C4CC;cursor:not-allowed}
+</style>
+<style>
+/* 列表分页条（用户 2026-10-20 / 规范 v5.41）：本需求包 assets/style.css 没有模板的 .bo-page，按模板样式在页内写，类名加 vip- 前缀 */
+.vip-pg{display:flex;align-items:center;justify-content:flex-end;flex-wrap:wrap;gap:8px;margin-top:12px;font-size:13px;color:#606266}
+.vip-pg .vip-pg-sort{margin-right:auto;font-size:12px;color:#909399}
+.vip-pg label{display:inline-flex;align-items:center;gap:4px;font-size:13px;color:#606266}
+.vip-pg select,.vip-pg input{font-family:inherit;height:28px;border:1px solid #DCDFE6;border-radius:3px;padding:0 6px;font-size:13px;color:#333;background:#fff}
+.vip-pg input{width:46px;text-align:center}
+.vip-pg button{font-family:inherit;min-width:28px;height:28px;padding:0 6px;border:1px solid #DCDFE6;border-radius:3px;background:#fff;color:#606266;cursor:pointer;font-size:13px}
+.vip-pg button[aria-current="page"]{background:#409EFF;border-color:#409EFF;color:#fff;font-weight:700}
+.vip-pg button:disabled{color:#C0C4CC;cursor:not-allowed;background:#F5F7FA}
+.vip-pg .vip-pg-nums{display:inline-flex;gap:4px;align-items:center}
+tr.vip-pg-h{display:none!important}
+td.vip-pg-st{text-align:center!important;color:#909399;padding:28px 0!important}
+td.vip-pg-st .vip-pg-fail{color:#F56C6C}
+td.vip-pg-st .vip-pg-retry{border:0;background:none;color:#409EFF;cursor:pointer;padding:0;font-size:inherit;font-family:inherit}
+.vip-pg-tag{display:inline-block;margin-left:4px;padding:0 4px;font-size:11px;line-height:16px;color:#909399;border:1px dashed #DCDFE6;border-radius:3px;white-space:nowrap}
+</style>
+<style>
+/* 数据表尽量一行显示（用户 2026-10-20）：后台数据表（列表、配置表、弹窗里的表）表头和单元格不换行，放不下时在表格容器内横向滚动，页面本身不横向滚动；
+   超过约 300px 的长文字单元格由页尾脚本包一层 .vip-ell 单行省略，鼠标悬停 title 显示全文；值下方的小字说明改为同一行、用「·」分隔。新增类名加 vip- 前缀（规范 v5.39） */
+.adm-stage .bo table th,.adm-stage .bo table td,.bo-mask table th,.bo-mask table td{white-space:nowrap}
+.adm-stage .bo th.th-wrap{white-space:nowrap}
+.adm-stage .bo table .ops,.bo-mask table .ops{flex-wrap:nowrap;max-width:none}
+.vip-ell{display:inline-block;max-width:300px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;vertical-align:middle}
+.adm-stage .bo table td .sub2,.adm-stage .bo table td .di,.adm-stage .bo table td .gmt,.adm-stage .bo table td .idt,.adm-stage .bo table td .mode,.bo-mask table td .sub2,.bo-mask table td .di{display:inline;margin:0 0 0 4px;white-space:nowrap;max-width:none}
+.adm-stage .bo table td .sub2::before,.adm-stage .bo table td .di::before,.adm-stage .bo table td .gmt::before,.adm-stage .bo table td .idt::before,.bo-mask table td .sub2::before,.bo-mask table td .di::before{content:"· "}
+.adm-stage .bo table td .sub2+.sub2::before,.bo-mask table td .sub2+.sub2::before{content:""}.adm-stage .bo #lvTbl th{white-space:nowrap}
+.adm-stage .bo #lvTbl .fx2{white-space:nowrap;max-width:none}
+</style></head>
+<body>
+<div class="with-nav">
+<div class="adm-stage">
+  <div class="bo">
+    <div class="bo-top1"><span class="bo-time">当前时间: <b>2026/10/12 22:30:00 -04:00</b></span><span class="sp bo-fs" title="全屏" aria-hidden="true">⛶</span><span class="bo-lang">👤简体中文</span><span class="bo-user">👤 <span id="who">运营账号A ▾</span></span></div>
+    <div class="bo-top2"><div class="bo-stats"><span class="bo-bell" aria-hidden="true">🔔</span><span>在线人数: <em class="c-r">13</em></span><span>当日注册: <em class="c-y">10</em></span><span>实名认证-待处理: <em class="c-g">0</em></span><span>当日充值成功: <em class="c-y">15</em></span><span>充值: <b class="bo-n g">0</b></span><span>提款: <b class="bo-n g">0</b></span><span>提款超时(&gt;10分): <b class="bo-n r">0</b></span><span>风控审核: <b class="bo-n g">0</b></span><span>风控超时(&gt;30分): <b class="bo-n r">0</b></span><span>预算告警: <b class="bo-n g">0</b></span></div></div>
+    <div class="bo-body">
+      <nav class="bo-menu" aria-label="后台菜单">
+        <div class="mt">菜单 <span aria-hidden="true">☰</span></div>
+        <div class="g me"><i>ⓘ</i>个人中心</div>
+        <div class="g open" role="button" tabindex="0" aria-expanded="true"><i>▤</i>用户管理</div>
+        <div class="sub">
+          <div class="i">投注站</div><div class="i">大代理</div><div class="i">代理</div><div class="i">会员</div><div class="i">子账号</div><div class="i">会员代理标签配置</div>
+          <a class="i on" href="VIP会员体系-后台会员等级配置页面.html#levels">会员等级</a><a class="i" href="VIP会员体系-后台VIP特权配置页面.html#vip">VIP特权</a><div class="i">KYC审核</div><div class="i">会员资料修改审核</div>
+        </div>
+        <div class="g" role="button" tabindex="0" aria-expanded="false"><i>▤</i>财务管理</div>
+        <div class="g open" role="button" tabindex="0" aria-expanded="true"><i>▤</i>实体奖品管理</div>
+        <div class="sub">
+          <span class="i ext" title="实体奖品功能，见实体奖品需求">库存管理（实体奖品管理需求）</span>
+          <span class="i ext" title="实体奖品功能，见实体奖品需求">发放管理（实体奖品管理需求）</span>
+        </div>
+        <div class="g" role="button" tabindex="0" aria-expanded="false"><i>▤</i>提现管理</div><div class="g" role="button" tabindex="0" aria-expanded="false"><i>▤</i>数据报表</div><div class="g" role="button" tabindex="0" aria-expanded="false"><i>▤</i>平台概况</div>
+        <div class="g" role="button" tabindex="0" aria-expanded="false"><i>▤</i>充值配置</div><div class="g" role="button" tabindex="0" aria-expanded="false"><i>▤</i>活动中心</div><div class="g" role="button" tabindex="0" aria-expanded="false"><i>▤</i>公告管理</div><div class="g" role="button" tabindex="0" aria-expanded="false"><i>▤</i>日志管理</div><div class="g" role="button" tabindex="0" aria-expanded="false"><i>▤</i>系统管理</div>
+      </nav>
+      <div class="bo-main">
+        <div class="bo-hd"><div class="bo-crumb" id="crumb">位置 › 用户管理 › 会员等级 › <b>会员等级配置</b></div><input class="bo-search" placeholder="搜索页面..." aria-label="搜索页面"></div>
+        <div class="bo-open"><a class="ot on" href="VIP会员体系-后台会员等级配置页面.html#levels"><i>✣</i>会员等级<span class="x">×</span></a><span class="om" aria-hidden="true">▦ ﹀</span></div>
+        <div class="bo-card">
+        <div class="bo-tabs" role="tablist">
+          <span role="tab" tabindex="0" data-view="levels">会员等级配置</span>
+          <span role="tab" tabindex="0" data-view="rewards">会员等级奖励配置</span>
+          <span role="tab" tabindex="0" data-view="stats">活动奖励统计</span>
+        </div>
+
+        <!-- ============ 会员等级配置（现有页签；版式和字段以线上截图为准，用户 2026-10-17） ============ -->
+        <section id="vLevels" class="bo-content" hidden>
+          <!-- 前台显示方式（单选）：用户 2026-10-19 改，原「前台会员等级显示」两态开关改为单选按钮，放在「会员等级配置」页签最上面 -->
+          <div class="lvsw glow" id="lvShowBox" role="radiogroup" aria-label="前台显示方式">
+            <span class="fl">前台显示方式<i class="qm" data-h="前台显示方式">?</i></span>
+            <span class="rdo">
+              <label id="lvRdoIdL"><input type="radio" name="lvShowRdo" value="id" data-perm="1">会员身份（普通会员）</label>
+              <label id="lvRdoLvL"><input type="radio" name="lvShowRdo" value="lv" data-perm="1">会员等级（LEVEL n）</label>
+            </span>
+            <span class="vip-cnt" id="lvShowHint"></span>
+          </div>
+          <!-- 用户 2026-10-19：取消「Level 段显示与停用」区块（含「LEVEL 30 及以上等级与奖励」启用 / 停用）；「需确认」K04 入口移到本标题旁 -->
+          <div class="fsec">会员等级配置</div>
+          <!-- 用户 2026-10-19：表格去掉 LEVEL 0、从 LEVEL 1 开始；操作只有「修改」「删除」；表格上方加「添加等级」按钮（弹窗输入等级和有效投注累计值，确认时校验） -->
+          <div class="btnrow glow" style="margin-top:0"><button class="bo-btn q" type="button" id="lvAdd" data-perm="1">+ 添加等级</button><i class="qm" data-h="添加等级">?</i><span class="vip-cnt" id="lvOffTip"></span></div>
+          <!-- VIP0 沿用级别提示（用户 2026-10-21：取消原「会员最高等级上限」；只在【VIP特权】VIP0 勾选「沿用普通会员级别」时显示：不能在 LEVEL n 之后添加；VIP 等级不高于 LEVEL n 时在【VIP特权】标为「不符合标准」并关闭，用户 2026-10-21 改） -->
+          <div class="vip-cnt glow vip-live" id="lvCapTip" style="margin:0 0 8px;line-height:1.7"></div>
+          <!-- 用户 2026-10-20：VIP0 沿用 LEVEL n 并已删除 LEVEL n+1 及以上时的提示（读共享模拟状态 vip0Use） -->
+          <div class="vip-cnt glow vip-live" id="lvV0Tip" style="margin:0 0 8px;line-height:1.7;color:#B88230" hidden></div>
+          <!-- 下注限额与返水（按 Level 等级）并入等级表（用户 2026-10-19）：LEVEL 0 一行放在表格上方；添加 / 修改等级时在弹窗里一并维护该级数据，在弹窗里直接填谷歌验证码，确认后生效（用户 2026-10-20）。用户 2026-10-19 去掉充值返水 / 体育返水总开关；用户 2026-10-21 去掉体育返水比例（平台已无体育类游戏） -->
+          <div class="lv0 glow" id="lrbBlk"><span id="lv0Box"></span></div>
+          <div class="lvwrap glow" id="lvWrap">
+            <table class="lv lvt" id="lvTbl"><thead><tr>
+              <th class="fx1">级别</th><th class="fx2">等级名称</th><th>有效投注累计值</th>
+              <th>单注最大下注额<i class="qm" data-h="单注 / 串关 / 单注冠军最大下注额（Level）">?</i></th>
+              <th>串关最大下注额<i class="qm" data-h="单注 / 串关 / 单注冠军最大下注额（Level）">?</i></th>
+              <th>单注冠军最大下注额<i class="qm" data-h="单注 / 串关 / 单注冠军最大下注额（Level）">?</i></th>
+              <th>充值返水比例(%)<i class="qm" data-h="充值返水比例(%)（Level）">?</i></th>
+              <th>单注最大返水(PHP)<i class="qm" data-h="单注最大返水(PHP)（Level）">?</i></th>
+              <th class="fxr">操作</th>
+            </tr></thead><tbody id="lvBody"></tbody></table>
+          </div>
+          <p class="glow" style="font-size:12px;color:#909399;margin:10px 0 0">说明：LEVEL 0 是系统初始等级，不在表中显示，其限额与返水在表格上方单独修改。金额单位 PHP；限额与返水为示例值，运营出方案后填。演示数据：LEVEL 1–10 的有效投注累计值取线上截图，其余为虚构。VIP 等级在【用户管理 › VIP特权】配置（<a class="lnk" href="VIP会员体系-后台VIP特权配置页面.html#vip">打开</a>）。</p>
+          <!-- 场馆成长值倍数：现有功能，从 VIP特权页移到本页（用户 2026-10-20） -->
+          <div class="blk glow" id="lvMulBlk" style="padding-left:0">
+            <div class="fsec">场馆成长值倍数<i class="qm" data-h="场馆成长值倍数（Level）">?</i><span class="vip-cnt" style="margin-left:8px;font-weight:400">现有功能，从 VIP特权页移到本页（用户 2026-10-20）；只用于普通用户 Level</span></div>
+            <div style="overflow-x:auto;max-width:420px">
+              <table class="lv"><thead><tr><th>场馆名称</th><th>成长值倍数</th></tr></thead><tbody id="lmBody">
+                <tr><td class="ro">示例场馆 A（电子）</td><td><input class="bo-inp sm lmi" value="1" aria-label="示例场馆 A 成长值倍数"></td></tr>
+                <tr><td class="ro">示例场馆 B（真人）</td><td><input class="bo-inp sm lmi" value="0.5" aria-label="示例场馆 B 成长值倍数"></td></tr>
+                <tr><td class="ro">示例场馆 C（捕鱼）</td><td><input class="bo-inp sm lmi" value="0.5" aria-label="示例场馆 C 成长值倍数"></td></tr>
+                <tr><td class="ro">示例场馆 D（Bingo）</td><td><input class="bo-inp sm lmi" value="1" aria-label="示例场馆 D 成长值倍数"></td></tr>
+              </tbody></table>
+            </div>
+            <p class="vip-cnt" style="margin:6px 0 10px">Level 段成长值 = 有效投注 × 场馆成长值倍数，修改后次日 03:50 生效（时区以研发确认为准）（沿用平台现有执行时间，时区以研发确认为准）；VIP 的成长值比例在【VIP特权】「VIP 成长值规则」单独配置（<a class="lnk" href="VIP会员体系-后台VIP特权配置页面.html#vip-level">打开</a>），两套互相独立。场馆名称和倍数为示意。</p>
+            <div class="btnrow"><button class="bo-btn q" type="button" id="lmSave" data-perm="1">保存</button></div>
+          </div>
+        </section>
+
+        <!-- ============ 会员等级奖励配置（现有页签；版式和字段以线上截图为准，用户 2026-10-17） ============ -->
+        <section id="vRewards" class="bo-content" hidden>
+          <div class="frow"><span class="fl">活动状态</span><div class="fctl rdg"><span class="rd on" role="radio" tabindex="0"><i></i>开启</span><span class="rd" role="radio" tabindex="0"><i></i>关闭</span></div></div>
+          <div class="fsec" style="color:#409EFF">会员等级奖励配置</div>
+          <div class="vip-cnt" id="rwOffTip" style="margin:0 0 6px"></div>
+          <div class="rwg">
+            <div class="scroll2"><table class="lv lvt"><thead><tr><th>级别</th><th>等级名称</th><th>生日礼包金额</th><th>升级奖励金额</th></tr></thead><tbody id="lrBody"></tbody></table></div>
+            <div class="scroll2 glow"><div style="margin:0 0 6px"><button class="bo-btn q" type="button" id="phlAdd" data-perm="1">+ 新增实体奖品</button></div><table class="lv lvt"><thead><tr><th>会员等级</th><th>实体奖品</th><th>发放库存</th><th>操作</th></tr></thead><tbody id="phlBody"></tbody></table><div class="vip-cnt" style="margin-top:4px">会员等级、实体奖品均为下拉：等级取「会员等级配置」列表，奖品取【实体奖品管理 › 库存管理】；<span class="glow">发放库存为正整数；保存时按奖品汇总，新增占用件数 ≤ 可用（可用 = 平台库存 − 其他活动已占 − Level 段已保存的占用，已定，用户 2026-10-20；允许正好用完），任一奖品不满足则整次保存失败；奖品下拉显示编号、名称、可用，可用 0 置灰，悬停显示计算过程（用户 2026-10-20）。</span></div></div>
+          </div>
+          <div class="btnrow"><button class="bo-btn q" type="button" id="rwSave" data-perm="1">保存</button></div>
+          <p style="font-size:12px;color:#909399;margin:10px 0 0">版式和字段以线上截图为准（现有功能，本需求不改）：活动状态（开启 / 关闭）；左表<span class="glow">「级别 / 等级名称 / 生日礼包金额 / 升级奖励金额」，行固定跟随「会员等级配置」列表展示全部等级（LEVEL 1 ~ 最高级），不能新增或删除，只填金额（用户 2026-10-19）</span>；右表<span class="glow">「会员等级 / 实体奖品 / 发放库存 / 操作」：会员等级、实体奖品改为下拉（奖品读取【实体奖品管理 › 库存管理】），「数量」改为「发放库存」（用户 2026-10-19）</span><span class="glow">；发放库存检查改为实体奖品管理的口径（覆盖原「需小于当前平台剩余库存」）：新增占用件数 ≤ 可用库存（可用 = 平台库存 − 其他活动已占 − Level 段已保存的占用，已定，用户 2026-10-20；允许正好用完；下拉悬停显示计算过程）；同一奖品配在多个等级时按奖品汇总检查，整次保存原子（任一不满足整次失败）；下拉显示奖品编号、名称、可用，可用 0 置灰。Level 段作为实体奖品库存来源，保存时调用实体「分配活动库存」，以实体返回为准（实体 v1.1 能力，待实体对话定稿）（用户 2026-10-20）</span>（Level 段实体奖品，与本需求 VIP 无关）。金额为示意：LEVEL 0–10 取截图示例，其余虚构<span class="glow">；表格只到 LEVEL 29，右表实体奖品示例改为 LEVEL 25、LEVEL 29（示意；原按 UAT 示意的 LEVEL 30 及以上生日礼包和 LEVEL 55 / 60 实体奖品随 LEVEL 30 及以上演示数据删除，用户 2026-10-19）</span>。<span class="glow">VIP 段的升级 / 保级 / 生日奖励金额、VIP全局参数和「需确认」K01–K03 已移到【用户管理 › VIP特权 › VIP特权】（<a class="lnk" href="VIP会员体系-后台VIP特权配置页面.html#vip">打开</a>）；VIP 等级对应的实物奖品由实体奖品管理需求负责（Claire 答复 C-10/C-12/C-13/C-14）（用户 2026-10-17：会员等级与 VIP特权 分开）。</span>本区块提示文案以运营定稿为准。</p>
+        </section>
+
+        <!-- ============ 活动奖励统计（现有页签，只含 Level 段奖励记录；版式和字段以线上截图为准，原样示意；VIP 奖励记录移到【用户管理 › VIP特权 › 会员福利】页签的会员福利记录，用户 2026-10-17） ============ -->
+        <section id="vStats" hidden>
+          <div class="bo-filter">
+            <span class="flab">会员账号：</span><input class="bo-inp" id="sAcc" style="width:130px" placeholder="请输入账号" aria-label="会员账号">
+            <span class="flab">奖励金额：</span><input class="bo-inp" id="sAmt" style="width:110px" placeholder="请输入" aria-label="奖励金额">
+            <span class="flab">奖励类型：</span><select class="bo-inp glow" id="sType" aria-label="奖励类型"><option value="">全部</option><option value="upgrade">升级奖励</option><option value="birthday">生日礼包</option></select>
+            <span class="flab">发放状态：</span><select class="bo-inp glow" id="sSt" aria-label="发放状态"><option value="">全部</option><option value="approved">已发放</option><option value="pending">待审核</option><option value="rejected">已驳回</option></select>
+            <span class="flab">申请领取时间：</span><input class="bo-inp" type="date" id="sFrom" value="2026-09-01" aria-label="开始日期"><span class="flab">~</span><input class="bo-inp" type="date" id="sTo" value="2026-10-12" aria-label="结束日期">
+            <span class="bo-fbtns"><button class="bo-btn q" type="button" id="sSearch">搜索</button>
+            <button class="bo-btn" type="button" id="sExport" data-perm="1">导出</button></span>
+          </div>
+          <div class="bo-content">
+            <div class="tot"><span class="stsum glow" id="sTotBox"><span>发放总额：<b id="sTotAll">0</b></span><span>已发放总额：<b id="sTot">0</b></span><span>未发放总额：<b id="sTotUn">0</b></span></span><button class="bo-btn q" type="button" id="sTotBtn">查询总计</button></div>
+            <div style="overflow-x:auto">
+            <table class="stt">
+              <thead><tr><th>会员账号</th><th>会员等级</th><th>申请领取时间</th><th>奖励类型</th><th>奖励金额</th><th>审核发放时间</th><th>状态</th><th>审核人</th><th>操作</th></tr></thead>
+              <tbody id="sBody"></tbody>
+            </table>
+            </div>
+            <div class="pager" id="sPager"></div>
+            <p style="font-size:12px;color:#909399;margin:10px 0 0">现有页签，版式和字段以线上截图为准，原样示意，本需求不改字段。示例数据为虚构账号（不使用线上账号），只含 Level 段奖励记录。<span class="glow">奖励类型、发放状态改为中文显示（升级奖励 / 生日礼包；已发放 / 待审核 / 已驳回），后台原始值不变（用户 2026-10-19）。</span><span class="glow">列表底部合计区分别显示发放总额（列表全部记录）、已发放总额、未发放总额（待审核 + 已驳回等未到账），发放总额 = 已发放 + 未发放；右上「查询总计」按当前筛选显示同样三项（用户 2026-10-19）。导出：后台语言为简体中文时导出中文值，为 English 时导出英文值（用户 2026-10-19）。</span><span class="glow">VIP 升级 / 保级 / 生日奖励记录（到账时间红 / 蓝样式、放行、补发、作废、生日奖励待领取等）已移到【用户管理 › VIP特权 › 会员福利】页签的会员福利记录（<a class="lnk" href="VIP会员体系-后台会员福利页面.html#welfare">打开</a>；用户 2026-10-17：会员等级与 VIP特权 分开）。</span>本区块提示文案以运营定稿为准。</p>
+          </div>
+        </section>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <aside class="notes adm-notes">
+    <h2>VIP会员体系-v1.1-后台会员等级配置页面</h2>
+    <p class="sub">用户管理 › 会员等级 › 会员等级配置 / 会员等级奖励配置 / 活动奖励统计（三个页签在本原型内切换）。三个页签的版式和字段以 2026-10-17 线上截图为准（现有功能）。<span class="glow">本页只放 Level 段（LEVEL 0 及以上）的配置和奖励记录；VIP 段（VIP1–SUPER VIP）的等级、奖励、VIP全局参数、VIP 体系状态和 VIP 奖励记录已移到【用户管理 › VIP特权】（用户 2026-10-17：会员等级与 VIP特权 分开）。</span>带淡色光晕的是本需求对 Level 段的改动，其余为现有功能；左侧菜单「实体奖品管理 › 库存管理 / 发放管理」属于实体奖品管理需求（灰色不可点），顶栏不再显示「库存告急」「待派发奖品」。红色「需确认」标签为 PRD 3.5 需研发评估事项，只显示未定的；<span class="glow">本页的 K04 已定，页面不再显示标签，结论见规则批注「「需确认」标签」（用户 2026-10-20）</span>；K01–K03 均已定（K01、K02 用户 2026-10-20），结论见 VIP特权 页。<span class="glow">用户 2026-10-19：「会员等级配置」页签顶部新增单选「前台显示方式」（会员身份（普通会员）/ 会员等级（LEVEL n），默认「会员身份」；用户 2026-10-19、同日由两态开关改为单选）；会员等级奖励配置右表 Level 实体奖品保留（「数量」后改为「发放库存」）。</span><span class="glow">用户 2026-10-19 待确认清单：第 11 条「会员等级配置」新增「下注限额与返水（按 Level 等级）」（同日改为并入等级表，并去掉返水开关）；第 23–25 条活动奖励统计导出语言、状态对应、合计三项；第 17–19 条 Level 显示开关的显示范围。</span><span class="glow">用户 2026-10-19：取消「Level 段显示与停用」（含「LEVEL 30 及以上等级与奖励」启用 / 停用）；演示数据只到 LEVEL 29；新增「会员最高等级与 VIP 最低等级互相限制」（已于用户 2026-10-21 取消）：VIP 已配置时，会员最高等级的有效投注累计值必须小于 VIP 最低的已开启等级的累计有效投注。</span><span class="glow">上线提示去括注、出处挪入说明块（用户 2026-10-20）：上线后显示给运营的提示（页面提示、弹窗提示、确认文案）不再夹带日期、「示意」、C-xx、Qxx、清单 / 轮次编号等需求出处；这些内容挪到紧挨着的说明块（带「※ 此内容仅作为需求说明」标注），上线提示加 vip-live，不会被自动识别成说明块。</span><span class="glow">运营可见文字去「（示意）」、内部编号改写为规则内容（用户 2026-10-21）：操作成功 / 失败等弹出提示（含导出、列表「点击重试」）去掉「（示意）」，所在区块说明块注明「本区块提示文案以运营定稿为准」。</span></p>
+    <h3>模拟场景</h3>
+    <div class="vip-req-note ui-reqnote vip-req-hd"></div>
+    <div class="sim">
+      <button type="button" data-go="levels"><span class="simtag">会员等级配置</span>现有 LEVEL 表（会员等级 / 有效投注累计值 / 操作）</button>
+      <button type="button" class="glow" data-go="lvshow"><span class="simtag">前台等级显示</span>「前台显示方式」单选（默认「会员身份」）</button>
+      <button type="button" class="glow" data-go="lvrb"><span class="simtag">Level 返水</span>下注限额与返水并入等级表、LEVEL 0 一行（用户 2026-10-19 合并，返水总开关已去掉）</button>
+      <button type="button" class="glow" data-go="lvcap"><span class="simtag">VIP0 沿用级别</span>勾选沿用 LEVEL n 时：不能在 n 之后添加；VIP 等级不高于 LEVEL n 时标为「不符合标准」并关闭（用户 2026-10-21）</button>
+      <button type="button" class="glow" data-go="lvmul"><span class="simtag">场馆成长值倍数</span>Level 段现有功能，从 VIP特权页移到本页（用户 2026-10-20）</button>
+      <button type="button" data-go="rewards"><span class="simtag">会员等级奖励配置</span>现有活动状态、生日礼包与升级奖励表、实体奖品表</button>
+      <button type="button" data-go="stats"><span class="simtag">活动奖励统计</span>现有页签，只含 Level 段奖励记录；奖励类型、发放状态中文显示</button>
+    </div>
+    <h3>模拟操作</h3>
+    <!-- 由 assets/proto.js 生成；模拟状态在后台原型之间共享，存在 sessionStorage -->
+    <div class="sim" id="simPanel"></div>
+    <h3>列表分页演示</h3>
+    <div class="sim" id="vpgSim">
+      <button type="button" data-vpg="multi"><span class="simtag">多页</span>本页各列表示例数据扩充到 41 条（复制行只读、标「演示」）→ 每页 20 条为 3 页，可翻页、跳页</button>
+      <button type="button" data-vpg="size10"><span class="simtag">每页条数</span>各列表每页切到 10 条（回到第 1 页）</button>
+      <button type="button" data-vpg="del"><span class="simtag">删除</span>多页时删除末页最后一条 → 该页为空，自动回到上一页（以当前显示的第一个可删除列表演示）</button>
+      <button type="button" data-vpg="empty"><span class="simtag">空列表</span>各列表显示「暂无数据」，共 0 条</button>
+      <button type="button" data-vpg="fail"><span class="simtag">加载失败</span>各列表显示「加载失败，点击重试」，点击后恢复</button>
+      <button type="button" data-vpg="reset"><span class="simtag">恢复</span>恢复正常数据和默认每页条数</button>
+    </div>
+    <h3>规则批注</h3>
+    <div class="vip-req-note ui-reqnote vip-req-hd"></div>
+    <ol>
+      <li class="glow"><b>帮助按钮同行、同行居中、说明文字靠左并标注</b>（用户 2026-10-20，规范通用）：① 所有「?」帮助按钮紧跟在它说明的内容（表头文字、字段名、区块标题、开关名、按钮等）后面，与文字同一行，不单独换行；② 同一行内的文字、「?」、拨杆、输入框、下拉、按钮、标签在一条水平中线上对齐，表单行的标签与控件第一行按中线对齐；③ 页面主体和弹窗里给评审看的说明性文字（灰色说明、示意 / 示例说明、「用户 2026-10-xx」等）统一靠左，开头标注「※ 此内容仅作为需求说明，上线页面不显示本内容。」，相邻多段合并为一个说明块、只标注一次；上线页面真实显示的提示（输入提示、校验红字、弹窗里给运营看的操作说明和影响说明、当前状态说明、空列表「暂无数据」等）不加标注。规则批注区和模拟面板本身就是需求说明，只在区域标题处标注一次。<span class="ref">用户 2026-10-20 · 规范 v5.45</span></li>
+      <li class="glow"><b>「?」帮助精炼版</b>：「?」帮助改为精炼版，HELP2 优先（用户 2026-10-21，规范 v5.46）。每条一两句写清是什么、怎么填；同一个键挂在含义不同的列上的，已拆成各自的键。</li>
+      <li class="glow"><b>HELP 同步块已按 PRD 8.8 精炼版整块同步；清理过时批注</b>：本页「?」帮助全部取自 PRD 8.8 精炼版（共 8 条），HELP2 中与 HELP 相同的条目已清空（用户 2026-10-21）。</li>
+      <li class="glow"><b>数据表一行显示</b>：数据表尽量一行显示（用户 2026-10-20）。本页数据表（列表、配置表、弹窗里的表）的表头和单元格不换行，放不下时在表格区域内左右滚动，页面本身不出现横向滚动条；备注、说明、原因等长文字超过约 300px 时单行省略，鼠标悬停显示全文；金额、数字、时间、状态、等级名和操作按钮不省略。原来分两行的「值 + 小字说明」合并为一行，用「·」分隔。<span class="ref">用户 2026-10-20</span></li>
+      <li class="glow"><b>列表分页</b>（用户 2026-10-20 / 规范 v5.41）：本页列表：会员等级配置、场馆成长值倍数、生日礼包与升级奖励表、实体奖品表、活动奖励统计（各表排序见分页条左侧）。配置表同样分页：等级可添加、行数会增长，不属于规范「一两条、条数固定」的例外；保存时保存全部页的数据，不只当前页（会员等级奖励配置、场馆成长值倍数，已定，用户 2026-10-20）。活动奖励统计沿用线上现有：每页默认 10 条，可选 10 / 20 / 50 / 100（用户 2026-10-20），合计三行每页末尾固定显示、按全部符合筛选的记录统计；原「Total / 10/page」示意分页条改为本分页条。后台页码分页，表格下方显示默认排序、共 N 条、每页条数（默认 20，可选 10 / 20 / 50 / 100）、上一页 / 页码 / 下一页、前往某页（输入 0、负数或超过总页数时取首页或末页）；排序时间相同时按 ID 兜底，翻页不重复、不遗漏。改每页条数、筛选 / 搜索 / 重置后回到第 1 页；编辑后停在当前页；删除后当前页为空时回到上一页；翻页期间有新数据时不插入当前页，重新查询后按排序显示（各表默认排序和本条已定，用户 2026-10-20）；空列表显示「暂无数据」；加载失败显示「加载失败，点击重试」。导出按当前筛选条件导出全部数据，不受分页限制。<span class="ref">生成内容规范第五章第 2 节「列表分页」· 需求包框架规范第 4 节</span></li>
+      <li class="glow"><b>菜单与页签</b>（用户 2026-10-17：会员等级与 VIP特权 分开）：【用户管理 › 会员等级】只放 Level 段，页签为会员等级配置、会员等级奖励配置、活动奖励统计（都是现有页签，版式照线上截图；活动奖励统计只含 Level 段奖励记录）。VIP 相关功能放在【用户管理 › VIP特权】，页签为 VIP特权（改：整合新 VIP 等级、VIP 奖励、VIP全局参数和旧版现有配置）、成长值记录（现有）、会员福利记录（改：承接 VIP 升级 / 保级 / 生日奖励记录）、VIP会员数据（新）、等级变动记录（新）、月度结算记录（新）（<a class="lnk" href="VIP会员体系-后台VIP特权配置页面.html#vip">打开 VIP特权</a>）。原「实物领取审核（新）」页签和页面已移出本需求包（Claire 答复 C-10/C-12/C-13/C-14）。左侧一级菜单【实体奖品管理 › 库存管理 / 发放管理】属于实体奖品管理需求（灰色不可点）。<span class="ref">PRD 8.1 · 0.1 · 管理后台知识库 4.1.5 · 用户 2026-10-17</span></li>
+      <li><b>现有等级表</b>：现有「会员等级配置」表（LEVEL × 有效投注累计值）保留全部现有 LEVEL 行，编辑规则改为「添加等级 / 修改 / 删除」：任意级别都可删除（至少保留 LEVEL 1），添加时输入已有级别即插在它前面，见等级表下方说明。<span class="glow">（用户 2026-10-19：原型演示数据只到 LEVEL 29（原按 UAT 示意到 LEVEL 60 已删除）；原「LEVEL 30 及以上停用时行置灰、标『已停用』、只读」随「Level 段显示与停用」取消；编辑规则已改为「添加等级 / 修改 / 删除」，见等级表下方说明；最高级的上限原见「会员最高等级与 VIP 最低等级互相限制」（已取消，用户 2026-10-21））</span><span class="glow">。版式照线上截图：「会员等级 / 有效投注累计值 / 操作」三列（用户 2026-10-17）；线上原为 LEVEL 0 行「新增」、只有末级「删除」可点，本需求改为表格上方「+ 添加等级」、每行「修改 / 删除」（清理过时写法，用户 2026-10-21）</span>。规则 N1：Level 0–29 为普通成长等级，Level 29 之后是 VIP 段。<span class="glow">前台不再显示 Level 0–29（C-03）后，这张表、成长值和 Level 段数据全部保留，后台保持现状，只是前台不显示 Level（用户 2026-10-17 定）。</span><span class="ref">PRD 8.2 · 规则 N1 · F01-01 · C-03</span></li>
+      <li class="glow"><b>下注限额与返水（按 Level 等级，新增）</b>（用户 2026-10-19）：普通会员（Level）在会员等级配置时单独配置返水。<br>
+        <span class="glow">（用户 2026-10-19 原话「将限额与返水的设置直接与等级配置列表整合在一起，添加和修改时直接对该等级对应的数据进行维护」）</span><br>
+        ① <b>位置与格式</b>：并入「会员等级配置」页签的等级表，列为：级别、等级名称、有效投注累计值、单注最大下注额、串关最大下注额、单注冠军最大下注额、充值返水比例(%)、单注最大返水(PHP)、操作（后 5 列字段与【VIP特权】「下注限额与返水（按 VIP 等级）」一致）。表格只读：金额千分位，比例统一显示两位小数带 %（如 0.2 显示 0.20%），未配置显示红字「未配置」。表宽、表高超出时在容器内滚动，表头固定，「级别」「等级名称」固定在左，「操作」固定在右。LEVEL 0（系统初始等级，表中不显示）的限额与返水在表格上方单独一行显示，点「修改」只改这 5 个字段。<span class="glow">去掉体育返水比例（平台已无体育类游戏，用户 2026-10-21），表格、弹窗、校验和示例数据同步去掉该列。</span><br>
+        ② <b>不设开关</b>：用户 2026-10-19 原话「所有返水的这个开关都去掉」，充值返水不设总开关，5 个字段始终生效（体育返水已去掉，用户 2026-10-21）。<br>
+        ③ <b>维护与校验</b>：「添加等级」「修改」弹窗在等级字段下方含这 5 个字段（修改时预填该级现值）。下注限额和单注最大返水为正整数，返水比例 0–100、最多 2 位小数；5 个字段都必填；逐字段红字提示，任一不通过不能确认。<br>
+        ④ <b>生效与日志</b>：添加等级、修改、删除和 LEVEL 0「修改」的弹窗里直接填谷歌验证码，点确定时与其他字段一并校验，为空或错误时弹窗不关、内容保留（用户 2026-10-20）；「添加等级」插入到中间时再弹插入确认，点「取消」回到填写弹窗、已填内容保留（追加到最高级之后不弹插入确认，用户 2026-10-19）；生效后只影响之后的投注；写操作日志（操作人、时间 GMT+8、各字段修改前后值）。插入等级时原该级及以上的数据随等级顺延，删除时随等级前移，被删等级的数据一并删除。按钮级权限码为<span class="glow">「保存会员等级配置」（原「保存 Level 段显示与停用」改名，用户 2026-10-19）</span>。<br>
+        ⑤ <b>两套独立</b>：VIP 与 Level 各自单独配置返水，两套配置互不影响。<br>
+        <span class="glow">⑤-1 <b>返水口径（已定，用户 2026-10-19）</b>：<b>勾选</b>【VIP特权】VIP0「沿用普通会员级别」时：普通会员（非 VIP）只按本表其所在 Level 行返水，玩家达到 VIP 最低级条件后只按【VIP特权】「下注限额与返水（按 VIP 等级）」领对应 VIP 等级的返水，不再同时享受 Level 返水；<b>不勾选</b>时（两套独立）：玩家按普通会员身份（本表 Level 行）和 VIP 身份（VIP 返水表）分别领返水，两边都有配置就两边都领（用户 2026-10-21）。会员层级实时返水不停用：它是介绍其他用户参与游戏产生的抽水，单独核算、与玩家是普通会员还是 VIP 无关，与本表和 VIP 返水表都不互斥、不合并计算。</span><br>
+        ⑥ <b>示例数值</b>：从低到高递增，示例，运营出方案后填（单注最大下注额 ₱10,000–₱40,000，串关为单注的 1/2，单注冠军为单注的 30%，充值返水 0.05%–0.09%，单注最大返水 = 单注最大下注额的 1%），均低于 VIP1 示例值。<br>
+        ⑦ <span class="glow"><b>开发备注</b>（用户 2026-10-19）：口径已定——勾选「沿用普通会员级别」时，玩家当前为 VIP 等级时只按 VIP 返水表，非 VIP 玩家只按其 Level 行，同一笔投注不会同时得到 Level 返水和 VIP 返水；不勾选时两套各自核算，同一笔投注可同时得到 Level 返水和 VIP 返水（用户 2026-10-21）；会员层级实时返水照常单独核算（介绍其他用户参与游戏产生的抽水，与身份无关）。本表与【游戏管理 › 返水设定】的对接方式由开发评估。</span><span class="ref">用户 2026-10-19 · VIP特权页「下注限额与返水（按 VIP 等级）」· 管理后台知识库 4.1.6 · 等级方案 Q8</span></li>
+      <li class="glow"><b>Level 段显示与停用（已取消，用户 2026-10-19）</b>：用户原话「首先取消掉 LEVEL 段显示与停用的内容」。原「Level 段显示与停用」区块整块删除：「Level 段前台显示」只读行、「LEVEL 30 及以上等级与奖励」启用 / 停用单选、保存和撤销按钮；随之取消「VIP 体系第一次开启时系统自动停用 LEVEL 30 及以上」「停用区的行置灰只读、奖励不发」「重新启用时按成长值重新判定」等规则。现口径：前台是否显示 LEVEL n 只由本页最上面的「前台显示方式」单选决定（见下一条）；会员等级不再按 LEVEL 30 划分启用 / 停用区，会员最高等级改由 VIP 最低等级限制（见「会员最高等级与 VIP 最低等级互相限制」；该限制已取消，改为勾选沿用时只约束被沿用的 LEVEL n，用户 2026-10-21）。规则 N10「当前等级在 VIP1 及以上的玩家不再领取 Level 段奖励」保留，只在【VIP特权】VIP0 勾选「沿用普通会员级别」时适用；不勾选时两套独立，Level 奖励和 VIP 奖励各自达标都可领（例：LEVEL 10 奖励 10 + VIP2 奖励 120 = 130，用户 2026-10-21）；原 Level 段奖励（生日礼包、升级奖励、实体奖品）和「会员等级奖励配置」保持现状。「需确认」K04 按新规则改写，入口移到「会员等级配置」标题旁。<span class="ref">用户 2026-10-19 · 原 PRD 8.2 · 规则 N1 · N10 · C-03 · C-07</span></li>
+      <li class="glow"><b>勾选沿用 LEVEL n 后禁止在 n 之后添加级别（用户 2026-10-21）</b>：【VIP特权】VIP0 勾选「沿用普通会员级别」LEVEL n 后，不论 VIP 体系是否已开启、是否已执行删除，「+ 添加等级」都不能加在 LEVEL n 之后：弹窗提示可添加范围为 LEVEL 1–n，输入的等级 &gt; n 时拦截并提示「已沿用 LEVEL n 作为 VIP0，不能在其后添加级别；如需添加请先在【VIP特权】修改沿用级别」；加在 LEVEL n 及以下仍允许（VIP0 跟随原级别 +1，见下方「VIP0 沿用普通会员级别的联动」）。不勾选时不限制。表格上方提示行（只在勾选时显示）同步说明。模拟操作「VIP0 沿用级别的限制」组可演示。<span class="ref">用户 2026-10-21</span></li>
+      <li class="glow"><b>会员最高等级与 VIP 最低等级互相限制（已取消，用户 2026-10-21；以下为历史记录）</b>：用户 2026-10-21 原话「取消“「会员最高等级」的有效投注累计值，必须小于「VIP 最低等级」的累计有效投注”这条规则」；同日补充「只是勾选vip0的时候。vip0会沿用最高的level n标准，那么设置vip1的时候就需要对应标准比vip0要高」。现口径见上一条「VIP0「沿用普通会员级别」勾选 / 不勾选对本页的影响」①。原规则（留作记录）：用户原话「会员等级配置时若 vip 会员已配置，则会员最高等级的最大值要在 vip 会员最低等级（以下），同样 vip 最低等级也受会员最高等级的限制」。<br>
+        ① <b>VIP 已配置</b>（【VIP特权】至少有一个「开启」的 VIP 等级）：会员最高等级的有效投注累计值必须<b>小于</b> VIP 最低的已开启等级（默认 VIP1）的累计有效投注（演示：VIP1 = 600,000，会员最高 LEVEL 29 = 560,000）。<b>VIP 未配置</b>（没有开启的 VIP 等级）：会员最高等级无上限。<br>
+        ② <b>本页校验</b>：「+ 添加等级」追加到最高级之后时，累计值上限为「小于 VIP 最低等级的累计有效投注」（原为无上限）；「修改」最高级时同理；插入到中间、修改中间等级仍按相邻等级的上下限。超限时提示「需小于 VIP 最低等级 {名称} 的累计有效投注 {数值}（在【VIP特权】配置）」，不能确认。表格上方提示行显示当前限制；VIP 未配置时显示「会员最高等级无上限」。<br>
+        ③ <b>VIP特权页校验</b>：VIP 最低的已开启等级的累计有效投注必须<b>大于</b>会员最高等级的有效投注累计值，否则提示并引导到【会员等级】调整；关闭 / 重新开启 VIP 等级导致「最低已开启等级」变化时，按新的最低已开启等级校验（关闭在复核通过时校验）。<br>
+        ④ <b>边界</b>：「小于」「大于」都不含等于（两边相等时拦截）。<span class="glow">【VIP特权】全局计算方式为成长值（所有 VIP 等级都没有累计有效投注门槛）时无法比较，不校验，提示行注明（用户 2026-10-19 定；用户 2026-10-20 原「最低等级采用成长值」改为全局计算方式）。两种计算方式的门槛各存一套，切回累计金额时按上次保存的累计有效投注恢复校验（用户 2026-10-20）。K04 与本条互相限制在 v1.1 / 完整需求里并存（用户 2026-10-20）。VIP0 不勾选「沿用普通会员级别」时，会员级别和 VIP 两套独立核算、不删除 LEVEL 30 及以上（用户 2026-10-21）；本条互相限制只在勾选「沿用普通会员级别」时校验，不勾选时不校验（用户 2026-10-21；原型已实现：不勾选时表格上方提示「会员最高等级不受 VIP 最低等级限制」，添加 / 修改最高级不拦截，VIP特权页同样不校验；模拟操作可切换勾选 / 不勾选）；勾选 = 普通会员最高级之上一级为 VIP1；不勾选 = 两套独立、奖励可叠加领取（用户 2026-10-21）。</span>两边口径不同（Level 按成长值、VIP 按累计有效投注不乘倍数，见 VIP特权页 K03），本规则只约束配置数值。<br>
+        ⑤ <b>原型实现</b>：两个后台页共用模拟状态 lvTop（会员最高等级及其有效投注累计值，本页打开时及每次添加 / 修改 / 删除后写入）和 vipLow（VIP 最低的已开启等级及其累计有效投注，VIP特权页保存 VIP 等级配置后写入；null = VIP 未配置）。模拟操作可勾选「VIP 等级未配置」演示无上限。<span class="ref">用户 2026-10-19 · 规则 N1 · VIP特权页「校验」· K03 · K04</span></li>
+      <li class="glow"><b>VIP0「沿用普通会员级别」勾选 / 不勾选对本页的影响（用户 2026-10-21）</b>：① <span class="glow"><b>取消原互相限制；改为勾选时 VIP 等级的标准须高于 VIP0（沿用的 LEVEL n），不高于的标为「不符合标准」并关闭、提高门槛后才能开启（用户 2026-10-21）</b></span>：原「会员最高等级与 VIP 最低等级互相限制」（最高级须小于 VIP 最低等级、VIP 最低等级累计充值为 0 才比较）取消；勾选时只涉及被沿用的 LEVEL n：<span class="glow">修改 LEVEL n 后，累计有效投注不高于它的 VIP 等级在【VIP特权】标为「不符合标准」并关闭，提高门槛后才能开启；VIP 体系开启过时，须先在【VIP特权】按关闭流程关闭这些等级或提高门槛，否则不能保存（用户 2026-10-21 改，替代原「修改 LEVEL n 须低于 VIP 最低开启等级」的拦截）</span>，添加、修改其他级别不比较；VIP 计算方式为成长值时不比较；不勾选时不做任何比较，表格上方提示行隐藏；② 勾选时 VIP0 弹窗的 LEVEL n 默认为本页当前最高级（默认不删除级别），上线默认勾选（用户 2026-10-21）；③ N10 和返水 B1 只在勾选时互斥，不勾选时 Level 奖励 / 返水与 VIP 奖励 / 返水各自达标都可领（例：LEVEL 10 奖励 10 + VIP2 奖励 120 = 130）；④ 取消上线前运营手工删除 30 级以上普通会员级别；⑤ 场馆成长值倍数按当前平台的时间规则，不改现网执行时间：沿用平台现有执行时间，修改后次日 03:50 生效（时区以研发确认为准）（时区以研发确认为准）。原型默认勾选、沿用 LEVEL 29（与【VIP特权】、前台共用状态 vip0），模拟操作「会员最高等级与 VIP 最低等级」组可切换。<span class="ref">用户 2026-10-21</span></li>
+      <li class="glow"><b>VIP0 沿用普通会员级别的联动（用户 2026-10-20）</b>：【VIP特权】VIP0 选「沿用普通会员级别」LEVEL n，并在开启 VIP 体系（或已开启后再改沿用级别、关闭期间改过后重新开启）时删除 LEVEL n+1 ~ 最高级后，本页等级表只到 LEVEL n，表格上方提示「LEVEL n+1 及以上已随 VIP0 沿用删除」；下注限额与返水（并在等级表里）、会员等级奖励配置、实体奖品表同步不再显示被删级别。VIP0 取消沿用后，已删除的级别不恢复。<span class="glow">删除后（仍在沿用时）「添加等级」只能加在 LEVEL n 及以下，输入的等级 &gt; n 时提示「LEVEL n 之后已由 VIP 段接管，不能添加」（已定，用户 2026-10-20）；<b>用户 2026-10-21 改</b>：不论是否已执行删除，勾选沿用期间都不能在 LEVEL n 之后添加，提示改为「已沿用 LEVEL n 作为 VIP0，不能在其后添加级别；如需添加请先在【VIP特权】修改沿用级别」。<b>取消沿用后</b>不再有这条边界：不再随插入 / 删除 ±1，也不再拦截添加到 LEVEL n 之后，能加到哪一级改由「会员最高等级须小于 VIP 最低等级」互相限制控制（VIP 最低开启等级累计充值为 0 时才校验），表格上方提示同步说明（用户 2026-10-20）；<b>用户 2026-10-21 改</b>：原互相限制已取消（用户 2026-10-21），取消沿用后会员最高等级不受 VIP 最低等级限制。<b>沿用级别默认值</b>：VIP0 弹窗勾选时 LEVEL n 默认为当前会员最高等级，默认不删除级别；上线前不再要求运营手工删除高等级（用户 2026-10-21）。<b>VIP0 跟随插入 / 删除</b>：VIP0 沿用 LEVEL n 后「添加等级」插入到 LEVEL n 及以下时允许插入，VIP0 跟随原来那一级，沿用级别自动 +1（写回【VIP特权】VIP0 显示），插入确认弹窗提示「插入后 VIP0 沿用的级别变为 LEVEL n+1」；删除 LEVEL n 以下的等级时同理自动 −1；删除的正是沿用的那一级时拦截，提示先到【VIP特权】更改 VIP0 沿用级别（用户 2026-10-20）。VIP0 还没删除级别时（VIP 体系从未开启、只保存了沿用选择），插入 / 删除同样让沿用级别 ±1（已定，用户 2026-10-20）。</span>原型：读取 VIP特权页写入的共享模拟状态 vip0Use = { on, lv 保留到的 LEVEL, deletedFrom 被删的起始 LEVEL, at 删除时间 }，打开本页时按 lv 截断演示等级表并写入 lvTop。<span class="ref">用户 2026-10-20</span></li>
+      <li class="glow"><b>前台显示方式（单选）</b>（用户 2026-10-19为两态，同日由开关改为单选「前台显示方式」）：用户原话「level 作为普通用户等级，可以通过后台配置，增加一个总开关，当开关关闭时前台所有等级的普通用户不再显示对应等级，均显示为普通用户（即非 VIP 用户），所以普通用户底层还是存在 level 段的」说明这是「后台会员等级 › 会员等级配置里的一个开关，决定前台显示会员等级，还是都显示为普通会员」。<br>
+        ① <b>位置与默认</b>：「会员等级配置」页签顶部，单选「前台显示方式」：「会员身份（普通会员）」/「会员等级（LEVEL n）」，默认「会员身份」（与 C-03「不显示玩家等级」一致）；原两态开关名「前台会员等级显示」已不用。原型模拟状态键仍为 lvShow（true = 会员等级），与前台共用，键名不改。<br>
+        ② <b>会员身份</b>：前台所有普通会员级别（非 VIP）的玩家都显示「普通用户」，不显示 LEVEL n。<b>会员等级（LEVEL n）</b>：前台非 VIP 玩家显示其 LEVEL n——等级中心头像徽章显示「LEVEL n」，普通用户卡片增加一行「当前等级 LEVEL n」（不恢复已删除的 Lv 卡片、Level 刻度和普通等级奖励表）。<br>
+        ③ <b>统一口径：非 VIP 玩家一律跟随本开关</b><span class="glow">（用户 2026-10-19：「Level 根据后台会员等级里的开关：打开就显示等级，关闭就只显示身份」）</span>：选「会员等级」→ 显示 LEVEL n；选「会员身份」→ 只显示身份「普通用户」。适用于全部非 VIP 玩家：普通用户、「KYC 限制」开启时未完成 KYC 的玩家、VIP 体系关闭期间的原 VIP 玩家，新版和老版本 App 相同。VIP 玩家始终显示 VIP 等级，不受此开关控制。底层 Level 段照常累计成长值、照常判定 Level 等级、照常按「会员等级奖励配置」发 Level 奖励。<span class="glow">未完成 KYC 的玩家等级显示同样跟随本开关（KYC 引导照常显示），覆盖原「未完成 KYC 只显示 KYC 引导卡、不显示 Level」和「老版本 App 未 KYC 不显示 Level」的写法。</span><br>
+        ④ <b>操作</b>：点选项 → 确认弹窗（内填谷歌验证码，用户 2026-10-20）→ 立即生效，写操作日志（操作人、时间 GMT+8、修改前后值）；按钮级权限码为「保存会员等级配置」（用户 2026-10-19 改名）。<br>
+        ⑤ <span class="glow"><b>与 K04 的关系（用户 2026-10-19 改）</b>：原「LEVEL 30 及以上等级与奖励」停用开关已取消，「前台显示方式」只管前台是否显示 Level。选「会员等级（LEVEL n）」时，前台最高显示到玩家实际所在的 LEVEL，即不超过会员等级配置的最高级（演示为 LEVEL 29；原「VIP 已配置时最高级受 VIP 最低等级限制」已取消，用户 2026-10-21）。</span><br>
+        ⑥ 原型中模拟状态 lvShow 与前台 VIP中心共用，切换后到前台「普通用户」场景可看到徽章和卡片变化（前台模拟面板也有同一开关）。<br>
+        <span class="glow">⑦ <b>选「会员等级」时的显示范围</b>（用户 2026-10-19）：沿用目前平台显示规则——通知、个人中心、Level 升级弹窗等按现有平台行为显示 Level，不另做新规则。VIP 体系关闭期间，原 VIP 玩家按普通会员处理，受本开关控制：选「会员等级」显示 LEVEL n，选「会员身份」显示「普通用户」。</span><span class="ref">用户 2026-10-19 / F3 / B3 · C-03 · C-11 · 规则 N1 · K04</span></li>
+      <li class="glow"><b>场馆成长值倍数（现有功能，从 VIP特权页移到本页，用户 2026-10-20）</b>：放在「会员等级配置」页签等级表下方，内容照原 VIP特权页：场馆名称（只读）、成长值倍数；Level 段成长值 = 有效投注 × 场馆成长值倍数，修改后次日 03:50 生效（时区以研发确认为准）（<span class="glow">按当前平台的时间规则，不改现网执行时间：沿用平台现有执行时间，次日 03:50，时区以研发确认为准，用户 2026-10-21</span>）。保存：确认弹窗内填谷歌验证码（000000 模拟错误）→ 写操作日志（各场馆修改前后值），权限码「保存会员等级配置」；输入规则按线上现有规则（取值范围、小数位数需研发确认）；原型校验保持「非空且 ≥ 0」（用户 2026-10-20）。<b>LEVEL 与 VIP 两套逻辑互相独立</b>：普通用户按 Level 逻辑升级；玩家按【VIP特权】所选计算方式达到 VIP1（最低开启等级）的升级标准后，升级、保级都按【VIP特权】设置执行，不再按 Level 逻辑；VIP 玩家降回普通用户（如 VIP1 保级失败，不再是 VIP、成为普通用户，C-07）后回到 Level 逻辑，能否重新成为 VIP 仍按【VIP特权】条件判断（C-02 降级后恢复：一个自然月内达到 VIP1 保级要求，次月恢复 VIP1）。两套成长值各自累计，数值、计算和生效时间各自独立，改一边不影响另一边；VIP 成长值比例在【VIP特权】「VIP 成长值规则」按 6 大类游戏分类配置（用户 2026-10-20，原按场馆），与本表按场馆的倍数互不相关。<span class="ref">用户 2026-10-20 · 管理后台知识库 4.1.6 · C-02 · C-07</span></li>
+      <li><b>「需确认」标签</b>：<span class="glow">已定的需确认：K04，页面不再显示标签，结论见此（用户 2026-10-20）：开启 VIP 前删除 LEVEL 30 及以上，只保留 LEVEL 1–29，这些等级的老玩家按上线存量初始化规则重新判定（用户 2026-10-19 按建议处理）。<b>用户 2026-10-21 改</b>：VIP0 勾选「沿用普通会员级别」LEVEL n 时，开启 VIP 体系时删除 LEVEL n 之后的级别（用户 2026-10-20）；LEVEL n 默认为当前会员最高等级，默认不删除级别，上线前不再单独删除高等级（用户 2026-10-21）；不勾选时会员级别和 VIP 两套独立核算，不删除 LEVEL 30 及以上普通会员级别，也不因 VIP 改变普通会员级别，替代原 K04 在不勾选时的处理；勾选 = 普通会员最高级之上一级为 VIP1；不勾选 = 两套独立、奖励可叠加领取（用户 2026-10-21）。以下为原标签说明，留作记录：</span>PRD 3.5 的 4 条需研发评估事项中，本页 1 处：<span class="glow">「会员等级配置」页签的「会员等级配置」标题旁（K04，3.3 冲突 04；原在「Level 段显示与停用」区块，该区块已取消，用户 2026-10-19）</span>；<span class="glow">K01–K03 随 VIP 段配置移到 VIP特权 页（用户 2026-10-17：会员等级与 VIP特权 分开）</span>。点开显示本条的需求内容（本需求写法）、后台现状、后果、建议（取 PRD 3.3 冲突 04 原文，已按 VIP0「沿用普通会员级别」现口径同步，用户 2026-10-21），下方处理方案三选一和处理意见输入框（选「不采纳建议，按我的意见」时必填）；「确定」后标签显示所选结果。原型中的选择只在页面上演示，不作为需求结论，结论以产品更新后的 PRD 为准。<span class="ref">PRD 3.5 · 3.3 冲突 04 · 附录 B</span></li>
+      <li><b>会员等级奖励配置（现有）</b>：版式和字段以线上截图为准：活动状态（开启 / 关闭）；左表「级别 / 等级名称 / 生日礼包金额 / 升级奖励金额」，行固定跟随「会员等级配置」列表（LEVEL 1 ~ 最高级），不能新增或删除，只填金额；右表「会员等级 / 实体奖品 / 发放库存 / 操作」，会员等级、实体奖品为下拉，原「数量」改为「发放库存」，用「+ 新增实体奖品」添加、每行可删除（用户 2026-10-19；清理过时写法，用户 2026-10-21）。右表是 Level 段现有实体奖品，与本需求 VIP 无关，保留不改。<span class="glow">（用户 2026-10-19：「保留当前的这个配置（会员等级奖励配置里 Level × 实体奖品 × 数量）」，Level 作为普通用户等级继续使用；VIP 等级的奖品在【用户管理 › VIP特权 › VIP特权 › VIP奖励配置】子页签的 VIP奖品配置按平台库存预占，两者分开。）</span><span class="glow">批注：管理后台知识库 4.1.5 还记有「是否需要 KYC、领取方式、手动领取时间、生日礼包发放方式、升级奖励发放方式、奖金所需流水」等全局项，线上截图未显示，原型以截图为准不显示；如线上仍有，继续只管 Level 0–29。VIP 段的发放时机、领取方式和流水在【VIP特权】的 VIP全局参数配置（规则 N5、N26、N34；与 Level 段现状的差异见 VIP特权 页 K01、K02 结论，已定，用户 2026-10-20）（用户 2026-10-17）。</span><span class="ref">管理后台知识库 4.1.5 · 线上截图 2026-10-17 · PRD 8.3</span></li>
+      <li><b>Level 段奖励互斥</b><span class="glow">（原「互斥置灰」：「LEVEL 30 及以上停用时本页 LEVEL 30 及以上的生日礼包、升级奖励、实体奖品行置灰、提示去启用」随「Level 段显示与停用」取消，用户 2026-10-19；奖励表的行跟随会员等级表，演示只到 LEVEL 29）</span>。规则 N10：当前等级在 VIP1 及以上的玩家不再领取 Level 段奖励（只在【VIP特权】VIP0 勾选「沿用普通会员级别」时适用；不勾选时两边各自达标都可领，用户 2026-10-21）。<span class="ref">PRD 8.3 · 规则 N10 · F02-06 Level 段奖励互斥</span></li>
+      <li><b>奖励配置生效（Level 段）</b>：活动状态、生日礼包金额、升级奖励金额、实体奖品保存后立即生效，沿用现状；保存需要谷歌验证码（原型输入 000000 模拟错误）。<span class="ref">管理后台知识库 4.1.5</span></li>
+      <li><b>活动奖励统计（现有，只含 Level 段）</b>：版式和字段以 2026-10-17 线上截图为准，原样示意，本需求不改字段：筛选为会员账号、奖励金额、奖励类型、发放状态、申请领取时间（日期区间）+「搜索」「导出」；右上「审核已发放金额」+「查询总计」（点「查询总计」后按当前筛选显示已通过记录的合计）；列表为会员账号、会员等级、申请领取时间、奖励类型（英文值，如 upgrade）、奖励金额、审核发放时间、状态（如绿色「已通过」）、审核人（如 SYSTEM）、操作；底部「合计」行（当前列表奖励金额合计）和分页。<span class="glow">只列 Level 段奖励记录；VIP 升级 / 保级 / 生日奖励记录（到账时间红 / 蓝样式、筛选短名、放行、补发、作废、生日奖励待领取 / 已领取 / 已过期等）已移到【用户管理 › VIP特权 › 会员福利】页签的会员福利记录（<a class="lnk" href="VIP会员体系-后台会员福利页面.html#welfare">打开</a>）（用户 2026-10-17：会员等级与 VIP特权 分开）。</span><span class="glow"><b>中文显示（用户 2026-10-19）</b>：奖励类型 upgrade → 升级奖励、birthday → 生日礼包；发放状态显示 已发放（绿）/ 待审核（橙）/ 已驳回（红）（截图中的「已通过」显示为「已发放」）；筛选项「奖励类型」「发放状态」的选项同步为中文。后台原始值不变，仅显示改中文（鼠标悬停可看原始值；状态原始值 approved / pending / rejected 为示意）。示例 10 条为虚构账号（新增 player_a07 生日礼包待审核 ₱30、player_a08 生日礼包已驳回 ₱15，金额取本页奖励表 LEVEL 3、LEVEL 15）。</span><br>
+        <span class="glow"><b>合计三项（用户 2026-10-19）</b>：列表底部合计区分三行显示：发放总额（当前列表全部记录）₱145、已发放总额 ₱100（升级奖励 ₱52 + 生日礼包 ₱48）、未发放总额 ₱45（待审核 ₱30 + 已驳回 ₱15，未到账）；发放总额 = 已发放总额 + 未发放总额（145 = 100 + 45）。右上原「审核已发放金额」改为同样三项，点「查询总计」按当前筛选计算（默认 0，点后显示 145 / 100 / 45）；筛选后三项随列表重算，仍满足等式。</span><br>
+        <span class="glow"><b>导出语言（用户 2026-10-19）</b>：导出文件列值跟随后台语言——后台语言为简体中文时导出中文（奖励类型：升级奖励 / 生日礼包；发放状态：已发放 / 待审核 / 已驳回）；为 English 时导出英文（原始值对应的英文，如 upgrade / birthday、approved / pending / rejected，以线上英文文案为准）。导出提示同步说明当前导出语言。</span><br>
+        <span class="glow"><b>状态对应关系（已定，用户 2026-10-19）</b>：已定：先按原型三种状态（已发放 / 待审核 / 已驳回）。分别对应线上「已通过 / 未审核 / 审核驳回后的状态」（线上截图只看到「已通过」；管理后台知识库 4.10「派奖审核」记录状态有「未审核」、操作有「审核通过 / 审核驳回」），原型数据不改。</span><br>原「示例 8 条，合计 ₱100（upgrade ₱52、birthday ₱48）」已按新数据重算；生日礼包的奖励类型原始值截图未显示，原型示意为 birthday。规则 N10：当前等级在 VIP1 及以上的玩家不再领取 Level 段奖励（只在【VIP特权】VIP0 勾选「沿用普通会员级别」时适用；不勾选时两边各自达标都可领，用户 2026-10-21），所以示例玩家都是普通用户（后台 Level 段保留，只是前台不显示 Level，C-03）。<span class="ref">线上截图 2026-10-17 · 管理后台知识库 4.1.5 · 规则 N10 · C-03</span></li>
+      <li><b>顶栏</b>：顶栏不再显示「库存告急」「待派发奖品」（实物相关，属于实体奖品管理需求）。顶栏统计行始终一行显示，放不下时在行内左右滚动。<span class="ref">用户 2026-10-16 决定 · 用户 2026-10-17</span></li>
+      <li><b>权限与日志</b>：<span class="glow">「保存会员等级配置」</span>是按钮级权限码（服务端校验，授权后需重新登录生效）<span class="glow">；由原「保存 Level 段显示与停用」改名（用户 2026-10-19），用于前台显示方式、会员等级添加 / 修改 / 删除和 LEVEL 0 限额与返水修改；「Level 段显示与停用修改（含 VIP 体系第一次开启时系统自动停用）」日志项随之取消；会员等级的添加 / 修改 / 删除写操作日志</span>。<span class="glow">「前台显示方式」切换同属此权限，写操作日志（用户 2026-10-19）。</span><span class="glow">添加 / 修改等级（含下注限额与返水）和 LEVEL 0 限额与返水「修改」同属此权限，均写操作日志（用户 2026-10-19；同日并入等级表）。</span>日志内容：操作人、时间（GMT+8）、对象、修改前后值。<span class="glow">VIP 配置相关的权限和日志见 VIP特权 页（用户 2026-10-17：会员等级与 VIP特权 分开）。</span>原型日志见下方「模拟操作日志」。<span class="ref">PRD 8.1 · F01</span></li>
+    </ol>
+    <h3>评审待确认</h3>
+    <ol>
+      <li>K04（<span class="glow">会员最高等级与 VIP 最低等级互相限制；原「Level 30 及以上等级与 VIP 段并存」已按用户 2026-10-19 要求改写；互相限制已取消，改为勾选时 VIP 等级的标准须高于 VIP0（沿用的 LEVEL n），不高于的标为「不符合标准」并关闭、提高门槛后才能开启，用户 2026-10-21</span>）<span class="glow">已定（用户 2026-10-19 按建议处理），页面不再显示标签（用户 2026-10-20），结论见规则批注「「需确认」标签」</span>；K01–K03 均已定，结论见 VIP特权 页（K01、K02 用户 2026-10-20）。<span class="ref">PRD 3.5</span></li>
+      <li class="glow">待产品决定（用户 2026-10-19 取消 Level 段显示与停用的衍生问题，资料未覆盖）：① 现网（UAT）配到 LEVEL 60、LEVEL 30 = 600,000，不小于 VIP1 默认 600,000：开启 VIP 前是否删除 LEVEL 30 及以上，已在这些等级的玩家如何重新判定、LEVEL 30 及以上已配置的生日礼包和实体奖品（UAT 为 LEVEL 55、60）如何处理。已定（用户 2026-10-19）：① 按 K04 建议处理（用户 2026-10-21 改：VIP0 勾选「沿用普通会员级别」时按沿用删除 LEVEL n 之后的级别；不勾选时会员级别和 VIP 两套独立核算，不删除 LEVEL 30 及以上）；② VIP 计算方式为成长值时（用户 2026-10-20 改为全局计算方式），不校验会员最高等级，页面提示一句；③「VIP 已配置」= 至少有一个已开启的 VIP 等级，与 VIP 体系开关状态无关；④ 权限码改名为「保存会员等级配置」。<span class="ref">用户 2026-10-19 · 管理后台知识库 4.1.5</span></li>
+      <li class="glow">已定（用户 2026-10-17）：后台 Level 段数据（LEVEL 表、成长值、Level 等级记录）和原 Level 段奖励（生日礼包、升级奖励、实体奖品）都保留，后台保持现状，只是前台不显示 Level（C-03）。<span class="ref">C-03 · 用户 2026-10-17</span></li>
+      <li class="glow">资料未覆盖：线上截图未显示知识库 4.1.5 所记的其他全局项（是否需要 KYC、领取方式等），原型以截图为准；生日礼包的奖励类型原始值待核对（原型示意为 birthday）（用户 2026-10-17：会员等级与 VIP特权 分开）。<span class="ref">线上截图 2026-10-17</span></li>
+      <li class="glow">已定（用户 2026-10-19衍生）：① 导出文件列值：跟随后台语言，简体中文导出中文、English 导出英文；② 发放状态：先按原型三种状态（已发放 / 待审核 / 已驳回）（用户 2026-10-19）；③「合计」口径：分别显示发放总额、已发放总额、未发放总额。<span class="ref">用户 2026-10-19</span></li>
+      <li class="glow">已定（用户 2026-10-19衍生、F3、B3）：① 改为单选「前台显示方式」：会员身份（普通会员）/ 会员等级（LEVEL n），默认「会员身份」，只影响前台非 VIP 玩家；VIP 玩家始终显示 VIP 等级；非 VIP 玩家（含未完成 KYC、VIP 体系关闭期间的原 VIP 玩家，新旧版本 App 相同）一律跟随此设置：选「会员等级」显示等级、选「会员身份」只显示身份（用户 2026-10-19）；② 选「会员等级」时其他前台位置沿用目前平台显示规则。PRD 8.8 帮助已改为「前台显示方式」条目（2026-10-21）。<span class="ref">用户 2026-10-19 / F3 / B3 · C-03</span></li>
+      <li class="glow">已定（用户 2026-10-19）：勾选「沿用普通会员级别」时普通会员只按本页 Level 返水表，VIP 玩家只按 VIP 返水表；不勾选时两套各自核算，两边都有配置就两边都领（用户 2026-10-21）；会员层级实时返水不停用，单独核算、与身份无关。与【游戏管理 › 返水设定】的对接由开发评估；正式数值由运营出方案。<span class="ref">用户 2026-10-19 · 等级方案 Q8</span></li>
+    </ol>
+    <h3>模拟操作日志</h3>
+    <ol id="log"><li style="color:#909399">暂无（保存、复核、开关 VIP 体系后显示）</li></ol>
+    <!-- 上一页 / 下一页：按 PRD 2.1 主流程（运营配置：会员等级 → VIP特权 → VIP中心 → 通知 → 会员福利 → VIP数据报表；用户 2026-10-17 会员等级与 VIP特权 分开） -->
+    <div class="pager"><span></span><a href="VIP会员体系-后台VIP特权配置页面.html">下一页：后台VIP特权配置页面 →</a></div>
+  </aside>
+</div>
+</div>
+<script>window.NAV_ROOT = "../../../";</script>
+<script src="../../../assets/nav-data.js"></script>
+<script src="../../../assets/nav.js"></script>
+<script src="../../../assets/vip.js"></script>
+<script src="../../../assets/proto.js"></script>
+<script>
+(function () {
+  /* ===== 「?」帮助文字：由脚本从 PRD 8.8「帮助提示内容」逐字同步，不手改 ===== */
+  /* HELP:BEGIN */
+  var HELP = {
+    "前台显示方式": "决定前台怎样显示非 VIP 玩家（普通用户、「KYC 限制」开启时未完成 KYC 的玩家、VIP 体系关闭期间的原 VIP 玩家）：选「会员身份」只显示「普通用户」，选「会员等级」显示 LEVEL n，默认「会员身份」；VIP 玩家始终显示 VIP 等级。只影响前台显示，切换时填谷歌验证码，立即生效。",
+    "单注 / 串关 / 单注冠军最大下注额（Level）": "该 Level 等级玩家单笔投注的最高金额（PHP，正整数），单注、串关、单注冠军分别限制。",
+    "充值返水比例(%)（Level）": "该 Level 等级的充值返水比例（%），必填，0–100，最多 2 位小数；填 0 表示该级不返水。",
+    "单注最大返水(PHP)（Level）": "该 Level 等级单笔投注可以得到的返水上限（PHP，正整数），必填。",
+    "场馆成长值倍数（Level）": "现有功能：按场馆设置倍数，只用于普通用户的 Level 成长值（有效投注 × 倍数），修改后次日 03:50 生效（沿用平台现有执行时间，时区以研发确认为准）；和【VIP特权】的 VIP 成长值规则互不影响。保存时填谷歌验证码。",
+    "VIP0 沿用级别": "只在【VIP特权】VIP0 勾选「沿用普通会员级别」时出现：不能在沿用的 LEVEL n 之后添加级别；修改 LEVEL n 后，累计有效投注不高于它的 VIP 等级标为「不符合标准」并关闭（VIP 体系开启过时须先在【VIP特权】关闭这些等级或提高门槛）。不勾选时两套独立，不限制。",
+    "添加等级": "输入级别和有效投注累计值；输入已有级别时插在它前面，原级别依次顺延。勾选沿用 LEVEL n 时只能加在 LEVEL n 及以下，不勾选不限制。确认时填谷歌验证码，立即生效。",
+    "下注限额与返水（按 Level 等级）": "按 Level 等级配置下注限额和返水，在添加或修改等级的弹窗里维护，LEVEL 0 在表格上方单独修改，确认时填谷歌验证码。勾选「沿用普通会员级别」时 VIP 玩家只按 VIP 返水表，不勾选时两边都有配置就两边都领；与【游戏管理 › 返水设定】的对接以后台配置为准。"
+  };
+  /* HELP:END */
+  /* ===== 「需确认」说明框内容：由脚本从 PRD 3.3 冲突 01–04 逐字同步，不手改 ===== */
+  /* KCHK:BEGIN */
+  var KCHK = {
+    K04: { title: "现网 LEVEL 30 及以上与 VIP 段重叠", req: "按 VIP0「沿用普通会员级别」处理：勾选时沿用 LEVEL n（默认当前最高级），开启 VIP 体系时删除 LEVEL n 之后的级别，被删级别上的玩家按存量初始化规则重新判定；勾选期间不能在 LEVEL n 之后添加级别；累计有效投注不高于 LEVEL n 的 VIP 等级为「不符合标准」，只能关闭。不勾选时两套独立，不删除任何级别（规则 N56、N57、N46）", now: "会员等级按「有效投注累计值」从 LEVEL 0 起配置；UAT 配到 LEVEL 60，LEVEL 30 = ₱600,000（与 VIP1 默认门槛相同），L30–L60 有生日礼包，L55、L60 配了实体奖品（管理后台知识库 4.1.5；UAT 读取）", risk: "勾选沿用时如果保留 LEVEL 30 及以上，玩家会同时升 LEVEL 30+ 和 VIP，两边奖励重复发放，违反规则 N10；累计有效投注不高于 LEVEL n 的 VIP 等级会被标为「不符合标准」并关闭（例：沿用 LEVEL 30 = ₱600,000 时默认 VIP1 被关闭）", adv: "勾选沿用时，运营在开启前核对被标为不符合标准的等级：需要这些等级开启的，改选更低的 LEVEL n（开启时由系统删除其后的级别）或调高这些等级的标准；不勾选时两套独立、奖励可叠加" }
+  };
+  /* KCHK:END */
+  /* 原同步块外的覆盖对象（K04）已删除：PRD 3.3 冲突 04 已同步进 KCHK 块，说明框直接显示 KCHK（用户 2026-10-21） */
+  /* HELP2：HELP 同步块外的覆盖条目，initHelp 取值 HELP2 优先于 HELP。2026-10-21 HELP 同步块已按 PRD 8.8 精炼版整块同步，原 HELP2 条目与 HELP 完全相同，已清空（用户 2026-10-21）；以后同步块外新增的「?」帮助先放这里，PRD 8.8 补上后再移入 HELP */
+  var HELP2 = {};
+
+  /* ===== 模拟状态：5 个后台原型共用同一组默认值（sessionStorage 共享） ===== */
+  P.init({ defaults: {
+    /* SHARED:BEGIN 后台原型共用的模拟状态默认值（同一份；示意，待文档同步）。
+       原实体奖品库（lib）、其他来源占用（othOcc）、VIP 等级奖品对应（phs）、使用量（vUse）、领取申请（apps）和「Level 段前台显示上限」（lvCap）已删除：
+       VIP 等级对应的实物奖品、活动库存、领取与发放由实体奖品管理需求负责（Claire 答复 C-10/C-12/C-13/C-14，用户 2026-10-17 定）；前台不再显示 Level 0–29（Claire 答复 C-03，用户 2026-10-17 定） */
+    perm: "all", me: "A", vipSt: "never", closeMode: "", lv30: "on",
+    /* SHARED:END */
+    /* 演示默认值覆盖（同步块外，4 个后台原型相同；用户 2026-10-19）：VIP 体系状态默认「已开启」（示例 2026-07-01 第一次开启并完成存量初始化）；
+       同名键后写覆盖同步块里的 vipSt: "never"。用户 2026-10-19 取消「Level 段显示与停用」：原 lv30: "off" 覆盖已删除，同步块里残留的 lv30 不再使用 */
+    vipSt: "on",
+    /* 用户 2026-10-19：会员最高等级与 VIP 最低等级互相限制（与 VIP特权页共用）。
+       lvTop = 会员最高等级 {lv, v}（本页打开时及每次添加 / 修改 / 删除后写入）；vipLow = VIP 最低的已开启等级 {name, v, gm}（VIP特权页保存后写入），null = VIP 未配置 */
+    lvTop: { lv: 29, v: 560000 }, vipLow: { name: "VIP1", v: 600000, gm: false, dep: 50000 },
+    kchk: {},
+    /* 用户 2026-10-19：前台显示方式单选（默认「会员身份」= false，true = 会员等级；与前台 VIP中心共用模拟状态 lvShow，键名不改） */
+    lvShow: false,
+    /* 用户 2026-10-21：VIP0 起始级别（与【VIP特权】、前台 VIP中心共用；三页默认值相同）。原型演示默认勾选「沿用普通会员级别」、沿用当前会员最高等级 LEVEL 29（默认不删除级别）；
+       上线默认勾选（用户 2026-10-21）；勾选时不能在 LEVEL n 之后添加；VIP 等级不高于 LEVEL n 时标为「不符合标准」并关闭（原互相限制已取消，用户 2026-10-21），模拟操作可切到「不勾选」（两套独立、不比较） */
+    vip0: { follow: true, lv: "29", cut: "", bet: "560000", dep: "0", gMin: "" }
+  } });
+  var ACC = { A: "运营账号A", B: "运营账号B" };
+
+  function esc(s) { return String(s).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); }
+  function fmt(n) { return n === null || n === undefined || n === "" ? "—" : Number(n).toLocaleString("en-US"); }
+  function clone(o) { return JSON.parse(JSON.stringify(o)); }
+  function initHelp(root) {
+    (root || document).querySelectorAll(".qm[data-h]").forEach(function (q) {
+      q.setAttribute("data-tip", HELP2[q.getAttribute("data-h")] || HELP[q.getAttribute("data-h")] || "");   /* HELP2 优先（精炼版，用户 2026-10-21，规范 v5.46） */
+      q.setAttribute("tabindex", "0"); q.setAttribute("role", "button");
+      q.setAttribute("aria-label", q.getAttribute("data-h") + " 说明"); q.setAttribute("aria-expanded", "false");
+    });
+  }
+  /* 「?」气泡：点击打开；再点一次、点气泡外或按 Esc 关闭；同一时间只显示一个 */
+  var pop = null, popFor = null;
+  function closeTip() { if (!pop) return false; pop.remove(); popFor.setAttribute("aria-expanded", "false"); pop = popFor = null; return true; }
+  function openTip(q) {
+    closeTip();
+    pop = document.createElement("div"); pop.className = "qm-pop"; pop.setAttribute("role", "tooltip");
+    pop.textContent = q.getAttribute("data-tip"); document.body.appendChild(pop);
+    var r = q.getBoundingClientRect(), vw = document.documentElement.clientWidth;
+    pop.style.left = (Math.max(8, Math.min(r.left, vw - pop.offsetWidth - 8)) + window.scrollX) + "px";
+    pop.style.top = (r.bottom + window.scrollY + 6) + "px";
+    popFor = q; q.setAttribute("aria-expanded", "true");
+  }
+  document.addEventListener("click", function (e) {
+    var q = e.target.closest(".qm");
+    if (q) { e.preventDefault(); e.stopPropagation(); if (popFor === q) closeTip(); else openTip(q); return; }
+    if (pop && !e.target.closest(".qm-pop")) closeTip();
+  }, true);
+  window.addEventListener("keydown", function (e) {
+    if (e.key === "Escape" && closeTip()) { e.stopPropagation(); return; }
+    if ((e.key === "Enter" || e.key === " ") && e.target.classList && e.target.classList.contains("qm")) { e.preventDefault(); e.stopPropagation(); e.target.click(); }
+  }, true);
+  window.addEventListener("resize", closeTip);
+  /* 页面提示（需求要求的后台提示，研发实现） */
+  function toast(msg, type) {
+    var m = document.createElement("div"); m.className = "bo-msg " + (type || "ok"); m.textContent = msg; m.setAttribute("role", "status");
+    document.body.appendChild(m); setTimeout(function () { m.remove(); }, 2400);
+  }
+  /* 原型演示反馈：只显示在模拟操作面板里 */
+  function demo(msg, anchor) { P.note(msg, anchor || document.querySelector("#simPanel button")); }
+  var stack = [];
+  function dialog(o) {
+    var mask = document.createElement("div"); mask.className = "bo-mask";
+    var d = document.createElement("div"); d.className = "bo-dlg"; d.setAttribute("role", "dialog"); d.setAttribute("aria-modal", "true");
+    if (o.width) d.style.width = "min(" + o.width + "px,94vw)";
+    /* 用户 2026-10-20：按钮会校验谷歌验证码（gcode / gcOk）的弹窗，在字段最下方、按钮上方直接放「谷歌验证码」输入框；o.gc 可显式指定 */
+    var gc = o.gc !== undefined ? o.gc : (o.buttons || []).some(function (b) { return b.onClick && /\bgc(ode|Ok)\(/.test(String(b.onClick)); });
+    d.innerHTML = "<h4>" + esc(o.title) + "</h4><div class='dlg-body'>" + o.body + (gc ? gcRow() : "") + "</div><div class='row2'></div>";
+    var row = d.querySelector(".row2"), ctx = { el: d, close: close, btn: {} };
+    function close() { closeTip(); mask.remove(); stack = stack.filter(function (x) { return x !== ctx; }); }
+    (o.buttons || []).forEach(function (b) {
+      var btn = document.createElement("button"); btn.type = "button"; btn.className = "bo-btn " + (b.cls || ""); btn.textContent = b.text;
+      if (b.key) ctx.btn[b.key] = btn;
+      if (b.perm) btn.setAttribute("data-perm", "1");
+      btn.onclick = function () { if (!b.onClick || b.onClick(ctx) !== false) close(); };
+      row.appendChild(btn);
+    });
+    mask.appendChild(d); document.body.appendChild(mask); stack.push(ctx);
+    initHelp(d); applyPerm(); if (o.onOpen) o.onOpen(ctx);
+    return ctx;
+  }
+  document.addEventListener("keydown", function (e) { if (e.key === "Escape" && stack.length && !pop) stack[stack.length - 1].close(); });
+  function closeAll() { while (stack.length) stack[stack.length - 1].close(); }
+  function confirmBox(title, html, okText, onOk) { return dialog({ title: title, width: 460, body: "<div>" + html + "</div>", buttons: [{ text: "取消" }, { text: okText || "确定", cls: "q", key: "ok", onClick: onOk }] }); }
+  var logSec = 0;
+  function now() { logSec += 7; return "2026-10-13 10:" + (30 + Math.floor(logSec / 60)) + ":" + ("0" + logSec % 60).slice(-2); }
+  function addLog(text, by) {
+    var ol = document.getElementById("log"); if (ol.firstElementChild && ol.firstElementChild.style.color) ol.innerHTML = "";
+    var li = document.createElement("li"); li.textContent = now() + "（GMT+8）· " + (by || ACC[P.get("me")]) + " · " + text; ol.insertBefore(li, ol.firstChild);
+  }
+  /* 按钮级权限：无权限时隐藏带 data-perm 的按钮（服务端同样校验） */
+  function applyPerm() { var none = P.get("perm") === "none"; document.querySelectorAll("[data-perm]").forEach(function (b) { b.hidden = none; }); }
+  function bindRadios(box, onPick) {
+    box.querySelectorAll(".rd").forEach(function (r) {
+      function pick() { if (r.classList.contains("dis")) return; box.querySelectorAll(".rd").forEach(function (x) { x.classList.toggle("on", x === r); x.setAttribute("aria-checked", x === r); }); if (onPick) onPick(r); }
+      r.onclick = pick; r.onkeydown = function (e) { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); pick(); } };
+    });
+  }
+  document.querySelectorAll(".rdg").forEach(function (g) { bindRadios(g); });
+  /* 谷歌验证码（用户 2026-10-20：按当前后台习惯，验证码输入框直接放在操作弹窗里，点确定时一并校验） */
+  function gcRow() { return "<div class='frow gcrow' style='grid-template-columns:110px 1fr'><label><span class='req'>*</span>谷歌验证码</label><div class='fctl'><input class='bo-inp gcin' maxlength='6' style='width:180px' placeholder='请输入谷歌验证码' inputmode='numeric' aria-label='谷歌验证码'><div class='ferr gcerr' hidden></div></div></div>"; }
+  /* 校验弹窗里的谷歌验证码：空 →「请输入谷歌验证码」，000000 →「谷歌验证码错误」，弹窗不关、内容保留；其他 6 位数字视为正确 */
+  function gcOk(c) {
+    var inp = c && c.el.querySelector(".gcin"); if (!inp) return true;
+    var v = inp.value.trim(), er = c.el.querySelector(".gcerr"), m = !v ? "请输入谷歌验证码" : v === "000000" ? "谷歌验证码错误" : "";
+    inp.classList.toggle("bad", !!m); er.hidden = !m; er.textContent = m;
+    if (m) { if (v) toast(m, "err"); inp.focus(); return false; }
+    return true;
+  }
+  /* 当前弹窗里有验证码输入框时就地校验（返回 false 时弹窗不关）；没有操作弹窗的保存按钮仍弹现有「设定」验证码窗 */
+  function gcode(onOk) {
+    var top = stack[stack.length - 1];
+    if (top && top.el.querySelector(".gcin")) { if (!gcOk(top)) return false; setTimeout(onOk, 0); return true; }
+    dialog({
+      title: "设定", width: 400,
+      body: "<div class='frow' style='grid-template-columns:110px 1fr'><label for='gcode'><span class='req'>*</span>谷歌验证码</label><div class='fctl'><input class='bo-inp' id='gcode' maxlength='6' style='width:180px' placeholder='请输入谷歌验证码' inputmode='numeric'><div class='ferr' id='gcErr' hidden></div></div></div>",
+      onOpen: function (c) { c.el.querySelector("#gcode").focus(); },
+      buttons: [{ text: "取消" }, { text: "保存", cls: "q", onClick: function (c) {
+        var v = c.el.querySelector("#gcode").value.trim(), er = c.el.querySelector("#gcErr");
+        if (!v) { er.hidden = false; er.textContent = "请输入谷歌验证码"; return false; }
+        if (v === "000000") { er.hidden = true; toast("谷歌验证码错误", "err"); return false; }
+        setTimeout(onOk, 0);
+      } }]
+    });
+  }
+
+  /* COMMON:BEGIN 后台原型共用代码（同一份；示意，待文档同步）。
+     原「实体奖品库引用与 VIP 活动库存」代码已删除：VIP 等级对应的实物奖品、活动库存、领取与发放由实体奖品管理需求负责（Claire 答复 C-10/C-12/C-13/C-14，用户 2026-10-17 定），本需求包不再有实物领取审核页 */
+  /* 旧版模拟状态清理：删掉已不再使用的实物相关键和 Level 段显示上限（原型演示用，研发不用实现） */
+  (function () { ["lib", "phs", "othOcc", "vUse", "vIss", "vRev", "apps", "lvCap"].forEach(function (k) { if (P.get(k) !== undefined) P.set(k, undefined); }); })();
+  /* 顶栏统计行始终一行：放不下时右侧渐隐提示还有内容，鼠标滚轮在这一行上可左右滚动。渐隐类名用 bo-fade，不能用 ov（ov 是模板全局遮罩类：绝对定位铺满 + 深色半透明底，会把统计项甩出顶栏并让整个后台画面发灰） */
+  (function () {
+    var s = document.querySelector(".bo-top2 .bo-stats"); if (!s) return;
+    function ov() { s.classList.toggle("bo-fade", s.scrollWidth - s.clientWidth - s.scrollLeft > 1); }
+    s.addEventListener("scroll", ov); window.addEventListener("resize", ov); window.addEventListener("load", ov); ov();
+    s.addEventListener("wheel", function (e) { if (s.scrollWidth > s.clientWidth && Math.abs(e.deltaY) > Math.abs(e.deltaX)) { s.scrollLeft += e.deltaY; e.preventDefault(); } }, { passive: false });
+  })();
+  /* COMMON:END */
+
+  /* ===== 数据（版式和字段以线上截图为准，用户 2026-10-17；数值为示意） ===== */
+  /* 现有 LEVEL 表：LEVEL 0–10 取线上截图示例值；LEVEL 11–29 虚构（LEVEL 29 = 560,000）。用户 2026-10-19：原型只配到 LEVEL 29，原按 UAT 示意的 LEVEL 30–60 已删除；
+     VIP 已配置时会员最高等级的累计值需小于 VIP 最低的已开启等级（默认 VIP1 = 600,000）的累计有效投注 */
+  var LV0 = [0, 50, 100, 200, 300, 500, 700, 900, 1300, 1800, 2400, 3200, 4200, 5500, 7200, 9500, 12500, 16500, 22000, 29000, 38000, 50000, 66000, 87000, 115000, 152000, 200000, 265000, 350000, 560000];
+  var levels = LV0.map(String);
+  /* 现有「会员等级 × 生日礼包金额 × 升级奖励金额」：LEVEL 0–10 取线上截图示例（生日礼包 0/10/20/30/40/0…/8，升级奖励 = 等级数），其余虚构；LEVEL 28/29 生日礼包 20 与前台「普通用户卡片」演示 ₱20 一致（用户 2026-10-19）；
+     原 LEVEL 30/40/50/55/60 的 UAT 生日礼包示例随 LEVEL 30 及以上删除（用户 2026-10-19） */
+  function bdDef(n) { var s = { 1: 10, 2: 20, 3: 30, 4: 40, 10: 8, 15: 15, 20: 20, 25: 25, 28: 20, 29: 20 }; return s[n] || 0; }
+  function upDef(n) { return n; }
+  var LRW = levels.map(function (v, i) { return { lv: String(i), bd: String(bdDef(i)), up: String(upDef(i)) }; });
+  /* 现有「会员等级 × 实体奖品 × 数量」（Level 段现有功能，与本需求 VIP 无关）。用户 2026-10-19：原 UAT 示例在 LEVEL 55 / 60，随 LEVEL 30 及以上删除改为 LEVEL 25 / 29（示意） */
+  /* 用户 2026-10-19：实体奖品改为下拉读取【实体奖品管理 › 库存管理】，会员等级改为下拉（只能选「会员等级配置」已有等级），「数量」改为「发放库存」。
+     用户 2026-10-20：「发放库存」检查改为实体奖品管理的口径（覆盖 2026-10-19「需小于当前平台剩余库存」）：
+     stock = 平台库存，oth = 其他活动已占（含 VIP 剩余预占，不含 Level 段；示例 = VIP特权页「其他活动已占」+ VIP 各等级剩余预占），Level 段已占 = 已保存各行发放库存之和（phlSaved）；
+     可用 = 平台库存 − 其他活动已占 − Level 段已占（最小 0）；保存时按奖品汇总：新增占用件数（本次合计 − 已保存合计）≤ 可用，允许正好用完；
+     任一奖品不满足则整次保存失败（原子，不保存任何修改）；下拉显示奖品编号、名称、可用，可用 0 置灰（本行已选的除外）。
+     Level 段作为实体奖品库存来源，保存时调用实体「分配活动库存」，以实体返回为准（实体 v1.1 能力，待实体对话定稿） */
+  var PZ = [
+    { id: "P001", nm: "Samsung Z Flip7 FE", stock: 20, oth: 8 }, { id: "P002", nm: "iPhone Pro Max", stock: 12, oth: 5 }, { id: "P003", nm: "MacBook Pro", stock: 8, oth: 4 },
+    { id: "P004", nm: "Rolex Explorer", stock: 4, oth: 2 }, { id: "P005", nm: "Luxury Trip for Two（双人豪华旅行）", stock: 5, oth: 3 }, { id: "P006", nm: "Lexus NX350h", stock: 2, oth: 1 },
+    { id: "P007", nm: "AirPods Pro", stock: 30, oth: 26 }, { id: "P008", nm: "Dyson V15", stock: 6, oth: 6 }
+  ];
+  function pzOf(id) { for (var j = 0; j < PZ.length; j++) if (PZ[j].id === id) return PZ[j]; return null; }
+  var PHL = [{ lv: "25", p: "P001", q: "2" }, { lv: "29", p: "P002", q: "1" }];
+  var phlSaved = JSON.parse(JSON.stringify(PHL));   /* 已保存的实体奖品行（Level 段已占），保存成功后更新 */
+  function phlSum(arr, pid) { return arr.reduce(function (n, r) { return n + (r.p === pid && /^[1-9]\d*$/.test(String(r.q)) ? Number(r.q) : 0); }, 0); }
+  function pzAvl(z) { return Math.max(0, z.stock - z.oth - phlSum(phlSaved, z.id)); }
+  /* 可用的计算过程（悬停提示；口径已定，用户 2026-10-20）：可用 = 平台库存 − 其他活动已占 − Level 段已保存的占用 */
+  function pzCalc(z) { return "可用 = 平台库存 " + z.stock + " − 其他活动已占 " + z.oth + " − Level 段已保存的占用 " + phlSum(phlSaved, z.id) + " = " + pzAvl(z); }
+  function vipSt() { return P.get("vipSt"); }
+  /* ===== 会员最高等级与 VIP 最低等级互相限制（用户 2026-10-19）=====
+     共享模拟状态（sessionStorage，与 VIP特权页共用）：lvTop = {lv, v} 会员最高等级及其有效投注累计值，本页打开时及每次添加 / 修改 / 删除后写入
+     （原型等级表每次打开页面恢复为演示数据，所以打开时也写一次，保证两页读到的一致）；vipLow = {name, v, gm} VIP 最低的已开启等级及其累计有效投注，
+     由 VIP特权页保存 VIP 等级配置后写入，null = VIP 未配置（没有已开启的 VIP 等级）。
+     VIP 已配置时：会员最高等级的有效投注累计值必须小于 vipLow.v（不含等于）；VIP 未配置时无上限；全局计算方式为成长值（vipLow.gm = true，用户 2026-10-20 起表示全局计算方式，不再是每级勾选）时不校验；
+     用户 2026-10-19 追加：只有 VIP 最低的已开启等级「累计充值」为 0 时才比较两边有效投注，累计充值不为 0 时不校验 */
+  function vLow() { var w = P.get("vipLow"); return w || null; }
+  /* 用户 2026-10-21：取消原「会员最高等级与 VIP 最低等级互相限制」（与会员最高等级比较、VIP 最低等级累计充值为 0 才比较）；
+     改为只在【VIP特权】VIP0 勾选「沿用普通会员级别」时：VIP0 = 沿用的 LEVEL n，VIP 最低开启等级的累计有效投注须严格高于 LEVEL n 的有效投注累计值。
+     本页只在「修改」被沿用的 LEVEL n 时按 vipCap 拦截；添加不会改变 LEVEL n 的累计值（且勾选时不能在 n 之后添加），不需要此上限；
+     不勾选时两套独立，不比较。VIP 计算方式为成长值时 VIP0 的成长值另行填写，不与 LEVEL 比较（vipLow.gm）。原「VIP 等级未配置」演示勾选框已删除 */
+  function v0On() { var o = P.get("vip0"); return !!(o && o.follow); }
+  function vipCap() { var w = vLow(); return v0On() && v0Lv() && w && !w.gm && w.v !== null && w.v !== undefined && w.v !== "" ? Number(w.v) : null; }
+  function capTxt() { var w = vLow(); return w.name + " 的累计有效投注 " + fmtN(w.v); }
+  /* 用户 2026-10-21（VIP0 默认选最高级）：修改 VIP0 沿用的 LEVEL n 后，累计有效投注不高于它的 VIP 等级「不符合标准」，在【VIP特权】关闭、提高门槛后才能开启（替代原「LEVEL n 须低于 VIP 最低开启等级」的拦截）。
+     vipLvs = [{ name, v, on }] 由【VIP特权】写入；没有时按 vipLow 只看最低的已开启等级。ncHit 返回开启中、会不符合标准的 VIP 等级名称；计算方式为成长值或不勾选时不比较 */
+  function vipLvs() { var a = P.get("vipLvs"); if (a && a.length) return a; var w = vLow(); return w ? [{ name: w.name, v: w.v, on: true }] : []; }
+  function ncHit(val) { var w = vLow(); if (!v0On() || (w && w.gm)) return []; return vipLvs().filter(function (x) { return x.on && x.v !== null && x.v !== undefined && Number(x.v) <= Number(val); }).map(function (x) { return x.name; }); }
+  function writeTop() { var n = levels.length - 1; P.set("lvTop", { lv: n, v: Number(levels[n]) }); P.set("lvVals", levels.map(Number)); }   /* lvVals：各级累计值，VIP特权页 VIP0 下拉按它显示（用户 2026-10-20） */
+  /* 勾选沿用时不能在 LEVEL n 之后添加（用户 2026-10-21）的提示文字 */
+  function v0AddMsg(n) { return "已沿用 LEVEL " + n + " 作为 VIP0，不能在其后添加级别；如需添加请先在【VIP特权】修改沿用级别"; }
+
+  /* ===== 会员等级配置（用户 2026-10-19 改）=====
+     ① 表格不显示 LEVEL 0，从 LEVEL 1 开始；LEVEL 0 仍是系统初始等级（有效投注累计值固定为 0，未达到 LEVEL 1 的玩家为 LEVEL 0），不可修改、不可删除；
+     ② 每行操作只有「修改」「删除」，有效投注累计值在表格里只读，改值走「修改」弹窗；原「保存」按钮去掉，弹窗内填谷歌验证码、确认后立即生效（谷歌验证码为用户 2026-10-19 追加）并写操作日志；
+     ③ 表格上方「+ 添加等级」：弹窗输入会员等级（只能输入正整数，范围 LEVEL 1 ~ 当前最高级 + 1）和有效投注累计值；输入等级后，累计值输入框显示该位置的默认上下限
+        （大于 LEVEL k-1 的累计值，且小于原 LEVEL k 的累计值；加在最高级之后时无上限，原「VIP 已配置时须小于 VIP 最低开启等级」已取消，用户 2026-10-21）；输入已有等级 = 插在该等级前，原该等级及以上依次顺延 +1；
+     ④ 确认添加 / 修改时校验：等级为空、非正整数、超出可添加范围，累计值为空、非整数、不在上下限内（含最高级不小于 VIP 最低等级），均拦截并提示（原「LEVEL 30 及以上停用期间不能添加到停用区」已取消，用户 2026-10-19）；
+     ⑤ 插入 / 删除后，「会员等级奖励配置」和「下注限额与返水（按 Level 等级）」跟随原等级顺延或前移；新等级的奖励和返水为空（标红待填），被删等级的奖励和返水一并删除；
+     ⑥ 玩家 Level 按新门槛判定，沿用现有平台规则（资料未覆盖：现有系统改门槛后是否重算存量玩家 Level）；
+     ⑧ 列表列为「级别 / 等级名称 / 有效投注累计值 / 操作」（用户 2026-10-19 追加；同日在累计值与操作之间并入下注限额与返水 5 列，弹窗同步增加这 5 个字段）：等级名称添加时默认与级别一致（LEVEL n），可修改，等级名称需要唯一（用户 2026-10-19 改，覆盖「可同名」），自定义名称不能用「LEVEL + 数字」格式；未改过的名称随级别顺延 / 前移，自定义名称固定不变；前台「前台显示方式 = 会员等级」时显示等级名称；
+     ⑦ 原「LEVEL 30 及以上停用时停用区只读、插入 / 删除进出停用区单独提示」随「Level 段显示与停用」取消（用户 2026-10-19） */
+  /* 等级名称（用户 2026-10-19 追加；同日改为「等级名称需要唯一」，覆盖「可以同名」）：null = 跟随级别（显示「LEVEL n」，插入 / 删除后随级别变化）；自定义名称固定不变；
+     必填、最多 20 个字符、全部级别内唯一（不区分大小写、去掉首尾空格后比较）；「LEVEL + 数字」是默认名称格式，自定义名称不能用（只能填本级的「LEVEL k」= 恢复默认），保证插入 / 删除顺延后默认名称也不会与自定义名称重复 */
+  var lvNm = levels.map(function () { return null; });
+  function nmOf(i) { return lvNm[i] === null || lvNm[i] === undefined ? "LEVEL " + i : lvNm[i]; }
+  function nmSave(i, nm) { return nm === "LEVEL " + i ? null : nm; }
+  function nmErr(nm, k, mode) {
+    if (!nm) return "请输入等级名称";
+    if (nm.length > 20) return "等级名称最多 20 个字符";
+    if (/^level\s*\d+$/i.test(nm) && nm !== "LEVEL " + k) return "「LEVEL + 数字」是默认名称格式，只能用本级的「LEVEL " + k + "」；自定义名称请换其他名称";
+    var key = nm.toLowerCase();
+    for (var i = 1; i < levels.length; i++) {
+      if (mode === "edit" && i === k) continue;
+      var on = mode === "add" && i >= k ? (lvNm[i] === null || lvNm[i] === undefined ? "LEVEL " + (i + 1) : lvNm[i]) : nmOf(i);   /* 插入时原 LEVEL k 及以上顺延，按顺延后的名称比较 */
+      if (on.toLowerCase() === key) return "等级名称「" + nm + "」已被 LEVEL " + (mode === "add" && i >= k ? i + 1 : i) + " 使用，等级名称需要唯一";
+    }
+    return "";
+  }
+  /* ===== VIP0 沿用普通会员级别的联动（用户 2026-10-20）=====
+     共享模拟状态 vip0Use = { on, lv 保留到的 LEVEL, deletedFrom 被删的起始 LEVEL, at 删除时间 }，由 VIP特权页执行删除时写入；
+     on 时等级表只到 LEVEL lv，限额与返水（并在等级表里）、会员等级奖励配置、实体奖品表同步不再显示被删级别；VIP0 取消沿用后不恢复 */
+  var v0Done = 0;
+  function v0Use() { var u = P.get("vip0Use"); return u && u.on && Number(u.lv) > 0 ? u : null; }
+  /* 已删除且仍在沿用：才有「LEVEL n 之后由 VIP 段接管」的边界；取消沿用后不再有该边界，改由互相限制控制（用户 2026-10-20） */
+  function v0Fol() { var u = v0Use(), o = P.get("vip0"); return u && o && o.follow ? u : null; }
+  function v0Apply() {
+    var u = v0Use(); if (!u) return;
+    var n = Number(u.lv); if (levels.length - 1 <= n) { v0Done = n; return; }
+    levels.length = n + 1; lvNm.length = n + 1;
+    var a = LRW.filter(function (r) { return Number(r.lv) <= n; }); LRW.length = 0; Array.prototype.push.apply(LRW, a);
+    var b = PHL.filter(function (r) { return !/^\d+$/.test(String(r.lv)) || Number(r.lv) <= n; }); PHL.length = 0; Array.prototype.push.apply(PHL, b);
+    phlSaved = phlSaved.filter(function (r) { return !/^\d+$/.test(String(r.lv)) || Number(r.lv) <= n; });   /* 被删级别的实体奖品一并释放 */
+    v0Done = n;
+  }
+  /* VIP0 沿用级别跟随插入 / 删除（用户 2026-10-20）：vip0 = 【VIP特权】保存的 VIP0 设置 { follow, lv, cut, … }。
+     插入到 LEVEL k ≤ n：沿用级别 n → n+1；删除 LEVEL k < n：n → n−1；删除的正是 n：拦截。VIP0 还没删除级别时（从未开启、只保存了沿用选择）同样 ±1（已定，用户 2026-10-20）。
+     已执行删除的边界（vip0.cut、vip0Use.lv）只在仍沿用时 ±1；取消沿用后不再随插入 / 删除变化（用户 2026-10-20） */
+  function v0Lv() { var o = P.get("vip0"); return o && o.follow && Number(o.lv) > 0 ? Number(o.lv) : 0; }
+  function v0Shift(k, d) {
+    var o = P.get("vip0"), u = P.get("vip0Use"), msg = "";
+    if (o) {
+      o = clone(o); var ch = false, n = Number(o.lv);
+      if (o.follow && n > 0 && (d > 0 ? k <= n : k < n)) { o.lv = String(n + d); ch = true; msg = "VIP0 沿用级别 LEVEL " + n + " → LEVEL " + (n + d); }
+      if (o.follow && Number(o.cut) > 0 && k <= Number(o.cut)) { o.cut = String(Number(o.cut) + d); ch = true; }
+      if (ch) P.set("vip0", o);
+    }
+    if (o && o.follow && u && u.on && Number(u.lv) > 0 && k <= Number(u.lv)) { u = clone(u); u.lv = Number(u.lv) + d; u.deletedFrom = u.lv + 1; P.set("vip0Use", u); }
+    return msg;
+  }  function v0TipTxt() {
+    var u = v0Use(); if (!u) return "";
+    return v0Fol() ? "LEVEL " + (Number(u.lv) + 1) + " 及以上已随 VIP0 沿用删除（【VIP特权】VIP0 沿用 LEVEL " + u.lv + "，" + esc(u.at || "") + " 删除；取消沿用不恢复）。"
+      : "LEVEL " + (Number(u.lv) + 1) + " 及以上曾随 VIP0 沿用删除（" + esc(u.at || "") + "），已删除的级别不恢复；【VIP特权】VIP0 已取消沿用，添加等级不再受 LEVEL " + u.lv + " 限制；不沿用时两套独立，会员最高等级也不受 VIP 最低等级限制。";
+  }
+  function renderV0Tip() {
+    var t = v0TipTxt(), el = document.getElementById("lvV0Tip"); if (!el) return;
+    el.hidden = !t; el.innerHTML = t ? "<b>提示：</b>" + t + "<a class='lnk' href='VIP会员体系-后台VIP特权配置页面.html#vip-level' style='margin-left:4px'>去【VIP特权】</a><div class='vip-req-note ui-reqnote'><span>上方提示为上线提示；出处：用户 2026-10-20。</span></div>" : "";
+  }
+  var lvBody = document.getElementById("lvBody");
+  function opCell(i, n, kind, ro) {
+    if (i === 0) return "<button type='button' class='bo-btn link' data-add='" + kind + "'>新增</button>";
+    return "<button type='button' class='bo-btn link' data-del='" + kind + "'" + (i === n - 1 && !ro ? "" : " disabled") + ">删除</button>";
+  }
+  function fmtN(v) { return Number(v).toLocaleString("en-US"); }
+  /* 上下限：add = 插在 LEVEL k（下限 LEVEL k-1，上限原 LEVEL k）；edit = 修改 LEVEL k（下限 LEVEL k-1，上限 LEVEL k+1）；hi 为 null 表示无上限。
+     加在最高级之后 / 修改最高级时无上限（原「VIP 已配置时上限为 VIP 最低开启等级」已取消，用户 2026-10-21） */
+  /* 用户 2026-10-21：修改被沿用的 LEVEL n 也不再以 VIP 最低开启等级为上限；VIP 等级不再高于 LEVEL n 时在【VIP特权】标为「不符合标准」并关闭（见 ncHit / lvEditDlg）。vip 字段保留，恒为 false */
+  function lvBound(k, mode) {
+    var hiIdx = mode === "add" ? k : k + 1, top = hiIdx >= levels.length, hi = top ? null : Number(levels[hiIdx]), vip = false;
+    return { lo: Number(levels[k - 1]), hi: hi, vip: vip };
+  }
+  function boundTxt(b) { return "大于 " + fmtN(b.lo) + (b.hi === null ? "（无上限）" : "，且小于 " + fmtN(b.hi) + (b.vip ? "（VIP 最低开启等级）" : "")); }
+  /* 等级表与「下注限额与返水」合并（用户 2026-10-19）：列为级别 / 等级名称 / 有效投注累计值 / 6 个限额与返水字段 / 操作，全部只读；
+     返水不设总开关（用户 2026-10-19）；LEVEL 0 的限额与返水显示在表格上方 #lv0Box */
+  function renderLevels() {
+    var n = levels.length, rb = lrbGet();
+    lvBody.innerHTML = levels.map(function (v, i) {
+      if (!i) return "";   /* LEVEL 0 不显示 */
+      var r = rb["L" + i] || {};
+      return "<tr><td class='ro c fx1'>" + i + "</td><td class='ro fx2'>" + esc(nmOf(i)) + (lvNm[i] !== null && lvNm[i] !== undefined ? "<span class='vip-cnt' style='margin-left:4px'>（自定义）</span>" : "") + "</td><td class='ro num'>" + fmtN(v) + "</td>" +
+        LRK.map(function (k) { var e = r[k] === undefined || r[k] === ""; return "<td class='num" + (e ? " nil" : "") + "'>" + lrbFv(k, r[k]) + "</td>"; }).join("") +
+        "<td class='c fxr' style='white-space:nowrap'>" +
+        "<button type='button' class='bo-btn link' data-perm='1' data-lvedit='" + i + "'>修改</button> " +
+        "<button type='button' class='bo-btn link' data-perm='1' data-lvdel='" + i + "'" + (n <= 2 ? " disabled title='至少保留 LEVEL 1'" : "") + ">删除</button></td></tr>";
+    }).join("");
+    document.getElementById("lvOffTip").textContent = "当前 LEVEL 1–" + (n - 1) + "（LEVEL 0 为系统初始等级，不在表中显示）";
+    renderLrbTop();
+    renderCapTip();
+    renderV0Tip();   /* 用户 2026-10-20：VIP0 沿用删除提示 */
+    applyPerm();
+  }
+  /* 表格上方的上限提示行（用户 2026-10-19） */
+  /* 用户 2026-10-21：取消原「会员最高等级上限」提示；改为只在 VIP0 勾选「沿用普通会员级别」时显示，只针对被沿用的 LEVEL n（不能在其后添加；VIP 等级不高于它时标为不符合标准并关闭，用户 2026-10-21 改）；不勾选时隐藏 */
+  function renderCapTip() {
+    var tip = document.getElementById("lvCapTip"), n = v0Lv();
+    if (!v0On() || !n) { tip.hidden = true; tip.innerHTML = ""; return; }
+    var w = vLow(), cur = levels[n] !== undefined ? Number(levels[n]) : null, hit = cur === null ? [] : ncHit(cur);
+    var lnk = "<a class='lnk' href='VIP会员体系-后台VIP特权配置页面.html#vip-level' style='margin-left:4px'>去【VIP特权】</a>";
+    var q = "<i class='qm' data-h='VIP0 沿用级别'>?</i>";   /* 「?」放在说明的提示句后面（用户 2026-10-20） */
+    tip.hidden = false;
+    tip.innerHTML = "【VIP特权】VIP0 沿用 LEVEL " + n + "：不能在 LEVEL " + n + " 之后添加级别；" +
+      (w && w.gm
+        ? "VIP 计算方式为成长值，VIP0 的成长值另行设置，LEVEL " + n + " 的累计值不与 VIP 比较。"
+        : "VIP 等级的累计有效投注不高于 LEVEL " + n + " 的有效投注累计值（当前 " + fmtN(cur) + "）的，在【VIP特权】标为「不符合标准」并关闭，提高门槛后才能开启。" +
+          (hit.length ? "<b style='color:#F56C6C'>" + esc(hit.join("、")) + " 仍为开启状态且不高于 LEVEL " + n + "，请到【VIP特权】关闭或提高门槛。</b>" : "")) + q + lnk +
+      "<div class='vip-req-note ui-reqnote'><span>上方提示为上线提示；出处：取消原「会员最高等级与 VIP 最低等级互相限制」；勾选后不能在 LEVEL n 之后添加级别（用户 2026-10-21）；用户 2026-10-21 改：LEVEL n 不再以 VIP 最低开启等级为上限，VIP 等级不高于 LEVEL n 时标为「不符合标准」并关闭。</span></div>";
+    initHelp(tip);
+  }
+  /* 插入 / 删除等级后，奖励配置、实体奖品、返水跟随原等级顺延（+1）或前移（-1） */
+  function shiftLevels(k, d, newRb) {
+    function mv(n) { return d > 0 ? (n >= k ? n + 1 : n) : (n > k ? n - 1 : n); }
+    function fix(arr, addRow) {
+      var out = arr.filter(function (r) { return !(d < 0 && Number(r.lv) === k); }).map(function (r) { if (/^\d+$/.test(r.lv)) r.lv = String(mv(Number(r.lv))); return r; });
+      if (addRow) out.push(addRow);
+      return out.sort(function (a, b) { return Number(a.lv) - Number(b.lv); });
+    }
+    var a = fix(LRW, d > 0 ? { lv: String(k), bd: "", up: "" } : null); LRW.length = 0; Array.prototype.push.apply(LRW, a);
+    var b = fix(PHL, null); PHL.length = 0; Array.prototype.push.apply(PHL, b);
+    phlSaved = fix(phlSaved, null);   /* 等级增删立即生效，已保存的实体奖品行随之顺延 / 前移，被删等级的一并释放 */
+    /* 下注限额与返水直接改持久数据 lvRb（用户 2026-10-19 并入等级表）：插入时新等级取弹窗填写的值 newRb，删除时该级数据一并删除 */
+    var rb = lrbGet(), nr = {};
+    Object.keys(rb).forEach(function (key) { var n = Number(key.slice(1)); if (d < 0 && n === k) return; nr["L" + mv(n)] = rb[key]; });
+    if (d > 0) nr["L" + k] = newRb || lrbBlank();
+    lrbPut(nr);
+  }
+  function lvValErr(v, b, loN, hiN) {
+    if (v === "") return "请输入有效投注累计值";
+    if (!/^\d+$/.test(v)) return "有效投注累计值只能输入 ≥ 0 的整数";
+    if (Number(v) <= b.lo) return "需大于 " + loN + " 的累计值 " + fmtN(b.lo);
+    if (b.hi !== null && Number(v) >= b.hi) return b.vip ? "本级是 VIP0 沿用的级别，有效投注累计值须低于 " + capTxt() + "（" + vLow().name + " 须高于 VIP0）；如需调高，请先到【VIP特权】调高 " + vLow().name + " 或更换沿用级别" : "需小于 " + hiN + " 的累计值 " + fmtN(b.hi);
+    return "";
+  }
+  function lvFormRow(id, label, ctl) { return "<div class='frow' style='grid-template-columns:120px 1fr;margin-bottom:10px'><label for='" + id + "'><span class='req'>*</span>" + label + "</label><div class='fctl'>" + ctl + "</div></div>"; }
+  function lvAddDlg() {
+    /* 用户 2026-10-20 已定：VIP0 沿用 LEVEL n 并已删除 LEVEL n+1 及以上后，添加等级只能加在 LEVEL n 及以下；输入 > n 提示「LEVEL n 之后已由 VIP 段接管，不能添加」；
+       取消沿用后不再有此边界，可添加到 LEVEL n 之后，最高级上限由互相限制控制（lvBound / vipCap，用户 2026-10-20） */
+    /* 用户 2026-10-21 改：勾选沿用 LEVEL n 后（不论 VIP 体系是否已开启、是否已执行删除），添加等级只能加在 LEVEL n 及以下（插入后 VIP0 跟随 +1），输入 > n 拦截并提示原因；不勾选时不限制 */
+    var max = levels.length - 1, n0 = v0Lv(), u0 = n0 > 0, lim = u0 ? Math.min(max + 1, n0) : max + 1, v0Msg = v0AddMsg(n0);
+    return dialog({
+      title: "添加等级", width: 500,
+      body: lvFormRow("naLv", "会员等级", "LEVEL <input class='bo-inp' id='naLv' style='width:100px' inputmode='numeric' maxlength='4' placeholder='正整数'><div class='vip-cnt vip-live' style='margin-top:4px'>可添加 LEVEL 1–" + lim + "。输入已有等级时插在该等级前，原该等级及以上依次顺延 +1" + (u0 ? "<span class='glow'>；" + v0Msg + "</span>" : "") + "</div>" + (u0 ? "<div class='vip-req-note ui-reqnote'><span>上方提示为上线提示；出处：VIP0 沿用边界为用户 2026-10-20 已定；不论是否已执行删除都不能在 LEVEL n 之后添加为用户 2026-10-21。</span></div>" : "") + "<div class='ferr' id='naLvE' hidden></div>") +
+        lvFormRow("naN", "等级名称", "<input class='bo-inp' id='naN' style='width:220px' maxlength='20' placeholder='请先输入会员等级'><div class='vip-cnt' style='margin-top:4px'>默认与级别一致（LEVEL n），可修改；等级名称需要唯一，自定义名称不能用「LEVEL + 数字」格式；最多 20 个字符</div><div class='ferr' id='naNE' hidden></div>") +
+        lvFormRow("naV", "有效投注累计值", "<input class='bo-inp' id='naV' style='width:220px' inputmode='numeric' placeholder='请先输入会员等级' disabled><div class='vip-cnt' id='naVH' style='margin-top:4px'></div><div class='ferr' id='naVE' hidden></div>") +
+        lrbFieldsHtml(lrbBlank()),
+      onOpen: function (c) {
+        lrbBindDlg(c);
+        var iN = c.el.querySelector("#naN"), nTouched = false, iL = c.el.querySelector("#naLv"), iV = c.el.querySelector("#naV"), h = c.el.querySelector("#naVH"), eL = c.el.querySelector("#naLvE");
+        iL.focus();
+        iL.oninput = function () {
+          var raw = iL.value, clean = raw.replace(/\D/g, "").replace(/^0+/, "");
+          if (raw !== clean) iL.value = clean;   /* 只能输入正整数：非数字和前导 0 直接过滤 */
+          var k = Number(clean); eL.hidden = true;
+          if (!nTouched) iN.value = clean ? "LEVEL " + clean : "";   /* 等级名称默认跟随输入的级别，手动改过后不再自动覆盖 */
+          if (clean && k >= 1 && k <= lim) {
+            var b = lvBound(k, "add");
+            iV.disabled = false; iV.placeholder = boundTxt(b);
+            h.textContent = "默认范围：大于 LEVEL " + (k - 1) + " 的 " + fmtN(b.lo) + (k > max ? "，无上限（加在最高级之后）" :"，且小于原 LEVEL " + k + " 的 " + fmtN(b.hi) + "（原 LEVEL " + k + " 起顺延 +1）");
+          } else {
+            iV.disabled = true; iV.placeholder = clean ? "等级超出可添加范围" : "请先输入会员等级"; h.textContent = "";
+            if (u0 && clean && k > n0) { eL.hidden = false; eL.textContent = v0Msg; }   /* 用户 2026-10-20 */
+          }
+        };
+        iV.oninput = function () { c.el.querySelector("#naVE").hidden = true; };
+        iN.oninput = function () { nTouched = true; c.el.querySelector("#naNE").hidden = true; };
+      },
+      buttons: [{ text: "取消" }, { text: "确认添加", cls: "q", key: "ok", onClick: function (c) {
+        var lvS = c.el.querySelector("#naLv").value.trim(), v = c.el.querySelector("#naV").value.trim(), nm = c.el.querySelector("#naN").value.trim(), eL = c.el.querySelector("#naLvE"), eV = c.el.querySelector("#naVE"), eN = c.el.querySelector("#naNE");
+        function bad(el, t) { el.hidden = false; el.textContent = t; return false; }
+        eL.hidden = eV.hidden = eN.hidden = true;
+        /* 确认时整体校验（用户 2026-10-19）：等级、等级名称、累计值和限额与返水各字段同时逐项提示，任一不通过不关闭弹窗 */
+        var rbv = lrbCollect(c, lrbBlank()), ok = !!rbv, k = 0;
+        if (!lvS) ok = bad(eL, "请输入会员等级");
+        else if (!/^[1-9]\d*$/.test(lvS)) ok = bad(eL, "会员等级只能输入正整数");
+        else if (u0 && Number(lvS) > n0) ok = bad(eL, v0Msg);   /* 勾选沿用 LEVEL n 时不能在 n 之后添加（用户 2026-10-20；2026-10-21 改为不论是否已执行删除） */
+        else if (Number(lvS) > max + 1) ok = bad(eL, "等级需连续：当前最高 LEVEL " + max + "，最多添加到 LEVEL " + (max + 1));
+        else {
+          k = Number(lvS);
+          var b = lvBound(k, "add"), ve = lvValErr(v, b, "LEVEL " + (k - 1), "原 LEVEL " + k);
+          if (ve) ok = bad(eV, ve);
+          var ne = nmErr(nm, k, "add"); if (ne) ok = bad(eN, ne);
+        }
+        var gok = gcOk(c); if (!ok || !gok) return false;
+        function doAdd() {
+          levels.splice(k, 0, String(Number(v))); lvNm.splice(k, 0, nmSave(k, nm)); shiftLevels(k, 1, rbv); var v0m = v0Shift(k, 1); writeTop(); renderLevels(); renderLr();
+          toast("已添加 LEVEL " + k);
+          addLog("添加等级 LEVEL " + k + "（等级名称「" + nm + "」，有效投注累计值 " + fmtN(v) + "；" + lrbSumTxt(rbv) + "）" + (k <= max ? " · 原 LEVEL " + k + "–" + max + " 顺延为 LEVEL " + (k + 1) + "–" + (max + 1) + "，其限额与返水随等级顺延" : "") + (v0m ? " · " + v0m + "（VIP0 跟随原级别）" : "") + " · 奖励配置待填 · 立即生效");
+        }
+        /* 用户 2026-10-20：谷歌验证码直接填在添加弹窗里，点「确认添加」时与其他字段一并校验；插入到中间时再弹插入确认（取消 → 回到填写弹窗、内容保留），
+           确认后才生效并关闭填写弹窗；追加到最高级之后直接生效 */
+        function commit() { doAdd(); c.close(); }
+        if (k <= max) {
+          confirmBox("确认插入 LEVEL " + k, "插入后原 LEVEL " + k + "–" + max + " 依次顺延为 LEVEL " + (k + 1) + "–" + (max + 1) + "，它们的奖励配置和限额与返水跟随顺延；新 LEVEL " + k + " 的限额与返水取本次填写的值，奖励配置为空，请到「会员等级奖励配置」补填。" + "玩家 Level 按新门槛判定，沿用现有平台规则。" + (v0Lv() && k <= v0Lv() ? "<br><b class='glow'>插入后 VIP0 沿用的级别变为 LEVEL " + (v0Lv() + 1) + "</b>（VIP0 跟随原 LEVEL " + v0Lv() + "，【VIP特权】同步显示）。" : "") + "<div class='vip-req-note ui-reqnote'><span>上方确认文案为示意" + (v0Lv() && k <= v0Lv() ? "；VIP0 跟随插入顺延的出处：用户 2026-10-20" : "") + "。</span></div>", "确定插入", commit);
+        } else commit();
+        return false;
+      } }]
+    });
+  }
+  function lvEditDlg(k) {
+    var b = lvBound(k, "edit"), old = levels[k], oldRb = clone(lrbGet()["L" + k] || lrbBlank());
+    var isTop = k === levels.length - 1;
+    return dialog({
+      title: "修改 LEVEL " + k, width: 500,
+      body: lvFormRow("neN", "等级名称", "<input class='bo-inp' id='neN' style='width:220px' maxlength='20' value='" + esc(nmOf(k)) + "'><div class='vip-cnt' style='margin-top:4px'>默认与级别一致（LEVEL " + k + "），可修改；等级名称需要唯一，自定义名称不能用「LEVEL + 数字」格式；最多 20 个字符；改回「LEVEL " + k + "」即恢复跟随级别</div><div class='ferr' id='neNE' hidden></div>") + lvFormRow("neV", "有效投注累计值", "<input class='bo-inp' id='neV' style='width:220px' inputmode='numeric' value='" + esc(old) + "' placeholder='" + esc(boundTxt(b)) + "'><div class='vip-cnt' style='margin-top:4px'>范围：大于 LEVEL " + (k - 1) + " 的 " + fmtN(b.lo) + (isTop ? "，无上限（最高级）" : "，且小于 LEVEL " + (k + 1) + " 的 " + fmtN(b.hi)) + (k === v0Lv() ? "<br><span class='glow'>本级是 VIP0 沿用的级别：修改后 VIP 等级的累计有效投注不高于本级的，在【VIP特权】标为「不符合标准」并关闭，提高门槛后才能开启</span>" : "") + "</div><div class='ferr' id='neVE' hidden></div>") +
+        lrbFieldsHtml(oldRb),
+      onOpen: function (c) { lrbBindDlg(c); c.el.querySelector("#neN").focus(); },
+      buttons: [{ text: "取消" }, { text: "确定", cls: "q", key: "ok", onClick: function (c) {
+        var v = c.el.querySelector("#neV").value.trim(), e = c.el.querySelector("#neVE"), ve = lvValErr(v, b, "LEVEL " + (k - 1), "LEVEL " + (k + 1));
+        var nm = c.el.querySelector("#neN").value.trim(), en = c.el.querySelector("#neNE"), ne = nmErr(nm, k, "edit"), oldNm = nmOf(k);
+        en.hidden = !ne; en.textContent = ne; e.hidden = !ve; e.textContent = ve;
+        var rbv = lrbCollect(c, oldRb);   /* 用户 2026-10-19：限额与返水与等级字段同时校验 */
+        if (ne || ve || !rbv) return false;
+        /* 用户 2026-10-21：修改 VIP0 沿用的 LEVEL n 后 VIP 等级不再高于它 → 这些等级标为「不符合标准」并关闭（替代原拦截）。
+           VIP 体系从未开启：保存后由【VIP特权】直接关闭（没有玩家）；开启过：这些等级上可能已有玩家，须先在【VIP特权】按「关闭」流程（复核、重新归级）关闭或提高门槛，本次不保存 */
+        var hitN = k === v0Lv() && /^\d+$/.test(v) && Number(v) !== Number(old) ? ncHit(v) : [];
+        if (hitN.length && vipSt() !== "never") { e.hidden = false; e.textContent = "VIP 体系已开启过：" + hitN.join("、") + " 的累计有效投注不高于 " + fmtN(v) + "，修改后会不符合标准。请先到【VIP特权】关闭这些等级（复核通过后重新归级）或提高它们的门槛，再修改本级"; return false; }
+        var rbCh = lrbDiffTxt(oldRb, rbv);
+        if (Number(v) === Number(old) && nm === oldNm && !rbCh.length) { toast("未修改", "info"); return; }
+        return gcode(function () {   /* 验证码在本弹窗填写，点确定时校验（用户 2026-10-20） */
+          levels[k] = String(Number(v)); lvNm[k] = nmSave(k, nm);
+          if (rbCh.length) { var rb = lrbGet(); rb["L" + k] = rbv; lrbPut(rb); }
+          if (hitN.length) { var vl = P.get("vipLvs"); if (vl) { vl.forEach(function (x) { if (hitN.indexOf(x.name) >= 0) x.on = false; }); P.set("vipLvs", vl); } }
+          writeTop(); renderLevels(); renderLr(); toast("已修改 LEVEL " + k + (hitN.length ? "；" + hitN.join("、") + " 不符合标准，已在【VIP特权】关闭，提高门槛后才能开启" : ""));
+          var parts = [];
+          if (hitN.length) parts.push("VIP0 沿用本级：" + hitN.join("、") + " 的累计有效投注不高于 " + fmtN(v) + "，标为不符合标准并在【VIP特权】关闭（VIP 体系从未开启，没有玩家）");
+          if (nm !== oldNm) parts.push("等级名称：「" + oldNm + "」→「" + nm + "」");
+          if (Number(v) !== Number(old)) parts.push("有效投注累计值：" + fmtN(old) + " → " + fmtN(v));
+          addLog("修改 LEVEL " + k + " · " + parts.concat(rbCh).join("；") + " · 立即生效");
+        });
+      } }]
+    });
+  }
+  function lvDel(k) {
+    var max = levels.length - 1, f0 = v0Lv();
+    /* 用户 2026-10-20：删除的正是 VIP0 沿用的级别 → 拦截，提示先到【VIP特权】更改 VIP0 沿用级别 */
+    if (f0 && k === f0) return dialog({ title: "不能删除 LEVEL " + k, width: 460, body: "<div>LEVEL " + k + " 是【VIP特权】VIP0 当前沿用的级别，不能删除。请先到【VIP特权】更改 VIP0 沿用级别（或取消沿用）后再删除。<a class='lnk' href='VIP会员体系-后台VIP特权配置页面.html#vip-level' style='margin-left:4px'>去【VIP特权】</a></div><div class='vip-req-note ui-reqnote'><span>上方提示为上线提示；出处：用户 2026-10-20。</span></div>", buttons: [{ text: "知道了", cls: "q", key: "ok" }] });
+    confirmBox("删除 LEVEL " + k, "确定删除 LEVEL " + k + "（等级名称「" + esc(nmOf(k)) + "」，有效投注累计值 " + fmtN(levels[k]) + "）？" + (k < max ? "删除后原 LEVEL " + (k + 1) + "–" + max + " 依次前移为 LEVEL " + k + "–" + (max - 1) + "，它们的奖励配置和返水跟随前移；" : "") +
+      "LEVEL " + k + " 的奖励配置和限额与返水一并删除。" + "玩家 Level 按新门槛判定，沿用现有平台规则。" + (f0 && k < f0 ? "<br><b class='glow'>删除后 VIP0 沿用的级别变为 LEVEL " + (f0 - 1) + "</b>（VIP0 跟随原 LEVEL " + f0 + "，【VIP特权】同步显示）。" : "") + "<div class='vip-req-note ui-reqnote'><span>上方确认文案为示意" + (f0 && k < f0 ? "；VIP0 跟随删除前移的出处：用户 2026-10-20" : "") + "。</span></div>", "确定删除", function () { return gcode(function () {   /* 验证码在本弹窗填写，点确定时校验（用户 2026-10-20） */
+        var v = levels[k], dn = nmOf(k); levels.splice(k, 1); lvNm.splice(k, 1); shiftLevels(k, -1); var v0m = v0Shift(k, -1); writeTop(); renderLevels(); renderLr();
+        toast("已删除 LEVEL " + k);
+        addLog("删除等级 LEVEL " + k + "（等级名称「" + dn + "」，有效投注累计值 " + fmtN(v) + "）" + (k < max ? " · 原 LEVEL " + (k + 1) + "–" + max + " 前移为 LEVEL " + k + "–" + (max - 1) : "") + "，其奖励配置和限额与返水一并删除" + (v0m ? " · " + v0m + "（VIP0 跟随原级别）" : ""));
+      }); });
+  }
+  document.getElementById("lvAdd").onclick = lvAddDlg;
+  lvBody.addEventListener("click", function (e) {
+    var ed = e.target.closest("[data-lvedit]"), dl = e.target.closest("[data-lvdel]");
+    if (ed && !ed.disabled) lvEditDlg(Number(ed.dataset.lvedit));
+    else if (dl && !dl.disabled) lvDel(Number(dl.dataset.lvdel));
+  });
+  /* ===== 下注限额与返水（按 Level 等级）：用户 2026-10-19 =====
+     普通会员（Level）单独配置返水，与 VIP特权页的 VIP 返水两套独立（模拟状态 lvRb，与 VIP 的 vipRb 分开）。
+     按 LEVEL 序号存储（"L0"…）；s/p/c = 单注 / 串关 / 单注冠军最大下注额，d = 充值返水比例(%)（体育返水比例 t 已去掉：平台已无体育类游戏，用户 2026-10-21；旧存储里的 t 不再读取），m = 单注最大返水。
+     示例数值从低到高递增，示例，运营出方案后填：单注 ₱10,000 + ₱500 × n（LEVEL 29 = ₱24,500），串关 1/2，单注冠军 30%，
+     充值返水 0.05% + 0.01% × ⌊n/10⌋（LEVEL 20–29 = 0.07%），单注最大返水 = 单注的 1%；均低于 VIP1 示例值（₱50,000、0.10%）。
+     用户 2026-10-19 并入等级表：去掉单独的表、「保存」「撤销」和草稿；数据在添加 / 修改等级弹窗（LEVEL 0 在表格上方单独弹窗）里维护，确认即写 lvRb。
+     用户 2026-10-19「所有返水的这个开关都去掉」：充值返水 / 体育返水总开关（模拟状态 lvRbSw）已删除；用户 2026-10-21 去掉体育返水比例，5 个字段始终生效、必填 */
+  var LRBN = { s: "单注最大下注额", p: "串关最大下注额", c: "单注冠军最大下注额", d: "充值返水比例(%)", m: "单注最大返水(PHP)" };
+  var LRK = ["s", "p", "c", "d", "m"];
+  function lrbDefault() {
+    var o = {};
+    for (var i = 0; i <= 29; i++) { var s = 10000 + 500 * i, d = 0.05 + 0.01 * Math.min(4, Math.floor(i / 10)); o["L" + i] = { s: String(s), p: String(s / 2), c: String(s * 3 / 10), d: d.toFixed(2), m: String(s / 100) }; }
+    return o;
+  }
+  function lrbBlank() { return { s: "", p: "", c: "", d: "", m: "" }; }
+  function lrbGet() { return clone(P.get("lvRb") || lrbDefault()); }
+  function lrbPut(o) { P.set("lvRb", clone(o)); }
+  function lrbPc(k) { return k === "d"; }
+  /* 只读显示：金额千分位，比例统一两位小数带 %（如 0.2 显示 0.20%，用户 2026-10-19；存储和校验不变），空值显示「未配置」 */
+  function lrbFv(k, v) { return v === undefined || v === null || v === "" ? "未配置" : lrbPc(k) ? Number(v).toFixed(2) + "%" : fmtN(v); }
+  /* 字段校验（原 validateLrb 规则）：下注限额和单注最大返水为正整数；返水比例 0–100、最多 2 位小数；全部必填 */
+  var LPCT = /^\d{1,3}(\.\d{1,2})?$/, LPOS = /^[1-9]\d*$/;
+  function lrbErr(k, v) {
+    if (v === "") return "请输入" + LRBN[k];
+    if (lrbPc(k)) return !LPCT.test(v) || Number(v) > 100 ? "请输入 0–100 的数，最多 2 位小数" : "";
+    return LPOS.test(v) ? "" : "请输入正整数";
+  }
+  /* 弹窗里的 5 个字段（用户 2026-10-19） */
+  function lrbFieldsHtml(v) {
+    return "<div class='rbsec glow'>下注限额与返水<span class='vip-cnt vip-live' style='font-weight:400;margin-left:6px'>金额单位 PHP；5 个字段都必填</span></div><div class='vip-req-note ui-reqnote'><span>上方「金额单位 PHP；5 个字段都必填」为上线提示；出处：用户 2026-10-19。</span></div>" +
+      LRK.map(function (k) {
+        var pc = lrbPc(k);
+        return "<div class='frow' style='grid-template-columns:150px 1fr;margin-bottom:8px'><label for='rb_" + k + "'><span class='req'>*</span>" + LRBN[k] + "</label><div class='fctl'>" +
+          "<input class='bo-inp' id='rb_" + k + "' data-rk='" + k + "' style='width:160px' inputmode='" + (pc ? "decimal" : "numeric") + "' value='" + esc(v[k] || "") + "' placeholder='" + (pc ? "0–100，最多 2 位小数" : "正整数") + "'>" + (pc ? " %" : "") +
+          "<div class='ferr' id='rb_" + k + "E' hidden></div></div></div>";
+      }).join("");
+  }
+  function lrbBindDlg(c) {
+    c.el.addEventListener("input", function (e) { var k = e.target.dataset && e.target.dataset.rk; if (!k) return; e.target.classList.remove("bad"); c.el.querySelector("#rb_" + k + "E").hidden = true; });
+  }
+  /* 逐字段校验并取值；任一不通过返回 null */
+  function lrbCollect(c, base) {
+    var out = clone(base), ok = true;
+    LRK.forEach(function (k) {
+      var i = c.el.querySelector("#rb_" + k), e = c.el.querySelector("#rb_" + k + "E");
+      var v = i.value.trim(), m = lrbErr(k, v);
+      i.classList.toggle("bad", !!m); e.hidden = !m; e.textContent = m;
+      if (m) ok = false; else out[k] = lrbPc(k) ? v : String(Number(v));
+    });
+    return ok ? out : null;
+  }
+  function lrbDiffTxt(a, b) {
+    var out = [];
+    LRK.forEach(function (k) { var x = String(a[k] === undefined ? "" : a[k]), y = String(b[k] === undefined ? "" : b[k]); if (x !== y && !(x !== "" && y !== "" && Number(x) === Number(y))) out.push(LRBN[k] + "：" + lrbFv(k, x) + " → " + lrbFv(k, y)); });
+    return out;
+  }
+  function lrbSumTxt(v) { return LRK.map(function (k) { return LRBN[k] + " " + lrbFv(k, v[k]); }).join("、"); }
+  /* 表格上方 LEVEL 0 一行 */
+  var LV0N = { s: "单注", p: "串关", c: "单注冠军", d: "充值返水", m: "单注最大返水" };
+  function renderLrbTop() {
+    var r = lrbGet().L0 || {};
+    var box = document.getElementById("lv0Box");   /* 「?」放在说明的文字「限额与返水」后面、同一行（用户 2026-10-20，规范通用） */
+    box.innerHTML = "<b>LEVEL 0</b>（未达到 LEVEL 1 的玩家）<span class='vip-nw ui-nw'>限额与返水<i class='qm' data-h='下注限额与返水（按 Level 等级）'>?</i></span>：" + LRK.map(function (k) {
+      var e = r[k] === undefined || r[k] === "";
+      return "<span" + (e ? " class='nil'" : "") + ">" + LV0N[k] + " " + lrbFv(k, r[k]) + "</span>";
+    }).join(" / ") + " <button type='button' class='bo-btn link' id='lv0Edit' data-perm='1'>修改</button>";
+    initHelp(box);
+  }
+  function lv0EditDlg() {
+    var oldRb = clone(lrbGet().L0 || lrbBlank());
+    return dialog({
+      title: "修改 LEVEL 0 限额与返水", width: 500,
+      body: "<div class='vip-cnt'>LEVEL 0 是系统初始等级（未达到 LEVEL 1 的玩家），只维护下注限额与返水。</div>" + lrbFieldsHtml(oldRb),
+      onOpen: function (c) { lrbBindDlg(c); },
+      buttons: [{ text: "取消" }, { text: "确定", cls: "q", key: "ok", onClick: function (c) {
+        var rbv = lrbCollect(c, oldRb); if (!rbv) return false;
+        var ch = lrbDiffTxt(oldRb, rbv);
+        if (!ch.length) { toast("未修改", "info"); return; }
+        return gcode(function () {   /* 验证码在本弹窗填写，点确定时校验（用户 2026-10-20） */
+          var rb = lrbGet(); rb.L0 = rbv; lrbPut(rb); renderLevels(); toast("已修改 LEVEL 0 限额与返水");
+          addLog("修改 LEVEL 0 限额与返水 · " + ch.join("；") + " · 立即生效");
+        });
+      } }]
+    });
+  }
+  document.getElementById("lv0Box").addEventListener("click", function (e) { if (e.target.closest("#lv0Edit")) lv0EditDlg(); });
+  /* 原型等级表每次打开页面恢复为演示数据，限额与返水随之恢复（避免与上次插入 / 删除后顺延过的数据错位） */
+  lrbPut(lrbDefault());
+
+  /* ===== 会员等级奖励配置：现有两张表（版式照线上截图） ===== */
+  /* 用户 2026-10-19：原「LEVEL 30 及以上停用时两表对应行置灰只读、表上方提示去启用」随「Level 段显示与停用」取消 */
+  function inp(t, i, f, v, cls, label, dis) { return "<input class='bo-inp " + cls + "' data-t='" + t + "' data-i='" + i + "' data-f='" + f + "' value='" + esc(v) + "' aria-label='" + esc(label) + "'" + (dis ? " disabled" : "") + ">"; }
+  function renderLr() {
+    var n = LRW.length, m = PHL.length;
+    var v0t = v0TipTxt(); document.getElementById("rwOffTip").innerHTML = v0t ? "<span class='glow' style='color:#B88230'><b>提示：</b>" + v0t + "两张表不再显示被删级别。</span>" : "";   /* 用户 2026-10-20 */
+    /* 用户 2026-10-19：左表不再新增 / 删除，行固定跟随「会员等级配置」列表（LEVEL 1 ~ 最高级），级别和等级名称只读，只填金额；等级增删时由 shiftLevels 同步 */
+    var rows = [];
+    for (var lv = 1; lv < levels.length; lv++) {
+      var idx = -1; for (var q = 0; q < LRW.length; q++) if (Number(LRW[q].lv) === lv) { idx = q; break; }
+      if (idx < 0) { LRW.push({ lv: String(lv), bd: "", up: "" }); idx = LRW.length - 1; }
+      var r = LRW[idx];
+      rows.push("<tr><td class='ro c'>" + lv + "</td><td class='ro'>" + esc(nmOf(lv)) + "</td><td>" + inp("lr", idx, "bd", r.bd, "m", "LEVEL " + lv + " 生日礼包金额") + "</td><td>" + inp("lr", idx, "up", r.up, "m", "LEVEL " + lv + " 升级奖励金额") + "</td></tr>");
+    }
+    document.getElementById("lrBody").innerHTML = rows.join("");
+    document.getElementById("phlBody").innerHTML = PHL.length ? PHL.map(function (p, i) {
+      var lvOpt = "<option value=''>请选择</option>"; for (var lv = 1; lv < levels.length; lv++) lvOpt += "<option value='" + lv + "'" + (String(lv) === String(p.lv) ? " selected" : "") + ">" + esc(nmOf(lv)) + (nmOf(lv) === "LEVEL " + lv ? "" : "（LEVEL " + lv + "）") + "</option>";
+      var pzOpt = "<option value=''>请选择</option>" + PZ.map(function (z) { var a = pzAvl(z); return "<option value='" + z.id + "'" + (z.id === p.p ? " selected" : "") + (a || z.id === p.p ? "" : " disabled") + " title='" + esc(pzCalc(z)) + "'>" + z.id + " " + esc(z.nm) + "（可用 " + a + "）</option>"; }).join("");   /* 用户 2026-10-20：显示编号、名称、可用，可用 0 置灰 */
+      var z = pzOf(p.p);
+      return "<tr><td><select class='bo-inp' data-t='ph' data-i='" + i + "' data-f='lv' aria-label='第 " + (i + 1) + " 行 会员等级'>" + lvOpt + "</select></td><td><select class='bo-inp w' data-t='ph' data-i='" + i + "' data-f='p' aria-label='第 " + (i + 1) + " 行 实体奖品' title='" + esc(z ? pzCalc(z) : "可用 = 平台库存 − 其他活动已占 − Level 段已保存的占用（悬停选项看各奖品计算过程）") + "'>" + pzOpt + "</select></td><td>" + inp("ph", i, "q", p.q, "s", "第 " + (i + 1) + " 行 发放库存").replace("<input ", "<input placeholder='" + (z ? "正整数，可用 " + pzAvl(z) : "先选奖品") + "' title='" + (z ? esc(pzCalc(z)) : "") + "' ") + "</td><td class='c'><button type='button' class='bo-btn link' data-perm='1' data-phdel='" + i + "'>删除</button></td></tr>";
+    }).join("") : "<tr><td colspan='4' class='c vip-cnt'>暂无实体奖品，点「+ 新增实体奖品」添加</td></tr>";
+    applyPerm();
+  }
+  document.addEventListener("input", function (e) { var t = e.target; if (!t.dataset || !t.dataset.t) return; (t.dataset.t === "lr" ? LRW : PHL)[+t.dataset.i][t.dataset.f] = t.value.trim(); });
+  /* 选了奖品后刷新「发放库存」占位提示（可用件数，用户 2026-10-20） */
+  document.addEventListener("change", function (e) { var t = e.target; if (t.dataset && t.dataset.t === "ph" && t.dataset.f === "p") renderLr(); });
+  document.getElementById("phlAdd").onclick = function () { PHL.push({ lv: "", p: "", q: "" }); renderLr(); };
+  document.getElementById("phlBody").addEventListener("click", function (e) {
+    var b = e.target.closest("[data-phdel]"); if (!b) return;
+    var i = Number(b.dataset.phdel), r = PHL[i], z = pzOf(r.p);
+    confirmBox("删除", "确定删除第 " + (i + 1) + " 行（" + (r.lv ? nmOf(Number(r.lv)) : "未选等级") + " · " + (z ? z.nm : "未选奖品") + "）？保存后生效。", "确定", function () { PHL.splice(i, 1); renderLr(); });
+  });
+  /* 原线上版式的「新增」「删除」（只能在末尾新增、从末行往前删除）处理；opCell 已不再调用，本段不再生效：等级表改为「+ 添加等级 / 修改 / 删除」（任意级别可删，至少保留 LEVEL 1），奖励左表行固定，右表用「+ 新增实体奖品」、任意行可删（清理过时写法，用户 2026-10-21） */
+  document.addEventListener("click", function (e) {
+    var a = e.target.closest("[data-add]"), d = e.target.closest("[data-del]");
+    if (a) {
+      var k = a.dataset.add;
+      if (k === "lv") { levels.push(""); renderLevels(); }
+      else if (k === "lr") { LRW.push({ lv: String(LRW.length), bd: "", up: "" }); renderLr(); }
+      else { PHL.push({ lv: "", nm: "", q: "" }); renderLr(); }
+    } else if (d && !d.disabled) {
+      var k2 = d.dataset.del, arr = k2 === "lv" ? levels : k2 === "lr" ? LRW : PHL, last = arr.length - 1;
+      var nm = k2 === "lv" ? "LEVEL " + last : "第 " + (last + 1) + " 行（LEVEL " + (arr[last].lv || "未填") + "）";
+      confirmBox("删除", "确定删除 " + nm + "？只能从末行往前删除。", "确定", function () { arr.pop(); if (k2 === "lv") renderLevels(); else renderLr(); });
+    }
+  });
+
+  /* 原「Level 段显示与停用」（renderLvCfg / saveLvCfg / autoStop，模拟状态 lv30）已删除：用户 2026-10-19「首先取消掉 LEVEL 段显示与停用的内容」，
+     会员最高等级改由 VIP 最低等级限制（见上方 vLow / vipCap / lvBound） */
+
+  /* ===== 前台显示方式（用户 2026-10-19为两态，同日改为单选）=====
+     两项：会员身份（普通会员）/ 会员等级（LEVEL n），默认「会员身份」；只影响前台非 VIP 玩家，后台 Level 段照常累计、照常发 Level 奖励；
+     VIP 玩家始终显示 VIP 等级，不受此设置控制；非 VIP 玩家（含未完成 KYC、VIP 体系关闭期间的原 VIP 玩家，新旧版本 App 相同）一律跟随此设置。
+     模拟状态 lvShow（true = 会员等级）与前台 VIP中心共用（同一 sessionStorage），键名不改 */
+  /* 用户 2026-10-19 改：两态开关改为单选按钮「前台显示方式」：会员身份（普通会员）= lvShow false（默认）/ 会员等级（LEVEL n）= lvShow true；
+     点未选中的一项弹确认框（内填谷歌验证码），取消则单选恢复原选项；写操作日志 */
+  var LVS_ON = "会员等级（LEVEL n）", LVS_OFF = "会员身份（普通会员）";
+  function renderLvShow() {
+    var on = !!P.get("lvShow"), rs = document.querySelectorAll('input[name="lvShowRdo"]');
+    rs[0].checked = !on; rs[1].checked = on;
+    document.getElementById("lvRdoIdL").classList.toggle("on", !on); document.getElementById("lvRdoLvL").classList.toggle("on", on);
+    document.getElementById("lvShowHint").textContent = on
+      ? "当前：会员等级。前台普通会员级别（非 VIP）的玩家显示其 LEVEL n（头像徽章「LEVEL n」、普通用户卡片「LEVEL n」）。非 VIP 玩家（含未完成 KYC 的玩家、VIP 体系关闭期间的原 VIP 玩家，新旧版本 App 相同）一律跟随此设置；VIP 玩家始终显示 VIP 等级，不受此设置控制。"
+      : "当前：会员身份（默认）。前台普通会员级别（非 VIP）的玩家都显示为普通会员，不显示 LEVEL n；底层 Level 段照常累计、照常按会员等级奖励配置发 Level 奖励。非 VIP 玩家（含未完成 KYC 的玩家、VIP 体系关闭期间的原 VIP 玩家，新旧版本 App 相同）一律跟随此设置；VIP 玩家始终显示 VIP 等级，不受此设置控制。";
+  }
+  function toggleLvShow() {
+    var o = !!P.get("lvShow"), to = o ? LVS_OFF : LVS_ON;
+    renderLvShow();   /* 确认前单选先恢复原选项，确认成功后才切换 */
+    return confirmBox("前台显示方式改为「" + to + "」", o
+      ? "确定改为「会员身份（普通会员）」？改后前台普通会员级别（非 VIP）的玩家都显示为普通会员，不再显示 LEVEL n；后台 Level 段照常累计、照常发 Level 奖励。VIP 玩家不受影响。<div class='vip-req-note ui-reqnote'><span>上方确认文案为示意。</span></div>"
+      : "确定改为「会员等级（LEVEL n）」？改后前台普通会员级别（非 VIP）的玩家显示其 LEVEL n（头像徽章和普通用户卡片），其他位置沿用目前平台显示规则。VIP 玩家不受影响。<div class='vip-req-note ui-reqnote'><span>上方确认文案为示意。</span></div>",
+      "确定修改", function () {
+        return gcode(function () {
+          P.set("lvShow", !o); renderLvShow(); toast("前台显示方式已改为「" + to + "」");
+          addLog("前台显示方式：" + (o ? LVS_ON : LVS_OFF) + " → " + to + " · 立即生效（只影响前台非 VIP 玩家的显示，Level 段累计和奖励照常）");
+        });
+      });
+  }
+  document.querySelectorAll('input[name="lvShowRdo"]').forEach(function (r) { r.onchange = function () { if ((r.value === "lv") !== !!P.get("lvShow")) toggleLvShow(); }; });
+
+  /* ===== 「需确认」标签（PRD 3.5，K01–K04）：只存本页模拟状态 ===== */
+  var KOPT = ["按建议解决", "不采纳建议，按我的意见", "暂不处理"];
+  function renderK() {
+    var st = P.get("kchk") || {};
+    document.querySelectorAll(".kq[data-k]").forEach(function (b) {
+      var s = st[b.dataset.k];
+      b.textContent = s ? "需确认：" + s.opt : "需确认"; b.classList.toggle("done", !!s);
+      b.setAttribute("aria-label", b.dataset.k + " 需研发评估事项" + (s ? "，已选：" + s.opt : ""));
+    });
+  }
+  function openK(k) {
+    var d = KCHK[k], s = (P.get("kchk") || {})[k] || {};
+    if (!d) return;
+    return dialog({
+      title: "需确认 · " + d.title, width: 640,
+      body: "<div class='kd'>" + (d.q ? "<b>问题</b><span>" + esc(d.q) + "</span>" : "<b>需求内容</b><span>" + esc(d.req) + "</span><b>后台现状</b><span>" + esc(d.now) + "</span>") + "<b>后果</b><span>" + esc(d.risk) + "</span><b>建议</b><span>" + esc(d.adv) + "</span></div>" +   /* 有 q 时只显示「问题 / 后果 / 建议」三项（用户 2026-10-19 要求简单明确） */
+        "<div><span class='req' style='color:#F56C6C'>*</span>处理方案</div><div class='opt' id='kOpt'>" + KOPT.map(function (o) { return "<span class='rd" + (s.opt === o ? " on" : "") + "' data-v='" + o + "' role='radio' tabindex='0'><i></i>" + o + "</span>"; }).join("") + "</div><div class='ferr' id='kOptE' hidden></div>" +
+        "<div><label class='flab' for='kNote'>处理意见<span class='vip-cnt'>（选「不采纳建议，按我的意见」时必填）</span></label><textarea class='bo-inp' id='kNote' rows='3' style='height:auto;width:100%;box-sizing:border-box;padding:6px 10px' placeholder='请输入处理意见'>" + esc(s.note || "") + "</textarea><div class='ferr' id='kNoteE' hidden></div></div>" +
+        "<div class='vip-cnt'>原型中的选择只在页面上演示，不作为需求结论；结论以产品更新后的 PRD 为准。</div>",
+      onOpen: function (c) { bindRadios(c.el.querySelector("#kOpt"), function () { c.el.querySelector("#kOptE").hidden = true; c.el.querySelector("#kNoteE").hidden = true; }); },
+      buttons: [{ text: "取消" }, { text: "确定", cls: "q", key: "ok", onClick: function (c) {
+        var o = c.el.querySelector("#kOpt .rd.on"), note = c.el.querySelector("#kNote").value.trim(), e1 = c.el.querySelector("#kOptE"), e2 = c.el.querySelector("#kNoteE");
+        e1.hidden = !!o; e1.textContent = "请选择处理方案"; if (!o) return false;
+        var bad = o.dataset.v === KOPT[1] && !note;
+        e2.hidden = !bad; e2.textContent = "选择「不采纳建议，按我的意见」时，处理意见必填"; c.el.querySelector("#kNote").classList.toggle("bad", bad); if (bad) return false;
+        var st = clone(P.get("kchk") || {}); st[k] = { opt: o.dataset.v, note: note }; P.set("kchk", st); renderK();
+        addLog("需确认 " + k + "（" + d.title + "）· 处理方案：" + o.dataset.v + (note ? " · 意见：" + note : "") + "（原型演示，不作为需求结论）");
+      } }]
+    });
+  }
+  document.addEventListener("click", function (e) { var b = e.target.closest(".kq[data-k]"); if (b) { e.preventDefault(); openK(b.dataset.k); } });
+
+  /* ===== 会员等级奖励配置保存（Level 段现有配置，沿用现状；VIP 奖励与全局参数已移到 VIP特权 页，用户 2026-10-17） ===== */
+  function saveRw() {
+    if (document.getElementById("vRewards").hidden) show("rewards");
+    if (LRW.concat(PHL).some(function (r) { return !/^\d+$/.test(r.lv); }) || LRW.some(function (r) { return !/^\d+$/.test(r.bd) || !/^\d+$/.test(r.up); }) || PHL.some(function (p) { return !p.p; })) { toast("请完整填写：金额为 ≥ 0 的整数，实体奖品需选择会员等级和奖品", "err"); return; }
+    /* 发放库存（用户 2026-10-20，实体奖品管理口径，覆盖 2026-10-19「需小于当前平台剩余库存」）：正整数；同一等级不能重复配同一奖品（用户 2026-10-19）；
+       按奖品汇总：新增占用件数（本次合计 − 已保存合计）≤ 可用（= 平台库存 − 其他活动已占 − Level 段已占），允许正好用完；减少即释放；
+       任一奖品不满足整次保存失败（原子）；通过后调用实体「分配活动库存」，以实体返回为准（实体 v1.1 能力，待实体对话定稿） */
+    var sum = {}, seen = {}, perr = "";
+    PHL.forEach(function (r, i) {
+      if (perr) return; var z = pzOf(r.p), key = r.lv + "|" + r.p;
+      if (!/^[1-9]\d*$/.test(r.q)) { perr = "第 " + (i + 1) + " 行发放库存需为正整数"; return; }
+      if (seen[key]) { perr = "第 " + (i + 1) + " 行：" + nmOf(Number(r.lv)) + " 已配置过 " + z.nm + "，不能重复"; return; }
+      seen[key] = 1; sum[r.p] = (sum[r.p] || 0) + Number(r.q);
+    });
+    var bad = [], alloc = [];
+    if (!perr) PZ.forEach(function (z) {
+      var add = (sum[z.id] || 0) - phlSum(phlSaved, z.id), a = pzAvl(z);
+      if (add > a) bad.push(z.id + " " + z.nm + " 新增占用 " + add + " 件，可用只有 " + a + " 件（" + pzCalc(z) + "）");
+      else if (add) alloc.push(z.id + " " + (add > 0 ? "占用 +" + add : "释放 " + (-add)));
+    });
+    if (bad.length) perr = "库存不足，整次保存失败（任何修改都未保存）：" + bad.join("；") + "。同一奖品配在多个等级时按奖品汇总";
+    if (perr) { toast(perr, "err"); return; }
+    return gcode(function () {
+      phlSaved = JSON.parse(JSON.stringify(PHL)); renderLr();
+      toast("保存成功" + (alloc.length ? "（已调用实体「分配活动库存」：" + alloc.join("、") + "）" : ""));
+      addLog("保存会员等级奖励配置（Level 段：活动状态、生日礼包与升级奖励、实体奖品）· 记录修改前后值" + (alloc.length ? " · 调用实体「分配活动库存」：" + alloc.join("、") + "，以实体返回为准" : ""));
+    });
+  }
+  document.getElementById("rwSave").onclick = saveRw;
+
+  /* ===== 场馆成长值倍数（现有功能，从 VIP特权页移到本页，用户 2026-10-20）：确认弹窗（内填谷歌验证码） → 写日志，权限码「保存会员等级配置」。
+     原型只校验非空且 ≥ 0 的数（现有校验规则资料未覆盖，沿用线上） ===== */
+  var lmIn = [].slice.call(document.querySelectorAll("#lmBody .lmi"));
+  var lmSaved = lmIn.map(function (i) { return i.value; });
+  function lmName(i) { return i.closest("tr").firstElementChild.textContent; }
+  document.getElementById("lmSave").onclick = function () {
+    var bad = lmIn.filter(function (i) { var v = i.value.trim(); return !/^\d+(\.\d+)?$/.test(v); });
+    lmIn.forEach(function (i) { i.classList.toggle("bad", bad.indexOf(i) >= 0); });
+    if (bad.length) { toast(lmName(bad[0]) + "：请输入 ≥ 0 的数", "err"); bad[0].focus(); return; }
+    var ch = [];
+    lmIn.forEach(function (i, k) { var v = i.value.trim(); if (Number(v) !== Number(lmSaved[k])) ch.push(lmName(i) + " " + lmSaved[k] + " → " + v); });
+    if (!ch.length) { toast("未修改", "info"); return; }
+    confirmBox("保存场馆成长值倍数", "确认保存以下修改？修改后次日 03:50 生效（时区以研发确认为准），只影响普通用户 Level 段成长值。<br>" + ch.map(esc).join("<br>"), "确定", function () {
+      return gcode(function () {
+        lmSaved = lmIn.map(function (i) { return i.value.trim(); });
+        toast("保存成功，次日 03:50 生效（时区以研发确认为准）");
+        addLog("保存场馆成长值倍数 · " + ch.join("；") + " · 次日 03:50 生效（时区以研发确认为准）");
+      });
+    });
+  };
+
+  /* ===== 活动奖励统计（现有页签，版式和字段以线上截图为准，原样示意；只含 Level 段奖励记录。
+     VIP 奖励记录移到【用户管理 › VIP特权 › 会员福利】页签的会员福利记录，用户 2026-10-17：会员等级与 VIP特权 分开）
+     示例为虚构账号（不使用线上账号）；金额与本页奖励表一致；规则 N10：VIP1 及以上的玩家不再领 Level 段奖励，示例玩家都是普通用户 ===== */
+  var LREC = [
+    { acc: "player_a06", ml: "LEVEL 3", at: "2026-10-12 15:20:09", type: "upgrade", amt: 3, pay: "2026-10-12 15:20:09" },
+    { acc: "player_a06", ml: "LEVEL 2", at: "2026-10-12 15:20:09", type: "upgrade", amt: 2, pay: "2026-10-12 15:20:09" },
+    { acc: "player_a06", ml: "LEVEL 1", at: "2026-10-12 15:19:06", type: "upgrade", amt: 1, pay: "2026-10-12 15:19:06" },
+    { acc: "player_a01", ml: "LEVEL 20", at: "2026-10-11 00:00:01", type: "upgrade", amt: 20, pay: "2026-10-11 00:00:01" },
+    { acc: "player_a02", ml: "LEVEL 11", at: "2026-10-06 00:00:01", type: "upgrade", amt: 11, pay: "2026-10-06 00:00:01" },
+    { acc: "player_a04", ml: "LEVEL 4", at: "2026-10-03 09:12:30", type: "birthday", amt: 40, pay: "2026-10-03 11:20:45" },
+    { acc: "player_a03", ml: "LEVEL 15", at: "2026-09-29 00:00:01", type: "upgrade", amt: 15, pay: "2026-09-29 00:00:01" },
+    { acc: "player_a05", ml: "LEVEL 10", at: "2026-09-15 10:05:12", type: "birthday", amt: 8, pay: "2026-09-15 14:02:10" },
+    /* 用户 2026-10-19：加 1 条待审核、1 条已驳回的生日礼包（虚构账号；金额取本页奖励表 LEVEL 3 ₱30、LEVEL 15 ₱15） */
+    { acc: "player_a07", ml: "LEVEL 3", at: "2026-10-12 09:40:18", type: "birthday", amt: 30, pay: "—", st: "pending", by: "—" },
+    { acc: "player_a08", ml: "LEVEL 15", at: "2026-10-08 13:05:51", type: "birthday", amt: 15, pay: "2026-10-08 16:22:40", st: "rejected", by: "运营账号B" }
+  ];
+  /* 后台原始值不变（type：upgrade / birthday；st：approved / pending / rejected，原始值为示意），页面只把显示改为中文（用户 2026-10-19；导出文件列值是否同步改中文待用户确认） */
+  LREC.forEach(function (r) { r.st = r.st || "approved"; r.by = r.by || "SYSTEM"; });
+  LREC.sort(function (a, b) { return a.at < b.at ? 1 : a.at > b.at ? -1 : 0; });
+  var TYN = { upgrade: "升级奖励", birthday: "生日礼包" };
+  var STN = { approved: ["已发放", "s-pass"], pending: ["待审核", "s-pend"], rejected: ["已驳回", "s-rej"] };
+  function sv(id) { return document.getElementById(id).value.trim(); }
+  function sFilter() {
+    var acc = sv("sAcc").toLowerCase(), amt = sv("sAmt").replace(/,/g, ""), ty = sv("sType"), st = sv("sSt"), f = sv("sFrom"), to = sv("sTo");
+    return LREC.filter(function (r) {
+      var d = r.at.slice(0, 10);
+      if (acc && r.acc.toLowerCase().indexOf(acc) < 0) return false;
+      if (amt && String(r.amt) !== amt) return false;
+      if (ty && r.type !== ty) return false; if (st && r.st !== st) return false;
+      if (f && d < f) return false; if (to && d > to) return false; return true;
+    });
+  }
+  /* 合计三项（用户 2026-10-19）：发放总额 = 列表全部记录；已发放总额 = 状态 approved；
+     未发放总额 = 待审核 + 已驳回等未到账（发放总额 − 已发放总额），三者算术自洽 */
+  function sSums(list) {
+    var all = 0, paid = 0;
+    list.forEach(function (r) { all += r.amt; if (r.st === "approved") paid += r.amt; });
+    return { all: all, paid: paid, un: all - paid };
+  }
+  function renderStats() {
+    var list = sFilter(), t = sSums(list);
+    function trow(lab, v, tip) { return "<tr class='total'><td title='" + tip + "'>" + lab + "</td><td></td><td></td><td></td><td>" + fmt(v) + "</td><td></td><td></td><td></td><td></td></tr>"; }
+    document.getElementById("sBody").innerHTML = list.length ? list.map(function (r) {
+      var s = STN[r.st] || [r.st, ""];
+      return "<tr><td>" + esc(r.acc) + "</td><td>" + r.ml + "</td><td>" + r.at + "</td><td title='原始值 " + r.type + "'>" + (TYN[r.type] || r.type) + "</td><td>" + fmt(r.amt) + "</td><td>" + r.pay + "</td><td class='" + s[1] + "' title='原始值 " + r.st + "'>" + s[0] + "</td><td>" + r.by + "</td><td></td></tr>";
+    }).join("") + trow("发放总额", t.all, "当前列表全部记录") + trow("已发放总额", t.paid, "状态为已发放") + trow("未发放总额", t.un, "待审核 + 已驳回等未到账") : "<tr><td colspan='9' class='empty'>暂无数据</td></tr>";
+    document.getElementById("sPager").innerHTML = "<span>Total " + list.length + "</span><span class='pgr-sz'>10/page ﹀</span><span class='pgr-nav'>‹ <b>1</b> ›</span><span>Go to <span class='pgr-go'>1</span></span>";
+    ["sTotAll", "sTot", "sTotUn"].forEach(function (id) { document.getElementById(id).textContent = "0"; });
+    return list.length;
+  }
+  function resetS() { ["sAcc", "sAmt", "sType", "sSt"].forEach(function (id) { document.getElementById(id).value = ""; }); document.getElementById("sFrom").value = "2026-09-01"; document.getElementById("sTo").value = "2026-10-12"; renderStats(); }
+  document.getElementById("sSearch").onclick = renderStats;
+  /* 「查询总计」：按当前筛选计算已发放（原始值 approved，原「已通过」）记录的奖励金额合计（现有功能，原型示意；待审核、已驳回不计入） */
+  /* 用户 2026-10-19：「查询总计」按当前筛选显示发放总额、已发放总额、未发放总额三项 */
+  document.getElementById("sTotBtn").onclick = function () { var t = sSums(sFilter()); document.getElementById("sTotAll").textContent = fmt(t.all); document.getElementById("sTot").textContent = fmt(t.paid); document.getElementById("sTotUn").textContent = fmt(t.un); };
+  /* 用户 2026-10-19：导出文件列值跟随后台语言（本原型后台语言为简体中文） */
+  document.getElementById("sExport").onclick = function () {
+    if (!sFilter().length) { toast("暂无数据可导出", "info"); return; }
+    toast("已按当前筛选条件提交导出任务。后台语言为简体中文，导出中文（升级奖励 / 生日礼包、已发放 / 待审核 / 已驳回）；切换为 English 时导出英文");
+  };
+
+  /* ===== 视图切换 ===== */
+  /* lvcfg：原「Level 段显示与停用」场景（已取消，用户 2026-10-19），旧链接按 lvcap（会员最高等级上限）显示 */
+  var VIEWS = { levels: "会员等级配置", lvshow: "会员等级配置", lvrb: "会员等级配置", lvcap: "会员等级配置", lvcfg: "会员等级配置", lvmul: "会员等级配置", need: "会员等级配置", rewards: "会员等级奖励配置", stats: "活动奖励统计" };
+  var TABS = { "会员等级配置": "levels", "会员等级奖励配置": "rewards", "活动奖励统计": "stats" };
+  /* VIP 段的场景已移到 VIP特权 页（用户 2026-10-17）：旧链接（如运营需求确认页里的 #preview）自动转到 VIP特权 页同名场景 */
+  var MOVED = ["preview", "pending", "review", "scope", "first", "close"];
+  function show(view, run) {
+    if (MOVED.indexOf(view) >= 0) { location.replace("VIP会员体系-后台VIP特权配置页面.html#" + view); return; }
+    if (!VIEWS[view]) view = "levels";
+    closeTip();
+    var tab = TABS[VIEWS[view]];
+    document.getElementById("vLevels").hidden = tab !== "levels";
+    document.getElementById("vRewards").hidden = tab !== "rewards";
+    document.getElementById("vStats").hidden = tab !== "stats";
+    document.querySelectorAll(".bo-tabs [role=tab]").forEach(function (t) { var on = t.dataset.view === tab; t.classList.toggle("on", on); t.setAttribute("aria-selected", on); });
+    document.getElementById("crumb").innerHTML = "位置 › 用户管理 › 会员等级 › <b>" + VIEWS[view] + "</b>";
+    if (location.hash.slice(1) !== view) history.replaceState(null, "", "#" + view);
+    window.scrollTo(0, 0);
+    /* 嵌在「运营需求确认」页时，把当前视图告诉外层，用来同步切换按钮 */
+    if (window.self !== window.top) window.parent.postMessage({ type: "proto-view", view: view }, "*");
+    if (run) scene(view);
+  }
+  /* 原「会员等级配置 / 限额与返水」子页签已取消，内容并回一个页面（用户 2026-10-19） */
+  function scene(view) {
+    closeAll();
+    if (view === "lvcap" || view === "lvcfg") { var ct = document.getElementById("lvCapTip"); (ct.hidden ? document.getElementById("lvWrap") : ct).scrollIntoView({ block: "center" }); }
+    else if (view === "lvshow") document.getElementById("lvShowBox").scrollIntoView({ block: "center" });
+    else if (view === "lvrb") document.getElementById("lrbBlk").scrollIntoView({ block: "start" });
+    else if (view === "lvmul") document.getElementById("lvMulBlk").scrollIntoView({ block: "start" });
+    else if (view === "need") openK("K04");
+    else if (view === "stats") resetS();
+    buildPanel();
+  }
+  window.addEventListener("hashchange", function () { show(location.hash.slice(1), true); });
+  document.addEventListener("click", function (e) { var b = e.target.closest("[data-go]"); if (b) { e.preventDefault(); show(b.dataset.go, true); } });
+  document.querySelectorAll(".bo-tabs [role=tab]").forEach(function (t) {
+    function go() { if (t.dataset.view) show(t.dataset.view); else location.href = t.dataset.href; }
+    t.onclick = go; t.onkeydown = function (e) { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); go(); } };
+  });
+  function syncWho() { document.getElementById("who").textContent = ACC[P.get("me")] + " ▾"; }
+
+  /* ===== 模拟操作面板 ===== */
+  function buildPanel() {
+    P.panel(document.getElementById("simPanel"), [
+      { title: "VIP 体系状态（在【VIP特权】开关；与其他后台页共用状态。原「LEVEL 30 及以上随 VIP 体系开启自动停用」已取消，用户 2026-10-19）", items: [
+        { type: "radio", key: "vipSt", tag: "状态", options: [["never", "从未开启"], ["on", "开启"], ["off", "关闭（已选 ① 继续累计）"]], change: function (v) { if (v === "off") P.set("closeMode", "1"); } }
+      ] },
+
+      /* 用户 2026-10-21：取消原「会员最高等级与 VIP 最低等级互相限制」；改为勾选沿用 LEVEL n 时：不能在 n 之后添加（第 7 条），修改 LEVEL n 后不高于它的 VIP 等级标为不符合标准并关闭（用户 2026-10-21 改）；不勾选不比较 */
+      { title: "VIP0 沿用级别的限制（用户 2026-10-21：取消原互相限制）", items: [
+        { type: "button", tag: "沿用", label: "【VIP特权】VIP0 设为勾选「沿用普通会员级别」（沿用当前会员最高等级，默认不删除级别；上线默认勾选）", run: function () { v0Follow(true); } },
+        { type: "button", tag: "拦截", label: "勾选沿用 LEVEL 29 时：添加 LEVEL 30（LEVEL 29 之后）→ 拦截「已沿用 LEVEL 29 作为 VIP0，不能在其后添加级别…」", run: function () { v0FollowAt(29); demoAdd("599999"); } },
+        { type: "button", tag: "拦截", label: "勾选沿用 LEVEL 20（未执行删除，LEVEL 21–29 仍在）时：添加 LEVEL 25 → 拦截（不论是否已执行删除）", run: function () { v0FollowAt(20); demoAdd("400000", 25); } },
+        { type: "button", tag: "通过", label: "勾选沿用 LEVEL 29 时：插入 LEVEL 5（≤ 沿用级别）→ 允许，插入确认提示 VIP0 沿用级别变为 LEVEL 30", run: function () { v0FollowAt(29); demoIns(5); } },
+        { type: "button", tag: "已开启", label: "勾选沿用 LEVEL 29、VIP 体系已开启（演示默认）时：修改 LEVEL 29 有效投注累计值为 600,000（= VIP1，相等也算不符合）→ 拦截「VIP 体系已开启过：VIP1 … 修改后会不符合标准。请先到【VIP特权】关闭这些等级…或提高它们的门槛」（用户 2026-10-21）", run: function () { P.set("vipSt", "on"); v0FollowAt(29); demoEdit(29, "600000"); } },
+        { type: "button", tag: "不符合标准", label: "VIP 体系从未开启时：修改 LEVEL 29 为 1,200,000 → 保存，提示不高于 1,200,000 的 VIP 等级（默认 VIP1、VIP2）不符合标准，已在【VIP特权】关闭；打开【VIP特权】可见「已关闭 · 不符合标准」（用户 2026-10-21）", run: function () { P.set("vipSt", "never"); v0FollowAt(29); demoEdit(29, "1200000"); } },
+        { type: "button", tag: "通过", label: "勾选沿用 LEVEL 29 时：修改 LEVEL 29 为 599,999 → 通过（填验证码后生效）", run: function () { v0FollowAt(29); demoEdit(29, "599999"); } },
+        { type: "button", tag: "不沿用", label: "【VIP特权】VIP0 设为不勾选（两套独立）→ 添加 LEVEL 30、累计值 900,000 → 不比较，添加成功", run: function () { v0Follow(false); demoAdd("900000"); } },
+        { type: "button", tag: "不沿用", label: "不勾选时：修改最高级有效投注累计值为 800,000 → 不比较（不超过相邻级即可）", run: function () { v0Follow(false, 1); demoEdit(levels.length - 1, "800000"); } },
+        { type: "note", text: "原「会员最高等级须小于 VIP 最低等级」（含「VIP 最低等级累计充值为 0 才比较」）已取消（用户 2026-10-21）。勾选时只约束被沿用的 LEVEL n：不能在其后添加；修改 LEVEL n 后，累计有效投注不高于它的 VIP 等级（取【VIP特权】保存后的各级，默认 VIP1 = 600,000）标为「不符合标准」并在【VIP特权】关闭；VIP 体系开启过时须先在【VIP特权】关闭或提高门槛，否则不能保存（用户 2026-10-21 改）。VIP 计算方式为成长值时不比较。不勾选时两套独立，不比较。" }
+      ] },
+      { title: "VIP0 沿用级别跟随插入 / 删除（用户 2026-10-20）", items: [
+        { type: "button", tag: "准备", label: "模拟【VIP特权】VIP0 沿用 LEVEL 20 并已删除 LEVEL 21 及以上", run: function () { v0Demo(20); } },
+        { type: "button", tag: "插入", label: "添加 LEVEL 5（≤ 沿用级别）→ 插入确认提示「插入后 VIP0 沿用的级别变为 LEVEL 21」", run: function () { if (!v0Lv()) v0Demo(20); demoIns(5); } },
+        { type: "button", tag: "删除", label: "删除 LEVEL 3（< 沿用级别）→ 确认弹窗提示 VIP0 沿用级别 −1", run: function () { if (!v0Lv()) v0Demo(20); show("levels"); lvDel(3); } },
+        { type: "button", tag: "拦截", label: "删除 VIP0 正在沿用的那一级 → 拦截，提示先到【VIP特权】更改", run: function () { if (!v0Lv()) v0Demo(20); show("levels"); lvDel(v0Lv()); } }
+      ] },
+      { title: "实体奖品发放库存（实体奖品管理口径，用户 2026-10-20）", items: [
+        { type: "button", tag: "通过", label: "LEVEL 10 配 P006 Lexus NX350h 1 件（可用 1，正好用完）→ 保存通过", run: function () { phlDemo([{ lv: "10", p: "P006", q: "1" }]); } },
+        { type: "button", tag: "汇总", label: "LEVEL 10、LEVEL 12 都配 P007 AirPods Pro 各 3 件（合计新增 6，可用 4）→ 整次保存失败", run: function () { phlDemo([{ lv: "10", p: "P007", q: "3" }, { lv: "12", p: "P007", q: "3" }]); } },
+        { type: "button", tag: "原子", label: "P006 1 件（满足）+ P004 Rolex Explorer 3 件（可用 2）→ 整次失败，P006 也不保存", run: function () { phlDemo([{ lv: "10", p: "P006", q: "1" }, { lv: "12", p: "P004", q: "3" }]); } },
+        { type: "note", text: "可用 = 平台库存 − 其他活动已占 − Level 段已保存的占用（已定，用户 2026-10-20；悬停下拉选项看计算过程）；P008 Dyson V15 可用 0，下拉置灰。示例库存与 VIP特权页「平台库存」一致。" }
+      ] },      { title: "前台显示方式（单选；用户 2026-10-19，示意）", items: [
+        { type: "button", tag: "开关", label: "切换「前台显示方式」单选：会员身份（普通会员）/ 会员等级（LEVEL n）（确认弹窗内填谷歌验证码 + 日志；与前台 VIP中心共用状态 lvShow）", run: function () { show("levels"); toggleLvShow(); } },
+        { type: "note", text: "选「会员等级」后到前台 VIP中心「普通用户」场景，头像徽章显示「LEVEL 23」、普通用户卡片显示「当前等级 LEVEL 23」；选「会员身份」时显示「普通用户」。" }
+      ] },
+      { title: "下注限额与返水（按 Level 等级；用户 2026-10-19，示意）", items: [
+        /* 用户 2026-10-19：限额与返水并入等级表，演示按钮相应改写（示意） */
+        { type: "button", tag: "修改", label: "修改 LEVEL 1：充值返水比例填 120 → 看校验（0–100、最多 2 位小数）", run: function () { show("lvrb", true); var c = lvEditDlg(1); c.el.querySelector("#rb_d").value = "120"; c.btn.ok.click(); } },
+        { type: "button", tag: "添加", label: "添加等级、限额与返水留空 → 确认添加看必填校验", run: function () { show("lvrb", true); var c = lvAddDlg(), iL = c.el.querySelector("#naLv"); iL.value = "5"; iL.dispatchEvent(new Event("input", { bubbles: true })); c.el.querySelector("#naV").value = "350"; c.btn.ok.click(); } },
+        { type: "button", tag: "LEVEL 0", label: "修改 LEVEL 0 的限额与返水（只含 5 个字段）", run: function () { show("lvrb", true); lv0EditDlg(); } },
+        { type: "note", text: "Level 返水与 VIP特权页的 VIP 返水两套独立、互不影响；返水总开关已去掉（用户 2026-10-19）；与【游戏管理 › 返水设定】/ 会员层级实时返水的关系见规则批注开发备注。" }
+      ] },
+      { title: "活动奖励统计（Level 段）", items: [
+        { type: "button", tag: "筛选", label: "奖励类型「升级奖励」（6 条，均已发放，合计 ₱52）", run: function () { show("stats"); document.getElementById("sType").value = "upgrade"; renderStats(); } },
+        { type: "button", tag: "筛选", label: "奖励类型「生日礼包」（4 条：已发放 2、待审核 1、已驳回 1，合计 ₱93）", run: function () { show("stats"); document.getElementById("sType").value = "birthday"; renderStats(); } },
+        { type: "button", tag: "筛选", label: "发放状态「待审核」（player_a07 生日礼包 ₱30）", run: function () { show("stats"); document.getElementById("sSt").value = "pending"; renderStats(); } },
+        { type: "button", tag: "筛选", label: "发放状态「已驳回」（player_a08 生日礼包 ₱15）", run: function () { show("stats"); document.getElementById("sSt").value = "rejected"; renderStats(); } },
+        { type: "button", tag: "总计", label: "点「查询总计」（发放总额 145 = 已发放总额 100 + 未发放总额 45）", run: function () { show("stats", true); document.getElementById("sTotBtn").click(); } },
+        { type: "button", tag: "导出", label: "点「导出」（后台语言简体中文 → 导出中文；English → 导出英文）", run: function () { show("stats", true); document.getElementById("sExport").click(); } }
+      ] },
+      { title: "设置账号权限", items: [
+        { type: "radio", key: "perm", tag: "权限", options: [["all", "有全部按钮权限"], ["none", "无按钮级权限（隐藏添加等级 / 修改 / 删除、前台显示方式、LEVEL 0 限额与返水修改、会员等级奖励配置「保存」、活动奖励统计「导出」）"]], change: applyPerm }
+      ] },
+      { title: "注入异常", items: [
+        { type: "button", label: "活动奖励统计查询无结果（会员账号 nobody_x）→ 暂无数据", run: function () { show("stats", true); document.getElementById("sAcc").value = "nobody_x"; renderStats(); } }
+      ] },
+      { title: "演示值说明", items: [{ type: "note", text: "谷歌验证码输入 000000 模拟错误，其他 6 位数字模拟正确。版式和字段照线上截图；LEVEL 0–10 数值取截图示例，其余虚构，只到 LEVEL 29（= 560,000；用户 2026-10-19 删除原 UAT 示意的 LEVEL 30–60）；活动奖励统计 10 条为虚构账号。「需确认」的选择只存本页模拟状态，点「清空原型状态」恢复。VIP 段的门槛、奖励、复核和 VIP 体系状态的演示在 VIP特权 页。原型演示默认「VIP 体系状态」为已开启（示例 2026-07-01 第一次开启，用户 2026-10-19）。原「会员最高等级须小于 VIP 最低等级」已取消；勾选沿用时不能在 LEVEL n 之后添加；修改 LEVEL n 后不高于它的 VIP 等级标为「不符合标准」并关闭（用户 2026-10-21）。等级表（含下注限额与返水）每次打开页面恢复为演示数据。「需确认」K04 说明框按现口径显示（用户 2026-10-19）。" }] },
+      { items: [{ type: "reset" }] }
+    ]);
+    /* 原「VIP 等级未配置」演示勾选框（vipNoneDemo）只为已取消的互相限制服务，已删除（用户 2026-10-21） */
+  }
+  /* 演示（用户 2026-10-21）：切换【VIP特权】VIP0「沿用普通会员级别」勾选 / 不勾选（共享状态 vip0）。勾选时沿用当前会员最高等级（默认不删除级别）；
+     quiet = 1：已是勾选时不改沿用级别、不提示（供其他演示按钮先切状态） */
+  /* 演示（用户 2026-10-21）：VIP0 勾选沿用指定的 LEVEL n（不删除级别） */
+  function v0FollowAt(n) {
+    closeAll(); show("levels");
+    var o = clone(P.get("vip0") || {}); o.follow = true; o.lv = String(Math.min(n, levels.length - 1)); o.bet = String(levels[Number(o.lv)]); o.dep = "0"; P.set("vip0", o); renderLevels();
+  }
+  /* 演示：修改 LEVEL k 的有效投注累计值并点「确定」（验证码 123456） */
+  function demoEdit(k, v) {
+    show("lvcap", true);
+    var c = lvEditDlg(k); c.el.querySelector("#neV").value = v; var g = c.el.querySelector(".gcin"); if (g) g.value = "123456"; c.btn.ok.click();
+  }
+  function v0Follow(on, quiet) {
+    var o = clone(P.get("vip0") || {});
+    if (on && quiet && o.follow) return;
+    closeAll(); show("levels");
+    var top = levels.length - 1;
+    if (on) { o.follow = true; if (!o.lv || Number(o.lv) > top) o.lv = String(top); o.bet = String(levels[Number(o.lv)]); o.dep = "0"; }
+    else { o.follow = false; o.lv = ""; o.bet = ""; o.dep = ""; }
+    P.set("vip0", o); renderLevels();
+    if (!quiet) demo(on ? "已模拟：VIP0 勾选「沿用普通会员级别」LEVEL " + o.lv + "：不能在 LEVEL " + o.lv + " 之后添加；修改 LEVEL " + o.lv + " 后，不高于它的 VIP 等级在【VIP特权】标为不符合标准并关闭。" : "已模拟：VIP0 不勾选「沿用普通会员级别」，普通会员与 VIP 两套独立，不做比较。");
+  }
+  /* 演示（用户 2026-10-20）：模拟【VIP特权】VIP0 沿用 LEVEL n 并已删除 LEVEL n+1 及以上 */
+  function v0Demo(n) {
+    closeAll(); show("levels");
+    var o = clone(P.get("vip0") || {}); o.follow = true; o.lv = String(n); o.cut = String(n); P.set("vip0", o);
+    P.set("vip0Use", { on: true, lv: n, deletedFrom: n + 1, at: now() });
+    v0Apply(); writeTop(); renderLevels(); renderLr();
+    demo("已模拟：VIP0 沿用 LEVEL " + n + "，LEVEL " + (n + 1) + " 及以上已删除。");
+  }
+  /* 演示：在 LEVEL k 插入（累计值取相邻两级中间，限额与返水按原 LEVEL k 预填，验证码 123456），停在插入确认弹窗 */
+  function demoIns(k) {
+    closeAll(); show("levels");
+    var c = lvAddDlg(), iL = c.el.querySelector("#naLv"), iV = c.el.querySelector("#naV");
+    iL.value = String(k); iL.dispatchEvent(new Event("input", { bubbles: true }));
+    iV.value = String(Math.floor((Number(levels[k - 1]) + Number(levels[k])) / 2)); iV.dispatchEvent(new Event("input", { bubbles: true }));
+    var r = lrbGet()["L" + k] || {}; LRK.forEach(function (x) { c.el.querySelector("#rb_" + x).value = r[x] || (lrbPc(x) ? "0.05" : "100"); });
+    c.el.querySelector(".gcin").value = "123456"; c.btn.ok.click();
+  }
+  /* 演示：实体奖品表恢复为已保存的行，再追加 rows 并点「保存」（插入等级后未填的奖励金额按 0 预填，便于只看库存校验） */
+  function phlDemo(rows) {
+    closeAll(); show("rewards");
+    LRW.forEach(function (r) { if (r.bd === "") r.bd = "0"; if (r.up === "") r.up = "0"; });
+    PHL.length = 0; JSON.parse(JSON.stringify(phlSaved)).concat(rows).forEach(function (r) { PHL.push(r); });
+    renderLr(); saveRw();
+  }  /* 演示：追加 LEVEL（最高级 + 1），填入累计值后点「确认添加」 */
+  function demoAdd(v, k) {
+    show("lvcap", true);
+    var c = lvAddDlg(), iL = c.el.querySelector("#naLv"), iV = c.el.querySelector("#naV");
+    iL.value = String(k || levels.length); iL.dispatchEvent(new Event("input", { bubbles: true }));
+    iV.value = v; iV.dispatchEvent(new Event("input", { bubbles: true }));
+    /* 用户 2026-10-19：限额与返水必填，演示时按当前最高级的值预填 */
+    var top = lrbGet()["L" + (levels.length - 1)] || {};
+    LRK.forEach(function (k) { c.el.querySelector("#rb_" + k).value = top[k] || (lrbPc(k) ? "0.05" : "100"); });
+    var gi = c.el.querySelector(".gcin"); if (gi) gi.value = "123456";   /* 演示填入验证码，只看等级 / 累计值校验（用户 2026-10-21） */
+    c.btn.ok.click();
+  }
+  buildPanel();
+  window.addEventListener("proto-change", function (e) {
+    var k = e.detail.key;
+    if (k === "perm" || k === "*") applyPerm();
+    if (k === "vipLow" || k === "vip0") renderCapTip();   /* 用户 2026-10-21：提示行只在 VIP0 勾选沿用时显示 */
+    if (k === "*" && v0Done) { location.reload(); return; }   /* 清空原型状态：已按 vip0Use 截断的演示等级表重新加载恢复（用户 2026-10-20） */
+    if (k === "*") { renderLevels(); renderLr(); renderStats(); }
+    if (k === "lvShow" || k === "*") renderLvShow();
+    if (k === "kchk" || k === "*") renderK();
+  });
+
+  /* ===== 初始化 ===== */
+  initHelp();
+  v0Apply();   /* 用户 2026-10-20：VIP0 沿用已删除 LEVEL n+1 及以上时，演示等级表只到 LEVEL n（先截断再写 lvTop） */
+  writeTop();   /* 用户 2026-10-19：打开页面时把会员最高等级写入共享状态 lvTop，VIP特权页据此校验 */
+  renderLevels(); renderLr(); renderLvShow(); renderK(); renderStats(); syncWho(); applyPerm();
+  show(location.hash.slice(1) || "levels", true);
+})();
+</script>
+<script>
+/* 后台菜单：一级菜单点击展开 / 收起（样式对齐真实运营后台，2026-10-13） */
+(function () {
+  document.querySelectorAll(".bo-menu .g").forEach(function (g) {
+    var s = g.nextElementSibling; if (s && !s.classList.contains("sub")) s = null;
+    if (!g.classList.contains("open") && s) s.hidden = true;
+    function tg() { if (g.classList.contains("me")) return; var o = !g.classList.contains("open"); g.classList.toggle("open", o); g.setAttribute("aria-expanded", o); if (s) s.hidden = !o; }
+    g.addEventListener("click", tg);
+    g.addEventListener("keydown", function (e) { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); tg(); } });
+  });
+})();
+</script>
+<script>
+/* 列表分页（用户 2026-10-20「当需求中出现列表时均需要有分页机制」/ 规范 v5.41：生成内容规范第五章第 2 节「列表分页」、需求包框架规范第 4 节）。
+   本页每个列表（含弹窗里的列表）表格下方放页码分页条：左侧写默认排序，右侧为共 N 条、每页条数（默认 20，可选 10 / 20 / 50 / 100）、上一页 / 页码 / 下一页、前往某页（回车跳转，超出范围取首页或末页）。
+   规则：改每页条数、筛选 / 搜索 / 重置后回到第 1 页；编辑后停在当前页；删除后当前页为空时回到上一页；空列表显示「暂无数据」；加载失败显示「加载失败，点击重试」；
+   合计行（tr.total）固定显示在每页末尾；导出不受分页限制（批注说明）。分页只隐藏行、不删行，页面原有的读取、保存、全选逻辑不受影响。
+   模拟：「多页」把示例行复制扩充到 41 条（复制行只读、标「演示」）；「空列表」「加载失败」；有删除的列表另有「删除末页最后一条 → 回上一页」 */
+(function () {
+  var CFG = [
+    { sel: "#lvBody", nm: "会员等级配置", sort: "级别升序", del: true },
+    { sel: "#lmBody", nm: "场馆成长值倍数", sort: "沿用现有场馆顺序" },
+    { sel: "#lrBody", nm: "生日礼包与升级奖励", sort: "级别升序" },
+    { sel: "#phlBody", nm: "实体奖品", sort: "添加时间正序 + ID", del: true },
+    { sel: "#sBody", nm: "活动奖励统计", sort: "申请领取时间倒序 + 记录 ID 倒序", size: 10, flt: "#vStats .bo-filter", hide: "#sPager" }
+  ];
+  var EXEMPT = "";
+  var SIZES = [10, 20, 50, 100], MULTI = 41, REG = [], G = { mode: "" };   /* mode："" 正常 / multi 多页 / empty 空列表 / fail 加载失败 */
+  function esc(s) { return String(s).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); }
+  function tip(t) {
+    var m = document.createElement("div"); m.className = "bo-msg ok"; m.setAttribute("role", "status"); m.textContent = t;
+    document.body.appendChild(m); setTimeout(function () { m.remove(); }, 2200);
+  }
+  function cfgOf(tb) { for (var i = 0; i < CFG.length; i++) if (tb.matches(CFG[i].sel)) return CFG[i]; return null; }
+  function isData(tr) { return !tr.classList.contains("vpg-x") && !tr.classList.contains("total") && !(tr.cells.length === 1 && tr.cells[0].colSpan > 1); }
+  function isRow(tr) { return isData(tr) || tr.classList.contains("vpg-cl"); }   /* 含多页演示的复制行 */
+  function cols(tb) {
+    var t = tb.closest("table"), n = 0, rs = t && t.tHead ? t.tHead.rows : [];
+    for (var i = 0; i < rs.length; i++) { var s = 0; for (var j = 0; j < rs[i].cells.length; j++) s += rs[i].cells[j].colSpan; n = Math.max(n, s); }
+    if (!n && tb.rows[0]) for (var k = 0; k < tb.rows[0].cells.length; k++) n += tb.rows[0].cells[k].colSpan;
+    return n || 1;
+  }
+  /* 筛选条件快照：和上次不同（筛选 / 搜索条件变了）就回到第 1 页 */
+  function snap(r) {
+    var s = ""; if (!r.cfg.flt) return s;
+    document.querySelectorAll(r.cfg.flt).forEach(function (el) {
+      var xs = el.matches("input,select,textarea") ? [el] : el.querySelectorAll("input,select,textarea,.ms-box");
+      Array.prototype.forEach.call(xs, function (x) { s += "|" + (x.matches(".ms-box") ? x.textContent : x.type === "checkbox" || x.type === "radio" ? x.checked : x.value); });
+    });
+    return s;
+  }
+  /* 多页演示的复制行：去掉 id、data-*，输入框改成只读文字，整行 inert，避免被页面原有逻辑读到 */
+  function mk(src) {
+    var c = src.cloneNode(true);
+    c.querySelectorAll("input,select,textarea").forEach(function (x) {
+      var v = x.tagName === "SELECT" ? (x.options[x.selectedIndex] ? x.options[x.selectedIndex].text : "") : x.type === "checkbox" || x.type === "radio" ? (x.checked ? "☑" : "☐") : x.value;
+      var sp = document.createElement("span"); sp.textContent = v || "—"; x.replaceWith(sp);
+    });
+    [c].concat(Array.prototype.slice.call(c.querySelectorAll("*"))).forEach(function (el) {
+      Array.prototype.slice.call(el.attributes).forEach(function (a) { if (a.name === "id" || a.name === "for" || a.name.indexOf("data-") === 0) el.removeAttribute(a.name); });
+    });
+    c.classList.add("vpg-x", "vpg-cl"); c.classList.remove("vip-pg-h"); c.inert = true; c.title = "多页演示：复制的示例行（只读）";
+    var td = c.cells[0]; if (td) td.insertAdjacentHTML("beforeend", "<span class='vip-pg-tag'>演示</span>");
+    return c;
+  }
+  function apply(r) {
+    var tb = r.tb, st = r.st; if (!tb.isConnected) return;
+    r.obs.disconnect();
+    Array.prototype.slice.call(tb.rows).forEach(function (x) { if (x.classList.contains("vpg-x")) x.remove(); });
+    var sn = snap(r); if (sn !== st.snap) { if (st.snap !== null) st.page = 1; st.snap = sn; }
+    var all = Array.prototype.slice.call(tb.rows), data = all.filter(isData), pin = all.filter(function (x) { return x.classList.contains("total"); });
+    all.forEach(function (x) { x.classList.remove("vip-pg-h"); });
+    if (st.mode === "multi" && data.length) {
+      var n0 = data.length, want = MULTI - st.cut, at = pin[0] || null, k = 0;
+      while (data.length < want) { var c = mk(data[k % n0]); tb.insertBefore(c, at); data.push(c); k++; }
+    }
+    var n;
+    if (st.mode === "empty" || st.mode === "fail") {
+      all.forEach(function (x) { x.classList.add("vip-pg-h"); });
+      var tr = document.createElement("tr"), td = document.createElement("td"); tr.className = "vpg-x"; td.colSpan = cols(tb); td.className = "vip-pg-st";
+      if (st.mode === "empty") td.textContent = "暂无数据";
+      else {
+        td.innerHTML = "<span class='vip-pg-fail'>加载失败，</span><button type='button' class='vip-pg-retry'>点击重试</button><div class='vip-req-note ui-reqnote'><span>本区块提示文案以运营定稿为准。</span></div>";
+        td.querySelector("button").onclick = function () { st.mode = ""; st.page = 1; apply(r); tip("重新加载成功"); };
+      }
+      tr.appendChild(td); tb.appendChild(tr); n = 0; st.page = 1;
+    } else {
+      n = data.length;
+      var pages = Math.max(1, Math.ceil(n / st.size)); st.page = Math.min(Math.max(1, st.page), pages);
+      var a = (st.page - 1) * st.size, b = a + st.size;
+      data.forEach(function (x, i) { x.classList.toggle("vip-pg-h", i < a || i >= b); });
+      /* 分组标题行（整行合并单元格，如「福利」「细节设定」）：本组有数据行显示在当前页时才显示 */
+      var grp = null, any = false, seen = false;
+      function fin() { if (grp && seen) grp.classList.toggle("vip-pg-h", !any); }
+      Array.prototype.forEach.call(tb.rows, function (x) {
+        if (x.classList.contains("total")) return;
+        if (isRow(x)) { seen = true; if (!x.classList.contains("vip-pg-h")) any = true; }
+        else { fin(); grp = x; any = false; seen = false; }
+      });
+      fin();
+    }
+    draw(r, n);
+    r.obs.observe(tb, { childList: true });
+    try { tb.dispatchEvent(new CustomEvent("vpg-change", { bubbles: true })); } catch (e) {}   /* 翻页 / 改每页条数后通知页面刷新勾选提示（全选只选当前页，用户 2026-10-20） */
+  }
+  function draw(r, n) {
+    var st = r.st, pages = Math.max(1, Math.ceil(n / st.size)), h = "";
+    for (var i = 1; i <= pages; i++) {
+      if (pages > 7 && i > 2 && i < pages - 1 && Math.abs(i - st.page) > 1) { if (h.slice(-1) !== "…") h += "…"; continue; }
+      h += "<button type='button' data-pg='" + i + "'" + (i === st.page ? " aria-current='page'" : "") + ">" + i + "</button>";
+    }
+    r.pg.innerHTML = "<span class='vip-pg-sort'>默认排序：" + esc(r.cfg.sort) + "</span>" +
+      "<span>共 <b>" + n + "</b> 条</span>" +
+      "<label>每页 <select aria-label='每页条数'>" + SIZES.map(function (s) { return "<option" + (s === st.size ? " selected" : "") + ">" + s + "</option>"; }).join("") + "</select> 条</label>" +
+      "<button type='button' data-pg='prev' aria-label='上一页'" + (st.page <= 1 ? " disabled" : "") + ">‹</button><span class='vip-pg-nums'>" + h + "</span>" +
+      "<button type='button' data-pg='next' aria-label='下一页'" + (st.page >= pages ? " disabled" : "") + ">›</button>" +
+      "<label>前往 <input inputmode='numeric' aria-label='前往页码' value='" + st.page + "'> 页</label>";
+  }
+  function go(r, p) { r.st.page = p; apply(r); }
+  function bind(r) {
+    r.pg.addEventListener("click", function (e) {
+      var b = e.target.closest("[data-pg]"); if (!b || b.disabled) return;
+      var v = b.dataset.pg; go(r, v === "prev" ? r.st.page - 1 : v === "next" ? r.st.page + 1 : +v);
+    });
+    r.pg.addEventListener("change", function (e) {
+      if (e.target.tagName === "SELECT") { r.st.size = +e.target.value; go(r, 1); }
+      else if (e.target.tagName === "INPUT") { var v = parseInt(e.target.value, 10); go(r, isNaN(v) ? r.st.page : v); }
+    });
+    r.pg.addEventListener("keydown", function (e) {
+      if (e.key === "Enter" && e.target.tagName === "INPUT") { e.preventDefault(); var v = parseInt(e.target.value, 10); go(r, isNaN(v) ? r.st.page : v); }
+    });
+  }
+  function attach(tb) {
+    if (tb._vpg || (EXEMPT && tb.matches(EXEMPT))) return;
+    var c = cfgOf(tb); if (!c) return;
+    var r = { tb: tb, cfg: c, st: { page: 1, size: c.size || 20, mode: G.mode, snap: null, cut: 0 } };
+    tb._vpg = r;
+    r.pg = document.createElement("div"); r.pg.className = "vip-pg glow"; r.pg.setAttribute("role", "navigation"); r.pg.setAttribute("aria-label", "分页 · " + c.nm);
+    var t = tb.closest("table"), host = t, par = t.parentElement;
+    if (par && par.children.length === 1 && !par.classList.contains("dlg-body") && !par.classList.contains("fctl")) host = par;
+    host.insertAdjacentElement("afterend", r.pg);
+    if (c.hide) document.querySelectorAll(c.hide).forEach(function (x) { x.hidden = true; });
+    r.obs = new MutationObserver(function () { apply(r); });
+    bind(r); REG.push(r); apply(r);
+  }
+  function scan(root) { (root.matches && root.matches("tbody") ? [root] : Array.prototype.slice.call(root.querySelectorAll("tbody"))).forEach(attach); }
+  scan(document);
+  new MutationObserver(function (ms) {
+    ms.forEach(function (m) { m.addedNodes.forEach(function (n) { if (n.nodeType === 1 && n.tagName !== "TR" && n.tagName !== "TD") scan(n); }); });
+  }).observe(document.body, { childList: true, subtree: true });
+  function alive() { REG = REG.filter(function (r) { return r.tb.isConnected; }); return REG; }
+  /* 演示用：指定列表改每页条数 / 翻到某页（跨页勾选演示，用户 2026-10-20） */
+  function regOf(tb) { return alive().filter(function (r) { return r.tb === tb; })[0]; }
+  window.vpgCtl = {
+    size: function (tb, n) { var r = regOf(tb); if (r) { r.st.size = n; r.st.page = 1; apply(r); } },
+    go: function (tb, p) { var r = regOf(tb); if (r) go(r, p); }
+  };
+  /* 点「查询」「搜索」「重置」：同一区域内的列表回到第 1 页（条件没变也回第 1 页） */
+  document.addEventListener("click", function (e) {
+    var b = e.target.closest("button"); if (!b || !/^(查询|搜索|重置)$/.test(b.textContent.trim())) return;
+    var box = b.closest("section") || b.closest(".bo-dlg") || document;
+    alive().forEach(function (r) { if (box.contains(r.tb)) r.st.page = 1; });
+  }, true);
+  /* 弹窗内列表（如批量修改）校验出错：当前页没有出错行时，自动翻到第一处出错行所在页 */
+  document.addEventListener("click", function (e) {
+    if (!e.target.closest(".bo-dlg")) return;
+    setTimeout(function () {
+      alive().forEach(function (r) {
+        if (!r.tb.closest(".bo-dlg")) return;
+        var d = Array.prototype.filter.call(r.tb.rows, isRow), first = -1, here = false;
+        d.forEach(function (x, i) { if (x.querySelector(".bad")) { if (first < 0) first = i; if (!x.classList.contains("vip-pg-h")) here = true; } });
+        if (first >= 0 && !here) go(r, Math.floor(first / r.st.size) + 1);
+      });
+    }, 60);
+  });
+  /* 模拟面板 */
+  function visible() { return alive().filter(function (r) { var t = r.tb.closest("table"); return t && t.offsetParent !== null; }); }
+  function setMode(m) { G.mode = m; alive().forEach(function (r) { r.st.mode = m; r.st.page = 1; r.st.cut = 0; apply(r); }); }
+  var sim = document.getElementById("vpgSim");
+  if (sim) sim.addEventListener("click", function (e) {
+    var b = e.target.closest("[data-vpg]"); if (!b) return;
+    var a = b.dataset.vpg;
+    if (a === "multi") { setMode("multi"); tip("已把各列表示例数据扩充到 41 条（复制行标「演示」），每页 20 条为 3 页"); }
+    else if (a === "size10") { alive().forEach(function (r) { r.st.size = 10; r.st.page = 1; apply(r); }); tip("各列表每页切到 10 条，回到第 1 页"); }
+    else if (a === "empty") { setMode("empty"); tip("空列表：显示「暂无数据」"); }
+    else if (a === "fail") { setMode("fail"); tip("加载失败：显示「加载失败，点击重试」，点「点击重试」恢复"); }
+    else if (a === "reset") { G.mode = ""; alive().forEach(function (r) { r.st.mode = ""; r.st.size = r.cfg.size || 20; r.st.page = 1; r.st.cut = 0; apply(r); }); tip("已恢复正常数据和默认每页条数"); }
+    else if (a === "del") {
+      var r = visible().filter(function (x) { return x.cfg.del; })[0] || visible()[0];
+      if (!r) { tip("当前视图没有列表"); return; }
+      if (r.st.mode !== "multi") { r.st.mode = "multi"; r.st.cut = 0; }
+      apply(r);
+      var d = Array.prototype.filter.call(r.tb.rows, isRow), last = Math.max(1, Math.ceil(d.length / r.st.size));
+      if (!d.length || !d[d.length - 1].classList.contains("vpg-cl")) { tip("演示只删除复制的演示行，请先点「多页」"); return; }
+      if (d.length <= r.st.size) { tip("当前每页条数下只有 1 页，请先把每页条数切到 10 或 20"); return; }
+      if (d.length % r.st.size !== 1) { r.st.cut += (d.length % r.st.size || r.st.size) - 1; apply(r); d = Array.prototype.filter.call(r.tb.rows, isRow); last = Math.ceil(d.length / r.st.size); }
+      go(r, last);
+      setTimeout(function () {
+        var dd = Array.prototype.filter.call(r.tb.rows, isRow);
+        r.st.cut++; dd[dd.length - 1].remove();   /* 触发 apply：末页为空 → 回到上一页 */
+        tip("「" + r.cfg.nm + "」删除了第 " + last + " 页最后一条（演示行），该页为空，自动回到第 " + (last - 1) + " 页");
+      }, 700);
+    }
+  });
+  window.addEventListener("proto-change", function (e) { if (e.detail && e.detail.key === "*") { G.mode = ""; alive().forEach(function (r) { r.st.mode = ""; r.st.size = r.cfg.size || 20; r.st.page = 1; r.st.cut = 0; apply(r); }); } });
+})();
+</script>
+<script>
+/* 数据表尽量一行显示（用户 2026-10-20）：后台数据表（列表、配置表、弹窗里的表）中内容宽度超过约 320px 的单元格包一层 .vip-ell 单行省略，鼠标悬停 title 显示全文。
+   含输入框、按钮、链接、「?」帮助或 .vip-nocut（含不能截断的金额）的单元格，跨 3 列以上的提示行，以及有意保留多行（white-space 不是 nowrap）的单元格不处理；表格重新渲染后自动再处理 */
+(function () {
+  var vipMaxW = 320, vipTimer = 0;
+  /* 悬停全文：小字说明前补「·」、其他标签前补空格，与页面显示一致 */
+  function vipText(e) {
+    var c = e.cloneNode(true);
+    if (document.body.classList.contains("pub-admin")) Array.prototype.forEach.call(c.querySelectorAll(".ui-reqnote"), function (x) { x.remove(); });   /* 发布模式悬停全文不含需求说明（用户 2026-10-21） */
+    var s = c.querySelectorAll("span,b,i,em");
+    for (var i = 0; i < s.length; i++) {
+      var sub = /(^| )(sub2|di|gmt|idt)( |$)/.test(s[i].className), prev = s[i].previousElementSibling;
+      s[i].insertBefore(document.createTextNode(sub && !(prev && /(^| )sub2( |$)/.test(prev.className)) ? " · " : " "), s[i].firstChild);
+    }
+    return (c.textContent || "").replace(/\s+/g, " ").trim();
+  }
+  function vipFitCells() {
+    vipTimer = 0;
+    var cells = document.querySelectorAll(".bo table td, .bo-mask table td");
+    for (var i = 0; i < cells.length; i++) {
+      var td = cells[i];
+      if (!td.offsetParent || td.colSpan > 2) continue;
+      if (td.childNodes.length === 1 && td.firstChild.nodeType === 1 && td.firstChild.classList.contains("vip-ell")) continue;
+      if (td.querySelector("input,select,textarea,button,a,table,.qm,.vip-nocut,[style*='white-space:normal']")) continue;
+      if (getComputedStyle(td).whiteSpace !== "nowrap") continue;
+      var rg = document.createRange(); rg.selectNodeContents(td);
+      if (rg.getBoundingClientRect().width <= vipMaxW) continue;
+      var sp = document.createElement("span"); sp.className = "vip-ell"; sp.title = vipText(td);
+      while (td.firstChild) sp.appendChild(td.firstChild);
+      td.appendChild(sp);
+    }
+  }
+  function vipQueue() { if (!vipTimer) vipTimer = setTimeout(vipFitCells, 60); }
+  new MutationObserver(vipQueue).observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ["hidden", "class", "style"] });
+  vipQueue();
+})();
+</script>
+<style>
+/* VIP-HELPINLINE:BEGIN 帮助按钮同行、同行居中、说明文字靠左并标注（用户 2026-10-20，规范通用 v5.45）。新增类名加 vip- 前缀，同时带规范类名 ui-nw / ui-reqnote 便于以后同步模板。
+   注意：标注前缀文字改由模板 .ui-reqnote::before 输出，本页的 .vip-req-note::before 规则已删除（用户 2026-10-21，模板 v5.46），前缀只显示一遍 */
+/* ① 「?」帮助按钮紧跟在说明的文字后面、同一行：页尾脚本把「?」和它前面的文字包进 .vip-nw，不换行，内部垂直居中 */
+.vip-nw{display:inline-flex;align-items:center;white-space:nowrap;max-width:100%}
+.vip-nw>.qm{flex:none;vertical-align:middle}
+/* ② 同一行垂直居中：表单行 .frow 的标签第一行与控件第一行按中线对齐（页尾脚本量出两者第一行的中线，给较高一侧以外的一侧补上边距，写入 --vip-frow-pt / --vip-frow-ct）；
+      行内输入框、下拉、按钮、拨杆、标签、「需确认」与文字按中线对齐 */
+.adm-stage .bo .frow,.bo-mask .frow{align-items:start}
+.adm-stage .bo .frow>label,.adm-stage .bo .frow>.fl,.bo-mask .frow>label,.bo-mask .frow>.fl{padding-top:var(--vip-frow-pt,6px)}
+.adm-stage .bo .frow>:nth-child(2),.bo-mask .frow>:nth-child(2){margin-top:var(--vip-frow-ct,0px)}
+.vip-req-fp{flex-wrap:wrap!important}
+.vip-req-gp>.vip-req-note{grid-column:1/-1}
+.frow.vip-req-gp>.vip-req-note{grid-column:2/-1;margin-top:0}
+.adm-stage .bo input:not([type=checkbox]):not([type=radio]),.adm-stage .bo select,.adm-stage .bo button,.adm-stage .bo .vip-sw,.adm-stage .bo .vip-sw-btn,.adm-stage .bo .tag,
+.bo-mask input:not([type=checkbox]):not([type=radio]),.bo-mask select,.bo-mask button,.bo-mask .vip-sw,.bo-mask .vip-sw-btn,.bo-mask .tag{vertical-align:middle}
+.adm-stage .bo input[type=checkbox],.adm-stage .bo input[type=radio],.bo-mask input[type=checkbox],.bo-mask input[type=radio]{vertical-align:middle;margin-top:-2px}
+/* ③ 说明性文字（给评审看的需求说明，上线页面不显示）：靠左、浅色小号，每个说明块开头标注一次；相邻多段合并为一个说明块 */
+.vip-req-note{display:block;flex-basis:100%;box-sizing:border-box;max-width:100%;margin:6px 0;padding:4px 8px;border-left:2px solid #DCDFE6;background:#FAFAFA;color:#909399;font-size:12px;line-height:1.6;text-align:left!important;white-space:normal}
+.vip-req-note>*{text-align:left!important}
+.vip-req-note>.vip-cnt,.vip-req-note>span,.vip-req-note>p,.vip-req-note>div{display:block;margin:2px 0;padding-left:0;padding-right:0}
+.vip-req-note>.pend,.vip-req-note>.devnote{margin:2px 0}
+.vip-req-note[hidden]{display:none!important}
+.adm-notes .vip-req-note.vip-req-hd{margin:2px 0 6px;padding:2px 8px}
+/* 表格单元格里的需求说明（用户 2026-10-21）：带 ui-reqnote，发布模式（?publish=1）由模板规则隐藏；这里改为同行内联、不加框、不加前缀，不影响表格一行显示。
+   整行都是需求说明的表格行加 tr.vip-req-row，发布模式整行隐藏 */
+.ui-reqnote.vip-req-inl{display:inline;border:0;background:none;padding:0;margin:0;line-height:inherit;color:#909399;font-weight:400;font-family:inherit}
+.ui-reqnote.vip-req-inl::before{content:none;display:inline}
+body.pub-admin tr.vip-req-row{display:none!important}
+/* VIP-HELPINLINE:END */
+</style>
+<script>
+/* VIP-HELPINLINE:BEGIN 帮助按钮同行、同行居中、说明文字靠左并标注（用户 2026-10-20，规范通用 v5.45）。
+   ① 每个「?」（.qm）和它前面的文字（最后几个字或前一个短的行内元素）包进 span.vip-nw.ui-nw，不换行；父元素为 flex / grid 时整段文字一起包，避免拆成两个弹性项。
+   ② 表单行 .frow：量出标签第一行和控件第一行的中线，给偏上的一侧补上边距，两者落在同一中线上（控件多行时标签对齐控件第一行）。
+   ③ 页面主体（.bo-main）和弹窗（.bo-mask）里给评审看的说明性文字（.vip-cnt / .pend / .devnote / p 等，含「用户 2026-」「示意」「示例」「Claire」「PRD」「知识库」「待确认」等需求说明字样）包进 div.vip-req-note.ui-reqnote，
+      靠左并在开头标注「※ 此内容仅作为需求说明，上线页面不显示本内容。」；相邻的多段合并成一个说明块。含输入框、按钮、「?」、表格的元素和表格单元格内的文字不处理（上线真实提示）。
+      手动指定：class 含 vip-live 的元素一律不标注（上线真实提示），含 vip-req 的一律标注。页面重新渲染后自动再处理 */
+(function () {
+  var vipNoteRx = /用户 ?20\d\d-\d\d|示意|待文档同步|示例|演示|虚构|Claire|PRD|知识库|待确认|待定|待运营|运营出方案|开发备注|研发评估|由开发评估|决策第|清单第|第 ?\d+ ?轮|规范 ?v?\d|原型|\bQ\d{1,2}\b|\bC-\d{2}\b|本需求|现状|（原|原「/;
+  var vipCand = ".vip-cnt,.pend,.devnote,p,small,.vip-req,div[style*='909399'],span[style*='909399'],div[style*='#999'],span[style*='#999']";
+  var vipTimer = 0;
+  function vipIsInline(e) { var d = getComputedStyle(e).display; return d.indexOf("inline") === 0 || d === "contents"; }
+  function vipMakeNw() { var w = document.createElement("span"); w.className = "vip-nw ui-nw"; return w; }
+  function vipWrapQm() {
+    var qs = document.querySelectorAll(".qm");
+    for (var i = 0; i < qs.length; i++) {
+      var q = qs[i], par = q.parentNode;
+      if (!par || (par.classList && par.classList.contains("vip-nw"))) continue;
+      var prev = q.previousSibling, ws = null;
+      if (prev && prev.nodeType === 3 && !/\S/.test(prev.nodeValue)) { ws = prev; prev = prev.previousSibling; }
+      if (!prev) continue;
+      var pd = getComputedStyle(par).display, flexPar = /flex|grid/.test(pd);
+      var w;
+      if (prev.nodeType === 3) {
+        /* 取最后 1–6 个字（前面紧挨的英文 / 数字整词一起带上，不从单词中间断开） */
+        var s = prev.nodeValue, m = flexPar ? null : s.match(/(?:[A-Za-z0-9_.+\-]+)?[^\sA-Za-z0-9_.+\-]{0,6}\s*$/), tail = prev;
+        if (m && m.index > 0 && /\S/.test(m[0])) tail = prev.splitText(m.index);
+        w = vipMakeNw(); par.insertBefore(w, q);
+        w.appendChild(tail); if (ws) w.appendChild(ws); w.appendChild(q);
+      } else if (prev.nodeType === 1) {
+        if ((!flexPar && !vipIsInline(prev)) ||(prev.textContent || "").length > 30 || prev.querySelector("div,p,table,ul,ol")) continue;
+        w = vipMakeNw(); par.insertBefore(w, q);
+        w.appendChild(prev); if (ws) w.appendChild(ws); w.appendChild(q);
+      }
+    }
+  }
+  /* 元素第一行的中线（页面坐标 y）：取最上面一行里的文字、输入框、下拉、按钮、拨杆、「?」等的上下边界中点 */
+  var vipLeafSel = "input:not([type=hidden]),select,textarea,button,.vip-sw,.vip-sw-btn,.qm,.tag,img";
+  function vipCollect(p, rs) {
+    for (var n = p.firstChild; n; n = n.nextSibling) {
+      if (n.nodeType === 3) {
+        if (!/\S/.test(n.nodeValue)) continue;
+        var rg = document.createRange(); rg.selectNodeContents(n); var cr = rg.getClientRects();
+        for (var i = 0; i < cr.length; i++) if (cr[i].width > 0 && cr[i].height > 0) rs.push(cr[i]);
+      } else if (n.nodeType === 1) {
+        if (n.hidden || n.classList.contains("vip-req-note") || getComputedStyle(n).display === "none") continue;
+        if (n.matches(vipLeafSel)) { var b = n.getBoundingClientRect(); if (b.width > 0 && b.height > 0) rs.push(b); }   /* 控件整体算一个，不看内部 */
+        else vipCollect(n, rs);
+      }
+    }
+  }
+  function vipFirstMid(el) {
+    var rs = []; vipCollect(el, rs);
+    if (!rs.length) return null;
+    var top = Infinity, base = null;
+    rs.forEach(function (r) { if (r.top < top) { top = r.top; base = r; } });
+    var t = Infinity, bt = -Infinity;
+    rs.forEach(function (r) { if (r.top < base.bottom - 2) { t = Math.min(t, r.top); bt = Math.max(bt, r.bottom); } });
+    return (t + bt) / 2;
+  }
+  function vipPx(v) { return Math.round(v * 2) / 2 + "px"; }
+  function vipFrowAlign() {
+    var rows = document.querySelectorAll(".adm-stage .bo .frow, .bo-mask .frow");
+    for (var i = 0; i < rows.length; i++) {
+      var r = rows[i]; if (!r.offsetParent || r.children.length < 2) continue;
+      var lab = r.children[0], ctl = r.children[1];
+      if (!lab.offsetParent || !ctl.offsetParent) continue;
+      var lm = vipFirstMid(lab), cm = vipFirstMid(ctl); if (lm === null || cm === null) continue;
+      var pt = parseFloat(getComputedStyle(lab).paddingTop) || 0, ct = parseFloat(getComputedStyle(ctl).marginTop) || 0;
+      var l0 = lm - pt, c0 = cm - ct, npt = 0, nct = 0;
+      if (l0 <= c0) npt = c0 - l0; else nct = l0 - c0;
+      if (Math.abs(npt - pt) > 0.4 || Math.abs(nct - ct) > 0.4) { r.style.setProperty("--vip-frow-pt", vipPx(npt)); r.style.setProperty("--vip-frow-ct", vipPx(nct)); }
+    }
+  }
+  function vipIsNote(e) {
+    if (e.closest(".vip-live")) return false;
+    if (e.classList.contains("vip-req")) return true;
+    if (e.closest("td,th,.vip-pg,.bo-tabs,.bo-menu,.bo-crumb,.qm-pop")) return false;
+    if (e.querySelector("input,select,textarea,button,.qm,table,.vip-sw,.vip-sw-btn")) return false;
+    var t = (e.textContent || "").trim();
+    return t.length > 0 && vipNoteRx.test(t);
+  }
+  function vipShown(e) { return !e.hidden && getComputedStyle(e).display !== "none" && /\S/.test(e.textContent || ""); }
+  function vipNextEl(e) { var n = e.nextSibling; while (n && n.nodeType === 3 && !/\S/.test(n.nodeValue)) n = n.nextSibling; return n && n.nodeType === 1 ? n : null; }
+  function vipMarkNotes() {
+    var roots = document.querySelectorAll(".bo-main, .bo-mask");
+    for (var r = 0; r < roots.length; r++) {
+      var cs = roots[r].querySelectorAll(vipCand);
+      for (var i = 0; i < cs.length; i++) {
+        var e = cs[i];
+        if (e.closest(".vip-req-note")) continue;
+        /* 输入框后面「单位，说明」写在一起的（如「天，……」）：单位留在输入框旁，说明拆出来 */
+        var um = e.childElementCount === 0 && e.matches("span.vip-cnt") && e.previousElementSibling && e.previousElementSibling.matches("input,select") ? e.textContent.match(/^\s*([^\s，,；;]{1,4})[，,；;]\s*([\s\S]+)$/) : null;
+        if (um && vipNoteRx.test(um[2]) && !e.closest(".vip-live")) {
+          var rest = document.createElement("span"); rest.className = "vip-cnt vip-req"; rest.textContent = um[2];
+          e.textContent = um[1]; e.parentNode.insertBefore(rest, e.nextSibling); continue;   /* 拆出的说明随后单独处理 */
+        }
+        var anc = e.parentElement && e.parentElement.closest(vipCand);
+        if (anc && roots[r].contains(anc) && vipIsNote(anc)) continue;   /* 嵌在另一段说明里的，跟随外层 */
+        if (!vipIsNote(e)) continue;
+        var prevEl = e.previousElementSibling, pv = e.previousSibling;
+        while (pv && pv.nodeType === 3 && !/\S/.test(pv.nodeValue)) pv = pv.previousSibling;
+        var w;
+        if (pv && pv === prevEl && prevEl.classList.contains("vip-req-note") && !prevEl.classList.contains("vip-req-hd")) w = prevEl;   /* 紧挨着已有说明块：并入，只标注一次 */
+        else { w = document.createElement("div"); w.className = "vip-req-note ui-reqnote"; e.parentNode.insertBefore(w, e); }
+        w.appendChild(e);
+        var nx = vipNextEl(w);
+        while (nx && nx.matches(vipCand) && !nx.classList.contains("vip-req-note") && vipIsNote(nx)) { w.appendChild(nx); nx = vipNextEl(w); }
+      }
+    }
+    var ws = document.querySelectorAll(".vip-req-note:not(.vip-req-hd)");
+    for (var k = 0; k < ws.length; k++) {
+      var any = false, ch = ws[k].children;
+      for (var j = 0; j < ch.length; j++) if (vipShown(ch[j])) { any = true; break; }
+      if (ws[k].hidden !== !any) ws[k].hidden = !any;
+      /* 说明块在弹性行里另起一行、在网格里占整行（表单行 .frow 里占控件列），不挤压同行的标题和控件 */
+      var pp = ws[k].parentElement, pdp = pp ? getComputedStyle(pp).display : "";
+      if (/flex/.test(pdp) && !pp.classList.contains("vip-req-fp")) pp.classList.add("vip-req-fp");
+      if (/grid/.test(pdp) && !pp.classList.contains("vip-req-gp")) pp.classList.add("vip-req-gp");
+    }
+  }
+  function vipRun() { vipTimer = 0; vipWrapQm(); vipMarkNotes(); vipFrowAlign(); }
+  function vipQueue() { if (!vipTimer) vipTimer = setTimeout(vipRun, 50); }
+  new MutationObserver(vipQueue).observe(document.body, { childList: true, subtree: true, characterData: true, attributes: true, attributeFilter: ["hidden", "class", "style"] });
+  window.addEventListener("resize", vipQueue);
+  vipRun();
+})();
+/* VIP-HELPINLINE:END */
+</script>
+</body>
+</html>

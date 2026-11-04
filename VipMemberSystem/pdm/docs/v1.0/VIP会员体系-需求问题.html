@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>VIP会员体系-v1.0-需求问题</title>
+<link rel="stylesheet" href="../../assets/style.css">
+<style>
+.rq-intro{font-size:14px;line-height:1.8}
+.rq-sum{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:14px 0}
+.rq-sum div{border:1px solid #e4dfeb;border-radius:10px;padding:8px 12px;background:#faf8fc}.rq-sum b{display:block;font-size:20px;color:#4A2A7A}
+.rq-card{border:1px solid #e4dfeb;border-radius:12px;margin:12px 0;overflow:hidden;background:#fff}
+.rq-hd{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:9px 14px;background:#f6f2fb;border-bottom:1px solid #e4dfeb}
+.rq-id{font-weight:800;color:#4A2A7A}.rq-tt{font-weight:700;flex:1 1 260px}
+.rq-it{font-size:12px;padding:1px 8px;border-radius:10px;background:#efedf2;color:#5f5a66;white-space:nowrap}
+.rq-st{font-size:12px;padding:1px 8px;border-radius:10px;background:#fff2cc;color:#7a4b00;white-space:nowrap}
+.rq-bd{display:grid;grid-template-columns:1fr 1fr;gap:0}
+.rq-bd>div{padding:9px 14px;min-width:0;overflow-wrap:anywhere;font-size:14px;line-height:1.7}
+.rq-o{background:#fff8ea;border-right:1px solid #e4dfeb}.rq-c{background:#eef4fd}
+.rq-lb{display:block;font-size:12px;font-weight:800;margin-bottom:2px}.rq-o .rq-lb{color:#7a4b00}.rq-c .rq-lb{color:#1d4f8c}
+.rq-ft{padding:8px 14px;border-top:1px solid #e4dfeb;font-size:14px;line-height:1.7;overflow-wrap:anywhere}
+.rq-ft b{color:#4A2A7A}
+@media (max-width:640px){.rq-bd{grid-template-columns:1fr}.rq-o{border-right:0;border-bottom:1px solid #e4dfeb}}
+</style></head>
+<body>
+<div class="with-nav">
+<div class="desk"><article class="paper">
+
+<h1 class="doc-title">VIP会员体系-v1.0-需求问题</h1>
+<div class="doc-meta"><span>整理日期：2026-10-27（GMT+8）</span><span>状态：待 Claire 答复</span></div>
+<p class="rq-intro">本页列出需要 Claire 确认的全部需求问题，包括原文没有写到、需求写法与原文或答复有出入、以及原文没有提到而由需求补充的规则。依据：Claire《VIP会员体系方案》（SharePoint 5.0 版，2026-10-13 修改）和《向Claire确认的问题列表》答复 C-01～C-15。每个问题左侧为原文依据，右侧为需求现在的写法，底部为请确认的内容；Claire 答复后由产品更新到对应文档。</p>
+<div class="rq-sum"><div><b>25</b>问题合计</div><div><b>8</b>原文没写，需决定</div><div><b>3</b>与原文或答复有出入</div><div><b>14</b>需求补充的规则</div></div>
+<hr class="doc-rule">
+
+<h2 id="g1">一、原文没有写到，需要 Claire 决定</h2>
+<p class="rq-intro">原文和答复都没有规定，需求先按产品意见写了，请 Claire 拍板。</p>
+<div class="rq-card" id="D-01"><div class="rq-hd"><span class="rq-id">D-01</span><span class="rq-tt">玩家完成 KYC 前已达到的等级，完成 KYC 后要不要补发升级奖励</span><span class="rq-it">全部迭代</span><span class="rq-st">待 Claire 答复</span></div>
+<div class="rq-bd"><div class="rq-o"><span class="rq-lb">原始需求</span>原文四「玩家首次升级至对应VIP等级后立即获得升级现金奖励」；C-11「注册后完成kyc，才能享受所有的活动权益」；原文没写完成 KYC 后是否补发</div><div class="rq-c"><span class="rq-lb">需求现在的写法</span>不补发（产品暂定）：完成 KYC 时按历史累计直接定级，之前已达到的等级记「不发放」，以后也不补发；之后新到达的等级正常发。例：未 KYC 时累计已达 VIP5，完成 KYC 后直接为 VIP5，VIP1–VIP5 的升级奖励都不发</div></div>
+<div class="rq-ft"><b>请确认</b>：A. 不补发（现写法）<br>B. 补发：完成 KYC 时对首次到达的每个等级逐级补发升级奖励<br><b>Claire 答复</b>：—</div></div>
+<div class="rq-card" id="D-02"><div class="rq-hd"><span class="rq-id">D-02</span><span class="rq-tt">上线时已在高等级的老玩家，之前等级的升级奖励是否仍然不发</span><span class="rq-it">全部迭代</span><span class="rq-st">待 Claire 答复</span></div>
+<div class="rq-bd"><div class="rq-o"><span class="rq-lb">原始需求</span>C-01「之前的奖励不发，因为在现有的玩家等级他已经领过对应的奖励了。目前老板是这么说，后面改不改不好说」</div><div class="rq-c"><span class="rq-lb">需求现在的写法</span>按 C-01：上线时按历史累计定级，已到达的等级不发升级奖励、不弹升级弹窗；上线后新到达的等级正常发</div></div>
+<div class="rq-ft"><b>请确认</b>：上线时是否仍按 C-01 执行；老板口径有变化时请说明<br><b>Claire 答复</b>：—</div></div>
+<div class="rq-card" id="D-03"><div class="rq-hd"><span class="rq-id">D-03</span><span class="rq-tt">撤单使累计数据低于已达等级门槛时，等级和已发奖励是否回退</span><span class="rq-it">全部迭代</span><span class="rq-st">待 Claire 答复</span></div>
+<div class="rq-bd"><div class="rq-o"><span class="rq-lb">原始需求</span>原文三只写升级看历史累计，没写撤单扣回后的处理</div><div class="rq-c"><span class="rq-lb">需求现在的写法</span>累计数据照常扣回；已升的当前等级和历史最高等级不下调，已发奖励不追回</div></div>
+<div class="rq-ft"><b>请确认</b>：A. 不回退（现写法）<br>B. 等级回退、已发奖励追回<br>C. 其他（请说明）<br><b>Claire 答复</b>：—</div></div>
+<div class="rq-card" id="D-04"><div class="rq-hd"><span class="rq-id">D-04</span><span class="rq-tt">VIP 有效投注计入哪些游戏</span><span class="rq-it">全部迭代</span><span class="rq-st">待 Claire 答复</span></div>
+<div class="rq-bd"><div class="rq-o"><span class="rq-lb">原始需求</span>原文只写「累计有效投注」「当月有效投注」，没有限定游戏类型</div><div class="rq-c"><span class="rq-lb">需求现在的写法</span>只计 6 大类：Slot、Casino、Poker、Bingo、Arcade、Fishing；Perya、ESports 和未分类游戏不计入（累计、当月、VIP 奖励流水同口径）</div></div>
+<div class="rq-ft"><b>请确认</b>：是否同意只计这 6 大类；需要加入或排除某类时请说明<br><b>Claire 答复</b>：—</div></div>
+<div class="rq-card" id="D-05"><div class="rq-hd"><span class="rq-id">D-05</span><span class="rq-tt">VIP 奖励算不算平台营销费用；是否计入代理 NGR</span><span class="rq-it">全部迭代</span><span class="rq-st">待 Claire 答复</span></div>
+<div class="rq-bd"><div class="rq-o"><span class="rq-lb">原始需求</span>原文二只有成本比例「升级奖占比」「保级奖占比」（奖励 ÷ 投注门槛），没写营销费用和代理 NGR</div><div class="rq-c"><span class="rq-lb">需求现在的写法</span>按实际到账金额计入平台报表「活动费用」「活动费用 / 平台流水%」、财务数据「活动总额」和平台营销费用（NGR）；不进各活动自己的活动统计和活动报表。是否计入代理 NGR 未定</div></div>
+<div class="rq-ft"><b>请确认</b>：① 计入平台营销费用是否同意<br>② 代理 NGR：A. 计入　B. 不计入<br><b>Claire 答复</b>：—</div></div>
+<div class="rq-card" id="D-06"><div class="rq-hd"><span class="rq-id">D-06</span><span class="rq-tt">VIP 奖励要不要设月度预算</span><span class="rq-it">全部迭代</span><span class="rq-st">待 Claire 答复</span></div>
+<div class="rq-bd"><div class="rq-o"><span class="rq-lb">原始需求</span>原文没有预算相关内容</div><div class="rq-c"><span class="rq-lb">需求现在的写法</span>可配 VIP 奖励月度预算，不占用活动预算；发放达到 70%、100% 进预算告警；到 100% 只告警、不停发</div></div>
+<div class="rq-ft"><b>请确认</b>：① 是否需要月度预算，额度由谁定<br>② 到 100% 时：A. 只告警、继续发（现写法）　B. 停止发放<br><b>Claire 答复</b>：—</div></div>
+<div class="rq-card" id="D-07"><div class="rq-hd"><span class="rq-id">D-07</span><span class="rq-tt">强制审核、注册天数限制上线时是否开启</span><span class="rq-it">全部迭代</span><span class="rq-st">待 Claire 答复</span></div>
+<div class="rq-bd"><div class="rq-o"><span class="rq-lb">原始需求</span>原文四升级奖励「立即获得」；原文没写审核和注册天数</div><div class="rq-c"><span class="rq-lb">需求现在的写法</span>两项都是后台可选，默认不开启，奖励立即到账（与原文一致）。开启强制审核后奖励审核通过才到账；开启注册天数后，注册未满 n 天期间达到的等级不发升级奖励</div></div>
+<div class="rq-ft"><b>请确认</b>：A. 都不开启（默认）　B. 开启强制审核　C. 开启注册天数（请给天数）<br><b>Claire 答复</b>：—</div></div>
+<div class="rq-card" id="D-08"><div class="rq-hd"><span class="rq-id">D-08</span><span class="rq-tt">VIP 奖励到账是否在聊天室公开播报</span><span class="rq-it">全部迭代</span><span class="rq-st">待 Claire 答复</span></div>
+<div class="rq-bd"><div class="rq-o"><span class="rq-lb">原始需求</span>原文十六只规定保级奖励短信，没写聊天室</div><div class="rq-c"><span class="rq-lb">需求现在的写法</span>升级、保级、生日奖励实际到账时，按聊天室现有阈值参与「活动奖励播报」；审核中、暂停发放、驳回、不发放的不播报</div></div>
+<div class="rq-ft"><b>请确认</b>：A. 参与播报（现写法）　B. 不播报<br><b>Claire 答复</b>：—</div></div>
+
+<h2 id="g2">二、和原文或 Claire 答复有出入，需要确认</h2>
+<p class="rq-intro">需求现在的写法和原文或答复的某一条不完全一致，请确认按哪种。</p>
+<div class="rq-card" id="D-09"><div class="rq-hd"><span class="rq-id">D-09</span><span class="rq-tt">是否允许运营关闭「KYC 限制」</span><span class="rq-it">全部迭代</span><span class="rq-st">待 Claire 答复</span></div>
+<div class="rq-bd"><div class="rq-o"><span class="rq-lb">原始需求</span>C-11「注册后完成kyc，才能享受所有的活动权益」；原文十「生日奖励需完成KYC」</div><div class="rq-c"><span class="rq-lb">需求现在的写法</span>后台有「KYC 限制」开关，默认开启（与原文一致）。关闭后，未完成 KYC 的玩家也能定级、拿升级和保级奖励；生日奖励始终要求 KYC。需求注明关闭前须经老板或 Claire 确认</div></div>
+<div class="rq-ft"><b>请确认</b>：A. 保留开关，默认开启，关闭需审批（现写法）<br>B. 不提供关闭，始终要求 KYC<br><b>Claire 答复</b>：—</div></div>
+<div class="rq-card" id="D-10"><div class="rq-hd"><span class="rq-id">D-10</span><span class="rq-tt">保级到账短信的金额符号用「₱」还是「PHP」</span><span class="rq-it">全部迭代</span><span class="rq-st">待 Claire 答复</span></div>
+<div class="rq-bd"><div class="rq-o"><span class="rq-lb">原始需求</span>原文十六英文示例「₱{RetentionBonus} VIP Retention Bonus credited! Log in to 789Bingo to check your reward.」；C-15 答复「PHP」</div><div class="rq-c"><span class="rq-lb">需求现在的写法</span>保级到账短信按原文示例写「₱」；其他 VIP 短信（保级可领取、升级、生日）按 C-15 写「PHP」</div></div>
+<div class="rq-ft"><b>请确认</b>：A. 保级到账用「₱」，其他用「PHP」（现写法）<br>B. 全部统一「PHP」<br>C. 全部统一「₱」<br><b>Claire 答复</b>：—</div></div>
+<div class="rq-card" id="D-11"><div class="rq-hd"><span class="rq-id">D-11</span><span class="rq-tt">VIP 等级是否同步到支付层级（Tier VIP，影响快速提款等）</span><span class="rq-it">全部迭代</span><span class="rq-st">待 Claire 答复</span></div>
+<div class="rq-bd"><div class="rq-o"><span class="rq-lb">原始需求</span>原文九 Current VIP Level「用于保级要求、保级奖励、VIP客服、快速提款、专属活动及其他VIP权益」；C-08「这些不用开发做」</div><div class="rq-c"><span class="rq-lb">需求现在的写法</span>VIP 开启后按当前 VIP 等级同步支付层级 Tier VIP；快速提款功能本身由「用户提款风控规则升级」需求负责，本需求只提供等级变动</div></div>
+<div class="rq-ft"><b>请确认</b>：A. 同意由 VIP 等级驱动支付层级　B. 不同步，支付层级保持现状<br><b>Claire 答复</b>：—</div></div>
+
+<h2 id="g3">三、原文没有提到、由需求补充的规则（请确认是否同意）</h2>
+<p class="rq-intro">原文和答复都没提到、产品在需求里补充的规则，默认值大多与原文一致，只是多了可配置项或边界处理。同意写「同意」，不同意请写调整意见。</p>
+<div class="rq-card" id="D-13"><div class="rq-hd"><span class="rq-id">D-13</span><span class="rq-tt">短信、推送免打扰时段</span><span class="rq-it">全部迭代</span><span class="rq-st">待 Claire 答复</span></div>
+<div class="rq-bd"><div class="rq-o"><span class="rq-lb">原始需求</span>原文十六「次月1日保级结算及奖励发放成功后触发」</div><div class="rq-c"><span class="rq-lb">需求现在的写法</span>21:00–10:00（GMT+8）之间触发的 VIP 短信和 APP 推送顺延到 10:00 发送；如每月 1 日 00:05 结算完成，保级短信 10:00 发</div></div>
+<div class="rq-ft"><b>请确认</b>：是否同意<br><b>Claire 答复</b>：—</div></div>
+<div class="rq-card" id="D-14"><div class="rq-hd"><span class="rq-id">D-14</span><span class="rq-tt">小额到账不发短信</span><span class="rq-it">全部迭代</span><span class="rq-st">待 Claire 答复</span></div>
+<div class="rq-bd"><div class="rq-o"><span class="rq-lb">原始需求</span>原文未限定金额</div><div class="rq-c"><span class="rq-lb">需求现在的写法</span>本次到账金额小于 ₱1 时只发 APP 推送、不发短信（平台账变短信门槛）</div></div>
+<div class="rq-ft"><b>请确认</b>：是否同意<br><b>Claire 答复</b>：—</div></div>
+<div class="rq-card" id="D-15"><div class="rq-hd"><span class="rq-id">D-15</span><span class="rq-tt">生日提醒发送时间和特殊日期</span><span class="rq-it">全部迭代</span><span class="rq-st">待 Claire 答复</span></div>
+<div class="rq-bd"><div class="rq-o"><span class="rq-lb">原始需求</span>原文十「提前一天短信提醒，生日当天短信提醒」；发送时间和特殊日期原文未写</div><div class="rq-c"><span class="rq-lb">需求现在的写法</span>前一天、当天的提醒都在 10:00 发；当天 10:00 前已领取的不再发当天提醒；生日在每月 1 日的玩家，前一天提醒不写金额和期限（当天结算可能改变等级）；2 月 29 日生日的玩家，非闰年在 2 月 28 日发放</div></div>
+<div class="rq-ft"><b>请确认</b>：是否同意<br><b>Claire 答复</b>：—</div></div>
+<div class="rq-card" id="D-16"><div class="rq-hd"><span class="rq-id">D-16</span><span class="rq-tt">生日奖励领取方式和有效期</span><span class="rq-it">全部迭代</span><span class="rq-st">待 Claire 答复</span></div>
+<div class="rq-bd"><div class="rq-o"><span class="rq-lb">原始需求</span>原文十「然后x日后过期」；C-06「随便配吧」</div><div class="rq-c"><span class="rq-lb">需求现在的写法</span>玩家在等级中心手动领取，有效期含生日当天共 15 天（运营可改 1–30 天），过期作废；v1.1 / 完整需求可改为自动到账</div></div>
+<div class="rq-ft"><b>请确认</b>：是否同意 15 天默认值<br><b>Claire 答复</b>：—</div></div>
+<div class="rq-card" id="D-17"><div class="rq-hd"><span class="rq-id">D-17</span><span class="rq-tt">原文没列出的等级的生日金额</span><span class="rq-it">全部迭代</span><span class="rq-st">待 Claire 答复</span></div>
+<div class="rq-bd"><div class="rq-o"><span class="rq-lb">原始需求</span>原文十只列 9 档；C-06「随便配吧」</div><div class="rq-c"><span class="rq-lb">需求现在的写法</span>原文 9 档不变；其余等级默认沿用低一档，如 VIP2–5 ₱88、VIP7–10 ₱188、VIP12–13 ₱288、VIP15–16 ₱488（运营可改）</div></div>
+<div class="rq-ft"><b>请确认</b>：是否同意<br><b>Claire 答复</b>：—</div></div>
+<div class="rq-card" id="D-20"><div class="rq-hd"><span class="rq-id">D-20</span><span class="rq-tt">可选「成长值」计算方式</span><span class="rq-it">全部迭代</span><span class="rq-st">待 Claire 答复</span></div>
+<div class="rq-bd"><div class="rq-o"><span class="rq-lb">原始需求</span>原文一、三只有累计充值 + 累计有效投注双门槛</div><div class="rq-c"><span class="rq-lb">需求现在的写法</span>默认「累计金额」双门槛（与原文一致）；运营可切换为成长值方式（充值和投注折算成一个成长值判定升级和保级）</div></div>
+<div class="rq-ft"><b>请确认</b>：是否同意提供这个选项<br><b>Claire 答复</b>：—</div></div>
+<div class="rq-card" id="D-21"><div class="rq-hd"><span class="rq-id">D-21</span><span class="rq-tt">奖励流水倍数可配</span><span class="rq-it">全部迭代</span><span class="rq-st">待 Claire 答复</span></div>
+<div class="rq-bd"><div class="rq-o"><span class="rq-lb">原始需求</span>原文十一：升级、保级、生日奖励 1 倍 Bonus Turnover</div><div class="rq-c"><span class="rq-lb">需求现在的写法</span>默认 1 倍（与原文一致），运营可改 0–50 倍；VIP 奖励流水不适用低额自动清稽核</div></div>
+<div class="rq-ft"><b>请确认</b>：是否同意<br><b>Claire 答复</b>：—</div></div>
+<div class="rq-card" id="D-23"><div class="rq-hd"><span class="rq-id">D-23</span><span class="rq-tt">普通会员 Level 与 VIP 的衔接</span><span class="rq-it">全部迭代</span><span class="rq-st">待 Claire 答复</span></div>
+<div class="rq-bd"><div class="rq-o"><span class="rq-lb">原始需求</span>原文一「Level 0–29：普通会员成长等级；Level 30开始进入VIP体系」</div><div class="rq-c"><span class="rq-lb">需求现在的写法</span>第一次开启 VIP 时删除 LEVEL 30 及以上（默认沿用到 LEVEL 29，运营可改 LEVEL n），这些玩家按 VIP 规则重新定级；VIP1 及以上不再领 Level 段奖励</div></div>
+<div class="rq-ft"><b>请确认</b>：是否同意<br><b>Claire 答复</b>：—</div></div>
+<div class="rq-card" id="D-24"><div class="rq-hd"><span class="rq-id">D-24</span><span class="rq-tt">旧版 VIP活动与新版合并</span><span class="rq-it">全部迭代</span><span class="rq-st">待 Claire 答复</span></div>
+<div class="rq-bd"><div class="rq-o"><span class="rq-lb">原始需求</span>原文未写旧版的处理</div><div class="rq-c"><span class="rq-lb">需求现在的写法</span>新旧共用一个总开关；开启后旧版晋级礼金、生日礼金、每周红包、专属红包全部停止生成（已生成的照常处理完）；旧版的注册天数、强制审核保留为可选项</div></div>
+<div class="rq-ft"><b>请确认</b>：是否同意<br><b>Claire 答复</b>：—</div></div>
+<div class="rq-card" id="D-25"><div class="rq-hd"><span class="rq-id">D-25</span><span class="rq-tt">按 VIP 等级配置下注限额和返水</span><span class="rq-it">全部迭代</span><span class="rq-st">待 Claire 答复</span></div>
+<div class="rq-bd"><div class="rq-o"><span class="rq-lb">原始需求</span>原文未写</div><div class="rq-c"><span class="rq-lb">需求现在的写法</span>每个 VIP 等级可配单注 / 串关 / 单注冠军最大下注额、充值返水比例、单注最大返水；正式数值由运营出方案</div></div>
+<div class="rq-ft"><b>请确认</b>：是否同意<br><b>Claire 答复</b>：—</div></div>
+<div class="rq-card" id="D-26"><div class="rq-hd"><span class="rq-id">D-26</span><span class="rq-tt">账号异常时的处理</span><span class="rq-it">全部迭代</span><span class="rq-st">待 Claire 答复</span></div>
+<div class="rq-bd"><div class="rq-o"><span class="rq-lb">原始需求</span>原文未写</div><div class="rq-c"><span class="rq-lb">需求现在的写法</span>账号冻结、自我排除、风险分 70 及以上等状态：等级照常计算，奖励「暂停发放（风控）」，不发 VIP 短信；运营核验后放行（到账）或作废</div></div>
+<div class="rq-ft"><b>请确认</b>：是否同意<br><b>Claire 答复</b>：—</div></div>
+<div class="rq-card" id="D-27"><div class="rq-hd"><span class="rq-id">D-27</span><span class="rq-tt">VIP 奖励到账通知和升级弹窗</span><span class="rq-it">全部迭代</span><span class="rq-st">待 Claire 答复</span></div>
+<div class="rq-bd"><div class="rq-o"><span class="rq-lb">原始需求</span>原文十六只规定保级奖励短信</div><div class="rq-c"><span class="rq-lb">需求现在的写法</span>升级、保级、生日奖励到账时发站内信和 APP 推送（推送复用现有「奖励到账后」模板，受「奖励金到账通知」开关控制）；升级时弹升级弹窗（在第三方游戏中不弹，回到平台页面后弹）</div></div>
+<div class="rq-ft"><b>请确认</b>：是否同意<br><b>Claire 答复</b>：—</div></div>
+<div class="rq-card" id="D-28"><div class="rq-hd"><span class="rq-id">D-28</span><span class="rq-tt">前台等级中心展示</span><span class="rq-it">全部迭代</span><span class="rq-st">待 Claire 答复</span></div>
+<div class="rq-bd"><div class="rq-o"><span class="rq-lb">原始需求</span>原文未写前台展示</div><div class="rq-c"><span class="rq-lb">需求现在的写法</span>当前等级卡：本月未保级显示保级进度，保级达成后切换显示升级进度；VIP 奖励表只显示等级、升级奖励、保级奖励、生日奖励，门槛金额在「?」规则弹窗查看；前台不显示百分比</div></div>
+<div class="rq-ft"><b>请确认</b>：是否同意<br><b>Claire 答复</b>：—</div></div>
+<div class="rq-card" id="D-29"><div class="rq-hd"><span class="rq-id">D-29</span><span class="rq-tt">VIP 奖励独立账变类型</span><span class="rq-it">全部迭代</span><span class="rq-st">待 Claire 答复</span></div>
+<div class="rq-bd"><div class="rq-o"><span class="rq-lb">原始需求</span>原文未写</div><div class="rq-c"><span class="rq-lb">需求现在的写法</span>VIP 奖励入账使用独立账变类型「VIP 奖励」，不使用「活动金额」，便于在资金报表和会员账变记录单独统计</div></div>
+<div class="rq-ft"><b>请确认</b>：是否同意<br><b>Claire 答复</b>：—</div></div>
+
+</article></div>
+</div>
+<script>window.NAV_ROOT = "../../";</script>
+<script src="../../assets/nav-data.js"></script>
+<script src="../../assets/nav.js"></script>
+</body>
+</html>

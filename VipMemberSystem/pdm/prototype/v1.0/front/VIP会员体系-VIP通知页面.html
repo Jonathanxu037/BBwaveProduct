@@ -1,0 +1,570 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>VIP会员体系-v1.0-VIP通知页面</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<link rel="stylesheet" href="../../../assets/vip.css">
+<style>
+/* 大厅背景（示意） */
+.lobby{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.lobby div{height:92px;border-radius:12px;background:linear-gradient(135deg,#232a3d,#1a2030);display:grid;place-items:center;color:var(--app-muted);font-size:12px}
+/* 第三方游戏页面（示意）：玩家在游戏中时不弹站内弹窗类通知，返回平台原生页面后再弹（用户 2026-10-19） */
+.game{display:grid;gap:12px}
+.game[hidden],.lobby[hidden],#lobbyTop[hidden]{display:none}
+.game .gm{height:420px;border-radius:12px;background:linear-gradient(160deg,#3b1d5c,#12304a);display:grid;place-items:center;align-content:center;gap:8px;color:#e6ddff;font-size:13px}
+.game .gm i{font-style:normal;font-size:64px}
+/* 升级全屏动效 */
+.fx{position:absolute;inset:0;z-index:6;display:grid;place-items:center;background:radial-gradient(circle at 50% 42%,rgba(255,214,102,.55),rgba(60,30,0,.85) 55%,rgba(5,5,10,.95));overflow:hidden}
+.fx::before{content:"";position:absolute;inset:-40%;background:repeating-conic-gradient(from 0deg,rgba(255,220,120,.18) 0 8deg,transparent 8deg 20deg);animation:rot 6s linear infinite}
+@keyframes rot{to{transform:rotate(360deg)}}
+.fx .crown{position:relative;font-size:76px;animation:pop 1.2s ease-out}
+.fx .lv{position:relative;font-size:30px;font-weight:900;color:#ffe08a;text-shadow:0 2px 12px rgba(255,180,0,.6);text-align:center;margin-top:-10px}
+.fx .cd{position:absolute;right:14px;top:12px;font-size:11px;color:#ffe7a6;background:rgba(0,0,0,.35);border-radius:10px;padding:1px 8px}
+@keyframes pop{0%{transform:scale(.3);opacity:0}70%{transform:scale(1.15);opacity:1}100%{transform:scale(1)}}
+.up{background:linear-gradient(180deg,#3a2a10,#1c140a);border:1px solid #8a6a2a;border-radius:18px;padding:20px 18px;display:grid;gap:10px;text-align:center;width:100%;color:#fff3d1;max-height:100%;overflow:auto}
+.up h3{margin:0;font-size:20px;color:#ffe08a}
+.up .amt{font-size:34px;font-weight:900;color:#ffd666;line-height:1.1}
+.up .sm{font-size:12px;color:#d9c08a}
+.unl{background:rgba(255,214,102,.1);border:1px dashed #c8962e;border-radius:12px;padding:10px;display:grid;gap:8px}
+.unl .btn{height:40px;line-height:40px;font-size:14px;background:linear-gradient(90deg,#ff7a45,#f5222d);color:#fff}
+.oldp{background:var(--app-card);border:1px solid var(--app-line);border-radius:16px;padding:18px;display:grid;gap:10px;width:100%;text-align:center}
+.oldp b{font-size:16px}
+/* 短信 */
+.smsh{display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--app-line);padding-bottom:10px}
+.smsh i{width:36px;height:36px;border-radius:50%;background:#2c3447;display:grid;place-items:center;font-style:normal;font-weight:800}
+.smsd{text-align:center;font-size:11px;color:var(--app-muted)}
+.bub{align-self:flex-start;max-width:84%;background:#262d3f;border-radius:16px 16px 16px 4px;padding:10px 12px;font-size:13.5px;line-height:1.45;white-space:pre-line}
+.bub small{display:block;color:var(--app-muted);font-size:10.5px;margin-top:4px;white-space:normal}
+.draft{display:inline-block;font-size:10px;font-weight:800;background:#5a3a00;color:#ffe7a6;border-radius:4px;padding:0 5px;margin-left:4px}
+.ds{font-size:10px;font-weight:800;color:#d9b25e;margin-left:3px}
+/* 等级中心 VIP 段顶部（生日卡片所在位置） */
+.lcw{background:#fff;color:#222;border-radius:16px;padding:14px;display:grid;gap:8px}
+.lcw h4{margin:0;font-size:14px}
+.mpc{all:unset;cursor:pointer;justify-self:end;font-size:12.5px;font-weight:800;color:#8a5a12;border:1px solid #e6cf9a;background:#fff8e6;border-radius:14px;padding:4px 12px;text-decoration:none}
+.bd{display:grid;grid-template-columns:44px 1fr auto;gap:10px;align-items:center;background:linear-gradient(135deg,#fff3d6,#f3d38b);border-radius:12px;padding:10px 12px;color:#4a3510}
+.bd .ic{width:44px;height:44px;border-radius:10px;background:radial-gradient(circle at 35% 30%,#fff,#e8b44c 75%);display:grid;place-items:center;font-size:22px}
+.bd b{display:block;font-size:13.5px}
+.bd .amt{font-size:16px;font-weight:900;color:#b8741a}
+.bd .m{font-size:11px;color:#8a6a35}
+.bd.expired{opacity:.6}
+.cb{all:unset;cursor:pointer;font-size:12px;font-weight:800;border-radius:14px;padding:5px 14px;background:linear-gradient(90deg,#ff7a45,#f5222d);color:#fff}
+.cb[disabled]{background:#d9d9d9;color:#8c8c8c;cursor:default}
+.gone{font-size:12px;color:#999;text-align:center;padding:6px 0}
+.notes .ref{white-space:normal}
+/* 到账通知（站内信 + APP 推送）、Transaction 记录 */
+.push{display:grid;grid-template-columns:30px 1fr;gap:8px;align-items:center;background:rgba(255,255,255,.92);color:#222;border-radius:14px;padding:9px 11px;font-size:12px;box-shadow:0 4px 14px rgba(0,0,0,.35)}
+.push i{width:30px;height:30px;border-radius:8px;background:#f2b632;display:grid;place-items:center;font-style:normal;font-weight:900;color:#3a2600}
+.push b{display:block;font-size:12.5px}
+.push small{color:#888;font-size:10.5px}
+.inbox{background:var(--app-card);border:1px solid var(--app-line);border-radius:12px;padding:12px;display:grid;gap:4px;font-size:12.5px}
+.inbox b{font-size:13.5px}
+.inbox .m{color:var(--app-muted);font-size:11px}
+.txl{background:var(--app-card);border:1px solid var(--app-line);border-radius:12px;overflow:hidden}
+.txr{display:grid;grid-template-columns:1fr auto;gap:2px 10px;padding:10px 12px;border-top:1px solid var(--app-line);font-size:12.5px}
+.txr:first-child{border-top:0}
+.txr .a{color:#73d13d;font-weight:800;text-align:right}
+.txr .m{color:var(--app-muted);font-size:11px}
+/* 原 KYC 拦截弹窗的样式已删除：未完成 KYC 不参与 VIP 体系、看不到生日卡片（已定，用户 2026-10-17） */
+/* 帮助按钮同行、同行居中、说明文字靠左并标注（用户 2026-10-20，规范通用 v5.45）：本包 assets 暂未同步新模板，先用页内 vip- 样式实现，同时写规范类名 ui-reqnote / ui-nw；
+   前缀改由模板 .ui-reqnote::before 输出，本页的 .vip-req-note::before 伪元素已删除（用户 2026-10-21，模板 v5.46），前缀只显示一遍。前缀用伪元素输出，英文化不翻译、不计入漏翻 */
+.vip-nw{display:inline-flex;align-items:center;gap:6px;white-space:nowrap;min-width:0}
+.vip-req-note{display:block;text-align:left!important;font-size:11px;line-height:1.55;color:#8A6D3B;background:#FFFBE6;border:1px dashed #E6C67A;border-radius:6px;padding:4px 8px;margin:0;font-weight:400;font-style:normal;white-space:pre-line}
+.vip-req-note p{margin:0}
+.notes .vip-req-head{margin:-2px 0 8px;font-size:11px}
+.notes .vip-req-head::before{display:inline}
+.vip-phonecol{display:flex;flex-direction:column;gap:10px;width:100%;max-width:430px;min-width:0}
+.vip-outnote{font-size:12px}</style>
+</head>
+<body>
+<!-- 前台原型：VIP 通知（升级弹窗、生日卡片、保级短信、生日短信），PRD 第 6 章。短信为模拟展示。
+     另含 VIP 奖励到账的站内信、APP 推送和交易记录（Transaction）显示名（PRD 规则 N35、N55）。
+     地址 #状态名 切换（视图名见下方 VIEWS 和运营需求确认页 VIEWS）。 -->
+<div class="with-nav">
+<div class="stage">
+  <div class="vip-phonecol">
+  <div class="app" role="region" aria-label="手机画面">
+    <div class="sb"><span>9:41</span><span>●●● 5G</span></div>
+
+    <!-- ============ 升级弹窗（大厅背景 + 全屏动效 + 弹窗） ============ -->
+    <div class="view" id="vPopup">
+      <div class="topline" id="lobbyTop">789Bingo</div>
+      <p class="vip-req-note ui-reqnote" id="riskHint" hidden style="position:relative;z-index:7"></p>
+      <!-- 大厅示意去掉「体育」页签：平台已无体育类游戏，VIP 只计 6 大类游戏（用户 2026-10-21，Q-21） -->
+      <div class="lobby" id="lobby"><div>宾果</div><div>老虎机</div><div>真人</div><div>捕鱼</div><div>优惠活动</div></div>
+      <!-- 第三方游戏页面（示意）：游戏中升级不弹升级弹窗，点「返回大厅」回到平台原生页面后弹出（用户 2026-10-19） -->
+      <div class="game" id="gameV" hidden>
+        <div class="gm"><i>🎰</i><b>第三方游戏</b></div>
+        <button class="btn" type="button" id="gameBack">返回大厅</button>
+      </div>
+
+      <div class="fx" id="fx" hidden><span class="cd" id="fxCd">5s</span><div><div class="crown">👑</div><div class="lv" id="fxLv">VIP14</div></div></div>
+      <div class="ov" id="upDlg" hidden>
+        <div class="up glow" role="dialog" aria-modal="true" aria-labelledby="upT">
+          <h3 id="upT">恭喜你！</h3>
+          <div>你已升至 <b id="upLv">VIP14</b></div>
+          <div class="sm" id="upSub">升级奖励</div>
+          <div class="amt" id="upAmt">₱2,000</div>
+          <!-- 原「已到账 · n 倍流水」改为「已到账」：前台不显示流水倍数（用户 2026-10-19追加，示意），流水要求仍按原文十一 / 后台配置执行 -->
+          <!-- 强制审核生效时（用户 2026-10-20）：「已到账」改为「审核中，审核通过后到账」 -->
+          <div class="sm glow" id="upCr">已到账</div>
+          <!-- 原「立即领取（Claim now）」按钮已删除：升级奖励自动到账（用户 2026-10-17 定） -->
+          <button class="btn glow" type="button" id="upOk">知道了</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ 短信（模拟手机短信界面） ============ -->
+    <div class="view" id="vSms" hidden>
+      <div class="smsh"><i>7</i><div><b>789Bingo</b><div class="ui-hint" style="font-size:11px">短信</div></div></div>
+      <div class="smsd" id="smsDate">11月1日 周日 · 10:00</div>
+      <!-- 发送时间说明（用户 2026-10-19，示意）：保级短信在次月 1 日结算及奖励发放成功后触发；21:00–10:00（GMT+8）免打扰时段内完成的顺延到 10:00 发送 -->
+      <p class="vip-req-note ui-reqnote" id="smsNote" hidden></p>
+      <div class="bub" id="smsBub"></div>
+      <p class="vip-req-note ui-reqnote" id="smsNone" hidden></p>
+    </div>
+
+    <!-- ============ 生日卡片（等级中心 VIP 段顶部） ============ -->
+    <div class="view" id="vBonus" hidden>
+      <div class="topline"><a class="back" href="VIP会员体系-VIP中心页面.html#vip14" aria-label="返回">‹</a>等级中心</div>
+      <p class="vip-req-note ui-reqnote">（上方刻度和等级卡与 VIP中心页面相同，此处省略）</p>
+      <div class="lcw">
+        <div class="bd glow" id="bdCard">
+          <div class="ic">🎂</div>
+          <div><b>生日快乐！</b><div class="amt">₱488</div><div class="m" id="bdMeta">有效期至 2026-10-27（GMT+8）</div></div>
+          <button type="button" class="cb" id="bdBtn">领取</button>
+        </div>
+        <div class="gone vip-req-note ui-reqnote" id="bdGone" hidden>（10-29 00:00 起不再显示生日卡片）</div><!-- 过期显示口径：有效期含生日当天共 x 天，例 10-13 生日、15 天，截止 10-27 23:59:59（GMT+8）；10-28 全天显示「已过期」；10-29 00:00 起不再显示（用户 2026-10-19） -->
+        <div class="gone vip-req-note ui-reqnote" id="bdNoKyc" hidden>（未完成 KYC：不参与 VIP 体系，没有生日奖励，不显示生日卡片；等级中心只显示 KYC 引导卡）</div>
+        <h4>VIP 奖励</h4>
+        <p class="vip-req-note ui-reqnote">（奖励表与规则说明见 VIP中心页面）</p>
+      </div>
+    </div>
+
+    <!-- ============ VIP 奖励到账通知：APP 推送 + 站内信（沿用平台现有模板和通道，规则 N55） ============ -->
+    <div class="view" id="vNotice" hidden>
+      <div class="push glow" id="pushBox"><i>7</i><div><b>789Bingo</b>你的 VIP 升级奖励已到账。<small>刚刚</small></div></div>
+      <div class="topline">消息</div>
+      <p class="vip-req-note ui-reqnote">（现有站内消息列表，示意；本需求只由 VIP 发放流程发送下面这类消息；<span class="glow">升级、保级奖励到账时发送，生日奖励领取成功时发送，示意</span>）</p>
+      <div class="inbox glow" id="inboxBox"><b>奖励已到账</b><span id="inboxTxt">VIP 升级奖励 ₱2,000 已存入你的账户。</span><span class="m">2026-10-08 14:05</span></div>
+      <!-- 免打扰时段（用户 2026-10-19，示意）：本例 14:05 不在时段内，推送即时发送；画面灰字说明时段规则 -->
+      <div class="vip-req-note ui-reqnote glow" id="quietNote"><p>（21:00–10:00 触发的推送顺延到 10:00 发送，站内信即时生成）</p>
+      <!-- 强制审核生效时（用户 2026-10-20）：到账通知在审核通过、实际到账时发送，审核中、驳回不发 -->
+      <p id="audNote" hidden>（强制审核生效：审核通过到账时才发送，审核中、未通过不发）</p></div>
+      <p class="vip-req-note ui-reqnote" id="noticeNone" hidden></p>
+    </div>
+
+    <!-- ============ Transaction 交易记录（现有页面，示意；VIP 奖励显示名，规则 N35） ============ -->
+    <div class="view" id="vTxn" hidden>
+      <div class="topline"><a class="back" href="VIP会员体系-VIP中心页面.html#vip14" aria-label="返回">‹</a>交易记录</div>
+      <p class="vip-req-note ui-reqnote">（现有交易记录页，示意，本需求不改页面；以下为 VIP 奖励入账后的显示名）</p>
+      <!-- 示例时间线（用户 2026-10-17，示意）：按时间倒序；10-01 00:03 结算时为 VIP13 → VIP13 保级奖励 ₱1,200；10-08 14:05 升到 VIP14 → VIP14 升级奖励 ₱2,000 立即到账；
+           10-13 生日当天 00:00 为 VIP14 → 生成 VIP14 生日奖励 ₱488，玩家 10:30 领取（在 10:00 生日短信之后） -->
+      <div class="txl glow">
+        <div class="txr"><b>VIP 生日奖励</b><span class="a">+₱488</span><span class="m">2026-10-13 10:30</span><span class="m">奖金</span></div>
+        <div class="txr"><b>VIP 升级奖励</b><span class="a">+₱2,000</span><span class="m">2026-10-08 14:05</span><span class="m">奖金</span></div>
+        <div class="txr"><b>VIP 保级奖励</b><span class="a">+₱1,200</span><span class="m">2026-10-01 00:03</span><span class="m">奖金</span></div>
+      </div>
+    </div>
+
+    <!-- 原「KYC 拦截弹窗」（点生日卡片「领取」时 KYC 未通过）已删除：未完成 KYC 不参与 VIP 体系、看不到生日卡片；后端保留 KYC 校验兜底，校验失败提示领取失败（已定，用户 2026-10-17） -->
+
+    <div class="toast" id="toast" hidden></div>
+  </div>
+  <!-- 手机画面外紧下方的说明区（用户 2026-10-20）：原在标题、气泡里的「（示意）」类标记移到这里 -->
+  <div class="vip-req-note ui-reqnote vip-outnote" id="vipOut" hidden></div>
+  </div>
+
+  <aside class="notes">
+    <h2>VIP会员体系-v1.0-VIP通知页面</h2>
+    <p class="sub">集中演示 VIP 体系的通知类界面：升级弹窗、等级中心的生日卡片（等级卡下方、VIP 奖励表上方）、保级奖励短信、生日提醒短信、VIP 现金奖励到账的站内信和 APP 推送，以及 交易记录（Transaction） 里的 VIP 奖励显示名。短信是真实环境才能收到的效果，这里用模拟的手机短信界面展示，不实际发送。数据全部为虚构示例。</p>
+    <h3>模拟场景</h3>
+    <p class="vip-req-note ui-reqnote vip-req-head"></p>
+    <div class="sim">
+      <button type="button" data-go="popup-upgrade"><span class="simtag">弹窗</span>单级升级（VIP10 → VIP11）</button>
+      <button type="button" data-go="popup-prize"><span class="simtag">弹窗</span>单级升级（VIP13 → VIP14）</button>
+      <button type="button" data-go="popup-multi"><span class="simtag">弹窗</span>一次跨多级（VIP12 → VIP17，合计 ₱11,700，显示 ₱11.7K）</button>
+      <button type="button" data-go="popup-offline"><span class="simtag">弹窗</span>升级时不在线，下次进入时补弹（画面灰字说明，与单级升级区分）</button>
+      <button type="button" data-go="popup-ingame" class="glow"><span class="simtag">弹窗</span>游戏中升级 ①：玩家在第三方游戏页面时升级，不弹升级弹窗（用户 2026-10-19）</button>
+      <button type="button" data-go="popup-return" class="glow"><span class="simtag">弹窗</span>游戏中升级 ②：返回大厅（平台原生页面）后弹出升级弹窗（用户 2026-10-19）</button>
+      <button type="button" data-go="popup-order" class="glow"><span class="simtag">弹窗</span>普通用户升到 VIP1，后台 Level 段同一次也升级：前台只弹 VIP 升级弹窗，不弹 Level 段弹窗、不提示 Level 奖励（C-03，用户 2026-10-17）</button>
+      <button type="button" data-go="popup-risk"><span class="simtag">弹窗</span>风控暂停：升级后不弹升级弹窗</button>
+      <button type="button" data-go="popup-released"><span class="simtag">弹窗</span>风控放行后：升级奖励立即自动到账，不补弹</button>
+      <button type="button" data-go="popup-oldapp"><span class="simtag">弹窗</span>老版本 App：升级奖励照常自动到账，不弹升级弹窗</button>
+      <button type="button" data-go="popup-nokyc" class="glow"><span class="simtag">弹窗</span>未完成 KYC：「KYC 限制」开启时不参与 VIP 体系，不弹升级弹窗（已定，用户 2026-10-17）；关闭时照常弹升级弹窗（用户 2026-10-26）</button>
+      <!-- 强制审核场景（用户 2026-10-20）：data-aud="1" 把后台共享状态 vipLgOpt.audOn 设为生效、audSt 设为审核中；其他场景不改，右侧「强制审核」可切回不生效 -->
+      <button type="button" data-go="popup-prize" data-aud="1" class="glow"><span class="simtag">弹窗</span>强制审核生效（VIP13 → VIP14）：「已到账」改为「审核中，审核通过后到账」+「知道了」（用户 2026-10-20）</button>
+      <button type="button" data-go="bonus-pending"><span class="simtag">生日卡片</span>待领取（点「领取」直接领取生日奖励，提示「₱488 生日奖励已到账。」）</button>
+      <button type="button" data-go="bonus-fail"><span class="simtag">生日卡片</span>领取失败（点「领取」提示领取失败，保留待领取）</button>
+      <button type="button" data-go="bonus-claimed"><span class="simtag">生日卡片</span>已领取（Claimed，保留到有效期结束）</button>
+      <button type="button" data-go="bonus-expired"><span class="simtag">生日卡片</span>已过期（Expired）：例 10-28 全天显示「已过期」</button>
+      <button type="button" data-go="bonus-gone"><span class="simtag">生日卡片</span>例 10-29 00:00 起不再显示生日卡片</button>
+      <button type="button" data-go="bonus-risk"><span class="simtag">生日卡片</span>风控暂停（按钮显示待核验，不可点）</button>
+      <button type="button" data-go="bonus-released"><span class="simtag">生日卡片</span>风控放行后：回到待领取并重算有效期</button>
+      <button type="button" data-go="bonus-nokyc" class="glow"><span class="simtag">生日卡片</span>未完成 KYC：没有生日奖励，不显示生日卡片（已定，用户 2026-10-17；「KYC 限制」关闭时同样，生日奖励始终要求 KYC，用户 2026-10-26）</button>
+      <button type="button" data-go="bonus-pending" data-aud="1" class="glow"><span class="simtag">生日卡片</span>强制审核生效：点「领取」→ 提示「已提交领取，审核通过后到账。」，按钮「审核中」、说明「审核通过后到账」；右侧「领取后审核」切到「通过」→「已领取」，「驳回」→「未通过」+「审核未通过，如有疑问请联系客服」（用户 2026-10-20）</button>
+      <!-- 驳回后的显示时间（用户 2026-10-20）：「未通过」显示到原有效期结束，之后不再显示；data-agone="1" 演示原有效期结束后（共享状态 audGone，与 VIP中心页面共用） -->
+      <button type="button" data-go="bonus-claimed" data-aud="1" data-ast="reject" class="glow"><span class="simtag">生日卡片</span>强制审核生效 · 驳回：「未通过」+「审核未通过，如有疑问请联系客服」，显示到原有效期结束（例 10-27 23:59:59）（用户 2026-10-20）</button>
+      <button type="button" data-go="bonus-claimed" data-aud="1" data-ast="reject" data-agone="1" class="glow"><span class="simtag">生日卡片</span>强制审核生效 · 驳回后原有效期结束：例 10-28 00:00 起不再显示生日卡片（用户 2026-10-20）</button>
+      <button type="button" data-go="sms-retention"><span class="simtag">短信</span>保级奖励短信（模板「VIP 保级奖励到账」；次月 1 日结算及奖励发放成功后发送；00:05 结算完成处于免打扰时段，顺延到 10:00）</button>
+      <button type="button" data-go="sms-bday-before"><span class="simtag">短信</span>生日前一天提醒（10:00，模板「VIP 生日提醒 · 前一天 · 手动领取」；生日在 1 日的玩家前一天照常发，不写金额和期限）</button>
+      <button type="button" data-go="sms-bday-today"><span class="simtag">短信</span>生日当天提醒（10:00；右侧生日奖励设为已领取时不发；生日在 1 日的玩家在 1 日等级结算完成后发，10:00 前完成的 10:00 发）</button>
+      <!-- 强制审核短信（用户 2026-10-20）：审核中、驳回不发；审核通过、实际到账时发到账短信，按类别发送「审核通过到账」短信模板（PRD 附录 D）。data-ast 设审核结果 -->
+      <button type="button" data-go="sms-retention" data-aud="1" class="glow"><span class="simtag">短信</span>强制审核生效 · 保级奖励审核中：不发保级短信（驳回也不发）；右侧「领取后审核」切到「通过」→ 到账短信（用户 2026-10-20）</button>
+      <button type="button" data-go="sms-retention" data-aud="1" data-ast="pass" class="glow"><span class="simtag">短信</span>强制审核生效 · 保级奖励审核通过：到账时发保级短信（模板「VIP 保级奖励到账」）（用户 2026-10-20）</button>
+      <button type="button" data-go="sms-aud-up" data-aud="1" data-ast="pass" class="glow"><span class="simtag">短信</span>强制审核生效 · 升级奖励审核通过：到账短信（模板「VIP 升级奖励审核通过到账」）（用户 2026-10-20）</button>
+      <button type="button" data-go="sms-aud-bd" data-aud="1" data-ast="pass" class="glow"><span class="simtag">短信</span>强制审核生效 · 生日奖励审核通过：到账短信（模板「VIP 生日奖励审核通过到账」）；生日前一天 / 当天提醒短信不受审核影响，保持原逻辑（用户 2026-10-20）</button>
+      <button type="button" data-go="notice-credit"><span class="simtag">到账</span>VIP 现金奖励到账：站内信「奖励已到账」+ APP 推送（21:00–10:00 触发的推送顺延到 10:00）</button>
+      <button type="button" data-go="notice-small" class="glow"><span class="simtag">到账</span>到账金额小于 ₱1（接口模拟 ₱0.50，22:18 到账）：不发短信，只发 APP 推送；到账推送受免打扰时段限制，顺延到次日 10:00（与平台现行「资金类推送不受免打扰」不同，用户 2026-10-21）</button>
+      <button type="button" data-go="txn"><span class="simtag">到账</span>Transaction 交易记录中的 VIP 奖励显示名</button>
+    </div>
+    <h3>模拟操作</h3>
+    <p class="vip-req-note ui-reqnote vip-req-head"></p>
+    <!-- 由 assets/proto.js 按页面底部的配置生成；模拟状态跨页面共享，存在 sessionStorage -->
+    <div class="sim" id="simPanel"></div>
+    <h3>规则批注</h3>
+    <p class="vip-req-note ui-reqnote vip-req-head"></p>
+    <ol>
+      <li class="glow"><b>全需求前台金额规则（用户 2026-10-19 定，pending 第 105 条）</b>：本页前台金额（升级弹窗、生日卡片、站内信、到账推送、交易记录、toast）与 VIP中心页面统一：₱9,999 及以下显示完整金额（₱2,000、₱1,500、₱488）；₱10,000 起用 K、₱1,000,000 起用 M、十亿起用 B；确定金额四舍五入到最多 2 位小数，末尾 0 省略（₱1,050,000 → ₱1.05M）（与 VIP中心页面 fmtKM 一致；清理原「最多 1 位小数」写法，用户 2026-10-21）。本页只有跨多级合计 ₱11,700 达到 ₱10,000，显示 "₱11.7K"；其余金额都在 ₱9,999 及以下，保持完整金额。短信正文的金额写「PHP」+ 完整金额（见 PRD 附录 D）。</li>
+      <li><b>F06-04 升级弹窗</b>：标题 "恭喜你！（Congratulations!）"（示意）；显示新等级、升级奖励（跨多级显示合计 ₱{total}）、<span class="glow">到账说明 "已到账（Credited）" + 按钮 "知道了（OK）"（关闭弹窗）（原 "你的升级奖励 ₱{x} 已可领取" 和 "立即领取（Claim now）" 按钮随撤销一键领取删除，原「确定（OK）」按钮合并为「知道了」；用户 2026-10-17 定：按原文倾向升级、保级奖励自动到账（撤销 10-16 一键领取），示意）</span><span class="glow">；原到账说明里的 "· {n} 倍流水" 已删除：<b>前台不显示流水倍数（用户 2026-10-19追加，示意）</b>，流水要求仍按原文十一 / 后台配置执行（升级奖励默认 1 倍）</span>。<span class="glow">未完成 KYC 的玩家不参与 VIP 体系，没有升级，不弹升级弹窗（场景「未完成 KYC」）；完成 KYC 时按历史累计定级，KYC 前已达到的等级不发升级奖励、不弹升级弹窗，之后新到达的等级照常弹（已定（用户 2026-10-17），C-11；「KYC 前已达到不发」为已定（用户 2026-10-17），依据 Claire 原文历史累计和 C-01 存量初始化）。</span>动效沿用现行 11 级及以上档（全屏 5 秒，原型右上角倒计时示意，5 秒后出现弹窗），游戏内自动静音。<span class="glow"><b>玩家在第三方游戏页面时不弹，回到平台原生页面时再弹</b>（见规则 N44 补弹条，场景「游戏中升级 ①②」；用户 2026-10-19）。</span>展示时上报 vip_upgrade_popup_show（from_level、to_level、bonus、is_offline）<span class="glow">（原 vip_upgrade_popup_bonus_click 随「立即领取」按钮删除）</span>。<span class="ref">PRD 第 6 章 F06-04、14.1、9.3 · F06-04 升级弹窗</span></li>
+      <li><b>规则 N44：一次跨多级只弹一次，显示最终等级和各级升级奖励合计（不发放的等级不计入）</b>。演示 VIP12 → VIP17：VIP13–VIP17 升级奖励 ₱1,500 + ₱2,000 + ₱2,400 + ₱2,800 + ₱3,000 = ₱11,700，弹窗显示 "₱11.7K"<span class="glow">（全需求前台金额规则：₱9,999 及以下显示完整金额，₱10,000 起用 K、₱1,000,000 起用 M、十亿起用 B；用户 2026-10-19）</span>。<br><b>规则 N6：中间每个首次到达的等级各发一次升级奖励，奖励记录逐级各一条，等级变动记录只写一条</b>。<span class="ref">PRD 规则 N44、N6 · F06-04、F02-03</span></li>
+      <li><b>规则 N44：升级时不在线的，下次进入 App 或 H5 补弹一次；风控放行后不补弹</b>。<span class="glow"><b>弹出时机：玩家在第三方游戏页面（游戏内 / 游戏 WebView）时不弹，回到平台原生页面（大厅、等级中心、个人中心等平台自有页面）时再弹</b>；补弹口径扩展为「在第三方游戏中 / 离线时升级 → 回到平台原生页面时补弹」。适用于本需求的站内弹窗类通知：VIP 升级弹窗（v1.0 不弹 Level 升级弹窗，用户 2026-10-20 版本拆分）。多条待弹的按现有弹窗优先级依次显示，跨多级仍合并为一个弹窗（下一条）。<b>边界</b>：站内信照常即时生成；短信、APP 系统推送是系统级通知，不是页面弹窗，按免打扰时段规则发送，不受玩家是否在游戏中影响。场景「游戏中升级 ①②」演示（用户 2026-10-19）。</span><span class="ref">PRD 规则 N44 · F06-04</span></li>
+      <li><b>规则 N44：和其他弹窗的先后顺序沿用平台现有弹窗优先级</b><span class="glow">（在第三方游戏中累积的待弹弹窗，回到平台原生页面后按此优先级依次弹出，用户 2026-10-19）</span><b>；存量初始化和门槛调整不发放的等级不弹</b><span class="glow">（完成 KYC 时 KYC 前已达到的等级同样不弹，已定（用户 2026-10-17））</span><span class="glow">（第一次开启时按历史累计初始化到达的等级不弹升级弹窗，也不发升级奖励：Claire 答复 C-01，目前老板口径，后续可能调整；示意）</span>（开发须知见备忘 M14）。<span class="glow"><b>前台不显示 Level 0–29（C-03）</b>：前台不弹 Level 段升级弹窗、不提示 Level 奖励（弹窗、短信、站内信都不提 Level）；后台 Level 段数据和原 Level 奖励保留、按后台现有规则照常发放（用户早前定）。场景「普通用户升到 VIP1」：玩家同一次判定也到达 Level 段新等级，前台只弹 VIP1 升级弹窗（₱100）。<b>前台不出现「VIP0」字样，VIP1 前的「普通用户」卡就代表 VIP0（用户 2026-10-20）</b>。原「Level 段和 VIP 段同时升级时只弹 VIP 段」的说法已改写（用户 2026-10-17，依据 C-03，示意）。</span><span class="glow">v1.0：没有「前台显示方式」开关，普通用户不显示等级，前台任何情况下都不弹 Level 升级弹窗（用户 2026-10-20 版本拆分）。</span><span class="ref">PRD 规则 N44 · F06-04 · C-03</span></li>
+      <li><b>规则 N5：首次到达某个 VIP 等级时</b><span class="glow">立即自动发放该等级的升级奖励到账（1 倍流水），不生成待领取、不需玩家领取（Claire 原文四「立即获得」；用户 2026-10-17 定，撤销 10-16 一键领取；示意）</span><b>，不走次日发放；每个等级终身一次，降级后再升回不重复发放</b>。降级后再升回不发升级奖励，弹窗里不计入该等级的金额。<span class="glow">前台不显示 Level 0–29，不提示 Level 奖励；后台 Level 段原有奖励保留、按后台现有规则发放（用户 2026-10-17，依据 C-03，原「Level 0–29 的升级奖励发放时机不变」已改写，示意）。</span><br><span class="warn-2">※ 需研发评估（3.5 第 1 条，K01）：后台现状 Level 升级奖励为到达等级后次日 0 点发放，评估结果出来前按本需求写法（到达时立即自动到账）开发。</span><span class="ref">PRD 规则 N5、3.5 · F02-03</span></li>
+      <li><b>老版本 App（没有 VIP 段的旧包）</b>：<span class="glow">升级奖励、保级奖励照常自动到账（用户 2026-10-17 定）；生日奖励需到 H5 或新版本 App 的等级中心领取（生日卡片或等级卡「查看详情」，用户 2026-10-17；生日短信已引导）；示意</span>，不弹升级弹窗（场景「老版本 App」）。<span class="glow">老版本 App 上 VIP 玩家仍显示为 VIP（徽章 VIP 等级 + 「当前等级 VIP n」+ 更新 App 提示），见 <a href="VIP会员体系-VIP中心页面.html#oldapp">VIP中心页面</a> 场景⑦（用户 2026-10-19，示意）。</span><span class="ref">PRD 第 1 章多端范围 · F06-04</span></li>
+      <li><b>F08-05 风控暂停的显示</b>：奖励处于「暂停发放（风控）」时，升级弹窗不弹（场景「风控暂停」）；<span class="glow">生日卡片按钮文字为 "待核验（Verifying）"、不可点，有效期后不再追加；升级、保级奖励暂停发放，VIP中心等级卡片不特别显示（用户 2026-10-17 定；示意）</span>（不用 "审核中（Under Review）"）。哪些账号状态会暂停发放见规则 N48（右侧「账号状态」可切换）。<br><b>规则 N36：运营「放行」后</b><span class="glow">，升级奖励、保级奖励立即自动到账，生日奖励回到「待领取」由玩家在生日卡片或等级卡「查看详情」弹窗领取（用户 2026-10-17 定；示意）</span><b>；生日奖励有效期从放行时刻重新计算原有效天数，截止到「放行当天 + 有效天数 − 1」那天的 23:59:59（GMT+8）；放行后不补弹升级弹窗、不补发短信</b>。场景「风控放行后」：10 月 20 日放行、有效期 15 天 → 生日卡片 "领取（Claim）"，有效期至 2026-11-03。<span class="ref">PRD 第 4 章 F08-05、规则 N36、N48 · F08-05</span></li>
+      <li><b>F04-02 生日卡片</b>：<b>VIP 生日奖励在这张卡片领取，</b><span class="glow"><b>也可在 <a href="VIP会员体系-VIP中心页面.html#vip14">VIP中心页面</a> 当前等级卡的「详情」弹窗领取，两处领取逻辑相同、状态同步（任一处领取后另一处同时变为已领取）（用户 2026-10-17，示意）</b></span><b>；不需要客服审核，领取中心（Bonus）不显示</b>，也不使用「会员等级奖励配置」现有全局项「生日礼包发放方式」（该项只管 Level 段）。<span class="warn-2">※ 需研发评估（3.5 第 2 条，K02）：后台现状 Level 生日礼包在领取中心领取并联系客服审核，评估结果出来前按本需求写法开发。</span>显示在等级中心 VIP 段顶部，字段为标题 "生日快乐！（Happy Birthday!）"、金额、有效期至（日期，GMT+8）、按钮。<span class="glow">未完成 KYC 的玩家不参与 VIP 体系、看不到生日卡片（场景「未完成 KYC」），原领取时的 KYC 拦截弹窗已删除，<b>后端保留 KYC 校验兜底，校验失败提示领取失败</b>（已定（用户 2026-10-17），C-11）。</span><span class="glow">生日卡片按钮为 "领取（Claim）"，与 <a href="VIP会员体系-VIP中心页面.html#vip14">VIP中心页面</a> 一致（用户 2026-10-17 定：生日奖励按原文由玩家领取；示意）：点击<b>只领取生日奖励</b>（不再连带当前等级其他奖金），在本卡片直接领取，不跳页面。点击后按钮立即不可点（显示 "…"，防重复）；成功提示 "₱{amount} 生日奖励已到账。（₱{amount} Birthday Bonus credited.）"，按钮变为 "已领取（Claimed）"；失败提示 "领取失败，请重试。（Claim failed. Please try again.）"，保留待领取（后端 KYC 兜底校验失败也按此提示）。原「奖金领取成功（Bonus Claimed）」结果弹窗已删除。卡片<b>不列明细，没有「查看」按钮</b>。已领取 "已领取（Claimed）"（置灰，保留到有效期结束再隐藏）；已过期 "已过期（Expired）"（置灰；显示时间见规则 N26：例 10-28 全天显示，10-29 00:00 起不再显示生日卡片；用户 2026-10-19）；风控暂停时按钮文字为 "待核验（Verifying）"、不可点，有效期后不再追加。原 "查看（View）" 按钮、明细弹窗和埋点 vip_birthday_view 已删除，点击上报 <span class="glow">vip_bonus_claim_click（bonus_type = bd，level；原 vip_birthday_claim_click 已并入，三个迭代统一，用户 2026-10-20）</span>；原 vip_bonus_claim 已删除。</span>状态与 VIP中心页面共用。<span class="ref">PRD 第 6 章 F04-02、9.3 · F04-02</span></li>
+      <li><b>规则 N26：生日当天 00:00 生成「待领取」奖励，</b><span class="glow">按生日当天的当前等级发放，玩家在生日卡片或等级卡「查看详情」弹窗领取（两处都可；只领生日奖励；用户 2026-10-17 定，示意）</span><b>，领取后 1 倍流水；有效期为后台「生日奖励有效期（天）」，从生日当天算起，截止到「生日当天 + 有效期天数 − 1」那天的 23:59:59（GMT+8），过期作废</b>。<span class="glow">即<b>含生日当天共 x 天</b>（x = 后台「生日奖励有效期（天）」）；原文十只写「然后 x 日后过期」，C-06 答复「随便配」，本需求口径定为含生日当天共 x 天；生日短信的领取期限写到「10 月 27 日 23:59（GMT+8）」，与此一致（用户 2026-10-17，示意）。<b>生日在每月 1 日的玩家</b>：等当天保级结算完成后再生成，按结算后的当前等级发放（结算后的等级即生日当天的等级，与原文八、十一致）（用户 2026-10-17，示意）；<span class="glow">这类玩家前一天照常发提醒短信，但不写金额和期限（原文十；2026-10-26 按原始需求调整），当天短信在 1 日等级结算完成后按其可获得的生日奖励发送，没有资格不发（见规则 N43；用户 2026-10-19，示意）</span><span class="glow">；结算在 10:00 前完成的，10:00 发送（21:00–10:00 免打扰时段，用户 2026-10-19，示意）</span>。</span><span class="glow"><b>有效期含生日当天共 x 天：例 10-13 生日、15 天，截止 10-27 23:59:59（GMT+8）；10-28 全天显示「已过期」；10-29 00:00 起不再显示生日卡片</b>（原型按此演示；原「保留到过期当天结束」「截止后次日显示已过期」「过期次日 00:00 起隐藏」等说法统一为此口径；用户 2026-10-19）。</span>2 月 29 日生日的玩家，非闰年在 2 月 28 日生成。<span class="ref">PRD 规则 N26 · F04-02</span></li>
+      <li><b>规则 N23：按生日当天 00:00 的当前等级发放，该等级金额为 0 时不发</b>（原型为 VIP14 的 ₱488）<span class="glow">；生日在每月 1 日的，按当日保级结算完成后的当前等级发放（见上一条，用户 2026-10-17，示意）</span>。<b>规则 N24：生日当天 00:00（GMT+8）之前 KYC 已通过才生成；在生日当天 00:00 及之后才通过的，当年不发、不补</b>；生日取用户详情的「生日」字段。修改生日：本自然年已生成过的，当年不再生成；还没生成的按修改后的生日判断，修改后的生日在本年还没到的到当天生成，是修改当天或已经过去的当年不补发。<b>规则 N25：每年一次，按「会员 + 自然年（GMT+8）」唯一</b>。<span class="glow">未完成 KYC 的玩家不参与 VIP 体系，没有生日奖励；生成时按规则 N24 校验（生日当天 00:00 前 KYC 已通过才生成，当天才完成 KYC 的当年不发）；领取时前台不再弹 KYC 提示，后端保留 KYC 校验兜底，校验失败提示领取失败（已定（用户 2026-10-17），C-11；示意）。</span><span class="ref">PRD 规则 N23、N24、N25 · F04-01 · C-11</span></li>
+      <li><b>规则 N41：保级奖励短信在每月结算发奖成功后发给获得保级奖励的玩家（含当月有升级、本次恢复的玩家），每人每月最多 1 条；免打扰时段（默认 21:00–10:00，GMT+8）内的顺延到时段结束发送；未保级、N48 表中不发短信的、保级奖励暂停发放的不发（放行到账后也不补发）；未完成 KYC 的玩家不发；VIP1 保级失败后回到 VIP1 的当次没有保级奖励，不发</b>。<span class="glow">使用模板（用户 2026-10-26）：全局参数「保级短信模板」所选的模板（初始「VIP 保级奖励到账」）；强制审核生效时审核通过、实际到账才发。文案见 PRD 附录 D「短信模板」，手机画面的短信气泡为模板示例（代入 VIP14 保级奖励）。</span>到账金额小于 ₱1 不发短信、只发推送（账变短信门槛）。短信发送失败计入月度结算记录的短信失败数，不自动重发。保级奖励到账时玩家只收到这 1 条短信，营销中心「奖励金到账」短信不发（规则 N55）。<span class="ref">PRD 规则 N41、N55、附录 D · F07-01</span></li>
+      <li><b>规则 N43：生日提醒在生日前一天、当天各一条，10:00（GMT+8）发送；前一天按发送时刻的 KYC 和当前等级判断，当天按规则 N24 判断；只发给能领到生日奖励的玩家，自我排除和未绑定手机号的玩家不发；「VIP 体系状态」关闭期间一律不发生日短信（关闭前已发放、运营选「继续可领取」的生日奖励也不补发；右侧取消「VIP 体系状态」开启可演示）</b>。2 月 29 日生日的玩家，非闰年在 2 月 27 日、28 日发送。<b>生日在每月 1 日的玩家</b>：前一天照常发提醒，用不写金额和期限的模板「VIP 生日提醒 · 前一天 · 1 日生日」（原文十；2026-10-26 按原始需求调整）；1 日等级结算完成后按结算后的等级发当天短信（结算在 10:00 前完成的 10:00 发送），没有资格的不发（原型不单列场景）。当天 10:00 发送前已领取生日奖励的玩家不发当天提醒短信。<span class="glow">使用模板（用户 2026-10-26）：前一天、当天分别发全局参数「生日前一天短信模板」「生日当天短信模板」所选的模板（初始「VIP 生日提醒 · 前一天 · 手动领取」「VIP 生日提醒 · 当天 · 手动领取」），生日奖励在等级中心领取；强制审核不影响生日提醒短信。文案见 PRD 附录 D「短信模板」，手机画面的短信气泡为模板示例（代入 VIP14 生日奖励、10-13 生日、有效期 15 天）。</span><span class="ref">PRD 规则 N43、附录 D · F07-02</span></li>
+      <li><b>规则 N48：VIP 短信（保级奖励短信、生日提醒短信）</b>：冻结、停用（风控原因不是 Self-Exclusion）、禁止投注、自我排除（账号为停用或冻结，且风控原因为 Self-Exclusion）、风险分 70 及以上、未绑定手机号的玩家不发，放行后不补发；<span class="glow">风险分 40–69 照常发（与平台现行一致：打标转人工复核，不暂停，用户 2026-10-21）</span>；<span class="glow">未完成 KYC（KYC 未通过 / 审核中，或临时冻结（未 KYC））的玩家不参与 VIP 体系，保级短信、生日短信都不发（已定（用户 2026-10-17），原「临时冻结（未 KYC）照常发保级短信」已撤销）；<b>「KYC 限制」关闭时</b>未完成 KYC 的玩家照常收保级短信，生日提醒短信仍不发（生日奖励始终要求 KYC），临时冻结（未 KYC）按冻结处理、不发（用户 2026-10-26，PRD 规则 N48、N66）</span>。在右侧「KYC」「账号状态」切换后看短信场景，手机画面显示该玩家收不到短信。<span class="ref">PRD 规则 N48 · F08-05</span></li>
+      <li class="glow"><b>VIP 短信和 APP 推送的免打扰时段（用户 2026-10-19，示意）</b>：用户要求「所有的推送和短信都要避开晚 9 点到早 10 点之间」。VIP 相关的所有短信（保级奖励短信、生日前一天 / 当天提醒短信）和 APP 推送（奖励到账推送等），触发时间在<b>免打扰时段（后台可配，在后台 VIP特权页配置，默认 21:00–10:00，即 21:00:00–09:59:59，GMT+8）内的，顺延到时段结束发送</b>（按默认值：21:00 后触发的到次日 10:00，0 点后触发的到当天 10:00；本页示例都按默认值；用户 2026-10-19）。<b>站内信（消息列表）不是推送，照常即时生成</b>。各类的结果：保级短信——1 日结算一般在 0 点后完成，顺延到当天 10:00（规则 N41）；生日提醒短信——本来 10:00 发送，默认配置下不受影响（后台把时段结束时间改到 10:00 之后时，同样顺延到结束时间）；生日在 1 日的玩家当天短信在结算完成后发，结算在 10:00 前完成的 10:00 发送（规则 N43）；到账推送——升级奖励在夜间到达、保级奖励 0 点后结算到账、风控放行或运营补发在时段内到账的，推送都顺延到 10:00（规则 N55）。<span class="glow">已定（用户 2026-10-19）：顺延期间状态变化（如账号被冻结、生日奖励已领取、VIP 体系关闭），在实际发送时按规则 N43、N48、N55 再判断一次，不满足的不发、不补发（与生日当天短信「发送时再判断是否仍为待领取」一致）。</span><span class="ref">用户 2026-10-19 · 规则 N41、N43、N55</span></li>
+      <li><b>规则 N55：VIP 奖励到账通知</b>：升级奖励、保级奖励、生日奖励这三类现金奖励<span class="glow">入账时发送：升级、保级奖励在自动到账时（含风控放行后到账、运营补发到账），生日奖励在玩家领取成功时（用户 2026-10-17 定；原「一键领取多笔合并 1 条」不再适用，已删除；示意）</span>，由 VIP 自己的发放流程发送站内信 "奖励已到账（Credited）" 和 APP 推送「奖励到账」（沿用平台现有模板和通道，文案以现有模板为准）；<span class="glow"><b>APP 推送：免打扰时段（后台可配，默认 21:00–10:00，即 21:00:00–09:59:59）内的，顺延到时段结束发送，风控放行、运营补发到账的推送同样顺延；站内信不是推送，入账时即时生成</b>（如 1 日 00:03 保级奖励到账：站内信 00:03 生成，推送 10:00 发送；场景「到账」示例 14:05 不在时段内，推送即时发送；用户 2026-10-19；时段写法按）；</span><span class="glow">生日奖励生成待领取、风控放行回到待领取时不发；奖励处于「暂停发放（风控）」时不发；未完成 KYC 的玩家不参与 VIP 体系、没有 VIP 奖励，不收到账通知（场景「站内信 + APP 推送」时右侧 KYC 改为未通过可看；已定（用户 2026-10-17））</span>。营销中心「奖励金到账」短信不发。<span class="glow"><b>APP 推送（用户 2026-10-26）</b>：复用现有「奖励到账后」推送模板（变量能否带出奖励类别和金额待 PRD 待确认 Q42 确认，不能时按通用文案）；受【公告管理 › 消息推送 › app系统推送】「奖励金到账通知」开关控制，关闭时不发推送、站内信照发；推送写入【消息推送 › 推送记录】。<b>聊天室播报</b>：VIP 奖励实际到账时参与聊天室「活动奖励播报」，按聊天室管理现有阈值判断，审核中、暂停发放、驳回、不发放的不播报。</span>VIP 奖励不触发活动配置的其他通知（场景「站内信 + APP 推送」；右侧「账号状态」改为冻结后看该场景，手机画面显示暂停期间不发）。<span class="ref">PRD 规则 N55、N53 · F07-01</span></li>
+      <li class="glow"><b>到账推送与免打扰、账变短信门槛（用户 2026-10-21，Q-22）</b>：用户原话「受免打扰时段限制，且1p以下的账变不做短信推送只做push推送」。VIP 到账 APP 推送受免打扰时段限制，时段内触发的顺延到时段结束；这与平台现行「资金类推送不受免打扰」（BB2025789-5200、BB2025789-6461）不同，为用户已定的差异（PRD 3.3 冲突 19）。到账金额小于 ₱1 不发短信、只发 APP 推送，推送同样按免打扰顺延；场景「到账金额小于 ₱1」演示（₱0.50 为接口模拟值）。<span class="ref">PRD 规则 N55、N68 · 3.3 冲突 19</span></li>
+      <li class="glow"><b>大厅示意与计入游戏范围（用户 2026-10-21，Q-21）</b>：升级弹窗背景的大厅示意去掉「体育」页签（平台已无体育类游戏）；VIP 只计 Slot、Casino、Poker、Bingo、Arcade、Fishing 6 大类游戏的有效投注，Perya、ESports 和未分类游戏不计入。右侧「KYC 限制」「KYC」按 PRD 规则 N66 演示参与资格（用户 2026-10-26）。<span class="ref">PRD 3.1 · 3.2.1 · 规则 N66 · 3.3 冲突 17、18</span></li>
+      <li class="glow"><b>强制审核（已定，用户 2026-10-20）</b>：v1.0 没有领取方式（升级、保级奖励自动到账，生日奖励手动领取），但有后台【VIP特权】细节设定「强制审核」（共享状态 vipLgOpt.audOn，与后台、VIP中心页面共用）。<b>生效时</b>：升级、保级奖励审核通过才到账，原写「已到账」的地方改为 "审核中，审核通过后到账（Under review · credited once approved）"——升级弹窗到账说明、风控放行和老版本 App 的灰字说明；生日奖励玩家点「领取」后提示 "已提交领取，审核通过后到账。"，按钮 "审核中"、说明 "审核通过后到账"，审核通过变为 "已领取"。<b>驳回</b>：按钮 "未通过"，说明统一为 "审核未通过，如有疑问请联系客服"，<b>前台不显示具体驳回原因，具体原因只在后台看</b>；<b>手动领取的生日奖励「未通过」显示到原有效期结束，之后不再显示（生日卡片、详情弹窗都按此；例 10-13 生日、15 天：显示到 10-27 23:59:59，10-28 00:00 起不再显示；用户 2026-10-20）</b>。<b>自动到账的奖励（升级、保级奖励）被驳回（已定，用户 2026-10-20；<span class="glow">保级奖励与升级奖励一样显示 15 天为用户 2026-10-21 定</span>）：「未通过」显示 15 天（v1.0 没有领取方式配置，按 15 天），从驳回当天算起，到期后不再显示；到期后等级卡「查看详情」里升级奖励整行不显示，保级奖励行恢复显示该等级的保级状态</b>。到账站内信和 APP 推送在审核通过、实际到账时发送，审核中、驳回不发（场景「到账」画面灰字说明）。<b>不生效时</b>保持「已到账」。<br>
+        <b>审核相关短信（用户 2026-10-20；2026-10-26 改）</b>：强制审核生效时，保级短信在审核通过、实际到账时才发，审核中、驳回不发；升级、保级、生日三类奖励审核通过、实际到账时都发到账短信（生日奖励在玩家领取后审核），按类别使用模板「VIP 升级奖励审核通过到账」、全局参数所选的保级模板、「VIP 生日奖励审核通过到账」，运营审核时不填写短信内容（原「审核时填写短信内容、设为短信模板」和共享状态 smsTpl 已删除，用户 2026-10-26）；免打扰时段内通过的顺延到时段结束发送。生日前一天 / 当天的提醒短信不受审核影响。文案见 PRD 附录 D「短信模板」。<br>
+        <b>审核期间显示范围（已定，用户 2026-10-20）</b>：只在最近一次升级到达的那一级显示「审核中」；保级奖励审核中前台不单独显示，审核通过到账后照常显示。右侧「强制审核」「领取后审核」切换；带「强制审核生效」的场景自动设为生效，切回请用右侧开关。<span class="ref">用户 2026-10-20 · 规则 N41、N55</span></li>
+      <li><b>规则 N35：入账</b>：VIP 现金奖励由 VIP 自己的发放流程入账，账变类型为独立的「VIP 奖励」，不使用「活动金额」；前台 交易记录（Transaction） 显示名为 "VIP 升级奖励（VIP Upgrade）"、"VIP 保级奖励（VIP Retain）"、"VIP 生日奖励（VIP B-day）"（开发须知见备忘 M19：须加入备注前缀映射，否则会显示成 "平台活动奖金（Platform promotion bonus）"）。VIP 奖励不计入各活动的活动报表、活动费用报表，按实际到账金额计入平台报表「活动费用」和财务数据「活动总额」（规则 N54，用户 2026-10-26）。场景「交易记录（Transaction）」演示。<span class="ref">PRD 规则 N35、N54、备忘 M19 · F02-03</span></li>
+      <li class="glow"><b>示例时间线（用户 2026-10-17，示意）</b>：本页升级弹窗、站内信、APP 推送、交易记录、短信是同一个玩家的连续时间线，金额取 VIP 奖励表默认值。发放口径：保级奖励按每月 1 日结算时的当前等级发放（原文七、八）；升级奖励在到达等级时立即到账（原文四）；生日奖励按生日当天 00:00（GMT+8）的当前等级生成（原文十）。<br>
+        ① 2026-10-01 00:03：9 月保级结算，结算时为 VIP13 → VIP13 保级奖励 ₱1,200 到账；站内信 00:03 即时生成，保级短信 PHP1,200 和到账 APP 推送处于免打扰时段，顺延到 10:00 发送（本页未单列）。<br>
+        ② 2026-10-08 14:05：从 VIP13 升到 VIP14（与 VIP中心页面场景②f「10 月 8 日升到 VIP14」一致）→ VIP14 升级奖励 ₱2,000 立即到账；弹升级弹窗（场景「单级升级（VIP13 → VIP14）」），同时发站内信、APP 推送（场景「到账」）。<br>
+        ③ 2026-10-12 10:00：生日前一天提醒短信，按发送时刻的当前等级 VIP14 取生日奖励金额。<br>
+        ④ 2026-10-13 00:00：生日当天为 VIP14 → 生成 VIP14 生日奖励 ₱488（待领取，有效期至 2026-10-27）；10:00 生日当天提醒短信；10:30 玩家领取 → 到账，发站内信和 APP 推送（原 09:30 早于 10:00 生日短信，已改为 10:30）。<br>
+        ⑤ 2026-11-01 00:00 起：10 月保级结算，结算时为 VIP14（10 月有升级，按 VIP14 考核整月）、已达标 → VIP14 保级奖励 ₱1,500 到账，00:05 结算完成；站内信即时生成，保级短信和到账 APP 推送顺延到 10:00 发送（场景「保级奖励短信」）。<br>
+        ②④ 的推送时间（14:05、10:30）不在免打扰时段，即时发送。<br>
+        原示例「10-13 14:05 升到 VIP14，但 10-01 已按 VIP14 发保级奖励 ₱1,500」前后矛盾，已改为上面的时间线。<span class="ref">原文四、七、八、十 · 规则 N5、N11、N23、N35、N41、N43、N55 · VIP中心页面场景②f</span></li>
+      <li class="glow"><b>站内消息、交易记录为平台现有列表，不在本需求范围，沿用现有（含分页），本需求不改（用户 2026-10-20）</b>。<span class="ref">用户 2026-10-20 · 规则 N35、N55</span></li>
+      <li class="glow"><b>帮助按钮同行、同行居中、说明文字靠左并标注（用户 2026-10-20，规范通用）</b>：「?」帮助按钮紧跟对应内容、同一行不换行（页头「等级中心 ?」）；同一行内的文字、图标、徽章、按钮、进度、金额、标签在一条水平中线上对齐；手机画面里仅为原型说明的灰字统一靠左，前面加小字标注「※ 此内容仅作为需求说明，上线页面不显示本内容。」（相邻多段合并标注一次）；标题里的「（示意）」类标记移到手机画面外紧下方的说明区；画面外的模拟场景、模拟操作、规则批注、评审待确认在区域标题处各标注一次。标注不翻译成英文（伪元素输出，不计入漏翻）。<span class="ref">用户 2026-10-20 · 规范 v5.45</span></li>
+    </ol>
+    <h3>评审待确认</h3>
+    <p class="vip-req-note ui-reqnote vip-req-head"></p>
+    <ol>
+      <li class="glow"><b>Q13 已答复（Claire C-15）</b>：保级短信、生日短信的金额货币写「PHP」，原型短信已改；例外：「VIP 保级奖励到账」模板按 Claire 原文十六示例写「₱」（用户 2026-10-27，此处不按 C-15）；变量按原文支持 {VIPLevel}、{RetentionBonus}（示意）。<span class="ref">PRD 规则 N41 · Q13 · C-15</span></li>
+      <li class="glow"><b>已定（用户 2026-10-17 定，示意）</b>：按原文倾向升级、保级奖励自动到账（撤销 10-16 一键领取），生日奖励按原文由玩家领取（生日卡片或等级卡「查看详情」两处都可，用户 2026-10-17）；当月有升级、按新等级达标的照常发保级奖励和保级短信（依据 Claire 原文一、七、八章与 C-04）；<span class="glow">本次结算恢复 1 级的也照发（用户 2026-10-17，依据原文五、七 / C-02，覆盖原「恢复的不发」）</span>；未完成 KYC 不参与 VIP 体系，生日奖励生成时的 KYC 校验保留，领取时只在后端兜底校验（已定（用户 2026-10-17））；「VIP 体系状态」关闭期间、老版本 App 的等级中心显示「普通用户」卡片（见 VIP中心页面）<span class="glow">；老版本 App 的 VIP 玩家改为显示 VIP 等级，只有普通会员级别的玩家显示「普通用户」卡片（用户 2026-10-19，示意）</span>。<span class="ref">C-02 · C-11 · 用户 2026-10-17</span></li>
+      <li class="glow"><b>Q6 已答复（Claire C-06）</b>：生日金额和有效期由运营配置，上线后运营再出数值方案；原型的有效期 15 天（至 2026-10-27）只是示例；生日金额默认值按原文档位示意，未列出的等级沿用低一档（用户 2026-10-17，示意）。<span class="ref">PRD 规则 N26 · Q6 · C-06</span></li>
+      <li class="glow"><b>Q5 已答复（Claire C-05）</b>：跨多级时，从未达到的新等级全部发放（逐级发放），Claire 认为实际不会发生；本版逐级发放、弹窗显示合计（场景「一次跨多级」）（用户 2026-10-17 从待确认移到已答复，示意）。<span class="ref">PRD 规则 N6 · Q5 · C-05</span></li>
+      <li><b>需研发评估（3.5，K01、K02）</b>：<span class="glow">升级奖励到达时立即自动到账；生日奖励在生日卡片或等级卡「查看详情」领取（用户 2026-10-17 定，示意）</span>、不需客服审核、领取中心不显示（Q18 已定）。评估结果出来前按本需求写法开发。<span class="ref">PRD 3.5、规则 N5、N26 · 待确认 Q18</span></li>
+      <li class="glow"><b>已定（用户 2026-10-17）</b>：未完成 KYC 的玩家不参与 VIP 体系，不收 VIP 升级弹窗、到账通知（站内信、APP 推送）、保级短信、生日短信；进入等级中心时引导去 KYC，不存在「完成 KYC 后补发」（原「暂停发放（未 KYC）、完成 KYC 后自动补发」待确认已关闭）。完成 KYC 时 KYC 前已达到的等级不发升级奖励、不弹升级弹窗，<span class="warn-2">已定（用户 2026-10-17），依据 Claire 原文历史累计和 C-01 存量初始化</span>。<span class="ref">C-01 · C-11 · 规则 N48、N55</span></li>
+      <li class="glow"><b>已定（用户 2026-10-19，示意）</b>：短信、APP 推送因免打扰时段顺延到时段结束（默认 10:00）时，顺延期间玩家状态变了（如账号被冻结、生日奖励已领取、VIP 体系关闭），实际发送时按规则 N43、N48、N55 再判断，不满足的不发、不补发。开发评估项：时段结束时集中发送的短信、推送量和通道限流。<span class="ref">规则 N41、N43、N48、N55</span></li>
+      <li><b>原型暂定（PRD 未写明）</b>：<span class="glow">已过期的显示时间按规则 N26 一句话口径：有效期含生日当天共 x 天：例 10-13 生日、15 天，截止 10-27 23:59:59（GMT+8）；10-28 全天显示「已过期」；10-29 00:00 起不再显示生日卡片（用户 2026-10-19）。</span><span class="ref">PRD 第 6 章 F04-02</span></li>
+    </ol>
+    <!-- 上一页 / 下一页：按 PRD 2.1 主流程顺序（运营配置 → VIP中心 → 通知 → 会员福利 → VIP数据报表） -->
+    <div class="pager"><a href="VIP会员体系-VIP中心页面.html">← 上一页：VIP中心页面</a><a href="../admin/VIP会员体系-后台会员福利页面.html">下一页：后台会员福利页面 →</a></div>
+  </aside>
+</div>
+</div>
+<script>window.NAV_ROOT = "../../../";</script>
+<script src="../../../assets/nav-data.js"></script>
+<script src="../../../assets/nav.js"></script>
+<script src="../../../assets/proto-en.js"></script>
+<script src="../../../assets/vip.js"></script>
+<script src="../../../assets/proto.js"></script>
+<script>
+/* 模拟操作面板（assets/proto.js）。platform、oldApp、vipOn、kyc、acct、bday、bdayFail 与其他前台原型共用 */
+P.init({ defaults: { platform: "H5", oldApp: false, vipOn: true, kyc: "verified", kycLimit: "on", acct: "normal", fxEnd: 0, bday: "pending", bdayFail: false } });   /* v1.0：没有「前台显示方式」开关（lvShow），不演示 Level 升级弹窗（用户 2026-10-20 版本拆分） */
+P.panel(document.getElementById("simPanel"), [
+  { title: "切换端", items: [
+    { type: "select", key: "platform", label: "端", options: ["H5", "iOS 原生", "iOS Flutter", "安卓 Flutter"], change: function () { P.note("四端页面结构一致，数据以服务端为准（PRD 第 1 章多端范围）", document.activeElement); } },
+    { type: "check", key: "oldApp", label: "老版本 App（不弹升级弹窗）", change: function () { window.rerender && rerender(); } }
+  ] },
+  { title: "切换后台配置项", items: [{ type: "check", key: "vipOn", label: "「VIP 体系状态」开启（取消 = 关闭：保级短信、生日短信都不发，用户 2026-10-20）", change: function () { window.rerender && rerender(); } }] },
+  { title: "强制审核（后台）", items: [{ type: "note", text: "后台【VIP特权】细节设定「强制审核」（共享状态 vipLgOpt.audOn，与后台、VIP中心页面共用）和领取后的审核结果 audSt（用户 2026-10-20）。" }] },
+  { title: "设置用户状态", items: [
+    { type: "radio", key: "kycLimit", tag: "KYC 限制（后台）", options: [["on", "开启（默认）"], ["off", "关闭"]], change: function () { window.rerender && rerender(); } },
+    { type: "radio", key: "kyc", tag: "KYC", options: [["verified", "已认证"], ["pending", "审核中"], ["none", "未认证"], ["rejected", "拒绝"], ["info", "补充信息"]], change: function () { window.rerender && rerender(); } },
+    { type: "note", text: "KYC 状态（用户 2026-10-26，PRD 规则 N66）：只有已认证算 KYC 已通过，不区分认证层级。「KYC 限制」开启（默认）时，未完成 KYC 的玩家不参与 VIP 体系，不收升级弹窗、到账通知和 VIP 短信；关闭时升级弹窗、保级短信等照常，但生日奖励和生日提醒短信仍要求 KYC。「KYC 限制」与后台VIP特权配置页面共用状态。" },
+    { type: "radio", key: "acct", tag: "账号状态", options: [["normal", "正常"], ["frozen", "冻结 / 停用"], ["tempfrozen", "临时冻结（未 KYC）"], ["nobet", "禁止投注"], ["selfex", "自我排除"], ["risk40", "风险分 40–69"], ["risk70", "风险分 70+"], ["nophone", "未绑定手机号"]], change: function () { window.rerender && rerender(); } },
+    { type: "radio", key: "bday", tag: "生日奖励", options: [["pending", "待领取"], ["claimed", "已领取"], ["expired", "已过期（例 10-28）"], ["none", "不显示（例 10-29 起）"]], change: function (v) { location.hash = v === "none" ? "bonus-gone" : "bonus-" + v; } }
+  ] },
+  { title: "注入异常", items: [{ type: "check", key: "bdayFail", label: "生日奖励领取接口失败（领取时提示失败）" }] },
+  { title: "倒计时", items: [{ type: "countdown", key: "fxEnd", label: "升级动效 5 秒 → 立即结束，直接出现升级弹窗" }] },
+  { title: "短信", items: [{ type: "button", tag: "模拟", label: "模拟收到保级奖励短信（VIP14 · ₱1,500）", run: function () { location.hash = "sms-retention"; } }] },
+  { title: "演示值说明", items: [{ type: "note", text: "短信为模拟的手机短信界面，不实际发送；示例时间线：10-01 结算时为 VIP13（保级奖励 ₱1,200），10-08 14:05 升到 VIP14（升级奖励 ₱2,000），生日 2026-10-13 当天为 VIP14（生日奖励 ₱488、有效期候选 15 天），11-01 按 VIP14 结算 10 月（保级奖励 ₱1,500）；风控放行日期 2026-10-20；所有数据均为虚构。" }] },
+  { items: [{ type: "reset" }] }
+]);
+/* 原「关闭时生日奖励：继续可领取 / 停止领取」切换已删除：关闭期间一律不发生日短信，本页不再受该选项影响（用户 2026-10-20）；生日卡片是否继续显示见 VIP中心页面 */
+/* 「强制审核」「领取后审核」（用户 2026-10-20）：写共享状态 vipLgOpt.audOn（保留 regOn、regDays）和 audSt（review / pass / reject），放在「强制审核（后台）」说明下方 */
+(function () {
+  var rows = [];
+  function row(tg, opts, get, set) {
+    var w = document.createElement("div"); w.className = "simrow";
+    opts.forEach(function (o) {
+      var b = document.createElement("button"), t = document.createElement("span");
+      b.type = "button"; b.dataset.v = String(o[0]); t.className = "simtag"; t.textContent = tg; b.appendChild(t); b.appendChild(document.createTextNode(o[1]));
+      b.onclick = function () { set(o[0]); P.note("已设为：" + tg + o[1], b); };
+      w.appendChild(b);
+    });
+    rows.push([w, get]); return w;
+  }
+  function sync() { rows.forEach(function (r) { var v = String(r[1]()); r[0].querySelectorAll("button").forEach(function (b) { b.setAttribute("aria-pressed", String(b.dataset.v === v)); }); }); }
+  var at = [].filter.call(document.querySelectorAll("#simPanel .simnote"), function (p) { return p.textContent.indexOf("vipLgOpt") >= 0; })[0];
+  [row("强制审核（后台细节设定）", [[true, "生效"], [false, "不生效（默认）"]], function () { var o = P.get("vipLgOpt"); return !!(o && o.audOn); }, function (v) { var o = P.get("vipLgOpt"), n = { regOn: false, regDays: "", audOn: false }; if (o && typeof o === "object") for (var x in o) n[x] = o[x]; n.audOn = v; P.set("vipLgOpt", n); }),
+   row("领取后审核", [["review", "审核中"], ["pass", "通过"], ["reject", "驳回"]], function () { var s = P.get("audSt"); return s === "pass" || s === "reject" ? s : "review"; }, function (v) { P.set("audSt", v); }),
+   /* 驳回后的显示时间（用户 2026-10-20）：共享状态 audGone（前台演示用，与 VIP中心页面共用）——原有效期内显示「未通过」，结束后不再显示 */
+   row("驳回后", [[false, "「未通过」显示期内"], [true, "显示期结束后"]], function () { return !!P.get("audGone"); }, function (v) { P.set("audGone", v); })].forEach(function (w) { if (at) { at.parentNode.insertBefore(w, at.nextSibling); at = w; } });
+  sync();
+  window.addEventListener("proto-change", function (e) { if (e.detail.key === "vipLgOpt" || e.detail.key === "audSt" || e.detail.key === "audGone" || e.detail.key === "*") sync(); });
+})();</script>
+<script>
+(function () {
+  var $ = function (id) { return document.getElementById(id); };
+  /* 强制审核到账短信（用户 2026-10-20）：发送时间为审核通过、实际到账时（免打扰时段内通过的顺延到时段结束） */
+  var AUD_T = "审核通过到账时", AUD_N = "（审核通过、实际到账时发送；21:00–10:00 免打扰时段内通过的顺延到 10:00）";
+  /* 示例短信：PRD 附录 D 短信模板的代入示例（用户 2026-10-26） */
+  var SMS = {
+    /* 保级短信为 Claire 原文十六示例（「已到账」；金额符号按原文示例写「₱」，不按 C-15，用户 2026-10-27），不是示意（用户 2026-10-19） */
+    /* 发送时间：原文十六为次月 1 日保级结算及奖励发放成功后触发；21:00–10:00（GMT+8）免打扰时段内完成的顺延到 10:00 发送（用户 2026-10-19，示意）；第 5 项为画面上的灰字说明 */
+    "sms-retention": ["11月1日 周日 · 10:00", "₱1,500 VIP 保级奖励已到账！登录 789Bingo 查看奖励。", "", "retention", "（1 日 00:05 结算完成，处于 21:00–10:00 免打扰时段，顺延到 10:00 发送）"],
+    /* 生日短信领取期限写到分钟「10 月 27 日 23:59（GMT+8）」，与有效期「含生日当天共 x 天、截止 23:59:59」一致（用户 2026-10-17，示意） */
+    "sms-bday-before": ["10月12日 周一 · 10:00", "你的 PHP488 VIP 生日奖励明天可领取！请在 10 月 27 日 23:59（GMT+8）前到等级中心领取。使用旧版 App？请更新 App 或登录 789Bingo 网站领取。", "draft", "bday"],
+    "sms-bday-today": ["10月13日 周二 · 10:00", "789Bingo 祝你生日快乐！你的 PHP488 VIP 生日奖励已可领取。请在 10 月 27 日 23:59（GMT+8）前到等级中心领取。使用旧版 App？请更新 App 或登录 789Bingo 网站领取。", "draft", "bday"],
+    /* 强制审核生效时审核通过的到账短信（用户 2026-10-20；2026-10-26 改为固定模板示例：升级「VIP 升级奖励审核通过到账」、保级「VIP 保级奖励到账」、生日「VIP 生日奖励审核通过到账」，PRD 附录 D） */
+    "sms-aud-up": [AUD_T, "恭喜升级到 VIP14！PHP2,000 VIP 升级奖励已到账！登录 789Bingo 查看奖励。", "tpl", "aud", AUD_N, "up"],
+    "sms-aud-rv": [AUD_T, "₱1,500 VIP 保级奖励已到账！登录 789Bingo 查看奖励。", "tpl", "aud", AUD_N, "rv"],
+    "sms-aud-bd": [AUD_T, "789Bingo 祝你生日快乐！PHP488 VIP14 生日奖励已到账！登录 789Bingo 查看奖励。", "tpl", "aud", AUD_N, "bd"]
+  };
+  /* 规则 N48：不发 VIP 短信的账号状态 */
+  var NO_SMS = ["frozen", "nobet", "selfex", "risk70", "nophone"];
+  var PAUSE = ["frozen", "nobet", "selfex", "risk70"];
+  /* 未完成 KYC（KYC 未通过 / 审核中，或账号临时冻结（未 KYC））：不参与 VIP 体系，不收升级弹窗、到账通知、保级短信、生日短信，没有生日奖励（已定，用户 2026-10-17） */
+  /* KYC「已通过」= KYC 状态为已认证（verified），不区分认证层级；共享状态 kycLimit：on 开启（默认）/ off 关闭（用户 2026-10-26，PRD 规则 N66）。
+     noKyc() = 不参与 VIP 体系（只在开关开启时成立）；bdNk() = 没有生日奖励、不发生日短信（不受开关影响）；开关关闭时临时冻结（未 KYC）按冻结处理（isPause） */
+  function kycLimitOn() { return P.get("kycLimit") !== "off"; }
+  function bdNk() { var k = P.get("kyc"); return (!!k && k !== "verified") || P.get("acct") === "tempfrozen"; }
+  function noKyc() { return kycLimitOn() && bdNk(); }
+  function isPause() { var a = P.get("acct"); return PAUSE.indexOf(a) >= 0 || (a === "tempfrozen" && !kycLimitOn()); }
+  /* 强制审核（已定，用户 2026-10-20）：后台细节设定「强制审核」生效（共享状态 vipLgOpt.audOn，与后台VIP特权配置页面、VIP中心页面共用）时，
+     升级、保级奖励（v1.0 自动到账）审核通过才到账，原写「已到账」的地方改为「审核中，审核通过后到账」；生日奖励（v1.0 手动领取）玩家点「领取」后进入审核。
+     audRes()：review 审核中 / reject 驳回 / done 已到账（未生效或审核通过）；演示结果取 audSt。驳回时前台不显示具体原因 */
+  function audOn() { var o = P.get("vipLgOpt"); return !!(o && o.audOn); }
+  function audRes() { if (!audOn()) return "done"; var s = P.get("audSt"); return s === "pass" ? "done" : s === "reject" ? "reject" : "review"; }
+  var NOPOP_A = {
+    "popup-released": "（风控放行后：VIP11 升级奖励审核中，审核通过后到账，不补弹升级弹窗）",
+    "popup-oldapp": "（老版本 App：玩家升到 VIP11，升级奖励审核中，审核通过后到账，不弹升级弹窗）"
+  };
+  /* 弹窗数据：from、to、标题说明、合计金额；视图名 popup-prize 保留供其他页面引用 */
+  var POP = {
+    "popup-upgrade": ["VIP10", "VIP11", "升级奖励", "₱1,000"],
+    "popup-prize": ["VIP13", "VIP14", "升级奖励", "₱2,000"],
+    "popup-multi": ["VIP12", "VIP17", "升级奖励合计（VIP13–VIP17）", "₱11.7K"],   /* 合计 ₱11,700 按全需求前台金额规则显示 ₱11.7K（₱10,000 起用 K；用户 2026-10-19） */
+    "popup-offline": ["VIP10", "VIP11", "升级奖励", "₱1,000"],
+    "popup-return": ["VIP10", "VIP11", "升级奖励", "₱1,000"],   /* 游戏中升级 ②：返回大厅后弹出（用户 2026-10-19） */
+    "popup-order": ["regular", "VIP1", "升级奖励", "₱100"]   /* 用户 2026-10-17（依据 C-03）：普通用户升到 VIP1，后台 Level 段同一次也升级；前台只弹 VIP 升级弹窗，Level 段不弹窗、不提示 Level 奖励（后台 Level 奖励照常） */
+  };
+  /* 不弹升级弹窗的场景：大厅上方的灰字说明（画面背景说明，不是页面效果） */
+  var NOPOP = {
+    "popup-risk": "（风控暂停：玩家已升到 VIP11，升级奖励为「暂停发放（风控）」，不弹升级弹窗）",
+    "popup-released": "（风控放行后：VIP11 升级奖励立即自动到账，不补弹升级弹窗）",
+    "popup-oldapp": "（老版本 App：玩家升到 VIP11，升级奖励照常自动到账，不弹升级弹窗）",
+    "popup-nokyc": "（未完成 KYC：玩家不参与 VIP 体系，没有 VIP 等级和升级奖励，不弹升级弹窗）",
+    /* 弹窗照常弹出、只加灰字说明，用来与「单级升级（VIP10 → VIP11）」区分（用户 2026-10-19，示意） */
+    "popup-offline": "（离线期间升级，下次进入时补弹）",
+    /* 游戏中升级（用户 2026-10-19）：在第三方游戏页面不弹，回到平台原生页面后弹出 */
+    "popup-ingame": "（正在第三方游戏中，不弹出升级弹窗；返回平台页面后弹出）",
+    "popup-return": "（从第三方游戏返回大厅，弹出升级弹窗）"
+  };
+  /* 游戏中升级 ① →「返回大厅」→ 游戏中升级 ②（回到平台原生页面后弹出升级弹窗） */
+  $("gameBack").addEventListener("click", function () { location.hash = "popup-return"; });
+  var timer = null;
+
+  function vipPop(view) {
+    var p = POP[view];
+    $("upDlg").hidden = true; $("fx").hidden = false;
+    $("fxLv").textContent = p[1]; $("upLv").textContent = p[1]; $("upSub").textContent = p[2]; $("upAmt").textContent = p[3];
+    $("upCr").innerHTML = (audOn() ? "审核中，审核通过后到账" : "已到账");   /* 强制审核生效（用户 2026-10-20） */
+    console.log("[埋点] vip_upgrade_popup_show", { from_level: p[0], to_level: p[1], bonus: p[3], is_offline: view === "popup-offline" });
+    var s = 5; $("fxCd").textContent = s + "s";
+    timer = setInterval(function () {
+      s--; $("fxCd").textContent = s + "s";
+      if (s <= 0) { clearInterval(timer); $("fx").hidden = true; $("upDlg").hidden = false; }
+    }, 1000);
+  }
+  /* 升级奖励自动到账（用户 2026-10-17 定，撤销 10-16 一键领取；示意）：弹窗只显示「已到账 · {n}倍流水」，按钮「知道了」关闭弹窗；原「立即领取（Claim now）」已删除 */
+  $("upOk").addEventListener("click", function () { $("upDlg").hidden = true; });
+  /* 模拟操作面板「升级动效立即结束」 */
+  window.addEventListener("proto-change", function (e) {
+    if (e.detail.key === "fxEnd" && !$("fx").hidden) { clearInterval(timer); $("fx").hidden = true; $("upDlg").hidden = false; }
+    if (["vipLgOpt", "audSt", "audGone"].indexOf(e.detail.key) >= 0 && cur && window.rerender) rerender();   /* 强制审核、驳回后显示、审核短信模板切换后重画当前场景（用户 2026-10-20） */
+  });
+
+  /* ===== 生日卡片（F04-02） ===== */
+  /* 生日卡片按钮为「领取（Claim）」，与 VIP中心一致（用户 2026-10-17 定：生日奖励按原文由玩家领取；示意）：
+     点击只领取生日奖励，在本卡片直接领取、不跳页面；点击后立即不可点（显示「…」，防重复）；
+     成功提示「₱488 生日奖励已到账。」、按钮变为「已领取」；失败提示「领取失败，请重试。」、保留待领取（后端保留 KYC 校验兜底，校验失败也按领取失败提示；原 KYC 拦截弹窗已删除，已定，用户 2026-10-17）。卡片不列明细，没有「查看」按钮。
+     风控暂停时按钮文字为「待核验（Verifying）」、不可点，有效期后不追加；已领取 / 已过期置灰；未完成 KYC（nokyc）不显示生日卡片 */
+  var forceFail = false, bdBusy = false;
+  function bonus(st, released) {
+    var b = $("bdBtn"), c = $("bdCard"), risk = st === "risk";
+    /* 强制审核生效（用户 2026-10-20）：已领取的生日奖励进入审核——按钮「审核中」/「未通过」，说明「审核通过后到账」/「审核未通过，如有疑问请联系客服」（不显示具体原因） */
+    var ar = st === "claimed" ? audRes() : "done";
+    /* 驳回（用户 2026-10-20）：「未通过」显示到原有效期结束（10-27 23:59:59，放行后 11-03），之后不再显示；演示取共享状态 audGone */
+    var rg = ar === "reject" && !!P.get("audGone"), gone = st === "none" || rg;
+    c.hidden = gone || st === "nokyc"; $("bdGone").hidden = !gone; $("bdNoKyc").hidden = st !== "nokyc";
+    $("bdNoKyc").textContent = kycLimitOn() ? "（未完成 KYC：不参与 VIP 体系，没有生日奖励，不显示生日卡片；等级中心只显示 KYC 引导卡）" : "（未完成 KYC：「KYC 限制」关闭时可参与 VIP 体系，但生日奖励始终要求 KYC，没有生日奖励，不显示生日卡片）";
+    $("bdGone").textContent = rg ? "（审核未通过：" + (released ? "11-04" : "10-28") + " 00:00 起生日卡片不再显示）" : "（10-29 00:00 起不再显示生日卡片）";
+    c.classList.toggle("expired", st === "expired");
+    $("bdMeta").textContent = ar === "review" ? "审核通过后到账" : ar === "reject" ? "审核未通过，如有疑问请联系客服" : "有效期至 " + (released ? "2026-11-03" : "2026-10-27") + "（GMT+8）";
+    b.textContent = st === "claimed" ? (ar === "review" ? "审核中" : ar === "reject" ? "未通过" : "已领取") : st === "expired" ? "已过期" : risk ? "待核验" : bdBusy ? "…" : "领取";
+    b.disabled = st !== "pending" || bdBusy;
+  }
+  $("bdBtn").addEventListener("click", function () {
+    if (this.disabled) return;
+    console.log("[埋点] vip_bonus_claim_click", { bonus_type: "bd", level: "VIP14" });   /* 原 vip_birthday_claim_click 已并入（用户 2026-10-20） */
+    var released = cur === "bonus-released";
+    bdBusy = true; bonus("pending", released);
+    setTimeout(function () {
+      bdBusy = false;
+      if (forceFail || P.get("bdayFail")) { bonus("pending", released); P.toast("领取失败，请重试。"); return; }
+      var au = audOn(); if (au) P.set("audSt", "review");   /* 强制审核生效：领取后进入审核（用户 2026-10-20） */
+      P.set("bday", "claimed"); bonus("claimed", released);   /* 与 VIP中心页面的生日卡片同步 */
+      P.toast(au ? "已提交领取，审核通过后到账。" : "₱488 生日奖励已到账。");
+    }, 700);
+  });
+  var VIEWS = ["popup-upgrade", "popup-prize", "popup-multi", "popup-offline", "popup-ingame", "popup-return", "popup-order", "popup-risk", "popup-released", "popup-oldapp", "popup-nokyc",
+    "bonus-pending", "bonus-fail", "bonus-claimed", "bonus-expired", "bonus-gone", "bonus-risk", "bonus-released", "bonus-nokyc", "sms-retention", "sms-bday-before", "sms-bday-today", "sms-aud-up", "sms-aud-rv", "sms-aud-bd", "notice-credit", "notice-small", "txn"];
+  var cur = "";
+  var NORMAL = /^(popup-(upgrade|prize|multi|offline|ingame|return|order|released)|bonus-(pending|fail|claimed|expired|gone|released)|notice-(credit|small))$/;
+  /* fromPanel：由右侧「模拟操作」改了账号状态或老版本 App 后重画——按共享状态改走不弹窗或暂停的画面；
+     直接点模拟场景时，以场景为准，把账号状态和老版本 App 恢复为场景需要的值 */
+  function show(view, keepToast, fromPanel) {
+    if (VIEWS.indexOf(view) < 0) view = "popup-prize";
+    var pause = isPause(), nk = noKyc(), bk = bdNk();
+    if (fromPanel) {
+      /* 未完成 KYC 优先：不参与 VIP 体系（已定，用户 2026-10-17）；改回已通过时回到普通场景 */
+      if (nk && /^popup-/.test(view)) view = "popup-nokyc";
+      else if (bk && /^bonus-/.test(view)) view = "bonus-nokyc";   /* 生日奖励始终要求 KYC（「KYC 限制」关闭时同样，用户 2026-10-26） */
+      else if (!nk && view === "popup-nokyc") view = "popup-prize";
+      else if (!bk && view === "bonus-nokyc") view = "bonus-pending";
+      if (/^popup-(upgrade|prize|multi|offline|ingame|return|order)$/.test(view)) { if (P.get("oldApp")) view = "popup-oldapp"; else if (pause) view = "popup-risk"; }
+      if (/^bonus-(pending|fail|released)$/.test(view) && pause) view = "bonus-risk";
+    } else {
+      /* 直接点模拟场景：「未完成 KYC」场景把 KYC 设为未通过；其他场景都需要 KYC 已通过 */
+      if (/-nokyc$/.test(view)) { if (!bk) P.set("kyc", "none"); if (view === "popup-nokyc" && !kycLimitOn()) view = "popup-prize"; }   /* 「KYC 限制」关闭时未完成 KYC 的玩家照常弹升级弹窗（用户 2026-10-26） */
+      else if (nk || (bk && /^(bonus|sms-bday)/.test(view))) { P.set("kyc", "verified"); if (P.get("acct") === "tempfrozen") P.set("acct", "normal"); }
+      if (NORMAL.test(view) && pause) P.set("acct", "normal");
+      if ((view === "popup-risk" || view === "bonus-risk") && !pause) P.set("acct", "frozen");
+      if (view === "popup-oldapp" && !P.get("oldApp")) P.set("oldApp", true);
+      if (/^popup-/.test(view) && view !== "popup-oldapp" && P.get("oldApp")) P.set("oldApp", false);
+    }
+    cur = view;
+    var g = view.split("-")[0];
+    $("vPopup").hidden = g !== "popup"; $("vSms").hidden = g !== "sms"; $("vBonus").hidden = g !== "bonus";
+    $("vNotice").hidden = g !== "notice"; $("vTxn").hidden = g !== "txn";
+    if (g === "notice") {
+      /* 规则 N55：奖励「暂停发放（风控）」时不发站内信和推送，放行入账时再发；未完成 KYC 的玩家没有 VIP 奖励，不发（已定，用户 2026-10-17） */
+      var nkN = noKyc(), held = nkN || isPause();
+      $("pushBox").hidden = held; $("inboxBox").hidden = held; $("quietNote").hidden = held; $("noticeNone").hidden = !held;
+      $("audNote").hidden = held || !audOn();   /* 强制审核生效：审核通过到账时才发（用户 2026-10-20） */
+      $("noticeNone").textContent = nkN ? "（未完成 KYC：玩家不参与 VIP 体系，没有 VIP 奖励，不发站内信和 APP 推送）" : "（奖励处于「暂停发放（风控）」，不发站内信和 APP 推送；运营放行入账时再发：规则 N55）";
+      /* 到账金额小于 ₱1（用户 2026-10-21，Q-22）：不发短信、只发 APP 推送；到账推送受免打扰时段限制，22:18 到账顺延到次日 10:00；站内信即时生成 */
+      var sm = view === "notice-small";
+      $("inboxTxt").textContent = sm ? "VIP 升级奖励 ₱0.50 已存入你的账户。" : "VIP 升级奖励 ₱2,000 已存入你的账户。";
+      $("inboxBox").querySelector(".m").textContent = sm ? "2026-10-08 22:18" : "2026-10-08 14:05";
+      $("pushBox").querySelector("small").textContent = sm ? "10:00" : "刚刚";
+      $("quietNote").querySelector("p").textContent = sm ? "（到账金额 ₱0.50 小于 ₱1：不发短信，只发 APP 推送；22:18 触发的到账推送受免打扰时段限制，顺延到次日 10:00 发送，与平台现行「资金类推送不受免打扰」不同；站内信即时生成）" : "（21:00–10:00 触发的推送顺延到 10:00 发送，站内信即时生成）";
+    }
+    if (!keepToast) $("toast").hidden = true;
+    clearInterval(timer); $("fx").hidden = true; $("upDlg").hidden = true;
+    var np = audOn() && NOPOP_A[view] ? NOPOP_A[view] : NOPOP[view];   /* 强制审核生效时的灰字说明（用户 2026-10-20） */
+    $("riskHint").hidden = !np; $("riskHint").textContent = np || "";
+    /* 游戏中升级 ①：显示第三方游戏页面（示意），不弹升级弹窗 */
+    var inGame = view === "popup-ingame";
+    $("gameV").hidden = !inGame; $("lobby").hidden = inGame; $("lobbyTop").hidden = inGame;
+    if (g === "popup" && POP[view]) vipPop(view);
+    var vipSms = "";   /* 短信示意标记移到手机画面外的说明区（用户 2026-10-20） */
+    if (g === "sms") {
+      var m = SMS[view].slice(), acct = P.get("acct");
+      /* 强制审核生效（用户 2026-10-20）：保级短信在审核通过、实际到账时才发（审核中、驳回不发；原「审核中」版保级短信已删除），
+         使用模板「VIP 保级奖励到账」；生日提醒短信为「可领取」，不在审核时发，不变 */
+      var au = audOn(), aw = "";
+      if (view === "sms-retention" && au) m = SMS["sms-aud-rv"].slice();
+      if (m[3] === "aud") {
+        var ar0 = audRes();
+        aw = !au ? "（强制审核不生效：不在审核时发短信）" : ar0 === "review" ? "（审核中：不发短信，审核通过、实际到账时才发）" : ar0 === "reject" ? "（审核未通过：不发短信；页面显示「审核未通过，如有疑问请联系客服」）" : "";
+      }
+      /* 未完成 KYC：不参与 VIP 体系，保级短信、生日短信都不发（已定，用户 2026-10-17） */
+      /* 当天 10:00 发送前已领取生日奖励的，不发当天提醒短信（用户 2026-10-17 定）：右侧「生日奖励」设为已领取后看场景「生日当天提醒」 */
+      var early = view === "sms-bday-today" && P.get("bday") === "claimed";
+      /* 「VIP 体系状态」关闭期间（用户 2026-10-20）：保级短信、生日短信一律不发（不看「继续可领取」） */
+      var offStop = !P.get("vipOn");
+      var nkB = !noKyc() && bdNk() && /^sms-bday/.test(view);   /* 「KYC 限制」关闭时：未完成 KYC 的玩家不发生日提醒短信（生日奖励始终要求 KYC，用户 2026-10-26） */
+      var nkS = noKyc() || nkB, blocked = nkS || early || NO_SMS.indexOf(acct) >= 0 || acct === "tempfrozen" || offStop || !!aw;
+      $("smsDate").textContent = m[0];
+      $("smsNote").hidden = blocked || !m[4]; $("smsNote").textContent = m[4] || "";
+      $("smsBub").hidden = blocked; $("smsNone").hidden = !blocked;
+      $("smsNone").textContent = nkB ? "（未完成 KYC：生日奖励始终要求 KYC，「KYC 限制」关闭时也没有生日奖励，不发生日提醒短信）" : nkS ? "（未完成 KYC：玩家不参与 VIP 体系，不会收到 VIP 短信）" : early ? "（生日奖励已在 10:00 前领取，不发当天提醒短信）" : offStop ? "（「VIP 体系状态」关闭期间不发 VIP 短信：规则 N43、N40）" : aw || "（当前账号状态或「VIP 体系状态」下，该玩家不会收到这条短信：规则 N48、N43、N40）";
+      $("smsBub").textContent = m[1];
+     if (m[2] && !blocked) vipSms = "短信气泡为模板示例（代入本场景金额和日期），模板名称和文案见 PRD 附录 D「短信模板」（用户 2026-10-26）。";   /* 原在短信气泡里的小字，移到手机画面外的说明区（用户 2026-10-20） */
+    }
+    if (g === "bonus") {
+      var st = view.split("-")[1], released = st === "released";
+      forceFail = st === "fail";
+      if (st === "fail" || st === "released") st = "pending";
+      if (st === "gone") st = "none";
+      if (fromPanel && st === "pending" && P.get("bday") === "claimed") st = "claimed";   /* 领取后在右侧切换「领取后审核」等重画时保持已领取（用户 2026-10-20） */
+
+      if (st !== "risk" && st !== "nokyc" && P.get("bday") !== st) P.set("bday", st);   /* 与 VIP中心页面的生日卡片同步 */
+      bdBusy = false; bonus(st, released);
+    }
+    /* 手机画面外紧下方的说明区（用户 2026-10-20）：原在标题、气泡里的「（示意）」类标记按当前画面写在这里 */
+    var vo = [];
+    if (g === "popup") {
+      if (POP[view]) vo.push("升级弹窗标题「恭喜你！」和到账说明为示意文案。");
+      if (view === "popup-ingame") vo.push("第三方游戏页面为示意。");
+      if ($("lvDlg") && !$("lvDlg").hidden) vo.push("Level 升级弹窗为现有平台样式的简单示意。");
+    }
+    if (g === "notice" && !$("pushBox").hidden) vo.push("APP 推送沿用现有「奖励到账」推送模板，站内信「奖励已到账」沿用现有模板，文案为示意，以现有模板为准。");
+    if (vipSms) vo.push(vipSms);
+    $("vipOut").hidden = !vo.length; $("vipOut").textContent = vo.join("\n");
+    if (location.hash.slice(1) !== view) history.replaceState(null, "", "#" + view);
+    /* 嵌在「运营需求确认」页时，把当前状态告诉外层，用来同步切换按钮 */
+    if (window.self !== window.top) window.parent.postMessage({ type: "proto-view", view: view }, "*");
+  }
+  window.rerender = function () { show(cur, false, true); };
+  /* 按地址直达带强制审核预设的场景（#sms-aud-up、#sms-aud-bd、#sms-aud-rv，含运营需求确认视图）时，同样应用场景按钮上的预设（强制审核生效、审核结果通过），与点场景按钮一致（检查报告 R3-09） */
+  function presetFor(v) { if (!/^sms-aud-/.test(v || "")) return false; var pb = document.querySelector('[data-go="' + v + '"][data-aud="1"]'); if (pb) pb.click(); return !!pb; }
+  window.addEventListener("hashchange", function () { var v = location.hash.slice(1); if (!presetFor(v)) show(v); });
+  document.addEventListener("click", function (e) {
+    var b = e.target.closest("[data-go]"); if (!b) return;
+    e.preventDefault();
+    /* data-aud="1"：强制审核场景把 vipLgOpt.audOn 设为生效（保留其他细节设定）、审核结果设为审核中；其他场景不改（用户 2026-10-20） */
+    if (b.dataset.aud === "1") {
+      var lo = P.get("vipLgOpt");
+      if (!(lo && lo.audOn)) { var m2 = { regOn: false, regDays: "", audOn: false }; if (lo && typeof lo === "object") for (var y in lo) m2[y] = lo[y]; m2.audOn = true; P.set("vipLgOpt", m2); }
+      var as = b.dataset.ast || "review";   /* data-ast：场景指定的审核结果（用户 2026-10-20） */
+      if (P.get("audSt") !== as) P.set("audSt", as);
+      if (!!P.get("audGone") !== !!b.dataset.agone) P.set("audGone", !!b.dataset.agone);   /* data-agone：驳回后原有效期已结束 */
+    } else {
+      /* 其他场景开始时把强制审核复位为不生效（检查报告 Q-26），避免前一场景留下的审核状态 */
+      var lo3 = P.get("vipLgOpt"); if (lo3 && lo3.audOn) { var m3 = {}; for (var z in lo3) m3[z] = lo3[z]; m3.audOn = false; P.set("vipLgOpt", m3); }
+    }
+    show(b.dataset.go);
+  });
+  if (!presetFor(location.hash.slice(1))) show(location.hash.slice(1) || "popup-prize");
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>VIP会员体系-v1.1-需求修改总结</title>
+<link rel="stylesheet" href="../../assets/style.css">
+</head>
+<body>
+<div class="with-nav">
+<div class="desk"><article class="paper sum">
+
+<h1 class="doc-title">VIP会员体系-v1.1-需求修改总结</h1>
+<div class="doc-meta"><span id="sumVer">最新版本：-</span><span id="sumAt">提交时间：-</span><span id="sumSeal">状态：-</span></div>
+<p class="sum-note">※ 这里显示最新一版运营需求修改意见、产品回复和补充，数据来自云端，换电脑、换浏览器都能看到，每分钟自动刷新。</p>
+<div class="oc-sync" id="sumSync"></div>
+<div class="sum-acts"><a class="sum-btn pri" href="VIP会员体系-运营需求确认.html">去运营需求确认 ›</a><a class="sum-btn" href="VIP会员体系-运营需求确认.html#versions" id="allVers">查看全部版本</a></div>
+<hr class="doc-rule">
+
+<div id="sumBody"><p class="sum-note">正在读取…</p></div>
+
+</article></div>
+</div>
+<div class="oc-lightbox" id="lb" hidden><button type="button" class="x-close" aria-label="关闭" title="关闭">×</button><img alt="截图大图"></div>
+<script>window.NAV_ROOT = "../../";</script>
+<script src="../../assets/nav-data.js"></script>
+<script src="../../assets/nav.js"></script>
+<script src="../../assets/oc-store.js"></script>
+<script>
+(function () {
+  /* 与「运营需求确认」页同源：云端优先，读不到云端时用本机缓存（IndexedDB，不可用时退回 localStorage） */
+  var TOPIC = "VIP会员体系-v1.1", VER = "v1.0";
+  var KEY = OCStore.key(TOPIC);
+  var DEC = ["确认修改", "部分修改", "不修改", "待确认"];
+  function $(id) { return document.getElementById(id); }
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+  function plain(html) { var d = new DOMParser().parseFromString(html || "", "text/html"); return (d.body.textContent || "").replace(/\s+/g, " ").trim(); }
+  function cut(s, n) { return s.length > n ? s.slice(0, n) + "…" : s; }
+
+  function render(S) {
+    var V = OCStore.byVersion(S && S.versions);
+    if (!V.length) {
+      $("sumBody").innerHTML = '<div class="sum-empty"><b>还没有提交过需求修改意见</b><p>在「运营需求确认」页对照原型写意见，勾选后点「确认提交」，这里就会显示最新一版的内容和产品回复。</p><a class="sum-btn pri" href="VIP会员体系-运营需求确认.html">去运营需求确认 ›</a></div>';
+      $("allVers").hidden = true;
+      return;
+    }
+    var v = V[0], rows = v.rows || [];
+    $("sumVer").textContent = "最新版本：v" + v.major + "." + v.minor + "（共 " + V.length + " 个版本）";
+    $("sumAt").textContent = "提交时间：" + (v.at || "-");
+    $("sumSeal").textContent = "状态：" + (S.sealed ? "已于 " + S.sealed.at + "（GMT+8）" + (OCStore.ROLE_NAME[S.sealed.role] ? "由" + OCStore.ROLE_NAME[S.sealed.role] : "") + "封板（最终版本 v" + S.sealed.ver + "）" : "未封板");
+    var cnt = {}; DEC.forEach(function (d) { cnt[d] = 0; });
+    var replied = 0;
+    rows.forEach(function (r) { cnt[OCStore.dec(r)]++; if (OCStore.replied(r)) replied++; });
+    /* 补充记录：角色、时间、内容、结论调整 */
+    function notes(r) {
+      var ns = OCStore.sortNotes(r.notes);
+      return ns.length ? '<ol class="oc-notes">' + ns.map(function (n) {
+        return '<li><span class="oc-nr r-' + n.role + '">' + (n.role === "pdm" ? "产品" : "运营") + '补充</span><span class="oc-nt">' + esc(n.at || "") + "</span>" +
+          (n.decision ? '<span class="oc-dtag d' + n.decision + '">结论调整为「' + n.decision + "」</span>" : "") + "<div>" + esc(n.text).replace(/\n/g, "<br>") + "</div></li>";
+      }).join("") + "</ol>" : "";
+    }
+
+    var html = '<h2>' + esc(v.name) + '</h2>' +
+      (v.from ? '<p class="sum-note">由「' + esc(v.from) + '」修改而来</p>' : "") +
+      '<div class="sum-stats">' +
+        '<div><b>' + rows.length + '</b><span>修改意见</span></div>' +
+        '<div><b>' + replied + '</b><span>产品已回复</span></div>' +
+        DEC.map(function (d) { return '<div class="d' + d + '"><b>' + cnt[d] + '</b><span>' + d + '</span></div>'; }).join("") +
+      '</div>';
+
+    /* 回复总结：按「是否修改」分组 */
+    html += '<h2>回复总结</h2>';
+    DEC.forEach(function (d) {
+      var g = rows.map(function (r, i) { return { r: r, i: i }; }).filter(function (x) { return OCStore.dec(x.r) === d; });
+      if (!g.length) return;
+      html += '<div class="sum-grp"><h3><span class="oc-dtag d' + d + '">' + d + '</span>' + g.length + ' 条</h3><ul>' +
+        g.map(function (x) {
+          var txt = plain(x.r.html) || "（只有截图）";
+          var rep = (x.r.reply || "").trim();
+          return '<li><b>第 ' + (x.i + 1) + ' 条</b><span class="oc-ptag p' + x.r.pri + '">' + x.r.pri + '</span>' + esc(cut(txt, 80)) +
+            '<div class="sum-rep">' + (rep ? "产品回复：" + esc(rep) : (OCStore.replied(x.r) ? "产品未填写回复文字" : "产品尚未回复")) +
+            ((x.r.notes || []).length ? "（另有 " + x.r.notes.length + " 条补充，见修改明细）" : "") + "</div></li>";
+        }).join("") + "</ul></div>";
+    });
+
+    /* 明细 */
+    html += '<h2>修改明细</h2><div class="tbl"><table class="oc-dt sum-dt"><thead><tr><th class="c-no">序号</th><th class="c-img">截图</th><th>修改意见（运营）</th><th class="c-rep">产品回复及补充</th><th class="c-dec">是否修改</th></tr></thead><tbody>' +
+      rows.map(function (r, i) {
+        var d = OCStore.dec(r), d0 = r.decision || "待确认";
+        return "<tr><td class=\"c-no\">" + (i + 1) + "</td>" +
+          '<td class="c-img"><div class="oc-shots" data-row="' + i + '"></div></td>' +
+          '<td><span class="oc-ptag p' + r.pri + '">优先级 ' + r.pri + '</span><div class="oc-txt">' + esc(plain(r.html) || "（只有截图）") + "</div></td>" +
+          '<td class="c-rep"><div class="oc-rtxt">' + ((r.reply || "").trim() ? esc(r.reply).replace(/\n/g, "<br>") : '<span class="oc-noimg">' + (OCStore.replied(r) ? "（只给了结论）" : "产品尚未回复") + "</span>") + "</div>" + notes(r) + "</td>" +
+          '<td class="c-dec"><span class="oc-dtag d' + d + '">' + d + "</span>" + (d !== d0 ? '<div class="oc-nt">首次回复：' + d0 + "</div>" : "") + "</td></tr>";
+      }).join("") + "</tbody></table></div>";
+    $("sumBody").innerHTML = html;
+    /* 截图用 DOM 创建 img 元素，不拼进 innerHTML */
+    $("sumBody").querySelectorAll(".oc-shots[data-row]").forEach(function (box) { var i = +box.dataset.row; OCStore.thumbs(box, rows[i].imgs, { r: i }); });
+    /* 封板记录：显示在最新一版需求修改意见列表的最后 */
+    var lg = OCStore.sealLogEl(S); if (lg) $("sumBody").appendChild(lg);
+    $("sumBody").onclick = function (e) {
+      var t = e.target.closest(".oc-th"); if (!t) return;
+      var lb = $("lb"); lb.querySelector("img").src = rows[+t.dataset.r].imgs[+t.dataset.k]; lb.hidden = false;
+    };
+  }
+  $("lb").onclick = function () { this.hidden = true; };
+  OCStore.read(KEY).then(render);
+  OCSync.bar($("sumSync"), KEY, TOPIC, render);   /* 从共享文件夹读取版本文件和产品回复 */
+})();
+</script>
+</body>
+</html>
