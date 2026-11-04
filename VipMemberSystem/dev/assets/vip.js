@@ -38,3 +38,24 @@
   }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", setup); else setup();
 })();
+
+/* 手机画面保持 390 × 844，按可用宽高共同缩放；固定列宽随缩放同步，避免窄屏居中裁切。仅当前 v1.3 启用宽度修正，历史版本保持原样。 */
+(function () {
+  function fit() {
+    var col = document.querySelector('.vip-phonecol'), app = col && col.querySelector('.app');
+    if (!col || !app) return;
+    var stage = col.parentElement, current = /\/v1\.3\//.test(location.pathname);
+    col.style.zoom = '';
+    if (current) stage.style.gridTemplateColumns = '';
+    var top = Math.max(0, app.getBoundingClientRect().top + window.scrollY);
+    var s = Math.min(1, (window.innerHeight - top - 12) / app.offsetHeight);
+    if (current) {
+      var css = getComputedStyle(stage), available = stage.clientWidth - parseFloat(css.paddingLeft) - parseFloat(css.paddingRight);
+      s = Math.max(0.1, Math.min(s, available / app.offsetWidth));
+      stage.style.gridTemplateColumns = (app.offsetWidth * s) + 'px';
+    } else s = Math.max(0.5, s);
+    if (s < 1) col.style.zoom = String(s);
+  }
+  function setup() { fit(); window.scrollTo(0, 0); window.addEventListener('resize', fit); }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', setup); else setup();
+})();
