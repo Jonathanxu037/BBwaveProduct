@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>MannyPay支付渠道接入-在线支付配置</title>
+<link rel="stylesheet" href="../../assets/style.css">
+<style>.bo-tabs span{cursor:pointer}.bo-tabs span:hover{color:#409EFF}.mp-rd{display:inline-flex;align-items:center;gap:4px;margin-right:14px;color:#606266}.mp-fdlg{width:min(960px,96vw);max-height:92vh;display:flex;flex-direction:column;gap:10px;padding:16px 20px}
+.mp-fdlg h4{font-weight:400;font-size:15px}
+.mp-fbody{overflow:auto;padding-right:6px}
+.mp-fdlg .frow{grid-template-columns:120px minmax(0,1fr);padding:4px 0;gap:10px}
+.mp-fdlg .frow>label,.mp-fdlg .frow>.fl{justify-content:flex-end;font-size:12.5px}
+.mp-w{width:100%;height:28px}
+.mp-two{flex-wrap:nowrap}.mp-two .bo-inp{flex:1;min-width:0;height:28px}.mp-two .mp-l2{flex:none;width:110px;text-align:right;color:#606266;font-size:12.5px}
+.mp-two .ferr{flex:none;width:auto}
+.mp-cb{display:inline-flex;align-items:center;gap:5px;margin:2px 18px 2px 0;color:#606266;font-size:12.5px}
+.bo-inp.bad{border-color:#F56C6C}</style>
+<style>.mp-shots{display:grid;grid-template-columns:1fr;gap:10px;margin:6px 0 12px}.mp-shot{margin:0}.mp-shot img{display:block;width:100%;border:1px solid #DCDFE6;border-radius:6px}.mp-shot figcaption{font-size:12px;color:#909399;margin-top:3px;line-height:1.5}.mp-shotnote{font-size:12px;color:#909399;margin:2px 0 8px}</style>
+</head>
+<body>
+<div class="with-nav">
+<div class="adm-stage">
+  <div class="bo">
+    <div class="bo-top1"><span>当前时间：2026/11/04 14:05:32</span><span class="sp">简体中文</span><span>运营账号A ▾</span></div>
+    <div class="bo-top2"><span>在线人数<b class="bo-n r">21</b></span><span>当日注册<b class="bo-n g">9</b></span><span>当日充值成功<b class="bo-n g">15</b></span><span>提款<b class="bo-n g">2</b></span><span>风控审核<b class="bo-n r">0</b></span></div>
+    <div class="bo-body">
+      <nav class="bo-menu" aria-label="后台菜单">
+        <div class="mt">菜单 ≡</div>
+        <div class="g">用户管理</div><div class="g">财务管理</div><div class="g">平台概况</div>
+        <div class="g open">充值配置</div>
+        <div class="i">支付层级配置</div><div class="i">收款渠道切换</div><div class="i on">在线支付配置</div><div class="i">绑定银行配置</div>
+        <div class="g">系统管理</div>
+      </nav>
+      <div class="bo-main">
+        <div class="bo-crumb" id="crumb">位置 › 充值配置 › <b>在线支付配置</b></div>
+        <div class="bo-tabs" role="tablist">
+          <span role="tab" tabindex="0" data-go="list" id="tabList" class="on" aria-selected="true">在线支付配置</span><span role="tab" tabindex="0" data-go="dyn" id="tabDyn">支付渠道动态配置</span><span role="tab" tabindex="0" data-go="log" id="tabLog">支付渠道调整记录</span>
+        </div>
+
+        <section id="vList" hidden>
+          <div class="bo-filter">
+            <select class="bo-inp" aria-label="支付类型筛选" id="fType"><option value="">全部支付类型</option><option>GCASH</option><option>PayMongo</option><option>PayMaya</option><option>Traxion Pay</option><option>QRPH</option><option>Starpay</option><option class="glow">MannyPay</option></select>
+            <button class="bo-btn q" type="button" id="search">搜索</button>
+            <button class="bo-btn n" type="button" data-go="new" data-dev="D16">新增</button>
+          </div>
+          <div class="bo-content">
+            <table id="tbl">
+              <thead><tr><th>#</th><th>支付名称</th><th>支付类型</th><th>支付层级</th><th>最小 / 最大金额</th><th>状态</th><th>币种</th><th>操作</th></tr></thead>
+              <tbody id="rows"></tbody>
+            </table>
+            <div class="bo-page" id="pager" role="navigation" aria-label="分页">
+              <span>共 <b id="pgTotal">0</b> 条</span>
+              <label>每页 <select id="pgSize" aria-label="每页条数"><option>10</option><option selected>20</option><option>50</option><option>100</option></select> 条</label>
+              <button type="button" id="pgPrev" aria-label="上一页">‹</button><span id="pgNums"></span><button type="button" id="pgNext" aria-label="下一页">›</button>
+              <label>前往 <input id="pgGo" inputmode="numeric" aria-label="前往页码" value="1"> 页</label>
+            </div>
+            <p style="font-size:12px;color:#909399;margin:10px 0 0">示例数据均为虚构。</p>
+          </div>
+        </section>
+
+        <section id="vDyn" hidden>
+          <div class="bo-filter"><span>动态切换总开关</span><label class="mp-rd"><input type="checkbox" checked aria-label="动态切换总开关">开启</label><span class="fhelp" style="width:auto">动态调整规则（满足任意 1 条即启动备用渠道，沿用现有）：① 单个用户连续充值失败 ≥ N 次且累计 ≥ M 人；② 最近 X 分钟充值成功率持续 &lt; Y%；③ 最近 X 分钟三方下单失败率 ≥ Z% 或失败次数 ≥ K 次</span></div>
+          <div class="bo-content">
+            <table>
+              <thead><tr><th>支付名称</th><th>支付类型</th><th>支付排序（所有端）</th><th><span class="ui-nw">备用渠道<i class="qm" tabindex="0" data-tip="本渠道下单失败或成功率下降时，前台坑位自动切到这里选的渠道，前台名称不变。不能选本渠道。">?</i></span></th><th>当前状态</th></tr></thead>
+              <tbody>
+                <tr><td>GCASH</td><td>GCASH</td><td>1</td><td><select class="bo-inp" aria-label="GCASH 备用渠道"><option value="" selected>无</option><option>GCash3</option><option>GCash6</option></select></td><td class="st-on">生效中</td></tr>
+                <tr><td>GCash3</td><td>PayMongo</td><td>3</td><td><select class="bo-inp glow" id="bk1" data-dev="D17"><option value="">无</option><option>GCASH (GCASH)</option><option selected>MannyPay (GCash6)</option></select></td><td class="st-on" id="st1">生效中</td></tr>
+                <tr><td>Bank Card</td><td>QRPH</td><td>21</td><td><select class="bo-inp" aria-label="Bank Card 备用渠道"><option value="" selected>无</option></select></td><td class="st-off">未生效</td></tr>
+                <tr><td>Maya</td><td>PayMaya</td><td>199</td><td><select class="bo-inp" aria-label="Maya 备用渠道"><option value="" selected>无</option></select></td><td class="st-off">未生效</td></tr>
+                <tr><td>GCash4</td><td>Traxion Pay</td><td>200</td><td><select class="bo-inp" aria-label="GCash4 备用渠道"><option value="" selected>无</option><option>GCash6</option></select></td><td class="st-off">未生效</td></tr>
+                <tr class="glow"><td>GCash6</td><td>MannyPay</td><td>201</td><td><select class="bo-inp" id="bk2"><option value="">无</option><option selected>PayMongo (GCash3)</option><option>GCASH (GCASH)</option></select></td><td class="st-off" id="st2">未生效</td></tr>
+              </tbody>
+            </table>
+            <div style="margin-top:12px;display:flex;gap:10px"><button class="bo-btn q" type="button" id="dynSave">保存</button><button class="bo-btn" type="button" id="dynSwap">模拟：GCash3 达到切换阈值</button></div>
+            <div class="bo-page" role="navigation" aria-label="分页"><span>共 <b>6</b> 条</span><label>每页 <select aria-label="每页条数"><option>10</option><option selected>20</option><option>50</option><option>100</option></select> 条</label><button type="button" disabled aria-label="上一页">‹</button><button type="button" aria-current="page">1</button><button type="button" disabled aria-label="下一页">›</button><label>前往 <input inputmode="numeric" aria-label="前往页码" value="1"> 页</label></div>
+            <p class="ui-reqnote">GCash3 设备用渠道为 GCash6（MannyPay）时，GCash3 达到切换规则后，它的坑位改走 MannyPay，前台标签名称不变。切换记录写入「支付渠道调整记录」（沿用现有）。</p>
+          </div>
+        </section>
+
+        <section id="vLog" hidden>
+          <div class="bo-content">
+            <table>
+              <thead><tr><th>时间</th><th>原支付类型</th><th>原支付名称</th><th>新支付类型</th><th>新支付名称</th><th>触发规则</th><th>当前累计充值成功率</th></tr></thead>
+              <tbody id="logRows"><tr><td>2026-11-03 21:14:08</td><td>PayMongo</td><td>Gcash</td><td>Traxion Pay</td><td>GCash4</td><td>三方下单失败</td><td>62.50%</td></tr></tbody>
+            </table>
+            <div class="bo-page" role="navigation" aria-label="分页"><span>共 <b id="logTotal">1</b> 条</span><label>每页 <select aria-label="每页条数"><option>10</option><option selected>20</option><option>50</option><option>100</option></select> 条</label><button type="button" disabled aria-label="上一页">‹</button><button type="button" aria-current="page">1</button><button type="button" disabled aria-label="下一页">›</button><label>前往 <input inputmode="numeric" aria-label="前往页码" value="1"> 页</label></div>
+            <p class="ui-reqnote">沿用现有页面；MannyPay 配置参与切换时，按同样字段新增记录，时间倒序。示例数据均为虚构。</p>
+          </div>
+        </section>
+
+        <!-- 新增 / 编辑在线支付配置：弹窗，字段和顺序按 UAT 后台「添加在线支付配置」 -->
+        <div class="bo-mask" id="vForm" hidden>
+          <div class="bo-dlg mp-fdlg" role="dialog" aria-modal="true" aria-labelledby="fTitle">
+            <h4 id="fTitle">添加在线支付配置</h4>
+            <div class="mp-fbody">
+              <div class="frow"><label for="ty"><span class="req">*</span>支付类型:</label><div class="fctl"><select class="bo-inp glow mp-w" id="ty" data-dev="D10"><option value="">Select</option><option>Dragonpay支付</option><option>FortunePay支付</option><option>MayaMini-789Play支付</option><option>PayMaya</option><option>GCASH</option><option>CoinPH</option><option>PayMongo</option><option>QRPH</option><option>PayCools</option><option>Traxion Pay</option><option>Starpay</option><option value="MannyPay">MannyPay</option></select><span class="ferr" id="tyErr"></span></div></div>
+              <div class="frow"><label for="rg">不可见地区:</label><div class="fctl"><select class="bo-inp mp-w" id="rg"><option value="">Select</option><option>示例地区 A</option><option>示例地区 B</option></select></div></div>
+              <div class="frow"><label for="nm"><span class="req">*</span>支付名称:</label><div class="fctl"><input class="bo-inp mp-w" id="nm"><span class="ferr" id="nmErr"></span></div></div>
+              <div class="frow"><label for="mid"><span class="req">*</span>商户号:</label><div class="fctl"><input class="bo-inp mp-w" id="mid"><span class="ferr" id="midErr"></span></div></div>
+              <div class="frow"><label for="pk">第三方公钥:</label><div class="fctl"><input class="bo-inp mp-w" id="pk"></div></div>
+              <div class="frow"><label for="dm">第三方域名:</label><div class="fctl"><input class="bo-inp mp-w" id="dm"></div></div>
+              <div class="frow"><label for="tm">终端号:</label><div class="fctl"><input class="bo-inp mp-w" id="tm"></div></div>
+              <div class="frow"><label for="ex">扩充资讯:</label><div class="fctl"><input class="bo-inp mp-w" id="ex"></div></div>
+              <div class="frow"><label for="url"><span class="req">*</span>请求网址:</label><div class="fctl"><input class="bo-inp mp-w" id="url"><span class="ferr" id="urlErr"></span></div></div>
+              <div class="frow"><label for="mn"><span class="req">*</span>最小金额:</label><div class="fctl mp-two"><input class="bo-inp" id="mn" data-dev="D13"><label for="mx" class="mp-l2"><span class="req">*</span>最大金额:</label><input class="bo-inp" id="mx"><span class="ferr" id="mxErr"></span></div></div>
+              <div class="frow"><label for="fee">手续费:</label><div class="fctl"><input class="bo-inp mp-w" id="fee"></div></div>
+              <div class="frow"><label for="rb">返利:</label><div class="fctl"><input class="bo-inp mp-w" id="rb"></div></div>
+              <div class="frow"><label for="tv">流水倍数:</label><div class="fctl"><input class="bo-inp mp-w" id="tv" value="0"></div></div>
+              <div class="frow"><label for="cur"><span class="req">*</span>币种:</label><div class="fctl"><select class="bo-inp mp-w" id="cur"><option value="">Select</option><option>菲律宾比索</option></select><span class="ferr" id="curErr"></span></div></div>
+              <div class="frow"><span class="fl"><span class="req">*</span>状态:</span><div class="fctl" data-dev="D11"><label class="mp-rd"><input type="radio" name="st" value="正常" checked>正常</label><label class="mp-rd"><input type="radio" name="st" value="停用">停用</label><label class="mp-rd"><input type="radio" name="st" value="维护">维护</label></div></div>
+              <div class="frow"><span class="fl">通道模式:</span><div class="fctl"><label class="mp-rd"><input type="radio" name="cm" value="第三方" checked>第三方</label><label class="mp-rd"><input type="radio" name="cm">直连模式</label><label class="mp-rd"><input type="radio" name="cm">Glife</label><label class="mp-rd"><input type="radio" name="cm">Maya Mini</label><label class="mp-rd"><input type="radio" name="cm">Glife-OKFUN</label><label class="mp-rd"><input type="radio" name="cm">Maya-Mini-OKFUN</label></div></div>
+              <div class="frow"><label for="mt">前台维护说明:</label><div class="fctl"><input class="bo-inp mp-w" id="mt" data-dev="D12"><span class="ferr" id="mtErr"></span></div></div>
+              <div class="frow"><label for="fn">前端备注说明:</label><div class="fctl"><input class="bo-inp mp-w" id="fn"></div></div>
+              <div class="frow"><label for="bn">后台备注说明:</label><div class="fctl"><input class="bo-inp mp-w" id="bn"></div></div>
+              <div class="frow"><span class="fl">是否需要填写账号:</span><div class="fctl"><label class="mp-rd"><input type="radio" name="na">是</label><label class="mp-rd"><input type="radio" name="na" checked>否</label></div></div>
+              <div class="frow"><span class="fl">是否需要填写邮箱:</span><div class="fctl"><label class="mp-rd"><input type="radio" name="ne">是</label><label class="mp-rd"><input type="radio" name="ne" checked>否</label></div></div>
+              <div class="frow"><span class="fl"><span class="req">*</span>层设置:</span><div class="fctl" id="lvBox" data-dev="D60"></div></div>
+              <div class="frow" style="margin-top:-6px"><span></span><span class="ferr" id="lvErr"></span></div>
+              <div class="frow"><label for="so">排序:</label><div class="fctl"><input class="bo-inp" id="so" value="0" style="width:270px"><span class="fhelp" style="width:auto">（数字越大排位越靠后）</span></div></div>
+              <p class="ui-reqnote" style="margin:4px 0 0 130px">表单字段和顺序与现有「添加在线支付配置」一致，本需求只在「支付类型」下拉里新增 MannyPay。支付类型选 MannyPay 时，商户号、公钥、域名、请求网址等对接参数由技术按 MannyPay 提供的信息填写。</p>
+            </div>
+            <div class="row2"><button class="bo-btn" type="button" data-go="list" data-cancel>取 消</button><button class="bo-btn q" type="button" id="save">确 定</button></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <aside class="notes adm-notes">
+    <h2>在线支付配置</h2>
+    <p class="mp-cat" style="margin:4px 0 8px;padding:6px 10px;border-radius:6px;background:#FFF7E6;color:#8A5A00;font-size:12.5px"><b>页面分类 · </b>需配置页面：运营新增一条支付类型为 MannyPay 的配置、设置主备渠道，前台才会出现新标签（支付类型下拉新增 MannyPay 需开发）。</p>
+    <p class="sub">充值配置 › 在线支付配置。「支付类型」下拉新增 MannyPay（带淡色光晕）。新增一条支付类型为 MannyPay 的配置、状态设为正常，前台 Deposit 就多一个标签，名称取「支付名称」（示例 GCash6）。「支付渠道动态配置」里 MannyPay 可以作为其他配置的备用渠道，也可以设自己的备用渠道。其余字段、列表和操作沿用现有。</p>
+    <h3>模拟场景</h3>
+    <div class="sim">
+      <button type="button" data-go="list"><span class="simtag">在线支付配置</span>列表</button>
+      <button type="button" data-go="new"><span class="simtag">在线支付配置</span>新增 MannyPay</button>
+      <button type="button" data-go="edit"><span class="simtag">在线支付配置</span>编辑 MannyPay</button>
+      <button type="button" data-go="dyn"><span class="simtag">动态配置</span>主备渠道</button>
+      <button type="button" data-go="log"><span class="simtag">调整记录</span>切换记录</button>
+      <button type="button" id="simEmpty"><span class="simtag">列表</span>筛选无结果</button>
+      <button type="button" id="simMany"><span class="simtag">列表</span>多页</button>
+    </div>
+<h3 id="mpLink">联动说明</h3><ol><li>新增 / 编辑在线支付配置时，支付类型可选 MannyPay（F02-01）。</li><li>支付渠道动态配置里 MannyPay 参与主备切换，切换记录写入支付渠道调整记录（F02-02）。</li></ol><h3>现状截图（QA 后台）</h3><div class="mp-shots"><figure class="mp-shot"><a href="../../assets/img/xz-01-在线支付配置列表.jpg" target="_blank" rel="noopener"><img src="../../assets/img/xz-01-在线支付配置列表.jpg" alt="充值配置 › 在线支付配置：列表（每条正常的配置就是前台一个充值标签）" loading="lazy"></a><figcaption>充值配置 › 在线支付配置：列表（每条正常的配置就是前台一个充值标签）</figcaption></figure><figure class="mp-shot"><a href="../../assets/img/xz-02-新增在线支付配置-支付类型.jpg" target="_blank" rel="noopener"><img src="../../assets/img/xz-02-新增在线支付配置-支付类型.jpg" alt="新增在线支付配置：支付类型下拉（现有选项，末尾是 Starpay；本需求在此新增 MannyPay）" loading="lazy"></a><figcaption>新增在线支付配置：支付类型下拉（现有选项，末尾是 Starpay；本需求在此新增 MannyPay）</figcaption></figure><figure class="mp-shot"><a href="../../assets/img/xz-03-支付渠道动态配置.jpg" target="_blank" rel="noopener"><img src="../../assets/img/xz-03-支付渠道动态配置.jpg" alt="支付渠道动态配置：支付排序和备用渠道" loading="lazy"></a><figcaption>支付渠道动态配置：支付排序和备用渠道</figcaption></figure><figure class="mp-shot"><a href="../../assets/img/xz-04-支付渠道调整记录.jpg" target="_blank" rel="noopener"><img src="../../assets/img/xz-04-支付渠道调整记录.jpg" alt="支付渠道调整记录：切换到备用渠道的记录" loading="lazy"></a><figcaption>支付渠道调整记录：切换到备用渠道的记录</figcaption></figure></div><p class="mp-shotnote">2026-11-04 截取，敏感数据已打码；点击看大图。</p>
+    <h3>规则批注</h3>
+    <ol>
+      <li><b>支付类型</b>：新增 MannyPay；支付名称就是前台标签名（示例 GCash6）；可配多条（如不同层级不同限额），与其他支付类型的规则一致。<span class="ref">PRD 规则 N1 · F02-01 在线支付配置新增 MannyPay</span></li>
+      <li><b>主备切换</b>：支付渠道动态配置里，MannyPay 可作为其他配置的备用渠道，也可设自己的备用渠道；3 条动态调整规则、切换记录沿用现有，备用渠道不能选本渠道。<span class="ref">PRD 规则 N16 · F02-02 主备渠道</span></li>
+      <li><b>表单</b>：「新增」「编辑」打开弹窗，字段和顺序与现有「添加在线支付配置」一致；必填项（支付类型、支付名称、商户号、请求网址、最小 / 最大金额、币种、状态、层设置）沿用现有校验，没填时在字段下方提示，例如「请输入支付名称」。右上角 × 关闭，等同取消。<span class="ref">PRD 规则 N1</span></li>
+      <li><b>金额</b>：最小金额 ≥ 1 且 ≤ 最大金额，否则不能保存并提示「最小金额不能大于最大金额」。前台可充区间取与支付层级限额的交集。<span class="ref">PRD 规则 N2</span></li>
+      <li><b>状态</b>：正常 = 前台显示；维护 = 前台置灰并显示「前台维护说明」，选维护时维护说明必填；停用 = 前台不显示。保存后前台下一次打开充值页生效。<span class="ref">PRD 规则 N7</span></li>
+    </ol>
+    <h3>评审结论</h3>
+    <ol><li><b>前台名称</b>：前台标签名就是「支付名称」，由运营填写（示例 GCash6）。<span class="ref">PRD 待确认 Q6</span></li></ol>
+    <div class="pager"><a href="../front/MannyPay支付渠道接入-充值页.html">← 上一页：充值页</a><a href="MannyPay支付渠道接入-绑定银行配置.html">下一页：绑定银行配置 →</a></div>
+  </aside>
+</div>
+</div>
+<script>window.NAV_ROOT = "../../";</script>
+<script src="../../assets/nav-data.js"></script>
+<script>document.querySelectorAll(".bo-main button, .bo-main select, .bo-main input, .bo-main [role=tab], .bo-mask button, .bo-mask input, .bo-mask select").forEach(function (e) { if (!e.closest("[data-dev]") && !e.closest(".bo-page")) e.setAttribute("data-dev", "D60"); });</script>
+<script src="../../assets/nav.js"></script>
+<script>
+(function () {
+  var BASE = [
+    ["25", "GCash6", "MannyPay", "Default layer ; Tier 1", "100 / 50,000", "正常", true],
+    ["2", "GCASH", "GCASH", "Default layer ; Tier 1", "10 / 500,000", "正常"],
+    ["15", "GCash3", "PayMongo", "Default layer ; Tier 1 ; Tier 2", "10 / 500,000", "正常"],
+    ["3", "Maya", "PayMaya", "Default layer ; Tier 1", "10 / 500,000", "正常"],
+    ["20", "GCash4", "Traxion Pay", "Default layer", "10 / 500,000", "正常"],
+    ["21", "Bank Card", "QRPH", "Default layer ; Tier 1", "10 / 500,000", "正常"],
+    ["23", "Starpay", "Starpay", "Default layer ; Tier 1", "10 / 500,000", "停用"]
+  ];
+  var data = BASE.slice(), editing = false;
+  var PG = { total: 0, size: 20, page: 1 };
+  function msg(t, bad) { var m = document.createElement("div"); m.className = "bo-msg " + (bad ? "err" : "ok"); m.textContent = t; m.setAttribute("role", "status"); document.body.appendChild(m); setTimeout(function () { m.remove(); }, 1800); }
+  function draw() {
+    var f = document.getElementById("fType").value, list = data.filter(function (r) { return !f || r[2] === f; });
+    PG.total = list.length; var n = Math.max(1, Math.ceil(PG.total / PG.size)); PG.page = Math.min(Math.max(1, PG.page), n);
+    var body = document.getElementById("rows"); body.innerHTML = "";
+    if (!list.length) { body.innerHTML = '<tr><td colspan="8" style="text-align:center;color:#909399">暂无数据</td></tr>'; }
+    list.slice((PG.page - 1) * PG.size, PG.page * PG.size).forEach(function (r) {
+      var tr = document.createElement("tr"); tr.dataset.i = data.indexOf(r); if (r[6]) tr.className = "glow";
+      tr.innerHTML = "<td>" + r[0] + "</td><td>" + r[1] + "</td><td>" + r[2] + "</td><td>" + r[3] + "</td><td>" + r[4] + "</td><td class='" + (r[5] === "正常" ? "st-on" : "st-off") + "'>" + r[5] + "</td><td>菲律宾比索</td>" +
+        "<td><button class='bo-btn link' type='button' data-go='" + (r[2] === "MannyPay" ? "edit" : "list") + "' data-dev='D15'>编辑</button><button class='bo-btn link' type='button' data-tog data-dev='D15'>" + (r[5] === "正常" ? "停用" : "启用") + "</button><button class='bo-btn link' type='button' data-dev='D15'>复制</button></td>";
+      body.appendChild(tr);
+    });
+    document.getElementById("pgTotal").textContent = PG.total;
+    var box = document.getElementById("pgNums"); box.textContent = "";
+    for (var i = 1; i <= n; i++) { var b = document.createElement("button"); b.type = "button"; b.textContent = i; if (i === PG.page) b.setAttribute("aria-current", "page"); b.onclick = (function (k) { return function () { PG.page = k; draw(); }; })(i); box.appendChild(b); }
+    document.getElementById("pgPrev").disabled = PG.page <= 1; document.getElementById("pgNext").disabled = PG.page >= n; document.getElementById("pgGo").value = PG.page;
+  }
+  document.getElementById("rows").addEventListener("click", function (e) {
+    var b = e.target.closest("[data-tog]"); if (!b) return;
+    var r = data[+b.closest("tr").dataset.i];
+    r[5] = r[5] === "正常" ? "停用" : "正常"; msg("操作成功"); draw();
+  });
+  document.getElementById("pgPrev").onclick = function () { PG.page--; draw(); };
+  document.getElementById("pgNext").onclick = function () { PG.page++; draw(); };
+  document.getElementById("pgSize").onchange = function () { PG.size = +this.value; PG.page = 1; draw(); };
+  document.getElementById("pgGo").onkeydown = function (e) { if (e.key === "Enter") { var v = parseInt(this.value, 10); if (!isNaN(v)) PG.page = v; draw(); } };
+  document.getElementById("search").onclick = function () { PG.page = 1; draw(); };
+  document.getElementById("simEmpty").onclick = function () { show("list"); document.getElementById("fType").value = "GCASH"; data = BASE.filter(function (r) { return r[2] !== "GCASH"; }); PG.page = 1; draw(); };
+  document.getElementById("simMany").onclick = function () { show("list"); document.getElementById("fType").value = ""; data = BASE.slice(); for (var i = 0; i < 40; i++) data.push([String(100 + i), "示例配置" + (i + 1), "QRPH", "Default layer", "100 / 50,000", "正常"]); PG.page = 1; draw(); };
+  var LEVELS = ["Default layer", "Tier 1", "Tier 2", "Tier 3 (VIP)", "Tier 4 (SVIP)", "内部充值", "QASL", "eve", "提現check", "QASL_1000/30", "QASL_0/100", "Default tier free", "SECUNA TEST"];
+  document.getElementById("lvBox").innerHTML = LEVELS.map(function (l) { return "<label class='mp-cb'><input type='checkbox' value='" + l + "'>" + l + "</label>"; }).join("");
+  var EDIT = { ty: "MannyPay", nm: "GCash6", mid: "mannypay_merchant_id", url: "MannyPay 请求网址（示意）", mn: "100", mx: "50000", cur: "菲律宾比索", so: "201", lv: ["Default layer", "Tier 1"] };
+  function val(id, v) { var e = document.getElementById(id); e.value = v; e.classList.remove("bad"); }
+  function fill(edit) {
+    editing = edit;
+    document.getElementById("fTitle").textContent = edit ? "编辑在线支付配置" : "添加在线支付配置";
+    ["ty", "rg", "nm", "mid", "pk", "dm", "tm", "ex", "url", "mn", "mx", "fee", "rb", "cur", "mt", "fn", "bn"].forEach(function (id) { val(id, edit && EDIT[id] ? EDIT[id] : ""); });
+    val("tv", "0"); val("so", edit ? EDIT.so : "0");
+    document.querySelector('input[name="st"][value="正常"]').checked = true;
+    document.querySelector('input[name="cm"][value="第三方"]').checked = true;
+    document.querySelectorAll("#lvBox input").forEach(function (c) { c.checked = edit && EDIT.lv.indexOf(c.value) >= 0; });
+    ["tyErr", "nmErr", "midErr", "urlErr", "mxErr", "curErr", "mtErr", "lvErr"].forEach(function (id) { document.getElementById(id).textContent = ""; });
+  }
+  document.getElementById("save").onclick = function () {
+    var ok = true, st = document.querySelector('input[name="st"]:checked').value;
+    function er(id, t, inp) { document.getElementById(id).textContent = t; if (inp) document.getElementById(inp).classList.toggle("bad", !!t); if (t) ok = false; }
+    function req(inp, id, t) { er(id, document.getElementById(inp).value.trim() ? "" : t, inp); }
+    req("ty", "tyErr", "请选择支付类型"); req("nm", "nmErr", "请输入支付名称"); req("mid", "midErr", "请输入商户号"); req("url", "urlErr", "请输入请求网址"); req("cur", "curErr", "请选择币种");
+    var mn = Number(document.getElementById("mn").value), mx = Number(document.getElementById("mx").value);
+    er("mxErr", !(mn >= 1) || !(mx >= 1) ? "请输入大于 0 的金额" : mn > mx ? "最小金额不能大于最大金额" : "");
+    er("mtErr", st === "维护" && !document.getElementById("mt").value.trim() ? "状态为维护时请填写前台维护说明" : "", "mt");
+    er("lvErr", document.querySelector("#lvBox input:checked") ? "" : "请至少选择一个层级");
+    if (!ok) return;
+    msg("保存成功"); setTimeout(function () { show("list"); }, 600);
+  };
+  var SCENES = { new: "新增", edit: "编辑" };
+  function show(view) {
+    if (view !== "list" && view !== "dyn" && view !== "log" && !SCENES[view]) view = "list";
+    document.getElementById("vList").hidden = view !== "list" && !SCENES[view];
+    document.getElementById("vDyn").hidden = view !== "dyn";
+    document.getElementById("vLog").hidden = view !== "log";
+    document.getElementById("vForm").hidden = !SCENES[view];
+    document.getElementById("tabList").classList.toggle("on", view !== "dyn" && view !== "log"); document.getElementById("tabDyn").classList.toggle("on", view === "dyn"); document.getElementById("tabLog").classList.toggle("on", view === "log");
+    document.getElementById("crumb").innerHTML = "位置 › 充值配置 › <b>" + (SCENES[view] ? "在线支付配置" : view === "dyn" ? "支付渠道动态配置" : view === "log" ? "支付渠道调整记录" : "在线支付配置") + "</b>";
+    if (SCENES[view]) { draw(); fill(view === "edit"); } else if (view === "list") draw();
+    if (location.hash.slice(1) !== view) history.replaceState(null, "", "#" + view);
+    if (!SCENES[view]) window.scrollTo(0, 0);
+    if (window.self !== window.top) window.parent.postMessage({ type: "proto-view", view: view }, "*");
+  }
+  document.getElementById("dynSave").onclick = function () { msg("保存成功"); };
+  document.getElementById("dynSwap").onclick = function () {
+    var a = document.getElementById("st1"), b = document.getElementById("st2");
+    var on1 = a.textContent === "生效中"; a.textContent = on1 ? "未生效" : "生效"; b.textContent = on1 ? "生效" : "未生效";
+    a.textContent = on1 ? "未生效" : "生效中"; b.textContent = on1 ? "生效中" : "未生效";
+    a.className = on1 ? "st-off" : "st-on"; b.className = on1 ? "st-on" : "st-off";
+    msg(on1 ? "GCash3 已切到备用渠道 GCash6（MannyPay），前台名称不变，已新增一条调整记录" : "已切回 GCash3（PayMongo），已新增一条调整记录");
+    var tr = document.createElement("tr"); tr.className = "glow";
+    tr.innerHTML = "<td>2026-11-04 14:3" + document.getElementById("logRows").rows.length + ":00</td><td>" + (on1 ? "PayMongo</td><td>GCash3" : "MannyPay</td><td>GCash6") + "</td><td>" + (on1 ? "MannyPay</td><td>GCash6" : "PayMongo</td><td>GCash3") + "</td><td>" + (on1 ? "三方下单失败" : "人工切回") + "</td><td>" + (on1 ? "71.20%" : "93.40%") + "</td>";
+    var lb = document.getElementById("logRows"); lb.insertBefore(tr, lb.firstChild); document.getElementById("logTotal").textContent = lb.rows.length;
+  };
+  window.addEventListener("hashchange", function () { show(location.hash.slice(1) || "list"); });
+  document.addEventListener("click", function (e) { var b = e.target.closest("[data-go]"); if (b) { e.preventDefault(); show(b.dataset.go); } });
+  show(location.hash.slice(1) || "list");
+})();
+</script>
+</body>
+</html>

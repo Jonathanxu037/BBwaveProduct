@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>MannyPay支付渠道接入-版本需求说明</title>
+<link rel="stylesheet" href="../assets/style.css">
+<style>
+.vd-cards{display:grid;gap:12px;margin:8px 0 18px}
+.vd-card{border:1px solid #E4E7ED;border-radius:10px;padding:12px 14px;background:#fff}
+.vd-card h3{margin:0 0 8px;font-size:15px}
+.vd-card .kv{display:grid;grid-template-columns:76px minmax(0,1fr);gap:4px 10px;font-size:13.5px;line-height:1.7}
+.vd-card .kv b{color:#606266;font-weight:600}
+.vd-card table{margin-top:4px}
+.vd-flow{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;margin:8px 0 18px}
+.vd-flow h4{margin:0 0 6px;font-size:14px}
+</style>
+</head>
+<body>
+<div class="with-nav">
+<div class="desk"><article class="paper">
+
+<h1 class="doc-title">MannyPay支付渠道接入 · 版本需求说明 · v1.0</h1>
+<div class="doc-meta"><span>更新日期：2026-11-04（GMT+8）</span><span>适用：v1.0</span><span>可见角色：产品、开发</span><span>依据：<a href="MannyPay支付渠道接入-需求开发PRD文档.html">需求开发 PRD 文档</a> 和原型，规则和数值以 PRD 为准</span></div>
+<hr class="doc-rule">
+
+<h2 id="v1">一、一句话概述</h2>
+<div class="oneline">按平台现有的资金渠道配置流程接入 MannyPay：在线支付配置新增一条 MannyPay 配置，前台 Wallet › Deposit 就多一个 GCash 类充值标签；绑定银行配置把代付渠道选为 MannyPay，提款就由 MannyPay（InstaPay）出款；财务总表、手续费、余额卡片、监控大盘同步加入 MannyPay。</div>
+
+<h2 id="v2">二、业务流程图</h2>
+<div class="vd-flow">
+  <div>
+    <h4>充值</h4>
+    <div class="flow">
+      <div class="fs key"><div class="no">1</div><div><b>配置</b>：在线支付配置新增支付类型 MannyPay，填支付名称（示例 GCash6）、金额、层设置，状态正常（N1）</div></div>
+      <div class="fa">↓</div>
+      <div class="fs"><div class="no">2</div><div><b>前台出现标签</b>：对应层级的玩家在 Deposit 看到新标签（N1、N7）</div></div>
+      <div class="fa">↓</div>
+      <div class="fs"><div class="no">3</div><div><b>扫码付款</b>：选标签 → 输入金额 → 提交 → MannyPay 二维码页 → GCash 扫码（N2、N3）</div></div>
+      <div class="fa">↓</div>
+      <div class="fs key"><div class="no">4</div><div><b>入账</b>：MannyPay 确认成功且金额一致 → 入账一次 → 充值成功弹窗（N5）</div></div>
+      <div class="fa">↓</div>
+      <div class="fs br"><div class="no">!</div><div><b>异常（分支）</b>：下单失败、未付款关闭、二维码过期、金额不一致；达到切换规则时坑位切到备用渠道（N3、N4、N6、N16）</div></div>
+    </div>
+  </div>
+  <div>
+    <h4>提现</h4>
+    <div class="flow">
+      <div class="fs key"><div class="no">1</div><div><b>配置</b>：绑定银行配置把银行的代付渠道选为 MannyPay（N8、N11）</div></div>
+      <div class="fa">↓</div>
+      <div class="fs"><div class="no">2</div><div><b>发起出款</b>：自动代付，或运营在三方出款 / 重新出款里选 MannyPay（N9）</div></div>
+      <div class="fa">↓</div>
+      <div class="fs"><div class="no">3</div><div><b>出款中</b>：MannyPay 走 InstaPay 代付，同一订单不能重复发起（N10、N12）</div></div>
+      <div class="fa">↓</div>
+      <div class="fs key"><div class="no">4</div><div><b>结果</b>：成功 → 出款成功；失败 → 出款异常单，换渠道重新出款或驳回（N12）</div></div>
+      <div class="fa">↓</div>
+      <div class="fs br"><div class="no">!</div><div><b>失败原因（分支）</b>：单笔超过 ₱50,000、渠道余额不足、收款账户无效或银行不支持（N10、N11、N12）</div></div>
+    </div>
+  </div>
+</div>
+
+<h2 id="v3">三、业务点说明</h2>
+<p>每张卡片固定 4 项：作用、逻辑、场景 → 方案、依据。金额单位 PHP，时间均为 GMT+8。</p>
+<div class="vd-cards">
+
+<section class="vd-card" id="b1"><h3>1. 充值标签（在线支付配置）</h3><div class="kv">
+<b>作用</b><div>让玩家在 Deposit 看到并使用 MannyPay。</div>
+<b>逻辑</b><div>前台每个充值标签就是一条状态为「正常」的在线支付配置；「支付类型」下拉新增 MannyPay，表单字段和现有一致；标签名称取「支付名称」，前台不显示「MannyPay」字样。</div>
+<b>场景 → 方案</b><div><div class="tbl"><table><tr><th>场景</th><th>方案</th></tr><tr><td>状态正常、玩家在层设置内</td><td>显示标签</td></tr><tr><td>状态维护</td><td>置灰，显示前台维护说明，不能选</td></tr><tr><td>状态停用 / 玩家不在层设置内 / 地区不可见</td><td>不显示</td></tr></table></div></div>
+<b>依据</b><div>N1 · N7</div></div></section>
+
+<section class="vd-card" id="b2"><h3>2. 充值与入账</h3><div class="kv">
+<b>作用</b><div>玩家扫码付款后正确入账。</div>
+<b>逻辑</b><div>可充区间 = 层级限额与配置最小 / 最大金额的交集；提交后生成处理中订单并打开 MannyPay 二维码页；MannyPay 确认成功且金额一致才入账，同一订单只入账一次。</div>
+<b>场景 → 方案</b><div><div class="tbl"><table><tr><th>场景</th><th>方案</th></tr><tr><td>MannyPay 下单失败</td><td>不打开支付页，提示「This method is unavailable. Please try another.」，计入渠道失败次数</td></tr><tr><td>关闭二维码页未付款</td><td>回到充值记录页，订单保持处理中，不弹成功弹窗</td></tr><tr><td>二维码过期</td><td>订单记为失败；有效期以 MannyPay 规则为准</td></tr><tr><td>过期记失败后又收到成功</td><td>金额一致时改为成功并入账一次，发短信和 push，不补弹窗</td></tr><tr><td>重复成功通知</td><td>只入账一次</td></tr><tr><td>金额不一致</td><td>不自动入账，转人工核对；通过时按实付金额入账</td></tr><tr><td>签名校验不通过</td><td>不处理，记录告警</td></tr><tr><td>停留期间配置改为维护 / 停用</td><td>点「提交」不下单，提示换方式并刷新支付方式</td></tr></table></div></div>
+<b>依据</b><div>N2 · N3 · N4 · N5 · N6</div></div></section>
+
+<section class="vd-card" id="b3"><h3>3. 主备切换（支付渠道动态配置）</h3><div class="kv">
+<b>作用</b><div>主渠道异常时自动切到备用渠道，减少充值中断。</div>
+<b>逻辑</b><div>MannyPay 配置可被选为其他配置的备用渠道，也可设自己的备用渠道（不能选本渠道）；满足现有 3 条动态调整规则之一即切换，切换后坑位名称不变，记入支付渠道调整记录。</div>
+<b>场景 → 方案</b><div><div class="tbl"><table><tr><th>场景</th><th>方案</th></tr><tr><td>GCash3 达到切换规则，备用渠道为 MannyPay</td><td>坑位改走 MannyPay，前台名称不变</td></tr><tr><td>切换前已生成的订单</td><td>按原渠道处理</td></tr></table></div></div>
+<b>依据</b><div>N16</div></div></section>
+
+<section class="vd-card" id="b4"><h3>4. 代付渠道（绑定银行配置）</h3><div class="kv">
+<b>作用</b><div>指定哪些银行或电子钱包的提款由 MannyPay 出款。</div>
+<b>逻辑</b><div>添加 / 编辑银行配置的代付渠道新增 MannyPay，列表「代付渠道」列直接显示；页面不区分银行是否支持 MannyPay，由运营只给 MannyPay 能出款的银行选择。修改只影响之后发起的出款。</div>
+<b>场景 → 方案</b><div><div class="tbl"><table><tr><th>场景</th><th>方案</th></tr><tr><td>批量替换代付渠道为 MannyPay</td><td>沿用现有</td></tr><tr><td>给 MannyPay 不支持的银行选了 MannyPay</td><td>出款失败，转入出款异常单</td></tr></table></div></div>
+<b>依据</b><div>N8 · N11</div></div></section>
+
+<section class="vd-card" id="b5"><h3>5. 出款与失败处理（提款记录）</h3><div class="kv">
+<b>作用</b><div>运营可以用 MannyPay 出款，失败时有处理路径。</div>
+<b>逻辑</b><div>三方出款的出款类型、重新出款的出款渠道新增 MannyPay，不按金额置灰；发起后订单出款中，不能重复发起；明确成功则出款成功；明确失败才转入出款异常单，异常原因显示「其它：MannyPay 返回的原因」；结果未知时保持出款中，查询确认后更新，不重新发起；转单后又收到成功时标记「疑似重复出款」并告警，由财务核对追回。MannyPay 出款纳入现有渠道熔断告警和切换记录。</div>
+<b>场景 → 方案</b><div><div class="tbl"><table><tr><th>场景</th><th>方案</th></tr><tr><td>单笔超过 ₱50,000（InstaPay 上限）</td><td>MannyPay 返回失败，转入出款异常单，换渠道重新出款</td></tr><tr><td>渠道余额不足 / 收款账户无效</td><td>同上，异常原因显示返回信息</td></tr><tr><td>想减少大额失败</td><td>运营可调整现有「大额提现拆单设置」（全局、GCash、Maya 分别设置；银行卡提现是否拆单以现有规则为准）</td></tr></table></div></div>
+<b>依据</b><div>N9 · N10 · N12</div></div></section>
+
+<section class="vd-card" id="b6"><h3>6. 手续费（手续费设置）</h3><div class="kv">
+<b>作用</b><div>记录 MannyPay 充值、出款的手续费。</div>
+<b>逻辑</b><div>新增规则的充值 / 出款渠道新增 MannyPay；手续费模式、类型、值、状态沿用现有；同一类型 + 渠道只能有一条启用的规则；保存后之后成功的订单按新规则计算，已成功的不重算。</div>
+<b>场景 → 方案</b><div><div class="tbl"><table><tr><th>场景</th><th>方案</th></tr><tr><td>重复新增启用的同类规则</td><td>提示「该渠道已有启用的规则」</td></tr></table></div></div>
+<b>依据</b><div>N13</div></div></section>
+
+<section class="vd-card" id="b7"><h3>7. 报表、余额与监控</h3><div class="kv">
+<b>作用</b><div>按渠道看 MannyPay 的数据和账户余额。</div>
+<b>逻辑</b><div>财务总表的充值 / 出款渠道筛选、监控大盘的渠道标签新增 MannyPay，口径沿用现有；财务数据新增「资金余额(MannyPay)」，展示逻辑和现有资金余额卡片一致。</div>
+<b>场景 → 方案</b><div><div class="tbl"><table><tr><th>余额</th><th>显示</th></tr><tr><td>≥ ₱5,000,000</td><td>正常</td></tr><tr><td>≥ ₱2,000,000 且 &lt; ₱5,000,000</td><td>黄色</td></tr><tr><td>&lt; ₱2,000,000</td><td>红色</td></tr><tr><td>查询失败</td><td>显示「-」和「查询失败，请稍后刷新」</td></tr></table></div></div>
+<b>依据</b><div>N14 · N15</div></div></section>
+
+</div>
+
+<h2 id="v4">四、关键点汇总</h2>
+<h3 id="v4-1">① 关键规则与数值</h3>
+<div class="tbl"><table data-fit>
+<tr><th>项目</th><th>规则 / 数值</th></tr>
+<tr><td>收款方式</td><td class="w">QRPh 二维码，玩家用 GCash 扫码</td></tr>
+<tr><td>出款通道</td><td class="w">InstaPay，单笔上限 ₱50,000；超额由 MannyPay 返回失败</td></tr>
+<tr><td>入账</td><td class="w">成功且金额一致才入账，同一订单只入账一次</td></tr>
+<tr><td>余额预警</td><td class="w">&lt; ₱5,000,000 黄色，&lt; ₱2,000,000 红色（固定）</td></tr>
+<tr><td>主备切换</td><td class="w">沿用现有 3 条动态调整规则</td></tr>
+<tr><td>不做</td><td class="w">PESONet 出款、Scan-to-Pay、Intrabank 划转、前台提款页改动</td></tr>
+</table></div>
+<h3 id="v4-2">② 未完全确认的问题</h3>
+<ul>
+<li>QA 当前没有出款异常单，「重新出款」弹窗的现有渠道选项未在 QA 核对，上线前按现有后台核对。</li>
+<li>前台标签名称「GCash6」只是示例，实际以运营配置的「支付名称」为准。</li>
+</ul>
+<h3 id="v4-3">③ 需运营确认</h3>
+<ul>
+<li>MannyPay 配置的支付名称、层设置、最小 / 最大金额和排序。</li>
+<li>入款、出款手续费值（按与 MannyPay 约定的标准）。</li>
+<li>哪些银行的代付渠道切换为 MannyPay（只选 MannyPay 能出款的银行）。</li>
+<li>是否调整「大额提现拆单设置」来减少超额失败。</li>
+</ul>
+
+</article></div>
+</div>
+<script>window.NAV_ROOT = "../";</script>
+<script src="../assets/nav-data.js"></script>
+<script src="../assets/nav.js"></script>
+</body>
+</html>

@@ -1,0 +1,370 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>MannyPay支付渠道接入-充值页</title>
+<link rel="stylesheet" href="../../assets/style.css">
+<style>
+/* 页面样式参照线上 Wallet 页截图（2026-11-04 用户提供） */
+.app.mp-app{--app-bg:#EEF2F7;--app-fg:#1F2329;--app-muted:#8A8F99;color:#1F2329;font-family:"Microsoft YaHei",Arial,sans-serif}
+.mp-app .sb{color:#1F2329;background:#fff}
+.mp-app .view{padding:0 0 74px;gap:0;background:#EEF2F7}
+.mp-app .view.mp-plain{padding-bottom:16px}
+.mp-app .view>*{flex-shrink:0}
+.mp-head{position:sticky;top:0;z-index:3;background:#fff;text-align:center;font-weight:700;font-size:17px;line-height:44px}
+.mp-head .mp-back{all:unset;cursor:pointer;position:absolute;left:14px;top:0;font-size:24px;line-height:44px;color:#1F2329}
+.mp-bal{position:relative;margin:10px 12px 8px;padding:16px 18px;border-radius:14px;color:#fff;background:linear-gradient(90deg,#5B2BE0 0%,#3C7BF0 55%,#10D98A 100%);overflow:hidden}
+.mp-bal small{display:block;font-size:13px;opacity:.9}
+.mp-bal b{display:flex;align-items:center;gap:8px;font-size:26px;margin-top:4px}
+.mp-bal .mp-ref{font-size:16px;color:#FFD54A}
+.mp-coin{position:absolute;right:16px;top:12px;width:62px;height:62px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#FFE58A,#F5A623 70%);display:grid;place-items:center;font-size:28px;font-weight:800;color:#fff;box-shadow:0 6px 14px rgba(0,0,0,.18)}
+.mp-card{margin:0 12px 10px;background:#fff;border-radius:12px;padding:12px}
+.mp-tabs{display:grid;grid-template-columns:1fr 1fr;margin:0 12px;border-radius:12px 12px 0 0;overflow:hidden;background:#fff}
+.mp-tabs button{all:unset;cursor:pointer;text-align:center;font-size:17px;font-weight:700;line-height:46px;color:#1F2329;background:#F6F7F9}
+.mp-tabs button[aria-selected="true"]{color:#10C47A;background:linear-gradient(180deg,#E3FAF0,#fff)}
+.mp-tabs button[aria-selected="true"]::after{content:"";display:block;width:28px;height:3px;border-radius:2px;background:#10C47A;margin:-6px auto 0}
+.mp-tabcard{margin-top:0;border-radius:0 0 12px 12px}
+.mp-sec{font-size:15px;font-weight:700;color:#4A4F57;margin:2px 0 10px}
+.mp-ways{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
+.mp-way{position:relative;display:flex;align-items:center;gap:6px;height:42px;padding:0 8px;border:1px solid #DCDFE6;border-radius:8px;background:#fff;font-size:13px;color:#1F2329;cursor:pointer}
+.mp-way.on{border-color:#10C47A;background:#EFFBF5}
+.mp-way.off{opacity:.45;cursor:not-allowed}
+.mp-ic{flex:none;width:24px;height:24px;border-radius:50%;display:grid;place-items:center;font-size:11px;font-weight:800;color:#fff;background:#1E6FE8}
+.mp-ic.maya{background:#111;color:#3DDC84;font-size:8px}
+.mp-ic.bank{border-radius:6px;background:#19C27A}
+.mp-tag{position:absolute;right:4px;top:-9px;padding:0 6px;border-radius:8px;font-size:10px;line-height:16px;color:#fff;background:#E5322D}
+.mp-mt{position:absolute;right:4px;bottom:-8px;padding:0 5px;border-radius:6px;font-size:10px;line-height:14px;color:#fff;background:#E6A23C}
+.mp-mnt{margin-top:8px;padding:7px 10px;border-radius:6px;background:#FDF6EC;color:#B88230;font-size:12px}
+.mp-promo{display:flex;align-items:center;gap:10px;padding:8px 10px;border:1px solid #10C47A;border-radius:10px;background:linear-gradient(90deg,#fff,#E6FAF1)}
+.mp-promo .rd{width:14px;height:14px;border-radius:50%;border:4px solid #10C47A;flex:none;box-sizing:border-box}
+.mp-promo .up{padding:4px 10px;border-radius:6px;color:#fff;font-weight:800;font-size:16px;background:linear-gradient(90deg,#FF9A3D,#FF6A00);line-height:1.1;text-align:center}
+.mp-promo .up small{display:block;font-size:9px;font-weight:600}
+.mp-promo b{display:block;font-size:13px}.mp-promo b em{font-style:normal;color:#E5322D}
+.mp-promo span{font-size:11px;color:#606266}
+.mp-amt{display:flex;align-items:center;gap:8px;height:40px;padding:0 14px;border:1px solid #DCDFE6;border-radius:20px;background:#fff}
+.mp-amt.bad{border-color:#F56C6C}
+.mp-amt span{font-weight:700}
+.mp-amt input{all:unset;flex:1;min-width:0;font-size:14px;color:#1F2329}
+.mp-amt input::placeholder{color:#A0A4AB}
+.mp-err{font-size:12px;color:#F56C6C;min-height:16px;margin:4px 0 2px 14px}
+.mp-quick{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.mp-quick button{all:unset;cursor:pointer;position:relative;text-align:center;line-height:44px;border:1px solid #DCDFE6;border-radius:8px;background:#fff;font-size:17px;font-weight:600;color:#1F2329}
+.mp-quick button.on{border-color:#10C47A;color:#10C47A}
+.mp-quick .bn{position:absolute;right:-1px;top:-9px;padding:0 5px;border-radius:6px 6px 0 6px;font-size:11px;line-height:16px;font-weight:700;color:#fff;background:#FFA21A}
+.mp-quick .hb{position:absolute;left:-1px;top:4px;padding:0 5px;border-radius:0 6px 6px 0;font-size:10px;line-height:15px;color:#fff;background:#E5322D}
+.mp-quick .hb.vip{background:#7B5CFF}
+.mp-submit{all:unset;cursor:pointer;display:block;margin:6px 12px 10px;text-align:center;line-height:46px;border-radius:12px;font-size:17px;font-weight:700;color:#fff;background:linear-gradient(90deg,#14D18A,#9B5CFF)}
+.mp-ins{margin:4px 14px 12px;font-size:12px;color:#8A8F99;line-height:1.6}
+.mp-ins b{display:block;font-size:14px;color:#4A4F57;margin-bottom:4px}
+.mp-acc{display:flex;align-items:center;gap:10px}
+.mp-acc .box{flex:1;display:flex;justify-content:space-between;align-items:center;height:40px;padding:0 14px;border-radius:20px;background:#F3F5F8;font-weight:700}
+.mp-acc .box a{color:#10C47A;font-weight:600;font-size:13px;text-decoration:none;cursor:pointer}
+.mp-wd{font-size:13px;color:#606266;margin-top:10px}.mp-wd b{color:#1F2329}
+.mp-nav{position:absolute;left:0;right:0;bottom:0;z-index:4;display:grid;grid-template-columns:repeat(5,1fr);height:58px;background:#fff;border-top:1px solid #EBEEF5}
+.mp-nav button{all:unset;cursor:pointer;display:grid;place-items:center;align-content:center;gap:2px;font-size:11px;color:#606266}
+.mp-nav button i{font-style:normal;font-size:17px;line-height:1}
+.mp-nav button.on{color:#10C47A;font-weight:700}
+.mp-third{min-height:100%;background:#F5F7FA}
+.mp-third .bar{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:#fff;border-bottom:1px solid #EBEEF5;font-size:13px;color:#606266}
+.mp-third .bar button{all:unset;cursor:pointer;font-size:22px;color:#606266;padding:0 4px}
+.mp-qrbox{margin:16px 14px;padding:16px;border-radius:10px;background:#fff;text-align:center}
+.mp-qr{width:170px;height:170px;margin:10px auto;background:repeating-linear-gradient(90deg,#222 0 6px,#fff 6px 12px),repeating-linear-gradient(0deg,#222 0 6px,#fff 6px 12px);background-blend-mode:difference;border:8px solid #fff;outline:1px solid #DCDFE6}
+.mp-big{font-size:22px;font-weight:700}
+.mp-small{font-size:12px;color:#909399;margin-top:6px}
+.mp-res{margin:40px 16px 0;text-align:center}
+.mp-res .ic{width:56px;height:56px;margin:0 auto 10px;border-radius:50%;line-height:56px;font-size:28px;color:#fff;background:#10C47A}
+.mp-res h3{margin:6px 0;font-size:17px}
+.mp-res p{margin:4px 0;font-size:13px;color:#606266}
+.mp-row3{display:flex;gap:8px;margin-top:16px}
+.mp-row3 button{all:unset;cursor:pointer;flex:1;text-align:center;line-height:40px;border-radius:10px;font-size:14px;font-weight:600;border:1px solid #10C47A;color:#10C47A}
+.mp-row3 button:first-child{color:#fff;background:#10C47A}
+.mp-rec{display:flex;justify-content:space-between;margin:12px;padding:12px;border-radius:10px;background:#fff}
+.mp-rec p{margin:4px 0 0;font-size:12px;color:#909399}
+</style>
+</head>
+<body>
+<div class="with-nav">
+<div class="stage">
+  <div class="app mp-app" role="region" aria-label="手机画面">
+    <div class="sb"><span>9:41</span><span>●●● 5G</span></div>
+
+    <!-- ============ 钱包 · 充值（默认） ============ -->
+    <div class="view" id="vDeposit">
+      <div class="mp-head">钱包</div>
+      <div class="mp-bal"><small>账户余额：</small><b>₱ 568.78 <span class="mp-ref">⟳</span></b><span class="mp-coin">₱</span></div>
+      <div class="mp-tabs" role="tablist">
+        <button type="button" role="tab" aria-selected="true" data-go="deposit" data-dev="D19">充值</button>
+        <button type="button" role="tab" aria-selected="false" data-go="withdraw" data-dev="D19">提现</button>
+      </div>
+      <div class="mp-card mp-tabcard">
+        <div class="mp-sec">支付方式</div>
+        <div class="mp-ways" id="ways">
+          <div class="mp-way" data-way="gcash" data-min="10" data-max="500000" tabindex="0" data-dev="D09"><span class="mp-ic">G</span>GCASH<span class="mp-tag">幸运转盘</span></div>
+          <div class="mp-way" data-way="gcash3" data-min="10" data-max="500000" tabindex="0" data-dev="D09"><span class="mp-ic">G</span>GCash3</div>
+          <div class="mp-way" data-way="maya" data-min="10" data-max="500000" tabindex="0" data-dev="D09"><span class="mp-ic maya">maya</span>Maya</div>
+          <div class="mp-way" data-way="gcash4" data-min="10" data-max="500000" tabindex="0" data-dev="D09"><span class="mp-ic">G</span>GCash4</div>
+          <div class="mp-way" data-way="bank" data-min="10" data-max="500000" tabindex="0" data-dev="D09"><span class="mp-ic bank">▤</span>Bank Card</div>
+          <div class="mp-way on glow" data-way="mannypay" data-min="100" data-max="50000" id="wayMp" tabindex="0" data-dev="D01"><span class="mp-ic">G</span><span id="mpName">GCash6</span><span class="mp-mt" id="mpMnt" hidden>维护中</span></div>
+        </div>
+        <div class="mp-mnt" id="mpMntTip" hidden data-dev="D07">该支付方式维护中，预计 18:00 恢复（示意，取后台「前台维护说明」）</div>
+      </div>
+      <div class="mp-card">
+        <div class="mp-sec">优惠活动</div>
+        <div class="mp-promo" data-dev="D19"><span class="rd"></span><span class="up"><small>最高</small>10%</span><div><b>封顶 <em>₱ 200</em></b><span>0 倍流水（充值 + 奖金）</span></div></div>
+      </div>
+      <div class="mp-card">
+        <div class="mp-sec">充值金额</div>
+        <div class="mp-amt" id="amtBox"><span>₱</span><input id="amt" inputmode="numeric" placeholder="限额 100～50,000" aria-label="充值金额" data-dev="D03"></div>
+        <div class="mp-err" id="amtErr"></div>
+        <div class="mp-quick" id="quick">
+          <button type="button" data-v="100" data-dev="D02">+100<span class="bn">+10</span></button>
+          <button type="button" data-v="200" data-dev="D02">+200<span class="bn">+20</span></button>
+          <button type="button" data-v="300" data-dev="D02">+300<span class="bn">+30</span></button>
+          <button type="button" data-v="500" data-dev="D02">+500<span class="bn">+50</span><span class="hb">热门</span></button>
+          <button type="button" data-v="1000" data-dev="D02">+1,000<span class="bn">+100</span></button>
+          <button type="button" data-v="5000" data-dev="D02">+5,000<span class="bn">+200</span></button>
+          <button type="button" data-v="10000" data-dev="D02">+10,000<span class="bn">+200</span><span class="hb vip">VIP</span></button>
+          <button type="button" data-v="20000" data-dev="D02">+20,000<span class="bn">+200</span><span class="hb vip">VIP</span></button>
+          <button type="button" data-v="100000" data-dev="D02">+100,000<span class="bn">+200</span><span class="hb vip">VIP</span></button>
+        </div>
+      </div>
+      <button class="mp-submit" type="button" id="goPay" data-dev="D04">提交</button>
+      <div class="mp-ins"><b>充值说明：</b>1. 支付成功后通常 1-15 分钟到账，到账后会收到站内通知。</div>
+    </div>
+
+    <!-- ============ 钱包 · 提现（沿用现有，本需求不改） ============ -->
+    <div class="view" id="vWithdraw" hidden>
+      <div class="mp-head">钱包</div>
+      <div class="mp-bal"><small>账户余额：</small><b>₱ 568.78 <span class="mp-ref">⟳</span></b><span class="mp-coin">₱</span></div>
+      <div class="mp-tabs" role="tablist">
+        <button type="button" role="tab" aria-selected="false" data-go="deposit" data-dev="D19">充值</button>
+        <button type="button" role="tab" aria-selected="true" data-go="withdraw" data-dev="D19">提现</button>
+      </div>
+      <div class="mp-card mp-tabcard">
+        <div class="mp-sec">支付方式</div>
+        <div class="mp-ways">
+          <div class="mp-way on" data-dev="D19"><span class="mp-ic">G</span>GCash</div>
+          <div class="mp-way" data-dev="D19"><span class="mp-ic maya">maya</span>Maya</div>
+          <div class="mp-way" data-dev="D19"><span class="mp-ic bank">▤</span>Bank Card</div>
+        </div>
+      </div>
+      <div class="mp-card">
+        <div class="mp-sec">账户</div>
+        <div class="mp-acc"><span class="mp-ic">G</span><div class="box">099****1234<a data-dev="D19">更换</a></div></div>
+      </div>
+      <div class="mp-card">
+        <div class="mp-sec">提现金额</div>
+        <div class="mp-amt"><span>₱</span><input inputmode="numeric" placeholder="限额 ₱100～100,000,000" aria-label="提现金额" data-dev="D19"></div>
+        <div class="mp-quick" style="margin-top:12px">
+          <button type="button" data-dev="D19">+100</button><button type="button" data-dev="D19">+200</button><button type="button" data-dev="D19">+300</button>
+          <button type="button" data-dev="D19">+1,000</button><button type="button" data-dev="D19">+10,000</button><button type="button" data-dev="D19">+100,000</button>
+        </div>
+        <div class="mp-wd">可提现金额：<b>₱568</b></div>
+      </div>
+      <button class="mp-submit" type="button" data-dev="D19">提交</button>
+      <p class="ui-reqnote" style="margin:0 12px">提现页沿用现有，本需求不改；玩家提现到 GCash 等账户时，后台按「绑定银行配置」的代付渠道出款，代付渠道可设为 MannyPay。</p>
+    </div>
+
+    <!-- ============ MannyPay 二维码支付页（三方页面） ============ -->
+    <div class="view mp-plain" id="vQr" hidden>
+      <div class="mp-third">
+        <div class="bar"><span>MannyPay</span><button type="button" id="qrClose" aria-label="关闭" data-dev="D05">×</button></div>
+        <div class="mp-qrbox">
+          <div class="mp-small">请打开 GCash 扫码支付</div>
+          <div class="mp-big" id="qrAmt">₱ 500.00</div>
+          <div class="mp-qr" role="img" aria-label="付款二维码"></div>
+          <div class="mp-small">订单号：R01397637207380115456</div>
+        </div>
+        <p class="ui-reqnote" style="margin:0 14px">此页为 MannyPay 提供的三方支付页，内容和样式以 MannyPay 为准，平台只负责打开和关闭。</p>
+      </div>
+    </div>
+
+    <!-- ============ 充值成功（沿用现有充值成功弹窗） ============ -->
+    <div class="view mp-plain" id="vOk" hidden>
+      <div class="mp-head"><button class="mp-back" type="button" data-go="deposit" aria-label="返回" data-dev="D19">‹</button>钱包</div>
+      <div class="mp-res">
+        <div class="ic">✓</div>
+        <h3>充值成功</h3>
+        <p>支付方式：<span id="okName">GCash6</span></p>
+        <p>金额：<b id="okAmt">₱ 500.00</b></p>
+        <div class="mp-row3">
+          <button type="button" data-go="deposit" data-dev="D06">确认</button>
+          <button type="button" data-dev="D06">去游戏</button>
+          <button type="button" data-go="record" data-dev="D06">充值记录</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ 充值记录（沿用现有，只演示 MannyPay 订单状态） ============ -->
+    <div class="view mp-plain" id="vRecord" hidden>
+      <div class="mp-head"><button class="mp-back" type="button" data-go="deposit" aria-label="返回" data-dev="D19">‹</button>充值记录</div>
+      <div class="mp-rec">
+        <div><b>GCash6</b><p>2026-11-04 14:05:32</p></div>
+        <div style="text-align:right"><b id="recAmt">₱500.00</b><p id="recSt" data-dev="D08">处理中</p></div>
+      </div>
+      <div id="recMore"></div>
+      <div class="mp-small" id="recEmpty" hidden style="text-align:center;margin-top:30px">暂无记录</div>
+      <button class="ui-loadmore" type="button" id="loadMore" data-dev="D18">加载更多</button>
+    </div>
+
+    <nav class="mp-nav" id="mpNav" aria-label="底部导航">
+      <button type="button" data-dev="D19"><i>⌂</i>首页</button>
+      <button type="button" data-dev="D19"><i>✉</i>聊天</button>
+      <button type="button" data-dev="D19"><i>🎁</i>邀请</button>
+      <button type="button" class="on" data-dev="D19"><i>▣</i>钱包</button>
+      <button type="button" data-dev="D19"><i>☺</i>我的</button>
+    </nav>
+    <div class="toast" id="toast" role="status" hidden></div>
+  </div>
+
+  <aside class="notes">
+    <h2>钱包 · 充值页（新增 MannyPay 标签）</h2>
+    <p class="sub">入口：底部导航「Wallet」› Deposit。页面样式按线上 Wallet 页。「Payment Method」在现有标签（GCASH、GCash3、Maya、GCash4、Bank Card）之外新增一个标签（带淡色光晕），它是后台「在线支付配置」里支付类型为 MannyPay 的一条配置，名称取「支付名称」（示例 GCash6）。选中后点「提交」，打开 MannyPay 二维码支付页，玩家用 GCash 扫码付款，到账后弹出现有充值成功弹窗。Withdraw 页沿用现有、不改。</p>
+    <h3>模拟场景</h3>
+    <div class="sim">
+      <button type="button" data-go="deposit"><span class="simtag">页面</span>充值</button>
+      <button type="button" data-go="withdraw"><span class="simtag">页面</span>提现（不改）</button>
+      <button type="button" data-go="qr"><span class="simtag">页面</span>二维码支付页</button>
+      <button type="button" data-go="ok"><span class="simtag">结果</span>充值成功</button>
+      <button type="button" data-go="record"><span class="simtag">页面</span>充值记录</button>
+    </div>
+    <h3>模拟操作</h3>
+    <div class="sim" id="simPanel"></div>
+    <h3>规则批注</h3>
+    <ol>
+      <li><b>显示</b>：MannyPay 配置状态为「正常」、用户在「层设置」的层级内、所在地区不在不可见地区时显示；名称、排序取该配置，图标沿用现有 GCash 类标签图标，前台不显示「MannyPay」字样。其他标签沿用现有。<span class="ref">PRD 规则 N1 · F01-01 充值方式展示与金额校验</span></li>
+      <li><b>状态</b>：配置为「维护」时标签置灰并显示前台维护说明，不能选；「停用」时不显示（沿用现有）。<span class="ref">PRD 规则 N7</span></li>
+      <li><b>金额</b>：金额框提示「Limit 最小～最大」取所选标签配置的最小 / 最大金额，与支付层级限额取交集；超出时提示「请输入 100-50000 之间的金额」（数字取实际区间）。快捷金额和赠送角标沿用现有。<span class="ref">PRD 规则 N2 · F01-01</span></li>
+      <li><b>下单</b>：点「提交」后生成处理中的充值订单并打开 MannyPay 二维码支付页；MannyPay 下单失败时不打开支付页，提示「该支付方式暂不可用，请选择其他方式」，并计入失败次数。<span class="ref">PRD 规则 N3 · F01-02 二维码支付</span></li>
+      <li><b>主备切换</b>：MannyPay 可设为其他标签的备用渠道，也可设置自己的备用渠道；满足现有 3 条动态调整规则之一时坑位切到备用渠道，标签名称不变。<span class="ref">PRD 规则 N16</span></li>
+      <li><b>到账</b>：只有 MannyPay 确认支付成功且金额一致时才入账并弹出充值成功弹窗；同一订单只入账一次。<span class="ref">PRD 规则 N5 · F01-03 支付结果与入账</span></li>
+      <li><b>通知异常</b>：通知金额与订单金额不一致时不自动入账、转人工核对；通知签名校验不通过时不处理。<span class="ref">PRD 规则 N5</span></li>
+      <li><b>到账通知</b>：充值金额受配置最小金额限制（≥ ₱1），到账短信和 push 按现有规则发送。<span class="ref">PRD 规则 N5</span></li>
+      <li><b>充值记录</b>：沿用现有，滚到底「加载更多」，每次 10 条，全部加载后显示「没有更多了」，无数据显示「暂无记录」。<span class="ref">PRD 5.6 列表分页</span></li>
+      <li><b>未付款关闭</b>：关闭二维码页后回到充值记录页，订单保持「处理中」，不弹成功弹窗；二维码有效期以平台现有规则和 MannyPay 规则为准，过期未付款的订单记为「失败」。<span class="ref">PRD 规则 N4、N6 · F01-03</span></li>
+    </ol>
+    <h3>评审结论</h3>
+    <ol>
+      <li><b>二维码有效期</b>：以平台现有规则和 MannyPay 给出的规则为准。<span class="ref">PRD 待确认 Q1</span></li>
+      <li><b>前台名称</b>：新增一个 GCash 类标签，名称取后台「支付名称」（示例 GCash6）。<span class="ref">PRD 待确认 Q6</span></li>
+      <li><b>下单失败文案</b>：定稿为「This method is unavailable. Please try another.」，线上已有同类提示时用线上文案。</li>
+    </ol>
+    <div class="pager"><span></span><a href="../admin/MannyPay支付渠道接入-在线支付配置.html">下一页：在线支付配置 →</a></div>
+  </aside>
+</div>
+</div>
+<script>window.NAV_ROOT = "../../";</script>
+<script src="../../assets/nav-data.js"></script>
+<script src="../../assets/nav.js"></script>
+<script src="../../assets/proto-en.js"></script>
+<script src="../../assets/proto.js"></script>
+<script>
+P.init({ defaults: { platform: "H5", mpStatus: "normal", gcCh: "MannyPay" } });
+P.panel(document.getElementById("simPanel"), [
+  { title: "切换端", items: [{ type: "select", key: "platform", label: "端", options: ["H5", "iOS", "Android"] }] },
+  { title: "切换后台配置项", items: [
+    { type: "radio", key: "gcCh", options: [["MannyPay", "GCash6 坑位当前渠道：MannyPay"], ["PayMongo", "备用渠道 PayMongo"]] },
+    { type: "radio", key: "mpStatus", options: [["normal", "MannyPay 配置：正常"], ["maint", "维护"], ["off", "停用"]] }
+  ] },
+  { title: "注入异常", items: [
+    { type: "button", label: "MannyPay 下单失败", run: function () { P.set("mpFail", true); P.note("下次点「提交」时模拟 MannyPay 下单失败"); } },
+    { type: "button", label: "达到切换规则（如最近 5 分钟下单失败 2 次）", run: function () { P.set("gcCh", "PayMongo"); P.note("GCash6 坑位已切到备用渠道 PayMongo，标签名称不变，支付渠道调整记录新增一条"); } },
+    { type: "button", label: "模拟 MannyPay 通知支付成功", run: function () { P.set("recSt", "成功"); location.hash = "ok"; } },
+    { type: "button", label: "模拟重复收到成功通知", run: function () { P.note("同一订单已入账，不重复入账，余额不变"); } },
+    { type: "button", label: "通知金额与订单金额不一致", run: function () { P.set("recSt", "处理中"); location.hash = "record"; P.note("金额不一致：不自动入账，订单保持处理中，转人工核对（后台充值记录「通过 / 驳回」）"); } },
+    { type: "button", label: "通知签名校验不通过", run: function () { P.note("签名校验不通过：通知不处理，余额和订单状态都不变，记录告警"); } },
+    { type: "button", label: "模拟二维码过期未付款", run: function () { P.set("recSt", "失败"); location.hash = "record"; } }
+  ] },
+  { title: "充值记录", items: [
+    { type: "button", label: "多页（共 25 条）", run: function () { P.set("recTotal", 25); location.hash = "record"; } },
+    { type: "button", label: "只有 1 条", run: function () { P.set("recTotal", 1); location.hash = "record"; } },
+    { type: "button", label: "空列表", run: function () { P.set("recTotal", 0); location.hash = "record"; } }
+  ] },
+  { title: "演示值说明", items: [{ type: "note", text: "GCash6 演示限额 ₱100 - ₱50,000，其他标签 ₱10 - ₱500,000；充值记录每次加载 10 条；余额、订单号、金额均为虚构" }] },
+  { items: [{ type: "reset" }] }
+]);
+(function () {
+  var VIEWS = { deposit: "vDeposit", withdraw: "vWithdraw", qr: "vQr", ok: "vOk", record: "vRecord" };
+  var amt = document.getElementById("amt"), err = document.getElementById("amtErr"), box = document.getElementById("amtBox");
+  function cur() { return document.querySelector("#ways .mp-way.on"); }
+  function fmt(n) { return Number(n).toLocaleString("en-US"); }
+  function setLimit() { var w = cur(); if (w) amt.placeholder = "限额 " + fmt(w.dataset.min) + "～" + fmt(w.dataset.max); }
+  function show(view) {
+    if (!VIEWS[view]) view = "deposit";
+    Object.keys(VIEWS).forEach(function (k) { document.getElementById(VIEWS[k]).hidden = k !== view; });
+    document.getElementById("mpNav").hidden = view !== "deposit" && view !== "withdraw";
+    if (location.hash.slice(1) !== view) history.replaceState(null, "", "#" + view);
+    if (view === "record") { document.getElementById("recSt").textContent = P.get("recSt") || "处理中"; resetRec(); }
+    if (window.self !== window.top) window.parent.postMessage({ type: "proto-view", view: view }, "*");
+  }
+  function applyStatus() {
+    var st = P.get("mpStatus"), w = document.getElementById("wayMp");
+    w.hidden = st === "off";
+    w.classList.toggle("off", st === "maint");
+    document.getElementById("mpMnt").hidden = st !== "maint";
+    document.getElementById("mpMntTip").hidden = st !== "maint";
+    if (st !== "normal" && w.classList.contains("on")) { w.classList.remove("on"); document.querySelector('#ways [data-way="gcash"]').classList.add("on"); }
+    if (st === "normal" && !cur()) w.classList.add("on");
+    setLimit();
+  }
+  window.addEventListener("proto-change", function (e) {
+    if (e.detail.key === "mpStatus" || e.detail.key === "*") applyStatus();
+    if (e.detail.key === "platform") P.note({ H5: "H5：在当前页打开 MannyPay 支付页，付款后回跳平台", iOS: "iOS：在 App 内置浏览器打开 MannyPay 支付页，关闭后回到 App", Android: "Android：在 App 内置浏览器打开 MannyPay 支付页，关闭后回到 App" }[e.detail.value] + "（沿用现有三方支付页打开方式；PC 在新标签打开）");
+  });
+  /* 充值记录：每次加载 10 条，滚到底「加载更多」 */
+  var rec = { shown: 0 }, PER = 10;
+  function total() { var t = P.get("recTotal"); return t === undefined || t === null ? 1 : +t; }
+  function resetRec() {
+    var t = total(); rec.shown = 0;
+    document.getElementById("recMore").innerHTML = "";
+    document.querySelector("#vRecord .mp-rec").hidden = t === 0;
+    document.getElementById("recEmpty").hidden = t !== 0;
+    document.getElementById("loadMore").hidden = t === 0;
+    drawTo(Math.min(PER, t));
+  }
+  document.getElementById("loadMore").onclick = function () {
+    var b = this; if (b.disabled) return; b.textContent = "加载中…"; b.disabled = true;
+    setTimeout(function () { drawTo(Math.min(total(), rec.shown + PER)); }, 500);
+  };
+  function drawTo(target) {
+    var more = document.getElementById("recMore"), btn = document.getElementById("loadMore");
+    for (var i = Math.max(1, rec.shown); i < target; i++) {
+      var d = document.createElement("div"); d.className = "mp-rec";
+      d.innerHTML = "<div><b>" + (i % 3 ? "GCash6" : "GCash3") + "</b><p>2026-11-0" + (3 - (i % 3)) + " 1" + (i % 10) + ":2" + (i % 6) + ":05</p></div><div style='text-align:right'><b>₱" + (100 * ((i % 5) + 1)) + ".00</b><p>成功</p></div>";
+      more.appendChild(d);
+    }
+    rec.shown = target; btn.disabled = target >= total(); btn.textContent = target >= total() ? "没有更多了" : "加载更多";
+  }
+  document.getElementById("ways").addEventListener("click", function (e) {
+    var w = e.target.closest(".mp-way"); if (!w || w.classList.contains("off")) return;
+    document.querySelectorAll("#ways .mp-way").forEach(function (x) { x.classList.toggle("on", x === w); });
+    err.textContent = ""; box.classList.remove("bad"); setLimit();
+  });
+  document.getElementById("quick").addEventListener("click", function (e) {
+    var b = e.target.closest("button"); if (!b) return;
+    document.querySelectorAll("#quick button").forEach(function (x) { x.classList.toggle("on", x === b); });
+    amt.value = b.dataset.v; err.textContent = ""; box.classList.remove("bad");
+  });
+  document.getElementById("goPay").onclick = function () {
+    var w = cur(), v = Number(amt.value), mn = +w.dataset.min, mx = +w.dataset.max;
+    if (!amt.value || isNaN(v) || v < mn || v > mx) { err.textContent = "请输入 " + mn + "-" + mx + " 之间的金额"; box.classList.add("bad"); return; }
+    err.textContent = ""; box.classList.remove("bad");
+    if (w.id !== "wayMp") { P.note("其他标签沿用现有支付流程，原型不展开"); return; }
+    if (P.get("gcCh") === "PayMongo") { P.note("GCash6 坑位已切到备用渠道 PayMongo，打开 PayMongo 支付页（沿用现有，原型不展开）"); return; }
+    if (P.get("mpFail")) { P.set("mpFail", false); P.toast("该支付方式暂不可用，请选择其他方式"); return; }
+    var s = "₱ " + v.toFixed(2);
+    document.getElementById("qrAmt").textContent = s; document.getElementById("okAmt").textContent = s;
+    document.getElementById("recAmt").textContent = "₱" + v.toFixed(2);
+    P.set("recSt", "处理中");
+    show("qr");
+  };
+  document.getElementById("qrClose").onclick = function () { show("record"); };
+  window.addEventListener("hashchange", function () { show(location.hash.slice(1) || "deposit"); });
+  document.addEventListener("click", function (e) { var b = e.target.closest("[data-go]"); if (b) { e.preventDefault(); show(b.dataset.go); } });
+  applyStatus();
+  show(location.hash.slice(1) || "deposit");
+})();
+</script>
+</body>
+</html>
