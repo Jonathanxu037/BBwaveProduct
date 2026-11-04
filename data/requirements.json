@@ -62,6 +62,15 @@
       "version": "v1.0",
       "createdAt": "2026-10-23T05:59:47.929Z",
       "lastUploadAt": null
+    },
+    {
+      "id": 8,
+      "name": "MannyPay支付渠道接入",
+      "owner": "Johnny",
+      "folder": "mannyPay",
+      "version": "v1.0",
+      "createdAt": "2026-11-04T06:48:36.632Z",
+      "lastUploadAt": null
     }
   ]
 }
