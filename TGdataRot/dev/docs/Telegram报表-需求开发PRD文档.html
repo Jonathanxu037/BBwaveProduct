@@ -1,0 +1,635 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Telegram报表-需求开发PRD文档</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<div class="with-nav">
+<div id="fp-banner" class="fp-banner" hidden><span id="fp-text"></span><button type="button" id="fp-clear">清除标注</button></div>
+<div class="desk"><article class="paper" id="doc">
+
+<h1 class="doc-title">Telegram报表 · Telegram 机器人查看两站渠道实时报表 · 产品开发需求文档（PRD）· v1.0</h1>
+<div class="doc-meta"><span>版本：v1.0</span><span>平台：789Bingo、789Games（PH）</span><span>端：Telegram 机器人、两站管理后台</span><span>状态：确认中</span><span>时区：GMT+8</span></div>
+<hr class="doc-rule">
+
+<h2 id="ver">需求版本管理表</h2>
+<div class="tbl"><table id="vtable" data-fit>
+<tr><th>版本号</th><th>时间</th><th>修改人</th><th>概述</th><th>涉及章节</th></tr>
+<tr data-v="v1.0" data-sum="创建Telegram报表 v1.0"><td>v1.0</td><td>2026-11-04</td><td>Joshua</td><td class="w">创建Telegram报表 v1.0</td><td>全文</td></tr>
+</table></div>
+
+<h2 id="toc">全文目录</h2>
+<nav class="toc-full" aria-label="全文目录"><ol id="toc-list"></ol></nav>
+
+<h2 id="c0">0. 本迭代范围</h2>
+<p>本迭代只做下表「本迭代包含」的内容；与其他章节冲突时，以本章为准。</p>
+<div class="tbl"><table data-fit>
+<tr><th>类别</th><th>本迭代包含</th><th>顺延至</th></tr>
+<tr data-fp="F01 F02 F03 F04"><td>Telegram 机器人</td><td class="w">一个机器人账号；输入框旁菜单按钮；按钮矩阵（6 个渠道、代理线查询，进群即显示）；渠道报表和代理线报表（表格按列显示 789Bingo、789Games、全站（两站合计），12 项指标，今日实时与昨日全天对比）；报表发出满 1 小时自动删除、生成新报表时删除旧报表；只在授权的 Telegram 群内使用</td><td>-</td></tr>
+<tr data-fp="F05"><td>管理后台（两站各一份）</td><td class="w">【系统管理 › Telegram报表配置】：渠道配置（5 个渠道绑定代理）、授权群</td><td>-</td></tr>
+<tr><td>其他</td><td class="w">定时自动推送、报表导出、查询日志、运营新增渠道不做</td><td>不顺延</td></tr>
+</table></div>
+<h3 id="c0-1">0.1 需求确认结论（2026-11-04）</h3>
+<div class="tbl"><table data-fit>
+<tr><th>事项</th><th>规则</th></tr>
+<tr><td>自动删除时机</td><td class="w">Telegram 不向机器人提供「对方已读」状态，原诉求「已读后 1 小时删除」改为「报表发出满 1 小时删除」（用户确认）</td></tr>
+<tr><td>昨日对比范围</td><td class="w">今日为 00:00 至生成时刻，昨日取全天 00:00–23:59:59（用户确认）</td></tr>
+<tr><td>两站</td><td class="w">一个机器人；不用按钮区分站点，报表表格里按列同时显示 789Bingo、789Games 和「全站」（两站合计）（用户 2026-11-04 确认）</td></tr>
+<tr><td>使用场景与权限</td><td class="w">机器人只在后台登记的授权 Telegram 群内使用，群内所有成员都可以操作；私聊机器人不返回数据（用户 2026-11-04 确认）</td></tr>
+<tr><td>渠道归属</td><td class="w">后台为每个渠道配置对应代理，用户按所属代理归入渠道（用户确认）</td></tr>
+<tr><td>留存</td><td class="w">按单日计算：次日留存看昨天注册的用户今天是否登录，7日留存看 7 天前注册的用户今天是否登录；不取平均，不设留存周期选项（用户 2026-11-04 确认）</td></tr>
+<tr><td>新增首存人数</td><td class="w">取平台报表「首充人数」口径：时段内完成账号首笔成功存款的用户数，不限注册时间（用户 2026-11-04 确认，Q1）</td></tr>
+<tr><td>投注额</td><td class="w">总投注额、有效投注额分两行都显示（用户 2026-11-04 确认，Q2）</td></tr>
+<tr><td>有效投注额</td><td class="w">取平台报表「自算有效投注」口径（用户 2026-11-04 确认，Q8）</td></tr>
+<tr><td>变化百分比</td><td class="w">每格加显示与昨日全天相比的变化百分比（用户 2026-11-04 确认，Q3）</td></tr>
+<tr><td>代理线查询</td><td class="w">手动输入代理账号（如 kk_sms_g12），查询该代理线的同一套指标（用户 2026-11-04 补充）；可查本站任意代理账号，不限于渠道配置里绑定的代理（用户 2026-11-04 确认）</td></tr>
+<tr><td>使用的群</td><td class="w">目前共 3 个群：「789Bingo 数据群」只看 789Bingo（只在 789Bingo 后台授权）；「789Games 数据群」只看 789Games（只在 789Games 后台授权）；「两站汇总群」看两站分别和合计（两站后台都授权）。按 N4 配置即可，不需要另做功能（用户 2026-11-04 确认）</td></tr>
+<tr><td>显示语言</td><td class="w">机器人菜单、按钮、报表和提示全部显示中文；名称和头像先用示意，上线前运营再定（用户 2026-11-04 确认，Q4）</td></tr>
+<tr><td>内容保护</td><td class="w">报表开启 Telegram 内容保护，禁止转发和保存（用户 2026-11-04 确认，Q5）</td></tr>
+<tr><td>渠道</td><td class="w">固定为 cicc、短信、网红、谷歌、oem 5 个，运营不能在后台新增或停用渠道（用户 2026-11-04 确认，Q6）</td></tr>
+</table></div>
+
+<h2 id="c1">1. 项目概述</h2>
+<div class="tbl"><table data-fit>
+<tr><th>项目</th><th>说明</th></tr>
+<tr><td>需求描述</td><td class="w">新建一个 Telegram 报表机器人，在授权的 Telegram 群内使用：群成员通过输入框左侧「菜单」按钮和输入框下方的报表键盘，选择全站 / cicc / 短信 / 网红 / 谷歌 / oem 渠道，或输入代理账号，在一张表格里按列查看 789Bingo、789Games 和全站（两站合计）12 项指标的今日实时数据与昨日全天对比；报表发出满 1 小时或生成新报表时自动删除。两站管理后台【系统管理 › Telegram报表配置】新增渠道配置和授权群。</td></tr>
+<tr><td>背景与目标</td><td class="w">管理层和运营需要在手机上随时查看各推广渠道和代理线的当日核心数据，不必登录管理后台；报表含经营数据，需要限定查看人员并自动清除。</td></tr>
+<tr><td>范围</td><td class="w">做：机器人查询报表、两站后台配置。不做：定时推送、导出、修改后台现有报表。</td></tr>
+<tr><td>多端范围</td><td class="w">Telegram 群（手机、电脑客户端）：做；Telegram 私聊：不提供数据，只回复引导；789Bingo 后台、789Games 后台：做；玩家端 H5 / App：不涉及。</td></tr>
+<tr><td>时间与时区</td><td class="w">全部时间按 GMT+8；「今日」「昨日」按 GMT+8 自然日。</td></tr>
+</table></div>
+
+<h2 id="c2">2. 整体业务流程</h2>
+<h3 id="c2-1">2.1 主流程（使用人员视角）</h3>
+<div class="flow">
+  <div class="fs key" data-fp="F01-01"><div class="no">1</div><div><b>打开报表键盘</b>：在群里点左下角「菜单」选 /menu，或直接发送 /menu → 机器人校验本群权限（见 <a href="#c2-2">2.2 权限分支</a>）</div></div>
+  <div class="fa">↓</div>
+  <div class="fs" data-fp="F01-02"><div class="no">2</div><div><b>按钮矩阵</b>：打开授权群即在输入框下方显示按钮矩阵</div></div>
+  <div class="fa">↓</div>
+  <div class="fs" data-fp="F02-01 F03-01"><div class="no">3</div><div><b>选查询对象</b>：点渠道按钮；或点「代理线查询」后发送代理账号（见 <a href="#c2-3">2.3 查询对象分支</a>）</div></div>
+  <div class="fa">↓</div>
+  <div class="fs" data-fp="F02-01 F04-02"><div class="no">4</div><div><b>生成报表</b>：显示「正在生成报表…」→ 删除本聊天上一份报表 → 发出新报表</div></div>
+  <div class="fa">↓</div>
+  <div class="fs key" data-fp="F04-01"><div class="no">5</div><div><b>自动删除</b>：报表发出满 1 小时，机器人删除这份报表</div></div>
+</div>
+<h3 id="c2-2">2.2 权限分支（按聊天类型）</h3>
+<div class="brs">
+  <div class="bc" data-fp="F01-03"><h5>A - 授权群</h5><p class="s"><b>发出菜单</b><small>群内所有成员都可操作；报表只显示授权了该群的站点列</small></p></div>
+  <div class="bc" data-fp="F01-03"><h5>B - 群聊 · 群已授权</h5><p class="s"><b>发出菜单</b><small>群内所有成员都可操作；报表只显示授权了该群的站点列</small></p></div>
+  <div class="bc br" data-fp="F01-03"><h5>C - 私聊机器人</h5><p class="s"><b>回复引导</b><small>「本机器人仅在授权群内使用，请在群内发送 /menu。」</small></p></div>
+</div>
+<h3 id="c2-3">2.3 查询对象分支</h3>
+<div class="brs">
+  <div class="bc" data-fp="F02-01"><h5>A - 点渠道按钮</h5><p class="s"><b>渠道报表</b><small>全站或 cicc / 短信 / 网红 / 谷歌 / oem</small></p></div>
+  <div class="bc" data-fp="F03-01"><h5>B - 发送代理账号</h5><p class="s"><b>代理线报表</b><small>回复机器人的提问输入账号，或发送「/agent 代理账号」</small></p></div>
+  <div class="bc br" data-fp="F03-01"><h5>C - 代理账号在有权限的站点都不存在</h5><p class="s"><b>回复未找到提示</b><small>不生成报表，不删除旧报表</small></p></div>
+</div>
+<h3 id="c2-4">2.4 系统时序</h3>
+<div class="tbl"><table data-fit>
+<tr><th>触发</th><th>执行方</th><th>动作</th></tr>
+<tr data-fp="F01-03"><td>收到命令、按钮点击或文字</td><td>机器人服务</td><td class="w">按 N4 校验权限，无权限按 N5 回复</td></tr>
+<tr data-fp="F02-01 F03-01"><td>点渠道、发送代理账号、重试</td><td>机器人服务、两站数据</td><td class="w">按有权限的站点和查询对象，分站点统计生成时刻的数据并汇总全站列（N10–N22）</td></tr>
+<tr data-fp="F04-02"><td>新报表发出</td><td>机器人服务</td><td class="w">删除本聊天之前未删除的报表和失败提示（N27），新报表开始计时</td></tr>
+<tr data-fp="F04-01"><td>报表发出满 1 小时</td><td>机器人服务</td><td class="w">删除该报表（N26）</td></tr>
+<tr data-fp="F05-01 F05-02"><td>后台保存渠道配置或授权群</td><td>两站后台</td><td class="w">从下一次操作起按新配置执行（N8、N32）</td></tr>
+</table></div>
+
+<h2 id="c3">3. 业务规则</h2>
+<h3 id="c3-1">3.1 现状（不改动，仅作依据）</h3>
+<div class="tbl"><table data-fit>
+<tr><th>规则</th><th>说明</th><th>依据</th></tr>
+<tr><td>平台报表口径</td><td class="w">后台【数据报表 › 平台报表】已有注册人数、首充人数、首充金额、新客充值金额、存款、存款用户、人均首存金额、人均存款金额、提款、净存提；今日数据每 30 分钟统计一次</td><td>789Bingo管理后台知识库「平台报表 newStatistic-report」</td></tr>
+<tr><td>GGR</td><td class="w">GGR = 总投注 − 总派彩</td><td>789Bingo平台知识库「GGR / NGR」</td></tr>
+<tr><td>用户留存报表</td><td class="w">按注册日统计 D1–D7、D14、D30 留存；「总访问」为登录人数</td><td>789Bingo平台知识库「用户留存报表」、管理后台知识库「用户数据」</td></tr>
+<tr><td>代理树</td><td class="w">用户挂在代理下，代理有上下级；网红推广的用户归入大代理 5ji-wanghong</td><td>789Bingo管理后台知识库「网红代理名单配置」</td></tr>
+<tr><td>Telegram 现有用途</td><td class="w">Telegram 用于玩家登录和客服入口；平台没有报表机器人</td><td>789Bingo平台知识库「第三方登录」「客服渠道」</td></tr>
+<tr><td>789Games 后台</td><td class="w">与 789Bingo 后台为同一套系统，菜单、平台报表口径和代理树结构相同；本需求两站按同样方式开发</td><td>用户 2026-11-04 确认（Q7）</td></tr>
+</table></div>
+
+<h3 id="c3-2">3.2 机器人、权限与渠道规则</h3>
+<div class="tbl"><table data-fit>
+<tr><th>编号</th><th>规则</th><th>起因</th><th>功能点</th></tr>
+<tr id="n1" data-fp="F01-01" data-brief="输入框左侧蓝色「菜单」列出 /menu、/agent 两个命令；/menu 在群里打开报表键盘，其他命令回复不支持"><td>N1</td><td class="w">机器人拉进群后，群输入框左侧显示蓝色「菜单」按钮（Telegram 机器人命令菜单），点开列出两个命令：/menu 打开报表键盘、/agent 按代理线查询；点命令等同发送该命令。发送本机器人的其他命令时回复「不支持该命令，请点左下角「菜单」选择命令。」</td><td class="w">用户要求：输入框旁按钮唤起菜单；界面按标准 Telegram 机器人样式</td><td><span class="fp">F01-01</span> 菜单按钮与命令</td></tr>
+<tr id="n2" data-fp="F01-02" data-brief="授权群里输入框下方常驻按钮矩阵：渠道 2 行×3、代理线查询 1 行；点按钮等于发出按钮文字，点渠道立即生成报表"><td>N2</td><td class="w">机器人加入授权群后，群成员打开群时，输入框下方就显示报表按钮矩阵（Telegram 自定义键盘，浅灰圆角按钮，3 列网格），不需要先发命令：①「📊 全站」「📊 cicc」「📊 短信」/「📊 网红」「📊 谷歌」「📊 oem」；②「🔍 代理线查询」（整行）。<br>点按钮等于在群里发出按钮上的文字：点渠道立即生成报表；点「🔍 代理线查询」按 N23 提示输入。同时，聊天里有一条机器人的菜单消息「请选择渠道，点渠道即生成报表：」，消息下方带内联按钮矩阵，按钮内容和顺序与输入框下方的按钮矩阵完全一致；点内联按钮不在群里发文字，直接生成报表或提示输入代理账号。进群时聊天里默认只有菜单消息和按钮矩阵，不自动显示任何报表；点哪个按钮才生成哪个报表。机器人加入授权群（或群被授权）时发出这条菜单消息，之后每次发 /menu 再发一条；菜单消息不自动删除。按钮矩阵对群内所有成员显示，成员可用输入框右侧「⌨」收起或展开；收起后也可在「菜单」里发 /menu 重新显示。菜单不按站点区分，站点在报表表格里按列显示（N22）。</td><td class="w">用户要求：进入群组时对话框里显示按钮矩阵；按标准 Telegram 界面；不用按钮区分新旧站</td><td><span class="fp">F01-02</span> 报表菜单</td></tr>
+
+<tr id="n4" data-fp="F01-03 F05-02" data-brief="群 ID 在某站点授权群名单中且启用，群内全员可看该站；报表只显示有权限站点的列；私聊不返回数据"><td>N4</td><td class="w">权限按群、按站点判断：群 ID 在某站点后台的授权群名单中且状态为「启用」，群内所有成员都能查看该站点，不区分成员个人。私聊机器人一律不返回数据（N5）。报表只显示有权限站点的列；两站都有权限时才显示「全站」列（N22）。每次收到命令、按钮点击或文字时都重新判断。</td><td class="w">用户确认：针对 Telegram 群使用</td><td><span class="fp">F01-03</span> 授权校验</td></tr>
+<tr id="n5" data-fp="F01-03" data-brief="未授权群回复未开通并显示群 ID；私聊回复只在授权群内使用；群里不是命令也不是回复机器人的消息不回应"><td>N5</td><td class="w">群的两站都没有权限时，不显示菜单、不返回任何数据，回复「本群未开通报表权限，请联系管理员开通。本群 ID：<i>群 ID</i>」。任何人私聊机器人时，回复「本机器人仅在授权群内使用，请在群内发送 /menu。」，不显示菜单。群里既不是命令、不是报表键盘按钮文字、也不是回复机器人提问的普通消息，机器人一律不回应。</td><td class="w">方便管理员把群 ID 加进名单；避免机器人在群里刷屏</td><td><span class="fp">F01-03</span> 授权校验</td></tr>
+<tr id="n6" data-fp="F05-01 F02-02" data-brief="用户按当前所属代理归入渠道：绑定代理及其全部下级的用户都算；链上命中多个绑定代理时按离用户最近的一个；全站为全部用户"><td>N6</td><td class="w">渠道归属：用户的当前所属代理是某渠道绑定的代理，或是绑定代理的下级（任意层级），就归入该渠道。用户的代理链上有多个已绑定代理时，按离用户最近的一个归属，一个用户只归入一个渠道。不属于任何渠道的用户只计入「全站」。「全站」为本站全部用户，不用配置。</td><td class="w">用户确认：后台配置渠道对应代理</td><td><span class="fp">F05-01</span> 渠道配置</td></tr>
+<tr id="n7" data-fp="F05-01" data-brief="同一站点内一个代理只能绑定一个渠道，重复绑定时提示并拒绝保存"><td>N7</td><td class="w">同一站点内，一个代理账号只能绑定一个渠道；添加已绑定到其他渠道的代理时提示「代理 <i>账号</i> 已绑定到渠道「<i>渠道名</i>」，同一代理只能绑定一个渠道」，不能添加。一个渠道可以绑定多个代理，数量不限。</td><td class="w">避免同一用户被重复统计到两个渠道</td><td><span class="fp">F05-01</span> 渠道配置</td></tr>
+<tr id="n8" data-fp="F05-01" data-brief="渠道配置保存后，下一次生成的报表按新配置统计（含今日和昨日两列）；已发出的报表不变"><td>N8</td><td class="w">渠道配置保存后，机器人在本站的授权群里重新发出菜单消息并更新按钮矩阵（按 N9 显示或隐藏渠道按钮）；下一次生成的报表按新配置统计，今日、昨日两列都按新配置重算；已发出的报表不变。用户换了所属代理后，按新的所属代理统计（历史数据也按新归属）。</td><td class="w">保证同一份报表里今日、昨日口径一致</td><td><span class="fp">F05-01</span> 渠道配置</td></tr>
+<tr id="n9" data-fp="F01-02 F02-01 F05-01" data-brief="按钮只显示本群有权限站点里至少一个站点已绑定代理的渠道；报表只显示已绑定站点的列；全站不用绑定"><td>N9</td><td class="w">渠道按钮的显示（「全站」不用绑定，始终显示）：本群有权限的站点里，只要有一个站点给这个渠道绑定了代理，就显示这个渠道按钮；都没有绑定时，聊天里的菜单按钮和输入框下方的按钮矩阵都不显示该渠道，其余按钮按 3 列依次补位。点渠道生成的报表只显示已绑定代理的站点列，只剩一个站点时不显示「全站」列。渠道配置改动后，机器人在相关授权群里重新发出菜单消息并更新按钮矩阵（N8）；有人仍点旧按钮或手动发出未开放渠道的按钮文字时，回复「该渠道暂未开放，请选择其他渠道。」，不生成报表。</td><td class="w">用户 2026-11-04 要求：对应渠道未绑定时不显示该渠道按钮</td><td><span class="fp">F01-02</span> 报表菜单</td></tr>
+</table></div>
+
+<h3 id="c3-3">3.3 统计时段与指标口径</h3>
+<p>下表口径对渠道报表和代理线报表通用，按站点分别统计查询对象范围内的用户（「全站」渠道为该站全部用户；其他渠道按 N6；代理线按 N24）。报表的「全站」列为两站合计：人数和金额直接相加；人均金额和留存率用两站合计的分子、分母重新计算，不是两站数值的平均。同一个人在两站各有账号时按两个用户计。测试账号是否计入与后台【平台报表】一致。</p>
+<div class="tbl"><table data-fit>
+<tr><th>编号</th><th>指标 / 规则</th><th>口径</th><th>功能点</th></tr>
+<tr id="n10" data-fp="F02-02" data-brief="今日 = 今日 00:00 至生成时刻的实时数据；昨日 = 昨日全天；GMT+8"><td>N10</td><td>统计时段</td><td class="w">「今日」= 今日 00:00:00 至报表生成时刻（GMT+8），为生成时刻的实时数据，报表上写明「今日截至 YYYY-MM-DD HH:mm（GMT+8）」；「昨日」= 昨日 00:00:00–23:59:59。「全站」渠道下各站点列的昨日数据，和该站后台【平台报表】昨日日报表一致；今日数据比平台报表（每 30 分钟统计一次）更新，两者可能有差异。具体实现由技术确定。</td><td><span class="fp">F02-02</span> 指标口径</td></tr>
+<tr id="n11" data-fp="F02-02" data-brief="新增注册人数 = 时段内注册成功的用户数"><td>N11</td><td>新增注册人数</td><td class="w">时段内注册成功的用户数（同平台报表「注册人数」）</td><td><span class="fp">F02-02</span></td></tr>
+<tr id="n12" data-fp="F02-02" data-brief="新增首存人数 = 时段内完成账号首笔成功存款的用户数"><td>N12</td><td>新增首存人数</td><td class="w">时段内完成账号第一笔成功存款的用户数，不限注册时间（同平台报表「首充人数」）</td><td><span class="fp">F02-02</span></td></tr>
+<tr id="n13" data-fp="F02-02" data-brief="新增玩家存款金额 = 时段内注册的用户在时段内的成功存款金额合计"><td>N13</td><td>新增玩家存款金额</td><td class="w">时段内注册的用户，在同一时段内成功存款的金额合计（同平台报表「新客充值金额」）</td><td><span class="fp">F02-02</span></td></tr>
+<tr id="n14" data-fp="F02-02" data-brief="存款额 = 时段内全部成功存款金额合计"><td>N14</td><td>存款额</td><td class="w">时段内全部成功存款金额合计（同平台报表「存款」）</td><td><span class="fp">F02-02</span></td></tr>
+<tr id="n15" data-fp="F02-02" data-brief="总投注额 = 时段内总投注金额"><td>N15</td><td>总投注额</td><td class="w">时段内总投注金额，与 GGR 的总投注口径一致</td><td><span class="fp">F02-02</span></td></tr>
+<tr id="n33" data-fp="F02-02" data-brief="有效投注额 = 时段内有效投注金额，取平台报表「自算有效投注」口径"><td>N33</td><td>有效投注额</td><td class="w">时段内有效投注金额，取后台【平台报表】「自算有效投注」口径</td><td><span class="fp">F02-02</span></td></tr>
+<tr id="n16" data-fp="F02-02" data-brief="存提差 = 存款额 − 成功提款金额，可为负"><td>N16</td><td>存提差</td><td class="w">存款额（N14）− 时段内成功提款金额合计，可为负数（同平台报表「净存提」）</td><td><span class="fp">F02-02</span></td></tr>
+<tr id="n17" data-fp="F02-02" data-brief="人均首存金额 = 首存金额 ÷ 新增首存人数，人数为 0 显示 -"><td>N17</td><td>人均首存金额</td><td class="w">时段内首笔存款金额合计 ÷ 新增首存人数（N12）；人数为 0 时显示「-」</td><td><span class="fp">F02-02</span></td></tr>
+<tr id="n18" data-fp="F02-02" data-brief="人均存款金额 = 存款额 ÷ 时段内有成功存款的去重人数，人数为 0 显示 -"><td>N18</td><td>人均存款金额</td><td class="w">存款额（N14）÷ 时段内有成功存款的用户数（去重）；人数为 0 时显示「-」</td><td><span class="fp">F02-02</span></td></tr>
+<tr id="n19" data-fp="F02-02" data-brief="GGR = 总投注 − 总派彩，可为负"><td>N19</td><td>GGR</td><td class="w">时段内总投注 − 总派彩，可为负数</td><td><span class="fp">F02-02</span></td></tr>
+<tr id="n20" data-fp="F02-02" data-brief="次日留存：今日列 = 昨天注册的用户今天截至生成时刻有登录的比例；昨日列 = 前天注册的用户昨天有登录的比例"><td>N20</td><td>次日留存</td><td class="w">「今日」列 = 昨天注册的用户中，今天 00:00 至生成时刻有登录的人数 ÷ 昨天注册人数 × 100%；「昨日」列 = 前天注册的用户中，昨天有登录的人数 ÷ 前天注册人数 × 100%。登录同用户留存报表「总访问」口径。分母为 0 时显示「-」。今日列只统计到生成时刻，通常低于全天。</td><td><span class="fp">F02-02</span></td></tr>
+<tr id="n21" data-fp="F02-02" data-brief="7日留存：今日列 = 7 天前注册的用户今天截至生成时刻有登录的比例；昨日列 = 8 天前注册的用户昨天有登录的比例"><td>N21</td><td>7日留存</td><td class="w">「今日」列 = 7 天前（今天往前数第 7 天）注册的用户中，今天 00:00 至生成时刻有登录的人数 ÷ 该日注册人数 × 100%；「昨日」列 = 8 天前注册的用户中，昨天有登录的人数 ÷ 该日注册人数 × 100%。只看当天是否登录，不是 7 天内任意一天。分母为 0 时显示「-」。</td><td><span class="fp">F02-02</span></td></tr>
+<tr id="n22" data-fp="F02-01" data-brief="报表按用户、存提、投注、留存分 4 组；多列时指标名独占一行、下一行各站数据并排；每格三行：今日（带 ▲▼）、昨日、变化百分比"><td>N22</td><td>表格布局与显示格式</td><td class="w">报表按 4 组显示，组标题依次为「👥 用户」「💰 存提」「🎮 投注」「📈 留存」：用户组为新增注册人数、新增首存人数；存提组为新增玩家存款金额、存款额、存提差、人均首存金额、人均存款金额；投注组为总投注额、有效投注额、GGR；留存组为次日留存、7日留存。<br>列：群有两站权限时为 789Bingo | 789Games | 全站（表头下注小字「两站合计」），每个指标先占一行写名称，下一行三列数据并排；群只有一个站点权限时只显示该站一列，不显示「全站」列，指标名称和数据在同一行（左名称、右数据）。代理线报表只显示账号存在的站点列（N24）。<br>每格三行：第一行今日值（大字），今日 &gt; 昨日时前加「▲」并显示绿色，今日 &lt; 昨日时加「▼」并显示红色，相等或任一为「-」时不加箭头、黑色；第二行灰色小字「昨 昨日值」；第三行变化百分比，颜色同第一行。表头上方写「大字为今日，▲▼ 与昨日全天相比；小字为昨日全天和变化百分比」。报表消息占满聊天区宽度，手机最窄屏下数据不换行、不溢出。<br>变化百分比 =（今日 − 昨日）÷ |昨日| × 100%，保留 1 位小数，正数加「+」、负数加「-」；昨日为 0 或今日、昨日任一为「-」时显示「-」。分母取昨日的绝对值，昨日为负（存提差、GGR）时符号仍表示升降。两项留存本身是百分比，改为显示百分点差，如「+0.8pp」（pp 即百分点）。<br>人数显示整数，千分位分隔；金额前加「₱」，千分位，四舍五入到个位；人均金额保留 2 位小数；留存率保留 1 位小数加「%」；负数前加「-」。</td><td><span class="fp">F02-01</span> 报表生成与展示</td></tr>
+</table></div>
+
+<h3 id="c3-4">3.4 代理线查询、删除与异常规则</h3>
+<div class="tbl"><table data-fit>
+<tr><th>编号</th><th>规则</th><th>起因</th><th>功能点</th></tr>
+<tr id="n23" data-fp="F03-01" data-brief="点代理线查询或只发 /agent 时，机器人 @ 点击人要求回复账号，对方输入框自动进入回复状态；也可直接发 /agent 账号"><td>N23</td><td class="w">输入方式二选一：① 点报表键盘「🔍 代理线查询」或只发送「/agent」，机器人在群里回复「@<i>点击人</i> 请回复代理账号，例如 kk_sms_g12」，并让点击人的输入框自动进入「回复机器人」状态（Telegram 强制回复，只对点击人生效），点击人直接输入账号发送即可；点击人取消回复后，再发的普通消息不当作查询。② 发送「/agent 代理账号」（如 /agent kk_sms_g12）。账号去掉首尾空格，不区分大小写。</td><td class="w">用户 2026-11-04 补充：手动输入代理线查询</td><td><span class="fp">F03-01</span> 代理线查询</td></tr>
+<tr id="n24" data-fp="F03-01" data-brief="代理线 = 该代理及其全部下级代理名下的用户；同时查有权限的两站，账号存在的站点各一列，两站都有时加全站列"><td>N24</td><td class="w">代理线范围 = 该代理及其全部下级代理名下的用户。同时在有权限的站点里查找这个账号：账号存在的站点各显示一列，两站都存在时再加「全站」列（两站同名代理线合计）；指标和口径同 N10–N22，报表标题为「📊 代理线：<i>账号</i>（含下级）」。不受渠道配置影响。</td><td class="w">同上；两站代理账号互相独立</td><td><span class="fp">F03-01</span></td></tr>
+<tr id="n25" data-fp="F03-01" data-brief="代理账号在有权限的站点都不存在时回复未找到，不生成报表、不删除旧报表"><td>N25</td><td class="w">代理账号在有权限的站点里都不存在时，回复「未找到代理线「<i>账号</i>」，请检查代理账号后重试。」；不生成报表，也不删除本聊天已有的报表。</td><td class="w">输入错误的处理</td><td><span class="fp">F03-01</span></td></tr>
+<tr id="n26" data-fp="F04-01" data-brief="每份报表发出满 1 小时自动删除，报表底部写明删除时间"><td>N26</td><td class="w">每份报表发出满 1 小时，机器人自动删除这条消息；报表底部显示「⏱ 本报表将于今日 HH:mm 自动删除」（跨天时写「明日 HH:mm」）。机器人服务中断时，恢复后立即删除已到时间的报表。</td><td class="w">用户要求自动删除；Telegram 不提供已读状态（0.1）</td><td><span class="fp">F04-01</span> 发出 1 小时自动删除</td></tr>
+<tr id="n27" data-fp="F04-02" data-brief="同一群发出新报表时，立即删除之前所有未删除的报表和失败提示，新报表重新计时"><td>N27</td><td class="w">同一群发出新报表时（点渠道、代理线查询、重试都算），立即删除本群之前所有未删除的报表和「报表生成失败」提示，不论是谁查询的；新报表重新计 1 小时。不同的授权群之间互不影响。</td><td class="w">用户要求：生成新报表后原先的报表自动删除</td><td><span class="fp">F04-02</span> 新报表替换旧报表</td></tr>
+<tr id="n28" data-fp="F04-01 F04-02" data-brief="消息已被手动删除或机器人已被移出群时，删除跳过，不提示不重试"><td>N28</td><td class="w">删除时报表已被人手动删除、机器人已被移出群或被用户屏蔽，跳过这条，不提示、不重试。</td><td class="w">删除异常的处理</td><td><span class="fp">F04-01</span></td></tr>
+<tr id="n29" data-fp="F02-01" data-brief="同一聊天有报表在生成时，再点生成类按钮只弹提示「报表生成中，请稍候」，不重复生成"><td>N29</td><td class="w">点渠道或发送代理账号后，机器人先发「⏳ 正在生成报表…」，报表发出时删除这条提示。同一聊天已有报表在生成时，再点任何生成报表的按钮或发送代理账号，只弹出提示「报表生成中，请稍候」，不重复生成。</td><td class="w">防止重复点击产生多份报表</td><td><span class="fp">F02-01</span></td></tr>
+<tr id="n30" data-fp="F02-01" data-brief="30 秒内没生成出来就回复失败提示和重试按钮，失败提示也按 1 小时和新报表规则删除"><td>N30</td><td class="w">从点击起 30 秒内没有生成出报表时，删除「正在生成」提示，回复「报表生成失败，请稍后重试。」和「重试」按钮；点「重试」按原来的查询对象重新生成。失败提示按 N26、N27 删除。</td><td class="w">数据量大或服务异常时给出明确结果</td><td><span class="fp">F02-01</span></td></tr>
+<tr id="n31" data-fp="F05-02" data-brief="群 ID 为 -100 开头的负数，同站点不能重复；群名称必填 1–30 字；群 ID 不能修改"><td>N31</td><td class="w">授权群校验：群 ID 为以 -100 开头的负数，否则提示「群 ID 格式不正确」；同一站点内不能重复，重复时提示「该群已在名单中」；群名称必填，1–30 字。保存后群 ID 不能修改，只能改群名称和状态。</td><td class="w">防止填错导致授权无效</td><td><span class="fp">F05-02</span> 授权群</td></tr>
+<tr id="n32" data-fp="F05-02" data-brief="添加、启用、停用、删除立即生效，下一次操作起按新名单判断；已发出的报表仍按 1 小时删除"><td>N32</td><td class="w">添加、启用、停用、删除保存后立即生效：从该群的下一次操作起按新名单判断（N4）。已发出的报表不提前删除，仍按 N26 到时删除。</td><td class="w">权限变更的即时性</td><td><span class="fp">F05-02</span></td></tr>
+<tr id="n34" data-fp="F02-01" data-brief="报表和失败提示开启 Telegram 内容保护，不能转发和保存"><td>N34</td><td class="w">机器人发出的报表消息（含生成失败提示）开启 Telegram 内容保护：群成员不能转发、不能保存到本地或复制图片；部分客户端还会禁止截图，以 Telegram 实际支持为准。菜单消息和其他文字提示不受影响。</td><td class="w">用户 2026-11-04 确认（Q5）：报表含经营数据，防止外传</td><td><span class="fp">F02-01</span> 报表生成与展示</td></tr>
+</table></div>
+
+<h3 id="c3-5">3.5 与知识库的冲突与取舍</h3>
+<p>已比对 <code>789Bingo平台知识库.md</code>、<code>789Bingo管理后台知识库.md</code>，未发现冲突。按 2026-10-22 起的规定，暂不比对两份 Jira 知识库。今日数据与平台报表的刷新频率不同（N10），属于口径说明，不构成冲突。</p>
+<div class="tbl"><table data-fit>
+<tr><th>冲突点</th><th>说法 A（出处）</th><th>说法 B（出处）</th><th>以哪个为准</th></tr>
+<tr><td>-</td><td>-</td><td>-</td><td>-</td></tr>
+</table></div>
+
+<h3 id="c3-6">3.6 依赖的现有后台配置</h3>
+<div class="tbl"><table data-fit>
+<tr><th>配置项</th><th>菜单位置</th><th>测试环境值</th><th>关联功能点</th></tr>
+<tr><td>代理账号与上下级关系</td><td class="w">代理管理（沿用现有）</td><td>-</td><td><span class="fp">F05-01</span> 渠道配置、<span class="fp">F03-01</span> 代理线查询</td></tr>
+<tr><td>网红代理名单配置</td><td class="w">系统管理 › 系统参数 › 推广相关</td><td>-</td><td><span class="fp">F05-01</span> 渠道配置</td></tr>
+</table></div>
+<p><span class="warn-2">※ 测试环境值只用于测试和原型演示，和生产环境不一定相同；上线前由运营按生产配置核对。</span></p>
+
+<h2 id="c4">4. 前台页面一：机器人对话页</h2>
+<p>原型：<a href="../prototype/front/Telegram报表-机器人对话页.html">机器人对话页</a>。整页为本需求新增，界面沿用 Telegram 客户端的对话样式，机器人名称和头像见 Q4。</p>
+<div class="tbl"><table data-fit>
+<tr><th>模块</th><th>功能与交互要求</th></tr>
+<tr data-fp="F01-01"><td>菜单按钮 <span class="fp">F01-01</span></td><td class="w">输入框左侧蓝色「菜单」，点开命令列表：/menu「打开报表菜单」、/agent「按代理线查询」；点命令等同发送该命令（N1）。</td></tr>
+<tr data-fp="F01-02"><td>报表键盘 <span class="fp">F01-02</span></td><td class="w">按 N2：打开授权群即在输入框下方显示 3 列按钮矩阵，不区分站点。</td></tr>
+<tr data-fp="F01-03"><td>无权限 <span class="fp">F01-03</span></td><td class="w">按 N5 回复，不显示菜单。</td></tr>
+<tr data-fp="F02-01"><td>报表消息 <span class="fp">F02-01</span></td><td class="w">标题「📊 渠道：<i>渠道名</i>」；第二行「今日截至 YYYY-MM-DD HH:mm（GMT+8）」，第三行「大字为今日，▲▼ 与昨日全天相比；小字为昨日全天和变化百分比」；指标表按用户、存提、投注、留存 4 组共 12 项，列和排版按 N22；底部自动删除时间（N26）。格式按 N22。</td></tr>
+<tr data-fp="F02-01"><td>报表按钮 <span class="fp">F02-01</span></td><td class="w">报表下方不带任何按钮，不提供刷新功能；要看最新数据，再点一次对应的渠道按钮或重新查询代理线，生成新报表并按 N27 删除旧报表。</td></tr>
+<tr data-fp="F03-01"><td>代理线查询 <span class="fp">F03-01</span></td><td class="w">按 N23–N25。</td></tr>
+<tr data-fp="F02-01"><td>生成中与失败</td><td class="w">按 N29、N30；「报表生成中，请稍候」为 Telegram 按钮点击后的顶部提示，几秒后自动消失。</td></tr>
+</table></div>
+<h3 id="c4-1">4.1 页面文案</h3>
+<div class="tbl"><table data-fit>
+<tr><th>位置</th><th>文案</th></tr>
+<tr><td>菜单消息</td><td class="w">请选择渠道，点渠道即生成报表：</td></tr>
+<tr><td>生成中</td><td class="w">⏳ 正在生成报表…</td></tr>
+<tr><td>渠道未开放</td><td class="w">该渠道暂未开放，请选择其他渠道。</td></tr>
+<tr><td>其他提示</td><td class="w">见 N1、N5、N23、N25、N26、N29、N30 原文</td></tr>
+</table></div>
+<p>机器人显示中文（Q4），上线文案以本章和规则原文为准；名称「789报表助手」和头像为示意，上线前由运营确定。</p>
+
+<h2 id="c5">5. 运营后台需求</h2>
+<p>789Bingo、789Games 两站后台各新增菜单【系统管理 › Telegram报表配置】，含「渠道配置」「授权群」两个标签页，各管本站。需要的后台权限沿用现有菜单权限分配方式；保存、删除记入后台现有操作日志（沿用现有）。</p>
+<h3 id="c5-1">5.1 渠道配置</h3>
+<p>原型：<a href="../prototype/admin/Telegram报表-后台渠道配置页面.html">后台渠道配置页面</a>。</p>
+<div class="tbl"><table data-fit>
+<tr><th>功能</th><th>说明</th></tr>
+<tr data-fp="F05-01"><td>渠道列表 <span class="fp">F05-01</span></td><td class="w">固定 5 行：cicc、短信、网红、谷歌、oem，不分页。列：渠道、绑定代理（账号用「、」分隔，没有时显示「-」）、代理数、最后修改时间、操作人、操作（编辑）。</td></tr>
+<tr data-fp="F05-01"><td>编辑弹窗</td><td class="w">渠道名只读；输入代理账号点「添加」或回车加入，已添加的显示为标签，点「×」移除。校验：账号为空提示「请输入代理账号」；不存在提示「代理账号不存在」；本渠道已有提示「该代理已添加」；其他渠道已绑定按 N7 提示。可以保存为 0 个代理（N9）。点「保存」提示「保存成功」，点「取消」或右上角「×」不保存。生效按 N8。</td></tr>
+</table></div>
+<h3 id="c5-2">5.2 授权群</h3>
+<p>原型：<a href="../prototype/admin/Telegram报表-后台授权群页面.html">后台授权群页面</a>。</p>
+<div class="tbl"><table data-fit>
+<tr><th>功能</th><th>说明</th></tr>
+<tr data-fp="F05-02"><td>筛选 <span class="fp">F05-02</span></td><td class="w">状态（全部 / 启用 / 停用）、关键字（群 ID 或群名称，包含即匹配）；「查询」后回到第 1 页；「重置」清空条件并回到第 1 页。</td></tr>
+<tr data-fp="F05-02"><td>列表</td><td class="w">列：群 ID、群名称、状态（开关）、添加时间、操作人、操作（编辑、删除）。点状态开关立即切换并提示「已启用」或「已停用」。</td></tr>
+<tr data-fp="F05-02"><td>添加 / 编辑弹窗</td><td class="w">字段：群 ID、群名称、状态（默认启用）；校验按 N31；编辑时群 ID 置灰不可改。保存提示「保存成功」，新增的记录排在第 1 页最上面。右上角「×」等同取消。</td></tr>
+<tr data-fp="F05-02"><td>删除</td><td class="w">确认弹窗：「删除后，<i>类型</i>「<i>备注</i>」（<i>ID</i>）立即不能查看本站报表。确定删除？」；确认后提示「删除成功」。生效按 N32。</td></tr>
+</table></div>
+<h3 id="c5-3">5.3 列表分页</h3>
+<div class="tbl"><table data-fit>
+<tr><th>列表（所在页面）</th><th>分页方式</th><th>每页条数（默认 / 可选）</th><th>默认排序</th><th>筛选、搜索、操作后停在哪一页</th><th>空列表 / 加载失败</th><th>导出</th></tr>
+<tr data-fp="F05-02"><td class="w">授权群列表（授权群页）</td><td>页码分页</td><td>20 / 10、20、50、100</td><td class="w">添加时间倒序</td><td class="w">筛选回到第 1 页；编辑停在当前页；删除后当前页为空回到上一页</td><td class="w">空列表显示「暂无数据」；加载失败沿用后台现有提示</td><td>不涉及</td></tr>
+<tr data-fp="F05-01"><td class="w">渠道列表（渠道配置页）</td><td>固定 5 条，不分页</td><td>-</td><td class="w">cicc、短信、网红、谷歌、oem</td><td>-</td><td>-</td><td>不涉及</td></tr>
+</table></div>
+<ul>
+<li>授权群添加时间相同时，按添加先后倒序，保证翻页不重复、不遗漏；页码超出范围（0、负数、大于总页数）取首页或末页。</li>
+<li>机器人报表、菜单都是单条消息，不是列表，不分页。</li>
+</ul>
+<h3 id="c5-4">5.4 帮助提示内容</h3>
+<div class="tbl"><table data-fit>
+<tr><th>数据项 / 操作</th><th>说明内容</th></tr>
+<tr><td>绑定代理（列表表头）</td><td class="w">这个渠道包含的代理账号。绑定的代理和它的全部下级代理名下的用户，都统计到这个渠道。</td></tr>
+<tr><td>代理数</td><td class="w">已绑定的代理账号个数，不含下级代理。为 0 时，机器人里不显示这个渠道的按钮（两站都为 0 时）。</td></tr>
+<tr><td>绑定代理（编辑弹窗）</td><td class="w">输入代理账号后点「添加」，可添加多个；点标签上的 × 移除。同一代理只能绑定一个渠道。</td></tr>
+<tr><td>群 ID（列表表头）</td><td class="w">Telegram 群的数字 ID，以 -100 开头。把机器人拉进群后发 /menu，机器人会回复本群 ID，复制过来即可。</td></tr>
+<tr><td>状态</td><td class="w">启用：可以查看本站报表；停用：立即不能查看，记录保留。</td></tr>
+<tr><td>群 ID（弹窗）</td><td class="w">以 -100 开头的负数。把机器人拉进群后发 /menu，从机器人回复的无权限提示里复制。</td></tr>
+</table></div>
+
+<h2 id="c6">6. 接口与异常</h2>
+<div class="tbl"><table data-fit>
+<tr><th>场景</th><th>处理方式</th><th>用户提示</th></tr>
+<tr data-fp="F02-01"><td>报表 30 秒内未生成</td><td class="w">按 N30 回复失败和重试</td><td class="w">报表生成失败，请稍后重试。</td></tr>
+<tr data-fp="F02-01"><td>生成中重复点击</td><td class="w">不重复生成（N29）</td><td class="w">报表生成中，请稍候</td></tr>
+<tr data-fp="F01-03"><td>未授权的群、私聊机器人</td><td class="w">不返回任何数据（N5）</td><td class="w">N5 原文</td></tr>
+<tr data-fp="F01-03"><td>点旧菜单或旧报表上的按钮时权限已被取消</td><td class="w">按当前权限重新判断：两站都没权限按 N5 回复；只剩一个站点有权限时，报表只显示该站一列</td><td class="w">-</td></tr>
+<tr data-fp="F03-01"><td>代理账号不存在</td><td class="w">N25</td><td class="w">N25 原文</td></tr>
+<tr data-fp="F04-01"><td>到时删除失败</td><td class="w">N28：跳过，不提示</td><td>-</td></tr>
+<tr data-fp="F04-01"><td>机器人服务中断后恢复</td><td class="w">立即删除已到时间的报表（N26）；中断期间的点击不补发报表</td><td>-</td></tr>
+<tr data-fp="F01-01"><td>机器人被拉进未授权的群</td><td class="w">有人在群里发命令时按 N5 回复群 ID；机器人不主动退群</td><td class="w">N5 原文</td></tr>
+<tr data-fp="F02-01"><td>其中一个站点数据暂时取不到</td><td class="w">按 N30 生成失败处理，不显示部分数据</td><td class="w">报表生成失败，请稍后重试。</td></tr>
+</table></div>
+<p>具体实现由技术确定。</p>
+
+<h2 id="c7">7. 验收标准</h2>
+<h3 id="c7-1">7.1 验收条目</h3>
+<ol>
+<li data-fp="F01-01"><span class="fp">F01-01</span> 菜单按钮与命令：授权群里点左下角「菜单」→ 看到 /menu、/agent 两个命令；点 /menu → 输入框下方出现报表键盘；发送 /abc → 收到「不支持该命令…」。</li>
+<li data-fp="F01-02"><span class="fp">F01-02</span> 按钮矩阵：授权群成员打开群 → 不发任何命令，输入框下方就显示 6 个渠道和「🔍 代理线查询」按钮，没有站点按钮和留存周期按钮；点「📊 cicc」→ 群里出现成员发出的「📊 cicc」，随后生成 cicc 报表，表格按列显示 789Bingo、789Games、全站；点「⌨」收起后发 /menu → 按钮矩阵重新显示。</li>
+<li data-fp="F01-02"><span class="fp">F01-02</span> 只在 789Bingo 后台授权的群查看报表 → 表格只有 789Bingo 一列，没有「全站」列；两站都授权 → 三列，「全站」列人数、金额等于两站之和，人均和留存按合计重算。</li>
+<li data-fp="F01-03"><span class="fp">F01-03</span> 授权校验：未授权群里发 /menu → 收到本群未开通提示和群 ID，无菜单；把该群 ID 加入授权群并启用后再发 /menu → 收到菜单。</li>
+<li data-fp="F01-03"><span class="fp">F01-03</span> 授权群里任一成员发 /menu → 收到菜单并能查看报表；任何人私聊机器人 → 收到「本机器人仅在授权群内使用…」，无菜单、无数据。</li>
+<li data-fp="F01-03"><span class="fp">F01-03</span> 群里发送不是命令、不是键盘按钮文字、也不是回复机器人的普通消息（含直接发代理账号）→ 机器人不回应。</li>
+<li data-fp="F02-01"><span class="fp">F02-01</span> 报表生成与展示：点「全站」→ 先出现「正在生成报表…」，随后出现报表，12 项指标齐全，标题、截至时间、自动删除时间正确。</li>
+<li data-fp="F02-02"><span class="fp">F02-02</span> 指标口径：「全站」渠道下各站点列的昨日各项，与该站后台【平台报表】昨日日报表一致；GGR = 总投注额 − 派彩；报表里总投注额、有效投注额各占一行；存提差 = 存款额 − 提款。</li>
+<li data-fp="F02-02"><span class="fp">F02-02</span> 边界：今日新增首存人数为 0 → 人均首存金额显示「-」、不带箭头，百分比为「-」；昨日注册 100、今日 120 → 显示「+20.0%」；昨日为 0 → 百分比为「-」；昨日存提差 -₱1,000、今日 -₱500 → 显示「▲」和「+50.0%」；存提差为负 → 显示「-₱」金额。</li>
+<li data-fp="F02-02"><span class="fp">F02-02</span> 时间边界：23:59 生成的报表今日列含 23:59 前数据；00:00:30 生成的报表今日列从当日 00:00 起算，昨日列为刚结束的一天。</li>
+<li data-fp="F02-02"><span class="fp">F02-02</span> 留存：11 月 4 日 14:32 生成的报表，今日列次日留存 = 11 月 3 日注册用户在 11 月 4 日 00:00–14:32 有登录的比例，7日留存 = 10 月 28 日注册用户在 11 月 4 日 00:00–14:32 有登录的比例；昨日列分别为 11 月 2 日、10 月 27 日注册用户在 11 月 3 日全天的登录比例；手工核对一致。</li>
+<li data-fp="F01-02 F02-01"><span class="fp">F01-02</span> 渠道「网红」两站都解绑全部代理 → 两站汇总群的聊天菜单和按钮矩阵都不显示「网红」，其余按钮按 3 列补位；「oem」只在 789Bingo 绑定 → 两站汇总群仍显示「oem」，点开报表只有 789Bingo 一列；789Games 数据群不显示「oem」；手动发「📊 网红」→ 回复「该渠道暂未开放，请选择其他渠道。」</li>
+<li data-fp="F05-01 F02-02"><span class="fp">F05-01</span> 渠道归属：代理 A 绑定「短信」、其下级 B 绑定「谷歌」→ B 名下用户只计入谷歌，A 的其他下级用户计入短信；各渠道人数之和不超过全站。</li>
+<li data-fp="F03-01"><span class="fp">F03-01</span> 代理线查询：点「🔍 代理线查询」→ 机器人 @ 点击人，点击人输入框进入回复状态，输入「 KK_SMS_G12 」发送 → 生成 kk_sms_g12（含下级）报表；发「/agent kk_sms_g12」同样生成；不回复机器人、直接在群里发 kk_sms_g12 → 机器人不回应；发送不存在的账号 → 收到未找到提示，原有报表不被删除。</li>
+<li data-fp="F03-01"><span class="fp">F03-01</span> 查询只存在于 789Bingo 的代理账号 → 只显示 789Bingo 一列；只授权 789Games 的人查询该账号 → 收到未找到提示。</li>
+<li data-fp="F04-01"><span class="fp">F04-01</span> 自动删除：14:32 发出的报表 → 15:32 被删除；15:31 时仍在。</li>
+<li data-fp="F04-02"><span class="fp">F04-02</span> 新报表替换：同一群先查全站、再查 cicc → 全站报表立即消失，只剩 cicc 报表，且 cicc 报表删除时间为发出后 1 小时；群里成员甲查询后成员乙查询 → 甲的报表被删除。</li>
+<li data-fp="F04-02"><span class="fp">F04-02</span> 两个不同的授权群同时查询 → 互不删除对方的报表。</li>
+<li data-fp="F02-01"><span class="fp">F02-01</span> 生成中连续点 3 次渠道按钮 → 只生成 1 份报表，其余弹出「报表生成中，请稍候」。</li>
+<li data-fp="F02-01"><span class="fp">F02-01</span> 生成超过 30 秒 → 收到失败提示和「重试」；点「重试」成功后失败提示被删除。</li>
+<li data-fp="F04-01"><span class="fp">F04-01</span> 用户手动删除报表后，到时间机器人不报错、聊天里无多余提示。</li>
+<li data-fp="F05-01"><span class="fp">F05-01</span> 渠道配置：给「cicc」添加已绑定在「短信」的代理 → 提示 N7 原文，不能添加；添加不存在的账号 → 提示「代理账号不存在」；保存后立即查询 → 报表按新配置统计。</li>
+<li data-fp="F05-02"><span class="fp">F05-02</span> 授权群：群 ID 填「583920174」或「-200123456」→ 提示群 ID 格式不正确；重复群 ID → 提示该群已在名单中；群名称 30 字可保存、第 31 字无法输入。绕过页面直接提交同样拦截。</li>
+<li data-fp="F05-02"><span class="fp">F05-02</span> 停用某个群后，群里有人点旧菜单上的渠道按钮 → 收到本群未开通提示，不生成报表；已发出的报表仍在 1 小时后删除。</li>
+<li data-fp="F05-02"><span class="fp">F05-02</span> 分页：名单 21 条、每页 20 条 → 2 页；删除第 2 页唯一一条 → 回到第 1 页；筛选后回到第 1 页。</li>
+</ol>
+<h3 id="c7-2">7.2 跨端验收矩阵</h3>
+<div class="tbl"><table data-fit>
+<tr><th>验收点</th><th>功能点编号</th><th>Telegram 手机端</th><th>Telegram 电脑端</th><th>789Bingo 后台</th><th>789Games 后台</th></tr>
+<tr data-fp="F01-01 F01-02"><td class="w">菜单按钮、报表菜单</td><td><span class="fp">F01-02</span></td><td>✓</td><td>✓</td><td>-</td><td>-</td></tr>
+<tr data-fp="F02-01"><td class="w">报表显示（表格不错位）</td><td><span class="fp">F02-01</span></td><td>✓</td><td>✓</td><td>-</td><td>-</td></tr>
+<tr data-fp="F03-01"><td class="w">代理线查询</td><td><span class="fp">F03-01</span></td><td>✓</td><td>✓</td><td>-</td><td>-</td></tr>
+<tr data-fp="F04-01 F04-02"><td class="w">自动删除</td><td><span class="fp">F04-01</span></td><td>✓</td><td>✓</td><td>-</td><td>-</td></tr>
+<tr data-fp="F05-01 F05-02"><td class="w">渠道配置、授权群</td><td><span class="fp">F05-01</span></td><td>-</td><td>-</td><td>✓</td><td>✓</td></tr>
+</table></div>
+
+<h2 id="c8">8. 上线方式</h2>
+<ul>
+<li>上线前：运营在 Telegram 创建机器人账号（名称、头像按 Q4 结论），交技术接入；两站运营各自配置 5 个渠道的代理和授权群；把机器人拉进 3 个群。授权群配置：789Bingo 后台登记「789Bingo 数据群」和「两站汇总群」；789Games 后台登记「789Games 数据群」和「两站汇总群」。</li>
+<li>灰度：先只授权产品和运营负责人，核对全站昨日数据与后台平台报表一致后，再逐步加人、加群。</li>
+<li>回滚：在两站授权群把记录全部停用，机器人即对所有人停止返回数据；已发出的报表 1 小时内自动删除。</li>
+<li>上线后数据核对：连续 3 天核对全站和各渠道昨日数据与后台报表一致。</li>
+</ul>
+
+<h2 id="c9">9. 风险与依赖</h2>
+<div class="tbl"><table data-fit>
+<tr><th>风险</th><th>等级</th><th>应对</th></tr>
+<tr><td class="w">报表含经营数据，可能被截图、转发或群成员外泄</td><td>高</td><td class="w">只在授权群内返回数据、1 小时自动删除、开启内容保护禁止转发和保存（N34）；无法防止用另一台设备拍屏；群授权前确认群成员范围</td></tr>
+<tr><td class="w">渠道绑定代理配错，导致渠道数据失真</td><td>中</td><td class="w">一代理一渠道校验（N7）；上线前对照代理清单核对</td></tr>
+<tr><td class="w">实时统计在高峰期耗时长，报表生成失败</td><td>中</td><td class="w">30 秒超时提示和重试（N30）；生成中防重复（N29）</td></tr>
+<tr><td class="w">群里机器人默认只收到命令和回复它的消息，收不到点报表键盘发出的文字</td><td>中</td><td class="w">上线时让机器人能收到群消息（关闭隐私模式或设为群管理员，具体由技术确定）；机器人只处理命令、键盘按钮文字和回复它的消息，其他消息不回应（N5）</td></tr>
+<tr><td class="w">依赖 Telegram 平台可用性和消息删除能力</td><td>低</td><td class="w">删除失败按 N28 跳过</td></tr>
+</table></div>
+
+<h2 id="c10">10. 待确认事项</h2>
+<div class="tbl"><table data-fit>
+<tr><th>编号</th><th>事项</th><th>负责人</th><th>预计确认时间</th><th>状态</th></tr>
+<tr id="q1" data-brief="新增首存人数取「首充人数」（不限注册时间）还是「注册且首充人数」"><td>Q1</td><td class="w">「新增首存人数」取平台报表的「首充人数」（时段内首存、不限注册时间，当前写法）还是「注册且首充人数」（时段内注册并首存）？</td><td>Joshua</td><td>2026-11-04</td><td>已确认：取「首充人数」（不限注册时间）</td></tr>
+<tr id="q2" data-brief="投注额用总投注还是有效投注：两者分两行都显示"><td>Q2</td><td class="w">「投注额」用总投注还是有效投注？</td><td>Joshua</td><td>2026-11-04</td><td>已确认：总投注额、有效投注额分两行都显示</td></tr>
+<tr id="q3" data-brief="每格只显示今日、昨日和箭头，是否还要显示差值或百分比"><td>Q3</td><td class="w">每格只显示今日值（带 ▲▼）和昨日值（当前写法，保证手机上三列能放下）；是否还要显示差值或相对昨日的百分比？</td><td>Joshua</td><td>2026-11-04</td><td>已确认：加显示变化百分比（N22）</td></tr>
+<tr id="q4" data-brief="机器人名称、头像和显示语言（中文或英文）"><td>Q4</td><td class="w">机器人名称、头像，以及菜单和报表显示中文还是英文（使用者为内部人员）？原型名称「789报表助手」为示意。</td><td>运营</td><td>2026-11-04</td><td>已确认：显示中文；名称和头像先用示意，上线前运营再定</td></tr>
+<tr id="q5" data-brief="报表是否开启 Telegram 内容保护，禁止转发、保存和截图"><td>Q5</td><td class="w">是否对报表开启 Telegram 内容保护（禁止转发和保存，部分客户端禁止截图）？</td><td>Joshua</td><td>2026-11-04</td><td>已确认：开启（N34）</td></tr>
+<tr id="q6" data-brief="是否需要运营在后台自行新增渠道，当前固定 5 个"><td>Q6</td><td class="w">渠道固定为 cicc、短信、网红、谷歌、oem 5 个；是否需要运营在后台自行新增或停用渠道？</td><td>Joshua</td><td>2026-11-04</td><td>已确认：不可以，固定 5 个渠道</td></tr>
+<tr id="q7" data-brief="789Games 后台菜单位置和报表口径是否与 789Bingo 相同"><td>Q7</td><td class="w">789Games 后台是否有【系统管理】菜单和相同口径的平台报表、代理树？资料未覆盖，当前按与 789Bingo 相同写。</td><td>技术</td><td>2026-11-04</td><td>已确认：两站后台为同一套系统，菜单、平台报表口径和代理树结构相同</td></tr>
+<tr id="q8" data-brief="有效投注额取平台报表的三方平台有效投注还是自算有效投注"><td>Q8</td><td class="w">「有效投注额」取平台报表的「三方平台有效投注」还是「自算有效投注」？两者存在差额（平台报表另有 GAP 列）。</td><td>技术</td><td>2026-11-04</td><td>已确认：取「自算有效投注」</td></tr>
+</table></div>
+<h3 id="c10-1">10.1 未定文案清单</h3>
+<div class="tbl"><table data-fit>
+<tr><th>文案位置</th><th>示意文案</th><th>负责人</th><th>状态</th></tr>
+<tr><td>机器人名称</td><td class="w">789报表助手（示意）</td><td>运营</td><td>待确认</td></tr>
+</table></div>
+
+<h2 id="c11">11. 各角色协作 Tips</h2>
+<div class="roles-cards">
+  <div class="rc" style="--c:#C89A3C"><h4>设计</h4><ul><li>报表在手机上最窄约 320px，先用最长的金额（如 -₱12,345,678）试排，确保 4 列不换行错位。</li><li>机器人头像出 512×512 方图。</li></ul></div>
+  <div class="rc" style="--c:#6A2BB8"><h4>前端</h4><ul><li>后台两个标签页沿用现有后台组件；代理账号输入后回车等同「添加」。</li></ul></div>
+  <div class="rc" style="--c:#1560A8"><h4>后端</h4><ul><li>先按 N20、N21 用一个注册日手工算一遍留存，再做平均。</li><li>全站昨日数据直接和平台报表昨日日报表对数。</li></ul></div>
+  <div class="rc" style="--c:#1B7A4C"><h4>测试</h4><ul><li>准备一组跨渠道的代理链（父子分属两个渠道）验证 N6。</li><li>自动删除用 1 小时实测至少一次，不只看配置。</li></ul></div>
+  <div class="rc" style="--c:#B5601A"><h4>运营</h4><ul><li>上线前先整理 5 个渠道的代理清单，按「一代理一渠道」核对。</li><li>授权群前确认群成员都是可以看经营数据的人。</li></ul></div>
+  <div class="rc" style="--c:#8A1020"><h4>客服</h4><ul><li>本功能只给内部人员使用，玩家不会看到；内部同事问起时按客服 QA 回答。</li></ul></div>
+</div>
+<h2 id="appA">附录 A 评审清单核对</h2>
+<h3 id="appA-1">A.1 通用评审清单（知识库「四、通用需求评审清单」12 项）</h3>
+<div class="tbl"><table data-fit>
+<tr><th>项</th><th>结论</th><th>位置</th></tr>
+<tr><td>1. 合规</td><td class="w">不涉及玩家，不涉及 PAGCOR 规则；经营数据外发风险已列</td><td>9. 风险与依赖、Q5</td></tr>
+<tr><td>2. 资金</td><td class="w">只读统计，不改动资金</td><td>-</td></tr>
+<tr><td>3. 口径</td><td class="w">12 项指标口径和时段已写全，沿用平台报表口径</td><td>3.3 统计时段与指标口径</td></tr>
+<tr><td>4. 防刷与风控</td><td class="w">授权群、生成中防重复</td><td>N4、N29</td></tr>
+<tr><td>5. 多端范围</td><td class="w">Telegram 手机和电脑端、两站后台</td><td>1. 项目概述、7.2</td></tr>
+<tr><td>6. 后台配套</td><td class="w">渠道配置、授权群</td><td>5. 运营后台需求</td></tr>
+<tr><td>7. 系统约束</td><td class="w">Telegram 不提供已读状态，改为发出后 1 小时删除</td><td>0.1、N26</td></tr>
+<tr><td>8. 性能</td><td class="w">实时统计 30 秒超时</td><td>N30</td></tr>
+<tr><td>9. 安全</td><td class="w">按站点授权，未授权不返回数据，自动删除</td><td>N4、N5、N26、N27</td></tr>
+<tr><td>10. 上线方式</td><td class="w">先小范围授权，停用名单即回滚</td><td>8. 上线方式</td></tr>
+<tr><td>11. 验收</td><td class="w">含边界、时间和异常</td><td>7. 验收标准</td></tr>
+<tr><td>12. 工单规范</td><td class="w">两站都改，按规范分建 789Bingo【B】、789Games【G】两张单</td><td>-</td></tr>
+</table></div>
+<h3 id="appA-2">A.2 异常边界覆盖（规范第五章第 0 节 8 类）</h3>
+<div class="tbl"><table data-fit>
+<tr><th>类别</th><th>本需求处理位置</th></tr>
+<tr><td>边界值</td><td class="w">分母为 0、负数、渠道未绑定代理：N9、N17、N18、N22；ID 和备注校验：N31</td></tr>
+<tr><td>时间</td><td class="w">GMT+8 自然日、跨天删除时间、留存窗口：N10、N20、N21、N26</td></tr>
+<tr><td>异常</td><td class="w">生成超时、删除失败、服务中断：N28、N30、6. 接口与异常</td></tr>
+<tr><td>并发与重复</td><td class="w">重复点击、群内多人查询、多聊天并行：N27、N29</td></tr>
+<tr><td>状态</td><td class="w">旧菜单按钮、权限中途取消、配置修改生效：N2、N8、N32、6. 接口与异常</td></tr>
+<tr><td>用户与权限</td><td class="w">按群、按站点授权，私聊不返回数据：N4、N5</td></tr>
+<tr><td>端与版本</td><td class="w">Telegram 手机端和电脑端显示：7.2</td></tr>
+<tr><td>数据</td><td class="w">渠道归属与历史数据、与平台报表对数：N6、N8、N10</td></tr>
+</table></div>
+
+<h2 id="appB">附录 B 原型对照表</h2>
+<div class="tbl"><table data-fit>
+<tr><th>原型页面</th><th>功能点</th><th>可演示的交互</th><th>是否模拟</th></tr>
+<tr data-fp="F01-01"><td><a href="../prototype/front/Telegram报表-机器人对话页.html">机器人对话页</a></td><td><span class="fp">F01-01</span> 菜单按钮与命令</td><td class="w">点左下角「菜单」展开命令；点命令；输入 /menu、/agent、不支持的命令</td><td>真实交互</td></tr>
+<tr data-fp="F01-02"><td>机器人对话页</td><td><span class="fp">F01-02</span> 报表菜单</td><td class="w">进群即显示按钮矩阵；收起和 /menu 重新显示；只授权一个站点时报表只显示一列</td><td>真实交互；授权情况用模拟场景</td></tr>
+<tr data-fp="F01-03"><td>机器人对话页</td><td><span class="fp">F01-03</span> 授权校验</td><td class="w">授权群、未授权群、私聊引导</td><td>模拟场景</td></tr>
+<tr data-fp="F01-02 F02-01"><td>机器人对话页</td><td><span class="fp">F02-01</span> 报表生成与展示</td><td class="w">点渠道生成报表、再点一次生成新报表、生成中重复点击、渠道未绑定时按钮不显示、只在一站绑定时报表只有一列、生成超时和重试</td><td>真实交互；绑定情况和超时用模拟操作</td></tr>
+
+<tr data-fp="F03-01"><td>机器人对话页</td><td><span class="fp">F03-01</span> 代理线查询</td><td class="w">回复机器人提问输入账号、/agent 账号、不回复时不响应、账号不存在</td><td>真实交互</td></tr>
+<tr data-fp="F04-01 F04-02"><td>机器人对话页</td><td><span class="fp">F04-01</span> <span class="fp">F04-02</span> 自动删除</td><td class="w">生成新报表时旧报表消失；1 小时到时报表消失</td><td>新报表替换为真实交互；1 小时用模拟操作</td></tr>
+<tr data-fp="F05-01"><td><a href="../prototype/admin/Telegram报表-后台渠道配置页面.html">后台渠道配置页面</a></td><td><span class="fp">F05-01</span> 渠道配置</td><td class="w">编辑、添加和移除代理、三种校验提示、保存</td><td>真实交互</td></tr>
+<tr data-fp="F05-02"><td><a href="../prototype/admin/Telegram报表-后台授权群页面.html">后台授权群页面</a></td><td><span class="fp">F05-02</span> 授权群</td><td class="w">筛选、分页、添加、编辑、状态开关、删除确认、空列表、格式和重复校验</td><td>真实交互</td></tr>
+</table></div>
+
+<h2 id="appC">附录 C 前台文案中英对照</h2>
+<p>本需求例外：机器人上线显示中文（待确认事项 Q4 已确认），前台原型在发布站点也保持中文，不做英文对照，本表为空。界面文案以第 4 章「前台页面一：机器人对话页」和各规则原文为准。</p>
+<div class="tbl"><table id="enTable"><tr><th>序号</th><th>中文（原型制作用）</th><th>英文（界面实际文案）</th></tr></table></div>
+
+<h2 id="appD">附录 D 页面控件说明</h2>
+<p>原型上每个控件的作用、场景与状态、交互结果、限制和计算公式。本表由页面自动读取 <code>assets/dev-notes.js</code> 生成，不手写；开发和产品角色查看原型时，控件右上角的「研发说明」标签显示同一份内容（需求包框架规范第 4 节「研发说明标签」）。</p>
+<div class="tbl"><table id="devTable" class="dev-tbl" data-fit data-iter=""><tr><th>编号</th><th>控件</th><th>说明</th><th>计算公式与规则</th></tr></table></div>
+
+</article></div>
+</div>
+<script>window.NAV_ROOT = "../";</script>
+<script src="../assets/nav-data.js"></script>
+<script src="../assets/nav.js"></script>
+<script src="../assets/proto-en.js"></script>
+<script src="../assets/dev-notes.js"></script>
+<script>
+(function () {
+  /* 功能点名称（与开发自查清单保持一致） */
+  var FP = {
+    F01: "机器人入口与权限", "F01-01": "菜单按钮与命令", "F01-02": "报表菜单", "F01-03": "授权校验",
+    F02: "渠道报表", "F02-01": "报表生成与展示", "F02-02": "指标口径",
+    F03: "代理线查询", "F03-01": "代理线查询",
+    F04: "报表自动删除", "F04-01": "发出 1 小时自动删除", "F04-02": "新报表替换旧报表",
+    F05: "后台配置", "F05-01": "渠道配置", "F05-02": "授权群"
+  };
+  var doc = document.getElementById("doc");
+
+  /* 子功能点锚点：第一处相关内容 */
+  Object.keys(FP).forEach(function (code) {
+    if (code.length === 3 || document.getElementById(code)) return;
+    var el = [].filter.call(doc.querySelectorAll('[data-fp~="' + code + '"]'), function (e) { var f = e.querySelector(".fp"); return f && f.textContent === code; })[0] ||
+      doc.querySelector('[data-fp~="' + code + '"]');
+    if (!el) return;
+    if (!el.id) { el.id = code; return; }
+    var a = document.createElement("span"); a.id = code;
+    (el.tagName === "TR" ? el.cells[0] : el).prepend(a);
+  });
+  /* 大功能点（如 F01）没有单独位置时，锚到它第一处相关内容 */
+  Object.keys(FP).forEach(function (code) {
+    if (code.length !== 3 || document.getElementById(code)) return;
+    var el = doc.querySelector('[data-fp~="' + code + '"]') || doc.querySelector('[data-fp^="' + code + '-"]');
+    if (!el) return;
+    var s = document.createElement("span"); s.id = code; (el.tagName === "TR" ? el.cells[0] : el).prepend(s);
+  });
+
+  /* 全文目录：按正文 h2 / h3 自动生成 */
+  var list = document.getElementById("toc-list"), sub = null;
+  doc.querySelectorAll("h2, h3").forEach(function (h) {
+    if (h.id === "toc" || !h.id) return;
+    var li = document.createElement("li"), a = document.createElement("a");
+    a.href = "#" + h.id; a.textContent = h.textContent; li.appendChild(a);
+    if (h.tagName === "H2") { list.appendChild(li); sub = document.createElement("ol"); li.appendChild(sub); }
+    else if (sub) sub.appendChild(li);
+  });
+  list.querySelectorAll("ol").forEach(function (o) { if (!o.children.length) o.remove(); });
+
+  /* 版本标注（v1.0 首版没有标注；以后的版本沿用这段逻辑） */
+  var rows = [].slice.call(document.querySelectorAll("#vtable tr[data-v]"));
+  /* 最新版本按版本号判断（不依赖表格的排列顺序） */
+  function vnum(v) { var m = /(\d+)\.(\d+)/.exec(v || ""); return m ? (+m[1]) * 1000 + (+m[2]) : -1; }
+  var latest = rows.reduce(function (a, r) { return vnum(r.dataset.v) > vnum(a) ? r.dataset.v : a; }, rows[0].dataset.v), sum = {};
+  rows.forEach(function (r) { sum[r.dataset.v] = r.dataset.sum; });
+  doc.querySelectorAll(".vmark").forEach(function (m) { if (m.dataset.v !== latest) m.classList.add("old"); });
+  var tip = null;
+  function hideTip() { if (tip) { tip.remove(); tip = null; } }
+  doc.querySelectorAll(".vtag").forEach(function (t) {
+    if (t.dataset.v !== latest) t.classList.add("old");
+    t.tabIndex = 0;
+    function show(e) {
+      if (e) e.stopPropagation();
+      hideTip();
+      tip = document.createElement("div"); tip.className = "vtip"; tip.textContent = t.dataset.v + "：" + (sum[t.dataset.v] || "");
+      document.body.appendChild(tip);
+      var r = t.getBoundingClientRect();
+      tip.style.left = Math.max(8, Math.min(r.left + scrollX, innerWidth - 370)) + "px"; tip.style.top = (r.bottom + scrollY + 6) + "px";
+    }
+    t.addEventListener("mouseenter", show); t.addEventListener("click", show); t.addEventListener("focus", show);
+    t.addEventListener("mouseleave", hideTip);
+  });
+  document.addEventListener("click", hideTip);
+  /* 涉及章节（生成内容规范第五章第 3 节）：按项数折叠，不分新旧版本——3 项以内直接列出；超过 3 项只显示「查看详细（共 N 项）」，点开后清单末尾有「收起」 */
+  document.querySelectorAll("[data-chg]").forEach(function (b) {
+    var ul = document.getElementById(b.dataset.chg); if (!ul) return;
+    var n = ul.querySelectorAll("li:not(.chg-fold)").length;
+    if (n <= 3) { ul.hidden = false; b.hidden = true; return; }
+    b.textContent = "查看详细（共 " + n + " 项）"; ul.hidden = true;
+    var fold = document.createElement("li"); fold.className = "chg-fold";
+    var fb = document.createElement("button"); fb.type = "button"; fb.className = "linkbtn"; fb.textContent = "收起";
+    fb.onclick = function () { ul.hidden = true; b.hidden = false; b.focus(); };
+    fold.appendChild(fb); ul.appendChild(fold);
+    b.onclick = function () { ul.hidden = false; b.hidden = true; };
+  });
+
+  /* 附录 C 前台文案中英对照：读取 assets/proto-en.js（window.PROTO_EN）自动生成 */
+  (function () {
+    var t = document.getElementById("enTable"), D = window.PROTO_EN || {}, keys = Object.keys(D); if (!t) return;
+    if (!keys.length) { var r0 = t.insertRow(); var c0 = r0.insertCell(); c0.colSpan = 3; c0.className = "w"; c0.textContent = "还没有填写英文对照（打包前在 assets/proto-en.js 填写）。"; return; }
+    keys.forEach(function (k, i) { var r = t.insertRow(); r.insertCell().textContent = i + 1; var a = r.insertCell(); a.className = "w"; a.textContent = k; var b = r.insertCell(); b.className = "w"; b.textContent = D[k]; });
+  })();
+
+  /* 附录 D 页面控件说明：读取 assets/dev-notes.js（window.DEV_NOTES）自动生成，按所在页面分组；多迭代 PRD 在表格上写 data-iter="v1.1"，只列这个迭代的控件 */
+  (function () {
+    var t = document.getElementById("devTable"), D = window.DEV_NOTES || {}, it = t ? t.getAttribute("data-iter") || "" : "";
+    if (!t) return;
+    var ids = Object.keys(D).filter(function (k) { var x = D[k].iter; return !it || !x || [].concat(x).indexOf(it) >= 0; });
+    if (!ids.length) { var r0 = t.insertRow(); var c0 = r0.insertCell(); c0.colSpan = 4; c0.className = "w"; c0.textContent = "还没有填写控件说明（在 assets/dev-notes.js 填写，原型控件加 data-dev 编号）。"; return; }
+    function line(box, k, v, cls) { if (!v) return; var p = document.createElement("div"); var b = document.createElement("span"); b.className = "dev-k"; b.textContent = k + "："; p.appendChild(b); var s = document.createElement("span"); if (cls) s.className = cls; s.textContent = v; p.appendChild(s); box.appendChild(p); }
+    var page = null;
+    ids.forEach(function (k) {
+      var d = D[k];
+      if (d.page !== page) { page = d.page; var g = t.insertRow(); var gc = g.insertCell(); gc.colSpan = 4; gc.className = "w"; gc.innerHTML = "<b></b>"; gc.firstChild.textContent = page || "（未写所在页面）"; }
+      var r = t.insertRow(); r.id = "dev-" + k; r.setAttribute("data-brief", (d.name || k) + "：" + (d.what || ""));
+      var c1 = r.insertCell(); c1.className = "dev-id"; c1.textContent = k;
+      r.insertCell().textContent = d.name || "";
+      var c3 = r.insertCell(); c3.className = "w"; line(c3, "作用", d.what); line(c3, "场景与状态", d.scene); line(c3, "交互结果", d.result); line(c3, "限制", d.limit);
+      var c4 = r.insertCell(); c4.className = "w"; line(c4, "公式", d.formula, "dev-f"); line(c4, "规则", d.rules);
+    });
+    /* 从原型「在 PRD 中查看」跳来（#dev-D01）时，行是刚生成的，浏览器打开页面时还找不到它：生成后定位一次，
+       表格自动列宽和字体加载会改变行的位置，load 后和稍后各再定位一次；用户自己滚动过就不再拉回 */
+    function goDev() {
+      var h = decodeURIComponent(location.hash.slice(1)); if (!/^dev-/.test(h)) return;
+      var row = document.getElementById(h); if (!row) return;
+      doc.querySelectorAll("tr.dev-hit").forEach(function (x) { x.classList.remove("dev-hit"); });
+      row.classList.add("dev-hit"); row.scrollIntoView({ block: "center", behavior: "instant" });   /* 不用平滑滚动：多次定位时平滑滚动会互相打断，后台标签页里也不执行 */
+    }
+    var moved = false;
+    ["wheel", "touchmove", "keydown"].forEach(function (ev) { window.addEventListener(ev, function () { moved = true; }, { once: true, passive: true }); });
+    function again() { if (!moved) goDev(); }
+    goDev();
+    window.addEventListener("load", function () { again(); setTimeout(again, 400); setTimeout(again, 1200); });
+    window.addEventListener("hashchange", function () { moved = false; goDev(); });
+  })();
+
+  /* 引用编号（规则 N、待确认 Q、功能点 F、控件说明 D）换成可点击的编号按钮（点击打开 PRD 并标出相关位置）由公共 assets/nav.js 统一处理（生成内容规范第五章第 2 节「引用编号」），本页不再自带脚本 */
+  /* 表格自动列宽（生成内容规范第五章第 2 节「表格排版」，参考「用户提款风控规则升级」需求包）：带 data-fit 的表，
+     表格宽度等于正文宽度、不出现水平滚动；从有富余的列把宽度挪给撑高行的列，直到整张表的高度不能再降低。单元格允许换行，不会溢出或重叠。
+     没写 <colgroup> 时自动补上。打开页面、窗口大小变化、目录栏展开收起、字体加载完成后各算一次 */
+  (function () {
+    function cols(tbl) {
+      var cs = tbl.querySelectorAll("col"); if (cs.length) return cs;
+      var first = tbl.rows[0]; if (!first) return cs;
+      var n = 0; [].forEach.call(first.cells, function (c) { n += c.colSpan || 1; });
+      var g = document.createElement("colgroup"); for (var i = 0; i < n; i++) g.appendChild(document.createElement("col"));
+      tbl.insertBefore(g, tbl.firstChild); return tbl.querySelectorAll("col");
+    }
+    function fit(tbl, force) {
+      var cl = cols(tbl); if (!cl.length) return;
+      var n = cl.length, W = tbl.parentNode.clientWidth; if (!W) return;
+      /* 宽度和上次计算时一样就不重算（列宽已经设好），避免窗口事件、切换标签时卡顿（2026-10-26，来源「客服系统待回复列表优化」实测） */
+      if (!force && tbl._fitW === W) return;
+      tbl._fitW = W;
+      var MIN = 44, STEP = Math.max(4, Math.round(W / 120));
+      var rows = [].slice.call(tbl.rows), len = [];
+      for (var c = 0; c < n; c++) { var m = 1; rows.forEach(function (r) { var cell = r.cells[c]; if (cell && cell.colSpan === 1) m = Math.max(m, cell.textContent.trim().length); }); len.push(Math.sqrt(m)); }
+      /* 每列下限：不会折行的元素（功能点标签 .fp、.nw、code、nobr）不能被挤出单元格（2026-10-26，来源「实体奖品管理」） */
+      var mn = []; for (var k = 0; k < n; k++) mn.push(MIN);
+      rows.forEach(function (r) { for (var k = 0; k < r.cells.length && k < n; k++) { var cell = r.cells[k]; if (cell.colSpan !== 1) continue; [].forEach.call(cell.querySelectorAll(".fp,.nw,.ui-nw,code,nobr"), function (e) { mn[k] = Math.max(mn[k], e.offsetWidth + 18); }); } });
+      var sum = len.reduce(function (a, b) { return a + b; }, 0), w = len.map(function (l, i) { return Math.max(mn[i], Math.floor(W * l / sum)); });
+      var cells = [].slice.call(tbl.querySelectorAll("th,td")), rg = document.createRange();
+      /* 评分 = 表格总高度为主，各单元格文字高度之和为辅：先压最高的行，同高时也让其他格子少折行 */
+      function apply() { var s = w.reduce(function (a, b) { return a + b; }, 0); for (var i = 0; i < n; i++) cl[i].style.width = (w[i] / s * 100).toFixed(3) + "%"; var t = 0; cells.forEach(function (x) { rg.selectNodeContents(x); t += rg.getBoundingClientRect().height; }); return tbl.offsetHeight * 1000 + t; }
+      var best = apply(), guard = 0, improved = true;
+      while (improved && guard++ < 150) {
+        improved = false; var move = null;
+        /* 每轮同时试 1、2、4、8 倍步长，取评分下降最多的一次：一格要少折一行常要挪 20px 以上，只试单步会停在原处（2026-10-26，来源「用户提款风控规则升级」） */
+        [1, 2, 4, 8].forEach(function (k) {
+          var d = STEP * k;
+          for (var to = 0; to < n; to++) for (var from = 0; from < n; from++) {
+            if (to === from || w[from] - d < mn[from]) continue;
+            w[from] -= d; w[to] += d; var h = apply();
+            if (h < best - 0.5) { best = h; move = [from, to, d]; }
+            w[from] += d; w[to] -= d;
+          }
+        });
+        if (move) { w[move[0]] -= move[2]; w[move[1]] += move[2]; improved = true; }
+        apply();
+      }
+    }
+    function fitAll(force) { doc.querySelectorAll("table[data-fit]").forEach(function (t) { fit(t, force === true); }); }
+    var tm = 0; function later() { clearTimeout(tm); tm = setTimeout(fitAll, 150); }
+    window.addEventListener("resize", later); window.addEventListener("navtoggle", later);
+    /* 打开页面只算一次：等页面和字体都加载完（字体会改变文字宽度），不在脚本执行、字体就绪、load 时各算一遍 */
+    var loaded = document.readyState === "complete" ? Promise.resolve() : new Promise(function (r) { window.addEventListener("load", r); });
+    Promise.all([loaded, document.fonts && document.fonts.ready ? document.fonts.ready : null]).then(function () { fitAll(true); });
+  })();
+  /* 荧光蓝标注：网址以 #编号 结尾时出现（来自原型、开发自查清单等页面的编号标签和「在 PRD 中查看」） */
+  var banner = document.getElementById("fp-banner"), hits = [], pos = -1;
+  function report() { try { if (parent !== window) parent.postMessage({ type: "prd-hits", total: hits.length, pos: pos }, "*"); } catch (e) {} }
+  function clearHit() { doc.querySelectorAll(".fp-hit,.fp-cur").forEach(function (e) { e.classList.remove("fp-hit", "fp-cur"); }); hits = []; pos = -1; banner.hidden = true; }
+  function go(i) {
+    if (!hits.length) return;
+    pos = (i + hits.length) % hits.length;
+    hits.forEach(function (h) { h.classList.remove("fp-cur"); });
+    hits[pos].classList.add("fp-cur");
+    hits[pos].scrollIntoView({ block: "center", behavior: "instant" });   /* 不用平滑滚动：多次定位时会互相打断，后台标签页里也不执行 */
+    report();
+  }
+  /* 编号定位（所有需求通用，用户 2026-11-02）：原型和文档里点编号标签（规则 N、待确认 Q、功能点 F、研发说明 D）或研发说明弹窗「在 PRD 中查看」，
+     打开 PRD 并带 #编号；本页标出所有相关位置（荧光蓝底色，优先级最高），跳到文档中最前面的一处。
+     - F：data-fp 含该功能点的块；N / Q：定义行 + 正文里引用它的段落、表格行、列表项；
+     - D：研发说明关联的规则行（dev-notes 的 rules）+ 附录 D 行 + 正文里引用它的位置。 */
+  window.PRD_CODE_HL = true;
+  function mentions(code, add) {
+    var re = new RegExp("\\b" + code + "\\b"), w = document.createTreeWalker(doc, NodeFilter.SHOW_TEXT), n;
+    while ((n = w.nextNode())) {
+      if (!re.test(n.nodeValue) || !n.parentNode.closest || n.parentNode.closest("h1,h2,h3,.toc-full,#fp-banner,script,style")) continue;
+      var p = n.parentNode.closest("button") ? n.parentNode.closest("button").parentNode : n.parentNode;   /* 编号按钮里的文字：标它所在的整段，不只标按钮 */
+      add(p.closest("tr,li,p,dd,blockquote,h4") || p.closest(".vmark") || p);
+    }
+  }
+  function applyHit() {
+    var code = decodeURIComponent(location.hash.slice(1)), set = [];
+    clearHit();
+    function add(e) { if (e && set.indexOf(e) < 0 && !set.some(function (s) { return s.contains(e); })) { set = set.filter(function (s) { return !e.contains(s); }); set.push(e); } }
+    var title = "";
+    if (/^F\d{2}(-\d{2})?$/.test(code) && FP[code]) {
+      doc.querySelectorAll("[data-fp]").forEach(function (e) {
+        if (e.dataset.fp.split(/\s+/).some(function (c) { return c === code || c.indexOf(code + "-") === 0; })) add(e);
+      });
+      var big = code.slice(0, 3);
+      title = code.length > 3 ? big + " " + FP[big] + " › " + code + " " + FP[code] : code + " " + FP[code];
+    } else if (/^[NQ]\d{1,3}$/.test(code)) {
+      var row = document.getElementById(code.toLowerCase()); if (!row) { report(); return; }
+      add(row); mentions(code, add);
+      title = code + " " + (row.getAttribute("data-brief") || (row.cells[1] ? row.cells[1].textContent.trim().slice(0, 40) : ""));
+    } else if (/^D\d{2,3}$/.test(code)) {
+      var d = (window.DEV_NOTES || {})[code]; if (!d) { report(); return; }
+      String(d.rules || "").split(/[、,，\s]+/).forEach(function (r) { var m = /^[NQ]\d{1,3}/.exec(r); var e = m && document.getElementById(m[0].toLowerCase()); if (e) add(e); });
+      add(document.getElementById("dev-" + code)); mentions(code, add);
+      title = code + " " + (d.name || "");
+    } else { report(); return; }
+    hits = set.filter(Boolean).sort(function (a, b) { return a.compareDocumentPosition(b) & 4 ? -1 : 1; });
+    hits.forEach(function (e) { e.classList.add("fp-hit"); });
+    if (!hits.length) { report(); return; }
+    if (title.length > 60) title = title.slice(0, 60) + "…";
+    document.getElementById("fp-text").textContent = "正在查看：" + title + "（共标出 " + hits.length + " 处，已跳到最前面一处）";
+    banner.hidden = false;
+    go(0);
+    /* 表格自动列宽、字体加载、编号按钮替换会改变上方高度：用户没动之前再定位几次 */
+    var moved = false, stop = function () { moved = true; };
+    ["wheel", "touchstart", "keydown", "mousedown"].forEach(function (ev) { window.addEventListener(ev, stop, { once: true, passive: true, capture: true }); });
+    [300, 900, 2000].forEach(function (ms) { setTimeout(function () { if (!moved && hits.length) go(pos); }, ms); });
+  }
+  document.getElementById("fp-clear").onclick = function () { clearHit(); history.replaceState(null, "", location.pathname); report(); };
+  window.addEventListener("message", function (e) {
+    var d = e.data || {};
+    if (d.type === "prd-step") go(pos + d.dir);
+    if (d.type === "prd-show") { if (location.hash === "#" + d.code) applyHit(); else location.hash = d.code; }
+  });
+  window.addEventListener("hashchange", applyHit);
+  applyHit();
+})();
+</script>
+</body>
+</html>

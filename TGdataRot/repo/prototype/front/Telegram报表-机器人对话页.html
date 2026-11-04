@@ -1,0 +1,401 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Telegram报表-机器人对话页</title>
+<link rel="stylesheet" href="../../assets/style.css">
+<style>
+/* 本页仿 Telegram 对话界面；类名统一加 tg- 前缀，避免和模板通用样式重名 */
+.tg-app{background:linear-gradient(160deg,#d6dc8f 0%,#a9c98a 35%,#7fb58a 70%,#9cc69a 100%);color:#000;display:flex;flex-direction:column;font-family:-apple-system,"Segoe UI","Microsoft YaHei",sans-serif}
+.tg-app::before{content:"";position:absolute;inset:0;pointer-events:none;opacity:.18;background-image:radial-gradient(circle at 20% 30%,rgba(40,70,40,.5) 1.5px,transparent 2px),radial-gradient(circle at 70% 65%,rgba(40,70,40,.45) 1.2px,transparent 1.8px),radial-gradient(circle at 45% 85%,rgba(40,70,40,.4) 1px,transparent 1.6px);background-size:46px 46px,58px 58px,37px 37px}
+.tg-app>*{position:relative}
+.tg-app .sb{color:#222;background:#fff}
+.tg-head{display:flex;align-items:center;gap:10px;padding:8px 12px;background:#fff;border-bottom:1px solid #e7e7e7;z-index:2}
+.tg-head .tg-back{font-size:24px;color:#8a8a8a;width:16px}
+.tg-ava{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#6ec9f7,#3a94e0);color:#fff;display:grid;place-items:center;font-weight:700;font-size:16px;flex:none}
+.tg-head b{display:block;font-size:15px;font-weight:600;color:#000}
+.tg-head small{font-size:12.5px;color:#8e959b}
+.tg-hico{margin-left:auto;display:flex;gap:16px;color:#8a8f94;font-size:17px}
+.tg-chat{flex:1;overflow-y:auto;padding:12px 10px 8px;display:flex;flex-direction:column;gap:6px}
+.tg-day{align-self:center;font-size:12.5px;font-weight:600;color:#fff;background:rgba(76,110,72,.55);border-radius:12px;padding:2px 11px;margin:4px 0}
+.tg-msg{max-width:90%;display:flex;flex-direction:column;gap:4px}
+.tg-msg.me{align-self:flex-end}
+.tg-msg.bot{align-self:flex-start}
+.tg-bub{position:relative;background:#fff;border-radius:14px 14px 14px 4px;padding:6px 10px 4px;font-size:14px;line-height:1.45;box-shadow:0 1px 1px rgba(0,0,0,.12);word-break:break-word;color:#000}
+.tg-msg.me .tg-bub{background:#effdde;border-radius:14px 14px 4px 14px}
+.tg-msg.bot .tg-bub::before{content:"";position:absolute;left:-6px;bottom:0;border:6px solid transparent;border-right-color:#fff;border-bottom-color:#fff;border-radius:0 0 0 6px}
+.tg-msg.me .tg-bub::after{content:"";position:absolute;right:-6px;bottom:0;border:6px solid transparent;border-left-color:#effdde;border-bottom-color:#effdde}
+.tg-who{font-size:13px;font-weight:600;color:#d26a1f;margin-bottom:1px}
+.tg-tm{display:block;text-align:right;font-size:11.5px;color:#a0acb6;margin-top:1px}
+.tg-msg.me .tg-tm{color:#5fae57}
+.tg-bub .tg-cmd{color:#2481cc}
+.tg-kb{display:grid;gap:4px}
+.tg-kb .tg-row{display:grid;gap:4px}
+.tg-kb button{all:unset;cursor:pointer;text-align:center;background:rgba(62,98,58,.38);color:#fff;font-size:13px;font-weight:600;border-radius:9px;padding:8px 4px;font-family:inherit;backdrop-filter:blur(2px)}
+.tg-kb button:hover{background:rgba(62,98,58,.5)}
+.tg-kb button.on{background:rgba(36,129,204,.85)}
+.tg-kb .tg-lab{font-size:12px;color:#7d8b9c;padding:2px 2px 0}.tg-rep{font-size:12.5px}
+.tg-rep h4{margin:0 0 2px;font-size:13.5px}
+.tg-rep .tg-sub{font-size:11.5px;color:#7d8b9c;margin-bottom:6px}
+.tg-rep .tg-warn{font-size:11.5px;color:#c0392b;margin-bottom:6px}
+.tg-app .tg-rep table{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums;font-size:11.5px}
+.tg-app .tg-rep th,.tg-app .tg-rep td{border:1px solid #dfe5ec;padding:3px 4px;text-align:right;white-space:nowrap;color:#1f2a37}
+.tg-app .tg-rep th{background:#f3f6f9;font-weight:700;text-align:center}
+.tg-app .tg-rep td:first-child{text-align:left;white-space:normal}
+.tg-app .tg-rep td b{display:block;font-weight:600}.tg-y{display:block;font-size:10px;color:#93a1b1;font-weight:400}
+.tg-up{color:#1a9e5a}.tg-dn{color:#d14343}
+.tg-chat{overflow-x:hidden}
+.tg-msg.wide{max-width:100%;width:100%}.tg-msg.wide .tg-bub{box-sizing:border-box;width:100%}
+.tg-app .tg-rep table{table-layout:fixed}
+.tg-app .tg-rep th{font-size:12px;padding:5px 2px}
+.tg-app .tg-rep td.tg-v{text-align:center;padding:4px 2px;white-space:nowrap;vertical-align:top}
+.tg-app .tg-rep td.tg-v b{display:block;font-size:12.5px;font-weight:700;color:#1f2a37}
+.tg-app .tg-rep td.tg-v b.tg-up{color:#1a9e5a}.tg-app .tg-rep td.tg-v b.tg-dn{color:#d14343}
+.tg-app .tg-rep .tg-y,.tg-app .tg-rep .tg-p{display:block;font-size:10.5px;line-height:1.35;color:#8a97a5;font-weight:400}
+.tg-app .tg-rep .tg-p.tg-up{color:#1a9e5a}.tg-app .tg-rep .tg-p.tg-dn{color:#d14343}
+.tg-app .tg-rep tr.tg-mlab td{background:#f6f8fa;text-align:left;font-size:11.5px;font-weight:600;color:#4a5866;padding:3px 6px;border-bottom:0}
+.tg-app .tg-rep tr.tg-sec td{background:#e9f1f8;text-align:left;font-size:12px;font-weight:700;color:#2b5d8a;padding:4px 6px}
+.tg-app .tg-rep table.tg-one td.tg-mname{text-align:left;font-size:12px;color:#33414f;padding:4px 6px;white-space:normal;vertical-align:middle;width:44%}
+.tg-app .tg-rep table.tg-one td.tg-v{text-align:right;padding-right:8px}
+.tg-app .tg-rep table.tg-one th:first-child{width:44%}
+.tg-del{font-size:11px;color:#93a1b1;margin-top:5px}
+.tg-gen{color:#56657a;font-style:italic}
+.tg-cmds{position:absolute;left:8px;right:8px;bottom:58px;background:#fff;border-radius:12px;box-shadow:0 6px 24px rgba(0,0,0,.18);padding:6px 0;z-index:5}
+.tg-cmds button{all:unset;cursor:pointer;display:flex;gap:10px;align-items:center;width:calc(100% - 28px);padding:8px 14px;font-size:14px;font-family:inherit;color:#000}
+.tg-cmds button:hover{background:#f1f1f1}
+.tg-cmds b{color:#2481cc;min-width:58px;font-weight:600}
+.tg-cmds span{color:#8e959b;font-size:13px}
+.tg-slash{all:unset;cursor:pointer;flex:none;width:24px;height:24px;border:2px solid #9aa0a6;border-radius:6px;color:#9aa0a6;font-weight:700;font-size:14px;line-height:22px;text-align:center}
+.tg-slash[aria-expanded="true"]{border-color:#50a2e9;color:#50a2e9}
+.tg-reply{display:flex;align-items:center;gap:10px;padding:6px 12px;background:#fff;border-top:1px solid #e7e7e7;z-index:2;font-size:13px}
+.tg-reply i{color:#50a2e9;font-style:normal;font-size:18px}.tg-reply div{flex:1;border-left:2px solid #50a2e9;padding-left:8px;min-width:0}.tg-reply b{display:block;color:#50a2e9;font-weight:600}.tg-reply span{color:#666}
+.tg-reply button{all:unset;cursor:pointer;color:#9aa0a6;font-size:18px}
+.tg-quote{border-left:2px solid #5fae57;padding:1px 0 1px 7px;margin-bottom:3px;font-size:12.5px;color:#4a7c44;background:rgba(95,174,87,.1);border-radius:3px}
+.tg-who.bot{color:#2481cc}
+.tg-menu{all:unset;cursor:pointer;background:#50a2e9;color:#fff;border-radius:16px;padding:5px 14px;font-size:14px;font-weight:600;font-family:inherit;flex:none}
+.tg-kbtg{all:unset;cursor:pointer;color:#9aa0a6;font-size:20px;flex:none}
+.tg-kbtg[aria-pressed="true"]{color:#50a2e9}
+.tg-send .tg-arrow{display:none}.tg-send.has .tg-mic{display:none}.tg-send.has .tg-arrow{display:inline}.tg-mic{filter:grayscale(1);opacity:.6;font-size:17px}
+.tg-kbd{background:#fff;padding:4px 8px 10px;display:grid;gap:7px;z-index:2}
+.tg-kbd .tg-krow{display:grid;gap:7px}
+.tg-kbd button{all:unset;cursor:pointer;text-align:center;background:#f0f1f3;border-radius:10px;padding:10px 4px;font-size:14px;color:#222;font-family:inherit;box-shadow:0 1px 0 rgba(0,0,0,.06)}
+.tg-kbd button:hover{background:#e6e8eb}.tg-bar{display:flex;align-items:center;gap:10px;padding:8px 12px;background:#fff;border-top:1px solid #e7e7e7;z-index:2}
+.tg-menu{all:unset;cursor:pointer;background:#50a2e9;color:#fff;border-radius:16px;padding:5px 12px;font-size:13.5px;font-weight:600;font-family:inherit;flex:none}
+.tg-clip,.tg-emo{color:#9aa0a6;font-size:18px;flex:none;line-height:1}
+.tg-bar input{all:unset;flex:1;min-width:0;font-size:14px;color:#000;font-family:inherit;padding:6px 2px}
+.tg-bar input::placeholder{color:#a8aeb3}
+.tg-send{all:unset;cursor:pointer;color:#50a2e9;font-size:20px;flex:none;width:24px;text-align:center}.tg-app .toast{position:absolute;left:50%;top:84px;transform:translateX(-50%);background:rgba(30,40,55,.88);color:#fff;font-size:12.5px;border-radius:8px;padding:7px 12px;z-index:6;max-width:80%;text-align:center}
+</style>
+</head>
+<body>
+<!-- 前台原型：仿 Telegram 机器人对话界面。手机画面和批注都用中文；打包前把画面中文和英文写进 assets/proto-en.js。示例数据均为虚构。 -->
+<div class="with-nav">
+<div class="stage">
+  <div class="app tg-app" role="region" aria-label="手机画面">
+    <div class="sb"><span>14:32</span><span>●●● 5G</span></div>
+    <div class="tg-head"><span class="tg-back" aria-hidden="true">‹</span><div class="tg-ava" id="tgAva">运</div><div><b id="tgTitle">运营数据群（示意）</b><small id="tgSub">12 位成员</small></div><div class="tg-hico" aria-hidden="true"><span>⌕</span><span>⋮</span></div></div>
+    <div class="tg-chat" id="chat" aria-live="polite"></div>
+    <div class="tg-cmds" id="cmds" hidden>
+      <button type="button" data-cmd="/menu" data-dev="D02"><b>/menu</b><span>重新显示按钮矩阵</span></button>
+      <button type="button" data-cmd="/agent" data-dev="D03"><b>/agent</b><span>按代理线查询</span></button>
+    </div>
+    <div class="tg-reply" id="replyBar" hidden><i>↩</i><div><b>回复 789报表助手</b><span>请回复代理账号，例如 kk_sms_g12</span></div><button type="button" id="replyX" aria-label="取消回复">×</button></div>
+    <div class="tg-bar">
+      <button type="button" class="tg-menu" id="menuBtn" data-dev="D01" aria-expanded="false">菜单</button>
+      <span class="tg-clip" aria-hidden="true">📎</span>
+      <input id="msg" placeholder="输入消息…" aria-label="消息" data-dev="D12" autocomplete="off">
+      <button type="button" class="tg-kbtg" id="kbdTg" aria-label="显示或收起键盘" data-dev="D16" hidden>⌨</button>
+      <button type="button" class="tg-send" id="send" aria-label="发送" data-dev="D13"><span class="tg-mic">🎙</span><span class="tg-arrow">➤</span></button>
+    </div>
+    <div class="tg-kbd" id="kbd" hidden></div>
+    <div class="toast" id="toast" role="status" hidden></div>
+  </div>
+
+  <aside class="notes">
+    <h2>机器人对话页</h2>
+    <p class="sub">机器人拉进授权的 Telegram 群，群成员通过「菜单」按钮和输入框下方的报表键盘查看 789Bingo、789Games 两站的渠道实时报表，或回复代理账号查询代理线报表（本页全部为本需求新增）。</p>
+    <h3>模拟场景</h3>
+    <div class="sim">
+      <button type="button" data-go="menu"><span class="simtag">两站汇总群</span>进群（按钮矩阵）</button>
+      <button type="button" data-go="report"><span class="simtag">两站汇总群</span>渠道报表（两站 + 合计）</button>
+      <button type="button" data-go="bingo"><span class="simtag">789Bingo 数据群</span>进群（按钮矩阵）</button>
+      <button type="button" data-go="games"><span class="simtag">789Games 数据群</span>进群（按钮矩阵）</button>
+      <button type="button" data-go="agent"><span class="simtag">两站汇总群</span>代理线查询</button>
+      <button type="button" data-go="groupno"><span class="simtag">未授权群</span>无权限</button>
+      <button type="button" data-go="private"><span class="simtag">私聊</span>引导到群</button>
+      <button type="button" data-go="fail"><span class="simtag">异常</span>生成失败</button>
+    </div>
+    <h3>模拟操作</h3>
+    <div class="sim" id="simPanel"></div>
+    <h3>规则批注</h3>
+    <ol>
+      <li><b>使用场景</b>：机器人拉进授权的 Telegram 群使用，群内所有成员都可以操作；私聊机器人只回复「本机器人仅在授权群内使用，请在群内发送 /menu。」<span class="ref">PRD 规则 N4、N5 · F01-03 授权校验</span></li>
+      <li><b>菜单按钮</b>：输入框左侧蓝色「菜单」展开机器人命令：/menu 打开报表键盘、/agent 按代理线查询。<span class="ref">PRD 规则 N1 · F01-01 菜单按钮与命令</span></li>
+      <li><b>按钮矩阵</b>：打开授权群时，输入框下方就显示报表按钮矩阵（3 列），不用先发命令：📊 全站、cicc、短信 / 网红、谷歌、oem；🔍 代理线查询。点按钮等于在群里发出按钮文字，点渠道立即生成报表。聊天里同时有一条机器人菜单消息，下方的内联按钮矩阵和输入框下方内容一致，点它直接生成报表、不在群里发文字。输入框右侧「⌨」可收起或展开；收起后可点「菜单」里的 /menu 重新调出。<span class="ref">PRD 规则 N2 · F01-02 报表菜单</span></li>
+      <li><b>报表内容</b>：12 项指标按「用户、存提、投注、留存」4 组显示。两站汇总群显示 789Bingo、789Games、全站（两站合计）三列，每个指标先占一行写名称、下一行三列数据并排；789Bingo 数据群、789Games 数据群只显示本站一列，名称和数据在同一行；每格大字为今日值（▲▼ 为与昨日全天相比），小字为昨日全天和变化百分比（留存为百分点差）。次日留存、7日留存按单日计算，不取平均。群只授权一个站点时只显示该站一列。<span class="ref">PRD 规则 N9、N10–N22 · F02-01 报表生成与展示</span></li>
+      <li><b>代理线查询</b>：点「🔍 代理线查询」后，机器人 @ 点击人并要求回复代理账号，点击人的输入框自动进入回复状态，直接输入账号（如 kk_sms_g12）发送；也可以发「/agent 代理账号」。群里不是回复机器人的普通消息，机器人不回应。<span class="ref">PRD 规则 N23–N25 · F03-01 代理线查询</span></li>
+      <li><b>自动删除</b>：报表发出满 1 小时自动删除；群里任何人生成新报表时，之前的报表立即删除。<span class="ref">PRD 规则 N26–N28 · F04-01、F04-02</span></li>
+      <li><b>生成中与失败</b>：生成中再点按钮只弹提示「报表生成中，请稍候」；超过 30 秒未生成，回复失败提示和「重试」按钮。<span class="ref">PRD 规则 N29、N30 · F02-01</span></li>
+    </ol>
+    <h3>评审待确认</h3>
+    <ol>
+      <li><b>机器人名称、头像和显示语言</b>：原型名称「789报表助手」为示意，画面文字暂按中文制作。<span class="ref">PRD 待确认 Q4</span></li>
+      <li><b>是否禁止转发和保存报表</b>：Telegram 支持对消息开启内容保护。<span class="ref">PRD 待确认 Q5</span></li>
+    </ol>
+    <div class="pager"><span></span><a href="../admin/Telegram报表-后台渠道配置页面.html">下一页：后台渠道配置页面 →</a></div>
+  </aside>
+</div>
+</div>
+<script>window.NAV_ROOT = "../../";</script>
+<script src="../../assets/nav-data.js"></script>
+<script src="../../assets/nav.js"></script>
+<script>window.PROTO_LANG = "zh";   /* 需求例外（需求包框架规范第 14 节）：机器人上线显示中文（PRD 待确认 Q4），发布站点的前台原型也保持中文 */</script>
+<script src="../../assets/proto-en.js"></script>
+<script src="../../assets/proto.js"></script>
+<script>
+P.init({ defaults: { whEmpty: false, oemBingo: false, slow: false } });
+P.panel(document.getElementById("simPanel"), [
+  { title: "后台配置", items: [{ type: "check", key: "whEmpty", label: "渠道「网红」两站都未绑定代理（按钮不显示）" }, { type: "check", key: "oemBingo", label: "渠道「oem」只在 789Bingo 绑定（报表只显示 789Bingo 列）" }] },
+  { title: "注入异常", items: [{ type: "check", key: "slow", label: "报表生成超时（超过 30 秒）" }] },
+  { title: "自动删除", items: [{ type: "button", label: "模拟报表发出满 1 小时（报表消失）", run: function () { TG.expire(); } }] },
+  { title: "演示值说明", items: [{ type: "note", text: "演示代理账号：kk_sms_g12（两站都有）、wh_star01（只在 789Bingo）、gg_ads_03（只在 789Games）；输入其他账号演示「未找到」。Telegram ID、群名称和全部数据均为虚构。" }] },
+  { items: [{ type: "reset" }] }
+]);
+</script>
+<script>
+var TG = (function () {
+  var SITES = ["789Bingo", "789Games"];
+  var CH = ["全站", "cicc", "短信", "网红", "谷歌", "oem"];
+  var AGENTS = { kk_sms_g12: { "789Bingo": 0.11, "789Games": 0.06 }, wh_star01: { "789Bingo": 0.07 }, gg_ads_03: { "789Games": 0.12 } };   /* 代理账号在哪些站点存在（演示） */
+  var NOW = "14:32", TODAY = "2026-11-04", DEL_AT = "15:32";
+  var S = {};   /* 页面状态：auth 可看的站点、chat 聊天类型、period 留存周期、msgs 消息、busy 生成中、waitAgent 等待输入代理账号 */
+  var chat = document.getElementById("chat"), seq = 0;
+
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+  function fmtInt(n) { return Math.round(n).toLocaleString("en-US"); }
+  function money(n) { return (n < 0 ? "-₱" : "₱") + fmtInt(Math.abs(n)); }
+  function money2(n) { return "₱" + n.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
+
+  /* 演示数据：按站点、查询对象生成固定的虚构原始数（人数、金额、留存分子分母），合计列 = 两站原始数相加后再算人均和留存 */
+  function raw(site, scope, period, k) {
+    var f = scope.agent ? (AGENTS[scope.agent][site] || 0) : [1, 0.18, 0.22, 0.12, 0.26, 0.08][CH.indexOf(scope.ch)] * (site === "789Games" ? 0.42 : 1);
+    var x = f * k, fd = 820 * x, r1Reg = 2050 * f, r7Reg = 1980 * f;   /* 留存分母：今日列为昨天 / 7 天前注册人数，昨日列为前天 / 8 天前注册人数（演示取近似值） */
+    return { reg: 2100 * x, fd: fd, fdAmt: fd * (site === "789Games" ? 188 : 215), newDep: fd * 290, dep: 1180000 * x, depU: 2650 * x, wd: 1010000 * x, bet: 9800000 * x, vbet: 8450000 * x, pay: 9800000 * x * 0.969,
+      r1Reg: r1Reg, r1Ret: r1Reg * (k === 1 ? 0.306 : 0.248), r7Reg: r7Reg, r7Ret: r7Reg * (k === 1 ? 0.131 : 0.097) };   /* 今日列截至生成时刻，比全天偏低 */
+  }
+  function sum(a, b) { var o = {}; Object.keys(a).forEach(function (key) { o[key] = a[key] + b[key]; }); return o; }
+  function val(r, key) {
+    switch (key) {
+      case "avgFd": return r.fd ? r.fdAmt / r.fd : null;
+      case "avgDep": return r.depU ? r.dep / r.depU : null;
+      case "net": return r.dep - r.wd;
+      case "ggr": return r.bet - r.pay;
+      case "r1": return r.r1Reg ? r.r1Ret / r.r1Reg * 100 : null;
+      case "r7": return r.r7Reg ? r.r7Ret / r.r7Reg * 100 : null;
+      default: return r[key];
+    }
+  }
+  /* 报表列（N2、N22）：有权限的站点各一列；两站都有权限时加「全站（两站合计）」列。代理线只显示账号存在的站点 */
+  /* 渠道是否绑定了代理（N9，演示）：「全站」不用绑定；网红、oem 的绑定情况由模拟操作切换 */
+  function bound(ch, site) {
+    if (ch === "全站") return true;
+    if (ch === "网红" && P.get("whEmpty")) return false;
+    if (ch === "oem" && P.get("oemBingo") && site === "789Games") return false;
+    return true;
+  }
+  /* 按钮矩阵只显示本群有权限的站点里至少有一个已绑定代理的渠道 */
+  function visibleCh() { return CH.filter(function (c) { return S.auth.some(function (s) { return bound(c, s); }); }); }
+  function rows3(list) { var out = []; for (var i = 0; i < list.length; i += 3) out.push(list.slice(i, i + 3)); return out; }
+  function columns(scope) {
+    var sites = S.auth.filter(function (s) { return scope.agent ? AGENTS[scope.agent][s] : bound(scope.ch, s); });
+    return sites.length === 2 ? sites.concat(["全站"]) : sites;
+  }
+  function reportHtml(scope, period) {
+    var cols = columns(scope), T = {}, Y = {};
+    cols.forEach(function (c) {
+      if (c === "全站") { T[c] = sum(T["789Bingo"], T["789Games"]); Y[c] = sum(Y["789Bingo"], Y["789Games"]); }
+      else { T[c] = raw(c, scope, period, 0.62); Y[c] = raw(c, scope, period, 1); }
+    });
+    function cell(a, b, kind) {
+      var f = kind === "money" ? money : kind === "money2" ? money2 : kind === "pct" ? function (x) { return x.toFixed(1) + "%"; } : fmtInt;
+      /* 变化百分比（N22）：金额和人数 =（今日 − 昨日）÷ |昨日| × 100%；留存为百分点差；昨日为 0 或任一为 - 时显示 - */
+      var pc = "-";
+      if (a != null && b != null) {
+        var dd = a - b;
+        if (kind === "pct") pc = Math.abs(dd) < 0.05 ? "0.0pp" : (dd > 0 ? "+" : "-") + Math.abs(dd).toFixed(1) + "pp";
+        else if (Math.abs(b) >= 0.5) { var r = dd / Math.abs(b) * 100; pc = Math.abs(r) < 0.05 ? "0.0%" : (r > 0 ? "+" : "-") + Math.abs(r).toFixed(1) + "%"; }
+      }
+      var y = '<small class="tg-y">昨 ' + (b == null ? "-" : f(b)) + "</small>";
+      if (a == null) return '<td class="tg-v"><b>-</b>' + y + '<small class="tg-p">-</small></td>';
+      var d = b == null ? 0 : a - b, eq = b == null || Math.abs(d) < (kind === "pct" ? 0.05 : 0.5), cls = eq ? "" : d > 0 ? "tg-up" : "tg-dn";
+      return '<td class="tg-v"><b class="' + cls + '">' + (eq ? "" : d > 0 ? "▲" : "▼") + f(a) + "</b>" + y + '<small class="tg-p ' + cls + '">' + pc + "</small></td>";
+    }
+    /* 排版（N22）：多列时每个指标先占一行写名称，下一行各站数据并排，数据列用满整行宽度；只有一列时名称和数据同一行 */
+    var one = cols.length === 1;
+    function row(name, key, kind) {
+      var cells = cols.map(function (c) { return cell(val(T[c], key), val(Y[c], key), kind); }).join("");
+      return one ? '<tr><td class="tg-mname">' + name + "</td>" + cells + "</tr>" : '<tr class="tg-mlab"><td colspan="' + cols.length + '">' + name + "</td></tr><tr>" + cells + "</tr>";
+    }
+    function sec(name) { return '<tr class="tg-sec"><td colspan="' + (one ? 2 : cols.length) + '">' + name + "</td></tr>"; }
+    var title = scope.agent ? "代理线：" + esc(scope.agent) + "（含下级）" : "渠道：" + scope.ch;
+    var head = one ? "<tr><th>指标</th><th>" + cols[0] + "</th></tr>" : "<tr>" + cols.map(function (c) { return "<th>" + (c === "全站" ? '全站<small class="tg-y">两站合计</small>' : c) + "</th>"; }).join("") + "</tr>";
+    return '<div class="tg-rep" data-dev="D08"><h4>📊 ' + title + "</h4>" +
+      '<div class="tg-sub">今日截至 ' + TODAY + " " + NOW + "（GMT+8）<br>大字为今日，▲▼ 与昨日全天相比；小字为昨日全天和变化百分比</div>" +
+      '<table class="' + (one ? "tg-one" : "tg-multi") + '">' + head +
+      sec("👥 用户") + row("新增注册人数", "reg") + row("新增首存人数", "fd") +
+      sec("💰 存提") + row("新增玩家存款金额", "newDep", "money") + row("存款额", "dep", "money") + row("存提差", "net", "money") + row("人均首存金额", "avgFd", "money2") + row("人均存款金额", "avgDep", "money2") +
+      sec("🎮 投注") + row("总投注额", "bet", "money") + row("有效投注额", "vbet", "money") + row("GGR", "ggr", "money") +
+      sec("📈 留存") + row("次日留存", "r1", "pct") + row("7日留存", "r7", "pct") +
+      '</table><div class="tg-del" data-dev="D14">⏱ 本报表将于今日 ' + DEL_AT + " 自动删除</div></div>";
+  }  function kb(rows) {
+    return '<div class="tg-kb">' + rows.map(function (r) {
+      if (r.lab) return '<div class="tg-lab">' + r.lab + "</div>";
+      return '<div class="tg-row" style="grid-template-columns:repeat(' + r.length + ',1fr)">' + r.map(function (b) {
+        return '<button type="button" data-act="' + b.act + '"' + (b.arg != null ? ' data-arg="' + esc(b.arg) + '"' : "") + (b.dev ? ' data-dev="' + b.dev + '"' : "") + (b.on ? ' class="on"' : "") + ">" + b.t + "</button>";
+      }).join("") + "</div>";
+    }).join("") + "</div>";
+  }
+  /* 报表键盘（N2）：和标准 Telegram 机器人一样，显示在输入框下方，3 列网格；点按钮等于在群里发出按钮上的文字 */
+  var KEYS_CH = CH.map(function (c) { return "📊 " + c; }), KEY_AGENT = "🔍 代理线查询";
+
+  function renderKbd() {
+    var box = document.getElementById("kbd"), tg = document.getElementById("kbdTg");
+    tg.hidden = !S.kbd; tg.setAttribute("aria-pressed", String(S.kbd && !S.kbdHide));
+    box.hidden = !S.kbd || S.kbdHide;
+    if (box.hidden) return;
+    function row(list, dev) { return '<div class="tg-krow" style="grid-template-columns:repeat(' + list.length + ',1fr)">' + list.map(function (k) { return '<button type="button" data-key="' + esc(k) + '" data-dev="' + dev + '">' + k + "</button>"; }).join("") + "</div>"; }
+    box.innerHTML = rows3(visibleCh().map(function (c) { return "📊 " + c; })).map(function (r) { return row(r, "D05"); }).join("") + row([KEY_AGENT], "D06");
+  }
+  /* 消息：from = me（当前群成员）/ bot；kind = text / report / gen / fail；quote = 回复引用 */
+  function add(m) { m.id = ++seq; m.tm = NOW; S.msgs.push(m); return m; }
+  function me(text, quote) { return add({ from: "me", kind: "text", quote: quote, html: esc(text).replace(/^(\/\w+)/, '<span class="tg-cmd">$1</span>') }); }
+  function bot(html, kind, extra) { var m = add({ from: "bot", kind: kind || "text", html: html }); if (extra) Object.keys(extra).forEach(function (k) { m[k] = extra[k]; }); return m; }
+  function render() {
+    chat.innerHTML = '<div class="tg-day">11月4日</div>' + S.msgs.map(function (m) {
+      var who = m.from === "bot" && S.chat === "group" ? '<div class="tg-who bot">789报表助手</div>' : "";
+      var q = m.quote ? '<div class="tg-quote"><b>789报表助手</b><br>' + m.quote + "</div>" : "";
+      return '<div class="tg-msg ' + m.from + (m.kind === "report" ? " wide" : "") + '" data-mid="' + m.id + '"><div class="tg-bub">' + who + q + m.html + '<span class="tg-tm">' + m.tm + (m.from === "me" ? " ✓✓" : "") + "</span></div>" + (m.kind === "menu" ? menuKb() : (m.kb || "")) + "</div>";
+    }).join("");
+    chat.scrollTop = chat.scrollHeight;
+    document.getElementById("replyBar").hidden = !S.waitAgent;
+    renderKbd();
+  }
+
+  /* 权限（N4、N5）：只在授权群内可用；私聊一律引导到群里；返回 true 表示已回复、不再处理 */
+  function denied() {
+    if (S.chat === "private") { bot("本机器人仅在授权群内使用，请在群内发送 /menu。"); return true; }
+    if (S.auth.length) return false;
+    bot("本群未开通报表权限，请联系管理员开通。<br>本群 ID：-1001827364510");
+    return true;
+  }
+  /* 菜单消息（N2）：聊天里的机器人消息带内联按钮矩阵，和输入框下方按钮矩阵的内容、顺序一致 */
+  function menuKb() {
+    var rows = rows3(visibleCh()).map(function (r) { return r.map(function (c) { return { t: "📊 " + c, act: "ch", arg: c, dev: "D17" }; }); });
+    rows.push([{ t: KEY_AGENT, act: "agentAsk", dev: "D18" }]);
+    return kb(rows);
+  }
+  /* 菜单消息的按钮随渠道配置更新（N9）：渲染时按当前绑定情况生成 */
+  function menuMsg() { bot("请选择渠道，点渠道即生成报表：", "menu"); }
+  function openMenu() { if (denied()) return; menuMsg(); S.kbd = true; S.kbdHide = false; }
+  /* 生成报表（N26–N30）：同一群只保留最新一份报表 */
+  function gen(scope) {
+    if (S.busy) { P.toast("报表生成中，请稍候"); return; }
+    S.busy = true;
+    var g = bot('<span class="tg-gen">⏳ 正在生成报表…</span>', "gen"); render();
+    var slow = P.get("slow");
+    setTimeout(function () {
+      S.msgs = S.msgs.filter(function (m) { return m !== g && m.kind !== "report" && m.kind !== "fail"; });   /* 上一份报表从群里消失（N27） */
+      if (slow) bot("报表生成失败，请稍后重试。", "fail", { kb: kb([[{ t: "重试", act: "retry", dev: "D15" }]]), scope: scope });
+      else bot(reportHtml(scope, S.period), "report", { scope: scope, kb: repKb() });
+      S.busy = false; render();
+    }, slow ? 1500 : 700);
+  }
+  function repKb() { return ""; }   /* 报表下方不带按钮，不提供刷新；要看最新数据就再点一次渠道按钮 */
+  var ASK = "@王运营 请回复代理账号，例如 kk_sms_g12";
+  function ask() { bot(ASK); S.waitAgent = true; }
+  /* 代理线查询（N23–N25） */
+  function agent(acc) {
+    acc = acc.trim().toLowerCase();
+    if (!acc) { ask(); return; }
+    if (!AGENTS.hasOwnProperty(acc) || !columns({ agent: acc }).length) { bot("未找到代理线「" + esc(acc) + "」，请检查代理账号后重试。"); return; }
+    gen({ agent: acc });
+  }
+  function input(text) {
+    text = text.trim(); if (!text) return;
+    var replying = S.waitAgent; S.waitAgent = false;
+    me(text, replying ? "请回复代理账号，例如 kk_sms_g12" : null);
+    var m = /^\/(\w+)\s*(.*)$/.exec(text), ch = KEYS_CH.indexOf(text), isKey = ch >= 0 || text === KEY_AGENT;
+    if (!m && !replying && !isKey) { render(); return; }   /* 群里的其他普通消息，机器人不回应（N5） */
+    if (denied()) { render(); return; }
+    if (ch >= 0 && visibleCh().indexOf(CH[ch]) < 0) bot("该渠道暂未开放，请选择其他渠道。");   /* 旧按钮或手动输入了未绑定的渠道（N9） */
+    else if (ch >= 0) gen({ ch: CH[ch] });
+    else if (text === KEY_AGENT) ask();
+    else if (replying && !m) agent(text);   /* 回复机器人的提问 = 输入代理账号（N23） */
+    else if (m[1] === "menu" || m[1] === "start") openMenu();
+    else if (m[1] === "agent") agent(m[2]);
+    else bot("不支持该命令，请点左下角「菜单」选择命令。");
+    render();
+  }
+
+  document.getElementById("chat").addEventListener("click", function (e) {
+    var b = e.target.closest("[data-act]"); if (!b) return;
+    var act = b.dataset.act, msg = S.msgs.filter(function (x) { return String(x.id) === b.closest(".tg-msg").dataset.mid; })[0];
+    if (act === "refresh" || act === "retry") gen(msg.scope);
+    else if (act === "ch") { if (!denied()) gen({ ch: b.dataset.arg }); render(); }   /* 内联按钮不在群里发文字，直接生成报表 */
+    else if (act === "agentAsk") { if (!denied()) ask(); render(); document.getElementById("msg").focus(); }
+  });
+  document.getElementById("kbd").addEventListener("click", function (e) { var b = e.target.closest("[data-key]"); if (b) input(b.dataset.key); });
+  document.getElementById("kbdTg").onclick = function () { S.kbdHide = !S.kbdHide; renderKbd(); };
+  var cmds = document.getElementById("cmds"), menuBtn = document.getElementById("menuBtn"), inp = document.getElementById("msg"), sendBtn = document.getElementById("send");
+  menuBtn.onclick = function () { cmds.hidden = !cmds.hidden; menuBtn.setAttribute("aria-expanded", !cmds.hidden); };
+  cmds.addEventListener("click", function (e) { var b = e.target.closest("[data-cmd]"); if (!b) return; cmds.hidden = true; menuBtn.setAttribute("aria-expanded", "false"); input(b.dataset.cmd); });
+  function sendNow() { input(inp.value); inp.value = ""; sendBtn.classList.remove("has"); }
+  sendBtn.onclick = sendNow;
+  inp.addEventListener("input", function () { sendBtn.classList.toggle("has", !!inp.value.trim()); });
+  inp.addEventListener("keydown", function (e) { if (e.key === "Enter") sendNow(); });
+  document.getElementById("replyX").onclick = function () { S.waitAgent = false; render(); };
+  document.addEventListener("click", function (e) { if (!cmds.hidden && !e.target.closest("#cmds,#menuBtn")) { cmds.hidden = true; menuBtn.setAttribute("aria-expanded", "false"); } });
+
+  /* 场景预设：默认在授权群里使用 */
+  function scene(v) {
+    S = { auth: SITES.slice(), chat: v === "private" ? "private" : "group", period: 7, msgs: [], busy: false, waitAgent: false, kbd: false, kbdHide: false };
+    if (v === "bingo") S.auth = ["789Bingo"];
+    if (v === "games") S.auth = ["789Games"];
+    if (v === "groupno") S.auth = [];
+    var grp = S.chat === "group", GN = { bingo: ["B", "789Bingo 数据群（示意）"], games: ["G", "789Games 数据群（示意）"], groupno: ["新", "新建群（未授权，示意）"] }[v] || ["汇", "两站汇总群（示意）"];
+    document.getElementById("tgAva").textContent = grp ? GN[0] : "报";
+    document.getElementById("tgTitle").textContent = grp ? GN[1] : "789报表助手（示意）";
+    document.getElementById("tgSub").textContent = grp ? "12 位成员" : "机器人";
+    /* 授权群：一进群就显示按钮矩阵（N2），不用先发 /menu；未授权群和私聊要发命令才有回应 */
+    if (!grp || !S.auth.length) { me(grp ? "/menu" : "/start"); denied(); render(); return; }
+    S.kbd = true; menuMsg();
+    if (v === "report") { me("📊 全站"); bot(reportHtml({ ch: "全站" }, 7), "report", { scope: { ch: "全站" }, kb: repKb() }); }
+    if (v === "agent") { me(KEY_AGENT); bot(ASK); me("kk_sms_g12", "请回复代理账号，例如 kk_sms_g12"); bot(reportHtml({ agent: "kk_sms_g12" }, 7), "report", { scope: { agent: "kk_sms_g12" }, kb: repKb() }); }
+    if (v === "fail") { me("📊 全站"); bot("报表生成失败，请稍后重试。", "fail", { kb: kb([[{ t: "重试", act: "retry", dev: "D15" }]]), scope: { ch: "全站" } }); }
+    render();
+  }
+  window.addEventListener("proto-change", function (e) { if (e.detail.key === "whEmpty" || e.detail.key === "oemBingo" || e.detail.key === "*") render(); });  return {
+    scene: scene,
+    expire: function () {
+      S.msgs = S.msgs.filter(function (m) { return m.kind !== "report" && m.kind !== "fail"; }); render();
+    }
+  };
+})();
+</script>
+<script>
+(function () {
+  var VIEWS = ["menu", "bingo", "games", "report", "agent", "groupno", "private", "fail"];
+  function show(view) {
+    if (VIEWS.indexOf(view) < 0) view = "menu";
+    TG.scene(view);
+    if (location.hash.slice(1) !== view) history.replaceState(null, "", "#" + view);
+    if (window.self !== window.top) window.parent.postMessage({ type: "proto-view", view: view }, "*");
+  }
+  window.addEventListener("hashchange", function () { show(location.hash.slice(1) || "menu"); });
+  document.addEventListener("click", function (e) { var b = e.target.closest("[data-go]"); if (b) { e.preventDefault(); show(b.dataset.go); } });
+  show(location.hash.slice(1) || "menu");
+})();
+</script>
+</body>
+</html>

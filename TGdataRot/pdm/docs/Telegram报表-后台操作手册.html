@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Telegram报表-后台操作手册</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<div class="with-nav">
+  <header class="mh">
+    <div class="k">789BINGO · 789GAMES · 后台操作手册 <span class="vp">v1.0</span></div>
+    <h1>Telegram报表 · 渠道配置与授权群操作手册</h1>
+    <p>写给运营：在 789Bingo、789Games 两站后台配置 Telegram 报表机器人的渠道代理和可使用的群，两站各配各的。</p>
+    <div class="btns"><a class="b1" href="../prototype/admin/Telegram报表-后台渠道配置页面.html">打开后台原型 ›</a><a class="b2" href="Telegram报表-需求开发PRD文档.html">查看 PRD ›</a></div>
+  </header>
+
+  <div class="mk">
+    <b>重要结论</b>
+    <ul>
+      <li>报表在发出满 1 小时后自动删除；同一聊天生成新报表时旧报表立即删除（PRD「0.1 需求确认结论（2026-11-04）」）。</li>
+      <li>机器人只在授权群内使用：群加入授权群并启用后，群里所有成员都能查看本站报表；私聊机器人不返回数据（PRD「0.1 需求确认结论（2026-11-04）」）。</li>
+      <li>同一站点内一个代理只能绑定一个渠道（PRD「3.2 机器人、权限与渠道规则」）。</li>
+    </ul>
+  </div>
+
+  <div class="mbody">
+    <nav class="mtoc" aria-label="手册目录">
+      <a href="#m0">整体操作流程</a>
+      <a href="#m1">01 渠道配置</a>
+      <a href="#m2">02 授权群</a>
+      <a href="#m3">03 后台通用</a>
+      <a href="#m9">常见问题</a>
+    </nav>
+    <div>
+      <section class="mcard" id="m0">
+        <h2>整体操作流程</h2>
+        <div class="msteps">
+          <div class="mstep"><i>1</i><div>整理 cicc、短信、网红、谷歌、oem 各自的代理账号清单，确认一个代理只属于一个渠道。</div></div>
+          <div class="mstep"><i>2</i><div>在【渠道配置】给 5 个渠道绑定代理。</div></div>
+          <div class="mstep"><i>3</i><div>把机器人拉进运营群，在群里发 /menu，记下机器人回复的本群 ID。</div></div>
+          <div class="mstep"><i>4</i><div>在【授权群】添加这个群 ID 并启用。</div></div>
+          <div class="mstep"><i>5</i><div>打开群，确认输入框下方出现按钮矩阵，点一个渠道能看到本站报表。</div></div>
+        </div>
+      </section>
+
+      <section class="mcard" id="m1">
+        <h2><span class="no2">01</span>渠道配置</h2>
+        <h3>这个功能做什么</h3>
+        <p>决定机器人报表里 5 个渠道各自包含哪些用户。「全站」为本站全部用户，不用配置。</p>
+        <h3>菜单路径与权限</h3>
+        <p>系统管理 › Telegram报表配置 › 渠道配置。需要该菜单权限，按后台现有方式分配。</p>
+        <h3>字段说明</h3>
+        <table data-fit>
+          <tr><th>字段</th><th>含义</th><th>默认值</th></tr>
+          <tr><td>绑定代理（列表表头）</td><td>这个渠道包含的代理账号。绑定的代理和它的全部下级代理名下的用户，都统计到这个渠道。</td><td>-</td></tr>
+          <tr><td>代理数</td><td>已绑定的代理账号个数，不含下级代理。为 0 时，机器人里不显示这个渠道的按钮（两站都为 0 时）。</td><td>0</td></tr>
+          <tr><td>绑定代理（编辑弹窗）</td><td>输入代理账号后点「添加」，可添加多个；点标签上的 × 移除。同一代理只能绑定一个渠道。</td><td>-</td></tr>
+        </table>
+        <h3>操作步骤</h3>
+        <div class="msteps">
+          <div class="mstep"><i>1</i><div>在要修改的渠道行点「编辑」。</div></div>
+          <div class="mstep"><i>2</i><div>输入代理账号，点「添加」或按回车；要移除的点标签上的「×」。</div></div>
+          <div class="mstep"><i>3</i><div>点「保存」，看到「保存成功」。</div></div>
+        </div>
+        <h3>生效时间</h3>
+        <p>保存后，机器人下一次生成的报表按新配置统计（今日、昨日两列都按新配置）；已发出的报表不变。</p>
+        <h3>注意事项</h3>
+        <ul>
+          <li>提示「已绑定到渠道「××」」时，要先到那个渠道移除这个代理，再来添加。</li>
+          <li>上级和下级代理绑定在不同渠道时，下级名下的用户算下级所在的渠道。</li>
+          <li><span class="warn-2">※ 渠道配错会让各渠道数据失真，保存前对照代理清单核对。</span></li>
+        </ul>
+      </section>
+
+      <section class="mcard" id="m2">
+        <h2><span class="no2">02</span>授权群</h2>
+        <h3>这个功能做什么</h3>
+        <p>决定机器人在哪些 Telegram 群里返回本站报表；群加入并启用后，群里所有成员都能查看。私聊机器人不返回数据。</p>
+        <h3>菜单路径与权限</h3>
+        <p>系统管理 › Telegram报表配置 › 授权群。需要该菜单权限，按后台现有方式分配。</p>
+        <h3>字段说明</h3>
+        <table data-fit>
+          <tr><th>字段</th><th>含义</th><th>默认值</th></tr>
+          
+          <tr><td>群 ID</td><td>以 -100 开头的负数。把机器人拉进群后发 /menu，从机器人回复的无权限提示里复制。保存后不能修改。</td><td>-</td></tr>
+          <tr><td>群名称</td><td>便于识别的群名称，必填，最多 30 字。</td><td>-</td></tr>
+          <tr><td>状态</td><td>启用：可以查看本站报表；停用：立即不能查看，记录保留。</td><td>启用</td></tr>
+        </table>
+        <h3>操作步骤</h3>
+        <div class="msteps">
+          <div class="mstep"><i>1</i><div>点「+ 添加」，粘贴群 ID，填群名称，点「保存」。</div></div>
+          <div class="mstep"><i>2</i><div>临时取消权限：点该行的状态开关改为停用。</div></div>
+          <div class="mstep"><i>3</i><div>永久取消：点「删除」并确认。</div></div>
+        </div>
+        <h3>生效时间</h3>
+        <p>保存后立即生效，从对方下一次操作起按新名单判断。已经发出的报表不会提前删除，仍在发出满 1 小时后删除。</p>
+        <h3>注意事项</h3>
+        <ul>
+          <li><span class="warn-1">※ 报表含经营数据。授权群之前，先确认群里每个成员都可以查看这些数据。</span></li>
+          <li>同事要看两个站点时，两站后台都要各加一次。</li>
+          <li>群 ID 填错时提示「群 ID 格式不正确」；已在名单中时提示「该群已在名单中」。</li>
+        </ul>
+      </section>
+
+      <section class="mcard" id="m3">
+        <h2><span class="no2">03</span>后台通用</h2>
+        <ul>
+          <li>两个页面的保存、删除记入后台现有操作日志。</li>
+          <li>授权群默认按添加时间倒序，每页 20 条，可改为 10 / 50 / 100 条；查询后回到第 1 页。</li>
+          <li>两站后台各有一份配置，互不影响。</li>
+        </ul>
+      </section>
+
+      <section class="mcard" id="m9">
+        <h2>常见问题</h2>
+        <dl class="faq">
+          <dt>同事说机器人回复「没有查看报表的权限」？</dt>
+          <dd>机器人只在授权群里返回数据，私聊不提供。请到已授权的运营群里查看；需要新开群时，把群 ID 加进授权群。</dd>
+          <dt>把机器人拉进群后没有反应？</dt>
+          <dd>在群里发 /menu，机器人会回复本群 ID；把这个 ID 以「群」类型加进名单。群里的普通消息机器人不回应。</dd>
+          <dt>群里某个渠道按钮不见了？</dt>
+          <dd>该渠道在本群能看的站点都没有绑定代理时，按钮不显示。到【渠道配置】给它绑定代理并保存，机器人会在群里重新发出菜单。</dd>
+          <dt>报表和后台平台报表的今日数据对不上？</dt>
+          <dd>机器人是点击时刻的实时数据，平台报表每 30 分钟统计一次，今日数据会有差异；昨日数据应一致，不一致时转技术。</dd>
+          <dt>报表不见了？</dt>
+          <dd>报表发出满 1 小时会自动删除，同一聊天再查一次也会删除上一份。重新点渠道即可。</dd>
+        </dl>
+      </section>
+    </div>
+  </div>
+</div>
+<script>window.NAV_ROOT = "../";</script>
+<script src="../assets/nav-data.js"></script>
+<script src="../assets/nav.js"></script>
+</body>
+</html>

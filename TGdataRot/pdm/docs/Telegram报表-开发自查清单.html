@@ -1,0 +1,276 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Telegram报表-开发自查清单</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<div class="with-nav">
+  <header class="ck-head" id="ckhead">
+    <div class="ck-top">
+      <div>
+        <div class="k">789BINGO · 功能自查</div>
+        <h1>Telegram报表 · 开发自查清单 · <span id="hdVer">v1.0</span></h1>
+        <div class="d">勾选状态保存在本机浏览器，按角色分别保存；换电脑或换浏览器后看不到，留档请导出 CSV。</div>
+      </div>
+      <div class="ck-total"><b id="tp">0%</b><span id="tn">0 / 0 项</span><div class="pbar"><i id="tb" style="width:0"></i></div></div>
+    </div>
+    <div class="filters">
+      <div class="fgroup" data-g="role"><span class="gl">角色</span></div>
+      <div class="fgroup" data-g="type"><span class="gl">类型</span></div>
+      <div class="fgroup" data-g="state"><span class="gl">状态</span></div>
+      <div class="fgroup"><button class="pill" type="button" id="exall">全部展开</button><button class="pill" type="button" id="coall">全部收起</button><button class="pill" type="button" id="csv">导出 CSV</button><button class="pill" type="button" id="prt">打印</button></div>
+      <button class="clearbtn" type="button" id="clear">清空勾选</button>
+    </div>
+  </header>
+  <div class="split" id="split">
+    <div class="ck-left" id="list"></div>
+    <div class="divider" id="divider" role="separator" aria-label="拖动调整宽度"></div>
+    <div class="ck-right">
+      <div class="rhead">PRD 需求文档 <button type="button" id="up" aria-label="上一处标注">↑</button><button type="button" id="dn" aria-label="下一处标注">↓</button><span class="cnt2" id="hitn"></span></div>
+      <iframe id="prd" src="Telegram报表-需求开发PRD文档.html" title="PRD 需求文档"></iframe>
+    </div>
+  </div>
+</div>
+
+<script>
+/* 顶栏右侧「在新标签页打开」。左侧目录栏默认始终显示，方便跳到其他页面；
+   需要更宽的两栏时，点目录栏右上角「隐藏」，再点顶栏「展开目录」恢复（需求包框架规范第 3.1.5 节） */
+window.NAV_NEWWIN_TEXT = "在新标签页打开";
+window.addEventListener("navtoggle", function () { setTimeout(fitHead, 0); });
+</script>
+<script>window.NAV_ROOT = "../";</script>
+<script src="../assets/nav-data.js"></script>
+<script src="../assets/nav.js"></script>
+<script>
+/* 自查项：[类型, 适用角色, 关键, 检查什么, 预期结果, 新增或修改的版本]。新自查项只追加在各组末尾，保证已有编号不变。
+   类型 fn 功能 / bd 边界值 / ex 异常 / un 非常规；角色 d 设计 / f 前端 / b 后端 / q 测试。功能点名称与 PRD 保持一致。
+   预期结果写用户或运营看到的业务结果，不写字段值、接口返回、状态码和测试工具（生成内容规范第五章第 0 节「只写产品层面」）。 */
+var DATA = [
+ { c: "F01", n: "机器人入口与权限", s: [
+  { c: "F01-01", n: "菜单按钮与命令", i: [
+   ["fn", "dfq", 1, "授权群里点左下角「菜单」，再点 /menu", "命令列表只有 /menu、/agent 两项；/menu 后机器人回复并重新显示按钮矩阵"],
+   ["ex", "bq", 0, "发送 /abc 等不支持的命令", "回复「不支持该命令，请点左下角「菜单」选择命令。」"],
+   ["fn", "dfbq", 1, "按 PRD 附录 D 逐个核对 D01–D03 的作用、场景和交互结果", "实现与说明一致"]
+  ]},
+  { c: "F01-02", n: "报表菜单", i: [
+   ["fn", "dfq", 1, "授权群成员打开群，不发任何命令", "输入框下方直接显示按钮矩阵：6 个渠道、代理线查询；没有站点按钮和留存周期按钮"],
+   ["bd", "bq", 0, "只在 789Games 后台授权的群查看报表；两站都授权的群查看报表", "前者只有 789Games 一列；后者有 789Bingo、789Games、全站三列"],
+   ["un", "fq", 0, "成员点「⌨」收起按钮矩阵，再点展开或发 /menu", "按钮矩阵收起后能重新显示；只影响操作人自己的界面"],
+   ["un", "bq", 0, "一个站点的授权被停用后点旧菜单的渠道", "报表只剩另一站一列；两站都停用时回复无权限"]
+  ]},
+  { c: "F01-03", n: "授权校验", i: [
+   ["fn", "bq", 1, "未授权群里发 /menu；任何人私聊机器人", "未授权群回复未开通并显示群 ID；私聊回复「本机器人仅在授权群内使用…」；都不显示菜单、不返回数据"],
+   ["fn", "bq", 1, "授权群里任一成员操作", "都能正常打开菜单、查看报表"],
+   ["ex", "bq", 0, "群里发送普通文字（含代理账号）", "机器人不回应"]
+  ]}
+ ]},
+ { c: "F02", n: "渠道报表", s: [
+  { c: "F02-01", n: "报表生成与展示", i: [
+   ["fn", "dfq", 1, "点「📊 全站」", "群里先出现点击人发出的「📊 全站」，再出现「正在生成报表…」和报表；标题、截至时间、12 项指标、自动删除时间齐全"],
+   ["fn", "dq", 0, "在 Telegram 手机端最窄屏和电脑端看报表", "4 列不错位，最长金额完整显示"],
+   ["bd", "bq", 1, "渠道「网红」两站都解绑；「oem」只在 789Bingo 绑定；手动发「📊 网红」", "两站汇总群不显示「网红」按钮，其余按 3 列补位；「oem」报表只有 789Bingo 一列；789Games 数据群不显示「oem」；手动发送时回复「该渠道暂未开放，请选择其他渠道。」"],
+   ["ex", "bq", 1, "生成中连续点 3 次渠道", "只生成 1 份报表，其余弹出「报表生成中，请稍候」"],
+   ["ex", "bq", 1, "报表 30 秒内未生成；点「重试」", "回复失败提示和重试；重试成功后失败提示被删除"],
+   ["fn", "bq", 1, "长按报表尝试转发、保存；在手机端截图", "报表不能转发、不能保存；截图是否被拦截以 Telegram 客户端实际支持为准；菜单消息不受影响"],
+   ["fn", "dfbq", 1, "按 PRD 附录 D 核对 D05、D06、D08、D14、D15、D16、D17、D18", "实现与说明一致"]
+  ]},
+  { c: "F02-02", n: "指标口径", i: [
+   ["fn", "bq", 1, "「全站」渠道下各站点列的昨日 12 项和该站后台【平台报表】昨日日报表对比", "注册、首存、存款、总投注、有效投注、提款、存提差、人均等一致"],
+   ["fn", "bq", 1, "核对「全站」列", "人数、金额等于两站之和；人均和留存按两站合计的分子、分母重算，不是两站平均"],
+   ["bd", "bq", 1, "今日新增首存人数为 0、存款人数为 0", "对应人均显示「-」，不带箭头"],
+   ["bd", "bq", 0, "存提差、GGR 为负数", "显示「-₱」金额，箭头方向正确"],
+   ["bd", "bq", 1, "变化百分比：昨日 100、今日 120；昨日 0；昨日 -₱1,000、今日 -₱500；留存 30.6% → 31.4%", "分别显示 +20.0%、-、+50.0%（带 ▲）、+0.8pp"],
+   ["bd", "bq", 1, "00:00:30 和 23:59 各生成一次", "今日列从当日 00:00 起算；昨日列为刚结束的一整天（GMT+8）"],
+   ["fn", "bq", 1, "代理 A 绑定短信、其下级 B 绑定谷歌", "B 名下用户只计入谷歌；各渠道人数之和不超过全站"],
+   ["fn", "bq", 1, "11 月 4 日 14:32 生成报表，手工核对留存", "今日列次日留存 = 11 月 3 日注册用户今天 00:00–14:32 有登录的比例；7日留存 = 10 月 28 日注册用户今天的登录比例；昨日列为 11 月 2 日、10 月 27 日注册用户在 11 月 3 日的登录比例；注册人数为 0 时显示「-」"]
+  ]},
+ ]},
+ { c: "F03", n: "代理线查询", s: [
+  { c: "F03-01", n: "代理线查询", i: [
+   ["fn", "fbq", 1, "点「代理线查询」后回复「 KK_SMS_G12 」；发「/agent kk_sms_g12」", "机器人 @ 点击人、输入框进入回复状态；两种方式都生成「代理线 kk_sms_g12（含下级）」报表"],
+   ["ex", "fbq", 0, "不回复机器人、直接在群里发 kk_sms_g12；点击人取消回复后再发", "机器人都不回应"],
+   ["ex", "bq", 1, "发送不存在的账号", "回复未找到提示；已有报表不被删除"],
+   ["bd", "bq", 0, "查询只在 789Bingo 存在的账号；只授权 789Games 的人查询同一账号", "前者只显示 789Bingo 一列；后者回复未找到"],
+   ["fn", "bq", 0, "代理线下有 3 层下级代理", "3 层下级的用户都计入"]
+  ]}
+ ]},
+ { c: "F04", n: "报表自动删除", s: [
+  { c: "F04-01", n: "发出 1 小时自动删除", i: [
+   ["fn", "bq", 1, "14:32 发出报表，15:31 和 15:32 各看一次", "15:31 仍在；15:32 被删除"],
+   ["bd", "bq", 0, "23:30 发出报表", "底部写「明日 00:30」，到时删除"],
+   ["ex", "bq", 0, "报表已被手动删除、机器人被移出群", "到时不报错，聊天里没有多余提示"],
+   ["ex", "bq", 1, "机器人服务中断跨过删除时间后恢复", "恢复后立即删除已到时间的报表"]
+  ]},
+  { c: "F04-02", n: "新报表替换旧报表", i: [
+   ["fn", "bq", 1, "同一群先查全站再查 cicc", "全站报表立即消失；cicc 报表重新计 1 小时"],
+   ["un", "bq", 1, "群里成员甲查询后成员乙查询；两个授权群同时查询", "群里甲的报表被删除；不同群互不删除"]
+  ]}
+ ]},
+ { c: "F05", n: "后台配置", s: [
+  { c: "F05-01", n: "渠道配置", i: [
+   ["fn", "fbq", 1, "给 cicc 添加已绑定在短信的代理；添加不存在的账号；重复添加", "分别提示 N7 原文、「代理账号不存在」「该代理已添加」，都不能添加"],
+   ["fn", "bq", 1, "保存后立即在机器人查询", "今日、昨日两列都按新配置统计"],
+   ["fn", "dfbq", 0, "按 PRD 附录 D 核对 D20–D23 和帮助提示文字", "实现与说明一致；「?」文字与 PRD 5.4 一致"]
+  ]},
+  { c: "F05-02", n: "授权群", i: [
+   ["bd", "fbq", 1, "群 ID 填 583920174 或 -200123456；重复群 ID；群名称 30 字和 31 字", "格式不正确、已在名单中分别提示；30 字可保存，第 31 字无法输入；绕过页面提交同样拦截"],
+   ["fn", "bq", 1, "停用某个群后，群里有人点旧菜单的渠道", "回复本群未开通，不生成报表；已发出的报表仍按 1 小时删除"],
+   ["bd", "fbq", 0, "分页——数据超过一页、刚好一页、为空；改每页条数、翻到末页、筛选后、删除末页最后一条", "按 PRD 5.3 列表分页：总条数和页数正确，筛选后回到第 1 页，删除后当前页为空时回到上一页，排序稳定不重复不遗漏"],
+   ["fn", "dfbq", 0, "按 PRD 附录 D 核对 D24–D32", "实现与说明一致"]
+  ]}
+ ]}
+];
+/* VER：文档版本号（如 v1.3，和 PRD 需求版本管理表一致），不是迭代名。
+   ITER：多迭代需求包的迭代名（如 "v1.0"、"完整需求"，需求包框架规范第 3 节），单版本需求留空。
+   勾选状态按「需求 + 迭代 + 文档版本」分开保存；升版本后第一次打开时，自动找本机保存过的、版本号比 VER 小的最近一版，
+   沿用其中没有改动的自查项的勾选（本版新增或修改的项，即 it.v === VER 的项，清空重查）。不需要手工填写上一版本。 */
+var VER = "v1.0", ITER = "", BASE = "Telegram报表功能需求-" + (ITER ? ITER + "-" : ""), KEY = BASE + VER + "-checklist";
+document.getElementById("hdVer").textContent = VER;   /* 标题版本号跟着 VER 显示，升版本只改 VER */
+var PREV = (function () {
+  function vn(v) { var m = /^v(\d+)\.(\d+)$/.exec(v || ""); return m ? (+m[1]) * 1000 + (+m[2]) : -1; }
+  var best = "", bestN = -1, cur = vn(VER);
+  try { for (var i = 0; i < localStorage.length; i++) { var k = localStorage.key(i); if (k.indexOf(BASE) !== 0 || !/-checklist$/.test(k)) continue;
+    var v = k.slice(BASE.length, -"-checklist".length), n = vn(v); if (n >= 0 && n < cur && n > bestN) { best = k; bestN = n; } } } catch (e) {}
+  return best;
+})();
+var RN = { d: "设计", f: "前端", b: "后端", q: "测试" }, TN = { fn: "功能", bd: "边界值", ex: "异常", un: "非常规" };
+var F = { role: "all", type: "all", state: "all" };
+var store = {};
+try { store = JSON.parse(localStorage.getItem(KEY) || "null"); } catch (e) { store = null; }
+try { var sv = JSON.parse(localStorage.getItem(KEY + "-filters") || "{}"); if (sv.role) F = sv; } catch (e) {}
+/* 新版本首次打开：沿用上一版未改动自查项的勾选；本版新增或修改的自查项清空 */
+var MIGRATE = store === null; if (MIGRATE) store = {};
+function save() { try { localStorage.setItem(KEY, JSON.stringify(store)); localStorage.setItem(KEY + "-filters", JSON.stringify(F)); } catch (e) {} }
+function done(it, role) {
+  var rs = role === "all" ? it.r.split("") : [role];
+  return rs.every(function (r) { return store[r + ":" + it.id]; });
+}
+function setDone(it, on) { (F.role === "all" ? it.r.split("") : [F.role]).forEach(function (r) { if (on) store[r + ":" + it.id] = 1; else delete store[r + ":" + it.id]; }); }
+/* 展开数据 */
+var ITEMS = [];
+DATA.forEach(function (fp) { fp.s.forEach(function (s) { s.i.forEach(function (x, k) {
+  var it = { id: s.c + "-" + (k + 1), fp: fp, sub: s, t: x[0], r: x[1], key: !!x[2], q: x[3], e: x[4], v: x[5] || "" }; ITEMS.push(it); s.items = (s.items || []).concat(it);
+}); }); });
+function inRole(it) { return F.role === "all" || it.r.indexOf(F.role) >= 0; }
+function visible(it) {
+  if (!inRole(it)) return false;
+  if (F.type === "fn" && it.t !== "fn") return false;
+  if (F.type === "bd" && it.t !== "bd") return false;
+  if (F.type === "ex" && it.t !== "ex" && it.t !== "un") return false;
+  var d = done(it, F.role);
+  if (F.state === "todo" && d) return false;
+  if (F.state === "done" && !d) return false;
+  if (F.state === "key" && !it.key) return false;
+  return true;
+}
+function stat(list) { var n = list.length, c = list.filter(function (it) { return done(it, F.role); }).length; return { n: n, c: c, p: n ? Math.round(c * 100 / n) : 0 }; }
+var closed = {};
+function render() {
+  var html = "";
+  DATA.forEach(function (fp) {
+    var all = []; fp.s.forEach(function (s) { all = all.concat(s.items.filter(inRole)); });
+    var vis = all.filter(visible); if (!vis.length) return;
+    var st = stat(all), tag = st.c === 0 ? '<span class="stt">未开始</span>' : st.c === st.n ? '<span class="stt done">已完成</span>' : '<span class="stt ing">进行中</span>';
+    html += '<section class="fpc' + (closed[fp.c] ? " closed" : "") + '" data-fp="' + fp.c + '"><div class="fpc-h">' +
+      '<button class="tri" type="button" data-tog="' + fp.c + '" aria-label="展开或收起">▼</button><span class="code">' + fp.c + '</span><span class="nm">' + fp.n + "</span>" + tag +
+      '<span class="mbar"><i style="width:' + st.p + '%"></i></span><span class="num">' + st.c + " / " + st.n + "</span>" +
+      '<button class="selall" type="button" data-sel="' + fp.c + '">全选本组</button><button class="gopr" type="button" data-pr="' + fp.c + '">查看 PRD ›</button></div><div class="fpc-b">';
+    fp.s.forEach(function (s) {
+      var sv = s.items.filter(visible); if (!sv.length) return;
+      var ss = stat(s.items.filter(inRole));
+      html += '<div class="sub-h"><span class="code2">' + s.c + '</span><span class="nm">' + s.n + '</span><span class="mbar"><i style="width:' + ss.p + '%"></i></span><span class="num">' + ss.c + " / " + ss.n + '</span><button class="gopr" type="button" data-pr="' + s.c + '">查看 PRD ›</button></div><ul class="items">';
+      sv.forEach(function (it) {
+        var d = done(it, F.role);
+        html += '<li class="' + (d ? "done" : "") + (it.v ? " vmark" + (it.v === VER ? "" : " old") : "") + '"><input type="checkbox" data-id="' + it.id + '"' + (d ? " checked" : "") + ' aria-label="' + it.q.replace(/"/g, "&quot;") + '"><div><span class="tx">' + it.q +
+          '<span class="tags"><span class="lb t-' + it.t + '">' + TN[it.t] + "</span>" + it.r.split("").map(function (r) { return '<span class="lb r-' + r + '">' + RN[r] + "</span>"; }).join("") + (it.key ? '<span class="lb key">关键</span>' : "") +
+          (it.v ? '<sup class="vtag' + (it.v === VER ? "" : " old") + '" title="' + it.v + '">' + it.v + "</sup>" : "") +
+          '</span></span><span class="ex">预期：' + it.e + "</span></div></li>";
+      });
+      html += "</ul>";
+    });
+    html += "</div></section>";
+  });
+  document.getElementById("list").innerHTML = html || '<div class="empty">当前筛选下没有检查项</div>';
+  var t = stat(ITEMS.filter(inRole));
+  document.getElementById("tp").textContent = t.p + "%";
+  document.getElementById("tn").textContent = t.c + " / " + t.n + " 项";
+  document.getElementById("tb").style.width = t.p + "%";
+}
+var byId = {}; ITEMS.forEach(function (it) { byId[it.id] = it; });
+if (MIGRATE && PREV) { try { var old = JSON.parse(localStorage.getItem(PREV) || "{}"); Object.keys(old).forEach(function (k) { var it = byId[k.split(":")[1]]; if (it && it.v !== VER) store[k] = old[k]; }); } catch (e) {} save(); }
+var list = document.getElementById("list");
+list.addEventListener("change", function (e) { var id = e.target.dataset.id; if (!id) return; setDone(byId[id], e.target.checked); save(); render(); });
+list.addEventListener("click", function (e) {
+  var b = e.target.closest("button"); if (!b) return;
+  if (b.dataset.tog) { closed[b.dataset.tog] = !closed[b.dataset.tog]; b.closest(".fpc").classList.toggle("closed"); }
+  if (b.dataset.sel) {
+    var its = ITEMS.filter(function (it) { return it.fp.c === b.dataset.sel && visible(it); });
+    var allOn = its.every(function (it) { return done(it, F.role); });
+    its.forEach(function (it) { setDone(it, !allOn); }); save(); render();
+  }
+  if (b.dataset.pr) showPRD(b.dataset.pr);
+});
+/* 查看 PRD：宽屏在右栏定位并标荧光蓝；窄屏在新页面打开 */
+var frame = document.getElementById("prd"), ready = false, pending = null;
+frame.addEventListener("load", function () { ready = true; if (pending) { frame.contentWindow.postMessage({ type: "prd-show", code: pending }, "*"); pending = null; } });
+function showPRD(code) {
+  if (window.matchMedia("(max-width:699px)").matches) { window.open("Telegram报表-需求开发PRD文档.html#" + code, "_blank"); return; }
+  if (!ready) { pending = code; return; }   /* PRD 还没加载完：加载完成后再定位 */
+  frame.contentWindow.postMessage({ type: "prd-show", code: code }, "*");
+}
+document.getElementById("up").onclick = function () { frame.contentWindow.postMessage({ type: "prd-step", dir: -1 }, "*"); };
+document.getElementById("dn").onclick = function () { frame.contentWindow.postMessage({ type: "prd-step", dir: 1 }, "*"); };
+window.addEventListener("message", function (e) {
+  var d = e.data || {}; if (d.type !== "prd-hits") return;
+  document.getElementById("hitn").textContent = d.total ? "第 " + (d.pos + 1) + " / " + d.total + " 处标注" : "";
+});
+/* 筛选 */
+var GROUPS = { role: [["all", "全部"], ["d", "设计"], ["f", "前端"], ["b", "后端"], ["q", "测试"]], type: [["all", "全部"], ["fn", "功能"], ["bd", "边界值"], ["ex", "异常与非常规操作"]], state: [["all", "全部"], ["todo", "未完成"], ["done", "已完成"], ["key", "仅关键项"]] };
+Object.keys(GROUPS).forEach(function (g) {
+  var box = document.querySelector('[data-g="' + g + '"]');
+  GROUPS[g].forEach(function (o) {
+    var b = document.createElement("button"); b.type = "button"; b.className = "pill"; b.textContent = o[1]; b.setAttribute("aria-pressed", F[g] === o[0]);
+    b.onclick = function () { F[g] = o[0]; box.querySelectorAll(".pill").forEach(function (x) { x.setAttribute("aria-pressed", x === b); }); save(); render(); };
+    box.appendChild(b);
+  });
+});
+document.getElementById("exall").onclick = function () { closed = {}; render(); };
+document.getElementById("coall").onclick = function () { DATA.forEach(function (fp) { closed[fp.c] = true; }); render(); };
+document.getElementById("prt").onclick = function () { window.print(); };
+document.getElementById("clear").onclick = function () {
+  var m = document.createElement("div"); m.className = "cfm";
+  m.innerHTML = '<div role="dialog" aria-modal="true"><p><b>清空勾选</b></p><p>将清空本需求 ' + VER + ' 在本浏览器里所有角色的勾选，不能撤销。</p><div class="row2"><button class="obtn" type="button" data-x="0">取消</button><button class="obtn" type="button" data-x="1" style="border-color:#C00000;color:#C00000">确认清空</button></div></div>';
+  m.onclick = function (e) { var x = e.target.dataset.x; if (x === undefined) return; if (x === "1") { store = {}; save(); render(); } m.remove(); };
+  document.body.appendChild(m);
+};
+document.getElementById("csv").onclick = function () {
+  var rows = [["大功能点", "子功能点", "编号", "类型", "适用角色", "关键", "检查什么", "预期结果", "设计", "前端", "后端", "测试"]];
+  ITEMS.forEach(function (it) {
+    rows.push([it.fp.c + " " + it.fp.n, it.sub.c + " " + it.sub.n, it.id, TN[it.t], it.r.split("").map(function (r) { return RN[r]; }).join("/"), it.key ? "是" : "",
+      it.q, it.e].concat(["d", "f", "b", "q"].map(function (r) { return it.r.indexOf(r) < 0 ? "-" : store[r + ":" + it.id] ? "已勾" : "未勾"; })));
+  });
+  var csv = "﻿" + rows.map(function (r) { return r.map(function (c) { return '"' + String(c).replace(/"/g, '""') + '"'; }).join(","); }).join("\r\n");
+  var a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([csv], { type: "text/csv;charset=utf-8" })); a.download = "Telegram报表-开发自查清单-" + VER + ".csv";
+  document.body.appendChild(a); a.click(); a.remove();
+};
+/* 分隔条拖动 */
+(function () {
+  var split = document.getElementById("split"), dv = document.getElementById("divider"), drag = false;
+  dv.addEventListener("mousedown", function (e) { drag = true; frame.style.pointerEvents = "none"; e.preventDefault(); });
+  window.addEventListener("mouseup", function () { drag = false; frame.style.pointerEvents = ""; });
+  window.addEventListener("mousemove", function (e) {
+    if (!drag) return;
+    var r = split.getBoundingClientRect(), p = Math.min(70, Math.max(25, (e.clientX - r.left) * 100 / r.width));
+    split.style.setProperty("--lw", p + "%");
+  });
+})();
+/* 分栏高度 = 视口 - 顶栏 - 头图 */
+function fitHead() { document.getElementById("split").style.setProperty("--headh", document.getElementById("ckhead").offsetHeight + "px"); }
+window.addEventListener("resize", fitHead);
+render(); setTimeout(fitHead, 0);
+</script>
+</body>
+</html>

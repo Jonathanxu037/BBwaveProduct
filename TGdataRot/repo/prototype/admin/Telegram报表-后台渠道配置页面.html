@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Telegram报表-后台渠道配置页面</title>
+<link rel="stylesheet" href="../../assets/style.css">
+<style>.bo-tabs a{padding:9px 14px;font-size:13px;color:#555;border-bottom:2px solid transparent;text-decoration:none}.bo-tabs a:hover{color:#409EFF}.bo-tabs a.on{color:#409EFF;border-bottom-color:#409EFF}
+.tr-ag{display:flex;gap:8px;align-items:center}</style>
+</head>
+<body>
+<!-- 后台原型：仿平台真实后台。整页为本需求新增；示例数据一律虚构。视图：#list 列表 / #edit 编辑弹窗 / #empty 渠道未绑定代理 -->
+<div class="with-nav">
+<div class="adm-stage">
+  <div class="bo">
+    <div class="bo-top1"><span>当前时间：2026/11/04 14:32:08</span><span class="sp">简体中文</span><span>运营账号A ▾</span></div>
+    <div class="bo-top2"><span>在线人数<b class="bo-n r">1,286</b></span><span>当日注册<b class="bo-n g">1,302</b></span><span>当日充值成功<b class="bo-n g">2,417</b></span><span>提款<b class="bo-n g">936</b></span><span>风控审核<b class="bo-n r">4</b></span></div>
+    <div class="bo-body">
+      <nav class="bo-menu" aria-label="后台菜单">
+        <div class="mt">菜单 ≡</div>
+        <div class="g">用户管理</div><div class="g">财务管理</div><div class="g">代理管理</div>
+        <div class="g open">系统管理</div>
+        <div class="i">系统参数</div><div class="i on">Telegram报表配置</div>
+      </nav>
+      <div class="bo-main">
+        <div class="bo-crumb">位置 › 系统管理 › <b>Telegram报表配置</b></div>
+        <div class="bo-tabs" role="tablist">
+          <a role="tab" class="on" aria-selected="true" href="Telegram报表-后台渠道配置页面.html">渠道配置</a>
+          <a role="tab" aria-selected="false" href="Telegram报表-后台授权群页面.html">授权群</a>
+        </div>
+        <div class="bo-content">
+          <p class="ui-reqnote">本页配置 Telegram 报表里 5 个渠道各自包含哪些代理。用户按当前所属代理归入渠道：绑定的代理及其全部下级代理的用户都算这个渠道；「全站」为本站全部用户，不用配置。789Bingo、789Games 两站后台各有一份，各管本站。</p>
+          <table>
+            <tr><th>渠道</th><th><span class="ui-nw">绑定代理<i class="qm" tabindex="0" data-tip="这个渠道包含的代理账号。绑定的代理和它的全部下级代理名下的用户，都统计到这个渠道。">?</i></span></th><th><span class="ui-nw">代理数<i class="qm" tabindex="0" data-tip="已绑定的代理账号个数，不含下级代理。为 0 时，机器人里不显示这个渠道的按钮（两站都为 0 时）。">?</i></span></th><th>最后修改时间</th><th>操作人</th><th>操作</th></tr>
+            <tbody id="rows"></tbody>
+          </table>
+          <p style="font-size:12px;color:#909399;margin:10px 0 0">固定 5 个渠道，不分页。示例数据均为虚构。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="bo-mask" id="dlg" hidden>
+    <div class="bo-dlg" role="dialog" aria-modal="true" aria-labelledby="dlgT" style="width:min(520px,92vw)">
+      <h4 id="dlgT">编辑渠道</h4>
+      <div class="frow"><span class="fl">渠道</span><div class="fctl"><b class="lab" id="dlgCh"></b></div></div>
+      <div class="frow" style="align-items:start"><span class="fl" style="padding-top:6px">绑定代理<i class="qm" tabindex="0" data-tip="输入代理账号后点「添加」，可添加多个；点标签上的 × 移除。同一代理只能绑定一个渠道。">?</i></span>
+        <div class="fctl">
+          <div class="tr-ag"><input class="bo-inp" id="agIn" style="width:220px" placeholder="输入代理账号" data-dev="D21" aria-label="代理账号"><button class="bo-btn" type="button" id="agAdd">添加</button></div>
+          <div class="ms-box" id="agTags" style="width:100%;cursor:default" aria-label="已绑定代理"></div>
+          <div class="ferr" id="agErr"></div>
+        </div>
+      </div>
+      <div class="row2"><button class="bo-btn" type="button" data-cancel id="dlgNo">取消</button><button class="bo-btn q" type="button" id="dlgOk" data-dev="D22">保存</button></div>
+    </div>
+  </div>
+
+  <aside class="notes adm-notes">
+    <h2>后台渠道配置页面</h2>
+    <p class="sub">系统管理 › Telegram报表配置 › 渠道配置。配置 cicc、短信、网红、谷歌、oem 5 个渠道各自绑定的代理（整页为本需求新增）。</p>
+    <h3>模拟场景</h3>
+    <div class="sim">
+      <button type="button" data-go="list"><span class="simtag">渠道配置</span>列表</button>
+      <button type="button" data-go="edit"><span class="simtag">渠道配置</span>编辑「短信」</button>
+      <button type="button" data-go="empty"><span class="simtag">渠道配置</span>「网红」未绑定代理</button>
+    </div>
+    <h3>规则批注</h3>
+    <ol>
+      <li><b>渠道归属</b>：用户按当前所属代理归入渠道；绑定代理及其全部下级代理的用户都算该渠道；代理链上命中多个已绑定代理时，按离用户最近的一个归属。<span class="ref">PRD 规则 N6 · F05-01 渠道配置</span></li>
+      <li><b>一个代理只能绑定一个渠道</b>：添加已绑定到其他渠道的代理时，提示「代理 xx 已绑定到渠道「cicc」，同一代理只能绑定一个渠道」；输入不存在的账号提示「代理账号不存在」；同一渠道重复添加提示「该代理已添加」。<span class="ref">PRD 规则 N7 · F05-01</span></li>
+      <li><b>生效时间</b>：保存后，机器人下一次生成的报表按新配置统计；已发出的报表不变。<span class="ref">PRD 规则 N8 · F05-01</span></li>
+      <li><b>未绑定代理</b>：代理数为 0 的渠道，在只看本站的群里不显示按钮；两站汇总群里两站都为 0 才不显示，只有一站绑定时报表只显示该站一列。保存后机器人在相关群里重新发菜单。<span class="ref">PRD 规则 N9 · F01-02</span></li>
+      <li><b>操作日志</b>：保存记入后台现有操作日志，沿用现有。<span class="ref">PRD 5.1 渠道配置</span></li>
+    </ol>
+    <h3>评审待确认</h3>
+    <ol>
+      <li><b>渠道固定 5 个</b>：运营不能新增或停用渠道（已确认）。<span class="ref">PRD 待确认 Q6</span></li>
+      <li><b>789Games 后台</b>：与 789Bingo 为同一套系统，菜单位置和结构相同（已确认）。<span class="ref">PRD 待确认 Q7</span></li>
+    </ol>
+    <div class="pager"><a href="../front/Telegram报表-机器人对话页.html">← 上一页：机器人对话页</a><a href="Telegram报表-后台授权群页面.html">下一页：后台授权群页面 →</a></div>
+  </aside>
+</div>
+</div>
+<script>window.NAV_ROOT = "../../";</script>
+<script src="../../assets/nav-data.js"></script>
+<script src="../../assets/nav.js"></script>
+<script>
+(function () {
+  var ALL = ["kk_sms_g12", "kk_sms_g13", "sms_ph_01", "cicc_main", "cicc_02", "5ji-wanghong", "wh_star01", "gg_ads_03", "gg_kw_01", "oem_partner_a", "oem_partner_b", "dl_test_9"];
+  var BASE = [
+    { ch: "cicc", ag: ["cicc_main", "cicc_02"], at: "2026-11-03 18:20:11", by: "运营账号A" },
+    { ch: "短信", ag: ["kk_sms_g12", "sms_ph_01"], at: "2026-11-03 18:22:40", by: "运营账号A" },
+    { ch: "网红", ag: ["5ji-wanghong", "wh_star01"], at: "2026-11-02 11:05:02", by: "运营账号B" },
+    { ch: "谷歌", ag: ["gg_ads_03", "gg_kw_01"], at: "2026-11-02 11:07:45", by: "运营账号B" },
+    { ch: "oem", ag: ["oem_partner_a"], at: "2026-11-01 16:40:19", by: "运营账号A" }
+  ];
+  var R, cur = null, tmp = [];
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+  function draw() {
+    document.getElementById("rows").innerHTML = R.map(function (r, i) {
+      return "<tr><td>" + r.ch + '</td><td class="w" data-dev="D20">' + (r.ag.length ? r.ag.map(esc).join("、") : "-") + "</td><td>" + r.ag.length + "</td><td>" + r.at + "</td><td>" + r.by +
+        '</td><td><button class="bo-btn link" type="button" data-edit="' + i + '" data-dev="D23">编辑</button></td></tr>';
+    }).join("");
+  }
+  function tags() {
+    document.getElementById("agTags").innerHTML = tmp.length ? tmp.map(function (a, i) { return '<span class="ms-tag">' + esc(a) + '<button type="button" data-rm="' + i + '" aria-label="移除 ' + esc(a) + '">×</button></span>'; }).join("") : '<span class="ms-ph">还没有绑定代理</span>';
+  }
+  function err(t) { document.getElementById("agErr").textContent = t || ""; }
+  function open(i) { cur = i; tmp = R[i].ag.slice(); document.getElementById("dlgCh").textContent = R[i].ch; document.getElementById("agIn").value = ""; err(); tags(); document.getElementById("dlg").hidden = false; }
+  function close() { document.getElementById("dlg").hidden = true; cur = null; }
+  document.getElementById("agAdd").onclick = function () {
+    var v = document.getElementById("agIn").value.trim().toLowerCase();
+    if (!v) return err("请输入代理账号");
+    if (ALL.indexOf(v) < 0) return err("代理账号不存在");
+    if (tmp.indexOf(v) >= 0) return err("该代理已添加");
+    var other = R.filter(function (r, i) { return i !== cur && r.ag.indexOf(v) >= 0; })[0];
+    if (other) return err("代理 " + v + " 已绑定到渠道「" + other.ch + "」，同一代理只能绑定一个渠道");
+    tmp.push(v); document.getElementById("agIn").value = ""; err(); tags();
+  };
+  document.getElementById("agIn").addEventListener("keydown", function (e) { if (e.key === "Enter") document.getElementById("agAdd").click(); });
+  document.getElementById("agTags").addEventListener("click", function (e) { var b = e.target.closest("[data-rm]"); if (b) { tmp.splice(+b.dataset.rm, 1); tags(); } });
+  document.getElementById("dlgNo").onclick = close;
+  document.getElementById("dlgOk").onclick = function () {
+    R[cur].ag = tmp.slice(); R[cur].at = "2026-11-04 14:32:08"; R[cur].by = "运营账号A"; close(); draw();
+    var m = document.createElement("div"); m.className = "bo-msg ok"; m.textContent = "保存成功"; m.setAttribute("role", "status");
+    document.body.appendChild(m); setTimeout(function () { m.remove(); }, 1800);
+  };
+  document.getElementById("rows").addEventListener("click", function (e) { var b = e.target.closest("[data-edit]"); if (b) open(+b.dataset.edit); });
+
+  function show(view) {
+    if (["list", "edit", "empty"].indexOf(view) < 0) view = "list";
+    R = JSON.parse(JSON.stringify(BASE));
+    if (view === "empty") R[2].ag = [];
+    close(); draw();
+    if (view === "edit") open(1);
+    if (location.hash.slice(1) !== view) history.replaceState(null, "", "#" + view);
+    if (window.self !== window.top) window.parent.postMessage({ type: "proto-view", view: view }, "*");
+  }
+  window.addEventListener("hashchange", function () { show(location.hash.slice(1) || "list"); });
+  document.addEventListener("click", function (e) { var b = e.target.closest("[data-go]"); if (b) { e.preventDefault(); show(b.dataset.go); } });
+  show(location.hash.slice(1) || "list");
+})();
+</script>
+</body>
+</html>

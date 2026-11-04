@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Telegram报表-客服QA</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body class="qa-page" data-lang="both">
+<div class="with-nav">
+<div class="desk"><article class="paper qa">
+
+<h1 class="doc-title">Telegram报表 · 客服 QA<span class="qa-sub">Telegram Report Bot · Customer Service Q&amp;A</span></h1>
+<div class="doc-meta"><span>版本 / Version：v1.0</span><span>适用 / For：客服 Customer Service</span><span>依据 / Based on：PRD、后台操作手册 Admin Manual</span></div>
+<div class="qa-lang" role="group" aria-label="语言 Language">
+  <button type="button" data-l="both" aria-pressed="true">双语 Bilingual</button>
+  <button type="button" data-l="zh" aria-pressed="false">中文</button>
+  <button type="button" data-l="en" aria-pressed="false">English</button>
+</div>
+<hr class="doc-rule">
+
+<h2 id="q0">适用范围 <span class="en-t">Scope</span></h2>
+<div class="bi"><div class="zh">789Bingo、789Games 内部人员使用的 Telegram 报表机器人。玩家看不到、也用不了这个机器人；本 QA 用于回答内部同事的问题。</div><div class="en">The Telegram report bot for internal staff of 789Bingo and 789Games. Players cannot see or use it; this Q&amp;A is for answering colleagues.</div></div>
+
+<h2 id="q1">这次改了什么 <span class="en-t">What changed</span></h2>
+<div class="bi"><div class="zh">授权人员可在 Telegram 里查看两站各渠道（全站、cicc、短信、网红、谷歌、oem）和指定代理线的今日实时数据与昨日对比。报表发出满 1 小时、或同一聊天再查一次时自动删除。对玩家没有任何变化。</div><div class="en">Authorized staff can view today's real-time data vs. yesterday for each channel (All, cicc, SMS, Influencer, Google, OEM) and for a given agent line, on both sites, in Telegram. Reports are deleted 1 hour after being sent, or when a new report is generated in the same chat. Nothing changes for players.</div></div>
+
+<h2 id="q2">客服核查步骤 <span class="en-t">How to check</span></h2>
+<ol class="qa-steps">
+  <li class="bi"><div class="zh"><b>是否有权限</b>：后台【系统管理 › Telegram报表配置 › 授权群】按群 ID 查询，看是否存在且为「启用」。两站分别查。</div><div class="en"><b>Access</b>: In admin 系统管理 › Telegram报表配置 › 授权名单 (System › Telegram Report Settings › Access List), search the Telegram ID and check it exists and is enabled. Check each site separately.</div></li>
+  <li class="bi"><div class="zh"><b>渠道按钮不见了</b>：同一菜单的「渠道配置」标签，看该渠道的代理数是否为 0（为 0 时不显示按钮）。</div><div class="en"><b>Channel button missing</b>: On the 渠道配置 (Channel Settings) tab, check whether the channel has 0 agents (the button is hidden when it has none).</div></li>
+</ol>
+
+<h2 id="q3">问答 <span class="en-t">Q&amp;A</span></h2>
+<section class="qa-card" id="qa1">
+  <h3><span class="qa-no">1</span><span class="bi-inline"><span class="zh">玩家问：你们的 Telegram 机器人能查数据吗？</span><span class="en">Player: Can your Telegram bot show data?</span></span></h3>
+  <div class="qa-row"><b>回复玩家<small>Reply</small></b>
+    <div class="bi"><div class="en qa-reply">This bot is for internal use only and is not available to players. For your account details, please check the Account page in the app or contact us here.<button type="button" class="qa-copy">复制 Copy</button></div>
+    <div class="zh">该机器人仅供内部使用，玩家无法使用。账户信息请在 App 的 Account 页面查看，或在这里联系我们。</div></div></div>
+  <div class="qa-row"><b>客服核查<small>Check</small></b>
+    <div class="bi"><div class="zh">不用核查；不要向玩家透露机器人名称和报表内容。</div><div class="en">No check needed. Do not share the bot name or any report content with players.</div></div></div>
+  <div class="qa-row"><b>转交<small>Escalate</small></b>
+    <div class="bi"><div class="zh">玩家声称看到了报表内容时，截图转运营负责人。</div><div class="en">If a player claims to have seen report content, send screenshots to the Operations lead.</div></div></div>
+</section>
+<section class="qa-card" id="qa2">
+  <h3><span class="qa-no">2</span><span class="bi-inline"><span class="zh">同事问：机器人说我没有权限？</span><span class="en">Colleague: The bot says I have no access?</span></span></h3>
+  <div class="qa-row"><b>回复同事<small>Reply</small></b>
+    <div class="bi"><div class="en qa-reply">The bot only works in authorized groups. Please use it in the authorized operations group. If you need a new group enabled, send the group ID shown in the bot's reply to Operations.<button type="button" class="qa-copy">复制 Copy</button></div>
+    <div class="zh">机器人只在授权群里使用，请到已授权的运营群里查看；需要开通新群时，把机器人回复的群 ID 发给运营。</div></div></div>
+  <div class="qa-row"><b>客服核查<small>Check</small></b>
+    <div class="bi"><div class="zh">按「客服核查步骤」查授权群。</div><div class="en">Check the access list as described in "How to check".</div></div></div>
+  <div class="qa-row"><b>转交<small>Escalate</small></b>
+    <div class="bi"><div class="zh">已在名单中且启用仍提示无权限时，转技术。</div><div class="en">If the ID is listed and enabled but access is still denied, escalate to Tech.</div></div></div>
+</section>
+<section class="qa-card" id="qa3">
+  <h3><span class="qa-no">3</span><span class="bi-inline"><span class="zh">同事问：报表怎么不见了？</span><span class="en">Colleague: Where did the report go?</span></span></h3>
+  <div class="qa-row"><b>回复同事<small>Reply</small></b>
+    <div class="bi"><div class="en qa-reply">Reports are deleted automatically 1 hour after being sent, or when someone in the same chat generates a new one. Just tap a channel again to get the latest report.<button type="button" class="qa-copy">复制 Copy</button></div>
+    <div class="zh">报表发出满 1 小时会自动删除；同一聊天里有人再查一次，上一份也会被删除。重新点渠道即可看到最新报表。</div></div></div>
+  <div class="qa-row"><b>客服核查<small>Check</small></b>
+    <div class="bi"><div class="zh">不用核查。</div><div class="en">No check needed.</div></div></div>
+  <div class="qa-row"><b>转交<small>Escalate</small></b>
+    <div class="bi"><div class="zh">不需要转交。</div><div class="en">No escalation needed.</div></div></div>
+</section>
+
+<h2 id="q4">转交与升级 <span class="en-t">Escalation</span></h2>
+<div class="tbl"><table class="qa-tbl">
+  <thead><tr><th>情况 <small>Situation</small></th><th>转给 <small>To</small></th></tr></thead>
+  <tbody>
+    <tr><td class="bi"><div class="zh">需要开通或取消权限、渠道按钮不见了</div><div class="en">Grant or remove access; a channel button is missing</div></td><td class="bi"><div class="zh">运营</div><div class="en">Operations</div></td></tr>
+    <tr><td class="bi"><div class="zh">已授权仍无权限、昨日数据和后台平台报表不一致、多次生成失败</div><div class="en">Authorized but denied; yesterday's data differs from the admin platform report; repeated generation failures</div></td><td class="bi"><div class="zh">技术</div><div class="en">Tech</div></td></tr>
+  </tbody>
+</table></div>
+
+<h2 id="q5">资料未覆盖的问题 <span class="en-t">Not covered yet</span></h2>
+<ul class="qa-open">
+  <li class="bi"><div class="zh">机器人的正式名称和显示语言还在确认中（PRD 10. 待确认事项）。</div><div class="en">The bot's official name and display language are still to be confirmed.</div></li>
+</ul>
+</article></div>
+</div>
+<script>window.NAV_ROOT = "../";</script>
+<script src="../assets/nav-data.js"></script>
+<script src="../assets/nav.js"></script>
+<script>
+(function () {
+  /* 语言切换：双语 / 中文 / English，记在本机浏览器 */
+  var KEY = "Telegram报表功能需求-客服QA-lang";
+  function set(l) {
+    document.body.dataset.lang = l;
+    document.querySelectorAll(".qa-lang button").forEach(function (b) { b.setAttribute("aria-pressed", b.dataset.l === l); });
+    try { localStorage.setItem(KEY, l); } catch (e) {}
+  }
+  document.querySelectorAll(".qa-lang button").forEach(function (b) { b.onclick = function () { set(b.dataset.l); }; });
+  try { var s = localStorage.getItem(KEY); if (s) set(s); } catch (e) {}
+  /* 复制英文回复 */
+  document.addEventListener("click", function (e) {
+    var b = e.target.closest(".qa-copy"); if (!b) return;
+    var box = b.parentNode.cloneNode(true); box.querySelector(".qa-copy").remove();
+    var text = box.textContent.trim();
+    function done(ok) { b.textContent = ok ? "已复制 Copied" : "复制失败 Failed"; setTimeout(function () { b.textContent = "复制 Copy"; }, 1500); }
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(function () { done(true); }, function () { done(fallback(text)); });
+    else done(fallback(text));
+  });
+  function fallback(text) {
+    var t = document.createElement("textarea"); t.value = text; t.style.cssText = "position:fixed;left:-9999px"; document.body.appendChild(t); t.select();
+    var ok = false; try { ok = document.execCommand("copy"); } catch (e) {}
+    t.remove(); return ok;
+  }
+})();
+</script>
+</body>
+</html>
