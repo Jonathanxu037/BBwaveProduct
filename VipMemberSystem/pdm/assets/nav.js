@@ -248,7 +248,9 @@
     (window.NAV_TOP_LEFT || []).forEach(function (b) { bar.appendChild(b); });
     var crumb = document.createElement("div"); crumb.className = "crumb";
     var path = []; for (var n = current; n; n = n.parent) path.unshift(n.title);
-    crumb.innerHTML = path.map(function (t, i) { var s = t.replace(/[<>&]/g, ""); return i === path.length - 1 ? "<b>" + s + "</b>" : s; }).join(" › ");
+    /* 上级路径包在 .cr-up 里，窄屏时隐藏，只显示当前页名 */
+    crumb.innerHTML = path.map(function (t, i) { var s = t.replace(/[<>&]/g, ""); return i === path.length - 1 ? "<b>" + s + "</b>" : '<span class="cr-up">' + s + " › </span>"; }).join("");
+    crumb.title = path.join(" › ");
     bar.appendChild(crumb);
     var rc;
     if (REAL === "pdm") {
@@ -644,7 +646,12 @@ function isPubAdmin() {
   /* 弹窗 */
   function prdHref(id) {
     var p = window.DEV_NOTES_PRD; if (!p) return "";
-    return (window.NAV_ROOT || "") + String(p).replace("{iter}", ITER || "full") + "#dev-" + encodeURIComponent(id);
+    return (window.NAV_ROOT || "") + String(p).replace("{iter}", ITER || "full") + "#" + encodeURIComponent(id);   /* PRD 标出这条说明关联的规则和所有相关位置，跳到最前面一处（用户 2026-11-02） */
+  }
+  /* 说明里的编号（N / Q / F / D）做成可点链接：打开 PRD 并跳到对应位置、荧光蓝标注（用户 2026-11-02「研发说明中对应规则后面的序号还是不可点击」） */
+  function codeLinks(s) {
+    var base = prdHref("X"); if (!base) return s; base = base.slice(0, base.lastIndexOf("#") + 1);
+    return s.replace(/\b(N\d{1,3}|Q\d{1,3}|F\d{2}(?:-\d{2})?|D\d{2,3})\b/g, function (c) { return '<a class="ref-btn dp-code" href="' + base + c + '" title="打开 PRD 查看 ' + c + '">' + c + "</a>"; });
   }
   function show(id) {
     var d = (window.DEV_NOTES || {})[id], mask = document.createElement("div"); mask.className = "ui-devpop-mask";
@@ -653,7 +660,7 @@ function isPubAdmin() {
     if (!d) h += '<h3>没有找到这条说明</h3><p class="dp-miss">assets/dev-notes.js 里没有编号「' + esc(id) + "」，请补上（PRD 附录 D 由它自动生成）。</p>";
     else {
       h += "<h3>" + esc(d.name || id) + "</h3>" + (d.page ? '<div class="dp-page">' + esc(d.page) + "</div>" : "") + "<dl>";
-      FIELDS.forEach(function (f) { if (d[f[0]]) h += "<dt>" + f[1] + '</dt><dd class="' + (f[0] === "formula" ? "dp-f" : "") + '">' + esc(d[f[0]]).replace(/\n/g, "<br>") + "</dd>"; });
+      FIELDS.forEach(function (f) { if (d[f[0]]) h += "<dt>" + f[1] + '</dt><dd class="' + (f[0] === "formula" ? "dp-f" : "") + '">' + codeLinks(esc(d[f[0]])).replace(/\n/g, "<br>") + "</dd>"; });
       h += "</dl>";
       var href = prdHref(id); if (href) h += '<a class="dp-prd" href="' + esc(href) + '">在 PRD 中查看 ›</a>';
     }
@@ -721,12 +728,12 @@ function isPubAdmin() {
     var idx = {}, base = onPrd ? "" : PRD_URL;
     [].forEach.call(root.querySelectorAll("tr[id]"), function (tr) {
       if (!/^[nq]\d+$/.test(tr.id)) return;
-      idx[tr.id.toUpperCase()] = { brief: tr.getAttribute("data-brief") || text(tr.cells[1]), href: base + "#" + tr.id };
+      idx[tr.id.toUpperCase()] = { brief: tr.getAttribute("data-brief") || text(tr.cells[1]), href: base + "#" + tr.id.toUpperCase() };
     });
     var m = /var FP\s*=\s*\{([\s\S]*?)\};/.exec(src || ""), r = /"?(F\d{2}(?:-\d{2})?)"?\s*:\s*"((?:[^"\\]|\\.)*)"/g, x;
     if (m) while ((x = r.exec(m[1]))) idx[x[1]] = { brief: x[2], href: base + "#" + x[1] };
     var D = window.DEV_NOTES || {};
-    Object.keys(D).forEach(function (k) { var d = D[k]; idx[k] = { brief: (d.name || k) + (d.what ? "：" + d.what : ""), href: base + "#dev-" + k }; });
+    Object.keys(D).forEach(function (k) { var d = D[k]; idx[k] = { brief: (d.name || k) + (d.what ? "：" + d.what : ""), href: base + "#" + k }; });
     return idx;
   }
   function load(done) {
@@ -758,38 +765,38 @@ function isPubAdmin() {
         if (!INDEX[m[1]]) continue;
         hit = true; frag.appendChild(document.createTextNode(s.slice(last, m.index)));
         var b = document.createElement("button"); b.type = "button"; b.className = "ref-btn"; b.textContent = m[1]; b.setAttribute("data-code", m[1]);
-        b.title = "查看 " + m[1] + " 的内容"; frag.appendChild(b); last = m.index + m[0].length;
+        b.title = m[1] + "：" + (INDEX[m[1]].brief || "") + "（点击打开 PRD 对应位置）"; frag.appendChild(b); last = m.index + m[0].length;
       }
       if (!hit) return;
       frag.appendChild(document.createTextNode(s.slice(last))); par.replaceChild(frag, t);
     });
   }
+  function markFp() {   /* 功能点标签 .fp（如「F08-01」）：PRD 里有这个编号的标成可点 */
+    [].forEach.call(document.querySelectorAll(".fp:not([data-code])"), function (el) {
+      var m = /^(F\d{2}(?:-\d{2})?)\b/.exec(el.textContent.trim()); if (m && INDEX[m[1]]) { el.setAttribute("data-code", m[1]); el.title = m[1] + "：" + INDEX[m[1]].brief + "（点击打开 PRD 对应位置）"; el.setAttribute("role", "link"); el.tabIndex = 0; }
+    });
+  }
   var pop = null;
   function close() { if (pop) { pop.remove(); pop = null; } }
+  /* 点编号标签（.ref-btn 编号按钮、功能点标签 .fp）：打开 PRD 并跳到对应位置，PRD 用荧光蓝标出所有相关位置（用户 2026-11-02「以后所有显示标题序号的标签都可点击」） */
   document.addEventListener("click", function (e) {
-    var b = e.target.closest && e.target.closest(".ref-btn[data-code]");
+    var b = e.target.closest && e.target.closest(".ref-btn[data-code],.fp[data-code]");
     if (!b) { if (pop && !pop.contains(e.target)) close(); return; }
-    e.preventDefault(); e.stopPropagation();
-    var code = b.getAttribute("data-code"), same = pop && pop.dataset.code === code; close(); if (same) return;
-    var it = INDEX && INDEX[code]; if (!it) return;
-    pop = document.createElement("div"); pop.className = "ref-pop"; pop.setAttribute("role", "tooltip"); pop.dataset.code = code;
-    var h = document.createElement("b"); h.textContent = code; pop.appendChild(h);
-    var p = document.createElement("p"); p.textContent = it.brief || "（这条编号还没写精炼描述）"; pop.appendChild(p);
-    var a = document.createElement("a"); a.href = it.href; a.textContent = "查看完整内容 ›"; a.onclick = close; pop.appendChild(a);
-    document.body.appendChild(pop);
-    var r = b.getBoundingClientRect(), w = pop.offsetWidth;
-    pop.style.left = Math.max(8, Math.min(r.left + scrollX, scrollX + innerWidth - w - 8)) + "px"; pop.style.top = (r.bottom + scrollY + 6) + "px";
+    e.preventDefault(); e.stopPropagation(); close();
+    var code = b.getAttribute("data-code"), it = INDEX && INDEX[code]; if (!it) return;
+    if (onPrd) { if (location.hash === "#" + code) window.dispatchEvent(new HashChangeEvent("hashchange")); else location.hash = code; }
+    else location.href = it.href;
   }, true);
   document.addEventListener("keydown", function (e) { if (e.key === "Escape") close(); });
   var t = 0;
   function start() {
     load(function (idx) {
       INDEX = idx; if (!INDEX) return;
-      convert(document.body);
+      convert(document.body); markFp();
       /* 页面脚本后来画出的内容（开发自查清单、需求修改总结等）也换 */
       new MutationObserver(function (list) {
         if (list.every(function (m) { return [].every.call(m.addedNodes, function (n) { return n.nodeType === 1 && (n.classList.contains("ref-btn") || n.classList.contains("ref-pop")); }); })) return;
-        clearTimeout(t); t = setTimeout(function () { convert(document.body); }, 60);
+        clearTimeout(t); t = setTimeout(function () { convert(document.body); markFp(); }, 60);
       }).observe(document.body, { childList: true, subtree: true });
     });
   }
@@ -805,8 +812,10 @@ function isPubAdmin() {
   ["wheel", "touchstart", "keydown", "mousedown"].forEach(function (ev) { window.addEventListener(ev, function () { moved = true; }, { passive: true, capture: true }); });
   function go() {
     if (moved || !location.hash || /^#dev-/.test(location.hash)) return;
+    if (window.PRD_CODE_HL && /^#[NQFD]\d/.test(location.hash)) return;   /* 支持编号标注的 PRD：#编号 由 PRD 页面自己标注并跳到最前面一处 */
     var id; try { id = decodeURIComponent(location.hash.slice(1)); } catch (e) { id = location.hash.slice(1); }
-    var el = document.getElementById(id); if (el) el.scrollIntoView({ block: "start", behavior: "instant" });
+    var el = document.getElementById(id) || (/^[NQ]\d/.test(id) && document.getElementById(id.toLowerCase())) || (/^D\d/.test(id) && document.getElementById("dev-" + id));   /* 旧版 PRD：#N3 → 规则行 n3，#D12 → 附录 D 行 */
+    if (el) el.scrollIntoView({ block: "start", behavior: "instant" });
   }
   function again() { go(); setTimeout(go, 400); setTimeout(go, 1200); if (document.fonts && document.fonts.ready) document.fonts.ready.then(go); }
   if (document.readyState === "complete") again(); else window.addEventListener("load", again);

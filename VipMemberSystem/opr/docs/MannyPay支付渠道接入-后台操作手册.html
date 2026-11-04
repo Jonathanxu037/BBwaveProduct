@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>MannyPay支付渠道接入-后台操作手册</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<div class="with-nav">
+  <header class="mh">
+    <div class="k">789BINGO · 后台操作手册 <span class="vp">v1.0</span></div>
+    <h1>MannyPay支付渠道接入 · MannyPay 渠道操作手册</h1>
+    <p>写给运营和客服：新增 MannyPay 充值标签、设置主备渠道、代付出款、手续费、余额和监控的后台操作。</p>
+    <div class="btns"><a class="b1" href="../prototype/admin/MannyPay支付渠道接入-在线支付配置.html">打开后台原型 ›</a><span class="link-off" title="当前角色不能查看这个页面">查看 PRD</span></div>
+  </header>
+
+  <div class="mk">
+    <b>重要结论</b>
+    <ul>
+      <li>前台 Deposit 的每个标签就是「在线支付配置」里一条状态为正常的配置；新增一条 MannyPay 配置，前台就多一个标签，名称取「支付名称」（PRD 规则 N1）。</li>
+      <li>MannyPay 收款方式为 QRPh 二维码，玩家用 GCash 扫码付款（PRD 规则 N1）。</li>
+      <li>MannyPay 代付走 InstaPay，单笔超过 ₱50,000 时 MannyPay 会返回失败，订单进入「出款异常单」，换其他渠道重新出款（PRD 规则 N10）。</li>
+      <li>出款中的订单不能再次出款；失败的订单会转入「出款异常单」（PRD 规则 N12）。</li>
+    </ul>
+  </div>
+
+  <div class="mbody">
+    <nav class="mtoc" aria-label="手册目录">
+      <a href="#m1">01 新增 MannyPay 充值标签</a>
+      <a href="#m2">02 主备渠道</a>
+      <a href="#m3">03 绑定银行配置</a>
+      <a href="#m4">04 提款记录出款</a>
+      <a href="#m5">05 手续费与财务总表</a>
+      <a href="#m6">06 余额与监控</a>
+      <a href="#m9">常见问题</a>
+    </nav>
+    <div>
+      <section class="mcard" id="m1">
+        <h2><span class="no2">01</span>新增 MannyPay 充值标签</h2>
+        <h3>菜单路径与权限</h3>
+        <p>充值配置 › 在线支付配置。沿用现有权限；商户号等对接参数由技术填写。</p>
+        <h3>字段说明</h3>
+        <table data-fit>
+          <tr><th>字段</th><th>含义</th><th>默认值</th></tr>
+          <tr><td>支付类型</td><td>选 MannyPay。</td><td>-</td></tr>
+          <tr><td>支付名称</td><td>前台 Deposit 标签上显示的名称，例如 GCash6。</td><td>-</td></tr>
+          <tr><td>最小 / 最大金额</td><td>前台金额框「Limit 最小～最大」就取这里，与支付层级限额取交集。</td><td>-</td></tr>
+          <tr><td>状态</td><td>正常：前台显示；维护：前台置灰并显示前台维护说明；停用：前台不显示。</td><td>-</td></tr>
+          <tr><td>层设置</td><td>哪些支付层级的用户能看到这个标签。</td><td>-</td></tr>
+          <tr><td>排序</td><td>数字越大越靠后。</td><td>-</td></tr>
+        </table>
+        <h3>操作步骤</h3>
+        <div class="msteps">
+          <div class="mstep"><i>1</i><div>点「新增」，支付类型选 MannyPay，填写支付名称、最小 / 最大金额、层设置、排序；其他字段按现有方式填写。</div></div>
+          <div class="mstep"><i>2</i><div>状态为「停用」时由技术填好对接参数；然后层设置只选测试层级，状态改为「正常」。</div></div>
+          <div class="mstep"><i>3</i><div>用测试层级账号收款、出款各验证一笔。</div></div>
+          <div class="mstep"><i>4</i><div>验证通过后，把层设置放开到目标层级。维护说明用英文填写。</div></div>
+        </div>
+      </section>
+
+      <section class="mcard" id="m2">
+        <h2><span class="no2">02</span>主备渠道</h2>
+        <h3>菜单路径与权限</h3>
+        <p>充值配置 › 在线支付配置 › 支付渠道动态配置。沿用现有权限。</p>
+        <h3>字段说明</h3>
+        <table data-fit>
+          <tr><th>字段</th><th>含义</th><th>默认值</th></tr>
+          <tr><td>备用渠道</td><td>本渠道下单失败或成功率下降时，前台坑位自动切到这里选的渠道，前台名称不变。不能选本渠道。</td><td>无</td></tr>
+          <tr><td>动态调整规则</td><td>满足任意 1 条即启动备用渠道：① 单个用户连续充值失败 ≥ N 次且累计 ≥ M 人；② 最近 X 分钟充值成功率持续 &lt; Y%；③ 最近 X 分钟三方下单失败率 ≥ Z% 或失败次数 ≥ K 次。</td><td>沿用现有</td></tr>
+        </table>
+        <h3>操作步骤</h3>
+        <div class="msteps">
+          <div class="mstep"><i>1</i><div>需要时，把 GCash3 等配置的备用渠道选为 MannyPay 配置，或给 MannyPay 配置选一个备用渠道，点「保存」。</div></div>
+          <div class="mstep"><i>2</i><div>切换情况在「支付渠道调整记录」查看。</div></div>
+        </div>
+      </section>
+
+      <section class="mcard" id="m3">
+        <h2><span class="no2">03</span>绑定银行配置</h2>
+        <h3>菜单路径与权限</h3>
+        <p>充值配置 › 绑定银行配置。沿用现有权限。</p>
+        <h3>字段说明</h3>
+        <table data-fit>
+          <tr><th>字段</th><th>含义</th><th>默认值</th></tr>
+          <tr><td>代付渠道</td><td>玩家提款到该银行 / 电子钱包时由哪个渠道出款：PayMongo、CoinPH、UnionBank、Dragonpay、Paycools、Starpay、MannyPay。</td><td>沿用现有</td></tr>
+        </table>
+        <h3>操作步骤</h3>
+        <div class="msteps">
+          <div class="mstep"><i>1</i><div>确认该银行在 MannyPay 可出款的银行范围内，点「编辑」，代付渠道选 MannyPay，确定。</div></div>
+          <div class="mstep"><i>2</i><div>批量切换时点「批量替换代付渠道」，替换为 MannyPay。原代付渠道为所选渠道的银行会全部替换，系统不判断是否支持 MannyPay，替换前先确认这些银行 MannyPay 都能出款。</div></div>
+        </div>
+      </section>
+
+      <section class="mcard" id="m4">
+        <h2><span class="no2">04</span>提款记录出款</h2>
+        <h3>菜单路径与权限</h3>
+        <p>财务管理 › 提款记录 › 待处理订单 / 出款异常单。沿用现有权限。</p>
+        <h3>字段说明</h3>
+        <table data-fit>
+          <tr><th>字段</th><th>含义</th><th>默认值</th></tr>
+          <tr><td>出款通道</td><td>MannyPay 代付走 InstaPay，实时到账。实际出款金额超过 InstaPay 单笔上限（₱50,000）时 MannyPay 返回失败，订单转入出款异常单。</td><td>InstaPay</td></tr>
+          <tr><td>异常原因</td><td>MannyPay 明确返回失败时显示「其它：MannyPay 返回的原因」，如渠道余额不足、收款账户无效、超过单笔上限。</td><td>-</td></tr>
+        </table>
+        <h3>操作步骤</h3>
+        <div class="msteps">
+          <div class="mstep"><i>1</i><div>待处理订单点「出款」，出款渠道选「三方代付」，出款类型选 MannyPay，点「确定」。</div></div>
+          <div class="mstep"><i>2</i><div>订单变为「出款中」后等待结果，不要重复操作；超过 30 分钟仍无结果，转技术核查，不要重新发起。</div></div>
+          <div class="mstep"><i>3</i><div>失败的订单到「出款异常单」查看异常原因，点「重新出款」换渠道或驳回。大额订单可以直接选其他渠道出款；也可在「提现出款设置 › 大额提现拆单设置」调整单笔最大出款金额（全局、GCash、Maya 分别设置；银行卡提现是否拆单以现有规则为准）。</div></div>
+        </div>
+      </section>
+
+      <section class="mcard" id="m5">
+        <h2><span class="no2">05</span>手续费与财务总表</h2>
+        <h3>菜单路径与权限</h3>
+        <p>财务管理 › 财务总览 › 财务总表 / 手续费设置。沿用现有权限。</p>
+        <h3>操作步骤</h3>
+        <div class="msteps">
+          <div class="mstep"><i>1</i><div>手续费设置点「新增规则」，类型选充值或提款，渠道选 MannyPay，按与 MannyPay 约定的标准填写每笔手续费。同一类型同一渠道只能有一条启用的规则。</div></div>
+          <div class="mstep"><i>2</i><div>财务总表的充值渠道或出款渠道选 MannyPay 查询。</div></div>
+        </div>
+      </section>
+
+      <section class="mcard" id="m6">
+        <h2><span class="no2">06</span>余额与监控</h2>
+        <h3>菜单路径与权限</h3>
+        <p>平台概况 › 财务数据 / 监控大盘。沿用现有权限。</p>
+        <h3>字段说明</h3>
+        <table data-fit>
+          <tr><th>字段</th><th>含义</th><th>默认值</th></tr>
+          <tr><td>资金余额(MannyPay)</td><td>MannyPay 账户当前可用余额，打开、刷新页面和页面自动刷新时更新。低于 ₱5,000,000 显示黄色，低于 ₱2,000,000 显示红色。</td><td>-</td></tr>
+        </table>
+        <h3>操作步骤</h3>
+        <div class="msteps">
+          <div class="mstep"><i>1</i><div>大批量出款前先看余额卡片；黄色或红色时联系财务给 MannyPay 账户补款，或改用其他代付渠道。</div></div>
+          <div class="mstep"><i>2</i><div>监控大盘「业务指标实时监控」选 MannyPay 标签，看 MannyPay 的充值、提款成功率。</div></div>
+        </div>
+      </section>
+
+      <section class="mcard" id="m9">
+        <h2>常见问题</h2>
+        <dl class="faq">
+          <dt>提款记录里出现「疑似重复出款」？</dt>
+          <dd>订单转入出款异常单或已换渠道出款后，MannyPay 又返回了成功。出款结果不会自动改，转财务核对并追回多付的款项。</dd>
+          <dt>新增了 MannyPay 配置，前台看不到标签？</dt>
+          <dd>检查状态是否「正常」、层设置是否包含该用户的层级、所在地区是否在不可见地区里。</dd>
+          <dt>MannyPay 出款失败，异常原因是超过单笔上限？</dt><dd>InstaPay 单笔最多 ₱50,000，在出款异常单里换其他渠道重新出款。</dd><dt>MannyPay 出款失败，异常原因是收款账户无效？</dt><dd>可能是该银行 MannyPay 不支持，在出款异常单里换其他渠道重新出款，并把该银行的代付渠道改回原渠道。</dd>
+          <dt>余额卡片显示「-」？</dt>
+          <dd>余额查询失败，稍后刷新页面；持续失败转技术。</dd>
+          <dt>MannyPay 订单一直是出款中？</dt>
+          <dd>InstaPay 正常为实时到账；超过 30 分钟仍出款中转技术，不要重复出款。</dd>
+        </dl>
+      </section>
+    </div>
+  </div>
+</div>
+<script>window.NAV_ROOT = "../";</script>
+<script src="../assets/nav-data.js"></script>
+<script src="../assets/nav.js"></script>
+</body>
+</html>

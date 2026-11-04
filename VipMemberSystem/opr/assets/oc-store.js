@@ -312,6 +312,9 @@ window.OCRemote = {
   /* 把接口错误翻译成看得懂的原因和处理办法（页面顶部「云端：……」显示这段话） */
   explain: function (e) {
     var s = e && e.status, pdm = window.NAV && NAV.realRole === "pdm";
+    /* 云端只允许发布地址跨域访问，本地预览（localhost、直接打开文件）一律被浏览器拦下，状态同样是 0 */
+    if (s === 0 && (location.protocol === "file:" || /^(localhost|127\.0\.0\.1|\[::1\])$|\.localhost$/.test(location.hostname)))
+      return "本地预览读不到云端（云端只允许发布后的地址访问），这是正常的；发布到 GitHub Pages 后可以正常读写";
     if (s === 0) return "连不上云端。请先检查网络；网络正常仍连不上时，请联系该需求的产品管理人（可能是云端接口被停用）";
     if (s === 401) return pdm ? "产品密码不对，或云端接口里的产品密码没配置。请关闭页面后重新打开产品链接并输入正确的密码；仍不行请联系产品管理人核对 Cloudflare 里的 PDM_PASS"
                               : "运营写入口令不对，暂时不能读写。请联系该需求的产品管理人重新打包需求（或核对 Cloudflare 里的 OPR_KEY）";
