@@ -130,6 +130,7 @@
     <div class="sim" id="simPanel"></div>
     <h3>规则批注</h3>
     <ol>
+      <li><b>按群配置</b>：每个授权群在 789Bingo 后台「授权群」里单独设置站点范围（只看 789Bingo / 只看 789Games / 两站分别 + 合计）和渠道（全站、cicc、短信、网红、谷歌、oem、代理线查询，可多选）。按钮矩阵只显示本群勾选了、并且在站点范围内已绑定代理的渠道；没勾「代理线查询」时不显示该按钮，发 /agent 回复「本群未开放代理线查询。」（可在模拟操作里勾选演示）。<span class="ref">待同步到 PRD</span></li>
       <li><b>使用场景</b>：机器人拉进授权的 Telegram 群使用，群内所有成员都可以操作；私聊机器人只回复「本机器人仅在授权群内使用，请在群内发送 /menu。」<span class="ref">PRD 规则 N4、N5 · F01-03 授权校验</span></li>
       <li><b>菜单按钮</b>：输入框左侧蓝色「菜单」展开机器人命令：/menu 打开报表键盘、/agent 按代理线查询。<span class="ref">PRD 规则 N1 · F01-01 菜单按钮与命令</span></li>
       <li><b>按钮矩阵</b>：打开授权群时，输入框下方就显示报表按钮矩阵（3 列），不用先发命令：📊 全站、cicc、短信 / 网红、谷歌、oem；🔍 代理线查询。点按钮等于在群里发出按钮文字，点渠道立即生成报表。聊天里同时有一条机器人菜单消息，下方的内联按钮矩阵和输入框下方内容一致，点它直接生成报表、不在群里发文字。输入框右侧「⌨」可收起或展开；收起后可点「菜单」里的 /menu 重新调出。<span class="ref">PRD 规则 N2 · F01-02 报表菜单</span></li>
@@ -154,9 +155,9 @@
 <script src="../../assets/proto-en.js"></script>
 <script src="../../assets/proto.js"></script>
 <script>
-P.init({ defaults: { whEmpty: false, oemBingo: false, slow: false } });
+P.init({ defaults: { whEmpty: false, oemBingo: false, grpLimit: false, slow: false } });
 P.panel(document.getElementById("simPanel"), [
-  { title: "后台配置", items: [{ type: "check", key: "whEmpty", label: "渠道「网红」两站都未绑定代理（按钮不显示）" }, { type: "check", key: "oemBingo", label: "渠道「oem」只在 789Bingo 绑定（报表只显示 789Bingo 列）" }] },
+  { title: "后台配置", items: [{ type: "check", key: "whEmpty", label: "渠道「网红」两站都未绑定代理（按钮不显示）" }, { type: "check", key: "oemBingo", label: "渠道「oem」只在 789Bingo 绑定（报表只显示 789Bingo 列）" }, { type: "check", key: "grpLimit", label: "本群「渠道」不勾 cicc 和代理线查询" }] },
   { title: "注入异常", items: [{ type: "check", key: "slow", label: "报表生成超时（超过 30 秒）" }] },
   { title: "自动删除", items: [{ type: "button", label: "模拟报表发出满 1 小时（报表消失）", run: function () { TG.expire(); } }] },
   { title: "演示值说明", items: [{ type: "note", text: "演示代理账号：kk_sms_g12（两站都有）、wh_star01（只在 789Bingo）、gg_ads_03（只在 789Games）；输入其他账号演示「未找到」。Telegram ID、群名称和全部数据均为虚构。" }] },
@@ -205,7 +206,11 @@ var TG = (function () {
     return true;
   }
   /* 按钮矩阵只显示本群有权限的站点里至少有一个已绑定代理的渠道 */
-  function visibleCh() { return CH.filter(function (c) { return S.auth.some(function (s) { return bound(c, s); }); }); }
+  /* 授权群的「渠道」（N9，演示）：模拟操作勾选后本群不显示 cicc 和代理线查询 */
+  function chOn(c) { return !(P.get("grpLimit") && c === "cicc"); }
+  function agentOn() { return !P.get("grpLimit"); }
+  /* 按钮矩阵只显示：本群勾选了的渠道，并且在本群站点范围里至少有一个站点已绑定代理 */
+  function visibleCh() { return CH.filter(function (c) { return chOn(c) && S.auth.some(function (s) { return bound(c, s); }); }); }
   function rows3(list) { var out = []; for (var i = 0; i < list.length; i += 3) out.push(list.slice(i, i + 3)); return out; }
   function columns(scope) {
     var sites = S.auth.filter(function (s) { return scope.agent ? AGENTS[scope.agent][s] : bound(scope.ch, s); });
@@ -265,7 +270,7 @@ var TG = (function () {
     box.hidden = !S.kbd || S.kbdHide;
     if (box.hidden) return;
     function row(list, dev) { return '<div class="tg-krow" style="grid-template-columns:repeat(' + list.length + ',1fr)">' + list.map(function (k) { return '<button type="button" data-key="' + esc(k) + '" data-dev="' + dev + '">' + k + "</button>"; }).join("") + "</div>"; }
-    box.innerHTML = rows3(visibleCh().map(function (c) { return "📊 " + c; })).map(function (r) { return row(r, "D05"); }).join("") + row([KEY_AGENT], "D06");
+    box.innerHTML = rows3(visibleCh().map(function (c) { return "📊 " + c; })).map(function (r) { return row(r, "D05"); }).join("") + (agentOn() ? row([KEY_AGENT], "D06") : "");
   }
   /* 消息：from = me（当前群成员）/ bot；kind = text / report / gen / fail；quote = 回复引用 */
   function add(m) { m.id = ++seq; m.tm = NOW; S.msgs.push(m); return m; }
@@ -292,7 +297,7 @@ var TG = (function () {
   /* 菜单消息（N2）：聊天里的机器人消息带内联按钮矩阵，和输入框下方按钮矩阵的内容、顺序一致 */
   function menuKb() {
     var rows = rows3(visibleCh()).map(function (r) { return r.map(function (c) { return { t: "📊 " + c, act: "ch", arg: c, dev: "D17" }; }); });
-    rows.push([{ t: KEY_AGENT, act: "agentAsk", dev: "D18" }]);
+    if (agentOn()) rows.push([{ t: KEY_AGENT, act: "agentAsk", dev: "D18" }]);
     return kb(rows);
   }
   /* 菜单消息的按钮随渠道配置更新（N9）：渲染时按当前绑定情况生成 */
@@ -330,7 +335,7 @@ var TG = (function () {
     if (denied()) { render(); return; }
     if (ch >= 0 && visibleCh().indexOf(CH[ch]) < 0) bot("该渠道暂未开放，请选择其他渠道。");   /* 旧按钮或手动输入了未绑定的渠道（N9） */
     else if (ch >= 0) gen({ ch: CH[ch] });
-    else if (text === KEY_AGENT) ask();
+    else if (text === KEY_AGENT || (m && m[1] === "agent" && !agentOn())) { if (agentOn()) ask(); else bot("本群未开放代理线查询。"); }
     else if (replying && !m) agent(text);   /* 回复机器人的提问 = 输入代理账号（N23） */
     else if (m[1] === "menu" || m[1] === "start") openMenu();
     else if (m[1] === "agent") agent(m[2]);
@@ -343,7 +348,7 @@ var TG = (function () {
     var act = b.dataset.act, msg = S.msgs.filter(function (x) { return String(x.id) === b.closest(".tg-msg").dataset.mid; })[0];
     if (act === "refresh" || act === "retry") gen(msg.scope);
     else if (act === "ch") { if (!denied()) gen({ ch: b.dataset.arg }); render(); }   /* 内联按钮不在群里发文字，直接生成报表 */
-    else if (act === "agentAsk") { if (!denied()) ask(); render(); document.getElementById("msg").focus(); }
+    else if (act === "agentAsk") { if (!denied()) { if (agentOn()) ask(); else bot("本群未开放代理线查询。"); } render(); document.getElementById("msg").focus(); }
   });
   document.getElementById("kbd").addEventListener("click", function (e) { var b = e.target.closest("[data-key]"); if (b) input(b.dataset.key); });
   document.getElementById("kbdTg").onclick = function () { S.kbdHide = !S.kbdHide; renderKbd(); };
@@ -375,7 +380,7 @@ var TG = (function () {
     if (v === "fail") { me("📊 全站"); bot("报表生成失败，请稍后重试。", "fail", { kb: kb([[{ t: "重试", act: "retry", dev: "D15" }]]), scope: { ch: "全站" } }); }
     render();
   }
-  window.addEventListener("proto-change", function (e) { if (e.detail.key === "whEmpty" || e.detail.key === "oemBingo" || e.detail.key === "*") render(); });  return {
+  window.addEventListener("proto-change", function (e) { if (e.detail.key === "whEmpty" || e.detail.key === "oemBingo" || e.detail.key === "grpLimit" || e.detail.key === "*") render(); });  return {
     scene: scene,
     expire: function () {
       S.msgs = S.msgs.filter(function (m) { return m.kind !== "report" && m.kind !== "fail"; }); render();
