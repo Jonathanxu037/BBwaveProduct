@@ -681,3 +681,11 @@ Object.assign(window.PROTO_EN, {
   "按本月有效投注达到的最高每月奖金等级发放，下月领取，开启累计后获得的奖金不过期；此前奖金以详情截止日期为准。": "Paid for the highest Monthly Bonus level reached this month. Claim next month. Only bonuses earned after accumulated claiming is enabled do not expire; earlier bonuses follow the deadline in Details.",
   "按生日月评定的等级发放，生日当天起可领；开启累计后获得的奖金领取前一直有效，此前奖金以详情截止日期为准。": "Based on your level for your birthday month. Claimable from your birthday. Only bonuses earned after accumulated claiming is enabled stay valid until claimed; earlier bonuses follow the deadline in Details."
 });
+
+/* 2026-11-05现行界面新增短语；保留历史版本对照。 */
+Object.assign(window.PROTO_EN, {
+  "已满足": "Met",
+  "升级进度": "Upgrade progress",
+  "每月奖金进度": "Monthly Bonus progress",
+  "{t}奖金：正常结算生成新记录时，较早未领取的同类奖金失效。": "{t} Bonuses: a new regular settlement replaces earlier unclaimed bonuses of the same type."
+});
