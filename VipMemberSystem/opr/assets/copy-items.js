@@ -546,7 +546,7 @@ window.COPY_ITEMS = [
     "use": "页面文案",
     "page": "VIP中心页面",
     "place": "右上角「i」→「VIP 规则」弹窗全文（10 条固定 + 按设置显示的条目 + 末条「如有疑问，请联系客服。」）",
-    "zh": "按 PRD 4.1「VIP 规则（前台显示原文）」，当前全文见原型 VIP中心页面：第 1 条级数和等级名随后台等级配置变化；第 4–7 条用「每月奖金投注」；第 7 条例子「连续 3 个月未达每月奖金投注，由 VIP5 降到 VIP2；之后当月有效投注 ₱80,000 达到 VIP4 每月奖金投注 → 次月回到 VIP4，可领 ₱28。奖金领取、有效期和同类记录替代按规则 N52「领取与有效期」处理。」；补一句「KEEP = 次月保持，BACK VIPn = 次月恢复到 VIPn」（用户 2026-11-02）；条目编号按实际显示的条数自动生成",
+    "zh": "按 PRD 4.1「VIP 规则（前台显示原文）」，当前全文见原型 VIP中心页面：第 1 条级数和等级名随后台等级配置变化；第 4–7 条用「每月奖金投注」；第 7 条例子「连续 3 个月未达每月奖金投注，由 VIP5 降到 VIP2；之后当月有效投注 ₱80,000 达到 VIP4 每月奖金投注 → 次月回到 VIP4，可领 ₱28。」；第 9 条和生日奖金一条随领取方式变化（见 T02）；有手动领取的类别时在第 9 条后加第 10 条（有效期，默认显示，见 T03；第 17 批 W01、W23 v1.3）；「KYC 限制」开启时加「须完成 KYC 才能加入 VIP；加入时按累计定级，已达到等级的升级奖金一并补发。」；补一句「KEEP = 次月保持，BACK VIPn = 次月恢复到 VIPn」（用户 2026-11-02）；条目编号按实际显示的条数自动生成",
     "en": "各条英文见本页 E 类条目（VIP 规则）；KEEP / BACK 一句示意：KEEP = you keep your level next month; BACK VIPn = you return to VIPn next month.（示意）",
     "note": "全文为产品拟稿，待运营定稿（PRD 14.1、Q14 前台文案定稿）；第 7、8、9 条的中英文（含 KEEP / BACK 一句放在哪一条、第 9 条自动 / 手动模板句）以 PRD 4.1 为准，原型、T02 与之一致；不得出现宣传金额；不写结算日期和时间（规则 N12 每月结算 ⑤）"
   },
@@ -556,10 +556,10 @@ window.COPY_ITEMS = [
     "lang": "前台中英文",
     "use": "页面文案",
     "page": "VIP中心页面",
-    "place": "奖金领取、有效期和同类记录替代按规则 N52「领取与有效期」处理。",
-    "zh": "第 9 条（以 PRD 4.1 为准，第 17 批 W23 v1.3；不写有效期天数，天数写在第 10 条，见 T03）· 自动类：{类型}奖金到账后直接进入余额，无需领取。／手动类：{类型}奖金在等级卡「查看详情」里领取。奖金领取、有效期和同类记录替代按规则 N52「领取与有效期」处理。奖金领取、有效期和同类记录替代按规则 N52「领取与有效期」处理。；生日奖金一条 · 手动：生日奖金：每年一次，金额按生日所在月份评定后的等级确定；生日当天起在当前等级详情里领取。／自动：……生日当天自动到账。",
-    "en": "Manual bonuses must be claimed by the deadline in Details. Normal monthly settlement replaces earlier unclaimed Monthly or Birthday Bonuses; Upgrade Bonuses and the exceptions in PRD rule N52 keep their own deadlines.",
-    "note": "奖金领取、有效期和同类记录替代按规则 N52「领取与有效期」处理。仍待领取的奖金以详情为准。奖金领取、有效期和同类记录替代按规则 N52「领取与有效期」处理。"
+    "place": "「VIP 规则」第 9 条（领取方式）和生日奖金一条，随后台三项领取方式变化",
+    "zh": "第 9 条（以 PRD 4.1 为准，第 17 批 W23 v1.3；不写有效期天数，天数写在第 10 条，见 T03）· 自动类：{类型}奖金到账后直接进入余额，无需领取。／手动类：{类型}奖金在等级卡「查看详情」里领取，或在卡上点「领取 ₱x」一次领完。（默认三类都手动：「升级、每月、生日奖金在等级卡「查看详情」里领取，或在卡上点「领取 ₱x」一次领完。」）／末句：仍待领取的奖金以详情为准。；生日奖金一条 · 手动：生日奖金：每年一次，金额按生日所在月份评定后的等级确定；生日当天起在当前等级详情里领取。／自动：……生日当天自动到账。",
+    "en": "Auto: {types} Bonuses are credited automatically. / Manual: Claim {types} Bonuses in a level card's Details, or tap Claim ₱x on the card to claim them all. / Last sentence: Check Details for bonuses still to claim.（示意）",
+    "note": "{类型} 固定按「升级、每月、生日」顺序用「、」连接，英文用逗号加 and 连接（如「Upgrade, Monthly and Birthday」）；自动、手动都有时两句都显示；不写规则编号；产品拟稿，待运营定稿"
   },
   {
     "id": "T03",
@@ -567,10 +567,10 @@ window.COPY_ITEMS = [
     "lang": "前台中英文",
     "use": "页面文案",
     "page": "VIP中心页面",
-    "place": "VIP规则 · 奖金截止日期与同类记录替代",
-    "zh": "请在各笔奖金的截止日期前领取。正常生成新每月或生日奖金时，较早未领取的同类记录失效；升级奖金及例外按VIP规则处理。",
-    "en": "Claim each bonus before its deadline. A new regular Monthly or Birthday Bonus replaces earlier unclaimed bonuses of the same type. Upgrade Bonuses and defined exceptions follow the VIP Rules.（示意）",
-    "note": "按2026-11-05取消累计领取后的现行规则；待运营定稿。"
+    "place": "「VIP 规则」第 10 条：有效期（有手动领取的类别时显示，插在第 9 条后；默认显示；都为自动领取时不显示；设为自动领取的类别不列）",
+    "zh": "{类型}奖金自获得当天起 {n} 天内有效（生日奖金自可领取当天起，含当天），请在截止日期前领取。（{类型} 按升级、每月、生日顺序列出；不含生日时括号只写「含当天」；各类天数不同时分别写。）",
+    "en": "{types} Bonuses are valid for {n} days from the day you get them (Birthday Bonus: from the day it becomes claimable; including that day). Claim each bonus by its deadline.（示意）",
+    "note": "{n} 按每类奖金各自的「领奖有效期」（第 17 批 W23 v1.3）；每笔奖金只按自己的截止日期过期，生成新的同类奖金时不作废之前未领取的（用户 2026-11-06）；不写规则编号；产品拟稿，待运营定稿"
   },
   {
     "id": "T04",
@@ -581,7 +581,7 @@ window.COPY_ITEMS = [
     "place": "VIP 等级表右上角「?」→「奖金领取规则」弹窗（4 条，按领取方式显示）",
     "zh": "「升级奖金」手动：累计有效投注和累计充值都达到门槛即升级，每级发一次，{n} 天内领取。／自动：……每级发一次，升级时自动到账。；「每月奖金」手动：按本月有效投注达到的最高每月奖金等级发放，下月领取，{n} 天内有效。／自动：……下月初自动到账。；「生日奖金」手动：按生日月评定的等级发放，自可领取当天起 {n} 天内领取。／自动：……生日当天自动到账。；「表格说明」高亮行为你当前的等级。",
     "en": "Bonus Rules / Reach both the Total Bet and Total Dep. targets to level up. Paid once per level; claim within {n} days. (Auto: credited automatically when you level up.) / Paid for the highest level whose Monthly Bonus bet you reach this month. Claim next month, within {n} days. (Auto: Credited automatically early next month.) / Based on your level for your birthday month. Claim within {n} days from the day it becomes claimable. (Auto: Credited automatically on your birthday.) / The highlighted row is your current level.（示意）",
-    "note": "奖金领取、有效期和同类记录替代按规则 N52「领取与有效期」处理。仍待领取的奖金以详情为准。奖金领取、有效期和同类记录替代按规则 N52「领取与有效期」处理。奖金领取、有效期和同类记录替代按规则 N52「领取与有效期」处理。"
+    "note": "等级表只高亮当前等级行，「表格说明」为「高亮行为你当前的等级。」（用户 2026-10-31）；{n} 读后台该类奖金各自的「领奖有效期」（第 17 批 W23 v1.3）；设为自动领取的类别写「…到账」；与 PRD 4.2.1 规则第 6 条一致；产品拟稿，待运营定稿"
   },
   {
     "id": "T05",
@@ -590,9 +590,9 @@ window.COPY_ITEMS = [
     "use": "页面文案",
     "page": "VIP中心页面",
     "place": "等级卡（当前等级卡、已达成 / 已解锁卡、未解锁卡）和状态标签",
-    "zh": "顶部标签显示等级名「VIPn」/「♛ SUPER VIP」；左上状态标签「当前」「KEEP」「BACK VIPk」「已达成」「已解锁」「未解锁」（KEEP / BACK 中英文相同）；当前卡：「升级 VIP(H+1)」+ 下一行「投注还差 ₱x」「充值还差 ₱y」（差额统一叫「还差」，第 17 批 W20 v1.3；已满足写「✓ 投注已满足」「✓ 充值已满足」）+ 升级奖金金额；「每月奖金 VIPt」+ 右上「还差 ₱z」或「已达成」+ 该级每月奖金金额；「生日奖金」+ 金额（该级有配置才显示）；「查看详情」，有待领取时旁边「₱x 待领取」（多笔写合计）；已达成 / 已解锁卡：「投注」「充值」两条满格 + 门槛金额 + ✓；未登录 / 未完成 KYC 的 VIP0 卡：「未达 VIP1，无奖金」；k 低于当前等级时每月奖金金额前小字「达标可得」；降级玩家「升级 VIP(H+1)」后小字「（历史最高 VIPH）」；下一级未解锁卡差额写「还差 ₱x」；刻度上「SUPER VIP」始终写「SVIP」，头像角标也写「SVIP」，其他位置写全称（用户 2026-11-02）",
-    "en": "Level up to {lv} / Bet ₱x more · Deposit ₱y more / Bet ✓ · Deposit ✓ / Monthly Bonus · {lv} / ₱z more · Achieved / Details / ₱x to claim / Current · Achieved · Unlocked · Locked / Below VIP1, no bonuses / If reached / (Highest: {lv}) / ₱x more / SVIP（示意）",
-    "note": "等级卡（用户 2026-10-31）：「当前」与 KEEP / BACK 标签横排一行，卡片标题最多 2 行、金额不换行（用户 2026-11-02）；徽章为卡片底纹，进度行用文字、不用图标；卡片上差额一律缩写（K / M / B，规则 N42 金额显示）；单句英文同时出现在 E 类，以本条为准整体确认；产品拟稿，待运营定稿"
+    "zh": "顶部标签显示等级名「VIPn」/「♛ SUPER VIP」；左上状态标签「KEEP」「BACK VIPk」「已达成」「已解锁」「未解锁」（KEEP / BACK 中英文相同）；当前卡：「升级 VIP(H+1)」+ 下一行「投注还差 ₱x」「充值还差 ₱y」（差额统一叫「还差」，第 17 批 W20 v1.3；已满足写「✓ 投注已满足」「✓ 充值已满足」）+ 升级奖金金额；「每月奖金 VIPt」+ 右上「还差 ₱z」或「已达成」+ 该级每月奖金金额；「生日奖金」+ 金额（该级有配置才显示）；「查看详情」（不显示红点），有待领取时左侧「领取 ₱x」按钮（多笔写合计，一次领完这张卡的全部待领取奖金；点击后「领取中…」；部分失败时按钮金额变为剩余金额，见 T07）；当前卡「每月奖金」「生日奖金」后「?」：说明弹窗标题为奖金名，标签「发放」「领取」「到账」「待领取」，说明句见 PRD F07-01「当前卡奖金说明」（用户 2026-11-05）；没有待领取时「待领取」显示 ₱0、不显示日期，合计口径与「领取 ₱x」一致（不含暂停发放和未到可领日的）；VIP0 卡不设「?」；已达成 / 已解锁卡：「投注」「充值」两条满格 + 门槛金额 + ✓；未登录 / 未完成 KYC 的 VIP0 卡：「未达 VIP1，无奖金」；k 低于当前等级时每月奖金金额前小字「达标可得」；降级玩家「升级 VIP(H+1)」后小字「（历史最高 VIPH）」；下一级未解锁卡差额写「还差 ₱x」；刻度上「SUPER VIP」始终写「SVIP」，头像角标也写「SVIP」，其他位置写全称（用户 2026-11-02）",
+    "en": "Level up to {lv} / Bet ₱x more · Deposit ₱y more / Bet ✓ · Deposit ✓ / Monthly Bonus · {lv} / ₱z more · Achieved / Details / Claim ₱x / Claiming… / Issued · Claim · Credit · Claimable / Achieved · Unlocked · Locked / Below VIP1, no bonuses / If reached / (Highest: {lv}) / ₱x more / SVIP（示意）",
+    "note": "等级卡（用户 2026-10-31）：当前卡不显示「当前」标签（用户 2026-11-05），卡片标题最多 2 行、金额不换行（用户 2026-11-02）；徽章为卡片底纹，进度行用文字、不用图标；卡片上差额一律缩写（K / M / B，规则 N42 金额显示）；单句英文同时出现在 E 类，以本条为准整体确认；产品拟稿，待运营定稿"
   },
   {
     "id": "T06",
@@ -601,8 +601,8 @@ window.COPY_ITEMS = [
     "use": "弹窗",
     "page": "VIP中心页面",
     "place": "「查看详情」弹窗（标题、奖金表、每月奖金和升级进度、领取状态、底部说明）",
-    "zh": "标题「VIPn 详情」；「享有奖励」表：升级奖金 / 每月奖金（「₱x / 月」，非当前等级记录写「· VIPk」，多笔待领取时每笔一行「每月奖金（m 月）」，英文「Monthly Bonus (Sep)」）/ 生日奖金；状态「MM-DD 前」+「领取」、「✓ 已领取」「✓ 已到账」「已过期」「暂停发放」「待发放」「下月可领」「下月到账」「未达成」「生日当天可领」（生日前已生成的手动生日奖金显示金额 +「生日当天可领」、无按钮）「生日当天到账」「生日当天为该级可领」「达到每月奖金投注可得」「升级后可得」「🔒 未解锁」「-」；进度区：「每月奖金」（+「已达成」或「达到 VIPk」；降为 VIP0 为「本月有效投注」，k = VIP0 时右侧「VIP0 → VIP1」）+「本月投注」进度行 + 右侧「VIPk → VIP(k+1)」（已达历史最高为「VIPk」满格 ✓）；本月达到的等级低于当前等级时多一行当前等级每月奖金投注进度「₱30,000 / ₱100,000 · 还差 ₱70,000」；「升级 VIPm」（与卡片同一叫法，用户 2026-11-02）+「投注」「充值」两行；每行第二行「当前 / 目标」完整金额 +「还差 ₱x」或「已达成」；底部说明（第 17 批 W25 v1.3，三种情况）：前半句按领取方式——都手动「升级、每月、生日奖金在此处领取」／部分自动「待领取的奖金在此处领取」／都自动「奖金自动到账」；手动领取的类别都有截止日期（默认）时后加「，过期作废」，只有部分有截止日期时后加「，到截止日期未领取的作废」，都",
-    "en": "{lv} Details / Your rewards / by {Mon} {D} · Claim / Claimed · Credited · Expired · On hold · Pending · Claim next month · Credited next month · Not reached · Claimable on your birthday · Credited on B-day / This month / Level up {lv} / Monthly Bonus (Sep) / ₱x more / Claim bonuses here. Unclaimed bonuses expire. · Claim bonuses here. Bonuses with a deadline expire if unclaimed. · Claim bonuses here. · Claim pending bonuses here. (+ same endings) · Bonuses are credited automatically.（示意）",
+    "zh": "标题「VIPn 详情」；「享有奖励」表：升级奖金 / 每月奖金（「₱x / 月」，非当前等级记录写「· VIPk」，多笔待领取时每笔一行「每月奖金（m 月）」，英文「Monthly Bonus (Sep)」）/ 生日奖金；状态「MM-DD 前」+「领取」、「✓ 已领取」「✓ 已到账」「已过期」「暂停发放」「待发放」「下月可领」「下月到账」「未达成」「生日当天可领」（生日前已生成的手动生日奖金显示金额 +「生日当天可领」、无按钮）「生日当天到账」「生日当天为该级可领」「达到每月奖金投注可得」「升级后可得」「🔒 未解锁」「-」；进度区：「每月奖金」（+「已达成」或「达到 VIPk」；降为 VIP0 为「本月有效投注」，k = VIP0 时右侧「VIP0 → VIP1」）+「本月投注」进度行 + 右侧「VIPk → VIP(k+1)」（已达历史最高为「VIPk」满格 ✓）；本月达到的等级低于当前等级时多一行当前等级每月奖金投注进度「₱30,000 / ₱100,000 · 还差 ₱70,000」；「升级 VIPm」（与卡片同一叫法，用户 2026-11-02）+「投注」「充值」两行；每行第二行「当前 / 目标」完整金额 +「还差 ₱x」或「已达成」；底部说明（第 17 批 W25 v1.3，三种情况）：前半句按领取方式——都手动「升级、每月、生日奖金在此处领取」／部分自动「待领取的奖金在此处领取」／都自动「奖金自动到账」；有手动领取的类别时后加「，过期作废」",
+    "en": "{lv} Details / Your rewards / by {Mon} {D} · Claim / Claimed · Credited · Expired · On hold · Pending · Claim next month · Credited next month · Not reached · Claimable on your birthday · Credited on B-day / This month / Level up {lv} / Monthly Bonus (Sep) / ₱x more / Claim bonuses here. Unclaimed bonuses expire. · Claim pending bonuses here. Unclaimed bonuses expire. · Bonuses are credited automatically.（示意）",
     "note": "进度区每项分两行显示，左侧用文字标签（用户 2026-10-31）；英文日期写「Oct 27」；单句英文同时出现在 E 类，以本条为准整体确认；产品拟稿，待运营定稿"
   },
   {
@@ -611,10 +611,10 @@ window.COPY_ITEMS = [
     "lang": "前台中英文",
     "use": "提示",
     "page": "VIP中心页面、VIP通知页面",
-    "place": "领取结果提示（详情弹窗「领取」、升级弹窗「领取」、待领取奖金通知「领取」共用，PRD「领取结果」表）",
+    "place": "领取结果提示（详情弹窗「领取」、等级卡「领取 ₱x」、升级弹窗「领取」、待领取奖金通知「领取」共用，PRD「领取结果」表）",
     "zh": "「领取成功，已到账」「领取失败，请重试」「部分奖金领取失败，请重试」「奖金已过期」「暂不可领取，有疑问联系客服」「奖金已领取」「没有可领取的奖金」「奖金已失效」（v1.3 新增：该笔已被作废）「奖金已到账」（v1.3 新增：关闭「VIP会员系统」时已由运营手动发放到账，该行显示已到账、弹窗去掉这一笔）；按钮加载中「领取中…」",
     "en": "Claimed & credited / Claim failed. Try again. / Some bonuses failed. Try again. / Bonus expired / Can't claim now. Questions? Contact CS. / Bonus already claimed / No bonuses to claim / Bonus no longer valid / Bonus already credited / Claiming…（示意）",
-    "note": "在升级弹窗、待领取奖金通知里领取时：部分失败只留下失败的金额并提示「部分奖金领取失败，请重试」；某笔恰好已被作废提示「奖金已失效」，这笔从弹窗去掉、其余照常，只剩这笔时弹窗关闭（用户 2026-11-02）；「VIP会员系统」关闭时玩家仍停留在 VIP中心点「领取」，同样提示「奖金已失效」；另一端已领完统一提示「奖金已领取」（用户 2026-11-02）；与 E 类（英文对照表）中的单句相同，只在本条整体确认；待运营定稿"
+    "note": "在等级卡点「领取 ₱x」时：部分失败时成功的到账，按钮金额变为剩余金额，提示「部分奖金领取失败，请重试」；其中某笔已作废、已过期或已到账的从合计中去掉并提示对应原因（用户 2026-11-05）；在升级弹窗、待领取奖金通知里领取时：部分失败只留下失败的金额并提示「部分奖金领取失败，请重试」；某笔恰好已被作废提示「奖金已失效」，这笔从弹窗去掉、其余照常，只剩这笔时弹窗关闭（用户 2026-11-02）；「VIP会员系统」关闭时玩家仍停留在 VIP中心点「领取」，同样提示「奖金已失效」；另一端已领完统一提示「奖金已领取」（用户 2026-11-02）；与 E 类（英文对照表）中的单句相同，只在本条整体确认；待运营定稿"
   },
   {
     "id": "T08",
@@ -633,10 +633,10 @@ window.COPY_ITEMS = [
     "lang": "前台中英文",
     "use": "弹窗",
     "page": "VIP通知页面",
-    "place": "待领取奖金通知（已登录状态每天首次进入平台原生页面，有手动领取的未领取奖金时弹 1 次；首次弹出升级弹窗的当天不叠加，之后补弹升级弹窗的日子照常弹、排在补弹之后且不重复列补弹里的升级奖金；三类都自动领取时不弹）",
-    "zh": "标题「VIP 奖金待领取」；每行「{类别} {金额} · {MM-DD} 前」，最后一行「合计 {金额}」；按钮「查看权益」「领取」，右上角 ×",
+    "place": "待领取奖金通知（已登录状态每天首次进入平台原生页面，有手动领取的未领取奖金时弹 1 次；首次弹出升级弹窗的当天不叠加，之后补弹升级弹窗的日子照常弹、排在补弹之后且不重复列补弹里的升级奖金；三类都自动领取且没有可领取的配置变更批次或切换前手动记录时不弹）",
+    "zh": "标题「VIP 奖金待领取」；每行「{类别} {金额} · {MM-DD} 前」，最后一行「合计 {金额}」；按钮「查看权益」「领取」，没有 ×，点遮罩或按 Esc 不关闭",
     "en": "VIP bonuses to claim / {Bonus type} {Amount} · by {Mon} {D} (Upgrade Bonus / Monthly Bonus / Birthday Bonus) / Total {Amount} / View Benefits / Claim（「View Benefits」为用户给定，其余示意）",
-    "note": "「领取」一次领取全部，部分失败时弹窗只列失败项，已过期、风控暂停、被作废的从弹窗去掉（提示见 T07）；风控放行后恢复为待领取的奖金放行当天不计入，次日起提醒（用户 2026-11-02）；「查看权益」进 VIP中心；带变量的行 E 类列不出来，在本条确认；待运营定稿"
+    "note": "「领取」一次领取全部，部分失败时弹窗只列失败项，全部失败时弹窗不关，已过期、风控暂停、被作废的从弹窗去掉（提示见 T07）；风控放行后恢复为待领取的奖金放行当天不计入，次日起提醒（用户 2026-11-02）；「查看权益」进 VIP中心；带变量的行 E 类列不出来，在本条确认；待运营定稿"
   },
   {
     "id": "T10",
@@ -680,7 +680,7 @@ window.COPY_ITEMS = [
     "place": "聊天室领奖播报里的奖金名称（现网显示的是系统内部代码）和交易记录里的类型名称",
     "zh": "VIP 升级奖金 / VIP 每月奖金 / VIP 生日奖金",
     "en": "VIP Upgrade Bonus / VIP Monthly Bonus / VIP Birthday Bonus（示意）",
-    "note": "v1.3 新增（用户 2026-10-31 检查「受影响的现有页面」）：播报句式沿用现网「received ₱x bonus from …」，只把内部代码换成奖金名称；待运营定稿"
+    "note": "v1.3 新增（用户 2026-10-31 检查「受影响的现有页面」）：播报句式沿用现网「received ₱x bonus from …」，只把内部代码换成奖金名称；所有到账的奖励在玩家端 Overview、Transaction、Bet history 菜单显示，资金来源按奖励类型分别记为「VIPN 每月奖金」「VIPN 升级奖金」「VIPN 生日奖金」（N 为奖金对应的等级，如「VIP5 每月奖金」；英文如「VIP5 Monthly Bonus」「VIP5 Upgrade Bonus」「VIP5 Birthday Bonus」，用户 2026-11-05）；待运营定稿"
   },
   {
     "id": "T13",
@@ -688,8 +688,8 @@ window.COPY_ITEMS = [
     "lang": "后台中文",
     "use": "后台提示",
     "page": "后台VIP配置页面",
-    "place": "奖金领取、有效期和同类记录替代按规则 N52「领取与有效期」处理。",
-    "zh": "奖金领取、有效期和同类记录替代按规则 N52「领取与有效期」处理。",
+    "place": "弹出提示、确认框和校验提示（含 v1.3 新增：关闭「VIP会员系统」确认框、三个配置页签各自的保存确认框、「通知配置」保存校验）",
+    "zh": "以原型为准；v1.3 另有：等级表在「VIP会员系统」开启时置灰提示「请先关闭 VIP会员系统再修改」；开启确认框「预计首次结算：YYYY-MM-DD，评定 YYYY-MM」；影响预览（只列等级表改动）和开启确认框试算失败「试算失败，请重试」+「重试」；影响预览「变动较大，请核对」和勾选项「已核对标红的奖金」；删除确认框「被作废的升级奖金不补偿」；关闭「VIP会员系统」确认框中「被中止的结算月份已生成的奖金」「24 小时内配置变更批次」两行小计和风控笔的「保持原状态」；「保存规则配置」确认框列出本次规则改动（含流水倍数，改 KYC 限制或流水倍数时须填谷歌验证码）；有未保存修改时点「新增」的提示（先保存或放弃修改）；继续结算在系统关闭时「VIP会员系统已关闭，请先开启后再继续结算」；修改生日奖金领取方式时提示「请核对通知配置里的生日提醒文案」；修改生日提醒发送时间确认框中的受影响人数提示",
     "en": "",
     "note": "待运营定稿（PRD 14.1 未定文案清单）；后台只给运营看，用中文"
   }

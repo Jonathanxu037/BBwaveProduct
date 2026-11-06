@@ -39,6 +39,23 @@
    （画面上的示意标记由页面的「（示意）」小字显示，本表的「（示意）」不显示在画面上，只用于 PRD 附录 C 和未定文案清单）。
    英文里有前后空格的，是为了和相邻的金额、等级等拼成原句，不要删。 */
 window.PROTO_EN = {
+  /* 用户 2026-11-06（v1.3）：每月奖金「?」显示按结算日算出的发放日 */
+  "本月投注达到哪级（不超过历史最高），{d} 发哪级。": "Paid on {d} for the level your bets reach this month (up to your highest level).（示意）",
+  "{d} 自动到账，无需领取。": "Credited automatically on {d}.（示意）",
+  "月度结算日（后台，影响每月奖金「?」里的发放日）": "Monthly settlement day (admin)",
+  /* 用户 2026-11-05（v1.3）：当前卡每月奖金、生日奖金「?」说明；「领取 ₱x」按钮 */
+  "每月奖金说明": "Monthly Bonus info",
+  "生日奖金说明": "Birthday Bonus info",
+  "到账": "Credit",
+  /* 打包前复查 Y29（2026-11-05）：「?」弹窗的标签「发放」后带零宽空格 \u200b（画面上看不见），单独成词条，不套用句子片段「发放」→ given */
+  "发放\u200b": "Issued（示意）",
+  "本月投注达到哪级（不超过历史最高），下月初发哪级。": "Paid early next month for the level your bets reach this month (up to your highest level).（示意）",
+  "按生日月评定的等级发放，最早生日当天可领。": "Based on your level for your birthday month; claimable from your birthday at the earliest.（示意）",
+  "下月初自动到账，无需领取。": "Credited automatically early next month.（示意）",
+  "最早生日当天自动到账，无需领取。": "Credited automatically, from your birthday at the earliest.（示意）",
+  "发放后 {n} 天内领取，过期作废。": "Claim within {n} days of issue; expires after that.（示意）",
+  "可领取起 {n} 天内领取，过期作废。": "Claim within {n} days once claimable; expires after that.（示意）",
+  "领取 {a}": "Claim {a}",
   /* ===== 通用（3 个前台页面共用） ===== */
   "返回": "Back",
   "等级中心": "Level Center",
@@ -379,7 +396,7 @@ window.PROTO_EN = {
   "我的 VIP 进度": "My VIP Progress（示意）",
   "升级到 {lv}，{a} 待领取，{e}有效。": "Reached {lv}! Claim {a} {e}.（示意）",   /* {e} =「MM-DD 前」，按下方「MM-DD 前」条目换成「by Oct 27」（第 11 批 C14 英文日期） */
   "升级到 {lv}，{a} 已到账。": "Reached {lv}! {a} credited.（示意）",
-  "升级到 {lv}，{a} 待领取，有效至 {d}。": "Reached {lv}! Claim {a}. Valid until {d}.（示意）",   /* 第 17 批 W05（v1.3）：截止日期单独成句，与 PRD 第 6 章一致，不过期时整句省略；第 12 批 C12（v1.3 站内信「有效至 MM-DD」）：须排在下一条「升级到 {lv}」之前，否则被它先匹配 */
+  "升级到 {lv}，{a} 待领取，有效至 {d}。": "Reached {lv}! Claim {a}. Valid until {d}.（示意）",   /* 第 17 批 W05（v1.3）：截止日期单独成句，与 PRD 第 6 章一致，每笔都有截止日期；第 12 批 C12（v1.3 站内信「有效至 MM-DD」）：须排在下一条「升级到 {lv}」之前，否则被它先匹配 */
   "升级到 {lv}": "Upgrade to {lv}（示意）",
   "VIP 等级一览": "VIP Levels（示意）",
   "当前等级": "Current（示意）",
@@ -533,7 +550,7 @@ window.PROTO_EN = {
   /* 第 11 批 D03：「?」弹窗精简为 PRD 4.2.1 第 6 条新文案（文案确认 T12） */
   "累计有效投注和累计充值都达到门槛即升级，每级发一次，{n} 天内领取。": "Reach both the Total Bet and Total Dep. targets to level up. Paid once per level; claim within {n} days.（示意）",
   "按本月有效投注达到的最高保级等级发放，下月领取，{n} 天内有效。": "Paid for the highest level whose Ret. Bet your valid bets reach this month. Claim next month, within {n} days.（示意）",
-  /* v1.3 第 12 批（VIP中心，2026-11-02）：「每月奖金」统一用词、详情底部说明按领取方式、VIP 规则第 9、10 条和「可累计领取」一条、详情「本月投注」标签、领取结果「奖金已失效」；旧键保留给 v1.2 */
+  /* v1.3 第 12 批（VIP中心，2026-11-02）：「每月奖金」统一用词、详情底部说明按领取方式、VIP 规则第 9、10 条和有效期一条、详情「本月投注」标签、领取结果「奖金已失效」；旧键保留给 v1.2 */
   "按本月有效投注达到的最高每月奖金等级发放，下月领取，{n} 天内有效。": "Paid for the highest level whose Monthly Bonus bet you reach this month. Claim next month, within {n} days.（示意）",
   "升级、每月、生日奖金在此处领取，过期作废": "Claim bonuses here. Unclaimed bonuses expire.（示意）",
   "待领取的奖金在此处领取，过期作废": "Claim pending bonuses here. Unclaimed bonuses expire.（示意）",
@@ -541,9 +558,6 @@ window.PROTO_EN = {
   "升级、每月、生日奖金在等级卡「查看详情」里领取，自获得当天起 {n} 天内有效（生日奖金自生日当天起，含当天），过期不能再领。": "Claim Upgrade, Monthly and Birthday Bonuses in a level card's Details within {n} days from the day you get them (Birthday Bonus: from your birthday; incl. that day). Unclaimed bonuses expire.（示意）",
   "升级奖金到账后直接进入余额；每月、生日奖金在当前等级「查看详情」里领取，自获得当天起 {n} 天内有效（生日奖金自生日当天起，含当天），过期不能再领。": "Upgrade Bonuses go straight to your balance. Claim Monthly and Birthday Bonuses in your current level's Details within {n} days from the day you get them (Birthday Bonus: from your birthday; incl. that day). Unclaimed bonuses expire.（示意）",
   "生日奖金：每年一次，金额按生日所在月份评定后的等级确定；生日当天自动到账。": "Birthday Bonus: once a year. The amount follows your level as set for your birthday month; credited automatically on your birthday.（示意）",
-  "每月奖金：同类奖金只能领取最新一笔，新奖金生成后之前未领取的失效。": "Monthly Bonus: only the latest one can be claimed. When a new one is issued, any earlier unclaimed one becomes invalid.（示意）",
-  "每月、生日奖金：同类奖金只能领取最新一笔，新奖金生成后之前未领取的失效。": "Monthly and Birthday Bonuses: only the latest of each can be claimed. When a new one is issued, any earlier unclaimed one of the same type becomes invalid.（示意）",
-  "升级、每月、生日奖金：同类奖金只能领取最新一笔，新奖金生成后之前未领取的失效。": "Upgrade, Monthly and Birthday Bonuses: only the latest of each can be claimed. When a new one is issued, any earlier unclaimed one of the same type becomes invalid.（示意）",
   "本月投注": "This month（示意）",
   "奖金已失效": "Bonus no longer valid（示意）",
   "目标等级": "Target level（示意）",   /* 详情弹窗进度行「VIPk → VIP(k+1)」的 title */
@@ -626,7 +640,7 @@ window.PROTO_EN = {
   "{t}均自动到账。": "{t} are credited automatically.（示意）",
   "{t}自动到账。": "{t} is credited automatically.（示意）",
   "{t}请在「查看详情」里领取，{n} 天内有效，过期不能再领。": "Claim {t} in Details within {n} days. Unclaimed bonuses expire.（示意）",
-  /* 第 15、16 批（2026-11-03，前台 v1.3）：S22「₱x 待领取」、X11 差额统一「还差」（英文 ₱x more）、S21 当前等级进度、X03 VIP 规则第 7/9 条按 PRD 4.1、T08 不过期写法、S16「奖金已到账」 */
+  /* 第 15、16 批（2026-11-03，前台 v1.3）：S22「₱x 待领取」、X11 差额统一「还差」（英文 ₱x more）、S21 当前等级进度、X03 VIP 规则第 7/9 条按 PRD 4.1、T08 截止日期写法、S16「奖金已到账」 */
   "{a} 待领取": "{a} to claim（示意）",
   "投注还差 {a}": "Bet {a} more（示意）",
   "充值还差 {a}": "Deposit {a} more（示意）",
@@ -650,8 +664,10 @@ window.PROTO_EN = {
   "待领取的奖金在此处领取": "Claim pending bonuses here.（示意）",
   "升级、每月、生日奖金在此处领取，到截止日期未领取的作废": "Claim bonuses here. Bonuses with a deadline expire if unclaimed.（示意）",
   "待领取的奖金在此处领取，到截止日期未领取的作废": "Claim pending bonuses here. Bonuses with a deadline expire if unclaimed.（示意）",
-  /* 第 17 批（2026-11-03，前台 v1.3）：W20 删除旧键「投注差 {a}」「充值差 {a}」「还需 {a}」；W23 VIP 规则第 9、10 条以 PRD 4.1 为准（第 9 条不写天数，有效期天数写在可累计领取一条，按每类各自的有效期）；W21 升级自动 + 生日手动合并弹窗 */
+  /* 第 17 批（2026-11-03，前台 v1.3）：W20 删除旧键「投注差 {a}」「充值差 {a}」「还需 {a}」；W23 VIP 规则第 9、10 条以 PRD 4.1 为准（第 9 条不写天数，有效期天数写在第 10 条，按每类各自的有效期）；W21 升级自动 + 生日手动合并弹窗 */
   "{t}奖金在等级卡「查看详情」里领取。": "Claim {t} Bonuses in a level card's Details.（示意）",
+  /* PRD 4.1 第 9 条（2026-11-05）：手动类加「或在卡上点「领取 ₱x」一次领取」 */
+  "{t}奖金在等级卡「查看详情」里领取，或在卡上点「领取 ₱x」一次领取。": "Claim {t} Bonuses in a level card's Details, or tap Claim ₱x on the card to claim them all at once.（示意）",
   "{t}奖金在等级卡「查看详情」里领取，其中{a}奖金领取前一直有效。": "Claim {t} Bonuses in a level card's Details. {a} Bonuses stay valid until claimed.（示意）",
   /* 第 18 批 X01（v1.3）：VIP 规则第 10 条拆成有效期一句和「只能领取最新一笔」一句（后一句不含升级奖金） */
   "{t}奖金自获得当天起 {n} 天内有效（生日奖金自可领取当天起，含当天），过期不能再领。": "{t} Bonuses are valid for {n} days from the day you get them (Birthday Bonus: from the day it becomes claimable; incl. that day).（示意）",
@@ -659,33 +675,19 @@ window.PROTO_EN = {
   "自获得当天起，升级奖金 {a} 天、每月奖金 {b} 天、生日奖金 {c} 天内有效（生日奖金自可领取当天起，含当天），过期不能再领。": "Valid from the day you get them: Upgrade {a} days, Monthly {b} days, Birthday {c} days (Birthday Bonus: from the day it becomes claimable; incl. that day).（示意）",
   "自获得当天起，升级奖金 {a} 天、生日奖金 {c} 天内有效（生日奖金自可领取当天起，含当天），过期不能再领。": "Valid from the day you get them: Upgrade {a} days, Birthday {c} days (Birthday Bonus: from the day it becomes claimable; incl. that day).（示意）",
   "自获得当天起，每月奖金 {b} 天、生日奖金 {c} 天内有效（生日奖金自可领取当天起，含当天），过期不能再领。": "Valid from the day you get them: Monthly {b} days, Birthday {c} days (Birthday Bonus: from the day it becomes claimable; incl. that day).（示意）",
-  "自获得当天起，升级奖金 {a} 天、每月奖金 {b} 天内有效（含当天），过期不能再领。": "Valid from the day you get them: Upgrade {a} days, Monthly {b} days (incl. that day).（示意）",
-  "{t}奖金：同类奖金只能领取最新一笔，新奖金生成后之前未领取的失效。": "{t} Bonuses: only the latest of each type can be claimed; an earlier unclaimed one becomes invalid when a new one is issued.（示意）"
+  "自获得当天起，升级奖金 {a} 天、每月奖金 {b} 天内有效（含当天），过期不能再领。": "Valid from the day you get them: Upgrade {a} days, Monthly {b} days (incl. that day).（示意）"
 };
 
 /* 第19批：新文案对照，历史键保留。 */
 Object.assign(window.PROTO_EN, {
   "仍待领取的奖金以详情为准。": "For bonuses still awaiting claim, check Details.",
-  "高亮行为你当前的等级。仍待领取的奖金以详情为准。": "The highlighted row is your current level. For bonuses still awaiting claim, check Details.",
-  "开启累计后获得的奖金不过期；此前奖金以详情截止日期为准。": "Only bonuses earned after accumulated claiming is enabled stay valid until claimed; earlier bonuses follow the deadline in Details.",
-  "按生日月评定的等级发放，生日当天起可领；开启累计后获得的奖金领取前一直有效，此前奖金以详情截止日期为准。": "Only bonuses earned after accumulated claiming is enabled stay valid until claimed; earlier bonuses follow the deadline in Details.",
-  "；开启累计后获得的奖金领取前一直有效，此前奖金以详情截止日期为准。": "Only bonuses earned after accumulated claiming is enabled stay valid until claimed; earlier bonuses follow the deadline in Details.",
-  "奖金仅开启累计后获得的不过期，此前奖金以详情截止日期为准。": " Bonuses earned after accumulated claiming is enabled do not expire; earlier bonuses follow the deadline in Details."
+  "高亮行为你当前的等级。仍待领取的奖金以详情为准。": "The highlighted row is your current level. For bonuses still awaiting claim, check Details."
 });
 
-/* 第19批完整句式与变量对照 */
-Object.assign(window.PROTO_EN, {
-  "{t}奖金在等级卡「查看详情」里领取；开启累计后获得的奖金领取前一直有效，此前奖金以详情截止日期为准。": "Claim {t} Bonuses in a level card's Details. Only bonuses earned after accumulated claiming is enabled stay valid until claimed; earlier bonuses follow the deadline in Details.",
-  "{t}奖金在等级卡「查看详情」里领取，其中{a}奖金仅开启累计后获得的不过期，此前奖金以详情截止日期为准。": "Claim {t} Bonuses in a level card's Details. Only {a} Bonuses earned after accumulated claiming is enabled do not expire; earlier bonuses follow the deadline in Details.",
-  "累计有效投注和累计充值都达到门槛即升级，每级发一次，开启累计后获得的奖金不过期；此前奖金以详情截止日期为准。": "Reach both the Total Bet and Total Dep. targets to level up. Paid once per level. Only bonuses earned after accumulated claiming is enabled do not expire; earlier bonuses follow the deadline in Details.",
-  "按本月有效投注达到的最高每月奖金等级发放，下月领取，开启累计后获得的奖金不过期；此前奖金以详情截止日期为准。": "Paid for the highest Monthly Bonus level reached this month. Claim next month. Only bonuses earned after accumulated claiming is enabled do not expire; earlier bonuses follow the deadline in Details.",
-  "按生日月评定的等级发放，生日当天起可领；开启累计后获得的奖金领取前一直有效，此前奖金以详情截止日期为准。": "Based on your level for your birthday month. Claimable from your birthday. Only bonuses earned after accumulated claiming is enabled stay valid until claimed; earlier bonuses follow the deadline in Details."
-});
 
 /* 2026-11-05现行界面新增短语；保留历史版本对照。 */
 Object.assign(window.PROTO_EN, {
   "已满足": "Met",
   "升级进度": "Upgrade progress",
-  "每月奖金进度": "Monthly Bonus progress",
-  "{t}奖金：正常结算生成新记录时，较早未领取的同类奖金失效。": "{t} Bonuses: a new regular settlement replaces earlier unclaimed bonuses of the same type."
+  "每月奖金进度": "Monthly Bonus progress"
 });
