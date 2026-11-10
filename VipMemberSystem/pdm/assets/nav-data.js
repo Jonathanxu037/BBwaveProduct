@@ -37,7 +37,8 @@ window.NAV_DATA = {
               { title: "运营需求确认", href: "docs/v1.3/VIP会员体系-运营需求确认.html", type: "doc", roles: ["opr"] },
               { title: "文案确认", href: "docs/v1.3/VIP会员体系-文案确认.html", type: "doc", roles: ["opr"] },
               { title: "后台操作手册", href: "docs/v1.3/VIP会员体系-后台操作手册.html", type: "doc", roles: ["opr"], children: [
-              { title: "02A 短信提醒设置", href: "docs/v1.3/VIP会员体系-后台操作手册.html#m2s" }   /* 2026-10-30 用户要求短信提醒独立成节 */
+              { title: "01 VIP会员系统与规则配置", href: "docs/v1.3/VIP会员体系-后台操作手册.html#m1" },   /* Y11（用户 2026-11-09）：与手册第 01 节对应 */
+              { title: "01A 通知配置", href: "docs/v1.3/VIP会员体系-后台操作手册.html#m2s" }   /* 2026-10-30 用户要求短信提醒独立成节 */
             ] },
               { title: "客服QA", href: "docs/v1.3/VIP会员体系-客服QA.html", type: "doc", roles: ["opr"] },
               { title: "需求问题", href: "docs/v1.3/VIP会员体系-需求问题.html", type: "doc", roles: ["opr"] }

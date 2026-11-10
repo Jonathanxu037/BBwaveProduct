@@ -40,9 +40,76 @@
    英文里有前后空格的，是为了和相邻的金额、等级等拼成原句，不要删。 */
 window.PROTO_EN = {
   /* 用户 2026-11-06（v1.3）：每月奖金「?」显示按结算日算出的发放日 */
-  "本月投注达到哪级（不超过历史最高），{d} 发哪级。": "Paid on {d} for the level your bets reach this month (up to your highest level).（示意）",
+  /* R10（用户 2026-11-06）：投注统计标签写考核月份，英文用月份缩写 */
+  /* 2026-11-10：当前卡每月奖金「?」的发放日英文用英文日期（如「Paid on Dec 1」）。{b} 为「M 月投注」，由下方「10 月投注」「11 月投注」等词条译成「Oct bets」；
+     发放日为「MM-DD」，考核月为 12 月时跨年写「YYYY-01-DD」（规则 N42）。这些词条须排在旧的「10 月 / 11 月投注达到哪级…{d} 发哪级。」之前，先匹配；「MM-0{d}」须排在「MM-{d}」之前 */
+  "{b}达到哪级（不超过历史最高），{y}-01-0{d} 发哪级。": "Paid on Jan {d}, {y} for the level your {b} reach (up to your highest level).（示意）",
+  "{b}达到哪级（不超过历史最高），{y}-01-{d} 发哪级。": "Paid on Jan {d}, {y} for the level your {b} reach (up to your highest level).（示意）",
+  "{b}达到哪级（不超过历史最高），01-0{d} 发哪级。": "Paid on Jan {d} for the level your {b} reach (up to your highest level).（示意）",
+  "{b}达到哪级（不超过历史最高），01-{d} 发哪级。": "Paid on Jan {d} for the level your {b} reach (up to your highest level).（示意）",
+  "{b}达到哪级（不超过历史最高），02-0{d} 发哪级。": "Paid on Feb {d} for the level your {b} reach (up to your highest level).（示意）",
+  "{b}达到哪级（不超过历史最高），02-{d} 发哪级。": "Paid on Feb {d} for the level your {b} reach (up to your highest level).（示意）",
+  "{b}达到哪级（不超过历史最高），03-0{d} 发哪级。": "Paid on Mar {d} for the level your {b} reach (up to your highest level).（示意）",
+  "{b}达到哪级（不超过历史最高），03-{d} 发哪级。": "Paid on Mar {d} for the level your {b} reach (up to your highest level).（示意）",
+  "{b}达到哪级（不超过历史最高），04-0{d} 发哪级。": "Paid on Apr {d} for the level your {b} reach (up to your highest level).（示意）",
+  "{b}达到哪级（不超过历史最高），04-{d} 发哪级。": "Paid on Apr {d} for the level your {b} reach (up to your highest level).（示意）",
+  "{b}达到哪级（不超过历史最高），05-0{d} 发哪级。": "Paid on May {d} for the level your {b} reach (up to your highest level).（示意）",
+  "{b}达到哪级（不超过历史最高），05-{d} 发哪级。": "Paid on May {d} for the level your {b} reach (up to your highest level).（示意）",
+  "{b}达到哪级（不超过历史最高），06-0{d} 发哪级。": "Paid on Jun {d} for the level your {b} reach (up to your highest level).（示意）",
+  "{b}达到哪级（不超过历史最高），06-{d} 发哪级。": "Paid on Jun {d} for the level your {b} reach (up to your highest level).（示意）",
+  "{b}达到哪级（不超过历史最高），07-0{d} 发哪级。": "Paid on Jul {d} for the level your {b} reach (up to your highest level).（示意）",
+  "{b}达到哪级（不超过历史最高），07-{d} 发哪级。": "Paid on Jul {d} for the level your {b} reach (up to your highest level).（示意）",
+  "{b}达到哪级（不超过历史最高），08-0{d} 发哪级。": "Paid on Aug {d} for the level your {b} reach (up to your highest level).（示意）",
+  "{b}达到哪级（不超过历史最高），08-{d} 发哪级。": "Paid on Aug {d} for the level your {b} reach (up to your highest level).（示意）",
+  "{b}达到哪级（不超过历史最高），09-0{d} 发哪级。": "Paid on Sep {d} for the level your {b} reach (up to your highest level).（示意）",
+  "{b}达到哪级（不超过历史最高），09-{d} 发哪级。": "Paid on Sep {d} for the level your {b} reach (up to your highest level).（示意）",
+  "{b}达到哪级（不超过历史最高），10-0{d} 发哪级。": "Paid on Oct {d} for the level your {b} reach (up to your highest level).（示意）",
+  "{b}达到哪级（不超过历史最高），10-{d} 发哪级。": "Paid on Oct {d} for the level your {b} reach (up to your highest level).（示意）",
+  "{b}达到哪级（不超过历史最高），11-0{d} 发哪级。": "Paid on Nov {d} for the level your {b} reach (up to your highest level).（示意）",
+  "{b}达到哪级（不超过历史最高），11-{d} 发哪级。": "Paid on Nov {d} for the level your {b} reach (up to your highest level).（示意）",
+  "{b}达到哪级（不超过历史最高），12-0{d} 发哪级。": "Paid on Dec {d} for the level your {b} reach (up to your highest level).（示意）",
+  "{b}达到哪级（不超过历史最高），12-{d} 发哪级。": "Paid on Dec {d} for the level your {b} reach (up to your highest level).（示意）",
+  /* 2026-11-10：自动领取时「MM-DD 自动到账，无需领取。」英文用英文日期；须排在下方「{d} 自动到账，无需领取。」之前 */
+  "{y}-01-0{d} 自动到账，无需领取。": "Credited automatically on Jan {d}, {y}.（示意）",
+  "{y}-01-{d} 自动到账，无需领取。": "Credited automatically on Jan {d}, {y}.（示意）",
+  "01-0{d} 自动到账，无需领取。": "Credited automatically on Jan {d}.（示意）",
+  "01-{d} 自动到账，无需领取。": "Credited automatically on Jan {d}.（示意）",
+  "02-0{d} 自动到账，无需领取。": "Credited automatically on Feb {d}.（示意）",
+  "02-{d} 自动到账，无需领取。": "Credited automatically on Feb {d}.（示意）",
+  "03-0{d} 自动到账，无需领取。": "Credited automatically on Mar {d}.（示意）",
+  "03-{d} 自动到账，无需领取。": "Credited automatically on Mar {d}.（示意）",
+  "04-0{d} 自动到账，无需领取。": "Credited automatically on Apr {d}.（示意）",
+  "04-{d} 自动到账，无需领取。": "Credited automatically on Apr {d}.（示意）",
+  "05-0{d} 自动到账，无需领取。": "Credited automatically on May {d}.（示意）",
+  "05-{d} 自动到账，无需领取。": "Credited automatically on May {d}.（示意）",
+  "06-0{d} 自动到账，无需领取。": "Credited automatically on Jun {d}.（示意）",
+  "06-{d} 自动到账，无需领取。": "Credited automatically on Jun {d}.（示意）",
+  "07-0{d} 自动到账，无需领取。": "Credited automatically on Jul {d}.（示意）",
+  "07-{d} 自动到账，无需领取。": "Credited automatically on Jul {d}.（示意）",
+  "08-0{d} 自动到账，无需领取。": "Credited automatically on Aug {d}.（示意）",
+  "08-{d} 自动到账，无需领取。": "Credited automatically on Aug {d}.（示意）",
+  "09-0{d} 自动到账，无需领取。": "Credited automatically on Sep {d}.（示意）",
+  "09-{d} 自动到账，无需领取。": "Credited automatically on Sep {d}.（示意）",
+  "10-0{d} 自动到账，无需领取。": "Credited automatically on Oct {d}.（示意）",
+  "10-{d} 自动到账，无需领取。": "Credited automatically on Oct {d}.（示意）",
+  "11-0{d} 自动到账，无需领取。": "Credited automatically on Nov {d}.（示意）",
+  "11-{d} 自动到账，无需领取。": "Credited automatically on Nov {d}.（示意）",
+  "12-0{d} 自动到账，无需领取。": "Credited automatically on Dec {d}.（示意）",
+  "12-{d} 自动到账，无需领取。": "Credited automatically on Dec {d}.（示意）",
+  "10 月投注达到哪级（不超过历史最高），{d} 发哪级。": "Paid on {d} for the level your Oct bets reach (up to your highest level).（示意）",
+  "11 月投注达到哪级（不超过历史最高），{d} 发哪级。": "Paid on {d} for the level your Nov bets reach (up to your highest level).（示意）",
+  "10 月投注": "Oct bets（示意）",
+  "稍后再领": "Claim later（示意）",
+  "卡上金额": "Card amount（示意）",
+  "每月奖金标准；11 月预计金额见详情。": "Standard Monthly Bonus. See Details for your Nov estimate.（示意）",
+  "每月奖金标准；10 月预计金额见详情。": "Standard Monthly Bonus. See Details for your Oct estimate.（示意）",
+  "领取处理中，请稍后查看": "Processing. Check back later.（示意）",
+  "11 月投注": "Nov bets（示意）",
+  "10 月有效投注": "Oct valid bets（示意）",
+  "11 月有效投注": "Nov valid bets（示意）",
+  "12 月投注": "Dec bets（示意）",   /* 2026-11-10：考核月为 12 月时（发放日跨年）用 */
+  "12 月有效投注": "Dec valid bets（示意）",
   "{d} 自动到账，无需领取。": "Credited automatically on {d}.（示意）",
-  "月度结算日（后台，影响每月奖金「?」里的发放日）": "Monthly settlement day (admin)",
   /* 用户 2026-11-05（v1.3）：当前卡每月奖金、生日奖金「?」说明；「领取 ₱x」按钮 */
   "每月奖金说明": "Monthly Bonus info",
   "生日奖金说明": "Birthday Bonus info",
@@ -50,11 +117,11 @@ window.PROTO_EN = {
   /* 打包前复查 Y29（2026-11-05）：「?」弹窗的标签「发放」后带零宽空格 \u200b（画面上看不见），单独成词条，不套用句子片段「发放」→ given */
   "发放\u200b": "Issued（示意）",
   "本月投注达到哪级（不超过历史最高），下月初发哪级。": "Paid early next month for the level your bets reach this month (up to your highest level).（示意）",
-  "按生日月评定的等级发放，最早生日当天可领。": "Based on your level for your birthday month; claimable from your birthday at the earliest.（示意）",
+  "按生日月评定的等级发放，最早生日当天可领。": "Paid at your birthday-month level. Claimable from your birthday.（示意）",
   "下月初自动到账，无需领取。": "Credited automatically early next month.（示意）",
-  "最早生日当天自动到账，无需领取。": "Credited automatically, from your birthday at the earliest.（示意）",
-  "发放后 {n} 天内领取，过期作废。": "Claim within {n} days of issue; expires after that.（示意）",
-  "可领取起 {n} 天内领取，过期作废。": "Claim within {n} days once claimable; expires after that.（示意）",
+  "最早生日当天自动到账，无需领取。": "Credited automatically from your birthday.（示意）",
+  "发放后 {n} 天内领取，过期作废。": "Claim within {n} days of issue, or it expires.（示意）",
+  "可领取起 {n} 天内领取，过期作废。": "Claim within {n} days once claimable, or it expires.（示意）",
   "领取 {a}": "Claim {a}",
   /* ===== 通用（3 个前台页面共用） ===== */
   "返回": "Back",
@@ -86,16 +153,16 @@ window.PROTO_EN = {
   /* 老版本 App 的 VIP 玩家（用户 2026-10-19 第 2 轮第 F3 条）：必须放在「当前等级 LEVEL {n}」之后，避免抢先匹配 LEVEL 那一行 */
   "当前等级 {level}": "Current: {level}（示意）",
   "请更新 App 查看 VIP 权益。": "Update the app to see VIP perks.（示意）",
-  "你当前为普通用户，暂不显示 VIP 等级、进度和奖励。": "You are a Regular User. VIP levels, progress and rewards are not shown for now.（示意）",
+  "你当前为普通用户，暂不显示 VIP 等级、进度和奖励。": "You're a Regular User. VIP level, progress and rewards are hidden for now.（示意）",
   "本月有效投注达到 {amount} 可在下月恢复到 {level}": "Reach {amount} in valid bets this month to return to {level} next month（示意）",
-  "已达到恢复条件，下月恢复到 {level} ✓": "Recovery reached — back to {level} next month ✓（示意）",
-  "本月达到恢复条件可在下月恢复到 {level}": "Meet target to return to {level}（示意）",   /* 计算方式 = 成长值时的恢复说明，不写金额（用户 2026-10-20） */
+  "已达到恢复条件，下月恢复到 {level} ✓": "Target met — back to {level} next month ✓（示意）",
+  "本月达到恢复条件可在下月恢复到 {level}": "Meet the target to return to {level} next month（示意）",   /* 计算方式 = 成长值时的恢复说明，不写金额（用户 2026-10-20） */
   "跳到现有 KYC 认证页（示意）": "Opens the existing KYC verification page（示意）",
   "跳到现有 KYC 认证页": "Opens the existing KYC verification page（示意）",
   /* 未完成 KYC 的引导卡（已定，用户 2026-10-17） */
   "加入 VIP 会员体系": "Join VIP（示意）",
-  "完成 KYC 后即可加入 VIP 会员体系，享受之后的升级、保级和生日奖励。": "Complete KYC to join the VIP Program and enjoy Upgrade, Retention and Birthday Bonuses from then on.（示意）",
-  "你的 KYC 正在审核中，审核通过后即可加入 VIP 会员体系，享受之后的升级、保级和生日奖励。": "Your KYC is under review. Once approved, you can join the VIP Program and enjoy Upgrade, Retention and Birthday Bonuses from then on.（示意）",
+  "完成 KYC 后即可加入 VIP 会员体系，享受之后的升级、保级和生日奖励。": "Complete KYC to join VIP and get future Upgrade, Retention and Birthday Bonuses.（示意）",
+  "你的 KYC 正在审核中，审核通过后即可加入 VIP 会员体系，享受之后的升级、保级和生日奖励。": "Your KYC is under review. Once approved, you join VIP and get future Upgrade, Retention and Birthday Bonuses.（示意）",
   "去完成 KYC": "Verify KYC（示意）",
   "查看 KYC 进度": "KYC Status（示意）",
   "已达成": "Achieved",
@@ -127,12 +194,12 @@ window.PROTO_EN = {
   "升级": "Upgrade（示意）",
   /* 普通用户卡（VIP1 前，用户 2026-10-19 追加，待文档同步）：普通用户时的一行说明；徽章和刻度沿用「普通用户」→ Regular */
   "达到 VIP1 即可成为 VIP 会员": "Reach VIP1 to join VIP（示意）",
-  "本月达到恢复条件即可回到 VIP1": "Meet VIP1's monthly bet to return（示意）",
+  "本月达到恢复条件即可回到 VIP1": "Meet the target this month to return to VIP1（示意）",
   /* 普通用户等级奖励弹窗（用户 2026-10-19 追加，待文档同步）：「前台会员等级显示」开时标题为「LEVEL {n} 奖励」 */
   "普通用户奖励": "Regular Rewards（示意）",
   "LEVEL {n} 奖励": "Level {n} Rewards（示意）",
   "生日礼包": "B-day Gift（示意）",
-  "升级奖励到达后次日自动到账；生日礼包可在此领取。": "Upgrade reward is credited the next day; claim the B-day Gift here.（示意）",
+  "升级奖励到达后次日自动到账；生日礼包可在此领取。": "Upgrade reward is auto-credited the next day. Claim the B-day Gift here.（示意）",
   "{amount} 生日礼包已到账。": "{amount} B-day Gift credited.（示意）",
   "领取失败，请重试。": "Claim failed. Please try again.",
   "{amount} 生日奖励已到账。": "{amount} Birthday Bonus credited.",
@@ -150,12 +217,11 @@ window.PROTO_EN = {
   "下月恢复": "Back up（示意）",   /* 向上箭头图标的 aria-label / title */
   "下月恢复到 {level}": "{level} next month（示意）",
   /* 成长值模式等级（用户 2026-10-19 待确认清单第 6 条）：前台不显示成长值（第 2 轮第 F2 条），下一级卡只显示「升级进度」+ 进度条（不显示百分比，用户 2026-10-19） */
-  "升级进度": "Progress（示意）",
   "成为当前等级后可获得": "If current（示意）",
   "待领取": "Claimable",
   "生日当天发放": "On B-day（示意）",
   "生日当天为该等级时可领取": "B-day if current（示意）",
-  "升级奖励、保级奖励自动到账；生日奖励可在生日卡片或此处领取。": "Upgrade and Retention Bonuses are credited automatically; claim the Birthday Bonus here or on the birthday card.（示意）",   /* 前台不显示流水倍数，原句尾「奖励均需 {n} 倍流水」已删除（用户 2026-10-19 第 3 轮追加） */
+  "升级奖励、保级奖励自动到账；生日奖励可在生日卡片或此处领取。": "Upgrade and Retention Bonuses are auto-credited. Claim the Birthday Bonus here or on the birthday card.（示意）",   /* 前台不显示流水倍数，原句尾「奖励均需 {n} 倍流水」已删除（用户 2026-10-19 第 3 轮追加） */
   "累计有效投注": "Total Bet",   /* 奖励表表头（用户 2026-10-17 由「累计投注」改）与「?」弹窗共用；软连字符保证窄列不溢出 */
   "累计充值": "Total Dep.",
   "每月保级投注": "Ret. Bet/m",
@@ -168,39 +234,39 @@ window.PROTO_EN = {
   "请登录后查看等级中心。": "Please log in to view Level Center.",
   "手机号码": "Mobile Number",
   "密码": "Password",
-  "现有登录页（示意，本需求不改）。": "Existing login page (illustrative; not changed by this requirement).（示意）",
+  "现有登录页（示意，本需求不改）。": "Existing login page (unchanged).（示意）",
   /* VIP 规则（全文为示意，由运营定稿）：按片段对照，片段顺序与英文一致 */
   "VIP 规则": "VIP Rules（示意）",
-  "要达到某个 VIP 等级，你的累计充值和累计有效投注都必须达到该等级的要求（见本弹窗上方）。升级实时判定。两项均自注册起累计（历史累计）。": "To reach a VIP level, your Total Dep. (Cumulative Deposit) and Total Bet (Cumulative Valid Bet) must both meet that level's requirements (shown at the top of this window). Upgrades are checked in real time. Both are counted from your registration (all-time totals).（示意）",
+  "要达到某个 VIP 等级，你的累计充值和累计有效投注都必须达到该等级的要求（见本弹窗上方）。升级实时判定。两项均自注册起累计（历史累计）。": "To reach a VIP level, your Total Dep. and Total Bet must both meet its requirements (shown above). Upgrades happen in real time. Both count from registration.（示意）",
   "VIP 奖励表中的升级奖励，": "The Upgrade Bonus shown in the VIP Rewards table ",
   "在你首次到达每个 VIP 等级时立即发放到账": "is credited to your account instantly the first time you reach each VIP level",
   "。每个等级的升级奖励只": ". Each level's Upgrade Bonus is ",
   "发放": "given",
   "一次；降级后再次到达同一等级不会重复发放。": " only once; reaching the same level again after a downgrade does not give it again.（示意）",
-  "每月保级：在自然月内（GMT+8）有效投注达到当前等级的每月保级投注，即可在次月保持当前等级并获得保级奖励": "Monthly retention: reach your current level's Monthly Retention Bet in valid bets within the calendar month (GMT+8) to keep your level next month and receive the Retention Bonus （示意）",
+  "每月保级：在自然月内（GMT+8）有效投注达到当前等级的每月保级投注，即可在次月保持当前等级并获得保级奖励": "Monthly retention: reach your level's Ret. Bet/m in valid bets within the calendar month (GMT+8) to keep it next month and get the Retention Bonus （示意）",
   "（每月 1 日结算时自动到账）": "(credited automatically at settlement on the 1st)",
-  "未达到的，不发放保级奖励，次月 VIP 等级降 1 级（VIP1 未达到的，次月不再是 VIP 会员）。每月最多降 1 级。历史最高 VIP 等级不会下降。": "If you do not reach it, no Retention Bonus is paid and your VIP level drops by 1 next month (at VIP1, you are no longer a VIP member next month). You can drop at most 1 level per month. Your Highest VIP Level never drops.（示意）",
-  "当月有升级的，按升级后的 VIP 等级考核，达到即保持并获得保级奖励。": "If you were upgraded during the month, you are assessed at your new VIP level; reach its Ret. Bet/m to keep it and receive the Retention Bonus.（示意）",
-  "降级后，当月有效投注达到高一级的每月保级投注，次月恢复 1 级（次月 1 日结算时照常获得当前等级的保级奖励），最多恢复到你的历史最高 VIP 等级；该等级已停用时，以其上一个开放的等级为准。VIP1 未达到保级、不再是 VIP 会员的，当月有效投注达到 VIP1 的每月保级投注，次月回到 VIP1。累计充值和累计有效投注达到比历史最高 VIP 等级更高的等级要求时，立即升级。": "After a downgrade, reach the next level's Ret. Bet/m in valid bets within the month to move back up 1 level next month (you still receive your current level's Retention Bonus at settlement on the 1st), up to your Highest VIP Level, or the next open level above it if that level is no longer offered. If you are no longer a VIP member after missing retention at VIP1, reach VIP1's Ret. Bet/m in valid bets within the month to return to VIP1 next month. If your Total Dep. and Total Bet meet the requirements of a level above your Highest VIP Level, you are upgraded immediately.（示意）",
-  "有效投注统计到每月最后一天 23:59:59（GMT+8），次月 1 日结算。": "Valid bets are counted until 23:59:59 on the last day of each month (GMT+8). Settlement runs on the 1st of the following month.（示意）",
-  "生日奖励：每年生日当天生成一次，按你生日当天的 VIP 等级和 VIP 奖励表发放。你的 KYC 须在生日当天开始（00:00，GMT+8）前通过认证。": "Birthday Bonus: generated once a year on your birthday, based on your VIP level that day and the VIP Rewards table. Your KYC must be verified before your birthday begins (00:00, GMT+8). （示意）",
-  "请在过期前在生日卡片或等级卡「详情」中领取。": "Claim it on the birthday card or in your level card's Details before it expires.（示意）",
-  "升级奖励、保级奖励自动到账；生日奖励可在生日卡片或等级卡「详情」中领取。": "Upgrade and Retention Bonuses are credited automatically; claim your Birthday Bonus on the birthday card or in your level card's Details.（示意）",
+  "未达到的，不发放保级奖励，次月 VIP 等级降 1 级（VIP1 未达到的，次月不再是 VIP 会员）。每月最多降 1 级。历史最高 VIP 等级不会下降。": "If you miss it, you get no Retention Bonus and drop 1 level next month (VIP1 leaves VIP). You drop at most 1 level per month. Your Highest VIP Level never drops.（示意）",
+  "当月有升级的，按升级后的 VIP 等级考核，达到即保持并获得保级奖励。": "If you upgrade this month, your new level's Ret. Bet/m applies; reach it to keep that level and get the Retention Bonus.（示意）",
+  "降级后，当月有效投注达到高一级的每月保级投注，次月恢复 1 级（次月 1 日结算时照常获得当前等级的保级奖励），最多恢复到你的历史最高 VIP 等级；该等级已停用时，以其上一个开放的等级为准。VIP1 未达到保级、不再是 VIP 会员的，当月有效投注达到 VIP1 的每月保级投注，次月回到 VIP1。累计充值和累计有效投注达到比历史最高 VIP 等级更高的等级要求时，立即升级。": "After a downgrade, reach the next level's Ret. Bet/m in valid bets this month to go up 1 level next month (you still get your current level's Retention Bonus on the 1st), up to your Highest VIP Level, or the next open level above it if that level is no longer offered. If you left VIP after missing retention at VIP1, reach VIP1's Ret. Bet/m in valid bets this month to return to VIP1 next month. If your Total Dep. and Total Bet meet a level above your Highest VIP Level, you upgrade at once.（示意）",
+  "有效投注统计到每月最后一天 23:59:59（GMT+8），次月 1 日结算。": "Valid bets count until 23:59:59 on the last day of each month (GMT+8) and are settled on the 1st of next month.（示意）",
+  "生日奖励：每年生日当天生成一次，按你生日当天的 VIP 等级和 VIP 奖励表发放。你的 KYC 须在生日当天开始（00:00，GMT+8）前通过认证。": "Birthday Bonus: given once a year on your birthday, based on your VIP level that day and the VIP Rewards table. Your KYC must be verified before your birthday starts (00:00, GMT+8). （示意）",
+  "请在过期前在生日卡片或等级卡「详情」中领取。": "Claim it on the birthday card or in Details before it expires.（示意）",
+  "升级奖励、保级奖励自动到账；生日奖励可在生日卡片或等级卡「详情」中领取。": "Upgrade and Retention Bonuses are auto-credited. Claim the Birthday Bonus on the birthday card or in Details.（示意）",
   /* 2026-10-21 v1.0 检查报告 Q-52：规则弹窗「详情」改为按钮实际文字「查看详情」（英文按钮为 Details，英文不变） */
-  "请在过期前在生日卡片或等级卡「查看详情」中领取。": "Claim it on the birthday card or in your level card's Details before it expires.（示意）",
-  "升级奖励、保级奖励自动到账；生日奖励可在生日卡片或等级卡「查看详情」中领取。": "Upgrade and Retention Bonuses are credited automatically; claim your Birthday Bonus on the birthday card or in your level card's Details.（示意）",
-  "须先完成 KYC 认证，才能加入 VIP 会员体系。完成 KYC 时按你的历史累计确定 VIP 等级，完成 KYC 前已达到的等级不发放升级奖励。": "You must complete KYC verification to join the VIP Program. When your KYC is approved, your VIP level is set based on your all-time totals; no Upgrade Bonus is given for levels already reached before KYC approval.（示意）",
+  "请在过期前在生日卡片或等级卡「查看详情」中领取。": "Claim it on the birthday card or in Details before it expires.（示意）",
+  "升级奖励、保级奖励自动到账；生日奖励可在生日卡片或等级卡「查看详情」中领取。": "Upgrade and Retention Bonuses are auto-credited. Claim the Birthday Bonus on the birthday card or in Details.（示意）",
+  "须先完成 KYC 认证，才能加入 VIP 会员体系。完成 KYC 时按你的历史累计确定 VIP 等级，完成 KYC 前已达到的等级不发放升级奖励。": "Complete KYC to join VIP. Once approved, your level is set by your all-time totals. Levels reached before approval give no Upgrade Bonus.（示意）",
   /* 原流水倍数条款的片段（需完成 / 倍流水， / 全部游戏 / Slot 游戏 / 的有效投注计入该流水。）已删除：前台不显示流水倍数（用户 2026-10-19 第 3 轮追加） */
   "如有疑问，请联系客服。": "Questions? Contact Customer Service.（示意）",   /* VIP 规则末条（用户 2026-10-17） */
   /* v1.0 恢复条款（没有关闭等级，去掉「该等级已停用时…」一句；用户 2026-10-20 版本拆分） */
-  "降级后，当月有效投注达到高一级的每月保级投注，次月恢复 1 级（次月 1 日结算时照常获得当前等级的保级奖励），最多恢复到你的历史最高 VIP 等级。VIP1 未达到保级、不再是 VIP 会员的，当月有效投注达到 VIP1 的每月保级投注，次月回到 VIP1。累计充值和累计有效投注达到比历史最高 VIP 等级更高的等级要求时，立即升级。": "After a downgrade, reach the next level's Ret. Bet/m in valid bets within the month to move back up 1 level next month (you still receive your current level's Retention Bonus at settlement on the 1st), up to your Highest VIP Level. If you are no longer a VIP member after missing retention at VIP1, reach VIP1's Ret. Bet/m in valid bets within the month to return to VIP1 next month. If your Total Dep. and Total Bet meet the requirements of a level above your Highest VIP Level, you are upgraded immediately.（示意）",
+  "降级后，当月有效投注达到高一级的每月保级投注，次月恢复 1 级（次月 1 日结算时照常获得当前等级的保级奖励），最多恢复到你的历史最高 VIP 等级。VIP1 未达到保级、不再是 VIP 会员的，当月有效投注达到 VIP1 的每月保级投注，次月回到 VIP1。累计充值和累计有效投注达到比历史最高 VIP 等级更高的等级要求时，立即升级。": "After a downgrade, reach the next level's Ret. Bet/m in valid bets this month to go up 1 level next month (you still get your current level's Retention Bonus on the 1st), up to your Highest VIP Level. If you left VIP after missing retention at VIP1, reach VIP1's Ret. Bet/m in valid bets this month to return to VIP1 next month. If your Total Dep. and Total Bet meet a level above your Highest VIP Level, you upgrade at once.（示意）",
   /* 计算方式 = 成长值时的规则条（不写门槛、不出现「成长值」字样；用户 2026-10-20）：第 1、3、5、6、7 条（第 6 条 full / v1.0 两版） */
-  "要达到某个 VIP 等级，须达到该等级的升级要求，升级实时判定。升级和保级进度见等级卡上的进度条。": "To reach a VIP level, meet that level's upgrade target. Upgrades are checked in real time. See your progress on the level cards.（示意）",
-  "每月保级：在自然月内（GMT+8）达到当前等级的每月保级要求，即可在次月保持当前等级并获得保级奖励": "Monthly retention: meet your current level's monthly retention target within the calendar month (GMT+8) to keep your level next month and receive the Retention Bonus （示意）",
-  "当月有升级的，按升级后的 VIP 等级考核，达到该等级的每月保级要求即保持并获得保级奖励。": "If you were upgraded during the month, you are assessed at your new VIP level; meet its monthly retention target to keep it and receive the Retention Bonus.（示意）",
-  "降级后，当月达到高一级的每月保级要求，次月恢复 1 级（次月 1 日结算时照常获得当前等级的保级奖励），最多恢复到你的历史最高 VIP 等级；该等级已停用时，以其上一个开放的等级为准。VIP1 未达到保级、不再是 VIP 会员的，当月达到 VIP1 的每月保级要求，次月回到 VIP1。达到比历史最高 VIP 等级更高的等级要求时，立即升级。": "After a downgrade, meet the next level's monthly retention target within the month to move back up 1 level next month (you still receive your current level's Retention Bonus at settlement on the 1st), up to your Highest VIP Level, or the next open level above it if that level is no longer offered. If you are no longer a VIP member after missing retention at VIP1, meet VIP1's monthly retention target within the month to return to VIP1 next month. If you meet the target of a level above your Highest VIP Level, you are upgraded immediately.（示意）",
-  "降级后，当月达到高一级的每月保级要求，次月恢复 1 级（次月 1 日结算时照常获得当前等级的保级奖励），最多恢复到你的历史最高 VIP 等级。VIP1 未达到保级、不再是 VIP 会员的，当月达到 VIP1 的每月保级要求，次月回到 VIP1。达到比历史最高 VIP 等级更高的等级要求时，立即升级。": "After a downgrade, meet the next level's monthly retention target within the month to move back up 1 level next month (you still receive your current level's Retention Bonus at settlement on the 1st), up to your Highest VIP Level. If you are no longer a VIP member after missing retention at VIP1, meet VIP1's monthly retention target within the month to return to VIP1 next month. If you meet the target of a level above your Highest VIP Level, you are upgraded immediately.（示意）",
-  "每月保级统计到每月最后一天 23:59:59（GMT+8），次月 1 日结算。": "Monthly retention is counted until 23:59:59 on the last day of each month (GMT+8). Settlement runs on the 1st of the following month.（示意）",
+  "要达到某个 VIP 等级，须达到该等级的升级要求，升级实时判定。升级和保级进度见等级卡上的进度条。": "To reach a VIP level, meet its upgrade target. Upgrades happen in real time. See your progress on the level cards.（示意）",
+  "每月保级：在自然月内（GMT+8）达到当前等级的每月保级要求，即可在次月保持当前等级并获得保级奖励": "Monthly retention: meet your level's monthly target within the calendar month (GMT+8) to keep it next month and get the Retention Bonus （示意）",
+  "当月有升级的，按升级后的 VIP 等级考核，达到该等级的每月保级要求即保持并获得保级奖励。": "If you upgrade this month, your new level's monthly target applies; meet it to keep that level and get the Retention Bonus.（示意）",
+  "降级后，当月达到高一级的每月保级要求，次月恢复 1 级（次月 1 日结算时照常获得当前等级的保级奖励），最多恢复到你的历史最高 VIP 等级；该等级已停用时，以其上一个开放的等级为准。VIP1 未达到保级、不再是 VIP 会员的，当月达到 VIP1 的每月保级要求，次月回到 VIP1。达到比历史最高 VIP 等级更高的等级要求时，立即升级。": "After a downgrade, meet the next level's monthly target this month to go up 1 level next month (you still get your current level's Retention Bonus on the 1st), up to your Highest VIP Level, or the next open level above it if that level is no longer offered. If you left VIP after missing retention at VIP1, meet VIP1's monthly target this month to return to VIP1 next month. If you meet the target of a level above your Highest VIP Level, you upgrade at once.（示意）",
+  "降级后，当月达到高一级的每月保级要求，次月恢复 1 级（次月 1 日结算时照常获得当前等级的保级奖励），最多恢复到你的历史最高 VIP 等级。VIP1 未达到保级、不再是 VIP 会员的，当月达到 VIP1 的每月保级要求，次月回到 VIP1。达到比历史最高 VIP 等级更高的等级要求时，立即升级。": "After a downgrade, meet the next level's monthly target this month to go up 1 level next month (you still get your current level's Retention Bonus on the 1st), up to your Highest VIP Level. If you left VIP after missing retention at VIP1, meet VIP1's monthly target this month to return to VIP1 next month. If you meet the target of a level above your Highest VIP Level, you upgrade at once.（示意）",
+  "每月保级统计到每月最后一天 23:59:59（GMT+8），次月 1 日结算。": "Monthly retention counts until 23:59:59 on the last day of each month (GMT+8) and is settled on the 1st of next month.（示意）",
 
   /* 原「实物奖励领取页面（含 我的奖品申请 My Prize Claims）」对照已删除：该页已移出本需求包，实物见实体奖品管理需求（用户 2026-10-17） */
 
@@ -226,49 +292,49 @@ window.PROTO_EN = {
   "10月12日 周一 · 10:00": "Mon, Oct 12 · 10:00",
   "10月13日 周二 · 10:00": "Tue, Oct 13 · 10:00",
   "₱1,500 VIP 保级奖励已到账！登录 789Bingo 查看奖励。": "₱1,500 VIP Retention Bonus credited! Log in to 789Bingo to check your reward.",
-  "你的 PHP488 VIP 生日奖励明天可领取！请在 10 月 27 日 23:59（GMT+8）前到等级中心领取。使用旧版 App？请更新 App 或登录 789Bingo 网站领取。": "Your PHP488 VIP Birthday Bonus will be ready to claim tomorrow! Claim it in Level Center by 23:59 Oct 27 (GMT+8). Using an older app? Update it or log in on the 789Bingo website to claim.（示意）",
-  "789Bingo 祝你生日快乐！你的 PHP488 VIP 生日奖励已可领取。请在 10 月 27 日 23:59（GMT+8）前到等级中心领取。使用旧版 App？请更新 App 或登录 789Bingo 网站领取。": "Happy Birthday from 789Bingo! Your PHP488 VIP Birthday Bonus is ready to claim in Level Center by 23:59 Oct 27 (GMT+8). Using an older app? Update it or log in on the 789Bingo website to claim.（示意）",
+  "你的 PHP488 VIP 生日奖励明天可领取！请在 10 月 27 日 23:59（GMT+8）前到等级中心领取。使用旧版 App？请更新 App 或登录 789Bingo 网站领取。": "Your PHP488 VIP Birthday Bonus is ready to claim tomorrow! Claim it in Level Center by 23:59 Oct 27 (GMT+8). Older app? Update it or claim on the 789Bingo website.（示意）",
+  "789Bingo 祝你生日快乐！你的 PHP488 VIP 生日奖励已可领取。请在 10 月 27 日 23:59（GMT+8）前到等级中心领取。使用旧版 App？请更新 App 或登录 789Bingo 网站领取。": "Happy Birthday from 789Bingo! Your PHP488 VIP Birthday Bonus is ready. Claim it in Level Center by 23:59 Oct 27 (GMT+8). Older app? Update it or claim on the 789Bingo website.（示意）",
   "示例文案": "Sample",
   "示意 · 待运营定稿": "Draft（示意）",
-  "（上方刻度和等级卡与 VIP中心页面相同，此处省略）": "(The level scale and level cards above are the same as on the VIP Center page and are omitted here.)（示意）",
+  "（上方刻度和等级卡与 VIP中心页面相同，此处省略）": "(Level scale and cards are the same as the VIP Center page; omitted.)（示意）",
   "（10-29 00:00 起不再显示生日卡片）": "(Card hidden from Oct 29 00:00)（示意）",   /* 过期口径统一（用户 2026-10-19 第 4 轮，待文档同步） */
   "（奖励表与规则说明见 VIP中心页面）": "(See the VIP Center page for the rewards table and rules.)（示意）",
   "（现有「奖励到账」APP 推送模板，示意）": "(existing \"Reward credited\" app push template, draft)（示意）",
-  "你的 VIP 升级奖励已到账。": "Your VIP Upgrade Bonus has been credited.（示意）",
+  "你的 VIP 升级奖励已到账。": "Your VIP Upgrade Bonus is credited.（示意）",
   "刚刚": "now",
   "消息": "Messages",
-  "（现有站内消息列表，示意；本需求只由 VIP 发放流程发送下面这类消息；": "(Existing inbox list, draft. This requirement only sends messages like the one below through the VIP payout flow; （示意）",
-  "升级、保级奖励到账时发送，生日奖励领取成功时发送，示意": "sent when Upgrade and Retention Bonuses are credited, and when a Birthday Bonus is claimed, draft（示意）",
+  "（现有站内消息列表，示意；本需求只由 VIP 发放流程发送下面这类消息；": "(Existing inbox list, draft. Only VIP payouts send messages like the one below; （示意）",
+  "升级、保级奖励到账时发送，生日奖励领取成功时发送，示意": "sent when Upgrade or Retention Bonuses are credited or a Birthday Bonus is claimed, draft（示意）",
   "奖励已到账": "Credited",
   "（现有模板，示意）": "(existing template, draft)（示意）",
   "（21:00–10:00 触发的推送顺延到 10:00 发送，站内信即时生成）": "(Pushes from 21:00–10:00 go out at 10:00; inbox is instant)（示意）",   /* 免打扰时段（用户 2026-10-19 第 3 轮追加 2） */
-  "VIP 升级奖励 {amount} 已存入你的账户。": "VIP Upgrade Bonus {amount} has been credited to your account.（示意）",
-  "（奖励处于「暂停发放（风控）」，不发站内信和 APP 推送；运营放行入账时再发：规则 N55）": "(The reward is \"paused (risk control)\": no inbox message or app push is sent until Ops releases and credits it. Rule N55)（示意）",
+  "VIP 升级奖励 {amount} 已存入你的账户。": "VIP Upgrade Bonus {amount} credited to your account.（示意）",
+  "（奖励处于「暂停发放（风控）」，不发站内信和 APP 推送；运营放行入账时再发：规则 N55）": "(Reward on hold (risk control): no inbox or app push until Ops releases and credits it. Rule N55)（示意）",
   "交易记录": "Transaction",
-  "（现有交易记录页，示意，本需求不改页面；以下为 VIP 奖励入账后的显示名）": "(Existing transaction page, illustrative; this requirement does not change the page. Below are the display names after VIP rewards are credited.)（示意）",
+  "（现有交易记录页，示意，本需求不改页面；以下为 VIP 奖励入账后的显示名）": "(Existing transaction page, unchanged. Below: names shown for credited VIP rewards.)（示意）",
   "VIP 升级奖励": "VIP Upgrade",
   "VIP 保级奖励": "VIP Retain",
   "VIP 生日奖励": "VIP B-day",
   "奖金": "Bonus",
   "（离线期间升级，下次进入时补弹）": "(Upgraded offline; shown on next visit)（示意）",   /* 第 3 轮第 19 条 */
   /* 游戏中升级：在第三方游戏页面不弹，返回平台原生页面后弹出（用户 2026-10-19，待文档同步） */
-  "第三方游戏": "3rd-party game（示意）",
+  "第三方游戏": "Third-party game（示意）",
   "返回大厅": "Back to Lobby（示意）",
   "（正在第三方游戏中，不弹出升级弹窗；返回平台页面后弹出）": "(In game: pop-up shows once back on platform)（示意）",
   "（从第三方游戏返回大厅，弹出升级弹窗）": "(Back from game: pop-up shown)（示意）",
-  "（风控暂停：玩家已升到 VIP11，升级奖励为「暂停发放（风控）」，不弹升级弹窗）": "(Risk-control pause: the player has reached VIP11; the Upgrade Bonus is \"paused (risk control)\", so no upgrade pop-up is shown.)（示意）",
-  "（风控放行后：VIP11 升级奖励立即自动到账，不补弹升级弹窗）": "(After risk-control release: the VIP11 Upgrade Bonus is credited automatically right away. The upgrade pop-up is not shown again.)（示意）",
-  "（老版本 App：玩家升到 VIP11，升级奖励照常自动到账，不弹升级弹窗）": "(Older app version: the player reaches VIP11 and the Upgrade Bonus is credited automatically as usual, but no upgrade pop-up is shown.)（示意）",
+  "（风控暂停：玩家已升到 VIP11，升级奖励为「暂停发放（风控）」，不弹升级弹窗）": "(Risk-control hold: player reached VIP11; Upgrade Bonus on hold, so no upgrade pop-up.)（示意）",
+  "（风控放行后：VIP11 升级奖励立即自动到账，不补弹升级弹窗）": "(After release: VIP11 Upgrade Bonus auto-credited at once; no pop-up.)（示意）",
+  "（老版本 App：玩家升到 VIP11，升级奖励照常自动到账，不弹升级弹窗）": "(Older app: reached VIP11; Upgrade Bonus auto-credited as usual; no pop-up.)（示意）",
   /* 未完成 KYC：不参与 VIP 体系（已定，用户 2026-10-17） */
-  "（未完成 KYC：玩家不参与 VIP 体系，没有 VIP 等级和升级奖励，不弹升级弹窗）": "(KYC not completed: the player is not in the VIP Program, has no VIP level or Upgrade Bonus, and no upgrade pop-up is shown.)（示意）",
-  "（未完成 KYC：不参与 VIP 体系，没有生日奖励，不显示生日卡片；等级中心只显示 KYC 引导卡）": "(KYC not completed: the player is not in the VIP Program and has no Birthday Bonus, so no birthday card is shown. Level Center only shows the KYC prompt card.)（示意）",
-  "（未完成 KYC：玩家不参与 VIP 体系，没有 VIP 奖励，不发站内信和 APP 推送）": "(KYC not completed: the player is not in the VIP Program and has no VIP rewards, so no inbox message or app push is sent.)（示意）",
+  "（未完成 KYC：玩家不参与 VIP 体系，没有 VIP 等级和升级奖励，不弹升级弹窗）": "(No KYC: not in VIP, no VIP level or Upgrade Bonus, no pop-up.)（示意）",
+  "（未完成 KYC：不参与 VIP 体系，没有生日奖励，不显示生日卡片；等级中心只显示 KYC 引导卡）": "(No KYC: not in VIP, no Birthday Bonus or birthday card. Level Center shows only the KYC card.)（示意）",
+  "（未完成 KYC：玩家不参与 VIP 体系，没有 VIP 奖励，不发站内信和 APP 推送）": "(No KYC: not in VIP, no VIP rewards, no inbox or app push.)（示意）",
   "（生日奖励已在 10:00 前领取，不发当天提醒短信）": "(B-day Bonus claimed before 10:00 — no same-day SMS.)（示意）",
-  "（未完成 KYC：玩家不参与 VIP 体系，不会收到 VIP 短信）": "(KYC not completed: the player is not in the VIP Program and does not receive VIP SMS.)（示意）",
+  "（未完成 KYC：玩家不参与 VIP 体系，不会收到 VIP 短信）": "(No KYC: not in VIP, no VIP SMS.)（示意）",
   /* 「KYC 限制」关闭时（用户 2026-10-26）：未完成 KYC 的玩家可参与 VIP 体系，但生日奖励始终要求 KYC */
-  "（未完成 KYC：「KYC 限制」关闭时可参与 VIP 体系，但生日奖励始终要求 KYC，没有生日奖励，不显示生日卡片）": "(KYC not completed: with the KYC Restriction off, the player can join the VIP Program, but the Birthday Bonus always requires KYC, so there is no Birthday Bonus and no birthday card is shown.)（示意）",
-  "（未完成 KYC：生日奖励始终要求 KYC，「KYC 限制」关闭时也没有生日奖励，不发生日提醒短信）": "(KYC not completed: the Birthday Bonus always requires KYC, so even with the KYC Restriction off there is no Birthday Bonus and no birthday reminder SMS.)（示意）",
-  "（当前账号状态或「VIP 体系状态」下，该玩家不会收到这条短信：规则 N48、N43、N40）": "(With the current account status or VIP program status, this player does not receive this SMS. Rules N48, N43, N40)（示意）",
+  "（未完成 KYC：「KYC 限制」关闭时可参与 VIP 体系，但生日奖励始终要求 KYC，没有生日奖励，不显示生日卡片）": "(No KYC: with KYC Restriction off, the player can join VIP, but the Birthday Bonus always needs KYC: no Birthday Bonus or birthday card.)（示意）",
+  "（未完成 KYC：生日奖励始终要求 KYC，「KYC 限制」关闭时也没有生日奖励，不发生日提醒短信）": "(No KYC: the Birthday Bonus always needs KYC, so even with KYC Restriction off, no Birthday Bonus or reminder SMS.)（示意）",
+  "（当前账号状态或「VIP 体系状态」下，该玩家不会收到这条短信：规则 N48、N43、N40）": "(Account or VIP program status: this player gets no SMS. Rules N48, N43, N40)（示意）",
   "（「VIP 体系状态」关闭期间不发 VIP 短信：规则 N43、N40）": "(No VIP SMS while the VIP Program is off. Rules N43, N40)（示意）",   /* 关闭期间一律不发保级、生日短信（用户 2026-10-20） */
 
   /* ===== 领取方式：自动领取 / 手动领取（用户 2026-10-20，完整需求 / v1.1）：只新增，英文用最短写法 ===== */
@@ -290,20 +356,20 @@ window.PROTO_EN = {
   "生日奖励须在有效期内手动领取。": "Claim B-day before it expires. （示意）",
   "手动领取的奖励可在奖励卡片或等级卡「详情」中领取，过期作废。": "Claim on the reward card or in Details; unclaimed rewards expire.（示意）",
   "生日当天自动到账。": "Credited automatically on your birthday.（示意）",
-  "VIP 奖励表中的升级奖励，在你首次到达每个 VIP 等级时发放，须在 {n} 天内（含当天）领取，过期作废。每个等级的升级奖励只发放一次；降级后再次到达同一等级不会重复发放。": "The Upgrade Bonus in the VIP Rewards table is issued the first time you reach each VIP level; claim it within {n} days (incl. that day) or it expires. Each level's Upgrade Bonus is given only once; reaching the same level again after a downgrade does not give it again.（示意）",
+  "VIP 奖励表中的升级奖励，在你首次到达每个 VIP 等级时发放，须在 {n} 天内（含当天）领取，过期作废。每个等级的升级奖励只发放一次；降级后再次到达同一等级不会重复发放。": "The Upgrade Bonus is issued the first time you reach each VIP level; claim it within {n} days (incl. that day) or it expires. Each level pays it only once, even if you drop and reach it again.（示意）",
   "（每月 1 日结算后发放，须在 {n} 天内（含当天）领取，过期作废）": "(issued at settlement on the 1st; claim within {n} days incl. that day, or it expires)（示意）",
   /* VIP通知页面：升级弹窗、短信、生日卡片 */
   "可领取，请在 {md} 日 23:59（GMT+8）前领取": "Ready · claim by 23:59 {md} (GMT+8)（示意）",
-  "去领取": "Go claim（示意）",
+  "去领取": "Claim（示意）",
   "PHP1,500 VIP 保级奖励已可领取！请在 {md} 日 23:59（GMT+8）前到等级中心领取。": "PHP1,500 VIP Retention Bonus ready! Claim it in Level Center by 23:59 {md} (GMT+8).（示意）",
   "你的 PHP488 VIP 生日奖励将于明天自动到账！登录 789Bingo 查看奖励。": "Your PHP488 VIP Birthday Bonus will be credited tomorrow! Log in to 789Bingo to check your reward.（示意）",
   "789Bingo 祝你生日快乐！你的 PHP488 VIP 生日奖励已到账！登录 789Bingo 查看奖励。": "Happy Birthday from 789Bingo! Your PHP488 VIP Birthday Bonus has been credited! Log in to 789Bingo to check your reward.（示意）",
-  "你的 PHP488 VIP 生日奖励明天可领取！请在 {md} 日 23:59（GMT+8）前到等级中心领取。使用旧版 App？请更新 App 或登录 789Bingo 网站领取。": "Your PHP488 VIP Birthday Bonus will be ready to claim tomorrow! Claim it in Level Center by 23:59 {md} (GMT+8). Using an older app? Update it or log in on the 789Bingo website to claim.（示意）",   /* 有效期不是 15 天时（默认 15 天走上方原条目） */
-  "789Bingo 祝你生日快乐！你的 PHP488 VIP 生日奖励已可领取。请在 {md} 日 23:59（GMT+8）前到等级中心领取。使用旧版 App？请更新 App 或登录 789Bingo 网站领取。": "Happy Birthday from 789Bingo! Your PHP488 VIP Birthday Bonus is ready to claim in Level Center by 23:59 {md} (GMT+8). Using an older app? Update it or log in on the 789Bingo website to claim.（示意）",
+  "你的 PHP488 VIP 生日奖励明天可领取！请在 {md} 日 23:59（GMT+8）前到等级中心领取。使用旧版 App？请更新 App 或登录 789Bingo 网站领取。": "Your PHP488 VIP Birthday Bonus is ready to claim tomorrow! Claim it in Level Center by 23:59 {md} (GMT+8). Older app? Update it or claim on the 789Bingo website.（示意）",   /* 有效期不是 15 天时（默认 15 天走上方原条目） */
+  "789Bingo 祝你生日快乐！你的 PHP488 VIP 生日奖励已可领取。请在 {md} 日 23:59（GMT+8）前到等级中心领取。使用旧版 App？请更新 App 或登录 789Bingo 网站领取。": "Happy Birthday from 789Bingo! Your PHP488 VIP Birthday Bonus is ready. Claim it in Level Center by 23:59 {md} (GMT+8). Older app? Update it or claim on the 789Bingo website.（示意）",
   /* 领取期限英文日期统一写「23:59 {Mon} {d} (GMT+8)」（例「by 23:59 Oct 27 (GMT+8)」，检查报告 R3-23）：上面带期限的句子用 {md} 取「m 月 d」，再按下面 12 条换成英文月份缩写 */
   /* 第 11 批：「10 月达成…」两句须排在「1 月 {d}」…「12 月 {d}」之前，否则会被「10 月 {d}」先匹配（原顺序时英文预览译错） */
-  "10 月达成 {lv} 保级投注，{a} 待领取，{e}有效。": "October: {lv} Ret. Bet reached! Claim {a} {e}.（示意）",   /* {e} =「MM-DD 前」→「by Nov 15」（第 11 批 C14） */
-  "10 月达成 {lv} 保级投注，{a} 已到账。": "October: {lv} Ret. Bet reached! {a} credited.（示意）",
+  "10 月达成 {lv} 保级投注，{a} 待领取，{e}有效。": "Oct: {lv} Ret. Bet reached! Claim {a} {e}.（示意）",   /* {e} =「MM-DD 前」→「by Nov 15」（第 11 批 C14） */
+  "10 月达成 {lv} 保级投注，{a} 已到账。": "Oct: {lv} Ret. Bet reached! {a} credited.（示意）",
   "1 月 {d}": "Jan {d}",
   "2 月 {d}": "Feb {d}",
   "3 月 {d}": "Mar {d}",
@@ -335,7 +401,7 @@ window.PROTO_EN = {
 
   /* ===== 强制审核生效时替换「已到账」、驳回统一文案（用户 2026-10-20，三个迭代共用）：只新增 ===== */
   "审核中，审核通过后到账": "Under review · credited once approved（示意）",
-  "审核未通过，如有疑问请联系客服": "Not approved. Contact CS for help.（示意）",
+  "审核未通过，如有疑问请联系客服": "Not approved. Questions? Contact Customer Service.（示意）",
   "（风控放行后：VIP11 升级奖励审核中，审核通过后到账，不补弹升级弹窗）": "(After release: VIP11 Upgrade under review, credited once approved; no pop-up.)（示意）",
   "（老版本 App：玩家升到 VIP11，升级奖励审核中，审核通过后到账，不弹升级弹窗）": "(Older app: reached VIP11; Upgrade under review, credited once approved; no pop-up.)（示意）",
   "（强制审核生效：审核通过到账时才发送，审核中、未通过不发）": "(Review on: sent only when approved & credited)（示意）",
@@ -347,7 +413,7 @@ window.PROTO_EN = {
   "PHP488 VIP 生日奖励已到账！登录 789Bingo 查看奖励。": "PHP488 VIP Birthday Bonus credited! Log in to 789Bingo to check your reward.（示意）",
   "（强制审核不生效：不在审核时发短信）": "(Review off: no review SMS)（示意）",
   "（审核中：不发短信，审核通过、实际到账时才发）": "(Under review: no SMS until approved)（示意）",
-  "（审核未通过：不发短信；页面显示「审核未通过，如有疑问请联系客服」）": "(Rejected: no SMS; page shows \"Not approved. Contact CS for help.\")（示意）",
+  "（审核未通过：不发短信；页面显示「审核未通过，如有疑问请联系客服」）": "(Rejected: no SMS; page shows \"Not approved. Questions? Contact Customer Service.\")（示意）",
   "（审核未通过：{date} 00:00 起生日卡片不再显示）": "(Rejected: card hidden from {date} 00:00)（示意）",
 
   /* ===== 列表分页「加载更多」（用户 2026-10-20 / 规范 v5.41，三个迭代共用）：只新增；「加载中…」「加载失败，点击重试」沿用上方已有条目 ===== */
@@ -377,14 +443,14 @@ window.PROTO_EN = {
   "未达到 VIP1": "VIP1 not reached（示意）",
 
   /* ===== VIP 规则弹窗：「详情」统一为按钮实际文字「查看详情」（检查报告 Q-52，2026-10-21，full）：只新增 ===== */
-  "请在过期前在生日卡片或等级卡「查看详情」中领取。": "Claim it on the birthday card or in your level card's Details before it expires.（示意）",
-  "升级奖励、保级奖励自动到账；生日奖励可在生日卡片或等级卡「查看详情」中领取。": "Upgrade and Retention Bonuses are credited automatically; claim your Birthday Bonus on the birthday card or in your level card's Details.（示意）",
+  "请在过期前在生日卡片或等级卡「查看详情」中领取。": "Claim it on the birthday card or in Details before it expires.（示意）",
+  "升级奖励、保级奖励自动到账；生日奖励可在生日卡片或等级卡「查看详情」中领取。": "Upgrade and Retention Bonuses are auto-credited. Claim the Birthday Bonus on the birthday card or in Details.（示意）",
   "手动领取的奖励可在奖励卡片或等级卡「查看详情」中领取，过期作废。": "Claim on the reward card or in Details; unclaimed rewards expire.（示意）",
   /* VIP通知页面「普通用户 Level 升级」场景说明（检查报告 Q-39）：只新增 */
   "（前台显示方式为「会员身份」：Level 升级不弹窗，与现有口径一致）": "(Display mode is Member status: no Level-up pop-up, as today.)（示意）",
 
   /* ===== VIP 规则弹窗：只计 6 大类游戏（用户 2026-10-21，检查问题第二批 Q-21，v1.0）：只新增 ===== */
-  "只有 Slot、Casino、Poker、Bingo、Arcade、Fishing 游戏的有效投注计入 VIP 进度和保级；Perya、ESports 等其他游戏的投注不计入。": "Only valid bets on Slot, Casino, Poker, Bingo, Arcade and Fishing games count toward VIP progress and retention; bets on other games, such as Perya and ESports, do not count.（示意）",
+  "只有 Slot、Casino、Poker、Bingo、Arcade、Fishing 游戏的有效投注计入 VIP 进度和保级；Perya、ESports 等其他游戏的投注不计入。": "Only valid bets on Slot, Casino, Poker, Bingo, Arcade and Fishing count toward VIP progress and retention. Other games, like Perya and ESports, don't count.（示意）",
 
   /* ===== VIP通知页面：审核到账短信示例与后台系统预设一致（中文以后台预设为准，用户 2026-10-22）：只新增；英文为示意，待运营定稿 ===== */
   "恭喜升级到 VIP14！PHP2,000 VIP 升级奖励已到账！登录 789Bingo 查看奖励。": "Congrats on reaching VIP14! PHP2,000 VIP Upgrade Bonus credited! Log in to 789Bingo to check your reward.（示意）",
@@ -397,7 +463,7 @@ window.PROTO_EN = {
   "升级到 {lv}，{a} 待领取，{e}有效。": "Reached {lv}! Claim {a} {e}.（示意）",   /* {e} =「MM-DD 前」，按下方「MM-DD 前」条目换成「by Oct 27」（第 11 批 C14 英文日期） */
   "升级到 {lv}，{a} 已到账。": "Reached {lv}! {a} credited.（示意）",
   "升级到 {lv}，{a} 待领取，有效至 {d}。": "Reached {lv}! Claim {a}. Valid until {d}.（示意）",   /* 第 17 批 W05（v1.3）：截止日期单独成句，与 PRD 第 6 章一致，每笔都有截止日期；第 12 批 C12（v1.3 站内信「有效至 MM-DD」）：须排在下一条「升级到 {lv}」之前，否则被它先匹配 */
-  "升级到 {lv}": "Upgrade to {lv}（示意）",
+  "升级到 {lv}": "Level up to {lv}（示意）",
   "VIP 等级一览": "VIP Levels（示意）",
   "当前等级": "Current（示意）",
   "未到达": "Locked（示意）",
@@ -407,7 +473,7 @@ window.PROTO_EN = {
   "生日奖金": "Birthday Bonus（示意）",
   "升级条件": "To upgrade（示意）",
   "累计有效投注 {a} 且 累计充值 {b}": "Total Bet {a} and Total Dep. {b}（示意）",
-  "每月保级投注 {a}": "Monthly retention bet {a}（示意）",
+  "每月保级投注 {a}": "Ret. Bet/m {a}（示意）",
   "VIP 等级表": "VIP Level Table（示意）",
   "等级": "Level（示意）",
   "保级投注": "Ret. Bet（示意）",
@@ -415,16 +481,16 @@ window.PROTO_EN = {
   "下一级": "Next level（示意）",
   "本月保级": "This month's retention（示意）",
   "还差 {a}": "{a} more（示意）",   /* 第 17 批 W20（v1.3）：差额统一叫「还差」，英文统一「{a} more」 */
-  "本月保级成功 ✓": "Retention achieved ✓（示意）",
-  "恢复": "Restore（示意）",
+  "本月保级成功 ✓": "Retained ✓（示意）",
+  "恢复": "Back（示意）",
   "达到 {a} 有效投注，次月恢复到 {lv}": "Bet {a} this month to return to {lv} next month（示意）",
-  "已达到恢复条件 ✓": "Restore requirement met ✓（示意）",
-  "超过历史最高 {lv} 才能直接升级": "Go beyond your highest level ({lv}) to upgrade instantly（示意）",
+  "已达到恢复条件 ✓": "Target met ✓（示意）",
+  "超过历史最高 {lv} 才能直接升级": "Instant upgrade only above your highest ({lv})（示意）",
   "你已是最高等级": "You're at the top level（示意）",
   "未加入 VIP": "Not in VIP（示意）",
   "未登录": "Not logged in（示意）",
   "领取中…": "Claiming…（示意）",
-  "降级后，当月有效投注达到高一级的保级投注，次月恢复 1 级，最多恢复到你到达过的最高等级；累计有效投注和累计充值达到比你到达过的最高等级更高的要求时，立即升级。": "After dropping, reach the retention bet of the level above in a month and you go back up 1 level next month, up to your highest level reached. Reach the requirements of a level above your highest level and you are upgraded instantly.（示意）",
+  "降级后，当月有效投注达到高一级的保级投注，次月恢复 1 级，最多恢复到你到达过的最高等级；累计有效投注和累计充值达到比你到达过的最高等级更高的要求时，立即升级。": "After dropping, reach the next level's Ret. Bet in a month to go up 1 level next month, up to your highest level. If your Total Bet and Total Dep. meet a level above your highest, you upgrade instantly.（示意）",
   "大厅": "Lobby",
   "升级奖金 {a} 已到账": "{a} Upgrade Bonus credited（示意）",
 
@@ -440,7 +506,7 @@ window.PROTO_EN = {
   /* v1.2 降级与恢复规则改为「达到当前等级保级投注即次月恢复 1 级」（用户 2026-10-27）：只新增；原 v1.2 第 7 条「降级后，当月有效投注达到高一级的保级投注…」已不用，条目保留 */
   /* v1.2 用户 2026-10-28：VIP0 显示名改为「普通玩家」、「下月」统一为「次月」：只新增，不改旧键（封存版和 v1.2 原有键都保留） */
   /* v1.2 前台文字精简（用户 2026-10-28）：普通玩家前台显示名精简（2026-10-29 起统一为 VIP0）；卡片、弹窗、提示、规则、通知、短信中文精简，英文同样精简。只新增，v1.2 不再使用的旧条目已删除（封存版在用的保留） */
-  "部分 VIP 奖金暂未发放，有疑问联系客服": "Some VIP bonuses are on hold. Questions? Contact CS.（示意）",
+  "部分 VIP 奖金暂未发放，有疑问联系客服": "Some VIP bonuses are on hold. Questions? Contact Customer Service.（示意）",
   "登录查看 VIP 进度": "Log in to view VIP progress（示意）",
   "完成 KYC 加入 VIP": "Complete KYC to join VIP（示意）",
   "加入时按累计定级，补发升级奖金": "Level set by your totals; past Upgrade Bonuses paid（示意）",
@@ -449,22 +515,23 @@ window.PROTO_EN = {
   "结算中": "Settling（示意）",   /* 封存版本在用；v1.2 前台不显示结算（规则 N12 ⑤） */
   "历史最高": "Highest（示意）",
   "次月恢复": "Back next month（示意）",
-  "达到保级投注可得": "Hit its Ret. Bet（示意）",
+  "达到保级投注可得": "Hit its Ret. Bet（示意）",   /* v1.2 原型仍在用，保留 */
+  "达到每月奖金投注可得": "Hit its Monthly Bonus bet（示意）",   /* v1.3 VIP中心非当前卡每月奖金（用户 2026-11-09） */
   "升级后可得": "After upgrade（示意）",
   "进行中": "In progress（示意）",
   "生日当天为该级可领": "If this level on B-day（示意）",
   "领取成功，已到账": "Claimed & credited（示意）",
   "领取失败，请重试": "Claim failed. Try again.（示意）",
-  "VIP 暂未开放": "VIP is not available yet（示意）",
+  "VIP 暂未开放": "VIP not open yet（示意）",
   "左右滑动查看": "Swipe for more（示意）",
   "VIP 等级从 VIP1 到 SUPER VIP，VIP1 以下为 VIP0。累计有效投注和累计充值同时达到某级要求，立即升到该级。": "VIP levels run from VIP1 to SUPER VIP; below VIP1 is VIP0. Meet both a level's Total Bet and Total Dep. to upgrade to it instantly.（示意）",
-  "累计有效投注、累计充值从注册起计算，有效投注包括平台所有游戏。": "Total Bet and Total Dep. count from registration; valid bets on all platform games count.（示意）",   /* 第 11 批：VIP 规则第 2 条 */
-  "当月有效投注达到当前等级保级投注即保级，次月保持等级；当月升级的按新等级考核。": "Reach your level's Ret. Bet in valid bets in a calendar month to keep your level next month. If you upgrade mid-month, the new level applies.（示意）",
+  "累计有效投注、累计充值从注册起计算，有效投注包括平台所有游戏。": "Total Bet and Total Dep. count from registration. Valid bets on all games count.（示意）",   /* 第 11 批：VIP 规则第 2 条 */
+  "当月有效投注达到当前等级保级投注即保级，次月保持等级；当月升级的按新等级考核。": "Reach your level's Ret. Bet in valid bets this month to keep it next month. If you upgrade this month, the new level applies.（示意）",
   "未保级：次月降 1 级（每月最多降 1 级），VIP1 降为 VIP0；月度奖金照第 5 条发放。": "Miss it: you drop 1 level next month (at most 1 per month); VIP1 drops to VIP0. The Monthly Bonus still follows rule 5.（示意）",
-  "降级后（含降为 VIP0）：当月达到哪一级的保级投注，次月直接恢复到该级，最高到历史最高等级；超过历史最高的等级按累计立即升级。例：连续 3 个月未保级，由 VIP5 降到 VIP2；之后当月有效投注 ₱80,000 达到 VIP4 保级投注 → 次月回到 VIP4，可领 ₱28。": "After dropping (incl. to VIP0): reach a level's Ret. Bet in a month and you go straight back to that level next month, up to your highest level; levels above your highest are reached instantly by your totals. E.g. missed Ret. Bet 3 months in a row and dropped from VIP5 to VIP2, then bet ₱80,000 in a month (VIP4's Ret. Bet) → back to VIP4 next month, ₱28 to claim.（示意）",
-  "降级后（含降为 VIP0）：当月达到哪一级的保级投注，次月直接恢复到该级，最高到历史最高等级；超过历史最高的等级按累计立即升级。例：VIP5 降为 VIP2 后，当月有效投注 ₱80,000 达到 VIP4 保级投注 → 次月回到 VIP4，可领 ₱28。": "After dropping (incl. to VIP0): reach a level's Ret. Bet in a month and you go straight back to that level next month, up to your highest level; levels above your highest are reached instantly by your totals. E.g. dropped from VIP5 to VIP2, bet ₱80,000 in a month (VIP4's Ret. Bet) → back to VIP4 next month, ₱28 to claim.（示意）",
+  "降级后（含降为 VIP0）：当月达到哪一级的保级投注，次月直接恢复到该级，最高到历史最高等级；超过历史最高的等级按累计立即升级。例：连续 3 个月未保级，由 VIP5 降到 VIP2；之后当月有效投注 ₱80,000 达到 VIP4 保级投注 → 次月回到 VIP4，可领 ₱28。": "After dropping (incl. to VIP0): reach a level's Ret. Bet in a month to return to it next month, up to your highest level. Levels above your highest are reached instantly by your totals. E.g. missed 3 months in a row, VIP5 → VIP2; then bet ₱80,000 in a month (VIP4's Ret. Bet) → VIP4 next month, ₱28 to claim.（示意）",
+  "降级后（含降为 VIP0）：当月达到哪一级的保级投注，次月直接恢复到该级，最高到历史最高等级；超过历史最高的等级按累计立即升级。例：VIP5 降为 VIP2 后，当月有效投注 ₱80,000 达到 VIP4 保级投注 → 次月回到 VIP4，可领 ₱28。": "After dropping (incl. to VIP0): reach a level's Ret. Bet in a month to return to it next month, up to your highest level. Levels above your highest are reached instantly by your totals. E.g. VIP5 → VIP2, then bet ₱80,000 in a month (VIP4's Ret. Bet) → VIP4 next month, ₱28 to claim.（示意）",
   "每月初按上月有效投注评定等级和月度奖金。": "At the start of each month, your level and Monthly Bonus are set by last month's valid bets.（示意）",   /* 第 11 批：VIP 规则第 8 条 */
-  "须完成 KYC 才能加入 VIP；加入时按累计定级，已达到等级的升级奖金一并补发。": "KYC is required to join VIP. Your level is then set by your totals, and Upgrade Bonuses for levels already reached are paid too.（示意）",
+  "须完成 KYC 才能加入 VIP；加入时按累计定级，已达到等级的升级奖金一并补发。": "Complete KYC to join VIP. Your level is then set by your totals, and Upgrade Bonuses for levels reached are paid.（示意）",
   "已升级到 {lv}": "You've reached {lv}!（示意）",
   "明天是你的生日！明天到 789Bingo VIP中心领取 VIP 生日奖金。": "Your birthday is tomorrow! Claim your VIP Birthday Bonus in 789Bingo VIP Center tomorrow.（示意）",
   "789Bingo 祝你生日快乐！PHP488 VIP 生日奖金请在 10 月 27 日 23:59（GMT+8）前到 VIP中心领取。": "Happy Birthday from 789Bingo! Claim your PHP488 VIP Birthday Bonus in VIP Center by 23:59 Oct 27 (GMT+8).（示意）",
@@ -482,10 +549,10 @@ window.PROTO_EN = {
   "次月等级": "Next month's level（示意）",
   "完成 KYC，已定级 {lv}": "KYC done! You're now {lv}（示意）",
   /* v1.2 规则 6–8（用户 2026-10-29）：手动领取（等级卡上领取、升级确认弹窗点 OK 领取、登录提醒）；旧的「已到账」生成时文案、生日卡片、升级奖金发放中等 v1.2 条目已删除 */
-  "首次到达某级得该级升级奖金（跨多级逐级生成），每级只发一次，降级后再到达不重发。": "Get a level's Upgrade Bonus the first time you reach it (one for each level you pass). Each is given once only, even if you drop and reach it again.（示意）",
-  "月度奖金：当月有效投注达到哪一级的保级投注（最高到历史最高等级），下月可领取哪一级的月度奖金。": "Monthly Bonus: next month, claim the Monthly Bonus of the highest level whose Ret. Bet your valid bets reached this month (up to your highest level).（示意）",   /* 第 11 批：VIP 规则第 5 条 */
+  "首次到达某级得该级升级奖金（跨多级逐级生成），每级只发一次，降级后再到达不重发。": "Get a level's Upgrade Bonus the first time you reach it (one per level passed). Each is paid once, even if you drop and reach it again.（示意）",
+  "月度奖金：当月有效投注达到哪一级的保级投注（最高到历史最高等级），下月可领取哪一级的月度奖金。": "Monthly Bonus: next month, claim the Monthly Bonus of the highest level whose Ret. Bet you reach this month (up to your highest level).（示意）",   /* 第 11 批：VIP 规则第 5 条 */
   "升级、月度、生日奖金在等级卡「查看详情」里领取，自获得当天起 {n} 天内有效（生日奖金自生日当天起，含当天），过期不能再领。": "Claim Upgrade, Monthly and Birthday Bonuses in a level card's Details within {n} days from the day you get them (Birthday Bonus: from your birthday; incl. that day). Unclaimed bonuses expire.（示意）",   /* 第 11 批：VIP 规则第 9 条 · 全手动（待运营定稿） */
-  "生日奖金：每年一次，金额按生日所在月份评定后的等级确定；生日当天起在当前等级详情里领取。": "Birthday Bonus: once a year. The amount follows your level as set for your birthday month; claim it in your current level's Details from your birthday.（示意）",   /* 第 11 批：VIP 规则第 10 条 */
+  "生日奖金：每年一次，金额按生日所在月份评定后的等级确定；生日当天起在当前等级详情里领取。": "Birthday Bonus: once a year, paid at your birthday-month level. Claim it in your current level's Details from your birthday.（示意）",   /* 第 11 批：VIP 规则第 10 条 */
   "升级、月度、生日奖金在此处领取，过期作废": "Claim bonuses here. Unclaimed bonuses expire.（示意）",
   "升级奖金 {a}": "Upgrade Bonus {a}（示意）",
   /* 第 11 批 C14 英文日期统一「Oct 27」：「MM-DD 前」按月份换成「by Mon D」（日为个位时去掉前导 0，「0{d}」条目须在前）；未命中时退回下方「{d} 前」 */
@@ -513,18 +580,43 @@ window.PROTO_EN = {
   "11-{d} 前": "by Nov {d}",
   "12-0{d} 前": "by Dec {d}",
   "12-{d} 前": "by Dec {d}",
-  "{d} 前": "By {d}（示意）",
+  /* 2026-11-10：截止日期跨年时写「YYYY-MM-DD 前」（规则 N42），英文「by Jan 3, 2027」；须排在下方「{d} 前」之前；「-0{d}」须排在「-{d}」之前 */
+  "{y}-01-0{d} 前": "by Jan {d}, {y}",
+  "{y}-01-{d} 前": "by Jan {d}, {y}",
+  "{y}-02-0{d} 前": "by Feb {d}, {y}",
+  "{y}-02-{d} 前": "by Feb {d}, {y}",
+  "{y}-03-0{d} 前": "by Mar {d}, {y}",
+  "{y}-03-{d} 前": "by Mar {d}, {y}",
+  "{y}-04-0{d} 前": "by Apr {d}, {y}",
+  "{y}-04-{d} 前": "by Apr {d}, {y}",
+  "{y}-05-0{d} 前": "by May {d}, {y}",
+  "{y}-05-{d} 前": "by May {d}, {y}",
+  "{y}-06-0{d} 前": "by Jun {d}, {y}",
+  "{y}-06-{d} 前": "by Jun {d}, {y}",
+  "{y}-07-0{d} 前": "by Jul {d}, {y}",
+  "{y}-07-{d} 前": "by Jul {d}, {y}",
+  "{y}-08-0{d} 前": "by Aug {d}, {y}",
+  "{y}-08-{d} 前": "by Aug {d}, {y}",
+  "{y}-09-0{d} 前": "by Sep {d}, {y}",
+  "{y}-09-{d} 前": "by Sep {d}, {y}",
+  "{y}-10-0{d} 前": "by Oct {d}, {y}",
+  "{y}-10-{d} 前": "by Oct {d}, {y}",
+  "{y}-11-0{d} 前": "by Nov {d}, {y}",
+  "{y}-11-{d} 前": "by Nov {d}, {y}",
+  "{y}-12-0{d} 前": "by Dec {d}, {y}",
+  "{y}-12-{d} 前": "by Dec {d}, {y}",
+  "{d} 前": "Valid until {d}（示意）",
   "{d} 前有效": "Valid until {d}（示意）",
   "暂停发放": "On hold（示意）",
   /* 第 11 批：领取结果提示统一按 PRD 第 4 章「领取结果」表 */
   "奖金已过期": "Bonus expired（示意）",
-  "暂不可领取，有疑问联系客服": "Can't claim now. Questions? Contact CS.（示意）",
+  "暂不可领取，有疑问联系客服": "Can't claim now. Questions? Contact Customer Service.（示意）",
   "奖金已领取": "Bonus already claimed（示意）",
   "部分奖金领取失败，请重试": "Some bonuses failed. Try again.（示意）",
   "没有可领取的奖金": "No bonuses to claim（示意）",
   "恭喜升级到 {lv}": "Level up! {lv}（示意）",
   "VIP 奖金待领取": "VIP bonuses to claim（示意）",
-  "你有 {n} 笔 VIP 奖金待领取，共 {a}": "You have {n} VIP bonus(es) to claim, {a} in total（示意）",
+  "你有 {n} 笔 VIP 奖金待领取，共 {a}": "{n} VIP bonuses to claim, {a} total（示意）",
   "稍后": "Later（示意）",
   "去领取": "Claim（示意）",
   "‹ 返回平台": "‹ Back（示意）",
@@ -549,7 +641,7 @@ window.PROTO_EN = {
   "表格说明": "How to read（示意）",
   /* 第 11 批 D03：「?」弹窗精简为 PRD 4.2.1 第 6 条新文案（文案确认 T12） */
   "累计有效投注和累计充值都达到门槛即升级，每级发一次，{n} 天内领取。": "Reach both the Total Bet and Total Dep. targets to level up. Paid once per level; claim within {n} days.（示意）",
-  "按本月有效投注达到的最高保级等级发放，下月领取，{n} 天内有效。": "Paid for the highest level whose Ret. Bet your valid bets reach this month. Claim next month, within {n} days.（示意）",
+  "按本月有效投注达到的最高保级等级发放，下月领取，{n} 天内有效。": "Paid for the highest level whose Ret. Bet you reach this month. Claim next month, within {n} days.（示意）",
   /* v1.3 第 12 批（VIP中心，2026-11-02）：「每月奖金」统一用词、详情底部说明按领取方式、VIP 规则第 9、10 条和有效期一条、详情「本月投注」标签、领取结果「奖金已失效」；旧键保留给 v1.2 */
   "按本月有效投注达到的最高每月奖金等级发放，下月领取，{n} 天内有效。": "Paid for the highest level whose Monthly Bonus bet you reach this month. Claim next month, within {n} days.（示意）",
   "升级、每月、生日奖金在此处领取，过期作废": "Claim bonuses here. Unclaimed bonuses expire.（示意）",
@@ -557,11 +649,11 @@ window.PROTO_EN = {
   "奖金自动到账": "Bonuses are credited automatically.（示意）",
   "升级、每月、生日奖金在等级卡「查看详情」里领取，自获得当天起 {n} 天内有效（生日奖金自生日当天起，含当天），过期不能再领。": "Claim Upgrade, Monthly and Birthday Bonuses in a level card's Details within {n} days from the day you get them (Birthday Bonus: from your birthday; incl. that day). Unclaimed bonuses expire.（示意）",
   "升级奖金到账后直接进入余额；每月、生日奖金在当前等级「查看详情」里领取，自获得当天起 {n} 天内有效（生日奖金自生日当天起，含当天），过期不能再领。": "Upgrade Bonuses go straight to your balance. Claim Monthly and Birthday Bonuses in your current level's Details within {n} days from the day you get them (Birthday Bonus: from your birthday; incl. that day). Unclaimed bonuses expire.（示意）",
-  "生日奖金：每年一次，金额按生日所在月份评定后的等级确定；生日当天自动到账。": "Birthday Bonus: once a year. The amount follows your level as set for your birthday month; credited automatically on your birthday.（示意）",
+  "生日奖金：每年一次，金额按生日所在月份评定后的等级确定；生日当天自动到账。": "Birthday Bonus: once a year, paid at your birthday-month level. Credited automatically on your birthday.（示意）",
   "本月投注": "This month（示意）",
   "奖金已失效": "Bonus no longer valid（示意）",
   "目标等级": "Target level（示意）",   /* 详情弹窗进度行「VIPk → VIP(k+1)」的 title */
-  "按生日月评定的等级发放，生日当天起 {n} 天内领取。": "Based on your level for your birthday month. Claim within {n} days from your birthday.（示意）",
+  "按生日月评定的等级发放，生日当天起 {n} 天内领取。": "Paid at your birthday-month level. Claim within {n} days from your birthday.（示意）",
   "底色表示进度，对勾表示已达成；生日奖金列的对勾表示若下月是你的生日月，按此等级发放。": "Shading shows progress; a tick means reached. In the Birthday Bonus column, the tick shows the level paid if next month is your birthday month.（示意）",
   "高亮行为你当前的等级。": "The highlighted row is your current level.",
   /* 升级 3 秒提示动画（用户 2026-10-30 新增「升级通知动画页面」，VIP通知页面同一实现）：段位徽章 +「LEVEL UP」+ 等级名，中英文界面都显示 LEVEL UP（用户 2026-10-30），替代原「恭喜升级到 {lv}」（该条保留给其他迭代） */
@@ -572,7 +664,7 @@ window.PROTO_EN = {
   "VIP 生日奖金已到账": "VIP Birthday Bonus credited（示意）",
   "生日快乐！{a} 已到账。": "Happy Birthday! {a} credited.（示意）",
   "{a} VIP 月度奖金已到账！登录 789Bingo 查看。": "{a} VIP Monthly Bonus credited! Log in to 789Bingo to check.（示意）",
-  "生日当天到账": "Credited on B-day（示意）",
+  "生日当天到账": "Credited on birthday（示意）",
   "VIP 奖金到账后直接进入余额，无需领取。": "VIP bonuses go straight to your balance. No need to claim.（示意）",
   "升级奖金到账后直接进入余额；月度、生日奖金在当前等级「查看详情」里领取，自获得当天起 {n} 天内有效（生日奖金自生日当天起，含当天），过期不能再领。": "Upgrade Bonuses go straight to your balance. Claim Monthly and Birthday Bonuses in your current level's Details within {n} days from the day you get them (Birthday Bonus: from your birthday; incl. that day). Unclaimed bonuses expire.（示意）",   /* 第 11 批：VIP 规则第 9 条 · 混合（示例：升级自动、月度和生日手动；待运营定稿） */
   /* 第 12 批（v1.3 等级卡改版、「保级 / 月度奖金」统一改为「每月奖金」，用户 2026-10-31；待运营定稿） */
@@ -582,7 +674,7 @@ window.PROTO_EN = {
   "VIP 每月奖金": "VIP Monthly Bonus（示意）",
   /* 第 12 批 C08：v1.3 现网升级弹窗（英文按 VIP通知页「评审待确认 › 文案定稿」的现网英文参考，待运营定稿）；两项合并的写法放在单项前面，避免被单项模板先匹配 */
   "恭喜！你已升级到 {lv}！": "Congratulations! You've leveled up to {lv}!（示意）",
-  "{a} 生日奖金 ＋ {b} 升级奖金待领取": "{a} Birthday + {b} Level-Up Bonus to claim（示意）",
+  /* 2026-11-10 删除单行键「{a} 生日奖金 ＋ {b} 升级奖金待领取」：v1.2、v1.3 原型都不再使用（都手动时分两行显示）。D12（用户 2026-11-09）：升级弹窗内沿用现网 Level-Up Bonus */
   "{a} 升级奖金待领取": "{a} Level-Up Bonus to claim（示意）",
   "{a} 生日奖金待领取": "{a} Birthday Bonus to claim（示意）",
   "获得 {a} 生日奖金 ＋ {b} 升级奖金。": "Get {a} Birthday + {b} Level-Up Bonus.（示意）",
@@ -597,23 +689,23 @@ window.PROTO_EN = {
   "VIP 每月奖金待领取": "VIP Monthly Bonus to claim（示意）",
   "VIP 每月奖金已到账": "VIP Monthly Bonus credited（示意）",
   "10 月达成 {lv} 每月奖金投注，{a} 待领取，有效至 {d}。": "Oct: {lv} Monthly Bonus bet reached! Claim {a}. Valid until {d}.（示意）",   /* 第 17 批 W05（v1.3）：与 PRD 第 6 章一致 */
-  "10 月达成 {lv} 每月奖金投注，{a} 已到账。": "October: {lv} Monthly Bonus bet reached! {a} credited.（示意）",
+  "10 月达成 {lv} 每月奖金投注，{a} 已到账。": "Oct: {lv} Monthly Bonus bet reached! {a} credited.（示意）",
   "生日快乐！{a} 待领取，有效至 {d}。": "Happy Birthday! Claim {a}. Valid until {d}.（示意）",
   "{a} VIP 每月奖金已到账！登录 789Bingo 查看。": "{a} VIP Monthly Bonus credited! Log in to 789Bingo to check.（示意）",
-  "投注已满足": "Bet ✓（示意）",
-  "充值已满足": "Deposit ✓（示意）",
-  "当月有效投注达到当前等级每月奖金投注，次月保持等级；当月升级的按新等级考核。": "Reach your current level's Monthly Bonus bet in valid bets this month to keep your level next month. If you level up this month, the new level's target applies.（示意）",
-  "每月奖金：当月有效投注达到哪一级的每月奖金投注（最高到历史最高等级），下月可领取哪一级的每月奖金。": "Monthly Bonus: next month you can claim the Monthly Bonus of the highest level whose Monthly Bonus bet you reach this month (up to your highest-ever level).（示意）",
-  "未达当前等级每月奖金投注：次月降 1 级（每月最多降 1 级），VIP1 降为 VIP0；每月奖金照第 5 条发放。": "Below your current level's Monthly Bonus bet: you drop 1 level next month (max 1 level per month); VIP1 drops to VIP0. Monthly Bonus is paid per rule 5.（示意）",
-  "降级后（含降为 VIP0）：当月达到哪一级的每月奖金投注，次月直接恢复到该级，最高到历史最高等级；超过历史最高的等级按累计立即升级。例：连续 3 个月未达每月奖金投注，由 VIP5 降到 VIP2；之后当月有效投注 ₱80,000 达到 VIP4 每月奖金投注 → 次月回到 VIP4，可领 ₱28。": "After dropping (incl. to VIP0): reach a level's Monthly Bonus bet this month and you return to that level next month, up to your highest-ever level. Levels above your highest-ever level are reached instantly by cumulative totals. E.g. miss the Monthly Bonus bet 3 months in a row: VIP5 → VIP2; then bet ₱80,000 in a month (VIP4's Monthly Bonus bet) → back to VIP4 next month, claim ₱28.（示意）",
+  "投注已满足": "Bet met（示意）",
+  "充值已满足": "Deposit met（示意）",
+  "当月有效投注达到当前等级每月奖金投注，次月保持等级；当月升级的按新等级考核。": "Reach your current level's Monthly Bonus bet in valid bets this month to keep it next month. If you level up this month, the new level applies.（示意）",
+  "每月奖金：当月有效投注达到哪一级的每月奖金投注（最高到历史最高等级），下月可领取哪一级的每月奖金。": "Monthly Bonus: next month, claim the Monthly Bonus of the highest level whose Monthly Bonus bet you reach this month (up to your highest level).（示意）",
+  "未达当前等级每月奖金投注：次月降 1 级（每月最多降 1 级），VIP1 降为 VIP0；每月奖金照第 5 条发放。": "Miss your current level's Monthly Bonus bet: you drop 1 level next month (max 1 per month); VIP1 drops to VIP0. Monthly Bonus follows rule 5.（示意）",
+  "降级后（含降为 VIP0）：当月达到哪一级的每月奖金投注，次月直接恢复到该级，最高到历史最高等级；超过历史最高的等级按累计立即升级。例：连续 3 个月未达每月奖金投注，由 VIP5 降到 VIP2；之后当月有效投注 ₱80,000 达到 VIP4 每月奖金投注 → 次月回到 VIP4，可领 ₱28。": "After dropping (incl. to VIP0): reach a level's Monthly Bonus bet this month to return to it next month, up to your highest level. Levels above your highest are reached instantly by your totals. E.g. missed 3 months in a row, VIP5 → VIP2; then bet ₱80,000 in a month (VIP4's Monthly Bonus bet) → VIP4 next month, claim ₱28.（示意）",
   "每月初按上月有效投注评定等级和每月奖金。": "At the start of each month, your level and Monthly Bonus are set by last month's valid bets.（示意）",
   /* 2026-11-02 复查：生日奖金有效期自可领取当天（生日和奖金生成日中较晚的一天）起算；「?」帮助按领取方式显示（旧键保留） */
   "升级、每月、生日奖金在等级卡「查看详情」里领取，自获得当天起 {n} 天内有效（生日奖金自可领取当天起，含当天），过期不能再领。": "Claim Upgrade, Monthly and Birthday Bonuses in a level card's Details within {n} days from the day you get them (Birthday Bonus: from the day it becomes claimable; incl. that day). Unclaimed bonuses expire.（示意）",
   "升级奖金到账后直接进入余额；每月、生日奖金在当前等级「查看详情」里领取，自获得当天起 {n} 天内有效（生日奖金自可领取当天起，含当天），过期不能再领。": "Upgrade Bonuses go straight to your balance. Claim Monthly and Birthday Bonuses in your current level's Details within {n} days from the day you get them (Birthday Bonus: from the day it becomes claimable; incl. that day). Unclaimed bonuses expire.（示意）",
   "累计有效投注和累计充值都达到门槛即升级，每级发一次，升级时自动到账。": "Reach both the Total Bet and Total Dep. targets to level up. Paid once per level; credited automatically when you level up.（示意）",
   "按本月有效投注达到的最高每月奖金等级发放，下月初自动到账。": "Paid for the highest level whose Monthly Bonus bet you reach this month. Credited automatically early next month.（示意）",
-  "按生日月评定的等级发放，生日当天自动到账。": "Based on your level for your birthday month. Credited automatically on your birthday.（示意）",
-  "按生日月评定的等级发放，自可领取当天起 {n} 天内领取。": "Based on your level for your birthday month. Claim within {n} days from the day it becomes claimable.（示意）",
+  "按生日月评定的等级发放，生日当天自动到账。": "Paid at your birthday-month level. Credited automatically on your birthday.（示意）",
+  "按生日月评定的等级发放，自可领取当天起 {n} 天内领取。": "Paid at your birthday-month level. Claim within {n} days once claimable.（示意）",
   /* 2026-11-02 第 13 批评审（R21、R34、R35、R41、R42）：VIP中心新增文案（旧键保留） */
   "✓ 投注已满足": "✓ Bet met（示意）",
   "✓ 充值已满足": "✓ Deposit met（示意）",
@@ -632,7 +724,7 @@ window.PROTO_EN = {
   "每月奖金（10 月）": "Monthly Bonus (Oct)（示意）",
   "每月奖金（11 月）": "Monthly Bonus (Nov)（示意）",
   "每月奖金（12 月）": "Monthly Bonus (Dec)（示意）",
-  "每月初按上月有效投注评定等级和每月奖金。KEEP = 次月保持当前等级；BACK VIPn = 次月恢复到 VIPn。": "At the start of each month, your level and Monthly Bonus are set by last month's valid bets. KEEP = you keep your level next month; BACK VIPn = you return to VIPn next month.（示意）",
+  "每月初按上月有效投注评定等级和每月奖金。KEEP = 次月保持当前等级；BACK VIPn = 次月恢复到 VIPn。": "At the start of each month, your level and Monthly Bonus are set by last month's valid bets. KEEP = keep your level next month; BACK VIPn = return to VIPn next month.（示意）",
   "升级奖金和每月奖金": "Upgrade and Monthly Bonuses",
   "升级奖金和生日奖金": "Upgrade and Birthday Bonuses",
   "每月奖金和生日奖金": "Monthly and Birthday Bonuses",
@@ -646,7 +738,7 @@ window.PROTO_EN = {
   "充值还差 {a}": "Deposit {a} more（示意）",
   "当前 {lv}": "Current {lv}（示意）",
   "奖金已到账": "Bonus already credited（示意）",
-  "降级后（含降为 VIP0）：当月达到哪一级的每月奖金投注，次月直接恢复到该级，最高到历史最高等级；超过历史最高的等级按累计立即升级。例：连续 3 个月未达每月奖金投注，由 VIP5 降到 VIP2；之后当月有效投注 ₱80,000 达到 VIP4 每月奖金投注 → 次月回到 VIP4，可领 ₱28。卡片上的 KEEP 表示次月保持当前等级，BACK VIPn 表示次月恢复到 VIPn。": "After dropping (incl. to VIP0): reach a level's Monthly Bonus bet this month and you return to that level next month, up to your highest-ever level. Levels above your highest-ever level are reached instantly by cumulative totals. E.g. miss the Monthly Bonus bet 3 months in a row: VIP5 → VIP2; then bet ₱80,000 in a month (VIP4's Monthly Bonus bet) → back to VIP4 next month, claim ₱28. On the card, KEEP = you keep your level next month; BACK VIPn = you return to VIPn next month.（示意）",
+  "降级后（含降为 VIP0）：当月达到哪一级的每月奖金投注，次月直接恢复到该级，最高到历史最高等级；超过历史最高的等级按累计立即升级。例：连续 3 个月未达每月奖金投注，由 VIP5 降到 VIP2；之后当月有效投注 ₱80,000 达到 VIP4 每月奖金投注 → 次月回到 VIP4，可领 ₱28。卡片上的 KEEP 表示次月保持当前等级，BACK VIPn 表示次月恢复到 VIPn。": "After dropping (incl. to VIP0): reach a level's Monthly Bonus bet this month to return to it next month, up to your highest level. Levels above your highest are reached instantly by your totals. E.g. missed 3 months in a row, VIP5 → VIP2; then bet ₱80,000 in a month (VIP4's Monthly Bonus bet) → VIP4 next month, claim ₱28. On the card, KEEP = keep your level next month; BACK VIPn = return to VIPn next month.（示意）",
   "升级、每月、生日": "Upgrade, Monthly and Birthday",
   "升级、每月": "Upgrade and Monthly",
   "升级、生日": "Upgrade and Birthday",
@@ -659,7 +751,7 @@ window.PROTO_EN = {
   "{t}奖金在等级卡「查看详情」里领取，自获得当天起 {n} 天内有效（含当天），过期不能再领。": "Claim {t} Bonuses in a level card's Details within {n} days from the day you get them (incl. that day). Unclaimed bonuses expire.（示意）",
   "累计有效投注和累计充值都达到门槛即升级，每级发一次，领取前一直有效。": "Reach both the Total Bet and Total Dep. targets to level up. Paid once per level; valid until claimed.（示意）",
   "按本月有效投注达到的最高每月奖金等级发放，下月领取，领取前一直有效。": "Paid for the highest level whose Monthly Bonus bet you reach this month. Claim next month; valid until claimed.（示意）",
-  "按生日月评定的等级发放，生日当天起可领，领取前一直有效。": "Based on your level for your birthday month. Claimable from your birthday; valid until claimed.（示意）",
+  "按生日月评定的等级发放，生日当天起可领，领取前一直有效。": "Paid at your birthday-month level. Claimable from your birthday; valid until claimed.（示意）",
   "升级、每月、生日奖金在此处领取": "Claim bonuses here.（示意）",
   "待领取的奖金在此处领取": "Claim pending bonuses here.（示意）",
   "升级、每月、生日奖金在此处领取，到截止日期未领取的作废": "Claim bonuses here. Bonuses with a deadline expire if unclaimed.（示意）",
@@ -670,18 +762,18 @@ window.PROTO_EN = {
   "{t}奖金在等级卡「查看详情」里领取，或在卡上点「领取 ₱x」一次领取。": "Claim {t} Bonuses in a level card's Details, or tap Claim ₱x on the card to claim them all at once.（示意）",
   "{t}奖金在等级卡「查看详情」里领取，其中{a}奖金领取前一直有效。": "Claim {t} Bonuses in a level card's Details. {a} Bonuses stay valid until claimed.（示意）",
   /* 第 18 批 X01（v1.3）：VIP 规则第 10 条拆成有效期一句和「只能领取最新一笔」一句（后一句不含升级奖金） */
-  "{t}奖金自获得当天起 {n} 天内有效（生日奖金自可领取当天起，含当天），过期不能再领。": "{t} Bonuses are valid for {n} days from the day you get them (Birthday Bonus: from the day it becomes claimable; incl. that day).（示意）",
-  "{t}奖金自获得当天起 {n} 天内有效（含当天），过期不能再领。": "{t} Bonuses are valid for {n} days from the day you get them (incl. that day).（示意）",
-  "自获得当天起，升级奖金 {a} 天、每月奖金 {b} 天、生日奖金 {c} 天内有效（生日奖金自可领取当天起，含当天），过期不能再领。": "Valid from the day you get them: Upgrade {a} days, Monthly {b} days, Birthday {c} days (Birthday Bonus: from the day it becomes claimable; incl. that day).（示意）",
-  "自获得当天起，升级奖金 {a} 天、生日奖金 {c} 天内有效（生日奖金自可领取当天起，含当天），过期不能再领。": "Valid from the day you get them: Upgrade {a} days, Birthday {c} days (Birthday Bonus: from the day it becomes claimable; incl. that day).（示意）",
-  "自获得当天起，每月奖金 {b} 天、生日奖金 {c} 天内有效（生日奖金自可领取当天起，含当天），过期不能再领。": "Valid from the day you get them: Monthly {b} days, Birthday {c} days (Birthday Bonus: from the day it becomes claimable; incl. that day).（示意）",
-  "自获得当天起，升级奖金 {a} 天、每月奖金 {b} 天内有效（含当天），过期不能再领。": "Valid from the day you get them: Upgrade {a} days, Monthly {b} days (incl. that day).（示意）"
+  "{t}奖金自获得当天起 {n} 天内有效（生日奖金自可领取当天起，含当天），过期不能再领。": "{t} Bonuses are valid for {n} days from the day you get them (Birthday Bonus: from the day it becomes claimable; incl. that day). Unclaimed bonuses expire.（示意）",
+  "{t}奖金自获得当天起 {n} 天内有效（含当天），过期不能再领。": "{t} Bonuses are valid for {n} days from the day you get them (incl. that day). Unclaimed bonuses expire.（示意）",
+  "自获得当天起，升级奖金 {a} 天、每月奖金 {b} 天、生日奖金 {c} 天内有效（生日奖金自可领取当天起，含当天），过期不能再领。": "Valid from the day you get them: Upgrade {a} days, Monthly {b} days, Birthday {c} days (Birthday Bonus: from the day it becomes claimable; incl. that day). Unclaimed bonuses expire.（示意）",
+  "自获得当天起，升级奖金 {a} 天、生日奖金 {c} 天内有效（生日奖金自可领取当天起，含当天），过期不能再领。": "Valid from the day you get them: Upgrade {a} days, Birthday {c} days (Birthday Bonus: from the day it becomes claimable; incl. that day). Unclaimed bonuses expire.（示意）",
+  "自获得当天起，每月奖金 {b} 天、生日奖金 {c} 天内有效（生日奖金自可领取当天起，含当天），过期不能再领。": "Valid from the day you get them: Monthly {b} days, Birthday {c} days (Birthday Bonus: from the day it becomes claimable; incl. that day). Unclaimed bonuses expire.（示意）",
+  "自获得当天起，升级奖金 {a} 天、每月奖金 {b} 天内有效（含当天），过期不能再领。": "Valid from the day you get them: Upgrade {a} days, Monthly {b} days (incl. that day). Unclaimed bonuses expire.（示意）"
 };
 
 /* 第19批：新文案对照，历史键保留。 */
 Object.assign(window.PROTO_EN, {
-  "仍待领取的奖金以详情为准。": "For bonuses still awaiting claim, check Details.",
-  "高亮行为你当前的等级。仍待领取的奖金以详情为准。": "The highlighted row is your current level. For bonuses still awaiting claim, check Details."
+  "仍待领取的奖金以详情为准。": "Check Details for bonuses still to claim.",
+  "高亮行为你当前的等级。仍待领取的奖金以详情为准。": "The highlighted row is your current level. Check Details for bonuses still to claim."
 });
 
 

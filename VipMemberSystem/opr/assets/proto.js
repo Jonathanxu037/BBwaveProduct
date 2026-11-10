@@ -179,13 +179,20 @@
     apps.forEach(function (app) { for (var ch = app.firstChild; ch; ch = ch.nextSibling) walk(ch); });   /* .app 外框本身的 aria-label（如「手机画面」）是原型说明，不翻译 */
     badge();
   }
-  function later() { if (!raf) raf = (window.requestAnimationFrame || setTimeout)(scan); }
+  /* 后台标签页、预览面板隐藏时浏览器会暂停 requestAnimationFrame（有时 document.hidden 仍为 false），
+     所以同时排一个 setTimeout，哪个先到就执行一次，翻译和漏翻统计照常更新（规范 v1109） */
+  function later() {
+    if (raf) return;
+    var done = false, run = function () { if (!done) { done = true; scan(); } };
+    raf = 1;
+    if (window.requestAnimationFrame) window.requestAnimationFrame(run);
+    setTimeout(run, 60);
+  }
   function start() {
     apps = [].slice.call(document.querySelectorAll(".app"));
     if (!apps.length) return;
     scan();
     apps.forEach(function (app) { new MutationObserver(later).observe(app, { childList: true, subtree: true, characterData: true, attributes: true, attributeFilter: ATTRS }); });
-    document.documentElement.setAttribute("data-proto-lang", "en"); report();
-  }
+    document.documentElement.setAttribute("data-proto-lang", "en"); report();  }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", start); else start();
 })();
