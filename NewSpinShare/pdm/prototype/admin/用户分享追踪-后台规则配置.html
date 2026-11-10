@@ -27,6 +27,10 @@
 .us-prm{display:flex;align-items:center;gap:10px;padding:6px 0;font-size:13px;color:#303133}
 .us-pl{display:inline-flex;align-items:center;gap:6px;color:#303133}
 .us-impt{font-weight:700;font-size:13px;color:#303133;margin-top:18px}
+/* 数据项标题文字左对齐：必填 * 挂在标题左侧留白里，不占标题文字的位置 */
+.frow>label,.frow>.fl{position:relative;padding-left:10px}
+.frow>label .req,.frow>.fl .req{position:absolute;left:0;margin:0}
+.us-old{padding-left:15px}   /* 与下方「分享任务配置」区块（边框 1px + 内边距 14px）的标题对齐 */
 </style>
 </head>
 <body>
@@ -98,10 +102,10 @@
             <div class="fsec">分享任务配置</div>
             <div class="frow"><span class="fl">分享任务<i class="qm" tabindex="0" data-tip="开启后，本活动单次中奖满足触发条件的新用户被标记为受限用户；关闭后，本活动不再标记，由本活动标记的受限用户也不再被拦截。新建活动默认关闭。">?</i></span><div class="fctl"><label class="us-sw"><input type="checkbox" id="master" data-dev="D20"><span id="masterT">关</span></label></div></div>
             <div id="shareCfg" hidden>
-              <div class="frow"><span class="fl"><span class="req">*</span>触发条件<i class="qm" tabindex="0" data-tip="本活动单次中奖金额与 ₱789 的比较方式。大于等于（默认）：中奖 ≥ ₱789 即受限；等于：只有中奖 = ₱789 才受限。金额固定，不可修改。">?</i></span>
+              <div class="frow"><span class="fl"><span class="req">*</span>触发条件<i class="qm" tabindex="0" data-tip="本活动单次中奖金额与触发金额的比较方式和金额。大于等于（默认）：中奖 ≥ 触发金额即受限；等于：只有中奖 = 触发金额才受限。触发金额必填，默认 789，大于 0，最多 2 位小数。">?</i></span>
                 <div class="fctl"><span class="us-ro">单次中奖金额</span>
                   <select class="bo-inp" id="actOp" aria-label="判断方式" style="min-width:100px;margin:0 6px" data-dev="D32"><option value="ge" selected>大于等于</option><option value="eq">等于</option></select>
-                  <span class="us-ro" data-dev="D33">₱789</span></div></div>
+                  <span class="us-ro">₱</span><input class="bo-inp" id="amt" style="width:110px" value="789" aria-label="触发金额" data-dev="D33"><span class="us-ferr" id="amtE"></span></div></div>
               <div class="frow"><span class="fl">强制绑定谷歌邮箱<i class="qm" tabindex="0" data-tip="开启后，受限用户未绑定谷歌邮箱时，不能进入游戏，也不能提交提款。默认开启。">?</i></span><div class="fctl"><label class="us-sw"><input type="checkbox" id="bindOn" checked data-dev="D22"><span>开</span></label></div></div>
               <div class="frow"><span class="fl">提款分享任务<i class="qm" tabindex="0" data-tip="开启后，受限用户完成分享任务前不能提交提款。默认开启。">?</i></span><div class="fctl"><label class="us-sw"><input type="checkbox" id="shareOn" checked data-dev="D23"><span>开</span></label></div></div>
               <div class="frow" style="align-items:start"><span class="fl" style="padding-top:6px"><span class="req">*</span>分享渠道<i class="qm" tabindex="0" data-tip="受限用户需要分享的渠道，及每个渠道要唤起的次数。本版本只有 Facebook、Messenger，默认都启用；「提款分享任务」开启时至少启用 1 个。">?</i></span>
@@ -142,13 +146,13 @@
       <button type="button" data-go="new"><span class="simtag">活动配置</span>创建活动（分享任务默认关）</button>
       <button type="button" data-go="edit"><span class="simtag">活动配置</span>编辑活动 1208（已开启）</button>
       <button type="button" id="simBad"><span class="simtag">校验</span>填入错误值</button>
-      <button type="button" id="simEq"><span class="simtag">触发条件</span>等于 ₱789</button>
+      <button type="button" id="simEq"><span class="simtag">触发条件</span>等于 ₱1,000</button>
     </div>
     <h3>规则批注</h3>
     <ol>
       <li><b>位置</b>：只针对新用户转盘活动。每个活动在自己的创建 / 编辑页里单独配置，区块放在「活动参数设定」之后；新建活动默认关闭。<span class="ref">PRD 规则 N23 · F05-01 分享任务配置</span></li>
       <li><b>分享任务开关</b>：开启后，本活动单次中奖满足触发条件的新用户被标记为受限用户；关闭后，本活动不再标记，由本活动标记的受限用户也不再被拦截（分享用户记录里这些用户的绑定状态、分享进度、任务状态显示「-」，「手动解除」置灰），重新开启后恢复拦截。关闭时区块里其他字段的值保留，重新开启时显示上次保存的值。活动本身关闭或结束，不影响已标记的受限用户。<span class="ref">PRD 规则 N3、N22</span></li>
-      <li><b>触发条件</b>：本活动单次中奖金额「大于等于」或「等于」₱789，默认「大于等于」；第 3 次转盘的大礼包也计入；金额固定，不可修改。修改判断方式只影响保存后的中奖，已标记的受限用户保持受限。<span class="ref">PRD 规则 N1、N2</span></li>
+      <li><b>触发条件</b>：本活动单次中奖金额「大于等于」或「等于」触发金额，判断方式默认「大于等于」，触发金额默认 789，可修改（必填，大于 0，最多 2 位小数）；第 3 次转盘的大礼包也计入。修改判断方式或触发金额只影响保存后的中奖，已标记的受限用户保持受限。<span class="ref">PRD 规则 N1、N2</span></li>
       <li><b>分享渠道</b>：本版本只有 Facebook（默认 1 次）、Messenger（默认 3 次），默认都启用；渠道启用时要求次数必填，整数 1–10；「提款分享任务」开启时至少启用 1 个渠道。<span class="ref">PRD 规则 N12、N25</span></li>
       <li><b>分享文案（含分享链接说明）</b>：分享链接固定为用户邀请链接，只在文案下方说明，不用配置；文案必填，≤ 800 字符（每个表情计 1 个字符），不校验语言，只支持 <code>{amount}</code>、<code>{USER_INVITE_LINK}</code> 两个变量。<span class="ref">PRD 规则 N18、N26</span></li>
       <li><b>受限用户按哪个活动的配置执行</b>：只按第一次触发受限的活动配置执行（绑定和提款开关、分享渠道、要求次数、分享文案）；该活动关闭分享任务或用户被手动解除后，在其他活动再中奖也不再受限。<span class="ref">PRD 规则 N23</span></li>
@@ -181,7 +185,7 @@
     if (!VIEWS[view]) view = "list";
     $("vList").hidden = view !== "list"; $("vForm").hidden = view === "list";
     $("crumb").innerHTML = "位置 › 活动中心 › 新用户转盘活动" + (view === "list" ? "" : " › <b>" + VIEWS[view] + "</b>");
-    if (view === "new") { setMaster(false); $("actTime").value = ""; }
+    if (view === "new") { setMaster(false); $("actTime").value = ""; $("actOp").value = "ge"; ["amt", "nFb", "nMs", "txt"].forEach(function (id) { $(id).value = $(id).defaultValue; }); $("chFb").checked = $("chMs").checked = true; $("nFb").disabled = $("nMs").disabled = false; ["amtE", "nFbE", "nMsE", "chE", "txtE"].forEach(function (id) { $(id).textContent = ""; }); drawPrev(); }
     if (view === "edit") { setMaster(true); $("actTime").value = "2026-10-01 00:00:00 ~ 2026-11-30 23:59:59"; }
     if (location.hash.slice(1) !== view) history.replaceState(null, "", "#" + view);
     window.scrollTo(0, 0);
@@ -191,9 +195,11 @@
   document.addEventListener("click", function (e) { var b = e.target.closest("[data-go]"); if (b) { e.preventDefault(); show(b.dataset.go); } });
   $("save").onclick = function () {
     var ok = true;
-    ["nFbE", "nMsE", "chE", "txtE"].forEach(function (id) { $(id).textContent = ""; });
+    ["amtE", "nFbE", "nMsE", "chE", "txtE"].forEach(function (id) { $(id).textContent = ""; });
     function err(id, m) { $(id).textContent = m; ok = false; }
     if ($("master").checked) {
+      var a = $("amt").value.trim();
+      if (!/^\d+(\.\d{1,2})?$/.test(a) || +a <= 0) err("amtE", "请输入大于 0 的金额，最多 2 位小数");
       if ($("chFb").checked && !intIn($("nFb").value.trim(), 1, 10)) err("nFbE", "请输入 1–10 的整数");
       if ($("chMs").checked && !intIn($("nMs").value.trim(), 1, 10)) err("nMsE", "请输入 1–10 的整数");
       if ($("shareOn").checked && !$("chFb").checked && !$("chMs").checked) err("chE", "请至少启用 1 个分享渠道");
@@ -202,12 +208,12 @@
       else if (clen(t) > 800) err("txtE", "最多 800 字符");
       else if ((t.match(/\{[^}]*\}/g) || []).some(function (v) { return v !== "{amount}" && v !== "{USER_INVITE_LINK}"; })) err("txtE", "只支持 {amount}、{USER_INVITE_LINK}");
     }
-    var m = document.createElement("div"); m.className = "bo-msg " + (ok ? "ok" : "err"); m.setAttribute("role", "status");
-    m.textContent = ok ? "保存成功" : "请检查标红的字段"; document.body.appendChild(m); setTimeout(function () { m.remove(); }, 1800);
+    /* 校验不通过时只在对应字段下方提示，不保存（PRD 6.1） */
+    if (ok) { var m = document.createElement("div"); m.className = "bo-msg ok"; m.setAttribute("role", "status"); m.textContent = "保存成功"; document.body.appendChild(m); setTimeout(function () { m.remove(); }, 1800); }
     if (ok) { if (location.hash === "#edit") $("shareCol").textContent = $("master").checked ? "开启" : "-"; setTimeout(function () { show("list"); }, 600); }
   };
-  $("simBad").onclick = function () { show("edit"); $("chFb").checked = false; $("chMs").checked = false; $("nFb").disabled = $("nMs").disabled = true; $("txt").value = "Won ₱{prize}!"; drawPrev(); $("save").click(); };
-  $("simEq").onclick = function () { show("edit"); $("actOp").value = "eq"; };
+  $("simBad").onclick = function () { show("edit"); $("chFb").checked = false; $("chMs").checked = false; $("nFb").disabled = $("nMs").disabled = true; $("txt").value = "Won ₱{prize}!"; $("amt").value = "0"; drawPrev(); $("save").click(); };
+  $("simEq").onclick = function () { show("edit"); $("actOp").value = "eq"; $("amt").value = "1000"; };
   drawPrev(); show(location.hash.slice(1) || "list");
 })();
 </script>

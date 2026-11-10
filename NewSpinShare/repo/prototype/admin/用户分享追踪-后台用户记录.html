@@ -160,7 +160,7 @@
     var a = $("fAcc").value.trim(), ac = $("fAct").value.trim(), k = $("fTask").value;
     DATA = ALL.filter(function (x) { return (!a || x.acc === a) && (!ac || x.act === ac) && (!k || x.task === k); }); PG.page = 1; FAIL = false; draw();
   };
-  $("xBtn").onclick = function () { var m = document.createElement("div"); m.className = "bo-msg ok"; m.setAttribute("role", "status"); m.textContent = "导出成功，共 " + DATA.length + " 条"; document.body.appendChild(m); setTimeout(function () { m.remove(); }, 1800); };
+  $("xBtn").onclick = function () { /* 演示：不超过 5 万行时直接下载文件，不弹提示（D45）；原型不生成文件 */ };
   $("pgPrev").onclick = function () { PG.page--; draw(); };
   $("pgNext").onclick = function () { PG.page++; draw(); };
   $("pgSize").onchange = function () { PG.size = +this.value; PG.page = 1; draw(); };

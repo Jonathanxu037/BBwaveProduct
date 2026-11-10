@@ -26,7 +26,6 @@ window.PROTO_EN = {
   "已完成": "Done",
   "分享任务已完成": "Share task completed",
   "无法打开分享，请稍后重试": "Unable to open sharing. Please try again later.",
-  "已打开 Google 注册页（外部页面）": "Google sign-up page opened",
   /* 现有页面（沿用线上文案） */
   "余额 ₱1,289.00": "Balance ₱1,289.00",
   "热门游戏": "Hot Games",

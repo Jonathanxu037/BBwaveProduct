@@ -24,6 +24,11 @@
 .us-gbtn b{width:22px;height:22px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(#ea4335 0 25%,#fbbc05 0 50%,#34a853 0 75%,#4285f4 0);color:#fff;font-size:12px}
 .us-gbtn[disabled]{opacity:.6;cursor:wait}
 .us-tip{font-size:11.5px;color:var(--app-muted);text-align:center;margin:-4px 0 0}
+/* Google 官方注册页示意（与绑定谷歌邮箱弹窗原型相同） */
+.us-gpage{position:absolute;inset:30px 0 0;background:#fff;color:#202124;padding:28px 24px;display:flex;flex-direction:column;gap:14px;z-index:6}
+.us-gpage h4{margin:0;font-size:20px;font-weight:500}
+.us-gpage .gbar{height:40px;border:1px solid #dadce0;border-radius:4px;padding:0 12px;display:flex;align-items:center;color:#80868b;font-size:13px}
+.us-gpage .gbtn{all:unset;cursor:pointer;align-self:flex-end;background:#1a73e8;color:#fff;border-radius:4px;padding:8px 18px;font-size:13px;font-weight:600}
 </style>
 </head>
 <body>
@@ -86,6 +91,16 @@
       </div>
     </div>
 
+    <!-- ============ Google 官方注册页（外部页面，示意） ============ -->
+    <div class="us-gpage" id="gPage" hidden>
+      <p class="ui-reqnote">Google 官方注册页示意（外部页面，不在本需求开发范围）：H5 在新标签页打开，App 在系统浏览器打开。</p>
+      <h4>Create a Google Account</h4>
+      <div class="gbar">Name</div>
+      <div class="gbar">Username @gmail.com</div>
+      <div class="gbar">Password</div>
+      <button class="gbtn" type="button" id="gBack">Next</button>
+    </div>
+
     <div class="toast" id="toast" role="status" hidden></div>
   </div>
 
@@ -103,7 +118,7 @@
     <div class="sim" id="simPanel"></div>
     <h3>规则批注</h3>
     <ol>
-      <li><b>先绑定</b>：受限用户 且「强制绑定谷歌邮箱」开启 且 未绑定谷歌邮箱 且 未手动解除绑定要求时，点「提交」先弹出绑定谷歌邮箱弹窗，说明文字为「绑定后继续提款」，不生成提款订单；绑定成功提示「绑定成功」并停留在提款页，用户再点「提交」才判断分享任务。<span class="ref">PRD 规则 N11 · F03-01 提交提款校验</span></li>
+      <li><b>先绑定</b>：受限用户 且 触发受限的活动「分享任务」开启 且「强制绑定谷歌邮箱」开启 且 未绑定谷歌邮箱 且 未手动解除绑定要求时，点「提交」先弹出绑定谷歌邮箱弹窗，说明文字为「绑定后继续提款」，不生成提款订单；绑定成功提示「绑定成功」并停留在提款页，用户再点「提交」才判断分享任务。<span class="ref">PRD 规则 N11 · F03-01 提交提款校验</span></li>
       <li><b>分享拦截</b>：受限用户不需要先绑定 且「提款分享任务」开启 且 分享任务未完成 且 未手动解除分享任务时，点「提交」弹出分享任务弹窗，不生成提款订单；已完成分享时直接继续提款流程。绕过前端直接提交同样拦截。<span class="ref">PRD 规则 N11 · F03-01 提交提款校验</span></li>
       <li><b>完成条件</b>：后台「分享渠道」里每个已启用的渠道，唤起次数都达到要求次数（本版本 Facebook 1 次、Messenger 3 次）；停用的渠道不要求，也不在弹窗显示。<span class="ref">PRD 规则 N12 · F03-02 分享与计次</span></li>
       <li><b>计次</b>：点弹窗「去分享」后成功唤起 Facebook / Messenger（App，或 H5 页面）即计 1 次，不判断用户是否发布或发送；在邀请好友页等弹窗外分享不计次。某渠道达到要求次数后，按钮显示「已完成」、不可点。<span class="ref">PRD 规则 N13</span></li>
@@ -185,7 +200,8 @@ P.$("gBtn").onclick = function () {
     else P.toast("绑定失败，请重试");
   }, 800);
 };
-P.$("regBtn").onclick = function () { P.toast("已打开 Google 注册页（外部页面）"); };
+P.$("regBtn").onclick = function () { P.$("gPage").hidden = false; };
+P.$("gBack").onclick = function () { P.$("gPage").hidden = true; P.$("bindOv").hidden = false; };
 P.$("bindX").onclick = function () { P.$("bindOv").hidden = true; };
 P.$("simBind").onclick = function () { P.set("wdUser", "unbound"); show("wd"); P.$("shareOv").hidden = true; P.$("bindOv").hidden = false; };
 function share(key, needKey) {
@@ -204,7 +220,7 @@ P.$("simOpen").onclick = openShare;
 P.$("simPart").onclick = function () { P.set("done", false); P.set("fb", 1); P.set("ms", 2); openShare(); };
 window.addEventListener("proto-change", function (e) { if (e.detail.key === "*") location.reload(); else if (!P.$("shareOv").hidden) draw(); });
 window.addEventListener("hashchange", function () { show(location.hash.slice(1) || "wd"); });
-document.addEventListener("click", function (e) { var b = e.target.closest("[data-go]"); if (b) { e.preventDefault(); P.$("shareOv").hidden = true; P.$("bindOv").hidden = true; show(b.dataset.go); } });
+document.addEventListener("click", function (e) { var b = e.target.closest("[data-go]"); if (b) { e.preventDefault(); P.$("shareOv").hidden = true; P.$("bindOv").hidden = true; P.$("gPage").hidden = true; show(b.dataset.go); } });
 show(location.hash.slice(1) || "wd");
 </script>
 </body>
