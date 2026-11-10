@@ -14,6 +14,7 @@
 .tg-head{display:flex;align-items:center;gap:10px;padding:8px 12px;background:#fff;border-bottom:1px solid #e7e7e7;z-index:2}
 .tg-head .tg-back{font-size:24px;color:#8a8a8a;width:16px}
 .tg-ava{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#6ec9f7,#3a94e0);color:#fff;display:grid;place-items:center;font-weight:700;font-size:16px;flex:none}
+.tg-ava.tg-ava-img{background:url(../../assets/tg-group-avatar.png) center/cover}
 .tg-head b{display:block;font-size:15px;font-weight:600;color:#000}
 .tg-head small{font-size:12.5px;color:#8e959b}
 .tg-hico{margin-left:auto;display:flex;gap:16px;color:#8a8f94;font-size:17px}
@@ -76,7 +77,7 @@
 .tg-menu{all:unset;cursor:pointer;background:#50a2e9;color:#fff;border-radius:16px;padding:5px 14px;font-size:14px;font-weight:600;font-family:inherit;flex:none}
 .tg-kbtg{all:unset;cursor:pointer;color:#9aa0a6;font-size:20px;flex:none}
 .tg-kbtg[aria-pressed="true"]{color:#50a2e9}
-.tg-send .tg-arrow{display:none}.tg-send.has .tg-mic{display:none}.tg-send.has .tg-arrow{display:inline}.tg-mic{filter:grayscale(1);opacity:.6;font-size:17px}
+.tg-send .tg-plane{display:block;margin:auto;color:#a9b3bc;transition:color .15s}.tg-send.has .tg-plane{color:#50a2e9}
 .tg-kbd{background:#fff;padding:4px 8px 10px;display:grid;gap:7px;z-index:2}
 .tg-kbd .tg-krow{display:grid;gap:7px}
 .tg-kbd button{all:unset;cursor:pointer;text-align:center;background:#f0f1f3;border-radius:10px;padding:10px 4px;font-size:14px;color:#222;font-family:inherit;box-shadow:0 1px 0 rgba(0,0,0,.06)}
@@ -85,92 +86,163 @@
 .tg-clip,.tg-emo{color:#9aa0a6;font-size:18px;flex:none;line-height:1}
 .tg-bar input{all:unset;flex:1;min-width:0;font-size:14px;color:#000;font-family:inherit;padding:6px 2px}
 .tg-bar input::placeholder{color:#a8aeb3}
-.tg-send{all:unset;cursor:pointer;color:#50a2e9;font-size:20px;flex:none;width:24px;text-align:center}.tg-app .toast{position:absolute;left:50%;top:84px;transform:translateX(-50%);background:rgba(30,40,55,.88);color:#fff;font-size:12.5px;border-radius:8px;padding:7px 12px;z-index:6;max-width:80%;text-align:center}
-</style>
-</head>
+.tg-send{all:unset;cursor:pointer;color:#50a2e9;font-size:20px;flex:none;width:24px;text-align:center}.tg-app .toast{position:absolute;left:50%;top:84px;bottom:auto;height:auto;transform:translateX(-50%);background:rgba(30,40,55,.88);color:#fff;font-size:12.5px;border-radius:8px;padding:7px 12px;z-index:6;max-width:80%;text-align:center}
+.tg-app .tg-rep table.tg-d3 td.tg-mname,.tg-app .tg-rep table.tg-d3 th:first-child{width:33%}.tg-app .tg-rep table.tg-d3 td.tg-v{padding-right:4px}.tg-app .tg-rep td.tg-v b.tg-o{font-weight:500;color:#5b6875}
+.tg-file{display:flex;gap:10px;align-items:center;cursor:pointer;min-width:230px}
+.tg-xls{width:42px;height:42px;border-radius:50%;background:#1d7b45;color:#fff;font-size:10.5px;font-weight:700;display:grid;place-items:center;flex:none}
+.tg-file b{display:block;font-size:13px;color:#2481cc;word-break:break-all;font-weight:600}.tg-file small{font-size:12px;color:#8e959b}
+.tg-cap{font-size:13px;margin-top:6px;line-height:1.45}
+.tg-shot{cursor:zoom-in;border-radius:10px;overflow:hidden;background:#fff;border:1px solid #e3e6ea;margin:-2px -6px 0}
+.tg-shot .in{zoom:.56;pointer-events:none;user-select:none;padding:6px}
+.tg-shs{margin-bottom:10px}.tg-shs i{display:block;font-style:normal;font-weight:700;font-size:12px;color:#1d7b45;margin:2px 0 4px}
+.tg-xl{position:absolute;inset:0;background:#fff;z-index:7;display:flex;flex-direction:column}.tg-xl[hidden]{display:none}
+.tg-xl.img{background:#111}.tg-xl.img .tg-xlh{background:#111}
+.tg-xlh{display:flex;align-items:center;gap:10px;padding:10px 12px;background:#1d7b45;color:#fff;font-size:13px}
+.tg-xlh button{all:unset;cursor:pointer;font-size:24px;line-height:1}.tg-xlh b{font-weight:600;word-break:break-all}
+.tg-xlb{flex:1;overflow:auto}
+.tg-shimg{background:#fff;margin:10px;padding:8px;border-radius:4px;zoom:.8;user-select:none}
+.xl-t{border-collapse:collapse;font-size:11px;color:#222;white-space:nowrap;background:#fff}
+.xl-t td{border:1px solid #d4d4d4;padding:3px 6px}.xl-t td.n{text-align:right;font-variant-numeric:tabular-nums}
+.xl-t td.t{font-weight:700;font-size:13px}.xl-t tr.g td{background:#eef3f8;font-weight:700;color:#2b5d8a}.xl-t tr.h td{background:#e2efda;font-weight:700;text-align:center}
+.xl-t .tg-up{color:#1a9e5a}.xl-t .tg-dn{color:#d14343}
+.tg-xlt{display:flex;border-top:1px solid #d4d4d4;background:#f3f3f3;overflow-x:auto}.tg-xlt[hidden]{display:none}
+.tg-xlt button{all:unset;cursor:pointer;padding:8px 12px;font-size:12px;color:#444;border-right:1px solid #ddd}
+.tg-xlt button.on{background:#fff;color:#1d7b45;font-weight:700;box-shadow:inset 0 -2px 0 #1d7b45}
+.tg-banner{position:relative;display:block;cursor:zoom-in;border-radius:10px;margin:-2px -6px 6px;height:118px;overflow:hidden;background:#fff;border:1px solid #e3e6ea}
+.tg-banner .tg-thumb{zoom:.5;pointer-events:none;user-select:none;padding:8px}
+.tg-banner::after{content:"";position:absolute;left:0;right:0;bottom:0;height:46px;background:linear-gradient(rgba(255,255,255,0),rgba(255,255,255,.96))}
+.tg-banner em{position:absolute;right:8px;bottom:7px;z-index:1;font-style:normal;font-size:11.5px;color:#fff;background:rgba(36,129,204,.9);padding:3px 10px;border-radius:10px}
+/* 「数据风险」标签：原型标注，不是 Telegram 界面元素 */
+.tg-risk{all:unset;cursor:pointer;display:inline-block;margin-left:6px;padding:0 6px;border-radius:8px;background:#7b3fe4;color:#fff;font-size:10.5px;font-weight:600;line-height:17px;vertical-align:2px}
+.tg-risk[hidden]{display:none}
+.tg-pop{position:absolute;left:16px;right:16px;top:70px;background:#fff;border:2px solid #7b3fe4;border-radius:12px;box-shadow:0 6px 24px rgba(0,0,0,.2);padding:12px 14px;z-index:8;font-size:13px;line-height:1.5;color:#222}
+.tg-pop[hidden]{display:none}.tg-pop b{display:block;color:#7b3fe4;margin-bottom:4px}.tg-pop small{display:block;color:#8e959b;font-size:11.5px;margin-top:6px}
+.tg-pop button{all:unset;cursor:pointer;display:block;margin:8px 0 0 auto;color:#7b3fe4;font-weight:600}
+.tg-cap .tg-lim{color:#7b3fe4}
+</style></head>
 <body>
 <!-- 前台原型：仿 Telegram 机器人对话界面。手机画面和批注都用中文；打包前把画面中文和英文写进 assets/proto-en.js。示例数据均为虚构。 -->
 <div class="with-nav">
 <div class="stage">
   <div class="app tg-app" role="region" aria-label="手机画面">
     <div class="sb"><span>14:32</span><span>●●● 5G</span></div>
-    <div class="tg-head"><span class="tg-back" aria-hidden="true">‹</span><div class="tg-ava" id="tgAva">运</div><div><b id="tgTitle">运营数据群（示意）</b><small id="tgSub">12 位成员</small></div><div class="tg-hico" aria-hidden="true"><span>⌕</span><span>⋮</span></div></div>
+    <div class="tg-head"><span class="tg-back" aria-hidden="true">‹</span><div class="tg-ava" id="tgAva" role="img" aria-label="群头像"></div><div><b><span id="tgTitle">BBwave平台数据</span><button type="button" class="tg-risk" id="riskTag" data-dev="D103" aria-haspopup="dialog">数据风险</button></b><small id="tgSub">12 位成员</small></div><div class="tg-hico" aria-hidden="true"><span>⌕</span><span>⋮</span></div></div>
     <div class="tg-chat" id="chat" aria-live="polite"></div>
     <div class="tg-cmds" id="cmds" hidden>
-      <button type="button" data-cmd="/menu" data-dev="D02"><b>/menu</b><span>重新显示按钮矩阵</span></button>
+      <button type="button" data-cmd="/menu" data-dev="D02"><b>/menu</b><span>显示首页菜单</span></button>
       <button type="button" data-cmd="/agent" data-dev="D03"><b>/agent</b><span>按代理线查询</span></button>
     </div>
-    <div class="tg-reply" id="replyBar" hidden><i>↩</i><div><b>回复 789报表助手</b><span>请回复代理账号，例如 kk_sms_g12</span></div><button type="button" id="replyX" aria-label="取消回复">×</button></div>
+    <div class="tg-reply" id="replyBar" hidden><i>↩</i><div><b>回复 BBWave报表助手</b><span>请回复代理账号（可只输入一部分），例如 kk_sms</span></div><button type="button" id="replyX" aria-label="取消回复">×</button></div>
     <div class="tg-bar">
-      <button type="button" class="tg-menu" id="menuBtn" data-dev="D01" aria-expanded="false">菜单</button>
+      <button type="button" class="tg-slash" id="menuBtn" data-dev="D01" aria-expanded="false" aria-label="命令列表">/</button>
       <span class="tg-clip" aria-hidden="true">📎</span>
       <input id="msg" placeholder="输入消息…" aria-label="消息" data-dev="D12" autocomplete="off">
       <button type="button" class="tg-kbtg" id="kbdTg" aria-label="显示或收起键盘" data-dev="D16" hidden>⌨</button>
-      <button type="button" class="tg-send" id="send" aria-label="发送" data-dev="D13"><span class="tg-mic">🎙</span><span class="tg-arrow">➤</span></button>
+      <button type="button" class="tg-send" id="send" aria-label="发送" data-dev="D13"><svg class="tg-plane" viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path fill="currentColor" d="M2.6 10.9 20.4 3.6c.9-.4 1.8.4 1.5 1.3l-4.9 15.3c-.3.9-1.4 1.2-2.1.6l-4.2-3.4-2.3 2.2c-.4.4-1.1.2-1.2-.4l-.6-4.4-4.3-1.4c-.9-.3-.9-1.6-.1-1.9Zm5.9 2.6.4 3.3 1.5-1.5 8.1-8.6-10 6.8Z"/></svg></button>
     </div>
     <div class="tg-kbd" id="kbd" hidden></div>
+    <div class="tg-xl" id="xl" hidden><div class="tg-xlh"><button type="button" id="xlX" aria-label="关闭">‹</button><b id="xlN"></b></div><div class="tg-xlb" id="xlB"></div><div class="tg-xlt" id="xlT"></div></div>
+    <div class="tg-pop" id="riskPop" role="dialog" aria-label="数据风险说明" hidden><b>数据风险</b>本群不按人隔离：只有 789Bingo 权限的人员查出的报表，只有 789Games 权限的人员也能在群里看到。<small>原型标注，不是 Telegram 界面元素。</small><button type="button" id="riskX">知道了</button></div>
     <div class="toast" id="toast" role="status" hidden></div>
   </div>
 
   <aside class="notes">
     <h2>机器人对话页</h2>
-    <p class="sub">机器人拉进授权的 Telegram 群，群成员通过「菜单」按钮和输入框下方的报表键盘查看 789Bingo、789Games 两站的渠道实时报表，或回复代理账号查询代理线报表（本页全部为本需求新增）。</p>
+    <p class="sub">机器人在授权的 Telegram 群「BBwave平台数据」里使用。群成员先选数据范围（789BINGO / 789GAMES / 全网数据），再选渠道或代理线查询，查看今日、昨日、前日三列报表；可见按钮按人员权限决定（本页全部为本需求新增）。</p>
     <h3>模拟场景</h3>
     <div class="sim">
-      <button type="button" data-go="menu"><span class="simtag">两站汇总群</span>进群（按钮矩阵）</button>
-      <button type="button" data-go="report"><span class="simtag">两站汇总群</span>渠道报表（两站 + 合计）</button>
-      <button type="button" data-go="bingo"><span class="simtag">789Bingo 数据群</span>进群（按钮矩阵）</button>
-      <button type="button" data-go="games"><span class="simtag">789Games 数据群</span>进群（按钮矩阵）</button>
-      <button type="button" data-go="agent"><span class="simtag">两站汇总群</span>代理线查询</button>
+      <button type="button" data-go="menu"><span class="simtag">BBwave平台数据</span>人员进群（本人首页菜单）</button>
+      <button type="button" data-go="botjoin"><span class="simtag">BBwave平台数据</span>机器人进群（一级菜单，所有人可点）</button>
+      <button type="button" data-go="lv2"><span class="simtag">BBwave平台数据</span>点 789BINGO（二级按钮）</button>
+      <button type="button" data-go="lv3"><span class="simtag">BBwave平台数据</span>点有子渠道的「谷歌」（下一级菜单）</button>
+      <button type="button" data-go="report"><span class="simtag">BBwave平台数据</span>789BINGO 渠道报表</button>
+      <button type="button" data-go="all"><span class="simtag">BBwave平台数据</span>全网数据渠道报表</button>
+      <button type="button" data-go="shot"><span class="simtag">BBwave平台数据</span>点开快照图片（全网数据）</button>
+      <button type="button" data-go="agent"><span class="simtag">BBwave平台数据</span>代理线查询</button>
+      <button type="button" data-go="nostaff"><span class="simtag">权限</span>成员未开通权限</button>
       <button type="button" data-go="groupno"><span class="simtag">未授权群</span>无权限</button>
       <button type="button" data-go="private"><span class="simtag">私聊</span>引导到群</button>
       <button type="button" data-go="fail"><span class="simtag">异常</span>生成失败</button>
+      <button type="button" data-go="stale"><span class="simtag">权限变化</span>权限变化后点旧菜单按钮</button>
     </div>
     <h3>模拟操作</h3>
     <div class="sim" id="simPanel"></div>
     <h3>规则批注</h3>
     <ol>
-      <li><b>按群配置</b>：每个授权群在 789Bingo 后台「授权群」里单独设置站点范围（只看 789Bingo / 只看 789Games / 两站分别 + 合计）和渠道（全站、cicc、短信、网红、谷歌、oem、代理线查询，可多选）。按钮矩阵只显示本群勾选了、并且在站点范围内已绑定代理的渠道；没勾「代理线查询」时不显示该按钮，发 /agent 回复「本群未开放代理线查询。」（可在模拟操作里勾选演示）。<span class="ref">待同步到 PRD</span></li>
-      <li><b>使用场景</b>：机器人拉进授权的 Telegram 群使用，群内所有成员都可以操作；私聊机器人只回复「本机器人仅在授权群内使用，请在群内发送 /menu。」<span class="ref">PRD 规则 N4、N5 · F01-03 授权校验</span></li>
-      <li><b>菜单按钮</b>：输入框左侧蓝色「菜单」展开机器人命令：/menu 打开报表键盘、/agent 按代理线查询。<span class="ref">PRD 规则 N1 · F01-01 菜单按钮与命令</span></li>
-      <li><b>按钮矩阵</b>：打开授权群时，输入框下方就显示报表按钮矩阵（3 列），不用先发命令：📊 全站、cicc、短信 / 网红、谷歌、oem；🔍 代理线查询。点按钮等于在群里发出按钮文字，点渠道立即生成报表。聊天里同时有一条机器人菜单消息，下方的内联按钮矩阵和输入框下方内容一致，点它直接生成报表、不在群里发文字。输入框右侧「⌨」可收起或展开；收起后可点「菜单」里的 /menu 重新调出。<span class="ref">PRD 规则 N2 · F01-02 报表菜单</span></li>
-      <li><b>报表内容</b>：12 项指标按「用户、存提、投注、留存」4 组显示。两站汇总群显示 789Bingo、789Games、全站（两站合计）三列，每个指标先占一行写名称、下一行三列数据并排；789Bingo 数据群、789Games 数据群只显示本站一列，名称和数据在同一行；每格大字为今日值（▲▼ 为与昨日全天相比），小字为昨日全天和变化百分比（留存为百分点差）。次日留存、7日留存按单日计算，不取平均。群只授权一个站点时只显示该站一列。<span class="ref">PRD 规则 N9、N10–N22 · F02-01 报表生成与展示</span></li>
-      <li><b>代理线查询</b>：点「🔍 代理线查询」后，机器人 @ 点击人并要求回复代理账号，点击人的输入框自动进入回复状态，直接输入账号（如 kk_sms_g12）发送；也可以发「/agent 代理账号」。群里不是回复机器人的普通消息，机器人不回应。<span class="ref">PRD 规则 N23–N25 · F03-01 代理线查询</span></li>
-      <li><b>自动删除</b>：报表发出满 1 小时自动删除；群里任何人生成新报表时，之前的报表立即删除。<span class="ref">PRD 规则 N26–N28 · F04-01、F04-02</span></li>
-      <li><b>生成中与失败</b>：生成中再点按钮只弹提示「报表生成中，请稍候」；超过 30 秒未生成，回复失败提示和「重试」按钮。<span class="ref">PRD 规则 N29、N30 · F02-01</span></li>
+      <li><b>适用子站</b>：覆盖 789Bingo（按钮 789BINGO）和 789Games（按钮 789GAMES），全部子站合计为「全网数据」。机器人按 Telegram ID 识别人员：在哪个子站后台「人员配置」登记并启用，就显示哪个子站的按钮；全部子站都登记并启用同一个 Telegram ID，才显示「全网数据」。新增子站同理。<span class="ref">PRD 规则 N35 · F01-03</span></li>
+      <li><b>使用场景</b>：只在授权群使用，目前只有「BBwave平台数据」，由技术配置，后台不设置；服务机器人以群为单位只有一个，初始由技术指定，接替见「子站停止出报表」。私聊回复「本机器人仅在授权群内使用，请在群内发送 /menu。」，不删除；未授权群的回复 1 分钟后删除。<span class="ref">PRD 规则 N4、N5、N52 · F01-03</span></li>
+      <li><b>群内共享（本期）</b>：人员权限只控制本人能发起哪些查询，群成员都能看到群里的全部报表；入群成员由群主和群管理员控制，只拉可以看全部报表数据的人。按人隔离查看（报表私聊发给点击人）放到下一版。群名旁紫色「数据风险」标签是原型标注，上线后不存在。<span class="ref">PRD 规则 N36 · F01-03</span></li>
+<li><b>一级按钮</b>：每个子站一个（目前 789BINGO、789GAMES），由技术添加，后台不能管理；全部子站都有权限时另显示「全网数据」，无需配置。<br><b>二级按钮（渠道）</b>：即后台「渠道配置」的渠道，按钮文字、顺序、是否在群里显示都在渠道配置设置。默认渠道「全站」「自然流量」始终显示；自建渠道同时满足才显示：在本人「可查看渠道」内、设为群里显示、已绑定代理（所绑代理全部被删除或停用视为未绑定）。全网数据下只显示全部子站都有、且本人在全部子站都勾选的渠道（取交集）；层级以 789Bingo 后台为准，同名渠道在两站的父级不同时不显示。<br><b>自然流量</b>：全站 − 各顶层渠道合计，即未归入任何自建渠道的用户，包括平台默认线和未绑定渠道的代理（含投注站、五级邀请、域名绑定代理）名下用户，不代表无推广来源；投注站按大代理处理。<br><b>下一级菜单</b>：层级不限（如 谷歌 › 谷歌品牌词 › 品牌词PH）。点有子渠道的父级进入下一级：「📊 父级·全渠道」（父级全部数据，本人勾选了全部子渠道时才显示，全网数据下须在全部子站都勾全）+ 本人可查看的子渠道；父级下没有可见子渠道时，点父级直接生成报表。<br><b>首页</b>：两个及以上子站有权限，首页为一级菜单；只有一个子站权限，首页为该子站的二级菜单。<br><b>按钮布局</b>：各级菜单从上到下为渠道按钮、「🔍 代理线查询」（单独一行）、「⬅ 返回上一级」「🏠 首页菜单」（并排，首页不显示）；一级菜单也有「🔍 代理线查询」。「⬅ 返回上一级」逐级返回，二级菜单的两个按钮都回到一级菜单。渠道按钮每行 1–3 个：「全站」「父级·全渠道」各占一行，其余按数量和名称长度均分（4 个排 2+2，5 个排 3+2），名称较长时每行 2 个或 1 个（界限由技术按屏幕宽度定）。<br><b>没有可显示的渠道</b>：某个范围一个渠道按钮都没有时（渠道被删除、设为群里不显示、无可用代理，或全网数据下没有交集），没有代理线查询权限的不发菜单，回复「你没有可查看的渠道，请联系管理员开通。」；有的菜单只有「🔍 代理线查询」和返回类按钮，菜单文字为这句提示。<span class="ref">PRD 规则 N2、N6、N9、N38、N39、N41、N45、N65 · F01-02</span></li>
+      <li><b>菜单归属</b>：底部键盘只有本人看得到；聊天消息群内所有人可见。人员进群时，机器人 @ 他发本人首页菜单；机器人进群时发的一级菜单不 @ 人，所有人可点，按点击人权限判断。同一人打开新菜单时，删除他的上一条菜单消息。<br><b>配置改动后</b>：渠道或人员配置保存后立即生效，不在群里群发；受影响的人员（改渠道配置：本子站全部已登记人员；改人员配置：被修改的人员）下次在群里发消息或点按钮时，机器人先按新权限 @ 他发首页菜单，再处理这次操作。已发出的菜单保留原按钮；点已不可用的按钮先按当前权限校验，只弹「该渠道已不可用，请发 /menu 重新打开菜单」或「你没有「xxx」的查看权限」。<span class="ref">PRD 规则 N40、N41、N61、6. 接口与异常 · F01-02、F01-04</span></li>
+      <li><b>按钮归属</b>：人员进群、发命令或点击产生的消息（首页菜单、各级菜单、代理线查询提问、搜索结果、他生成的报表和失败提示），按钮只有他能点；其他人点击弹「仅 @xxx 可操作，请发 /menu 打开你的菜单」。报表图片所有人都能点开。<br><b>拒绝提示</b>：点消息里的按钮被拒绝，只弹点击人可见的提示（原型用画面中部的提示条模拟）；发命令或点底部键盘被拒绝，机器人在群里 @ 发送人回复，不含报表数据，1 分钟后删除，最后一行为「⏱ MM-DD HH:mm 自动删除（GMT+8）」。未登记或已停用：群里回复「@昵称 你还没有报表查看权限，请联系管理员开通。你的 Telegram ID：xxx」，弹窗为同一句（不 @）。例外：子站停止出报表的提示，点按钮时也发在群里。<br><b>回复提问</b>：只有被 @ 的人员回复代理线查询提问才当作查询。<br><b>上线实测</b>：用两个不同子站权限的账号，在手机和电脑端交叉点对方的按钮、发命令，确认拿不到越权数据。<span class="ref">PRD 规则 N23、N29、N42、N43 · F01-04</span></li>
+      <li><b>「/」命令列表</b>：点「/」或在输入框输入「/」展开：/menu 显示首页菜单、/agent 按代理线查询。/start（Telegram 首次打开机器人时自动发出）等同 /menu；其他命令回复「不支持该命令，请输入「/」选择命令。」<span class="ref">PRD 规则 N1 · F01-01</span></li>
+      <li><b>底部按钮键盘</b>：默认收起，点「⌨」展开或收起，进群、发 /menu、打开命令列表都不展开；只影响本人界面。先显示一级按钮（只有一个子站权限时直接显示渠道）；选定范围后一次列出全部可查看渠道，不逐级进入：按层级从上到下，不同层级不同行，同层按上面的每行 1–3 个规则排列；父级渠道查父级全部数据（路径写「› 全渠道」）。其下「🔍 代理线查询」，最后一行「⬅ 返回上一级」「🏠 首页菜单」都回到一级按钮（只有一个子站权限时不显示）。手动发不可用的渠道名回复「该渠道已不可用，请选择其他渠道。」；未选一级按钮就发渠道名回复「请先选择 789BINGO、789GAMES 或全网数据。」（子站按钮按本人有权限的子站列出）。<span class="ref">PRD 规则 N40 · F01-02</span></li>
+      <li><b>报表形式</b>：按 Excel 格式生成后截成一张图片发到群里，不发文字表格和 Excel 文件；聊天里显示 banner 缩略图（只露上半部分，右下角「点开查看详情」），点开全屏查看。全网数据为「全网合计」+ 每个子站各 1 个工作表，上下拼接；代理线报表只含一个子站时只有「全网合计」。<br><b>图片下方文字</b>：① 菜单路径，如「789BINGO › 谷歌 › 谷歌品牌词」「789BINGO › 谷歌 › 全渠道」「全网数据 › 代理线查询 › kk_sms_g12」；② 统计时间，每个子站一组（只含一个子站时只写一组，不写「相加」）：「🕒 子站（时区）今日 日期 00:00 – 生成时刻」，其下昨日、前日 00:00 – 23:59 和「对比 昨日日期 00:00 – 同一时刻」，一律写具体日期；③ 代理线报表只含部分子站时加「只含 子站（原因）」，按渠道过滤时加「仅含你可查看的渠道」；④ 最后一行「⏱ MM-DD HH:mm 自动删除（GMT+8）」。<br><b>统计时区</b>：各子站按本站平台时区切日和统计，与该站后台同一时区的日报表对数；全网数据 = 各子站按本站时区统计的数据相加。平台时区具体值待技术确认（原型示意 789Bingo 为 UTC+8，依据平台知识库；789Games 写「时区待确认」）。删除时间按 GMT+8：发出时刻 + 15 分钟。<br><b>报表下的按钮</b>：「🔍 代理线查询」（按本报表的一级范围查，无权限时只弹提示），其下「⬅ 返回上一级」（回到生成本报表的那一级菜单）「🏠 首页菜单」；只有一个子站权限的人员也保留这两个按钮，使所有人看到的按钮位置一致。<span class="ref">PRD 规则 N10、N22、N26、N43、N47、待确认 Q24 · F02-01</span></li>
+      <li><b>图片内容</b>：每个工作表先写数据范围、查询对象、统计时间（各子站一行），下面是「指标 | 今日 | 昨日 | 前日 | 较昨日同时段」，12 项指标按用户、存提、投注、留存分组，每组上方一行分组标题。「较昨日同时段」带 ▲▼ 和变化百分比，留存类写变化的百分点（如「+0.9 百分点」）。人数、金额为 0 显示 0；只有比值的分母为 0 时显示「-」；相等时显示「0.0%」（留存「0.0 百分点」），不带符号和箭头。全网合计 = 各子站原始数相加后再算人均和留存。<span class="ref">PRD 规则 N10–N22、N46 · F02-01、F02-02</span></li>
+      <li><b>代理线查询</b>：入口在各级菜单（无权限时不显示）和报表下方（始终显示，无权限时只弹「你没有代理线查询权限」）。点击后机器人 @ 点击人要求回复代理账号（可只输入一部分），输入框自动进入回复状态。<br><b>查询范围</b>：在二级及以下菜单、报表下点击，为当前一级范围；在一级菜单点击、发「/agent」或「/agent 账号」，为全网数据，本人没有全网数据权限时为本人第一个有权限的子站（顺序同一级按钮）。全网数据下只查本人有代理线查询权限、且未暂停的子站，结果注明只查了哪些子站及原因；所有子站都没有权限时回复「你没有代理线查询权限。」<br><b>模糊搜索</b>：不区分大小写（按钮显示账号原有大小写），账号包含输入内容即命中，开头匹配的排前面；有该子站「全站」权限时搜全部代理，没有时只搜本人可查看渠道绑定的代理（父级半选时只含已勾选子渠道）。只搜到 1 个：直接生成该代理（含下级）的报表。搜到 2 个及以上：列出代理按钮（每行最多 3 个，最多 10 个，超出时提示输入更完整的账号），其下「🔍 代理线查询（重新搜索）」，最后一行「⬅ 返回上一级」（回到点「🔍 代理线查询」时所在的菜单，/agent 回到首页）「🏠 首页菜单」。没搜到：回复「未找到」，输入框自动进入回复状态，直接输入新账号即可（也可点「🔍 代理线查询」）。点代理按钮时按点击人当前权限重新校验，以该代理（含下级）生成报表。<br><b>归属与删除</b>：提问、搜索结果和「未找到」回复归属提问人，算作他的菜单消息，被他下一条菜单替换，15 分钟后删除。群里非回复机器人的普通消息，机器人不回应。<span class="ref">PRD 规则 N23–N25、N39、N60 · F03-01</span><br><b>代理线权限</b>：搜索和统计都按点击人当时的权限、按子站分别判断，例如只在 789Bingo 有权限的人员，只能搜到、统计 789Bingo 的代理线。子站内没有「全站」权限时，只统计该代理及下级中属于本人可查看渠道的用户，报表注明「仅含你可查看的渠道」。全网数据下只要一个子站可查就生成报表，只含可查的子站，注明「只含 子站（原因）」：代理账号只在该站存在 / 另一站暂停中 / 你在某子站没有代理线查询权限 / 你在某子站不能查看该代理所在的渠道；都不可查时只弹「你没有该代理所在渠道的查看权限」。回复账号、/agent、点搜索结果、重试，结果一致。<span class="ref">PRD 规则 N48、N55 · F03-02</span></li>
+      <li><b>自动删除</b>：报表图片、失败提示、代理线查询提问、搜索结果和「未找到」回复 15 分钟后删除；拒绝回复 1 分钟后删除。群内任何人生成新报表时，之前的报表和失败提示立即删除；生成失败或排队超时不删旧报表。<span class="ref">PRD 规则 N26、N27、N60 · F04-01、F04-02</span><br><b>删除失败</b>：自动重试；只统计报表图片（失败提示只重试、不计入），后台机器人管理页显示「未删除 N 份」。最早一份发出满 24 小时仍未删除时，机器人在群里发一条合并提醒「@群主 @管理员 HH:mm 发出的 N 份报表未能自动删除，请手动删除。」（@ 群主和每位群管理员；N 为全部份数，含未满 24 小时的；HH:mm 为最早一份的发出时间，GMT+8），发出后这些报表从份数中去掉；提醒也发不出时保留，并通知后台管理员。服务机器人被停用、替换或删除后，它的未删除报表由当前服务机器人按时删除。到时发现已被手动删除，视为删除成功，不计入「未删除 N 份」。<span class="ref">PRD 规则 N28 · F04-03</span></li>
+      <li><b>生成中</b>：本群已有报表生成或排队时，再点消息里的按钮只弹「报表生成中，请稍候」；点底部键盘或发命令时群里回复「@发送人 报表生成中，请稍候。」<br><b>超时与排队</b>：生成超过 30 秒（不含排队）回复「报表生成失败，请稍后重试。」；全网数据有一个子站取不到数据按失败处理，不发部分数据。生成后被限流时，「⏳ 正在生成报表…」改为「⏳ 排队中，稍后发出」；排队超过 2 分钟取消，提示改为「排队超时，报表未发出，请稍后重试。」，超时提示优先发送。两条失败提示都不带 @，「重试」只有生成者能点；同一人员同一查询只保留一个任务，同一次有效查询最多发出一份报表。<br><b>取消</b>：发送前复核不通过、排队超时提示也发不出、子站暂停时，取消这份报表：删除它的「正在生成 / 排队中」提示，不另发提示，本群随即可以再生成。<br><b>发送前复核</b>：发出前再校验：授权群、人员启用、仍有该子站和渠道（或代理线）权限、所涉子站未暂停；任一不满足就取消。已发出的报表不撤回。<span class="ref">PRD 规则 N29、N30、N43、N49、N50 · F02-03</span></li>
+      <li><b>子站停止出报表</b>：按子站分别处理，只影响该子站和全网数据，按钮照常显示，另一子站照常。
+        <br>① 总停用开关打开：点该子站或全网数据（含其下渠道、代理线查询、重试）回复「@点击人 报表服务暂停中，请稍后再试。」
+        <br>② 没有可用机器人：当前服务机器人在任一子站被停用（手动或不可用时自动），或变为「异常（不在群或权限不足）」时，整个群切换到可接替的机器人。可接替 = 全部子站都启用、已在群里且权限正常；状态正常的优先，限流中的其次，同组按机器人管理列表顺序。没有时，被停用的子站和全网数据回复「@点击人 报表机器人暂不可用，正在更换，请稍后再试。」，其他子站仍由原机器人服务。原机器人恢复后不自动切回，由技术决定。
+        <br>③ 切换后点原机器人发出的按钮，只弹「请发 /menu 打开你的菜单」，不重发历史菜单。
+        <br>全网数据范围的代理线查询只查正常的子站，报表注明「只含 789Games（789Bingo 暂停中）」，所查子站都暂停时才回复上述提示。①② 的提示点按钮时也发在群里，不含数据，1 分钟后删除；排队中的这些报表取消（见「取消」）。<span class="ref">PRD 规则 N52、N55、待确认 Q16 · F02-04</span></li>
+      <li><b>发送限制</b>：后台不设置，由技术配置和修改。机器人发出的所有消息（菜单、报表、提示，含编辑已有消息）都经过同一个发送队列。默认值按 Telegram 官方规则留余量：
+        <table class="ui-tbl" style="margin:6px 0;font-size:12px"><tr><th>配置项</th><th>默认值</th><th>依据</th></tr>
+        <tr><td>每分钟发送上限</td><td>16 条</td><td>官方：机器人在群里每分钟最多约 20 条，取 80%</td></tr>
+        <tr><td>两条消息最小间隔</td><td>1 秒</td><td>官方：同一聊天避免每秒超过 1 条</td></tr>
+        <tr><td>限流后等待</td><td>按 Telegram 返回的等待时间</td><td>官方：被限流后须按返回的等待时间等待，不能提前重发</td></tr>
+        <tr><td>恢复后速度</td><td>先按 50% 发送，正常后恢复</td><td>避免等待结束后积压消息集中发出再次被限流</td></tr>
+        <tr><td>重复点击合并</td><td>5 秒</td><td>同一个人重复点同一个按钮只处理一次，减少无效消息</td></tr>
+        <tr><td>相同查询复用结果</td><td>30 秒</td><td>同一人员、同一一级范围、同一查询对象，30 秒内且所涉子站都未跨本站平台时区的 00:00 时再查，复用本人上次的结果（报表时间仍为上次生成时刻），按新报表发出，删除旧报表并重新计 15 分钟；不同人员、或这 30 秒内权限有变化时不复用</td></tr>
+        <tr><td>排队有效期</td><td>2 分钟</td><td>超时的报表取消并提示，不再补发，避免恢复后刷屏</td></tr>
+        <tr><td>连续限流通知</td><td>3 次</td><td>连续被限流 3 次通知后台管理员</td></tr></table>
+        低于官方限制也可能被限流；不提供无视等待时间的强制补发，也不换机器人发送。<span class="ref">PRD 规则 N51、N58 · F02-03</span></li>
+      <li><b>内容保护</b>：群内报表和机器人发出的所有消息开启 Telegram 内容保护：禁止转发、禁止保存到相册。<span class="ref">PRD 规则 N57 · F02-01</span></li>
+      <li><b>机器人名称、头像和显示语言</b>：机器人名称为「BBWave报表助手」；头像用 BBWave 品牌标志，由设计提供图片，技术在 Telegram 里设置；群内文字显示中文。<span class="ref">PRD 待确认 Q4（已确认）</span></li>
     </ol>
-    <h3>评审待确认</h3>
-    <ol>
-      <li><b>机器人名称、头像和显示语言</b>：原型名称「789报表助手」为示意，画面文字暂按中文制作。<span class="ref">PRD 待确认 Q4</span></li>
-      <li><b>是否禁止转发和保存报表</b>：Telegram 支持对消息开启内容保护。<span class="ref">PRD 待确认 Q5</span></li>
-    </ol>
-    <div class="pager"><span></span><a href="../admin/Telegram报表-后台渠道配置页面.html">下一页：后台渠道配置页面 →</a></div>
+    <div class="pager"><span></span><a href="../admin/Telegram报表-后台人员配置页面.html">下一页：后台人员配置页面 →</a></div>
   </aside>
 </div>
 </div>
 <script>window.NAV_ROOT = "../../";</script>
 <script src="../../assets/nav-data.js"></script>
 <script src="../../assets/nav.js"></script>
-<script>window.PROTO_LANG = "zh";   /* 需求例外（需求包框架规范第 14 节）：机器人上线显示中文（PRD 待确认 Q4），发布站点的前台原型也保持中文 */</script>
+<script>window.PROTO_LANG = "zh";   /* 需求例外（需求包框架规范第 14 节）：机器人对内使用、群内显示中文（用户 2026-11-10 确认），发布站点的前台原型也保持中文 */</script>
 <script src="../../assets/proto-en.js"></script>
 <script src="../../assets/proto.js"></script>
 <script>
-P.init({ defaults: { whEmpty: false, oemBingo: false, grpLimit: false, slow: false } });
+P.init({ defaults: { whEmpty: false, oemBingo: false, ggDiff: false, noFull: false, noGames: false, noCicc: false, noSite: false, noAny: false, queue: false, stop: false, noBot: false, slow: false, revoke: false, other: false } });
 P.panel(document.getElementById("simPanel"), [
-  { title: "后台配置", items: [{ type: "check", key: "whEmpty", label: "渠道「网红」两站都未绑定代理（按钮不显示）" }, { type: "check", key: "oemBingo", label: "渠道「oem」只在 789Bingo 绑定（报表只显示 789Bingo 列）" }, { type: "check", key: "grpLimit", label: "本群「渠道」不勾 cicc 和代理线查询" }] },
-  { title: "注入异常", items: [{ type: "check", key: "slow", label: "报表生成超时（超过 30 秒）" }] },
-  { title: "自动删除", items: [{ type: "button", label: "模拟报表发出满 1 小时（报表消失）", run: function () { TG.expire(); } }] },
-  { title: "演示值说明", items: [{ type: "note", text: "演示代理账号：kk_sms_g12（两站都有）、wh_star01（只在 789Bingo）、gg_ads_03（只在 789Games）；输入其他账号演示「未找到」。Telegram ID、群名称和全部数据均为虚构。" }] },
+  { title: "后台配置", items: [{ type: "check", key: "whEmpty", label: "「网红」在两站的绑定代理都已删除或停用（不显示）" }, { type: "check", key: "oemBingo", label: "「oem」只在 789Bingo 有（789GAMES、全网数据下不显示）" }, { type: "check", key: "ggDiff", label: "「谷歌通用词」在 789Games 是顶层渠道（两站父级不同，全网数据下不显示）" }, { type: "button", label: "后台保存了渠道或人员配置（不群发；Kevin 下次操作时先收到新首页菜单）", run: function () { TG.cfgSaved(); } } ] },
+  { title: "人员配置（当前成员：Kevin）", items: [{ type: "check", key: "noGames", label: "789Games 后台没有权限（不显示 789GAMES 和全网数据）" }, { type: "check", key: "noCicc", label: "789Bingo 不含 cicc 和代理线查询（全网数据的代理线查询只查 789Games）" }, { type: "check", key: "noFull", label: "789Bingo「谷歌」下只勾了「谷歌品牌词」（下一级没有全渠道）" }, { type: "check", key: "noSite", label: "789Bingo 没勾「全站」「自然流量」（代理线只搜可查看渠道的代理）" }, { type: "check", key: "noAny", label: "789Bingo 没有可显示的渠道（勾选的渠道都设为群里不显示）" }] },
+  { title: "其他成员点击", items: [{ type: "check", key: "other", label: "以 Amy（权限同 Kevin）的身份点 Kevin 的按钮（被拒绝）" }] },
+  { title: "运行状态", items: [{ type: "check", key: "queue", label: "机器人限流中（报表生成后排队）" }, { type: "button", label: "限流结束（排队的报表发出）", run: function () { TG.flush(); } }, { type: "button", label: "排队超过 2 分钟（取消并提示）", run: function () { TG.qExpire(); } }, { type: "check", key: "stop", label: "789Bingo 总停用开关已打开（789BINGO、全网数据暂停；全网代理线查询只查 789Games）" }, { type: "check", key: "noBot", label: "789Bingo 没有可用机器人（同上，回复「暂不可用」）" }, { type: "button", label: "服务机器人已切换（之后点切换前发出的按钮）", run: function () { TG.botSwitched(); } }] },
+  { title: "注入异常", items: [{ type: "check", key: "slow", label: "报表生成超过 30 秒" }, { type: "check", key: "revoke", label: "发送前复核不通过（取消发送，删除「正在生成」提示，不另发提示）" }] },
+  { title: "自动删除", items: [{ type: "button", label: "发出满 15 分钟（报表、失败提示、代理线提问、搜索结果和「未找到」消失）", run: function () { TG.expire(); } }, { type: "button", label: "发出满 1 分钟（拒绝回复消失）", run: function () { TG.rejExpire(); } }] },
+  { title: "演示值说明", items: [{ type: "note", text: "演示代理账号：kk_sms_g12、kk_sms_g15、kk_sms_a01、KK_Vip08（短信）、wh_star01、wh_star02（网红）、gg_ads_03（谷歌通用词，只在 789Games）、gg_ph_01（品牌词PH）、cc_kk01（cicc）、free_01（未绑定渠道，属于自然流量）。输入「kk」「01」「sms」演示模糊搜索，「zz」演示「未找到」。kk_sms_g12 在 789Bingo 有一条下级属于「谷歌通用词」：同时勾选「没勾全站」和「只勾了谷歌品牌词」后，报表不统计这部分，并注明「仅含你可查看的渠道」。平台时区：789Bingo 示意为 UTC+8（平台知识库），789Games 待技术确认；演示假设两站当前时间都是 14:32。成员、群名称和数据均为虚构。" }] },
   { items: [{ type: "reset" }] }
 ]);
 </script>
 <script>
 var TG = (function () {
   var SITES = ["789Bingo", "789Games"];
-  var CH = ["全站", "cicc", "短信", "网红", "谷歌", "oem"];
-  var AGENTS = { kk_sms_g12: { "789Bingo": 0.11, "789Games": 0.06 }, wh_star01: { "789Bingo": 0.07 }, gg_ads_03: { "789Games": 0.12 } };   /* 代理账号在哪些站点存在（演示） */
-  var NOW = "14:32", TODAY = "2026-11-04", DEL_AT = "15:32";
-  var S = {};   /* 页面状态：auth 可看的站点、chat 聊天类型、period 留存周期、msgs 消息、busy 生成中、waitAgent 等待输入代理账号 */
+  var LV1 = { "789BINGO": ["789Bingo"], "789GAMES": ["789Games"], "全网数据": ["789Bingo", "789Games"] }, LV1K = Object.keys(LV1);
+  var CH = ["全站", "自然流量", "cicc", "短信", "网红", "谷歌", "谷歌品牌词", "品牌词PH", "谷歌通用词", "oem"];   /* 全站、自然流量为系统固定渠道，其余来自后台渠道配置，按绑定代理查数据 */
+  /* 代理账号（演示）：ch = 后台渠道配置里所属的渠道（没绑定到任何渠道的归「自然流量」），站点值 = 该站数据比例（没有该站即该站不存在） */
+  /* sub = 该代理的一条下级分支属于另一个渠道（演示 T03：本人没有该子站「全站」权限、也看不到这个渠道时，这部分不统计） */
+  var AGENTS = { kk_sms_g12: { ch: "短信", "789Bingo": 0.11, "789Games": 0.06, sub: { ch: "谷歌通用词", "789Bingo": 0.03 } }, kk_sms_g15: { ch: "短信", "789Bingo": 0.05 }, kk_sms_a01: { ch: "短信", "789Bingo": 0.04, "789Games": 0.03 }, KK_Vip08: { ch: "短信", "789Bingo": 0.05, "789Games": 0.02 },
+    wh_star01: { ch: "网红", "789Bingo": 0.07 }, wh_star02: { ch: "网红", "789Bingo": 0.03 }, gg_ads_03: { ch: "谷歌通用词", "789Games": 0.12 }, gg_ph_01: { ch: "品牌词PH", "789Bingo": 0.06, "789Games": 0.02 },
+    cc_kk01: { ch: "cicc", "789Bingo": 0.09 }, free_01: { ch: "自然流量", "789Bingo": 0.02 } };
+  var AG_MAX = 10;   /* 搜索结果最多显示的代理按钮数 */
+  var NOW = "14:32", TODAY = "2026-11-04", DEL_AT = "11-04 14:47", REJ_AT = "11-04 14:33", ME = "Kevin", OTHER = "Amy", BOT = "BBWave报表助手";   /* 删除时间按 GMT+8、写日期：报表发出满 15 分钟删除；拒绝回复发出满 1 分钟删除 */
+  /* 各子站平台时区（演示）：789Bingo 依据平台知识库写 UTC+8，789Games 资料未覆盖；具体值待技术确认。演示假设两站当前时间都是 14:32 */
+  var TZ = { "789Bingo": "UTC+8", "789Games": "时区待确认" };
+  function tzLab(s) { return s + "（" + TZ[s] + "）"; }
+  var MY_ID = "583920999";   /* 演示：未开通权限人员的 Telegram ID */
+  var S = {};   /* 页面状态：auth 本群已授权、chat 聊天类型、msgs 消息、task 进行中的报表任务（同一时间一个）、who 当前操作人（Kevin 或模拟的其他成员 Amy）、waitAgent 等待输入代理账号、agentLv 代理线查询的范围、kbLv 本人键盘当前所在的一级按钮（null 为一级） */
+  function who() { return S.who || ME; }
+  function mine() { return who() === ME; }   /* 本画面是 Kevin 的手机：只有 Kevin 的操作影响底部键盘和回复状态 */
   var chat = document.getElementById("chat"), seq = 0;
 
   function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
@@ -178,14 +250,71 @@ var TG = (function () {
   function money(n) { return (n < 0 ? "-₱" : "₱") + fmtInt(Math.abs(n)); }
   function money2(n) { return "₱" + n.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
 
-  /* 演示数据：按站点、查询对象生成固定的虚构原始数（人数、金额、留存分子分母），合计列 = 两站原始数相加后再算人均和留存 */
-  function raw(site, scope, period, k) {
-    var f = scope.agent ? (AGENTS[scope.agent][site] || 0) : [1, 0.18, 0.22, 0.12, 0.26, 0.08][CH.indexOf(scope.ch)] * (site === "789Games" ? 0.42 : 1);
-    var x = f * k, fd = 820 * x, r1Reg = 2050 * f, r7Reg = 1980 * f;   /* 留存分母：今日列为昨天 / 7 天前注册人数，昨日列为前天 / 8 天前注册人数（演示取近似值） */
-    return { reg: 2100 * x, fd: fd, fdAmt: fd * (site === "789Games" ? 188 : 215), newDep: fd * 290, dep: 1180000 * x, depU: 2650 * x, wd: 1010000 * x, bet: 9800000 * x, vbet: 8450000 * x, pay: 9800000 * x * 0.969,
-      r1Reg: r1Reg, r1Ret: r1Reg * (k === 1 ? 0.306 : 0.248), r7Reg: r7Reg, r7Ret: r7Reg * (k === 1 ? 0.131 : 0.097) };   /* 今日列截至生成时刻，比全天偏低 */
+  /* 权限（演示）：渠道配置里是否显示、当前成员是否有该一级按钮 / 渠道 / 代理线查询权限 */
+  /* 一级按钮：技术人员按子站添加（有几个子站就有几个），权限在各子站后台「人员配置」里管理；账号拥有全部子站权限时自动显示「全网数据」 */
+  function lvOn(k) { return true; }
+  function siteOk(s) { return !(s === "789Games" && P.get("noGames")); }
+  function canLv(k) { return LV1[k].every(siteOk); }
+  function myLv() { return LV1K.filter(canLv); }
+  /* 二级按钮按子站权限：子站按钮看该子站后台的可查看渠道；全网数据只显示每个子站都有权限的渠道（取交集） */
+  function siteCh(s, c) { if (P.get("noAny") && s === "789Bingo" && c !== "agent") return false; if (P.get("noSite") && s === "789Bingo" && (c === "全站" || c === "自然流量")) return false; if (P.get("noFull") && s === "789Bingo" && (c === "谷歌" || c === "谷歌通用词")) return false; return !((P.get("noCicc") || S.stale) && s === "789Bingo" && (c === "cicc" || c === "agent")); }   /* noFull：谷歌下只勾了谷歌品牌词，父级未全选；S.stale：「权限变化后点旧菜单按钮」场景里后台刚取消的权限 */
+  function canCh(c, k) { return LV1[k].every(function (s) { return siteCh(s, c); }); }
+  /* 代理线查询权限按子站分别判断：全网数据下只在一部分子站有代理线查询权限时不拒绝，只查有权限的子站（报表注明范围） */
+  function agentPerm(k) { return k && LV1[k] ? LV1[k].filter(function (s) { return siteOk(s) && siteCh(s, "agent"); }) : []; }   /* 有代理线查询权限的子站（决定按钮是否显示） */
+  function agentSites(k) { return agentPerm(k).filter(function (s) { return !paused(s); }); }   /* 实际查询的子站：再去掉暂停的子站 */
+  function canAgent(k) { return !!k && canLv(k) && agentPerm(k).length > 0; }
+  /* 子站暂停（演示 789Bingo）：总停用开关打开或没有可用机器人 */
+  function paused(s) { return s === "789Bingo" && (P.get("stop") || P.get("noBot")); }
+  /* 渠道是否绑定了代理（N9，演示）：默认渠道「全站」「自然流量」不用绑定；所绑代理全部被删除或停用时视为未绑定代理；网红、oem 的绑定情况由模拟操作切换 */
+  function bound(ch, site) {
+    if (ch === "全站" || ch === "自然流量") return true;
+    if (ch === "网红" && P.get("whEmpty")) return false;
+    if (ch === "oem" && P.get("oemBingo") && site === "789Games") return false;
+    return true;
+  }
+  /* 二级渠道按钮：本人可查看，并且本范围内每个子站都有该渠道（全网数据取交集：全部子站都有、本人在全部子站都勾选；同名渠道在两站的父级不同时，全网数据下不显示） */
+  function chList(k) { return CH.filter(function (c) { if (k === "全网数据" && c === "谷歌通用词" && P.get("ggDiff")) return false; return canCh(c, k) && LV1[k].every(function (s) { return bound(c, s); }); }); }
+  /* 子渠道（演示）：父级渠道有可见的子渠道时，点父级进入下一级菜单：「父级·全渠道」（子渠道全部勾选时才有）+ 子渠道，最后一行「返回上一级」「首页菜单」 */
+  var PARENT = { "谷歌品牌词": "谷歌", "品牌词PH": "谷歌品牌词", "谷歌通用词": "谷歌" }, ALLSUF = "·全渠道";   /* 层级不限：子渠道下还可以有子渠道 */
+  function chainOf(c) { var a = []; while (c) { a.unshift(c); c = PARENT[c]; } return a; }   /* 从顶层到 c 的渠道路径 */
+  function subsOf(p, k) { return chList(k).filter(function (c) { return PARENT[c] === p; }); }
+  function topList(k) { var all = chList(k); return CH.filter(function (c) { return !PARENT[c] && (all.indexOf(c) >= 0 || subsOf(c, k).length); }); }   /* 父级未全选但有子渠道权限时，父级按钮照常显示，进入后没有全渠道 */
+  function lv3List(p, k) { return (chList(k).indexOf(p) >= 0 ? [p + ALLSUF] : []).concat(subsOf(p, k)); }
+  /* 首页：在两个子站都有权限 → 一级按钮；只在一个子站有权限 → 该子站的二级菜单 */
+  function homeLv() { var m = myLv(); return m.length === 1 ? m[0] : null; }
+  /* 按钮自适应：全站、父级·全渠道各占一行；其余按数量和名称长度均分，每行最多 3 个（4 个排 2+2，5 个排 3+2）；
+     名称较长放不下 3 个时每行改为 2 个或 1 个（演示界限：中文按 2、其他按 1 计宽，最长名称超过 12 时每行 2 个，超过 18 时每行 1 个；上线由技术按屏幕宽度确定） */
+  function nameW(s) { var w = 0; for (var i = 0; i < s.length; i++) w += s.charCodeAt(i) > 255 ? 2 : 1; return w; }
+  function layoutRows(list) {
+    var solo = [], rest = [];
+    list.forEach(function (c) { if (c === "全站" || c.slice(-ALLSUF.length) === ALLSUF) solo.push([c]); else rest.push(c); });
+    var maxW = rest.reduce(function (m, c) { return Math.max(m, nameW(c)); }, 0), per = maxW > 18 ? 1 : maxW > 12 ? 2 : 3;
+    var n = rest.length, rows = Math.ceil(n / per), out = solo.slice(), i = 0;
+    for (var r = 0; r < rows; r++) { var size = Math.floor(n / rows) + (r < n % rows ? 1 : 0); out.push(rest.slice(i, i + size)); i += size; }
+    return out;
+  }  function rows3(list) { var out = []; for (var i = 0; i < list.length; i += 3) out.push(list.slice(i, i + 3)); return out; }
+  /* 代理线按子站分别判断（T03）：该站存在该代理、本人有该站权限，且有该站「全站」权限或该代理所在渠道的权限 */
+  function chSee(s, c) { return siteCh(s, "全站") || siteCh(s, c); }
+  function agentSiteOk(acc, s) { var a = AGENTS[acc]; return !!(a && a[s]) && siteOk(s) && !paused(s) && siteCh(s, "agent") && chSee(s, a.ch); }
+  /* 全网数据代理线报表只含部分子站时的原因：代理账号只在该站存在 / 另一站暂停中 / 没有该站代理线查询权限 / 不能查看该代理在该站所在的渠道 */
+  function agentRange(scope) {
+    var ss = sitesFor(scope), miss = LV1[scope.lv].filter(function (s) { return ss.indexOf(s) < 0; });
+    if (!scope.agent || scope.lv !== "全网数据" || !ss.length || !miss.length) return "";
+    return "只含 " + ss.join("、") + "（" + miss.map(function (s) { return !AGENTS[scope.agent][s] ? "代理账号只在 " + ss.join("、") + " 存在" : paused(s) ? s + " 暂停中" : !siteCh(s, "agent") ? "你在 " + s + " 没有代理线查询权限" : "你在 " + s + " 不能查看该代理所在的渠道"; }).join("；") + "）";
+  }
+  function agentLim(scope) { return !!scope.agent && sitesFor(scope).some(function (s) { return !siteCh(s, "全站"); }); }   /* 本人没有某站「全站」权限时按渠道过滤，报表注明「仅含你可查看的渠道」 */
+  function sitesFor(scope) { return LV1[scope.lv].filter(function (s) { return scope.agent ? agentSiteOk(scope.agent, s) : bound(scope.ch, s); }); }
+
+  /* 演示数据：d = 0 今日（截至生成时刻）/ 1 昨日 / 2 前日 / 3 昨日同时段（昨日 00:00 至同一时刻，只用于「较昨日同时段」）；全网数据 = 两站原始数相加后再算人均和留存 */
+  function agentF(acc, site) { var a = AGENTS[acc], f = a[site] || 0; if (a.sub && a.sub[site] && chSee(site, a.sub.ch)) f += a.sub[site]; return f; }   /* 代理及下级中，只统计本人可查看渠道的用户 */
+  function raw(site, scope, d) {
+    var f = scope.agent ? agentF(scope.agent, site) : [1, 0.14, 0.18, 0.22, 0.12, 0.26, 0.07, 0.03, 0.05, 0.08][CH.indexOf(scope.ch)] * (site === "789Games" ? 0.42 : 1);
+    var x = f * [0.62, 1, 0.94, 0.6][d], fd = 820 * x, r1Reg = 2050 * f * [1, 1, 0.97, 1][d], r7Reg = 1980 * f * [1, 1, 1.03, 1][d];
+    return { reg: 2100 * x, fd: fd, fdAmt: fd * (site === "789Games" ? 188 : 215), newDep: fd * 290, dep: 1180000 * x, depU: 2650 * x, wd: 1010000 * x, bet: 9800000 * x, vbet: 8450000 * x, pay: 9800000 * x * [0.969, 0.969, 0.972, 0.971][d],
+      r1Reg: r1Reg, r1Ret: r1Reg * [0.248, 0.306, 0.291, 0.239][d], r7Reg: r7Reg, r7Ret: r7Reg * [0.097, 0.131, 0.124, 0.101][d] };
   }
   function sum(a, b) { var o = {}; Object.keys(a).forEach(function (key) { o[key] = a[key] + b[key]; }); return o; }
+  function dayRaw(scope, d) { return sitesFor(scope).map(function (s) { return raw(s, scope, d); }).reduce(sum); }
   function val(r, key) {
     switch (key) {
       case "avgFd": return r.fd ? r.fdAmt / r.fd : null;
@@ -197,200 +326,371 @@ var TG = (function () {
       default: return r[key];
     }
   }
-  /* 报表列（N2、N22）：有权限的站点各一列；两站都有权限时加「全站（两站合计）」列。代理线只显示账号存在的站点 */
-  /* 渠道是否绑定了代理（N9，演示）：「全站」不用绑定；网红、oem 的绑定情况由模拟操作切换 */
-  function bound(ch, site) {
-    if (ch === "全站") return true;
-    if (ch === "网红" && P.get("whEmpty")) return false;
-    if (ch === "oem" && P.get("oemBingo") && site === "789Games") return false;
-    return true;
+  /* 报表（N10–N21）：后台按 Excel 格式生成工作表（全网数据另附各站分表），只用来生成快照图片，源文件不发到群里 */
+  function objName(scope) { return scope.agent ? "代理线 " + esc(scope.agent) + "（含下级）" : "渠道 " + scope.ch; }
+  function fname(scope) { return scope.lv + "_" + (scope.agent ? "代理线" + scope.agent : scope.ch) + "_20261104_1432.xlsx"; }
+  function sheets(scope) {
+    var ss = sitesFor(scope);
+    if (scope.lv !== "全网数据") return [[ss[0], null]];
+    return ss.length === 2 ? [["全网合计", null], ["789Bingo", "789Bingo"], ["789Games", "789Games"]] : [["全网合计", null]];
   }
-  /* 按钮矩阵只显示本群有权限的站点里至少有一个已绑定代理的渠道 */
-  /* 授权群的「渠道」（N9，演示）：模拟操作勾选后本群不显示 cicc 和代理线查询 */
-  function chOn(c) { return !(P.get("grpLimit") && c === "cicc"); }
-  function agentOn() { return !P.get("grpLimit"); }
-  /* 按钮矩阵只显示：本群勾选了的渠道，并且在本群站点范围里至少有一个站点已绑定代理 */
-  function visibleCh() { return CH.filter(function (c) { return chOn(c) && S.auth.some(function (s) { return bound(c, s); }); }); }
-  function rows3(list) { var out = []; for (var i = 0; i < list.length; i += 3) out.push(list.slice(i, i + 3)); return out; }
-  function columns(scope) {
-    var sites = S.auth.filter(function (s) { return scope.agent ? AGENTS[scope.agent][s] : bound(scope.ch, s); });
-    return sites.length === 2 ? sites.concat(["全站"]) : sites;
-  }
-  function reportHtml(scope, period) {
-    var cols = columns(scope), T = {}, Y = {};
-    cols.forEach(function (c) {
-      if (c === "全站") { T[c] = sum(T["789Bingo"], T["789Games"]); Y[c] = sum(Y["789Bingo"], Y["789Games"]); }
-      else { T[c] = raw(c, scope, period, 0.62); Y[c] = raw(c, scope, period, 1); }
-    });
-    function cell(a, b, kind) {
+  function sheetHtml(scope, site) {
+    var R = [0, 1, 2, 3].map(function (d) { return site ? raw(site, scope, d) : dayRaw(scope, d); }), ss = sitesFor(scope);
+    function row(group, name, key, kind) {
       var f = kind === "money" ? money : kind === "money2" ? money2 : kind === "pct" ? function (x) { return x.toFixed(1) + "%"; } : fmtInt;
-      /* 变化百分比（N22）：金额和人数 =（今日 − 昨日）÷ |昨日| × 100%；留存为百分点差；昨日为 0 或任一为 - 时显示 - */
-      var pc = "-";
-      if (a != null && b != null) {
-        var dd = a - b;
-        if (kind === "pct") pc = Math.abs(dd) < 0.05 ? "0.0pp" : (dd > 0 ? "+" : "-") + Math.abs(dd).toFixed(1) + "pp";
-        else if (Math.abs(b) >= 0.5) { var r = dd / Math.abs(b) * 100; pc = Math.abs(r) < 0.05 ? "0.0%" : (r > 0 ? "+" : "-") + Math.abs(r).toFixed(1) + "%"; }
+      var a = val(R[0], key), b = val(R[1], key), c = val(R[2], key), y = val(R[3], key), pc = "-", cls = "", arrow = "";   /* 变化列：今日 对比 昨日同时段（y） */
+      if (a != null && y != null) {
+        var dd = a - y, eq = Math.abs(dd) < (kind === "pct" ? 0.05 : 0.5);
+        if (kind === "pct") pc = eq ? "0.0 百分点" : (dd > 0 ? "+" : "-") + Math.abs(dd).toFixed(1) + " 百分点";
+        else if (Math.abs(y) >= 0.5) { var r = dd / Math.abs(y) * 100; pc = Math.abs(r) < 0.05 ? "0.0%" : (r > 0 ? "+" : "-") + Math.abs(r).toFixed(1) + "%"; }
+        if (!eq) { cls = dd > 0 ? "tg-up" : "tg-dn"; arrow = dd > 0 ? "▲ " : "▼ "; }
       }
-      var y = '<small class="tg-y">昨 ' + (b == null ? "-" : f(b)) + "</small>";
-      if (a == null) return '<td class="tg-v"><b>-</b>' + y + '<small class="tg-p">-</small></td>';
-      var d = b == null ? 0 : a - b, eq = b == null || Math.abs(d) < (kind === "pct" ? 0.05 : 0.5), cls = eq ? "" : d > 0 ? "tg-up" : "tg-dn";
-      return '<td class="tg-v"><b class="' + cls + '">' + (eq ? "" : d > 0 ? "▲" : "▼") + f(a) + "</b>" + y + '<small class="tg-p ' + cls + '">' + pc + "</small></td>";
+      function v(x) { return '<td class="n">' + (x == null ? "-" : f(x)) + "</td>"; }
+      return "<tr><td>" + name + "</td>" + v(a) + v(b) + v(c) + '<td class="n ' + cls + '">' + arrow + pc + "</td></tr>";
     }
-    /* 排版（N22）：多列时每个指标先占一行写名称，下一行各站数据并排，数据列用满整行宽度；只有一列时名称和数据同一行 */
-    var one = cols.length === 1;
-    function row(name, key, kind) {
-      var cells = cols.map(function (c) { return cell(val(T[c], key), val(Y[c], key), kind); }).join("");
-      return one ? '<tr><td class="tg-mname">' + name + "</td>" + cells + "</tr>" : '<tr class="tg-mlab"><td colspan="' + cols.length + '">' + name + "</td></tr><tr>" + cells + "</tr>";
-    }
-    function sec(name) { return '<tr class="tg-sec"><td colspan="' + (one ? 2 : cols.length) + '">' + name + "</td></tr>"; }
-    var title = scope.agent ? "代理线：" + esc(scope.agent) + "（含下级）" : "渠道：" + scope.ch;
-    var head = one ? "<tr><th>指标</th><th>" + cols[0] + "</th></tr>" : "<tr>" + cols.map(function (c) { return "<th>" + (c === "全站" ? '全站<small class="tg-y">两站合计</small>' : c) + "</th>"; }).join("") + "</tr>";
-    return '<div class="tg-rep" data-dev="D08"><h4>📊 ' + title + "</h4>" +
-      '<div class="tg-sub">今日截至 ' + TODAY + " " + NOW + "（GMT+8）<br>大字为今日，▲▼ 与昨日全天相比；小字为昨日全天和变化百分比</div>" +
-      '<table class="' + (one ? "tg-one" : "tg-multi") + '">' + head +
-      sec("👥 用户") + row("新增注册人数", "reg") + row("新增首存人数", "fd") +
-      sec("💰 存提") + row("新增玩家存款金额", "newDep", "money") + row("存款额", "dep", "money") + row("存提差", "net", "money") + row("人均首存金额", "avgFd", "money2") + row("人均存款金额", "avgDep", "money2") +
-      sec("🎮 投注") + row("总投注额", "bet", "money") + row("有效投注额", "vbet", "money") + row("GGR", "ggr", "money") +
-      sec("📈 留存") + row("次日留存", "r1", "pct") + row("7日留存", "r7", "pct") +
-      '</table><div class="tg-del" data-dev="D14">⏱ 本报表将于今日 ' + DEL_AT + " 自动删除</div></div>";
-  }  function kb(rows) {
+    function sec(name) { return '<tr class="g"><td colspan="5">' + name + "</td></tr>"; }   /* 分组标题行（不单独占一列） */
+    var range = site || (scope.lv !== "全网数据" ? scope.lv : ss.length === 2 ? "全网数据（789Bingo + 789Games 合计）" : "全网数据（只含 " + ss.join("、") + "）");
+    /* 统计时间：各子站按本站平台时区切日，每个子站一行（全网合计列出所含的每个子站） */
+    var tss = site ? [site] : ss;
+    var tRows = tss.map(function (s, i) { return "<tr>" + (i ? "" : '<td rowspan="' + tss.length + '">统计时间</td>') + '<td colspan="4">' + tzLab(s) + " 今日 " + TODAY + " 00:00–" + NOW + "；昨日 2026-11-03 全天；前日 2026-11-02 全天；对比 2026-11-03 00:00–" + NOW + "</td></tr>"; }).join("");
+    return '<table class="xl-t"><tr><td colspan="5" class="t">789 运营数据报表</td></tr>' +
+      '<tr><td>数据范围</td><td colspan="4">' + range + "</td></tr>" +
+      '<tr><td>查询对象</td><td colspan="4">' + objName(scope) + ((site ? scope.agent && !siteCh(site, "全站") : agentLim(scope)) ? "，仅含你可查看的渠道" : "") + "</td></tr>" + tRows +
+      '<tr class="h"><td>指标</td><td>今日</td><td>昨日</td><td>前日</td><td>较昨日同时段</td></tr>' +
+      sec("👥 用户") + row("用户", "新增注册人数", "reg") + row("用户", "新增首存人数", "fd") +
+      sec("💰 存提") + row("存提", "新增玩家存款金额", "newDep", "money") + row("存提", "存款金额", "dep", "money") + row("存提", "存提差", "net", "money") + row("存提", "人均首存金额", "avgFd", "money2") + row("存提", "人均存款金额", "avgDep", "money2") +
+      sec("🎮 投注") + row("投注", "总投注额", "bet", "money") + row("投注", "有效投注额", "vbet", "money") + row("投注", "GGR", "ggr", "money") +
+      sec("📈 留存") + row("留存", "次日留存", "r1", "pct") + row("留存", "7日留存", "r7", "pct") + "</table>";
+  }
+  /* 快照图片（N10–N21）：机器人在后台生成 Excel，把全部工作表的数据截成一张图片发到群里；多个工作表上下拼接；Excel 源文件不发到群里、不提供下载 */
+  function shotBody(scope) { return sheets(scope).map(function (s) { return '<div class="tg-shs"><i>工作表：' + s[0] + "</i>" + sheetHtml(scope, s[1]) + "</div>"; }).join(""); }
+  /* 菜单路径：按实际操作的一级 › 二级 › 三级（有子渠道时）显示 */
+  function menuPath(scope) {
+    var p = [scope.lv];
+    if (scope.agent) p.push("代理线查询", esc(scope.agent));
+    else if (scope.par) { p = p.concat(chainOf(scope.par)); p.push(scope.ch === scope.par ? "全渠道" : scope.ch); }
+    else p.push(scope.ch);
+    return p.join(" › ");
+  }
+  /* 报表消息：banner 样式的图片（点开查看完整报表），下方文字写菜单路径和查询时间区间，最下面「返回上一级」「首页菜单」 */
+  function shotHtml(scope) {
+    var n = sheets(scope).length;
+    return '<div class="tg-banner" data-act="shot" data-dev="D08" role="button" tabindex="0" aria-label="报表图片缩略图，点开查看详情"><div class="tg-thumb">' + shotBody(scope) + '</div><em>' + (n > 1 ? n + " 个工作表 · " : "") + "点开查看详情 ›</em></div>" +
+      '<div class="tg-cap" data-dev="D100">📍 ' + menuPath(scope) + sitesFor(scope).map(function (s) { return "<br>🕒 " + tzLab(s) + " 今日 " + TODAY + " 00:00 – " + NOW + "<br>　 昨日 2026-11-03 00:00 – 23:59<br>　 前日 2026-11-02 00:00 – 23:59<br>　 对比 2026-11-03 00:00 – " + NOW; }).join("") + (agentRange(scope) ? '<br><span class="tg-lim">' + agentRange(scope) + "</span>" : "") + (agentLim(scope) ? '<br><span class="tg-lim">仅含你可查看的渠道</span>' : "") + "</div>" +
+      '<div class="tg-del" data-dev="D14">⏱ ' + DEL_AT + " 自动删除（GMT+8）</div>";
+  }
+  function report(scope) { bot(shotHtml(scope), "report", { scope: scope, lv: scope.lv, shot: true, kb: kb([[{ t: KEY_AGENT, act: "agentAsk", dev: "D18" }], [{ t: KEY_UP, act: "rup", dev: "D100" }, { t: KEY_HOME, act: "home", dev: "D100" }]]) }); }   /* 报表下：代理线查询（按这份报表的一级范围查）+ 返回上一级、首页菜单 */   /* 只发图片，不提供 Excel 源文件下载 */  function openXl(scope, shot) {
+    var sh = sheets(scope), tabs = document.getElementById("xlT"), box = document.getElementById("xl");
+    box.classList.toggle("img", !!shot);
+    document.getElementById("xlN").textContent = shot ? "报表快照（图片）" : fname(scope);
+    tabs.hidden = !!shot;
+    if (shot) { document.getElementById("xlB").innerHTML = '<div class="tg-shimg">' + shotBody(scope) + "</div>"; box.hidden = false; return; }
+    function pick(i) { document.getElementById("xlB").innerHTML = sheetHtml(scope, sh[i][1]); [].forEach.call(tabs.querySelectorAll("button"), function (b, j) { b.classList.toggle("on", j === i); }); }
+    tabs.innerHTML = sh.map(function (s, i) { return '<button type="button" data-sh="' + i + '">' + s[0] + "</button>"; }).join("");
+    tabs.onclick = function (e) { var b = e.target.closest("[data-sh]"); if (b) pick(+b.dataset.sh); };
+    pick(0); box.hidden = false;
+  }
+  function kb(rows) {
     return '<div class="tg-kb">' + rows.map(function (r) {
-      if (r.lab) return '<div class="tg-lab">' + r.lab + "</div>";
       return '<div class="tg-row" style="grid-template-columns:repeat(' + r.length + ',1fr)">' + r.map(function (b) {
-        return '<button type="button" data-act="' + b.act + '"' + (b.arg != null ? ' data-arg="' + esc(b.arg) + '"' : "") + (b.dev ? ' data-dev="' + b.dev + '"' : "") + (b.on ? ' class="on"' : "") + ">" + b.t + "</button>";
+        return '<button type="button" data-act="' + b.act + '"' + (b.arg != null ? ' data-arg="' + esc(b.arg) + '"' : "") + (b.dev ? ' data-dev="' + b.dev + '"' : "") + ">" + b.t + "</button>";
       }).join("") + "</div>";
     }).join("") + "</div>";
   }
-  /* 报表键盘（N2）：和标准 Telegram 机器人一样，显示在输入框下方，3 列网格；点按钮等于在群里发出按钮上的文字 */
-  var KEYS_CH = CH.map(function (c) { return "📊 " + c; }), KEY_AGENT = "🔍 代理线查询";
-
+  /* 输入框下方键盘：只给操作人本人看，按本人权限显示；一级 = 本人可用的一级按钮，二级 = 本人可查看渠道 + 代理线查询 + 返回 */
+  var KEY_AGENT = "🔍 代理线查询", KEY_UP = "⬅ 返回上一级", KEY_HOME = "🏠 首页菜单";
   function renderKbd() {
-    var box = document.getElementById("kbd"), tg = document.getElementById("kbdTg");
-    tg.hidden = !S.kbd; tg.setAttribute("aria-pressed", String(S.kbd && !S.kbdHide));
-    box.hidden = !S.kbd || S.kbdHide;
+    var box = document.getElementById("kbd"), tg = document.getElementById("kbdTg"), mine = myLv();
+    var on = S.kbd && !S.noStaff && mine.length > 0;
+    tg.hidden = !on; tg.setAttribute("aria-pressed", String(on && !S.kbdHide));
+    box.hidden = !on || S.kbdHide;
     if (box.hidden) return;
     function row(list, dev) { return '<div class="tg-krow" style="grid-template-columns:repeat(' + list.length + ',1fr)">' + list.map(function (k) { return '<button type="button" data-key="' + esc(k) + '" data-dev="' + dev + '">' + k + "</button>"; }).join("") + "</div>"; }
-    box.innerHTML = rows3(visibleCh().map(function (c) { return "📊 " + c; })).map(function (r) { return row(r, "D05"); }).join("") + (agentOn() ? row([KEY_AGENT], "D06") : "");
+    if (!S.kbLv && homeLv()) S.kbLv = homeLv();   /* 只在一个子站有权限：首页就是该子站的二级菜单 */
+    if (!S.kbLv || !canLv(S.kbLv)) { S.kbLv = null; box.innerHTML = row(mine, "D75") + (canAgent(defLv()) ? row([KEY_AGENT], "D06") : ""); return; }   /* 一级菜单也有代理线查询 */
+    /* 底部键盘不分层进入：一次显示本人在该范围可查看的全部渠道，按层级从上到下排——一级渠道在最上，其次二级、三级……；不同层级不同行，同一层级按自适应规则每行 1–3 个 */
+    var all = chList(S.kbLv), html = "";
+    for (var d = 1; ; d++) {
+      var lvl = all.filter(function (c) { return chainOf(c).length === d; });
+      if (!lvl.length && !all.some(function (c) { return chainOf(c).length > d; })) break;
+      html += layoutRows(lvl).map(function (r) { return row(r.map(function (c) { return "📊 " + c; }), "D05"); }).join("");
+    }
+    box.innerHTML = html + (canAgent(S.kbLv) ? row([KEY_AGENT], "D06") : "") + (homeLv() ? "" : row([KEY_UP, KEY_HOME], "D76"));   /* 代理线查询独占一行；最后一行返回上一级、首页菜单并排；只有一个子站权限时键盘即首页，不显示返回类按钮 */
   }
-  /* 消息：from = me（当前群成员）/ bot；kind = text / report / gen / fail；quote = 回复引用 */
+  /* 底部键盘点渠道：直接生成该渠道报表；父级渠道 = 该父级全部数据（路径写「› 全渠道」），子渠道路径带上各级父级 */
+  function kbdScope(c) { return { lv: S.kbLv, ch: c, par: subsOf(c, S.kbLv).length ? c : (PARENT[c] || "") }; }
+  /* 消息：from = me（当前成员）/ bot；kind = text / menu / lv2 / report / gen / fail；quote = 回复引用 */
   function add(m) { m.id = ++seq; m.tm = NOW; S.msgs.push(m); return m; }
   function me(text, quote) { return add({ from: "me", kind: "text", quote: quote, html: esc(text).replace(/^(\/\w+)/, '<span class="tg-cmd">$1</span>') }); }
-  function bot(html, kind, extra) { var m = add({ from: "bot", kind: kind || "text", html: html }); if (extra) Object.keys(extra).forEach(function (k) { m[k] = extra[k]; }); return m; }
+  /* owner：这条消息归属的人员，下面的按钮只有他能点（T07）；进群时的一级菜单 owner 为 null，所有人员都能点 */
+  /* 菜单消息的按钮在发出时按当时的权限确定，之后不随权限变化（Telegram 已发出的按钮不会自己变）；点击时再按点击人当前权限校验 */
+  function bot(html, kind, extra) { var m = add({ from: "bot", kind: kind || "text", html: html, owner: who() }); if (extra) Object.keys(extra).forEach(function (k) { m[k] = extra[k]; }); if (!m.kb) m.kb = m.kind === "menu" ? menuKb() : m.kind === "lv2" ? lv2Kb(m.lv) : m.kind === "lv3" ? lv3Kb(m.lv, m.par) : ""; return m; }
+  function at(t) { return '<span class="tg-cmd">@' + who() + "</span> " + t; }
+  /* 命令或键盘文字被拒绝：只能在群里回复，@ 发送人，不含报表数据，发出满 1 分钟删除，不随新报表删除 */
+  function rej(t) { if (S.chat !== "group") { bot(t); return; } bot((S.auth ? at(t) : t) + '<div class="tg-del" data-dev="D104">⏱ ' + REJ_AT + " 自动删除（GMT+8）</div>", "rej"); }
+  /* 拒绝或提示：发命令、点底部键盘时只能在群里回复（rej）；点消息里的按钮时只弹点击人可见的提示（S.src = "inline"） */
+  function deny(t) { if (S.src === "inline") P.toast(t.replace(/。$/, "")); else rej(t); }
+  var NO_CH = "你没有可查看的渠道，请联系管理员开通。";
+  function pickLvTip() { var m = myLv(); return "请先选择 " + (m.length > 1 ? m.slice(0, -1).join("、") + " 或" + m[m.length - 1] : m[0]) + "。"; }   /* 子站按钮按本人有权限的子站依次列出 */
+  function menuKb() { var rows = [LV1K.filter(canLv).map(function (k) { return { t: k, act: "lv1", arg: k, dev: "D74" }; })]; if (canAgent(defLv())) rows.push([{ t: KEY_AGENT, act: "agentAsk", dev: "D18" }]); return kb(rows); }   /* 一级菜单（本人首页）：本人有权限的一级按钮 + 代理线查询（按全网数据查，本人有代理线查询权限时显示） */
+  function lv2Kb(k) {
+    var rows = layoutRows(topList(k)).map(function (r) { return r.map(function (c) { return { t: "📊 " + c, act: "ch", arg: c, dev: "D17" }; }); });
+    if (canAgent(k)) rows.push([{ t: KEY_AGENT, act: "agentAsk", dev: "D18" }]);
+    if (!homeLv()) rows.push([{ t: KEY_UP, act: "back", dev: "D76" }, { t: KEY_HOME, act: "home", dev: "D76" }]);   /* 二级菜单不是首页时：最后一行返回上一级、首页菜单并排，都回到一级菜单 */
+    return kb(rows);
+  }
+  /* 下一级菜单（内联）：父级·全渠道 + 子渠道；最后一行返回上一级、首页菜单 */
+  function lv3Kb(k, p) {
+    var rows = layoutRows(lv3List(p, k)).map(function (r) { return r.map(function (c) { return { t: "📊 " + c, act: "ch3", arg: c === p + ALLSUF ? p : c, dev: "D17" }; }); });
+    if (canAgent(k)) rows.push([{ t: KEY_AGENT, act: "agentAsk", dev: "D18" }]);
+    rows.push([{ t: KEY_UP, act: "up", dev: "D99" }, { t: KEY_HOME, act: "home", dev: "D99" }]);
+    return kb(rows);
+  }
   function render() {
     chat.innerHTML = '<div class="tg-day">11月4日</div>' + S.msgs.map(function (m) {
-      var who = m.from === "bot" && S.chat === "group" ? '<div class="tg-who bot">789报表助手</div>' : "";
-      var q = m.quote ? '<div class="tg-quote"><b>789报表助手</b><br>' + m.quote + "</div>" : "";
-      return '<div class="tg-msg ' + m.from + (m.kind === "report" ? " wide" : "") + '" data-mid="' + m.id + '"><div class="tg-bub">' + who + q + m.html + '<span class="tg-tm">' + m.tm + (m.from === "me" ? " ✓✓" : "") + "</span></div>" + (m.kind === "menu" ? menuKb() : (m.kb || "")) + "</div>";
+      if (m.from === "sys") return '<div class="tg-day">' + m.html + "</div>";   /* 系统消息（如成员加入群组） */
+      var who = m.from === "bot" && S.chat === "group" ? '<div class="tg-who bot">' + BOT + "</div>" : "";
+      var q = m.quote ? '<div class="tg-quote"><b>' + BOT + "</b><br>" + m.quote + "</div>" : "";
+      var k = m.kb || "";
+      return '<div class="tg-msg ' + m.from + (m.shot ? " wide" : "") + '" data-mid="' + m.id + '"><div class="tg-bub">' + who + q + m.html + '<span class="tg-tm">' + m.tm + (m.from === "me" ? " ✓✓" : "") + "</span></div>" + k + "</div>";
     }).join("");
     chat.scrollTop = chat.scrollHeight;
     document.getElementById("replyBar").hidden = !S.waitAgent;
     renderKbd();
   }
 
-  /* 权限（N4、N5）：只在授权群内可用；私聊一律引导到群里；返回 true 表示已回复、不再处理 */
-  function denied() {
-    if (S.chat === "private") { bot("本机器人仅在授权群内使用，请在群内发送 /menu。"); return true; }
-    if (S.auth.length) return false;
-    bot("本群未开通报表权限，请联系管理员开通。<br>本群 ID：-1001827364510");
-    return true;
+  /* 校验（N4、N5 + 人员配置）：返回提示文字，空字符串表示通过 */
+  function gate() {
+    if (S.chat === "private") return "本机器人仅在授权群内使用，请在群内发送 /menu。";
+    if (!S.auth) return "本群未开通报表权限，请联系管理员开通。<br>本群 ID：-1001827364510";
+    if (S.noStaff) return NO_STAFF;
+    return "";
   }
-  /* 菜单消息（N2）：聊天里的机器人消息带内联按钮矩阵，和输入框下方按钮矩阵的内容、顺序一致 */
-  function menuKb() {
-    var rows = rows3(visibleCh()).map(function (r) { return r.map(function (c) { return { t: "📊 " + c, act: "ch", arg: c, dev: "D17" }; }); });
-    if (agentOn()) rows.push([{ t: KEY_AGENT, act: "agentAsk", dev: "D18" }]);
-    return kb(rows);
+  /* 子站停止出报表（演示 789Bingo）：总停用开关打开 → 暂停提示；没有可用机器人 → 暂不可用提示。影响该子站和全网数据，另一子站照常；
+     点消息里的按钮也在群里回复（@ 点击人，不含数据，发出满 1 分钟删除），按钮照常显示 */
+  var BOT_DOWN = "报表机器人暂不可用，正在更换，请稍后再试。";
+  /* agentQ：全网数据范围的代理线查询只查正常的子站，只有所查子站全部暂停时才回复暂停提示 */
+  function downMsg(k, agentQ) {
+    if (!k || !LV1[k] || !LV1[k].some(paused)) return "";
+    if (agentQ && k === "全网数据" && agentSites(k).length) return "";
+    return P.get("stop") ? "报表服务暂停中，请稍后再试。" : BOT_DOWN;
   }
-  /* 菜单消息的按钮随渠道配置更新（N9）：渲染时按当前绑定情况生成 */
-  function menuMsg() { bot("请选择渠道，点渠道即生成报表：", "menu"); }
-  function openMenu() { if (denied()) return; menuMsg(); S.kbd = true; S.kbdHide = false; }
-  /* 生成报表（N26–N30）：同一群只保留最新一份报表 */
-  function gen(scope) {
-    if (S.busy) { P.toast("报表生成中，请稍候"); return; }
-    S.busy = true;
-    var g = bot('<span class="tg-gen">⏳ 正在生成报表…</span>', "gen"); render();
-    var slow = P.get("slow");
-    setTimeout(function () {
-      S.msgs = S.msgs.filter(function (m) { return m !== g && m.kind !== "report" && m.kind !== "fail"; });   /* 上一份报表从群里消失（N27） */
-      if (slow) bot("报表生成失败，请稍后重试。", "fail", { kb: kb([[{ t: "重试", act: "retry", dev: "D15" }]]), scope: scope });
-      else bot(reportHtml(scope, S.period), "report", { scope: scope, kb: repKb() });
-      S.busy = false; render();
+  function downRej(k, agentQ) { var t = downMsg(k, agentQ); if (t) rej(t); return !!t; }
+  var NO_STAFF = "你还没有报表查看权限，请联系管理员开通。你的 Telegram ID：" + MY_ID;   /* 群内回复和仅点击人可见的弹窗都带本人 Telegram ID，方便管理员登记（D69） */
+  function denied() { var t = gate(); if (!t) return false; rej(t); return true; }   /* 输入框发出的命令和键盘：只能在群里回复（不含数据，发出满 1 分钟删除） */
+  function deniedTip() { var t = gate(); if (!t) return false; P.toast(t.replace(/<br>.*/, "")); return true; }   /* 内联按钮：只弹提示给点击人（仅点击人可见），不在群里发消息；没有报表查看权限时弹窗也带本人 Telegram ID（不 @） */
+  /* 人员进群：机器人 @ 该人员自动发送本人权限范围内的首页菜单（只有他能点）；未登记或已停用的人员进群时不发菜单 */
+  function joinMsg() { add({ from: "sys", html: ME + " 加入了群组" }); if (!S.noStaff) homeMsg(); }
+  function isNav(x) { return x.kind === "lv2" || x.kind === "lv3" || x.nav; }
+  function dropMyNav() { var w = who(); S.msgs = S.msgs.filter(function (x) { return !(isNav(x) && x.owner === w); }); }   /* 只删除同一人的上一条菜单消息 */
+  /* 返回 / 首页菜单：两个子站都有权限 → @ 本人发一级按钮菜单；只有一个子站 → 发该子站的二级按钮；都替换本人上一条导航消息 */
+  function homeMsg() { if (homeLv()) { openLv2(homeLv()); return; } dropMyNav(); bot(at("请选择数据范围："), "menu", { nav: true }); if (mine()) { S.kbLv = null; S.kbSub = null; } }   /* 下方键盘同步回一级 */
+  function openMenu() { if (denied()) return; S.kbd = true; S.kbSub = null; S.kbLv = homeLv(); homeMsg(); }   /* /menu：@ 发送人发他的首页菜单（归他所有）；只有一个子站权限：首页就是该子站的渠道列表 */
+  /* 点一级按钮（内联）：@ 点击人发二级按钮消息；同一人的上一条二级按钮消息删除 */
+  function openLv2(k) {
+    if (!canLv(k)) { P.toast("你没有「" + k + "」的查看权限"); return; }
+    if (downRej(k)) return;
+    /* 该范围一个可显示的渠道都没有：没有代理线查询权限时不发菜单，只提示；有时菜单只有「🔍 代理线查询」和返回类按钮，菜单文字为这句提示 */
+    var none = !topList(k).length;
+    if (none && !canAgent(k)) { deny(NO_CH); return; }
+    dropMyNav();
+    bot(at(k + "：" + (none ? NO_CH : "请选择渠道，点渠道即生成报表")), "lv2", { lv: k }); if (mine()) { S.kbLv = k; S.kbSub = null; }   /* 下方键盘同步到二级 */
+  }
+  /* 点有子渠道的父级（内联）：@ 点击人发下一级菜单消息，替换他的二级按钮消息 */
+  function openLv3(k, p) {
+    if (downRej(k)) return;
+    dropMyNav();
+    bot(at(k + " › " + chainOf(p).join(" › ") + "：请选择全渠道或子渠道"), "lv3", { lv: k, par: p }); if (mine()) { S.kbLv = k; S.kbSub = p; }   /* 下方键盘同步到下一级 */
+  }
+  /* 查询对象是否仍在本人权限内（重试和发送前复核都用它，按当时的权限判断） */
+  function scopeOk(sc) {
+    if (!canLv(sc.lv)) return false;
+    if (sc.agent) return canAgent(sc.lv) && agentOk(sc.agent, sc.lv);
+    return chList(sc.lv).indexOf(sc.ch) >= 0;
+  }
+  /* 生成报表（N26–N30）：同一群只保留最新一份报表；同一人员对同一查询只保留一个任务；
+     30 秒超时只算生成时间；生成完成后限流则排队（不计入 30 秒），排队超过 2 分钟取消并提示；发出前统一复核 */
+  /* src = "kbd"：来自底部键盘或命令（等于在群里发文字），生成中被拒绝时只能在群里回复；其余为点消息里的按钮，只弹点击人可见的提示 */
+  function gen(scope, retry, src) {
+    if (downRej(scope.lv, !!scope.agent)) return;
+    var w = who(), key = w + "|" + scope.lv + "|" + (scope.agent || scope.ch) + "|" + (scope.par || "");
+    if (S.task) {
+      if (!(retry && S.task.key === key)) { if (src === "kbd") rej("报表生成中，请稍候。"); else P.toast("报表生成中，请稍候"); return; }
+      clearTimeout(S.task.timer); var old = S.task.g; S.msgs = S.msgs.filter(function (m) { return m !== old; }); S.task = null;   /* 点「重试」：取消同一查询的旧任务 */
+    }
+    var slow = P.get("slow"), g = bot('<span class="tg-gen">⏳ 正在生成报表…</span>', "gen");
+    var t = S.task = { key: key, g: g, scope: scope, who: w };
+    render();
+    t.timer = setTimeout(function () {
+      if (S.task !== t) return;
+      if (slow) {   /* 生成超过 30 秒：失败，可重试 */
+        S.task = null; S.who = t.who;
+        S.msgs = S.msgs.filter(function (m) { return m !== g; });   /* 生成失败不删除旧报表，旧报表按原定时间删除；只在新报表发出时删除（N27） */
+        bot("报表生成失败，请稍后重试。", "fail", { kb: kb([[{ t: "重试", act: "retry", dev: "D15" }]]), scope: scope });
+        S.who = null; render(); return;
+      }
+      if (P.get("queue")) { t.queued = true; g.html = '<span class="tg-gen">⏳ 排队中，稍后发出</span>'; render(); return; }   /* 限流：排队等待，不提示失败 */
+      send(t);
     }, slow ? 1500 : 700);
   }
-  function repKb() { return ""; }   /* 报表下方不带按钮，不提供刷新；要看最新数据就再点一次渠道按钮 */
-  var ASK = "@王运营 请回复代理账号，例如 kk_sms_g12";
-  function ask() { bot(ASK); S.waitAgent = true; }
-  /* 代理线查询（N23–N25） */
-  function agent(acc) {
-    acc = acc.trim().toLowerCase();
-    if (!acc) { ask(); return; }
-    if (!AGENTS.hasOwnProperty(acc) || !columns({ agent: acc }).length) { bot("未找到代理线「" + esc(acc) + "」，请检查代理账号后重试。"); return; }
-    gen({ agent: acc });
+  /* 发出报表：发送前复核（群、人员状态、子站和渠道权限、子站未暂停），任一不满足就取消发送，不另发提示；
+     取消时删除这份报表的「正在生成 / 排队中」提示，本群随即可以再生成（总停用开关取消排队、超时提示发不出时同样处理） */
+  function cancelTask(t) { S.task = null; S.msgs = S.msgs.filter(function (m) { return m !== t.g; }); }
+  function send(t) {
+    if (S.task !== t) return;
+    cancelTask(t);
+    S.who = t.who;
+    if (P.get("revoke") || gate() || downMsg(t.scope.lv, !!t.scope.agent) || !scopeOk(t.scope)) { S.who = null; render(); return; }
+    S.msgs = S.msgs.filter(function (m) { return m.kind !== "report" && m.kind !== "fail"; });   /* 上一份报表从群里消失（N27） */
+    report(t.scope); S.who = null; render();
   }
+  function flush() { if (S.task && S.task.queued) send(S.task); }   /* 限流结束：排队的报表发出 */
+  function qExpire() {   /* 排队超过 2 分钟：取消这份报表，把排队提示改为超时提示和「重试」 */
+    var t = S.task; if (!t || !t.queued) return;
+    S.task = null; S.who = t.who; t.g.kind = "fail"; t.g.scope = t.scope; t.g.html = "排队超时，报表未发出，请稍后重试。";   /* 两条失败提示都不带 @，按钮归属生成这份报表的人员 */ t.g.kb = kb([[{ t: "重试", act: "retry", dev: "D15" }]]); S.who = null; render();
+  }
+  var ASK = "请回复代理账号（可只输入一部分），例如 kk_sms";
+  /* from = 点「🔍 代理线查询」时所在的菜单（{ lv, par }；null 为首页，如发 /agent），搜索结果的「返回上一级」回到这里 */
+  /* 代理线查询提问、搜索结果、「未找到」回复归属提问人，算作本人的菜单消息：替换本人上一条菜单消息，被本人下一条菜单替换，发出满 15 分钟自动删除（ag） */
+  function ask(k, from) { if (downRej(k, true)) return; dropMyNav(); bot(at(k + "：" + ASK), "text", { nav: true, ag: true }); if (mine()) { S.waitAgent = true; S.agentLv = k; S.agentFrom = from || null; S.agentWho = who(); } }
+  function fromOf(m) { if (!m) return null; if (m.kind === "lv2") return { lv: m.lv }; if (m.kind === "lv3") return { lv: m.lv, par: m.par }; if (m.kind === "report" && m.scope) return { lv: m.scope.lv, par: m.scope.par || "" }; return m.agFrom || null; }
+  function defLv() { return canLv("全网数据") ? "全网数据" : myLv()[0]; }
+  /* 代理线查询（N23–N25）：在指定一级范围里查找 */
+  /* 代理线查询（N23–N25）：在指定一级范围、本人有权限的渠道里模糊搜索代理账号 */
+  /* 搜索范围：本人在该站有「全站」权限 → 该站全部代理；没有 → 只搜本人可查看渠道下绑定的代理（未绑定到渠道的代理归「自然流量」） */
+  function agentOk(acc, k) { return !!AGENTS[acc] && canLv(k) && LV1[k].some(function (s) { return agentSiteOk(acc, s); }); }   /* 按子站分别判断（T03），报表只含判断通过的子站 */
+  function agentSearch(q, k) { q = q.toLowerCase(); function at0(a) { return a.toLowerCase().indexOf(q); } return Object.keys(AGENTS).filter(function (acc) { return at0(acc) >= 0 && agentOk(acc, k); }).sort(function (a, b) { return (at0(a) - at0(b)) || (a.toLowerCase() < b.toLowerCase() ? -1 : 1); }); }   /* 不区分大小写的包含匹配（输入和账号都转小写比较，按钮显示账号原样）；账号开头匹配的排前面 */
+  function agent(acc, k, from) {
+    acc = acc.trim();
+    if (!k) { rej(NO_STAFF); return; }
+    if (downRej(k, true)) return;
+    if (!acc) { ask(k, from); return; }
+    var hit = agentSearch(acc, k);
+    /* 全网数据下只查部分子站时注明原因：另一站暂停中，或你在其他子站没有代理线查询权限 */
+    var miss = k === "全网数据" ? LV1[k].filter(function (s) { return agentSites(k).indexOf(s) < 0; }) : [];
+    var part = miss.length ? "（只查 " + agentSites(k).join("、") + "：" + (miss.some(paused) ? miss.filter(paused).join("、") + " 暂停中" : "你在其他子站没有代理线查询权限") + "）" : "";
+    dropMyNav();
+    /* 未找到：这条回复本身就是新的提问，输入框自动进入回复状态，直接输入新账号即可（也可点「🔍 代理线查询」） */
+    if (!hit.length) { bot(at("在 " + k + part + " 你可查看的渠道中未找到包含「" + esc(acc) + "」的代理，请直接回复新的账号。"), "text", { lv: k, agFrom: from || null, nav: true, ag: true, kb: kb([[{ t: KEY_AGENT, act: "agentAsk", dev: "D101" }]]) }); if (mine()) { S.waitAgent = true; S.agentLv = k; S.agentFrom = from || null; S.agentWho = who(); } return; }
+    if (hit.length === 1) { gen({ lv: k, agent: hit[0] }, false, S.src); return; }   /* 只搜到 1 个代理：直接生成报表，不列结果按钮 */
+    var more = hit.length > AG_MAX, list = hit.slice(0, AG_MAX);
+    /* 搜索结果：代理按钮 →「🔍 代理线查询（重新搜索）」单独一行 → 最后一行「⬅ 返回上一级」「🏠 首页菜单」并排 */
+    bot(at("在 " + k + part + " 找到 " + hit.length + " 个包含「" + esc(acc) + "」的代理" + (more ? "，仅显示前 " + AG_MAX + " 个，输入更完整的账号可缩小范围" : "") + "，请点击要查询的代理："), "agents", { lv: k, agFrom: from || null, nav: true, ag: true,
+      kb: kb(rows3(list).map(function (r) { return r.map(function (a) { return { t: "👤 " + a, act: "agPick", arg: a, dev: "D101" }; }); }).concat([[{ t: KEY_AGENT + "（重新搜索）", act: "agentAsk", dev: "D101" }], [{ t: KEY_UP, act: "agUp", dev: "D101" }, { t: KEY_HOME, act: "home", dev: "D101" }]])) });
+  }
+  /* 渠道或人员配置保存后不在群里群发：人员下次在群里发消息或点按钮时，机器人先按新权限 @ 他发本人首页菜单（替换他的上一条菜单消息），再处理这次操作 */
+  function newHome() { if (!S.cfgDirty || !mine() || S.chat !== "group" || !S.auth || S.noStaff) return; S.cfgDirty = false; homeMsg(); }
   function input(text) {
     text = text.trim(); if (!text) return;
+    S.src = "kbd";   /* 发命令或点底部键盘：被拒绝时只能在群里回复 */
     var replying = S.waitAgent; S.waitAgent = false;
-    me(text, replying ? "请回复代理账号，例如 kk_sms_g12" : null);
-    var m = /^\/(\w+)\s*(.*)$/.exec(text), ch = KEYS_CH.indexOf(text), isKey = ch >= 0 || text === KEY_AGENT;
+    me(text, replying ? ASK : null);
+    var kl = S.kbLv, ks = S.kbSub; newHome(); S.kbLv = kl; S.kbSub = ks;   /* 后台配置保存后本人第一次在群里发消息：先按新权限发本人首页菜单，再按新权限处理这条消息 */
+    var m = /^\/(\w+)\s*(.*)$/.exec(text), isLv = LV1K.indexOf(text) >= 0, chIdx = CH.map(function (c) { return "📊 " + c; }).indexOf(text);
+    var allP = text.indexOf("📊 ") === 0 && text.slice(-ALLSUF.length) === ALLSUF ? text.slice(3, -ALLSUF.length) : "";   /* 「📊 父级·全渠道」 */
+    var isKey = isLv || chIdx >= 0 || !!allP || text === KEY_AGENT || text === KEY_UP || text === KEY_HOME;
     if (!m && !replying && !isKey) { render(); return; }   /* 群里的其他普通消息，机器人不回应（N5） */
     if (denied()) { render(); return; }
-    if (ch >= 0 && visibleCh().indexOf(CH[ch]) < 0) bot("该渠道暂未开放，请选择其他渠道。");   /* 旧按钮或手动输入了未绑定的渠道（N9） */
-    else if (ch >= 0) gen({ ch: CH[ch] });
-    else if (text === KEY_AGENT || (m && m[1] === "agent" && !agentOn())) { if (agentOn()) ask(); else bot("本群未开放代理线查询。"); }
-    else if (replying && !m) agent(text);   /* 回复机器人的提问 = 输入代理账号（N23） */
-    else if (m[1] === "menu" || m[1] === "start") openMenu();
-    else if (m[1] === "agent") agent(m[2]);
-    else bot("不支持该命令，请点左下角「菜单」选择命令。");
+    if (isLv) { if (!canLv(text)) rej("你没有「" + text + "」的查看权限，请联系管理员开通。"); else { S.kbLv = text; S.kbSub = null; openLv2(text); } }   /* 回复里带二级按钮 */
+    else if (text === KEY_UP || text === KEY_HOME) { S.kbLv = homeLv(); S.kbSub = null; homeMsg(); }   /* 底部键盘不分层：返回上一级和首页菜单都回到本人首页（两个子站都有权限为一级按钮） */
+    else if ((chIdx >= 0 || allP) && !S.kbLv) rej(pickLvTip());
+    else if (allP) { if (chList(S.kbLv).indexOf(allP) < 0) rej("该渠道已不可用，请选择其他渠道。"); else gen({ lv: S.kbLv, ch: allP, par: allP }, false, "kbd"); }   /* 父级全渠道 = 父级渠道的全部数据 */
+    else if (chIdx >= 0) { if (chList(S.kbLv).indexOf(CH[chIdx]) < 0) rej("该渠道已不可用，请选择其他渠道。"); else gen(kbdScope(CH[chIdx]), false, "kbd"); }   /* 底部键盘的渠道按钮直接生成报表（不进入下一级）；旧键盘或手动输入了不可用的渠道时提示 */
+    else if (text === KEY_AGENT) { var ak = S.kbLv || defLv(); if (canAgent(ak)) ask(ak, S.kbLv ? { lv: S.kbLv } : null); else rej("你没有代理线查询权限。"); }   /* 一级菜单里点：按全网数据查（无全网权限时按本人第一个子站） */
+    else if (replying && !m) agent(text, S.agentLv, S.agentFrom);   /* 回复机器人的提问 = 输入代理账号（N23） */
+    else if (m[1] === "menu" || m[1] === "start") openMenu();   /* /start 等同 /menu（Telegram 首次打开机器人时自动发出） */
+    else if (m[1] === "agent") { if (canAgent(defLv())) agent(m[2], defLv(), null); else rej("你没有代理线查询权限。"); }   /* /agent：返回上一级回到首页 */
+    else rej("不支持该命令，请输入「/」选择命令。");
     render();
   }
 
   document.getElementById("chat").addEventListener("click", function (e) {
     var b = e.target.closest("[data-act]"); if (!b) return;
     var act = b.dataset.act, msg = S.msgs.filter(function (x) { return String(x.id) === b.closest(".tg-msg").dataset.mid; })[0];
-    if (act === "refresh" || act === "retry") gen(msg.scope);
-    else if (act === "ch") { if (!denied()) gen({ ch: b.dataset.arg }); render(); }   /* 内联按钮不在群里发文字，直接生成报表 */
-    else if (act === "agentAsk") { if (!denied()) { if (agentOn()) ask(); else bot("本群未开放代理线查询。"); } render(); document.getElementById("msg").focus(); }
+    if (act === "xl" || act === "shot") { openXl(msg.scope, act === "shot"); return; }   /* 查看图片不需要权限校验，群里所有人都能看 */
+    var w = P.get("other") ? OTHER : ME;   /* 模拟「其他成员点击」：点击人为 Amy */
+    if (msg.oldBot) { P.toast("请发 /menu 打开你的菜单"); return; }   /* 服务机器人切换后，点原机器人发出的菜单和报表按钮：由新机器人提示，不重发历史菜单 */
+    if (msg.owner && msg.owner !== w) { P.toast("仅 @" + msg.owner + " 可操作，请发 /menu 打开你的菜单"); return; }   /* 按钮归属（T07）：只弹给点击人，不在群里发消息 */
+    if (deniedTip()) return;
+    S.who = w; S.src = "inline";   /* 点消息里的按钮：被拒绝时只弹点击人可见的提示 */
+    try { newHome(); if (act === "agentAsk") { var ak2 = msg.lv || defLv(); if (!canAgent(ak2)) { P.toast("你没有代理线查询权限"); return; } ask(ak2, fromOf(msg)); render(); if (mine()) document.getElementById("msg").focus(); return; } onAct(act, b, msg); } finally { S.who = null; }
+    render();
   });
+  function onAct(act, b, msg) {
+    if (act === "retry") { if (!scopeOk(msg.scope)) { P.toast("你没有该报表的查看权限"); return; } gen(msg.scope, true); }   /* 重试：按点击人当前权限重新校验 */
+    else if (act === "lv1") openLv2(b.dataset.arg);
+    else if (act === "back") homeMsg();   /* 返回：回到本人首页，回复里带菜单按钮 */
+    else if (act === "ch" || act === "ch3") { var cur = act === "ch" ? topList(msg.lv) : lv3List(msg.par, msg.lv).map(function (c) { return c === msg.par + ALLSUF ? msg.par : c; });   /* 点击时先按点击人当前权限校验，不通过不生成 */
+      if (!canLv(msg.lv)) P.toast("你没有「" + msg.lv + "」的查看权限"); else if (cur.indexOf(b.dataset.arg) < 0) P.toast("该渠道已不可用，请发 /menu 重新打开菜单"); else if (b.dataset.arg !== msg.par && subsOf(b.dataset.arg, msg.lv).length) openLv3(msg.lv, b.dataset.arg); else gen({ lv: msg.lv, ch: b.dataset.arg, par: act === "ch3" ? msg.par : "" }); }   /* 内联按钮不在群里发文字；有子渠道的父级进入下一级，其余直接生成报表 */
+    else if (act === "up") { if (PARENT[msg.par]) openLv3(msg.lv, PARENT[msg.par]); else openLv2(msg.lv); }   /* 返回上一级：逐级向上，最上回到二级 */
+    else if (act === "home") homeMsg();
+    else if (act === "agUp") { var f = msg.agFrom; if (f && f.par) openLv3(f.lv, f.par); else if (f && f.lv) openLv2(f.lv); else homeMsg(); }   /* 搜索结果的返回上一级：回到点「代理线查询」时所在的菜单；发 /agent 查询的回到首页 */
+    else if (act === "rup") { var sc = msg.scope; if (mine()) { S.kbLv = sc.lv; S.kbSub = sc.par || null; } if (sc.par) openLv3(sc.lv, sc.par); else openLv2(sc.lv); }   /* 报表下的返回上一级：回到生成这份报表的那一级菜单 */   /* 首页菜单：本人的首页（一级按钮，或唯一子站的二级菜单） */
+    else if (act === "agPick") { if (!canAgent(msg.lv)) { P.toast("你没有代理线查询权限"); return; } if (!agentOk(b.dataset.arg, msg.lv)) { P.toast("你没有该代理所在渠道的查看权限"); return; } gen({ lv: msg.lv, agent: b.dataset.arg }); }   /* 点代理按钮：按点击人权限重新校验，以该代理（含下级）为条件生成报表 */
+  }
   document.getElementById("kbd").addEventListener("click", function (e) { var b = e.target.closest("[data-key]"); if (b) input(b.dataset.key); });
+  document.getElementById("xlX").onclick = function () { document.getElementById("xl").hidden = true; };
   document.getElementById("kbdTg").onclick = function () { S.kbdHide = !S.kbdHide; renderKbd(); };
   var cmds = document.getElementById("cmds"), menuBtn = document.getElementById("menuBtn"), inp = document.getElementById("msg"), sendBtn = document.getElementById("send");
   menuBtn.onclick = function () { cmds.hidden = !cmds.hidden; menuBtn.setAttribute("aria-expanded", !cmds.hidden); };
-  cmds.addEventListener("click", function (e) { var b = e.target.closest("[data-cmd]"); if (!b) return; cmds.hidden = true; menuBtn.setAttribute("aria-expanded", "false"); input(b.dataset.cmd); });
+  cmds.addEventListener("click", function (e) { var b = e.target.closest("[data-cmd]"); if (!b) return; cmds.hidden = true; menuBtn.setAttribute("aria-expanded", "false"); if (inp.value.trim() === "/") { inp.value = ""; sendBtn.classList.remove("has"); } input(b.dataset.cmd); });
   function sendNow() { input(inp.value); inp.value = ""; sendBtn.classList.remove("has"); }
   sendBtn.onclick = sendNow;
-  inp.addEventListener("input", function () { sendBtn.classList.toggle("has", !!inp.value.trim()); });
+  inp.addEventListener("input", function () { sendBtn.classList.toggle("has", !!inp.value.trim()); if (inp.value === "/" && S.chat === "group") { cmds.hidden = false; menuBtn.setAttribute("aria-expanded", "true"); } });   /* 输入「/」同样展开命令列表 */
+  var riskPop = document.getElementById("riskPop");
+  document.getElementById("riskTag").onclick = function () { riskPop.hidden = !riskPop.hidden; };   /* 「数据风险」标签（原型标注）：点开精炼说明 */
+  document.getElementById("riskX").onclick = function () { riskPop.hidden = true; };
   inp.addEventListener("keydown", function (e) { if (e.key === "Enter") sendNow(); });
   document.getElementById("replyX").onclick = function () { S.waitAgent = false; render(); };
   document.addEventListener("click", function (e) { if (!cmds.hidden && !e.target.closest("#cmds,#menuBtn")) { cmds.hidden = true; menuBtn.setAttribute("aria-expanded", "false"); } });
 
-  /* 场景预设：默认在授权群里使用 */
+  /* 场景预设：默认在授权群「BBwave平台数据」里使用 */
   function scene(v) {
-    S = { auth: SITES.slice(), chat: v === "private" ? "private" : "group", period: 7, msgs: [], busy: false, waitAgent: false, kbd: false, kbdHide: false };
-    if (v === "bingo") S.auth = ["789Bingo"];
-    if (v === "games") S.auth = ["789Games"];
-    if (v === "groupno") S.auth = [];
-    var grp = S.chat === "group", GN = { bingo: ["B", "789Bingo 数据群（示意）"], games: ["G", "789Games 数据群（示意）"], groupno: ["新", "新建群（未授权，示意）"] }[v] || ["汇", "两站汇总群（示意）"];
-    document.getElementById("tgAva").textContent = grp ? GN[0] : "报";
-    document.getElementById("tgTitle").textContent = grp ? GN[1] : "789报表助手（示意）";
+    S = { auth: v !== "groupno", chat: v === "private" ? "private" : "group", msgs: [], busy: false, waitAgent: false, agentLv: null, kbd: false, kbdHide: true, kbLv: null, kbSub: null };   /* 底部按钮键盘默认收起，只有点「⌨」才展开 */
+    S.noStaff = v === "nostaff"; document.getElementById("xl").hidden = true; riskPop.hidden = true;
+    var grp = S.chat === "group", GN = v === "groupno" ? ["新", "新建群（未授权，示意）"] : ["", "BBwave平台数据"];
+    document.getElementById("riskTag").hidden = !(grp && S.auth);   /* 「数据风险」标签只标在授权群名旁 */
+    var ava = document.getElementById("tgAva"); ava.textContent = grp ? GN[0] : "报"; ava.classList.toggle("tg-ava-img", grp && !GN[0]);   /* 授权群用 BBwave 群头像图片 */
+    document.getElementById("tgTitle").textContent = grp ? GN[1] : BOT + "（示意）";
     document.getElementById("tgSub").textContent = grp ? "12 位成员" : "机器人";
-    /* 授权群：一进群就显示按钮矩阵（N2），不用先发 /menu；未授权群和私聊要发命令才有回应 */
-    if (!grp || !S.auth.length) { me(grp ? "/menu" : "/start"); denied(); render(); return; }
-    S.kbd = true; menuMsg();
-    if (v === "report") { me("📊 全站"); bot(reportHtml({ ch: "全站" }, 7), "report", { scope: { ch: "全站" }, kb: repKb() }); }
-    if (v === "agent") { me(KEY_AGENT); bot(ASK); me("kk_sms_g12", "请回复代理账号，例如 kk_sms_g12"); bot(reportHtml({ agent: "kk_sms_g12" }, 7), "report", { scope: { agent: "kk_sms_g12" }, kb: repKb() }); }
-    if (v === "fail") { me("📊 全站"); bot("报表生成失败，请稍后重试。", "fail", { kb: kb([[{ t: "重试", act: "retry", dev: "D15" }]]), scope: { ch: "全站" } }); }
+    /* 授权群：人员进群时机器人自动 @ 他发本人首页菜单（N2），不用先发 /menu；未授权群和私聊要发命令才有回应 */
+    if (!grp || !S.auth) { me(grp ? "/menu" : "/start"); denied(); render(); return; }
+    S.kbd = true; S.view = v;
+    joinMsg();   /* 进群：两个及以上子站有权限发一级菜单；只有一个子站权限直接发该子站的渠道列表（没有返回按钮）；未登记的人员不发 */
+    if (v === "nostaff") { me("/menu"); denied(); }
+    if (v === "lv2" || v === "stale") { S.kbLv = "789BINGO"; openLv2("789BINGO"); }
+    if (v === "stale") { S.stale = true; S.cfgDirty = true; P.toast("演示：后台刚取消 Kevin 在 789Bingo 的 cicc 和代理线查询权限，请点上面旧菜单里的「📊 cicc」"); }   /* 已发出的菜单按发出时的权限保留按钮 */
+    if (v === "lv3") { S.kbLv = "789BINGO"; S.kbSub = "谷歌"; openLv2("789BINGO"); openLv3("789BINGO", "谷歌"); }   /* 点二级菜单里的「📊 谷歌」：下一级菜单替换二级菜单 */
+    if (v === "report") { S.kbLv = "789BINGO"; openLv2("789BINGO"); report({ lv: "789BINGO", ch: "全站" }); }
+    if (v === "shot") { report({ lv: "全网数据", ch: "全站" }); render(); openXl({ lv: "全网数据", ch: "全站" }, true); return; }
+    if (v === "all") { S.kbLv = "全网数据"; openLv2("全网数据"); report({ lv: "全网数据", ch: "全站" }); }
+    if (v === "agent") { S.kbLv = "全网数据"; me(KEY_AGENT); ask("全网数据", null); me("kk_sms_g12", ASK); S.waitAgent = false; dropMyNav(); report({ lv: "全网数据", agent: "kk_sms_g12" }); }   /* 回复账号，只搜到 1 个代理 → 直接出报表（搜到 2 个及以上时先列结果再点，可输入「kk」演示） */
+    if (v === "botjoin") {   /* 机器人进群：发一条一级菜单消息（不 @ 任何人），所有人可点，按点击人权限判断 */
+      S.msgs = []; add({ from: "sys", html: BOT + " 加入了群组" });
+      bot("请选择数据范围：", "menu", { owner: null, kb: kb([LV1K.map(function (k) { return { t: k, act: "lv1", arg: k, dev: "D74" }; }), [{ t: KEY_AGENT, act: "agentAsk", dev: "D18" }]]) });
+    }
+    if (v === "fail") { S.kbLv = "789BINGO"; me("📊 全站"); bot("报表生成失败，请稍后重试。", "fail", { kb: kb([[{ t: "重试", act: "retry", dev: "D15" }]]), scope: { lv: "789BINGO", ch: "全站" } }); }
     render();
   }
-  window.addEventListener("proto-change", function (e) { if (e.detail.key === "whEmpty" || e.detail.key === "oemBingo" || e.detail.key === "grpLimit" || e.detail.key === "*") render(); });  return {
-    scene: scene,
-    expire: function () {
-      S.msgs = S.msgs.filter(function (m) { return m.kind !== "report" && m.kind !== "fail"; }); render();
-    }
+  var CFG_KEYS = ["whEmpty", "oemBingo", "ggDiff", "noCicc", "noFull", "noSite", "noAny"];   /* 后台渠道配置、人员配置的改动：保存后不群发，本人下次操作时先收到新首页菜单 */
+  window.addEventListener("proto-change", function (e) {
+    if (e.detail && (e.detail.key === "noGames" || e.detail.key === "*") && S.view) scene(S.view);
+    else if (e.detail && e.detail.key === "queue" && !e.detail.value) flush();   /* 取消限流：排队的报表发出 */
+    else if (e.detail && (e.detail.key === "stop" || e.detail.key === "noBot") && e.detail.value && S.task && downMsg(S.task.scope.lv, !!S.task.scope.agent)) { cancelTask(S.task); render(); }   /* 子站暂停：排队中的该子站报表取消，删除「排队中」提示，不另发提示 */
+    else { if (e.detail && CFG_KEYS.indexOf(e.detail.key) >= 0) S.cfgDirty = true; render(); }
+  });   /* 切换子站权限时按新首页重新进群 */
+  return {
+    scene: scene, flush: flush, qExpire: qExpire,
+    cfgSaved: function () { S.cfgDirty = true; P.toast("已保存配置：群里不群发，Kevin 下次发消息或点按钮时先收到新首页菜单"); },
+    botSwitched: function () { S.msgs.forEach(function (m) { if (m.from === "bot") m.oldBot = true; }); P.toast("已切换服务机器人：点切换前发出的按钮，提示「请发 /menu 打开你的菜单」"); render(); },   /* 演示：群里已有的消息都是原机器人发的 */
+    expire: function () { document.getElementById("xl").hidden = true; S.msgs = S.msgs.filter(function (m) { return m.kind !== "report" && m.kind !== "fail" && m.kind !== "rej" && !m.ag; }); render(); },   /* 报表、失败提示、代理线提问、搜索结果和「未找到」回复发出满 15 分钟删除（拒绝回复满 1 分钟已先删除） */
+    rejExpire: function () { S.msgs = S.msgs.filter(function (m) { return m.kind !== "rej"; }); render(); }   /* 拒绝回复发出满 1 分钟删除 */
   };
 })();
 </script>
 <script>
 (function () {
-  var VIEWS = ["menu", "bingo", "games", "report", "agent", "groupno", "private", "fail"];
+  var VIEWS = ["menu", "botjoin", "lv2", "lv3", "report", "all", "shot", "agent", "nostaff", "groupno", "private", "fail", "stale"];
   function show(view) {
     if (VIEWS.indexOf(view) < 0) view = "menu";
     TG.scene(view);

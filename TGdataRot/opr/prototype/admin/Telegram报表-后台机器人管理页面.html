@@ -1,0 +1,320 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Telegram报表-后台机器人管理页面</title>
+<link rel="stylesheet" href="../../assets/style.css">
+<style>.bo-tabs a{padding:9px 14px;font-size:13px;color:#555;border-bottom:2px solid transparent;text-decoration:none}.bo-tabs a:hover{color:#409EFF}.bo-tabs a.on{color:#409EFF;border-bottom-color:#409EFF}
+.tr-sw{all:unset;cursor:pointer;width:36px;height:18px;border-radius:9px;background:#DCDFE6;position:relative;display:inline-block;vertical-align:middle}
+.tr-sw::after{content:"";position:absolute;left:2px;top:2px;width:14px;height:14px;border-radius:50%;background:#fff;transition:left .15s}
+.tr-sw[aria-checked="true"]{background:#409EFF}.tr-sw[aria-checked="true"]::after{left:20px}
+.tr-sw.red[aria-checked="true"]{background:#F56C6C}.tr-sw[disabled]{opacity:.5;cursor:not-allowed}
+.tr-empty{text-align:center!important;color:#909399!important;padding:28px 0!important}
+.bm-card{border:1px solid #EBEEF5;border-radius:4px;padding:10px 12px;background:#fff}
+.bm-card small{display:block;color:#909399;font-size:12px}.bm-card b{font-size:20px;color:#303133}
+.bm-kill{display:flex;align-items:center;gap:10px;border:1px solid #FDE2E2;background:#FEF0F0;border-radius:4px;padding:10px 14px;margin-bottom:12px;color:#606266;font-size:13px;flex-wrap:wrap}
+.bm-kill.off{border-color:#EBEEF5;background:#FAFBFC}
+.bm-h{display:inline-block;border-radius:3px;padding:0 6px;font-size:12px;line-height:20px;white-space:nowrap}
+.bm-ok{background:#F0F9EB;color:#67C23A}.bm-lim{background:#FDF6EC;color:#E6A23C}.bm-bad{background:#FEF0F0;color:#F56C6C}.bm-off{background:#F4F4F5;color:#909399}
+.bm-res{font-size:12px;margin-left:8px}.bm-res.ok{color:#67C23A}.bm-res.bad{color:#F56C6C}
+.bm-tip{font-size:12px;color:#909399;margin:4px 0 0}
+.bm-und{all:unset;cursor:pointer;margin-left:6px;border-radius:3px;padding:0 6px;font-size:12px;line-height:20px;white-space:nowrap;background:#FDF6EC;color:#E6A23C;border:1px solid #F5DAB1}.bm-und:hover,.bm-und:focus-visible{border-color:#E6A23C}
+@media (max-width:760px){}</style>
+</head>
+<body>
+<!-- 后台原型：整页为本需求新增；示例数据一律虚构，Token 只显示掩码。视图：#list 列表 / #new 添加 / #edit 编辑 / #del 删除确认 / #ban 疑似封禁处理 / #empty 空列表 -->
+<div class="with-nav">
+<div class="adm-stage">
+  <div class="bo">
+    <div class="bo-top1"><span>当前时间：2026/11/04 14:32:08</span><span class="sp">简体中文</span><span>运营账号A ▾</span></div>
+    <div class="bo-top2"><span>在线人数<b class="bo-n r">1,286</b></span><span>当日注册<b class="bo-n g">1,302</b></span><span>当日充值成功<b class="bo-n g">2,417</b></span><span>提款<b class="bo-n g">936</b></span><span>风控审核<b class="bo-n r">4</b></span><span data-dev="D131" title="Telegram报表告警：疑似封禁、Token 失效、机器人不在群或权限不足、删除提醒发不出、连续限流 3 次；点击进入机器人管理页">Telegram报表告警<b class="bo-n r">2</b></span></div>
+    <div class="bo-body">
+      <nav class="bo-menu" aria-label="后台菜单">
+        <div class="mt">菜单 ≡</div>
+        <div class="g">用户管理</div><div class="g">财务管理</div><div class="g">代理管理</div>
+        <div class="g open">系统管理</div>
+        <div class="i">系统参数</div><div class="i on">Telegram报表配置</div>
+      </nav>
+      <div class="bo-main">
+        <div class="bo-crumb">位置 › 系统管理 › <b>Telegram报表配置</b></div>
+        <div class="bo-tabs" role="tablist">
+          <a role="tab" aria-selected="false" href="Telegram报表-后台人员配置页面.html">人员配置</a>
+          <a role="tab" aria-selected="false" href="Telegram报表-后台渠道配置页面.html">渠道配置</a>
+          <a role="tab" class="on" aria-selected="true" href="Telegram报表-后台机器人管理页面.html">机器人管理</a>
+        </div>
+        <div class="bo-content">
+          <p class="ui-reqnote">每个子站后台各有本页：机器人以用户名识别为同一个，添加、改名称或用户名、更换 Token、删除在全部子站同步；启用、停用和总停用开关只作用于本子站。对接的群（目前「BBwave平台数据」）和初始服务机器人由技术指定；一个群只有一个服务机器人，不轮换、不分担发送（Telegram 开发者条款 5.2(f)「不得绕过频率限制或审核」）。服务机器人在任一子站停用或异常时，整个群切换到可接替的机器人；没有时，被停用的子站和全网数据暂停出报表。</p>
+          <div class="bm-kill" id="kill"></div>
+          <div style="display:flex;justify-content:flex-end;padding:0 0 10px"><button class="bo-btn n" type="button" data-go="new" data-dev="D40">+ 添加机器人</button></div>
+          <table>
+            <tr><th>机器人名称</th><th>用户名</th><th><span class="ui-nw">Token<i class="qm" tabindex="0" data-tip="机器人的访问凭证，只显示后 4 位，保存后不能查看完整内容。">?</i></span></th><th><span class="ui-nw">状态<i class="qm" tabindex="0" data-tip="正常：可发送。限流中：被 Telegram 限流，到时自动恢复。停用：在本子站后台人工停用，不调取本子站数据。异常（不在群或权限不足）：不在授权群、不是群管理员或没有发言权限，不能接替服务。停用（疑似封禁）、停用（Token 失效）：机器人本身不可用，全部子站自动停用，需人工处理。可接替 = 全部子站都启用、已在群里且权限正常，正常的优先、限流中的其次。蓝色「服务中」：当前服务本群的机器人。橙色「未删除 N 份」：有报表到时未能删除，正在自动重试。">?</i></span></th><th>操作</th></tr>
+            <tbody id="rows"></tbody>
+          </table>
+          <p style="font-size:12px;color:#909399;margin:10px 0 0">示例数据均为虚构，Token 为示意掩码。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="bo-mask" id="dlg" hidden>
+    <div class="bo-dlg" role="dialog" aria-modal="true" aria-labelledby="dlgT" style="width:min(560px,92vw)">
+      <h4 id="dlgT">添加机器人</h4>
+      <div class="frow" style="align-items:start"><label for="fmName" style="padding-top:6px"><span class="req">*</span>机器人名称</label><div class="fctl"><input class="bo-inp" id="fmName" style="width:240px" placeholder="便于识别的名称，1–30 个字符" data-dev="D126"><div class="ferr" id="eName"></div></div></div>
+      <div class="frow" style="align-items:start"><label for="fmUser" style="padding-top:6px"><span class="req">*</span>用户名<i class="qm" tabindex="0" data-tip="机器人在 Telegram 的用户名，以 bot 结尾，不加 @，如 bbwave_report_a_bot。各子站以用户名识别为同一个机器人。">?</i></label><div class="fctl"><input class="bo-inp" id="fmUser" style="width:240px" placeholder="如 bbwave_report_a_bot" data-dev="D127"><div class="ferr" id="eUser"></div></div></div>
+      <div class="frow" style="align-items:start"><label for="fmToken" style="padding-top:6px"><span class="req" id="tkReq">*</span>Token<i class="qm" tabindex="0" data-tip="在 Telegram 创建机器人时得到的访问凭证，全部子站共用，更换后同步生效。编辑时留空表示不修改；泄露时先在 Telegram 作废旧 Token，再填新 Token。">?</i></label><div class="fctl"><input class="bo-inp" id="fmToken" type="password" style="width:240px" autocomplete="off" placeholder="粘贴机器人 Token" data-dev="D41"><button class="bo-btn" type="button" id="fmTest" data-dev="D42">测试连接</button><span class="bm-res" id="testRes" role="status"></span><div class="ferr" id="eToken"></div></div></div>
+      <div class="frow"><span class="fl">状态</span><div class="fctl"><button type="button" class="tr-sw" id="fmSt" role="switch" aria-checked="true" aria-label="状态" data-dev="D128"></button><span id="fmStT">启用</span></div></div>
+      <div class="row2"><button class="bo-btn" type="button" data-cancel id="dlgNo">取消</button><button class="bo-btn q" type="button" id="dlgOk">保存</button></div>
+    </div>
+  </div>
+  <div class="bo-mask" id="cfm" hidden>
+    <div class="bo-dlg" role="dialog" aria-modal="true" aria-labelledby="cfmT">
+      <h4 id="cfmT">确认删除</h4>
+      <p style="margin:0" id="cfmP"></p>
+      <div class="ferr" id="eDel"></div>
+      <div class="row2"><button class="bo-btn" type="button" data-cancel id="cfmNo">取消</button><button class="bo-btn q" type="button" id="cfmOk">删除</button></div>
+    </div>
+  </div>
+  <div class="bo-mask" id="ban" hidden>
+    <div class="bo-dlg" role="dialog" aria-modal="true" aria-labelledby="banT" style="width:min(560px,92vw)">
+      <h4 id="banT">疑似封禁处理</h4>
+      <p style="margin:0" id="banP"></p>
+      <ol style="margin:0;padding-left:18px;color:#606266;line-height:1.8">
+        <li>该机器人已在全部子站自动停用；它服务的群已切换到可接替的机器人，没有时全部子站和全网数据暂停出报表。</li>
+        <li>核查原因：异常发送、Token 泄露、数据越权、业务是否符合条款。</li>
+        <li>整改完成后，通过 Telegram 官方渠道申诉并附上故障材料。</li>
+        <li>确认解封后，由技术核查后恢复：核查可正常使用后，点「确认已恢复」。</li>
+      </ol>
+      <p class="bm-tip">※ 服务机器人以群为单位只有一个，不做轮换或分担发送（条款 5.2(f)）。</p>
+      <div class="row2"><button class="bo-btn" type="button" id="banDoc" data-dev="D52">生成故障材料</button><button class="bo-btn" type="button" data-cancel id="banNo">关闭</button><button class="bo-btn q" type="button" id="banOk" data-dev="D49">确认已恢复</button></div>
+      <p class="bm-tip" id="banRes" role="status"></p>
+    </div>
+  </div>
+
+  <div class="bo-mask" id="kcf" hidden>
+    <div class="bo-dlg" role="dialog" aria-modal="true" aria-labelledby="kcfT" style="width:min(520px,92vw)">
+      <h4 id="kcfT">打开总停用开关</h4>
+      <p style="margin:0" id="kcfP"></p>
+      <div class="row2"><button class="bo-btn" type="button" data-cancel id="kcfNo">取消</button><button class="bo-btn q" type="button" id="kcfOk" data-dev="D50">确定</button></div>
+    </div>
+  </div>
+
+  <div class="bo-mask" id="und" hidden>
+    <div class="bo-dlg" role="dialog" aria-modal="true" aria-labelledby="undT" style="width:min(520px,92vw)">
+      <h4 id="undT">有未删除的报表</h4>
+      <p style="margin:0" id="undP"></p>
+      <p class="bm-tip">※ 只统计报表图片。删除成功后从份数中去掉；最早一份发出满 24 小时仍未删除时，机器人在群里 @ 群主和群管理员发一条合并提醒，发出后全部去掉，发不出时保留并通知后台管理员。机器人被停用、替换或删除后，由当前服务机器人继续删除。无需手动清除。</p>
+      <div class="row2"><button class="bo-btn q" type="button" data-cancel id="undNo">知道了</button></div>
+    </div>
+  </div>
+
+  <aside class="notes adm-notes">
+    <h2>后台机器人管理页面</h2>
+    <p class="sub">789Bingo 后台、789Games 后台 › 系统管理 › Telegram报表配置 › 机器人管理。登记机器人、查看实时状态，提供总停用开关和疑似封禁处理（整页为本需求新增）。</p>
+    <h3>模拟场景</h3>
+    <div class="sim">
+      <button type="button" data-go="list"><span class="simtag">机器人管理</span>列表</button>
+      <button type="button" data-go="new"><span class="simtag">机器人管理</span>添加</button>
+      <button type="button" data-go="edit"><span class="simtag">机器人管理</span>编辑</button>
+      <button type="button" data-go="ban"><span class="simtag">机器人管理</span>疑似封禁处理</button>
+      <button type="button" data-go="undel"><span class="simtag">机器人管理</span>有未删除的报表</button>
+      <button type="button" data-go="tkdup"><span class="simtag">机器人管理</span>添加时 Token 与已有机器人重复</button>
+      <button type="button" data-go="nogrp"><span class="simtag">机器人管理</span>服务机器人不在群或权限不足</button>
+      <button type="button" data-go="bakgrp"><span class="simtag">机器人管理</span>备用机器人不在群或权限不足（之后停用 A）</button>
+      <button type="button" data-go="delsrv"><span class="simtag">机器人管理</span>删除正在服务群的机器人</button>
+      <button type="button" data-go="kill"><span class="simtag">机器人管理</span>打开总停用开关确认</button>
+      <button type="button" data-go="del"><span class="simtag">机器人管理</span>删除确认</button>
+      <button type="button" data-go="empty"><span class="simtag">机器人管理</span>空列表</button>
+    </div>
+    <h3>规则批注</h3>
+    <ol>
+      <li><b>一群一个机器人</b>：对接的群和初始服务机器人由技术指定，后台不设置；一个群只有一个服务机器人，不轮换、不按渠道拆分发送（条款 5.2(f)）。<br><b>切换</b>：当前服务机器人在任一子站被停用（手动停用、不可用时自动停用），或状态变为「异常（不在群或权限不足）」时，整个群切换到可接替的机器人。<b>可接替</b> = 全部子站都启用、已在群里且权限正常；状态正常的优先，限流中的其次，同组按本页列表顺序（最早添加的在前）。没有时，被停用的子站和全网数据回复「报表机器人暂不可用，正在更换，请稍后再试。」，其他子站仍由原机器人服务。原机器人恢复后不自动切回，由技术决定是否换回。切换后点原机器人发出的按钮，只弹「请发 /menu 打开你的菜单」。<span class="ref">PRD 规则 N52、N54 · F05-04</span></li>
+      <li><b>两站信息同步</b>：机器人以用户名识别为同一个；添加、改名称或用户名、更换 Token、删除在全部子站同步（操作日志记在操作的子站）；在一个子站添加后，其他子站里它初始为「停用」，由该站手动启用；启用、停用和总停用开关各子站分别管理。只在一个子站启用的机器人不能接替服务，也不能出全网数据。新增子站上线时，已有机器人同步出现在新子站本页，初始为停用；开放新子站按钮前，先在新子站启用当前服务机器人，再登记人员。<span class="ref">PRD 规则 N53、N35 · F05-04</span></li>
+      <li><b>总停用开关</b>：异常时一键止损，只作用于本子站。打开：本子站和全网数据都不再出报表，排队中的这些报表取消，群里点本子站或全网数据回复「报表服务暂停中，请稍后再试。」（全网数据范围的代理线查询只查其他正常子站），其他子站不受影响；关闭：恢复服务，已取消的报表不补发。打开和关闭都要二次确认。<span class="ref">PRD 规则 N53、N55 · F05-04</span></li>
+      <li><b>状态</b>：正常；限流中——按 Telegram 返回的等待时间暂停，到时自动恢复；停用——在本子站人工停用，不调取本子站数据；异常（不在群或权限不足）——对所有机器人检测：不在授权群、不是群管理员或没有发言权限；是服务机器人时立即通知后台管理员并切换，是备用机器人时只显示该状态、不作为接替对象；恢复在群且权限正常后自动变回原状态，不自动切回服务；停用（疑似封禁）——连续发送失败且错误提示指向账号受限时自动停用并通知后台管理员，需人工核查，系统不直接判定为封禁；停用（Token 失效）——需更换 Token。疑似封禁、Token 失效时全部子站自动停用，不能手动启用；「确认已恢复」或更换 Token 后，全部子站恢复为之前的启用或停用状态。<br><b>告警</b>：后台顶部实时提醒栏新增「Telegram报表告警」（疑似封禁、Token 失效、机器人不在群或权限不足、删除提醒发不出、连续限流 3 次），有机器人管理权限的账号（即后台管理员）可见，点击进入本页；告警方式待技术确认。<span class="ref">PRD 规则 N54、N59、待确认 Q15 · F05-04</span></li>
+      <li><b>启用与停用</b>：停用表示不再调取本子站数据，重新启用后恢复。停用的是当前服务机器人时按「切换」处理，按钮照常显示；没有可接替的机器人时，群里点本子站或全网数据回复「报表机器人暂不可用，正在更换，请稍后再试。」，不含数据，1 分钟后删除。<span class="ref">PRD 规则 N53、N55 · F05-04、F02-04</span></li>
+      <li><b>疑似封禁处理</b>：按「停止发送 → 核查整改 → 申诉 → 技术核查后恢复」处理；可生成脱敏故障材料（机器人用户名、发生时间、官方提示、近 7 天发送量、错误记录、整改记录）。期间按「切换」由其他机器人服务。<span class="ref">PRD 5.3 机器人管理 · F05-04</span></li>
+      <li><b>只显示表格</b>：机器人数量少，只显示总停用开关和机器人表格，不做汇总、筛选和分页，不显示发送条数。排序：状态为正常、限流中、异常的排在前面，各类停用排在后面；同组按添加时间先后（最早添加的在上）。<span class="ref">PRD 5.3 机器人管理 · F05-04</span></li>
+      <li><b>发送限制</b>：由技术配置，后台不设置（如每分钟 16 条），见机器人对话页规则批注「发送限制」。<span class="ref">PRD 规则 N51 · F02-03</span></li>
+      <li><b>未删除的报表</b>：报表到删除时间（发出满 15 分钟）删除失败时自动重试，状态旁显示橙色「未删除 N 份」，悬停或点击显示份数和最早的应删除时间（GMT+8）。只统计报表图片。删除成功或群内合并提醒发出后，对应报表从份数中去掉，份数为 0 时标签消失，不提供手动清除；合并提醒的文案和提醒发不出时的处理见机器人对话页「删除失败」。机器人被停用、替换或删除后，它的未删除报表由当前服务机器人按时删除，标签移到当前服务机器人。<span class="ref">PRD 规则 N28 · F04-03</span></li>
+      <li><b>操作权限</b>：沿用后台现有「角色 → 权限组 → 菜单 / 按钮权限」，分四项授予：查看三个页面；编辑人员配置；编辑渠道配置；机器人管理（含 Token、启用停用、总停用开关、确认已恢复、删除）。上线时机器人管理只授予超级管理员。<span class="ref">PRD 规则 N56 · F05-04</span></li>
+      <li><b>Token 安全</b>：保存后只显示后 4 位，任何地方（列表、编辑弹窗、操作日志、故障材料）都不显示完整 Token；编辑时留空表示不修改。更换后系统立即停用旧 Token，提示「保存成功，系统已停用旧 Token；如旧 Token 已泄露，请在 Telegram 作废」。「测试连接」只校验 Token，不在群里发消息。<span class="ref">PRD 5.3 机器人管理 · F05-04</span></li>
+      <li><b>校验</b>：名称必填，1–30 个字符（中文、英文字母、数字、符号各算 1 个，去掉首尾空格后计算）；用户名必填、以 bot 结尾、不加 @、不能重复；添加时 Token 必填、格式正确、不能和已有机器人重复（提示「该 Token 已被其他机器人使用」）；绕过页面直接提交同样拦截。添加时状态选启用的显示「正常」，选停用的显示「停用」。<span class="ref">PRD 5.3 机器人管理 · F05-04</span></li>
+      <li><b>删除</b>：标「服务中」的机器人不能删除，点「删除」直接提示「这个机器人正在服务群，请联系技术更换后再操作」，只有「知道了」。其余机器人确认后在全部子站删除；它发出且未删除的报表由当前服务机器人按时删除。<span class="ref">PRD 5.3 机器人管理、规则 N28、N53 · F05-04</span></li>
+      <li><b>操作日志</b>：本页所有操作（添加、编辑、更换 Token、启用、停用、删除、总停用开关、确认已恢复、生成故障材料）都记入后台现有操作日志，Token 只记后 4 位。<span class="ref">PRD 规则 N56 · F05-04</span></li>
+    </ol>
+    <div class="pager"><a href="Telegram报表-后台渠道配置页面.html">← 上一页：后台渠道配置页面</a><span></span></div>
+  </aside>
+</div>
+</div>
+<script>window.NAV_ROOT = "../../";</script>
+<script src="../../assets/nav-data.js"></script>
+<script src="../../assets/nav.js"></script>
+<script>
+(function () {
+  function seed() {
+    return [
+      /* 只对接一个群「BBwave平台数据」，由 A 服务（groups = 服务的群数） */
+      /* tk：演示用的虚构 Token（只用于演示 Token 重复校验，页面只显示后 4 位） */
+      { name: "BBWave报表助手A", user: "bbwave_report_a_bot", tk: "7000000001:DEMO-token-aaaa-x7Qa", tail: "x7Qa", h: "限流中", left: "00:42", on: true, groups: 1, today: 186, m10: 46, und: { n: 2, first: "2026-11-04 14:23:10" } },
+      { name: "BBWave报表助手B", user: "bbwave_report_b_bot", tk: "7000000002:DEMO-token-bbbb-k2Lm", tail: "k2Lm", h: "正常", on: true, groups: 0, today: 0 },
+      { name: "BBWave报表助手C（备用）", user: "bbwave_report_c_bot", tk: "7000000003:DEMO-token-cccc-Pz91", tail: "Pz91", h: "正常", on: true, groups: 0, today: 0 },
+      { name: "BBWave报表助手D（旧）", user: "bbwave_report_d_bot", tk: "7000000004:DEMO-token-dddd-Hh03", tail: "Hh03", h: "疑似封禁", on: true, groups: 0, today: 0 },
+      { name: "BBWave报表助手E", user: "bbwave_report_e_bot", tk: "7000000005:DEMO-token-eeee-Wd58", tail: "Wd58", h: "Token 失效", on: true, groups: 0, today: 0 }
+    ];
+  }
+  var ALL, editing = null, delIdx = null, banIdx = null, killOn = false;
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+  function msg(t, bad) { var m = document.createElement("div"); m.className = "bo-msg " + (bad ? "err" : "ok"); m.textContent = t; m.setAttribute("role", "status"); document.body.appendChild(m); setTimeout(function () { m.remove(); }, 2200); }
+  /* 机器人本身不可用（疑似封禁、Token 失效）：全部子站后台都自动停用，不能手动启用；恢复后回到不可用前的启用或停用状态（r.on） */
+  function down(r) { return r.h === "疑似封禁" || r.h === "Token 失效"; }
+  function stat(r) {
+    if (down(r)) return '<span class="bm-h bm-bad">停用（' + r.h + "）</span>";
+    if (!r.on) return '<span class="bm-h bm-off">停用</span>';
+    if (r.h === "异常") return '<span class="bm-h bm-bad">异常（不在群或权限不足）</span>';
+    if (r.h === "限流中") return '<span class="bm-h bm-lim">限流中（' + r.left + " 后重试）</span>";
+    return '<span class="bm-h bm-ok">正常</span>';
+  }
+  /* 「服务中」：当前服务本群的机器人（groups = 服务的群数） */
+  function srvTag(r) { return r.groups > 0 ? '<span class="bm-h" style="background:#ECF5FF;color:#409EFF;margin-left:6px" data-dev="D130">服务中</span>' : ""; }
+  /* 可接替：全部子站都启用、已在群里且权限正常（演示假设其他机器人在另一子站也启用）；状态正常的优先，限流中的其次，同组按列表顺序（最早添加的在前） */
+  function usable(r) { return r.on && !down(r) && r.h !== "异常"; }
+  function nextBot(r) { var c = ALL.filter(function (x) { return x !== r && usable(x); }); return c.filter(function (x) { return x.h !== "限流中"; })[0] || c[0]; }
+  /* 当前服务机器人被停用、不可用或异常：整个群切换到可接替的机器人，未删除的报表标记一起移过去；没有时被停用的子站和全网数据暂停出报表 */
+  function takeover(r) {
+    if (!(r.groups > 0)) return "";
+    var nx = nextBot(r);
+    if (!nx) return "，没有可接替的机器人：本子站和全网数据暂停出报表，其他子站仍由原机器人服务";
+    nx.groups = r.groups; r.groups = 0; if (r.und) { nx.und = { n: (nx.und ? nx.und.n : 0) + r.und.n, first: r.und.first }; r.und = null; }
+    return "，本群已切换到「" + nx.name + "」";
+  }
+  /* 未删除的报表：到删除时间未能删除、正在重试的条数；每条在删除成功后去掉，最早一份满 24 小时时在群里发一条合并提醒，发出后全部去掉，发不出时保留并通知后台管理员。悬停或点击看条数和最早的应删除时间 */
+  function undText(r) { return "有 " + r.und.n + " 份报表到删除时间未能删除，正在自动重试，最早应删除时间 " + r.und.first + "（GMT+8）"; }
+  function undTag(r, i) { return r.und && r.und.n ? '<button type="button" class="bm-und" data-und="' + i + '" data-dev="D121" title="' + esc(undText(r)) + '">未删除 ' + r.und.n + " 份</button>" : ""; }
+  function openUnd(i) { var r = ALL[i]; document.getElementById("undP").textContent = "「" + r.name + "」（@" + r.user + "）" + undText(r) + "。"; document.getElementById("und").hidden = false; }
+  document.getElementById("undNo").onclick = function () { document.getElementById("und").hidden = true; };
+  function drawKill() {
+    var k = document.getElementById("kill"); k.className = "bm-kill" + (killOn ? "" : " off");
+    k.innerHTML = '<b>总停用开关</b><button type="button" class="tr-sw red" id="killSw" role="switch" aria-checked="' + killOn + '" aria-label="总停用开关" data-dev="D50"></button><span>' + (killOn ? "已打开：本子站和全网数据停止出报表，其他子站不受影响。" : "已关闭：正常服务。异常时打开，本子站和全网数据立即停止出报表。") + "</span>";
+  }
+  function draw() {
+    drawKill();
+    /* 机器人数量少，不分页、不筛选，只显示表格；排序：启用状态的排在最上面，同状态内按添加时间先后（最早添加的在上；ALL 按添加顺序保存） */
+    function en(r) { return r.on && !down(r) ? 1 : 0; }
+    var rows = ALL.slice().sort(function (a, b) { return (en(b) - en(a)) || (ALL.indexOf(a) - ALL.indexOf(b)); });
+    document.getElementById("rows").innerHTML = rows.length ? rows.map(function (r) {
+      var i = ALL.indexOf(r);
+      return "<tr><td>" + esc(r.name) + "</td><td>@" + esc(r.user) + "</td><td>••••••" + r.tail + '</td><td data-dev="D43">' + stat(r) + srvTag(r) + undTag(r, i) + '</td><td><button class="bo-btn link" type="button" data-ed="' + i + '" data-dev="D45">编辑</button>' + (r.h === "疑似封禁" ? '<button class="bo-btn link" type="button" data-ban="' + i + '" data-dev="D48">处理</button>' : "") +
+        (down(r) ? "" : '<button class="bo-btn link" type="button" data-sw="' + i + '" data-dev="D44">' + (r.on ? "停用" : "启用") + "</button>") + '<button class="bo-btn link" type="button" data-del="' + i + '" data-dev="D46">删除</button></td></tr>';
+    }).join("") : '<tr><td colspan="5" class="tr-empty">暂无机器人，请先添加</td></tr>';
+  }
+  /* 总停用开关：只作用于本子站；打开和关闭都要二次确认 */
+  function openKcf() {
+    document.getElementById("kcfT").textContent = killOn ? "关闭总停用开关" : "打开总停用开关";
+    document.getElementById("kcfP").textContent = killOn ? "关闭后本子站恢复出报表，已取消的报表不补发。确定关闭？" : "打开后，本子站和全网数据立即停止出报表，排队中的这些报表取消；其他子站不受影响。确定打开？";
+    document.getElementById("kcf").hidden = false;
+  }
+  document.getElementById("kill").addEventListener("click", function (e) { if (e.target.closest("#killSw")) openKcf(); });
+  document.getElementById("kcfNo").onclick = function () { document.getElementById("kcf").hidden = true; };
+  document.getElementById("kcfOk").onclick = function () { killOn = !killOn; document.getElementById("kcf").hidden = true; draw(); msg(killOn ? "已打开总停用开关，本子站停止出报表" : "已关闭总停用开关，本子站恢复正常服务", killOn); };
+
+  /* 添加 / 编辑 */
+  function setSt(on) { document.getElementById("fmSt").setAttribute("aria-checked", on); document.getElementById("fmStT").textContent = on ? "启用" : "停用"; }
+  document.getElementById("fmSt").onclick = function () { setSt(this.getAttribute("aria-checked") !== "true"); };
+  function openForm(i) {
+    editing = i; var r = i == null ? null : ALL[i];
+    document.getElementById("dlgT").textContent = r ? "编辑机器人" : "添加机器人";
+    document.getElementById("fmName").value = r ? r.name : ""; document.getElementById("fmUser").value = r ? r.user : "";
+    var tk = document.getElementById("fmToken"); tk.value = ""; tk.placeholder = r ? "留空表示不修改（当前 ••••••" + r.tail + "）" : "粘贴机器人 Token";
+    document.getElementById("tkReq").hidden = !!r; setSt(r ? r.on : true);
+    document.getElementById("fmSt").disabled = !!(r && down(r));   /* 不可用时自动停用，不能手动启用 */
+    ["eName", "eUser", "eToken"].forEach(function (k) { document.getElementById(k).textContent = ""; });
+    document.getElementById("testRes").textContent = ""; document.getElementById("testRes").className = "bm-res";
+    document.getElementById("dlg").hidden = false;
+  }
+  function closeForm() { document.getElementById("dlg").hidden = true; }
+  document.getElementById("dlgNo").onclick = closeForm;
+  /* 测试连接（演示）：Token 含「bad」或少于 20 位视为无效 */
+  document.getElementById("fmTest").onclick = function () {
+    var tk = document.getElementById("fmToken").value.trim(), res = document.getElementById("testRes");
+    if (!tk && editing != null) tk = "keep-existing-token-123456";
+    if (!tk) { res.className = "bm-res bad"; res.textContent = "请先填写 Token"; return; }
+    res.className = "bm-res"; res.textContent = "测试中…";
+    setTimeout(function () { var ok = tk.length >= 20 && tk.indexOf("bad") < 0; res.className = "bm-res " + (ok ? "ok" : "bad"); res.textContent = ok ? "连接正常" : "Token 无效，请检查后重试"; }, 600);
+  };
+  /* 名称去掉首尾空格后最多 30 个字符（中文、英文字母、数字、符号各算 1 个），超出无法输入 */
+  document.getElementById("fmName").oninput = function () { var v = this.value, lead = v.match(/^\s*/)[0], core = Array.from(v.slice(lead.length).replace(/\s+$/, "")), tail = v.slice(lead.length).match(/\s*$/)[0]; if (core.length > 30) this.value = lead + core.slice(0, 30).join("") + tail; };
+  document.getElementById("dlgOk").onclick = function () {
+    var name = document.getElementById("fmName").value.trim(), user = document.getElementById("fmUser").value.trim().replace(/^@/, ""), tk = document.getElementById("fmToken").value.trim(), ok = true;
+    var on = document.getElementById("fmSt").getAttribute("aria-checked") === "true";
+    ["eName", "eUser", "eToken"].forEach(function (k) { document.getElementById(k).textContent = ""; });
+    if (!name) { document.getElementById("eName").textContent = "请输入机器人名称"; ok = false; }
+    if (!user) { document.getElementById("eUser").textContent = "请输入用户名"; ok = false; }
+    else if (!/^[A-Za-z0-9_]{5,32}$/.test(user) || !/bot$/i.test(user)) { document.getElementById("eUser").textContent = "用户名格式不正确，应以 bot 结尾"; ok = false; }
+    else if (ALL.some(function (r, k) { return k !== editing && r.user.toLowerCase() === user.toLowerCase(); })) { document.getElementById("eUser").textContent = "该用户名已存在"; ok = false; }
+
+    if (editing == null && !tk) { document.getElementById("eToken").textContent = "请输入 Token"; ok = false; }
+    else if (tk && tk.length < 20) { document.getElementById("eToken").textContent = "Token 格式不正确"; ok = false; }
+    else if (tk && ALL.some(function (r, k) { return k !== editing && r.tk === tk; })) { document.getElementById("eToken").textContent = "该 Token 已被其他机器人使用"; ok = false; }
+    if (!ok) return;
+    var sw = "";
+    if (editing == null) ALL.push({ name: name, user: user, tk: tk, tail: tk.slice(-4), h: "正常", on: on, groups: 0, today: 0 });   /* 状态选停用的，添加后显示「停用」 */
+    else { var r = ALL[editing]; if (r.on && !on) sw = takeover(r); r.name = name; r.user = user; r.on = on; if (tk) { r.tk = tk; r.tail = tk.slice(-4); if (r.h === "Token 失效") r.h = "正常"; } }
+    closeForm(); draw(); msg((tk && editing != null ? "保存成功，系统已停用旧 Token；如旧 Token 已泄露，请在 Telegram 作废" : "保存成功") + sw);   /* 名称、用户名、Token 两站同步；启用、停用只作用于本子站 */
+  };
+  /* 删除 */
+  /* 删除：正在服务群的机器人点「删除」直接提示不能删除（只有「知道了」），不先给可确认的弹窗 */
+  function openDel(i) {
+    delIdx = i; document.getElementById("eDel").textContent = "";
+    var srv = ALL[i].groups > 0;
+    document.getElementById("cfmT").textContent = srv ? "不能删除" : "确认删除";
+    document.getElementById("cfmP").textContent = srv ? "这个机器人正在服务群，请联系技术更换后再操作。" : "删除后，机器人「" + ALL[i].name + "」（@" + ALL[i].user + "）在全部子站停止使用；它发出且未删除的报表由当前服务机器人按时删除。确定删除？";
+    document.getElementById("cfmOk").hidden = srv; document.getElementById("cfmNo").textContent = srv ? "知道了" : "取消";
+    document.getElementById("cfm").hidden = false;
+  }
+  document.getElementById("cfmNo").onclick = function () { document.getElementById("cfm").hidden = true; };
+  document.getElementById("cfmOk").onclick = function () {
+    var r = ALL[delIdx], srv = ALL.filter(function (x) { return x.groups > 0; })[0];
+    if (r.und && srv) srv.und = { n: (srv.und ? srv.und.n : 0) + r.und.n, first: srv.und && srv.und.first < r.und.first ? srv.und.first : r.und.first };   /* 未删除的报表转给当前服务机器人继续删除 */
+    ALL.splice(delIdx, 1); document.getElementById("cfm").hidden = true; draw(); msg("删除成功");   /* 其他子站同步删除 */
+  };
+  /* 疑似封禁处理 */
+  function openBan(i) { banIdx = i; document.getElementById("banP").textContent = "「" + ALL[i].name + "」（@" + ALL[i].user + "）连续发送失败，错误提示指向账号受限，系统已自动停用（疑似封禁）并通知后台管理员。请按以下步骤处理："; document.getElementById("banRes").textContent = ""; document.getElementById("ban").hidden = false; }
+  document.getElementById("banNo").onclick = function () { document.getElementById("ban").hidden = true; };
+  document.getElementById("banDoc").onclick = function () { document.getElementById("banRes").textContent = "已生成脱敏故障材料（机器人用户名、发生时间 GMT+8、官方提示、近 7 天发送量、错误记录、整改记录），不含 Token 和玩家信息。"; };
+  document.getElementById("banOk").onclick = function () { ALL[banIdx].h = "正常"; document.getElementById("ban").hidden = true; draw(); msg("已确认恢复，两个子站后台恢复为原启用或停用状态"); };
+  document.getElementById("rows").addEventListener("click", function (e) {
+    var b = e.target.closest("[data-sw]");
+    if (b) { var r = ALL[+b.dataset.sw], sw = r.on ? takeover(r) : ""; r.on = !r.on; draw(); msg(r.on ? "已启用，恢复调取本子站数据" : "已停用，不再调取本子站数据" + sw); return; }   /* 停用只作用于本子站；停用的是当前服务机器人时整个群切换，原机器人重新启用后不自动切回 */
+    b = e.target.closest("[data-ed]"); if (b) { openForm(+b.dataset.ed); return; }
+    b = e.target.closest("[data-ban]"); if (b) { openBan(+b.dataset.ban); return; }
+    b = e.target.closest("[data-und]"); if (b) { openUnd(+b.dataset.und); return; }
+    b = e.target.closest("[data-del]"); if (b) openDel(+b.dataset.del);
+  });
+
+  function show(view) {
+    if (["list", "new", "tkdup", "edit", "del", "ban", "undel", "nogrp", "bakgrp", "delsrv", "kill", "empty"].indexOf(view) < 0) view = "list";
+    ALL = view === "empty" ? [] : seed(); killOn = false;
+    if (view === "nogrp") { ALL[0].h = "异常"; takeover(ALL[0]); }   /* 服务机器人 A 被移出群或被取消管理员：状态异常并立即通知后台管理员，本群切换到 B */
+    if (view === "bakgrp") ALL[1].h = "异常";   /* 备用机器人 B 被移出群：只显示异常，不作为接替对象；之后停用 A，本群切换到 C */
+    closeForm(); document.getElementById("cfm").hidden = true; document.getElementById("ban").hidden = true; document.getElementById("und").hidden = true; document.getElementById("kcf").hidden = true; draw();
+    if (view === "kill") openKcf();
+    if (view === "undel") openUnd(0);
+    if (view === "new") openForm(null);
+    if (view === "tkdup") { openForm(null); document.getElementById("fmName").value = "BBWave报表助手F"; document.getElementById("fmUser").value = "bbwave_report_f_bot"; document.getElementById("fmToken").value = ALL[1].tk; document.getElementById("dlgOk").click(); }   /* 演示：填入与 B 相同的 Token */
+    if (view === "bakgrp") msg("「" + ALL[1].name + "」不在授权群或权限不足：只显示异常，切换时不选它。点 A 的「停用」看切换结果", true);
+    if (view === "edit") openForm(0);
+    if (view === "del") openDel(4);
+    if (view === "delsrv") openDel(0);
+    if (view === "nogrp") msg("「" + ALL[0].name + "」不在授权群或权限不足，已通知后台管理员，本群已切换到「" + ALL[1].name + "」", true);
+    if (view === "ban") openBan(3);
+    if (location.hash.slice(1) !== view) history.replaceState(null, "", "#" + view);
+    if (window.self !== window.top) window.parent.postMessage({ type: "proto-view", view: view }, "*");
+  }
+  window.addEventListener("hashchange", function () { show(location.hash.slice(1) || "list"); });
+  document.addEventListener("click", function (e) { var b = e.target.closest("[data-go]"); if (b) { e.preventDefault(); show(b.dataset.go); } });
+  show(location.hash.slice(1) || "list");
+})();
+</script>
+</body>
+</html>

@@ -10,81 +10,111 @@
 <div class="with-nav">
 <div class="desk"><article class="paper">
 
-<h1 class="doc-title">Telegram报表 · 需求要点 · v1.0</h1>
-<div class="doc-meta"><span>版本：v1.0</span><span>端：Telegram 机器人、789Bingo 后台、789Games 后台</span><span>依据：<a href="Telegram报表-需求开发PRD文档.html">需求开发 PRD 文档</a></span></div>
+<h1 class="doc-title">Telegram报表 · 需求要点 · v1.1</h1>
+<div class="doc-meta"><span>版本：v1.1</span><span>端：Telegram 机器人、789Bingo 后台、789Games 后台</span><span>依据：<a href="Telegram报表-需求开发PRD文档.html">需求开发 PRD 文档</a></span></div>
 <hr class="doc-rule">
 
 <h2 id="k1">一句话需求</h2>
-<div class="oneline">新建一个 Telegram 报表机器人，在授权的 Telegram 群内使用：群成员通过输入框左侧「菜单」按钮和输入框下方的报表键盘，选择全站 / cicc / 短信 / 网红 / 谷歌 / oem 渠道，或输入代理账号，在一张表格里按列查看 789Bingo、789Games 和全站（两站合计）12 项指标的今日实时数据与昨日全天对比；报表发出满 1 小时或生成新报表时自动删除。两站管理后台【系统管理 › Telegram报表配置】新增渠道配置和授权群。</div>
+<div class="oneline">新建 Telegram 报表机器人「BBWave报表助手」，在授权群「BBwave平台数据」内，已在 789Bingo、789Games 后台登记的人员按子站（789BINGO、789GAMES、全网数据）选择渠道或模糊搜索代理线，生成今日、昨日、前日 12 项指标及较昨日同时段对比的报表图片，发出满 15 分钟或生成新报表时自动删除；两个子站后台【系统管理 › Telegram报表配置】新增人员配置、渠道配置、机器人管理三个标签页。</div>
 
 <h2 id="k2">业务流程</h2>
 <div class="flow">
-  <div class="fs key"><div class="no">1</div><div><b>打开报表键盘</b>：在授权群里点「菜单」选 /menu 或直接发 /menu → 校验本群权限</div></div>
+  <div class="fs key"><div class="no">1</div><div><b>打开首页菜单</b>：人员进群时自动收到本人首页菜单；或点进群一级菜单、发 /menu → 校验群和人员</div></div>
   <div class="fa">↓</div>
-  <div class="fs"><div class="no">2</div><div><b>按钮矩阵</b>：打开授权群即显示，不用先发命令</div></div>
+  <div class="fs"><div class="no">2</div><div><b>选数据范围</b>：789BINGO / 789GAMES / 全网数据（只有一个子站权限时跳过）</div></div>
   <div class="fa">↓</div>
-  <div class="fs"><div class="no">3</div><div><b>选查询对象</b>：点渠道，或发送代理账号</div></div>
+  <div class="fs"><div class="no">3</div><div><b>选查询对象</b>：点渠道（父级进入下一级）或代理线查询（搜到 1 个直接出报表，多个时点选）</div></div>
   <div class="fa">↓</div>
-  <div class="fs"><div class="no">4</div><div><b>出报表</b>：删除本聊天旧报表 → 发出新报表</div></div>
+  <div class="fs"><div class="no">4</div><div><b>生成并发送</b>：生成 → 限流排队 → 发送前复核 → 删除旧报表 → 发出图片</div></div>
   <div class="fa">↓</div>
-  <div class="fs key"><div class="no">5</div><div><b>自动删除</b>：发出满 1 小时删除</div></div>
+  <div class="fs key"><div class="no">5</div><div><b>自动删除</b>：发出满 15 分钟删除；失败重试，满 24 小时群内提醒</div></div>
 </div>
 <div class="brs">
-  <div class="bc"><h5>A - 授权群</h5><p class="s"><b>发出菜单</b><small>群内全员可用；报表只显示有权限站点的列</small></p></div>
-  <div class="bc br"><h5>B - 未授权群 / 私聊</h5><p class="s"><b>不返回数据</b><small>未授权群附群 ID；私聊引导到群里使用</small></p></div>
-  <div class="bc br"><h5>C - 代理账号不存在</h5><p class="s"><b>回复未找到</b><small>不生成报表、不删旧报表</small></p></div>
+  <div class="bc"><h5>A - 已登记并启用</h5><p class="s"><b>按权限显示按钮</b><small>报表群内所有成员可见</small></p></div>
+  <div class="bc br"><h5>B - 未登记 / 未授权群 / 私聊</h5><p class="s"><b>不返回数据</b><small>未登记带本人 Telegram ID；未授权群带群 ID；私聊引导到群</small></p></div>
+  <div class="bc br"><h5>C - 子站停止出报表</h5><p class="s"><b>群内回复原因</b><small>总停用开关打开：暂停中；没有可接替的机器人：暂不可用、正在更换</small></p></div>
 </div>
 
 <h2 id="k3">开发功能点</h2>
 <div class="fpcard" id="F01-01">
-  <h3><span class="code">F01-01</span>菜单按钮与命令<a href="Telegram报表-需求开发PRD文档.html#F01-01">查看 PRD ›</a></h3>
-  <div class="fpgrid"><b>要做什么</b><ul><li>输入框左侧蓝色「菜单」列出 /menu、/agent。</li><li>/menu 在输入框下方打开报表键盘；其他命令回复不支持。</li></ul>
+  <h3><span class="code">F01-01</span>命令列表与命令<a href="Telegram报表-需求开发PRD文档.html#F01-01">查看 PRD ›</a></h3>
+  <div class="fpgrid"><b>要做什么</b><ul><li>「/」展开 /menu、/agent；/start 同 /menu；其他命令回复不支持。</li></ul>
   <b>公式</b><div class="formula">无</div><b>涉及端</b><div class="ends"><span>Telegram 机器人</span></div></div>
 </div>
 <div class="fpcard" id="F01-02">
-  <h3><span class="code">F01-02</span>报表菜单<a href="Telegram报表-需求开发PRD文档.html#F01-02">查看 PRD ›</a></h3>
-  <div class="fpgrid"><b>要做什么</b><ul><li>输入框下方 3 列按钮矩阵：6 个渠道、代理线查询；不设站点按钮和留存周期按钮。</li><li>打开授权群即显示，所有成员可用；点按钮等于发出按钮文字，点渠道立即出报表。</li><li>「⌨」可收起，/menu 重新显示。</li></ul>
-  <b>公式</b><div class="formula">默认周期 = 7 天</div><b>涉及端</b><div class="ends"><span>Telegram 机器人</span></div></div>
+  <h3><span class="code">F01-02</span>报表菜单与按钮<a href="Telegram报表-需求开发PRD文档.html#F01-02">查看 PRD ›</a></h3>
+  <div class="fpgrid"><b>要做什么</b><ul><li>一级（子站、全网数据）→ 二级渠道 → 不限层级的下一级菜单；按本人权限显示。</li><li>布局：渠道（每行 1–3 个）→ 代理线查询 → 两个返回类按钮并排（首页没有）；一级菜单也有代理线查询。</li><li>底部键盘本人可见、默认收起，「⌨」展开，一次列出全部层级。</li><li>新菜单替换本人上一条；进群时 @ 本人发首页菜单；配置变更不群发，下次操作时先发新首页菜单。</li><li>关闭父级「群里显示」时子渠道一起隐藏，不影响统计。</li></ul>
+  <b>公式</b><div class="formula">首页 ＝ 有权限的子站数 ≥ 2 ? 一级菜单（只显示有权限的子站） : 该子站二级菜单<br>显示「全网数据」＝ 全部子站都有权限<br>渠道显示 ＝ 已勾选 且（默认渠道 或（群里显示 且 有可用绑定代理））；全网数据另须每站都有、父级相同、都勾选<br>全网数据显示代理线查询 ＝ 任一子站勾选</div><b>涉及端</b><div class="ends"><span>Telegram 机器人</span><span>后端</span></div></div>
 </div>
 <div class="fpcard" id="F01-03">
-  <h3><span class="code">F01-03</span>授权校验<a href="Telegram报表-需求开发PRD文档.html#F01-03">查看 PRD ›</a></h3>
-  <div class="fpgrid"><b>要做什么</b><ul><li>每次操作都按群、按站点校验授权群名单。</li><li>未授权群回复未开通和群 ID；私聊回复只在授权群内使用；群里普通消息不回应。</li></ul>
-  <b>公式</b><div class="formula">群可看站点 S ＝ 群 ID ∈ S 后台授权群名单 且 状态为启用；私聊 → 不返回数据</div><b>涉及端</b><div class="ends"><span>Telegram 机器人</span><span>后端</span></div></div>
+  <h3><span class="code">F01-03</span>子站、人员与群授权<a href="Telegram报表-需求开发PRD文档.html#F01-03">查看 PRD ›</a></h3>
+  <div class="fpgrid"><b>要做什么</b><ul><li>按 Telegram ID 识别人员，各子站分别判断；只在授权群使用；群内共享。</li><li>未授权群回复群 ID（1 分钟后删除）；私聊回复引导；普通消息不回应。</li><li>某范围无可显示渠道：保留登记；无代理线查询权限时提示，有时菜单只显示代理线查询。</li></ul>
+  <b>公式</b><div class="formula">有子站 S 权限 ＝ 在 S 后台已登记 且 启用<br>生成报表 ＝ 在授权群 且 有所涉子站权限 且 有所选渠道或代理线查询权限</div><b>涉及端</b><div class="ends"><span>Telegram 机器人</span><span>后端</span></div></div>
+</div>
+<div class="fpcard" id="F01-04">
+  <h3><span class="code">F01-04</span>按钮归属与拒绝提示<a href="Telegram报表-需求开发PRD文档.html#F01-04">查看 PRD ›</a></h3>
+  <div class="fpgrid"><b>要做什么</b><ul><li>人员产生的消息按钮只有他能点；进群一级菜单所有人能点。</li><li>点按钮被拒只弹本人可见提示；发命令或点键盘被拒在群里 @ 回复，1 分钟后删除。</li><li>未登记或已停用时提示带本人 Telegram ID。</li></ul>
+  <b>公式</b><div class="formula">可点 ＝ 消息不属于任何人 或 点击人 ＝ 消息归属人</div><b>涉及端</b><div class="ends"><span>Telegram 机器人</span><span>后端</span></div></div>
 </div>
 <div class="fpcard" id="F02-01">
   <h3><span class="code">F02-01</span>报表生成与展示<a href="Telegram报表-需求开发PRD文档.html#F02-01">查看 PRD ›</a></h3>
-  <div class="fpgrid"><b>要做什么</b><ul><li>先发「正在生成报表…」，再发报表：标题、截至时间、指标表、自动删除时间。</li><li>表格列：789Bingo | 789Games | 全站（两站合计）；每格大字今日（带 ▲▼）、小字昨日和变化百分比。只授权一站时只显示该站一列。</li><li>报表下方不带按钮，不提供刷新；再点一次渠道按钮即生成新报表。</li><li>生成中重复点击只提示；30 秒未生成回复失败和重试。</li><li>渠道在本群有权限的站点都未绑定代理时，不显示该渠道按钮；只在一站绑定时报表只显示该站一列。</li></ul>
-  <b>公式</b><div class="formula">今日 &gt; 昨日 → ▲ 绿色；今日 &lt; 昨日 → ▼ 红色；相等或任一为 - → 无箭头<br>变化百分比 ＝（今日 − 昨日）÷ |昨日| × 100%，1 位小数；昨日为 0 或任一为 - → -；留存显示百分点差（pp）<br>全站列：人数、金额 ＝ 两站相加；人均、留存 ＝ 两站合计分子 ÷ 合计分母</div><b>涉及端</b><div class="ends"><span>Telegram 机器人</span><span>后端</span></div></div>
+  <div class="fpgrid"><b>要做什么</b><ul><li>按 Excel 格式截成一张图片；缩略图点开看全图；不发文件。</li><li>列：指标 | 今日 | 昨日 | 前日 | 较昨日同时段，12 项四组；全网数据 3 个工作表。</li><li>图片下方：路径、统计时间（每站一组，写日期和时区）、删除时间（MM-DD HH:mm，GMT+8）；按钮：代理线查询和两个返回类按钮。</li><li>内容保护：禁止转发、保存。</li></ul>
+  <b>公式</b><div class="formula">今日 &gt; 昨日同时段 → ▲ 绿；&lt; → ▼ 红；相等或任一为 - → 无箭头<br>变化百分比 ＝（今日 − 昨日同时段）÷ |昨日同时段| × 100%，1 位小数；分母为 0 或任一为 - → -；其余相等 → 0.0%<br>人数、金额为 0 → 0；比值分母为 0 → -<br>留存变化 ＝ 今日留存率 − 昨日同时段留存率，单位「百分点」</div><b>涉及端</b><div class="ends"><span>Telegram 机器人</span><span>后端</span></div></div>
 </div>
 <div class="fpcard" id="F02-02">
   <h3><span class="code">F02-02</span>指标口径<a href="Telegram报表-需求开发PRD文档.html#F02-02">查看 PRD ›</a></h3>
-  <div class="fpgrid"><b>要做什么</b><ul><li>今日 = 00:00 至生成时刻实时；昨日 = 全天；GMT+8。</li><li>12 项指标沿用平台报表口径；渠道用户按所属代理归属（就近）。</li></ul>
-  <b>公式</b><div class="formula">存提差 ＝ 存款额 − 提款金额<br>人均首存 ＝ 首存金额 ÷ 首存人数；人均存款 ＝ 存款额 ÷ 存款人数（分母 0 显示 -）<br>GGR ＝ 总投注 − 总派彩<br>次日留存：今日 ＝ 昨天注册用户今天截至生成时刻有登录人数 ÷ 昨天注册人数；昨日 ＝ 前天注册用户昨天有登录人数 ÷ 前天注册人数<br>7日留存：今日 ＝ 7 天前注册用户今天截至生成时刻有登录人数 ÷ 该日注册人数；昨日 ＝ 8 天前注册用户昨天有登录人数 ÷ 该日注册人数</div><b>涉及端</b><div class="ends"><span>后端</span></div></div>
+  <div class="fpgrid"><b>要做什么</b><ul><li>各子站按本站时区切日：今日 = 00:00 至生成时刻；昨日、前日全天；全网数据 = 两站相加。</li><li>12 项与平台报表一致，范围随按钮；不计测试用户。</li><li>渠道 = 所绑代理及下级的用户；自然流量 = 未归入自建渠道的用户。</li></ul>
+  <b>公式</b><div class="formula">自然流量 ＝ 全站 − 各顶层渠道合计<br>全网合计：人数、金额 ＝ 两站相加；人均、留存 ＝ 合计分子 ÷ 合计分母<br>存提差 ＝ 存款金额 − 提款金额<br>人均首存 ＝ 首存金额 ÷ 新增首存人数；人均存款 ＝ 存款金额 ÷ 存款人数（分母 0 → -）<br>GGR ＝ 总投注 − 总派彩<br>日期 D 的次日留存 ＝ D 前一天注册用户在 D 当天有登录人数 ÷ 该日注册人数<br>日期 D 的 7日留存 ＝ D 往前第 7 天注册用户在 D 当天有登录人数 ÷ 该日注册人数</div><b>涉及端</b><div class="ends"><span>后端</span></div></div>
+</div>
+<div class="fpcard" id="F02-03">
+  <h3><span class="code">F02-03</span>生成、排队与发送前复核<a href="Telegram报表-需求开发PRD文档.html#F02-03">查看 PRD ›</a></h3>
+  <div class="fpgrid"><b>要做什么</b><ul><li>校验通过后发「正在生成报表…」；生成中再点不重复生成。</li><li>30 秒内相同查询（未跨该站 00:00）复用本人上次结果。</li><li>超 30 秒或一个子站取不到数据：失败提示 + 重试，不发部分数据，不删旧报表。</li><li>限流排队，超 2 分钟提示排队超时。</li><li>发出前复核，不通过就取消，删除「正在生成 / 排队中」提示，本群恢复可生成。</li></ul>
+  <b>公式</b><div class="formula">超时 ＝ 生成时间 &gt; 30 秒（不含排队）<br>排队超时 ＝ 排队时间 &gt; 2 分钟<br>同一人员 + 同一查询 → 最多一个任务、最多发出一份报表</div><b>涉及端</b><div class="ends"><span>Telegram 机器人</span><span>后端</span></div></div>
+</div>
+<div class="fpcard" id="F02-04">
+  <h3><span class="code">F02-04</span>子站停止出报表<a href="Telegram报表-需求开发PRD文档.html#F02-04">查看 PRD ›</a></h3>
+  <div class="fpgrid"><b>要做什么</b><ul><li>总停用开关打开回复「报表服务暂停中，请稍后再试。」；没有可接替机器人回复「报表机器人暂不可用，正在更换，请稍后再试。」</li><li>点按钮也在群里回复，1 分钟后删除；另一子站照常。</li><li>全网代理线查询跳过该站，统一注明「X 暂停中」。</li></ul>
+  <b>公式</b><div class="formula">受影响 ＝ 该子站 ∪ 全网数据（全网代理线查询只跳过该站）</div><b>涉及端</b><div class="ends"><span>Telegram 机器人</span><span>后端</span></div></div>
 </div>
 <div class="fpcard" id="F03-01">
   <h3><span class="code">F03-01</span>代理线查询<a href="Telegram报表-需求开发PRD文档.html#F03-01">查看 PRD ›</a></h3>
-  <div class="fpgrid"><b>要做什么</b><ul><li>点「代理线查询」→ 机器人 @ 点击人要求回复，点击人输入框自动进入回复状态，直接输入账号；或发「/agent 账号」。</li><li>同时查有权限的两站，账号存在的站点各一列，两站都有时加全站列；范围为该代理及全部下级的用户。</li><li>有权限的站点都没有这个账号时回复未找到，不删旧报表。</li></ul>
-  <b>公式</b><div class="formula">范围 ＝ 代理本身 ∪ 全部下级代理名下的用户；账号去首尾空格、不区分大小写</div><b>涉及端</b><div class="ends"><span>Telegram 机器人</span><span>后端</span></div></div>
+  <div class="fpgrid"><b>要做什么</b><ul><li>点代理线查询或发 /agent → @ 点击人要求回复（只认被 @ 的人）；「/agent 账号」直接搜索。</li><li>搜到 1 个直接出报表；2 个及以上列按钮（最多 10 个）点选；报表含下级。</li><li>没搜到回复未找到，输入框自动进入回复状态可直接重输；不删旧报表。</li><li>提问、结果、未找到归属提问人，被下一条菜单替换，15 分钟删除。</li></ul>
+  <b>公式</b><div class="formula">命中 ＝ 账号包含输入内容（不区分大小写）；开头匹配排前<br>范围：二级及以下 → 当前范围；一级菜单或 /agent → 全网数据（无权限 → 第一个有权限的子站），只查有权限且未暂停的子站</div><b>涉及端</b><div class="ends"><span>Telegram 机器人</span><span>后端</span></div></div>
+</div>
+<div class="fpcard" id="F03-02">
+  <h3><span class="code">F03-02</span>代理线权限<a href="Telegram报表-需求开发PRD文档.html#F03-02">查看 PRD ›</a></h3>
+  <div class="fpgrid"><b>要做什么</b><ul><li>逐站判断，只含有权限的子站；无「全站」权限时只统计可查看渠道，注明「仅含你可查看的渠道」。</li><li>全网数据有一个子站可查就生成，注明「只含 X（原因）」。</li><li>四种查询方式结果一致。</li></ul>
+  <b>公式</b><div class="formula">统计用户 ＝ 代理线用户 ∩ 有代理线查询权限的子站 ∩（有「全站」权限 ? 全部 : 本人可查看渠道）</div><b>涉及端</b><div class="ends"><span>后端</span></div></div>
 </div>
 <div class="fpcard" id="F04-01">
-  <h3><span class="code">F04-01</span>发出 1 小时自动删除<a href="Telegram报表-需求开发PRD文档.html#F04-01">查看 PRD ›</a></h3>
-  <div class="fpgrid"><b>要做什么</b><ul><li>报表发出满 1 小时删除；服务中断恢复后立即补删。</li><li>消息已不存在或机器人已被移出时跳过，不提示。</li></ul>
-  <b>公式</b><div class="formula">删除时间 ＝ 发出时间 + 1 小时</div><b>涉及端</b><div class="ends"><span>Telegram 机器人</span></div></div>
+  <h3><span class="code">F04-01</span>发出 15 分钟自动删除<a href="Telegram报表-需求开发PRD文档.html#F04-01">查看 PRD ›</a></h3>
+  <div class="fpgrid"><b>要做什么</b><ul><li>报表和失败提示 15 分钟删除；拒绝回复 1 分钟删除（末行写删除时间）。</li></ul>
+  <b>公式</b><div class="formula">删除时间 ＝ 发出时间 + 15 分钟，写「⏱ MM-DD HH:mm 自动删除（GMT+8）」</div><b>涉及端</b><div class="ends"><span>Telegram 机器人</span></div></div>
 </div>
 <div class="fpcard" id="F04-02">
   <h3><span class="code">F04-02</span>新报表替换旧报表<a href="Telegram报表-需求开发PRD文档.html#F04-02">查看 PRD ›</a></h3>
-  <div class="fpgrid"><b>要做什么</b><ul><li>同一聊天发出新报表时，立即删除之前的报表和失败提示（不论是谁查的）。</li><li>不同聊天互不影响。</li></ul>
+  <div class="fpgrid"><b>要做什么</b><ul><li>新报表发出时删除本群之前的报表和失败提示；失败、排队超时不删。</li><li>拒绝回复不随之删除。</li></ul>
   <b>公式</b><div class="formula">无</div><b>涉及端</b><div class="ends"><span>Telegram 机器人</span></div></div>
+</div>
+<div class="fpcard" id="F04-03">
+  <h3><span class="code">F04-03</span>删除失败处理<a href="Telegram报表-需求开发PRD文档.html#F04-03">查看 PRD ›</a></h3>
+  <div class="fpgrid"><b>要做什么</b><ul><li>失败自动重试，后台显示「未删除 N 份」（只计报表）；由当前服务机器人负责删除。</li><li>最早一份满 24 小时：群里 @ 群主和管理员合并提醒；发不出时保留标记并告警。</li><li>已被手动删除视为成功。</li></ul>
+  <b>公式</b><div class="formula">N ＝ 本群全部未删除的报表份数（含未满 24 小时的）</div><b>涉及端</b><div class="ends"><span>Telegram 机器人</span><span>后台前端</span><span>后端</span></div></div>
 </div>
 <div class="fpcard" id="F05-01">
   <h3><span class="code">F05-01</span>渠道配置<a href="Telegram报表-需求开发PRD文档.html#F05-01">查看 PRD ›</a></h3>
-  <div class="fpgrid"><b>要做什么</b><ul><li>5 个固定渠道，各绑定多个代理。</li><li>同站点一个代理只能绑一个渠道；保存后下一份报表生效。</li></ul>
-  <b>公式</b><div class="formula">用户所属渠道 ＝ 代理链上离用户最近的已绑定代理所在渠道</div><b>涉及端</b><div class="ends"><span>两站后台前端</span><span>后端</span></div></div>
+  <div class="fpgrid"><b>要做什么</b><ul><li>默认渠道全站、自然流量；自建最多 20 个，可设父级，层级不限。</li><li>绑定代理树状勾选，至少一个；保存时对账拦截。</li><li>标红「范围重叠」「无可用代理」；「群里显示」开关；改动立即生效、不群发。</li><li>名称 1–10 个字符；改名影响全网合并时输入框下方提示，直接保存。</li></ul>
+  <b>公式</b><div class="formula">渠道数据 ＝ 所绑代理及全部下级代理名下用户<br>同一子站：一个代理（含下级）只属于一个顶层渠道；子渠道代理 ⊆ 父级范围<br>重叠时 → 以代理先进入的顶层渠道为准，换上级不改已有归属<br>查询任何日期 → 按查询时的绑定关系和用户当前所属代理</div><b>涉及端</b><div class="ends"><span>两站后台前端</span><span>后端</span></div></div>
 </div>
-<div class="fpcard" id="F05-02">
-  <h3><span class="code">F05-02</span>授权群<a href="Telegram报表-需求开发PRD文档.html#F05-02">查看 PRD ›</a></h3>
-  <div class="fpgrid"><b>要做什么</b><ul><li>增、改（群名称和状态）、删、启停，筛选和分页。</li><li>保存立即生效；已发出报表仍按 1 小时删除。</li></ul>
-  <b>公式</b><div class="formula">群 ID 以 -100 开头；同站点不重复；群名称 1–30 字</div><b>涉及端</b><div class="ends"><span>两站后台前端</span><span>后端</span></div></div>
+<div class="fpcard" id="F05-03">
+  <h3><span class="code">F05-03</span>人员配置<a href="Telegram报表-需求开发PRD文档.html#F05-03">查看 PRD ›</a></h3>
+  <div class="fpgrid"><b>要做什么</b><ul><li>登记 Telegram ID（正整数、不重复、不可改）、可查看渠道（树状，默认不勾，至少一个渠道）、状态；昵称自动获取。</li><li>筛选、分页、启停、删除，立即生效。</li></ul>
+  <b>公式</b><div class="formula">新建子渠道：已全选其父级的人员自动勾选，其余已登记人员不勾选<br>新建顶层渠道：已登记人员不勾选</div><b>涉及端</b><div class="ends"><span>两站后台前端</span><span>后端</span></div></div>
+</div>
+<div class="fpcard" id="F05-04">
+  <h3><span class="code">F05-04</span>机器人管理<a href="Telegram报表-需求开发PRD文档.html#F05-04">查看 PRD ›</a></h3>
+  <div class="fpgrid"><b>要做什么</b><ul><li>添加、改名称或用户名、换 Token、删除各子站同步（新机器人在另一站初始停用）；表单校验；Token 只显示后 4 位；测试连接。</li><li>各站分别启停；总停用开关只停本站，二次确认。</li><li>疑似封禁、Token 失效时全站自动停用；不在群显示异常（服务机器人切换，备用不接替）；封禁处理和故障材料。</li><li>「服务中」「未删除 N 份」标签；顶部告警；权限四项；操作日志。</li></ul>
+  <b>公式</b><div class="formula">服务机器人被停用或异常 → 整群切换到可接替的（全部子站启用 且 在群且权限正常 且 正常或限流中；正常优先，再按添加时间）；没有 → 该站和全网数据回复更换提示<br>排序：正常、限流中、异常在前，停用在后；同组按添加时间</div><b>涉及端</b><div class="ends"><span>两站后台前端</span><span>后端</span></div></div>
 </div>
 
 </article></div>

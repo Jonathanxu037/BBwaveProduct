@@ -12,7 +12,7 @@
 
 <header class="ck-head oc-head">
   <div class="k">OPERATION CONFIRM</div>
-  <h1>Telegram报表 · 运营需求确认 · <span id="hdVer">v1.0</span></h1>
+  <h1>Telegram报表 · 运营需求确认 · <span id="hdVer">v1.1</span></h1>
   <div class="d">上方切换查看原型，下方填写意见并「添加」到右侧列表；勾选要提交的意见，点「确认提交」保存为一个版本的运营需求修改意见。<span class="oc-role" id="role"></span></div>
 </header>
 <div class="oc-note" role="note">※ 运营提交的意见（含截图）、产品回复和补充都保存在云端，换电脑、换浏览器都能看到，每分钟自动刷新。产品回复后，这条意见不能再修改或删除，只能补充；封板后只有产品能补充。重新打包上传不会删除或覆盖这些记录。『下载』『复制』只用于留档或贴到 Jira。</div>
@@ -134,7 +134,7 @@
 <script>
 (function () {
   /* ITER：多迭代需求包的迭代标签（如 "v1.0"、"完整需求"，和 TOPIC 里的标签一致），单版本留空。填了以后：原型下拉只列本迭代 prototype/<迭代文件夹>/ 下的页面，名称写「迭代 · 页面名」，标题带迭代 */
-  var ROOT = "../", TOPIC = "Telegram报表", VER = "v1.0", ITER = "";
+  var ROOT = "../", TOPIC = "Telegram报表", VER = "v1.1", ITER = "";
   /* 标题里的版本号跟着 VER 显示：升版本只改 VER 一处（需求包框架规范第 12.1 节「升版本要改的位置」） */
   document.getElementById("hdVer").textContent = VER;
   if (ITER) {   /* 多迭代：页面标题和浏览器标题带迭代（需求包框架规范第 3 节「页面标题带迭代号」） */
@@ -151,8 +151,10 @@
   var MAX_MB = 10, BIG_W = 3840, BIG_MB = 5, FIT_W = 2880;
   /* 原型的视图（按页面路径）；没有列出的页面只显示整页 */
   var VIEWS = {
-    "prototype/front/Telegram报表-XX页面.html": [["default", "默认"], ["error", "异常"]],
-    "prototype/admin/Telegram报表-后台XX页面.html": [["list", "列表"], ["new", "新建"], ["edit", "编辑"]]
+    "prototype/front/Telegram报表-机器人对话页.html": [["menu", "人员进群（首页菜单）"], ["botjoin", "机器人进群（一级菜单）"], ["lv2", "二级菜单"], ["lv3", "下一级菜单"], ["report", "渠道报表"], ["all", "全网数据报表"], ["shot", "点开报表图片"], ["agent", "代理线查询"], ["nostaff", "未开通权限"], ["groupno", "未授权群"], ["private", "私聊"], ["fail", "生成失败"], ["stale", "权限变化后点旧菜单"]],
+    "prototype/admin/Telegram报表-后台人员配置页面.html": [["list", "列表"], ["games", "789Games 后台列表"], ["new", "添加"], ["edit", "编辑"], ["del", "删除确认"], ["empty", "空列表"]],
+    "prototype/admin/Telegram报表-后台渠道配置页面.html": [["list", "列表"], ["add", "新建渠道"], ["addsub", "新建子渠道"], ["edit", "编辑"], ["rename", "改名提示"], ["overlap", "保存时重叠拦截"], ["moved", "代理换上级后范围重叠"], ["del", "删除确认"], ["delpar", "删除有子渠道的渠道"], ["viewnat", "查看默认渠道"], ["off", "群里显示关闭"], ["offpar", "关闭父级群里显示"], ["nobind", "无可用代理"], ["none", "没有自建渠道"]],
+    "prototype/admin/Telegram报表-后台机器人管理页面.html": [["list", "列表"], ["new", "添加"], ["tkdup", "Token 重复提示"], ["edit", "编辑"], ["del", "删除确认"], ["delsrv", "删除正在服务的机器人"], ["ban", "疑似封禁处理"], ["undel", "未删除的报表"], ["nogrp", "服务机器人不在群或权限不足"], ["bakgrp", "备用机器人不在群或权限不足"], ["kill", "总停用开关确认"], ["empty", "空列表"]]
   };
   function $(id) { return document.getElementById(id); }
   function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }

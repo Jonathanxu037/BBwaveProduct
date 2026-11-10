@@ -760,9 +760,11 @@ function isPubAdmin() {
       var par = t.parentNode, s = t.nodeValue;
       if (!par || !/[NQFD]\d/.test(s) || !par.closest || par.closest(SKIP)) return;
       var td = par.closest("td"); if (td && td.cellIndex === 0 && /^([nq]\d+|dev-D\d+)$/.test(td.parentNode.id || "")) return;   /* 规则表、待确认表、附录 D 自己的编号格 */
+      /* 「D1–D7、D14、D30 留存」这类按天数的数据名称不是控件说明编号：同一段文字里有留存 / retention、一位数的 D1、或 D7–D14 这种区间时，D 编号都不转换 */
+      var dayCtx = /留存|retention|\bD\d\b|\bD\d+\s*[–—~\-至到]\s*D?\d+/i.test(s);
       var frag = document.createDocumentFragment(), last = 0, m, hit = false; RE.lastIndex = 0;
       while ((m = RE.exec(s))) {
-        if (!INDEX[m[1]]) continue;
+        if (!INDEX[m[1]] || (dayCtx && m[1].charAt(0) === "D")) continue;
         hit = true; frag.appendChild(document.createTextNode(s.slice(last, m.index)));
         var b = document.createElement("button"); b.type = "button"; b.className = "ref-btn"; b.textContent = m[1]; b.setAttribute("data-code", m[1]);
         b.title = m[1] + "：" + (INDEX[m[1]].brief || "") + "（点击打开 PRD 对应位置）"; frag.appendChild(b); last = m.index + m[0].length;

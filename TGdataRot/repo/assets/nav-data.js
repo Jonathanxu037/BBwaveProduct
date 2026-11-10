@@ -4,7 +4,7 @@
    需求不涉及前台或后台时，删掉对应的三级目录和原型文件；不涉及后台时删掉「后台操作手册」。 */
 window.NAV_DATA = {
   role: "repo",   /* 发布站点的角色：报告 */
-  title: "Telegram报表（v1.0）", href: "index.html",
+  title: "Telegram报表（v1.1）", href: "index.html",
   // brand: "【左侧目录栏标题，不写时自动取上面 title 去掉版本号】",   /* 目录栏顶部显示需求标题（需求包框架规范第 3.2 节） */
   showChanges: false,   /* 运营需求确认页是否显示原型修改标注（版本痕迹）：默认 false 不显示，需要时改成 true（需求包框架规范第 6.1 节） */
   roles: [],   /* 入口页「需求与原型中心」只有产品能看 */
@@ -14,9 +14,10 @@ window.NAV_DATA = {
       { title: "前台页面", href: "prototype/front/Telegram报表-机器人对话页.html", bar: "#3B82F6", children: [
         { title: "机器人对话页", href: "prototype/front/Telegram报表-机器人对话页.html", type: "page" }
       ]},
-      { title: "后台页面", href: "prototype/admin/Telegram报表-后台渠道配置页面.html", bar: "#8C6EDC", children: [
+      { title: "后台页面", href: "prototype/admin/Telegram报表-后台人员配置页面.html", bar: "#8C6EDC", children: [
+        { title: "后台人员配置页面", href: "prototype/admin/Telegram报表-后台人员配置页面.html", type: "admin" },
         { title: "后台渠道配置页面", href: "prototype/admin/Telegram报表-后台渠道配置页面.html", type: "admin" },
-        { title: "后台授权群页面", href: "prototype/admin/Telegram报表-后台授权群页面.html", type: "admin" }
+        { title: "后台机器人管理页面", href: "prototype/admin/Telegram报表-后台机器人管理页面.html", type: "admin" }
       ]}
     ]},
     { title: "文档资料", href: "docs/Telegram报表-需求要点.html", bar: "#2E9A58", children: [

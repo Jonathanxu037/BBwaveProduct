@@ -6,7 +6,20 @@
 <title>Telegram报表-后台渠道配置页面</title>
 <link rel="stylesheet" href="../../assets/style.css">
 <style>.bo-tabs a{padding:9px 14px;font-size:13px;color:#555;border-bottom:2px solid transparent;text-decoration:none}.bo-tabs a:hover{color:#409EFF}.bo-tabs a.on{color:#409EFF;border-bottom-color:#409EFF}
-.tr-ag{display:flex;gap:8px;align-items:center}</style>
+.tr-ag{display:flex;gap:8px;align-items:center}.ag-tree{border:1px solid #DCDFE6;border-radius:4px;max-height:220px;overflow:auto;padding:4px 6px;background:#fff}
+.ag-n{display:flex;align-items:center;gap:4px;line-height:26px;font-size:13px}.ag-n label{display:inline-flex;align-items:center;gap:4px;cursor:pointer}.ag-n small{color:#909399;font-size:12px}.ag-n .ag-own{color:#E6A23C}
+.ag-t{all:unset;width:14px;text-align:center;color:#909399;cursor:pointer;font-size:11px}
+.tr-sw{all:unset;cursor:pointer;width:36px;height:18px;border-radius:9px;background:#DCDFE6;position:relative;display:inline-block;vertical-align:middle}
+.tr-sw::after{content:"";position:absolute;left:2px;top:2px;width:14px;height:14px;border-radius:50%;background:#fff;transition:left .15s}
+.tr-sw[aria-checked="true"]{background:#409EFF}.tr-sw[aria-checked="true"]::after{left:20px}.tr-sw[disabled]{opacity:.5;cursor:not-allowed}
+.bm-sec{border:1px solid #EBEEF5;border-radius:4px;padding:6px 14px 12px;margin-bottom:12px;background:#fff}
+.bm-fix{font-size:12px;color:#909399;margin-top:6px}.bm-pv{display:flex;gap:16px;flex-wrap:wrap;margin-top:8px}
+.bm-kb{background:#f0f1f3;border-radius:8px;padding:8px;display:grid;gap:6px;min-width:220px}.bm-kb .r{display:grid;gap:6px}
+.bm-kb span{background:#fff;border-radius:6px;padding:6px 4px;text-align:center;font-size:12.5px;color:#222;box-shadow:0 1px 0 rgba(0,0,0,.06)}.bm-kb b{font-size:12px;color:#606266;font-weight:600}.bm-none{font-size:12.5px;color:#F56C6C}
+.lo-phone{background:#fff;border:1px solid #E4E7ED;border-radius:12px;padding:10px;max-width:420px}.lo-kb{display:grid;gap:7px}.lo-row{display:grid;gap:7px}
+.lo-b{background:#f0f1f3;border-radius:10px;padding:10px 4px;text-align:center;font-size:13px;color:#222;box-shadow:0 1px 0 rgba(0,0,0,.06);cursor:grab;user-select:none}.lo-b.sub{background:#e8f1fb}.lo-b.fix{cursor:default;color:#909399;background:#f7f7f8}.lo-b.dragging{opacity:.4}.lo-b.over{outline:2px dashed #409EFF}
+.lo-cap{font-size:12px;color:#606266;font-weight:600;margin:6px 0 0}.lo-more{color:#409EFF}
+.ov-tag{all:unset;cursor:pointer;margin-left:6px;font-size:11px;line-height:16px;padding:0 5px;border-radius:3px;color:#F56C6C;border:1px solid #F56C6C;background:#FEF0F0;white-space:nowrap}</style>
 </head>
 <body>
 <!-- 后台原型：仿平台真实后台。整页为本需求新增；示例数据一律虚构。视图：#list 列表 / #edit 编辑弹窗 / #empty 渠道未绑定代理 -->
@@ -25,59 +38,98 @@
       <div class="bo-main">
         <div class="bo-crumb">位置 › 系统管理 › <b>Telegram报表配置</b></div>
         <div class="bo-tabs" role="tablist">
+          <a role="tab" aria-selected="false" href="Telegram报表-后台人员配置页面.html">人员配置</a>
           <a role="tab" class="on" aria-selected="true" href="Telegram报表-后台渠道配置页面.html">渠道配置</a>
-          <a role="tab" aria-selected="false" href="Telegram报表-后台授权群页面.html">授权群</a>
+          <a role="tab" aria-selected="false" href="Telegram报表-后台机器人管理页面.html">机器人管理</a>
         </div>
         <div class="bo-content">
-          <p class="ui-reqnote">本页配置 Telegram 报表里 5 个渠道各自包含哪些代理。用户按当前所属代理归入渠道：绑定的代理及其全部下级代理的用户都算这个渠道；「全站」为本站全部用户，不用配置。789Bingo、789Games 两站后台各有一份，各管本站。</p>
-          <table>
-            <tr><th>渠道</th><th><span class="ui-nw">绑定代理<i class="qm" tabindex="0" data-tip="这个渠道包含的代理账号。绑定的代理和它的全部下级代理名下的用户，都统计到这个渠道。">?</i></span></th><th><span class="ui-nw">代理数<i class="qm" tabindex="0" data-tip="已绑定的代理账号个数，不含下级代理。为 0 时，机器人里不显示这个渠道的按钮（两站都为 0 时）。">?</i></span></th><th>最后修改时间</th><th>操作人</th><th>操作</th></tr>
-            <tbody id="rows"></tbody>
-          </table>
-          <p style="font-size:12px;color:#909399;margin:10px 0 0">固定 5 个渠道，不分页。示例数据均为虚构。</p>
+          <p class="ui-reqnote">本页的「渠道」指推广渠道，按绑定代理划分（所绑代理及其全部下级代理名下用户的数据），与充值渠道、出款渠道、新用户注册全链路跟踪的渠道筛选和广告投放的投放渠道（Facebook、TikTok、Google）无关；投放渠道的用户按其投手代理计入绑定了该代理的渠道。一个渠道就是群里的一个按钮：名称即按钮文字，顺序即「位置」，「群里显示」控制自建渠道是否出现（「全站」「自然流量」始终显示）。一级按钮由技术配置，后台不能管理。</p>
+          <div class="bm-sec">
+            <div class="bo-filter" style="margin:4px 0 8px;padding:0;border:0">
+              <span class="fsec" style="margin:0">渠道</span>
+              <span style="font-size:12px;color:#909399;margin-left:8px">自建 <b id="chCnt">0</b> 个，最多 20 个（默认渠道「全站」「自然流量」不可删除、不计入上限）</span>
+              <button class="bo-btn n" type="button" id="addCh" data-dev="D94" style="margin-left:auto">+ 新建渠道</button>
+            </div>
+            <table>
+              <tr><th>位置</th><th>渠道名称</th><th><span class="ui-nw">父级渠道<i class="qm" tabindex="0" data-tip="默认为当前子站（如 789Bingo）；选已有渠道时，本渠道为其子渠道。">?</i></span></th><th><span class="ui-nw">绑定代理<i class="qm" tabindex="0" data-tip="查询条件：这些代理及其全部下级代理名下的用户都计入本渠道。">?</i></span></th><th><span class="ui-nw">群里显示<i class="qm" tabindex="0" data-tip="只有自建渠道有此开关：关闭后群里对所有人隐藏该按钮，人员配置里的勾选保留；关闭父级时其全部子渠道一起隐藏。隐藏不影响统计。默认渠道「全站」「自然流量」始终显示。">?</i></span></th><th>最后修改</th><th>操作</th></tr>
+              <tbody id="rows"></tbody>
+            </table>
+          </div>
+          <p style="font-size:12px;color:#909399;margin:10px 0 0">示例数据均为虚构。</p>
         </div>
       </div>
     </div>
   </div>
 
   <div class="bo-mask" id="dlg" hidden>
-    <div class="bo-dlg" role="dialog" aria-modal="true" aria-labelledby="dlgT" style="width:min(520px,92vw)">
-      <h4 id="dlgT">编辑渠道</h4>
-      <div class="frow"><span class="fl">渠道</span><div class="fctl"><b class="lab" id="dlgCh"></b></div></div>
-      <div class="frow" style="align-items:start"><span class="fl" style="padding-top:6px">绑定代理<i class="qm" tabindex="0" data-tip="输入代理账号后点「添加」，可添加多个；点标签上的 × 移除。同一代理只能绑定一个渠道。">?</i></span>
-        <div class="fctl">
-          <div class="tr-ag"><input class="bo-inp" id="agIn" style="width:220px" placeholder="输入代理账号" data-dev="D21" aria-label="代理账号"><button class="bo-btn" type="button" id="agAdd">添加</button></div>
-          <div class="ms-box" id="agTags" style="width:100%;cursor:default" aria-label="已绑定代理"></div>
-          <div class="ferr" id="agErr"></div>
+    <div class="bo-dlg" role="dialog" aria-modal="true" aria-labelledby="dlgT" style="width:min(580px,92vw)">
+      <h4 id="dlgT">新建渠道</h4>
+      <div class="frow" style="align-items:start"><label for="chName" style="padding-top:6px"><span class="req">*</span>渠道名称<i class="qm" tabindex="0" data-tip="即群里的按钮文字，显示为「📊 渠道名称」。">?</i></label><div class="fctl"><input class="bo-inp" id="chName" style="width:220px" placeholder="1–10 个字符，如 谷歌品牌词" data-dev="D95"><div class="ferr" id="eName"></div><div style="font-size:12px;color:#E6A23C" id="nHint"></div></div></div>
+      <div class="frow" style="align-items:start"><label for="tgParent" style="padding-top:6px"><span class="req">*</span>父级渠道<i class="qm" tabindex="0" data-tip="默认为当前子站。选已有渠道时，本渠道为其子渠道，只能从其绑定代理里选。">?</i></label><div class="fctl"><select class="bo-inp" id="tgParent" style="width:220px" data-dev="D92"></select><div style="font-size:12px;color:#909399" id="pHint"></div></div></div>
+      <div class="frow" style="align-items:start"><span class="fl" style="padding-top:6px"><span class="req">*</span>绑定代理<i class="qm" tabindex="0" data-tip="按代理上下级树状显示，默认折叠、只显示首级代理；勾选上级代理时其下级全部勾上。">?</i></span>
+        <div class="fctl" data-dev="D93">
+          <input class="bo-inp" id="agQ" style="width:220px;margin-bottom:6px" placeholder="搜索代理账号" aria-label="搜索代理账号">
+          <div class="ag-tree" id="aTree"></div>
+          <div style="font-size:12px;color:#606266;margin-top:4px" id="aSum"></div>
+          <div class="ferr" id="eAg"></div>
+          <div style="font-size:12px;color:#909399" id="aHint"></div>
         </div>
       </div>
-      <div class="row2"><button class="bo-btn" type="button" data-cancel id="dlgNo">取消</button><button class="bo-btn q" type="button" id="dlgOk" data-dev="D22">保存</button></div>
+      <div class="row2"><button class="bo-btn" type="button" data-cancel id="dlgNo">取消</button><button class="bo-btn q" type="button" id="dlgOk" data-dev="D120">保存</button></div>
+    </div>
+  </div>
+  <div class="bo-mask" id="cfm" hidden>
+    <div class="bo-dlg" role="dialog" aria-modal="true" aria-labelledby="cfmT">
+      <h4 id="cfmT">确认删除渠道</h4>
+      <p style="margin:0" id="cfmP"></p>
+      <div class="row2"><button class="bo-btn" type="button" data-cancel id="cfmNo">取消</button><button class="bo-btn q" type="button" id="cfmOk">删除</button></div>
     </div>
   </div>
 
   <aside class="notes adm-notes">
     <h2>后台渠道配置页面</h2>
-    <p class="sub">系统管理 › Telegram报表配置 › 渠道配置。配置 cicc、短信、网红、谷歌、oem 5 个渠道各自绑定的代理（整页为本需求新增）。</p>
+    <p class="sub">系统管理 › Telegram报表配置 › 渠道配置。新建、编辑、删除渠道，设置是否在群里显示（整页为本需求新增）。</p>
     <h3>模拟场景</h3>
     <div class="sim">
-      <button type="button" data-go="list"><span class="simtag">渠道配置</span>列表</button>
-      <button type="button" data-go="edit"><span class="simtag">渠道配置</span>编辑「短信」</button>
-      <button type="button" data-go="empty"><span class="simtag">渠道配置</span>「网红」未绑定代理</button>
+      <button type="button" data-go="list"><span class="simtag">渠道配置</span>渠道列表</button>
+      <button type="button" data-go="add"><span class="simtag">渠道配置</span>新建渠道（父级默认子站）</button>
+      <button type="button" data-go="addsub"><span class="simtag">渠道配置</span>新建子渠道（父级选「谷歌」）</button>
+      <button type="button" data-go="edit"><span class="simtag">渠道配置</span>编辑「谷歌」</button>
+      <button type="button" data-go="overlap"><span class="simtag">渠道配置</span>保存时代理与顶层渠道「oem」重叠</button>
+      <button type="button" data-go="moved"><span class="simtag">渠道配置</span>代理换上级后范围重叠（标红）</button>
+      <button type="button" data-go="del"><span class="simtag">渠道配置</span>删除「oem」确认</button>
+      <button type="button" data-go="delpar"><span class="simtag">渠道配置</span>删除有子渠道的「谷歌」</button>
+      <button type="button" data-go="viewnat"><span class="simtag">渠道配置</span>查看默认渠道「自然流量」</button>
+      <button type="button" data-go="off"><span class="simtag">渠道配置</span>「网红」群里不显示</button>
+      <button type="button" data-go="offpar"><span class="simtag">渠道配置</span>父级「谷歌」群里不显示（子渠道一起隐藏）</button>
+      <button type="button" data-go="nobind"><span class="simtag">渠道配置</span>「网红」所绑代理已全部删除或停用</button>
+      <button type="button" data-go="rename"><span class="simtag">渠道配置</span>改名「谷歌」（另一子站有同名渠道）</button>
+      <button type="button" data-go="none"><span class="simtag">渠道配置</span>还没有自建渠道</button>
     </div>
     <h3>规则批注</h3>
     <ol>
-      <li><b>渠道归属</b>：用户按当前所属代理归入渠道；绑定代理及其全部下级代理的用户都算该渠道；代理链上命中多个已绑定代理时，按离用户最近的一个归属。<span class="ref">PRD 规则 N6 · F05-01 渠道配置</span></li>
-      <li><b>一个代理只能绑定一个渠道</b>：添加已绑定到其他渠道的代理时，提示「代理 xx 已绑定到渠道「cicc」，同一代理只能绑定一个渠道」；输入不存在的账号提示「代理账号不存在」；同一渠道重复添加提示「该代理已添加」。<span class="ref">PRD 规则 N7 · F05-01</span></li>
-      <li><b>生效时间</b>：保存后，机器人下一次生成的报表按新配置统计；已发出的报表不变。<span class="ref">PRD 规则 N8 · F05-01</span></li>
-      <li><b>未绑定代理</b>：代理数为 0 的渠道，在只看本站的群里不显示按钮；两站汇总群里两站都为 0 才不显示，只有一站绑定时报表只显示该站一列。保存后机器人在相关群里重新发菜单。<span class="ref">PRD 规则 N9 · F01-02</span></li>
-      <li><b>操作日志</b>：保存记入后台现有操作日志，沿用现有。<span class="ref">PRD 5.1 渠道配置</span></li>
+      <li><b>渠道即按钮</b>：一个渠道就是群里一个按钮（显示为「📊 名称」）。按钮顺序按列表「位置」：「全站」「自然流量」在前，其余按创建时间，子渠道排在父级后面；排列规则（每行 1–3 个、下一级的「父级·全渠道」、「🔍 代理线查询」和返回类按钮）见机器人对话页「按钮布局」。人员只看到自己有权限的按钮。<span class="ref">PRD 规则 N9、N38 · F05-01</span></li>
+      <li><b>渠道和查询条件</b>：渠道只是名称标识；渠道数据 = 所绑代理及其全部下级代理名下用户的数据，因此每个自建渠道至少绑定一个代理。「渠道」的含义和排除范围见页面顶部说明。<span class="ref">PRD 规则 N6 · F05-01</span></li>
+      <li><b>默认渠道</b>：「全站」「自然流量」不能删除、不能编辑，只能查看详情；始终在群里显示，没有开关。全站 = 当前子站全部数据；自然流量 = 全站 − 各顶层渠道合计，即未归入任何自建渠道的用户，包括平台默认线和未绑定渠道的代理（含投注站、五级邀请、域名绑定代理）名下用户，不代表无推广来源。各顶层渠道 + 自然流量 = 全站；子渠道包含在父级里，不重复计算。<span class="ref">PRD 规则 N6 · F05-01</span></li>
+      <li><b>新建渠道</b>：渠道名称、父级、绑定代理三项必填。名称 1–10 个字符（中文、英文字母、数字、符号各算 1 个，去掉首尾空格后计算），不能重名（不区分大小写），不能用「全站」「自然流量」「全网数据」或子站名称。自建渠道最多 20 个（含子渠道），满 20 个时「新建渠道」置灰。新建后排在同级最后，默认在群里显示。<span class="ref">PRD 5.2 渠道配置 · F05-01</span></li>
+      <li><b>父级渠道</b>：默认为当前子站，也可选本子站任一自建渠道（含子渠道），层级不限；下拉框按层级缩进（├─ / └─），编辑时本渠道及其下级置灰。父级是子站时可选本子站全部大代理、代理；父级是渠道时只能从父级渠道的绑定代理及其下级里选。<span class="ref">PRD 5.2 渠道配置 · F05-01</span></li>
+      <li><b>绑定代理</b>：取自本子站的大代理、代理（投注站按大代理处理，不单列层级；投注站名下如挂有其他大代理，整枝勾选投注站即包含这些大代理及其全部下级），树状显示，默认折叠、只显示首级，可搜索。勾上级时下级全部勾上；取消某个下级时上级半选。整枝勾选只保存最上层代理（以后新增的下级自动包含），部分勾选保存勾上的下级。未选时提示「请至少选择一个代理」。父级是子站时，已在其他顶层渠道范围内的代理置灰，显示「已属于渠道「xx」」；子渠道的代理同时属于父级，不算重复。<span class="ref">PRD 规则 N6、N7 · F05-01</span></li>
+      <li><b>渠道对账（不重叠）</b>：同一子站内，一个代理（含其全部下级）只能归属一个顶层渠道；子渠道的代理必须在父级范围内。保存时拦截并提示：「代理 xx 已在顶层渠道「yy」的范围内，不能再绑定到「zz」」「代理 xx 的下级 ww 已在顶层渠道「yy」的范围内，不能再绑定到「zz」」「代理 xx 不在父级渠道「yy」的范围内，不能绑定到「zz」」。不保留历史绑定关系：查询任何日期都按查询时的绑定关系和用户当前所属代理统计；已发出的报表不变。<span class="ref">PRD 规则 N7 · F05-01</span></li>
+      <li><b>代理换上级导致重叠</b>：代理换上级在代理管理里操作（本需求不改代理管理），可能让同一代理同时在两个顶层渠道范围内。重叠期间按该代理<b>进入各顶层渠道范围的时间</b>判断，先进入的为准，换上级不改变已有归属：例如 oem_b_01 于 10-28 直接绑定到「oem」，11-04 换到「短信」的绑定代理 kk_sms_g12 下面，仍计入「oem」。重叠部分的用户只计入一次，各顶层渠道 + 自然流量仍等于全站。冲突的各渠道名称旁标红「范围重叠」，悬停或点击显示重叠的代理、各自的进入时间和统计归属；编辑冲突的渠道时重叠的代理标红，取消勾选后可保存；消除后标记自动消失。<br><b>其他影响归属的现有操作</b>：会员变更代理、直属会员转移、投注站用户转移后，用户随新代理计入新渠道，查询任何日期都按新归属；会员变更代理时测试标识随新代理改变，用户可能由计入变为不计入（或相反），全站、全网数据和各渠道已查过的历史日数据都会变化。大代理变更代理线不改变渠道归属；部分代理停用仍按绑定关系统计，所绑代理全部停用按「无可用代理」处理；停用代理能否被代理线查询搜到待确认。<span class="ref">PRD 规则 N44、N62、待确认 Q14 · F05-01</span></li>
+      <li><b>无可用代理</b>：所绑代理在代理管理里全部被删除或停用时，视为未绑定代理：群里不显示，本页该行标红「无可用代理」，提示运营重新绑定。<span class="ref">PRD 规则 N9 · F05-01</span></li>
+      <li><b>群里显示</b>：只有自建渠道有此开关。关闭后群里对所有人隐藏，人员配置的勾选保留，重新打开后回到原位置。关闭父级时子渠道一起隐藏（子渠道开关置灰，显示「随父级隐藏」）；关闭子渠道时，下一级菜单不显示它，「父级·全渠道」照常显示且含其数据。隐藏不影响统计：自然流量照常扣除，人员可查看该渠道时代理线查询照常可搜。<span class="ref">PRD 规则 N9、N64 · F05-01</span></li>
+      <li><b>编辑渠道</b>：可改名称、父级和代理。有下级的渠道改父级时下级随之移动，改父级后从新父级的代理里重新选。父级去掉某个代理时，子渠道里属于它的部分一并去掉；子渠道因此不剩代理时不能保存，提示先调整子渠道。另一子站有同名渠道时改名，输入框下直接提示「改名后，全网数据下的「原名称」按钮将不再显示，直到各子站名称一致」，点保存即保存，不再弹确认。保存后提示「保存成功，下次生成的报表按新配置统计」，已发出的报表和菜单不变。<span class="ref">PRD 规则 N8 · F05-01</span></li>
+      <li><b>删除渠道</b>：确认后立即删除，群里的按钮和人员配置里的该渠道一并去掉，不能恢复；已发出的报表不受影响。有子渠道的渠道不能直接删除，提示「请先删除或改挂它的子渠道」。<span class="ref">PRD 5.2 渠道配置 · F05-01</span></li>
+      <li><b>联动和生效</b>：新建的渠道自动加入人员配置的可查看渠道选项：新建顶层渠道时已登记人员默认不勾选；新建子渠道时，已全选其父级的人员自动勾选，其余不勾选。改动保存后立即生效，不在群里群发；本子站已登记人员下次在群里操作时，先收到按新配置发出的首页菜单。新建、编辑、删除、开关显示记入操作日志，需要「编辑渠道配置」权限。<span class="ref">PRD 规则 N8、N37、N56、N61 · F05-01</span></li>
+      <li><b>全部子站</b>：每个子站后台各配本子站的渠道和代理；渠道按名称合并（不区分大小写）。全网数据下只显示全部子站都有、且人员在全部子站都勾选的渠道，层级和顺序以 789Bingo 后台为准；同名渠道在两站父级不同时不显示。<span class="ref">PRD 规则 N45 · F05-01</span></li>
+      <li><b>后续扩展：自然流量细分</b>（本版不做）：自然流量是排除各渠道后剩下的数据，不能当父级渠道细分；后续可按进站来源细分（如直接访问、搜索引擎、应用商店、社交媒体），前提是已记录进站来源（现有「新用户注册全链路跟踪」有进站埋点和渠道筛选，可评估复用）。<span class="ref">扩展性，待后续需求</span></li>
     </ol>
     <h3>评审待确认</h3>
     <ol>
-      <li><b>渠道固定 5 个</b>：运营不能新增或停用渠道（已确认）。<span class="ref">PRD 待确认 Q6</span></li>
+      <li><b>渠道可新建、修改、删除</b>：渠道由运营在本页新建、编辑、删除，支持父级渠道；渠道即群里按钮（PRD 待确认事项「渠道是否需要运营在后台自行新建、修改、删除」已确认）。<span class="ref">PRD 待确认 Q6</span></li>
       <li><b>789Games 后台</b>：与 789Bingo 为同一套系统，菜单位置和结构相同（已确认）。<span class="ref">PRD 待确认 Q7</span></li>
     </ol>
-    <div class="pager"><a href="../front/Telegram报表-机器人对话页.html">← 上一页：机器人对话页</a><a href="Telegram报表-后台授权群页面.html">下一页：后台授权群页面 →</a></div>
+    <div class="pager"><a href="Telegram报表-后台人员配置页面.html">← 上一页：后台人员配置页面</a><a href="Telegram报表-后台机器人管理页面.html">下一页：后台机器人管理页面 →</a></div>
   </aside>
 </div>
 </div>
@@ -86,53 +138,233 @@
 <script src="../../assets/nav.js"></script>
 <script>
 (function () {
-  var ALL = ["kk_sms_g12", "kk_sms_g13", "sms_ph_01", "cicc_main", "cicc_02", "5ji-wanghong", "wh_star01", "gg_ads_03", "gg_kw_01", "oem_partner_a", "oem_partner_b", "dl_test_9"];
+  var SITE = "789Bingo", MAX = 20;
+  /* 默认渠道：全站、自然流量（不可删除、不可修改，可开关显示） */
+  var FIX0 = [{ ch: "全站", fixed: true, p: "", d: "当前子站全部数据（不按代理筛选）", on: true }, { ch: "自然流量", fixed: true, p: "", d: "未归入任何自建渠道的用户：平台默认线和未绑定渠道的代理（含投注站、五级邀请、域名绑定代理）名下用户，不代表无推广来源", on: true }];
+  var OTHER_SITE = ["cicc", "短信", "网红", "谷歌", "谷歌品牌词", "谷歌通用词", "品牌词PH"];   /* 演示：另一子站（789Games）已有的同名渠道 */
   var BASE = [
-    { ch: "cicc", ag: ["cicc_main", "cicc_02"], at: "2026-11-03 18:20:11", by: "运营账号A" },
-    { ch: "短信", ag: ["kk_sms_g12", "sms_ph_01"], at: "2026-11-03 18:22:40", by: "运营账号A" },
-    { ch: "网红", ag: ["5ji-wanghong", "wh_star01"], at: "2026-11-02 11:05:02", by: "运营账号B" },
-    { ch: "谷歌", ag: ["gg_ads_03", "gg_kw_01"], at: "2026-11-02 11:07:45", by: "运营账号B" },
-    { ch: "oem", ag: ["oem_partner_a"], at: "2026-11-01 16:40:19", by: "运营账号A" }
+    { ch: "cicc", p: "", ag: ["cicc_main"], on: true, up: "2026-11-03 18:20:11", by: "运营账号A" },
+    { ch: "短信", p: "", ag: ["kk_sms_g12", "sms_ph_01"], bt: { kk_sms_g12: "2026-10-15 09:00:00", sms_ph_01: "2026-11-03 18:22:40" }, on: true, up: "2026-11-03 18:22:40", by: "运营账号A" },
+    { ch: "网红", p: "", ag: ["5ji-wanghong"], on: true, up: "2026-11-02 11:05:02", by: "运营账号B" },
+    { ch: "谷歌", p: "", ag: ["google_vi", "gg_ads_03"], on: true, up: "2026-11-02 11:07:45", by: "运营账号B" },
+    { ch: "oem", p: "", ag: ["oem_partner_a", "oem_b_01"], bt: { oem_partner_a: "2026-10-20 10:00:00", oem_b_01: "2026-10-28 15:12:30" }, on: true, up: "2026-11-01 16:40:19", by: "运营账号A" },
+    { ch: "谷歌品牌词", p: "谷歌", ag: ["GG_BID_156"], on: true, up: "2026-11-04 09:30:00", by: "运营账号A" },
+    { ch: "谷歌通用词", p: "谷歌", ag: ["gg_kw_01"], on: true, up: "2026-11-04 09:35:00", by: "运营账号A" },
+    { ch: "品牌词PH", p: "谷歌品牌词", ag: ["gg_bid_156a"], on: true, up: "2026-11-05 10:10:00", by: "运营账号A" }
   ];
-  var R, cur = null, tmp = [];
+  /* 演示：本站代理树（大代理 → 代理 → 下级代理） */
+  var TREE0 = { google_vi: ["GG_BID_156", "gg_kw_01"], GG_BID_156: ["gg_bid_156a"], cicc_main: ["cicc_02"], "5ji-wanghong": ["wh_star01"], kk_sms_g12: ["kk_sms_g13"], oem_partner_b: ["oem_b_01", "oem_b_02"] }, TREE;
+  var SITE_ROOTS = ["cicc_main", "kk_sms_g12", "sms_ph_01", "5ji-wanghong", "google_vi", "gg_ads_03", "oem_partner_a", "oem_partner_b", "dl_test_9"];
+  var R, FIX, TOP, editing = null, delIdx = null, ck = {}, closed = {}, roots = [], dragName = null;
   function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+  function msg(t) { var m = document.createElement("div"); m.className = "bo-msg ok"; m.textContent = t; m.setAttribute("role", "status"); document.body.appendChild(m); setTimeout(function () { m.remove(); }, 1800); }
+  function byName(n) { return R.filter(function (r) { return r.ch === n; })[0]; }
+  function anyByName(n) { return FIX.concat(R).filter(function (r) { return r.ch === n; })[0]; }
+  function hasKids(n) { return R.some(function (r) { return r.p === n; }); }
+  /* 顺序：TOP 为顶层顺序（含默认渠道），子渠道按 R 中的顺序紧跟父级 */
+  /* 按层级展开：顶层按 TOP 顺序，下级按创建顺序逐层跟在父级后面；_d 为层级深度（0 = 顶层） */
+  function ordered() { var out = []; function add(x, d) { x._d = d; out.push(x); R.filter(function (r) { return r.p === x.ch; }).forEach(function (c) { add(c, d + 1); }); } TOP.forEach(function (n) { add(anyByName(n), 0); }); return out; }
+  function descCh(n) { var out = []; R.filter(function (r) { return r.p === n; }).forEach(function (c) { out.push(c.ch); out = out.concat(descCh(c.ch)); }); return out; }
+  /* 「群里显示」开关只给自建渠道；默认渠道全站、自然流量始终显示，没有开关 */
+  function sw(on, key, off) { return '<button type="button" class="tr-sw" role="switch" aria-checked="' + on + '" aria-label="群里显示" data-sw="' + esc(key) + '" data-dev="D80"' + (off ? " disabled" : "") + "></button>"; }
+  /* 群里是否显示：本渠道开关打开、父级（逐级）也显示，且绑定代理没有全部被删除或停用 */
+  function vis(r) { return r.on && !r.dead && (!r.p || vis(byName(r.p))); }
+  /* 代理换上级（在代理管理里操作）后，顶层渠道之间可能出现重叠：统计以代理先进入范围的顶层渠道为准，换上级不改变已有归属；冲突的各渠道标红「范围重叠」。
+     进入时间：直接绑定的 = 绑定时间（bt）；经上级进入的 = 上级绑定时间与该代理换到这个上级下面的时间（MOVED）中较晚的一个。与渠道最后修改时间无关；演示数据未单独列出绑定时间的代理，以渠道最后修改时间代替 */
+  var MOVED = {};
+  function bindOf(r, a) {
+    var direct = r.ag.indexOf(a) >= 0, x = direct ? a : r.ag.filter(function (t) { return desc(t).indexOf(a) >= 0; })[0], at = (r.bt && r.bt[x]) || r.up;
+    if (!direct && MOVED[a] && MOVED[a] > at) at = MOVED[a];
+    return { ag: x, at: at, how: direct ? "直接绑定" : "经上级 " + x + (MOVED[a] ? "，换上级后" : "") };
+  }
+  function overlaps() {
+    var out = {}, tops = R.filter(function (r) { return !r.p; });
+    tops.forEach(function (t) {
+      t.ag.forEach(function (a) {
+        tops.forEach(function (u) {
+          if (u === t || !covers(u.ag, a)) return;
+          var bt = bindOf(t, a), bu = bindOf(u, a), first = bt.at <= bu.at ? t : u,
+            txt = "代理 " + a + " 同时在顶层渠道「" + t.ch + "」和「" + u.ch + "」的范围内：" + bt.at + " 进入「" + t.ch + "」（" + bt.how + "），" + bu.at + " 进入「" + u.ch + "」（" + bu.how + "）。统计以先进入的「" + first.ch + "」为准，这部分用户只计入「" + first.ch + "」。请调整绑定代理，消除重叠后标记自动消失。";
+          [t.ch, u.ch].forEach(function (n) { out[n] = out[n] || []; if (out[n].indexOf(txt) < 0) out[n].push(txt); });
+        });
+      });
+    });
+    return out;
+  }
+  var ov = {};
+  function openOv(n) {
+    document.getElementById("cfmT").textContent = "范围重叠：" + n;
+    document.getElementById("cfmP").innerHTML = ov[n].map(esc).join("<br>");
+    document.getElementById("cfmOk").hidden = true; document.getElementById("cfmNo").textContent = "知道了";
+    document.getElementById("cfm").hidden = false;
+  }
   function draw() {
-    document.getElementById("rows").innerHTML = R.map(function (r, i) {
-      return "<tr><td>" + r.ch + '</td><td class="w" data-dev="D20">' + (r.ag.length ? r.ag.map(esc).join("、") : "-") + "</td><td>" + r.ag.length + "</td><td>" + r.at + "</td><td>" + r.by +
-        '</td><td><button class="bo-btn link" type="button" data-edit="' + i + '" data-dev="D23">编辑</button></td></tr>';
+    var pos = 0; ov = overlaps();
+    document.getElementById("rows").innerHTML = ordered().map(function (r) {
+      var p = (r.fixed ? r.on : vis(r)) ? ++pos : "-", parHid = !r.fixed && r.p && !vis(byName(r.p));
+      if (r.fixed) return '<tr style="background:#F5F7FA"><td>' + p + "</td><td>" + r.ch + ' <span style="font-size:11px;padding:0 4px;color:#909399;border:1px solid #DCDFE6;border-radius:3px">默认</span></td><td>' + SITE + '<span style="color:#909399">（子站）</span></td><td class="w" style="color:#606266">' + r.d + '</td><td style="color:#909399">始终显示</td><td>系统</td>' +
+        '<td><button class="bo-btn link" type="button" data-view="' + r.ch + '" data-dev="D98">查看</button></td></tr>';
+      var i = R.indexOf(r);
+      return "<tr><td>" + p + "</td><td>" + (r.p ? '<span style="color:#C0C4CC;padding-left:' + ((r._d - 1) * 14) + 'px">└ </span>' : "") + esc(r.ch) + (ov[r.ch] ? '<button type="button" class="ov-tag" data-ov="' + esc(r.ch) + '" data-dev="D122" title="' + esc(ov[r.ch].join("\n")) + '">范围重叠</button>' : "") + (r.dead ? '<button type="button" class="ov-tag" data-dead="' + esc(r.ch) + '" data-dev="D129" title="所绑代理已全部删除或停用，群里不显示该按钮，请重新绑定代理">无可用代理</button>' : "") + "</td><td>" + (r.p ? esc(r.p) : SITE + '<span style="color:#909399">（子站）</span>') + '</td><td class="w" data-dev="D20">' + r.ag.map(esc).join("、") + (r.dead ? '<br><span style="color:#F56C6C;font-size:12px">已全部删除或停用</span>' : "") + "</td><td>" + sw(r.on, r.ch, parHid) + (parHid ? '<span style="font-size:12px;color:#909399;margin-left:4px">随父级隐藏</span>' : "") + "</td><td>" + r.up + "<br>" + r.by +
+        '</td><td class="ui-nw"><button class="bo-btn link" type="button" data-ed="' + i + '" data-dev="D96">编辑</button><button class="bo-btn link" type="button" data-del="' + i + '" data-dev="D97">删除</button></td></tr>';
+    }).join("") + (R.length ? "" : '<tr><td colspan="7" style="text-align:center;color:#909399;padding:20px 0">还没有自建渠道，请点「+ 新建渠道」；此时自然流量 = 全站</td></tr>') +
+      '<tr style="background:#FAFAFA"><td>渠道下方</td><td>🔍 代理线查询 <span style="font-size:11px;color:#909399">功能按钮</span></td><td>-</td><td class="w" style="color:#606266">回复代理账号即可查询；单独一行，排在返回类按钮上方，按人员配置显示</td><td>-</td><td>系统</td><td>-</td></tr>' +
+      '<tr style="background:#FAFAFA"><td>最后一行</td><td>⬅ 返回上一级、🏠 首页菜单 <span style="font-size:11px;color:#909399">功能按钮</span></td><td>-</td><td class="w" style="color:#606266">固定并排；首页不显示</td><td>-</td><td>系统</td><td>-</td></tr>';
+    document.getElementById("chCnt").textContent = R.length;
+    var add = document.getElementById("addCh"); add.disabled = R.length >= MAX; add.title = R.length >= MAX ? "自建渠道最多 20 个" : "";
+  }
+  /* 代理树：默认折叠，只显示首级代理；勾上级 = 下级全部勾上 */
+  function kids(a) { return TREE[a] || []; }
+  function desc(a) { var out = []; kids(a).forEach(function (k) { out.push(k); out = out.concat(desc(k)); }); return out; }
+  function parentOf(a) { for (var p in TREE) if (TREE[p].indexOf(a) >= 0) return p; return null; }
+  /* 范围：所绑代理及其全部下级 */
+  function covers(list, a) { return list.indexOf(a) >= 0 || list.some(function (t) { return desc(t).indexOf(a) >= 0; }); }
+  function ownerTop(a) { var t = R.filter(function (r, i) { return !r.p && i !== editing && covers(r.ag, a); })[0]; return t ? t.ch : ""; }
+  /* 渠道对账：顶层渠道之间不能重叠；子渠道不能超出父级范围。返回拦截提示，空串为通过 */
+  function conflict(n, p, ag) {
+    var out = "";
+    if (p) { var par = byName(p), bad = ag.filter(function (a) { return !covers(par.ag, a); })[0]; return bad ? "代理 " + bad + " 不在父级渠道「" + p + "」的范围内，不能绑定到「" + n + "」" : ""; }
+    R.some(function (t, i) {
+      if (t.p || i === editing) return false;
+      return ag.some(function (a) {
+        if (covers(t.ag, a)) { out = "代理 " + a + " 已在顶层渠道「" + t.ch + "」的范围内，不能再绑定到「" + n + "」"; return true; }
+        var d = t.ag.filter(function (x) { return desc(a).indexOf(x) >= 0; })[0];
+        if (d) { out = "代理 " + a + " 的下级 " + d + " 已在顶层渠道「" + t.ch + "」的范围内，不能再绑定到「" + n + "」"; return true; }
+        return false;
+      });
+    });
+    return out;
+  }
+  function setCk(a, v) { ck[a] = v; desc(a).forEach(function (d) { ck[d] = v; }); }
+  function fixUp(a) { var p = parentOf(a); if (!p || roots.indexOf(a) >= 0) return; ck[p] = kids(p).every(function (k) { return ck[k]; }); fixUp(p); }
+  function partial(a) { return !ck[a] && desc(a).some(function (x) { return ck[x]; }); }
+  function node(a, lv) {
+    var own = !document.getElementById("tgParent").value && ownerTop(a), k = kids(a), q = document.getElementById("agQ").value.trim().toLowerCase();
+    var hit = !q || a.toLowerCase().indexOf(q) >= 0 || desc(a).some(function (d) { return d.toLowerCase().indexOf(q) >= 0; });
+    if (!hit) return "";
+    var row = '<div class="ag-n" style="padding-left:' + (lv * 18) + 'px">' + (k.length ? '<button type="button" class="ag-t" data-tg="' + esc(a) + '" aria-label="展开或收起">' + (closed[a] && !q ? "▸" : "▾") + "</button>" : '<span class="ag-t"></span>') +
+      '<label><input type="checkbox" data-ag="' + esc(a) + '"' + (ck[a] ? " checked" : "") + (own && !ck[a] ? " disabled" : "") + ">" + esc(a) + "</label>" +
+      (k.length ? "<small>" + desc(a).length + " 个下级</small>" : "") + (own ? (ck[a] ? '<small style="color:#F56C6C">与顶层渠道「' + esc(own) + "」范围重叠，取消勾选后可保存</small>" : '<small class="ag-own">已属于渠道「' + esc(own) + "」</small>") : "") + "</div>";   /* 代理换上级造成的重叠：已勾选的保持可取消，便于运营消除重叠 */
+    return row + (closed[a] && !q ? "" : k.map(function (c) { return node(c, lv + 1); }).join(""));
+  }
+  function picked() { var out = []; function walk(a) { if (ck[a]) { out.push(a); return; } kids(a).forEach(walk); } roots.forEach(walk); return out; }
+  function drawTree() {
+    document.getElementById("aTree").innerHTML = roots.map(function (a) { return node(a, 0); }).join("") || '<div class="ms-ph">没有可选的代理</div>';
+    [].forEach.call(document.querySelectorAll("#aTree [data-ag]"), function (x) { x.indeterminate = partial(x.dataset.ag); });
+    var sel = picked();
+    document.getElementById("aSum").textContent = sel.length ? "已选 " + sel.length + " 项：" + sel.join("、") + "（勾选上级即包含其全部下级）" : "未选择代理";
+  }
+  function syncTree(keep) {
+    var p = document.getElementById("tgParent").value;
+    roots = p ? byName(p).ag.slice() : SITE_ROOTS.slice();
+    ck = {}; closed = {};
+    roots.forEach(function (a) { [a].concat(desc(a)).forEach(function (x) { if (kids(x).length) closed[x] = true; }); });   /* 默认全部折叠，只显示首级代理 */
+    (keep || []).forEach(function (a) { if (roots.indexOf(a) >= 0 || roots.some(function (r) { return desc(r).indexOf(a) >= 0; })) { setCk(a, true); fixUp(a); } });
+    document.getElementById("eAg").textContent = "";
+    document.getElementById("aHint").textContent = p ? "只显示父级渠道「" + p + "」的绑定代理及其下级代理" : "父级为子站：显示本子站全部大代理、代理；已属于其他顶层渠道的不能勾选";
+    drawTree();
+  }
+  function openForm(i, par) {
+    editing = i; var r = i == null ? null : R[i];
+    document.getElementById("dlgT").textContent = r ? "编辑渠道" : "新建渠道";
+    document.getElementById("chName").value = r ? r.ch : ""; document.getElementById("eName").textContent = ""; document.getElementById("nHint").textContent = "";
+    /* 父级下拉：以子站为根，按层级树状列出本站全部自建渠道；修改时不能选自己和自己的下级 */
+    var sel = document.getElementById("tgParent"), banned = r ? [r.ch].concat(descCh(r.ch)) : [];
+    var opts = ordered().filter(function (x) { return !x.fixed; });
+    sel.innerHTML = '<option value="">' + SITE + "（子站，默认）</option>" + opts.map(function (x, idx) {
+      var last = !opts.slice(idx + 1).some(function (y) { return y._d === x._d && y.p === x.p; });
+      return '<option value="' + esc(x.ch) + '"' + (banned.indexOf(x.ch) >= 0 ? " disabled" : "") + ">" + new Array(x._d + 1).join("　　") + (last ? "└─ " : "├─ ") + esc(x.ch) + (banned.indexOf(x.ch) >= 0 ? "（本渠道或其下级，不可选）" : "") + "</option>";
     }).join("");
+    sel.value = r ? r.p : par || ""; sel.disabled = false;
+    document.getElementById("pHint").textContent = "层级不限，可选任一已有渠道作为父级；子渠道只能从父级渠道的代理里选";
+    document.getElementById("agQ").value = "";
+    syncTree(r ? r.ag : []);
+    document.getElementById("dlg").hidden = false;
   }
-  function tags() {
-    document.getElementById("agTags").innerHTML = tmp.length ? tmp.map(function (a, i) { return '<span class="ms-tag">' + esc(a) + '<button type="button" data-rm="' + i + '" aria-label="移除 ' + esc(a) + '">×</button></span>'; }).join("") : '<span class="ms-ph">还没有绑定代理</span>';
+  function closeForm() { document.getElementById("dlg").hidden = true; editing = null; }
+  document.getElementById("addCh").onclick = function () { openForm(null, ""); };
+  /* 改名提示：另一子站有同名渠道时，改名后全网数据下的该按钮不再显示 */
+  function nameHint() {
+    var old = editing == null ? "" : R[editing].ch, n = document.getElementById("chName").value.trim();
+    document.getElementById("nHint").textContent = old && OTHER_SITE.indexOf(old) >= 0 && n.toLowerCase() !== old.toLowerCase() ? "改名后，全网数据下的「" + old + "」按钮将不再显示，直到各子站名称一致" : "";
   }
-  function err(t) { document.getElementById("agErr").textContent = t || ""; }
-  function open(i) { cur = i; tmp = R[i].ag.slice(); document.getElementById("dlgCh").textContent = R[i].ch; document.getElementById("agIn").value = ""; err(); tags(); document.getElementById("dlg").hidden = false; }
-  function close() { document.getElementById("dlg").hidden = true; cur = null; }
-  document.getElementById("agAdd").onclick = function () {
-    var v = document.getElementById("agIn").value.trim().toLowerCase();
-    if (!v) return err("请输入代理账号");
-    if (ALL.indexOf(v) < 0) return err("代理账号不存在");
-    if (tmp.indexOf(v) >= 0) return err("该代理已添加");
-    var other = R.filter(function (r, i) { return i !== cur && r.ag.indexOf(v) >= 0; })[0];
-    if (other) return err("代理 " + v + " 已绑定到渠道「" + other.ch + "」，同一代理只能绑定一个渠道");
-    tmp.push(v); document.getElementById("agIn").value = ""; err(); tags();
-  };
-  document.getElementById("agIn").addEventListener("keydown", function (e) { if (e.key === "Enter") document.getElementById("agAdd").click(); });
-  document.getElementById("agTags").addEventListener("click", function (e) { var b = e.target.closest("[data-rm]"); if (b) { tmp.splice(+b.dataset.rm, 1); tags(); } });
-  document.getElementById("dlgNo").onclick = close;
+  /* 名称去掉首尾空格后最多 10 个字符（中文、英文字母、数字、符号各算 1 个），超出无法输入 */
+  document.getElementById("chName").oninput = function () { var v = this.value, lead = v.match(/^\s*/)[0], rest = v.slice(lead.length), core = Array.from(rest.replace(/\s+$/, "")), tail = rest.match(/\s*$/)[0]; if (core.length > 10) this.value = lead + core.slice(0, 10).join("") + tail; nameHint(); };
+  document.getElementById("tgParent").onchange = function () { syncTree([]); };
+  document.getElementById("agQ").oninput = drawTree;
+  document.getElementById("dlgNo").onclick = closeForm;
+  document.getElementById("aTree").addEventListener("click", function (e) { var t = e.target.closest("[data-tg]"); if (t) { closed[t.dataset.tg] = !closed[t.dataset.tg]; drawTree(); } });
+  document.getElementById("aTree").addEventListener("change", function (e) { var x = e.target.closest("[data-ag]"); if (!x) return; setCk(x.dataset.ag, x.checked); fixUp(x.dataset.ag); drawTree(); });
   document.getElementById("dlgOk").onclick = function () {
-    R[cur].ag = tmp.slice(); R[cur].at = "2026-11-04 14:32:08"; R[cur].by = "运营账号A"; close(); draw();
-    var m = document.createElement("div"); m.className = "bo-msg ok"; m.textContent = "保存成功"; m.setAttribute("role", "status");
-    document.body.appendChild(m); setTimeout(function () { m.remove(); }, 1800);
+    var n = document.getElementById("chName").value.trim(), p = document.getElementById("tgParent").value, ag = picked(), ok = true;
+    var eN = document.getElementById("eName"), eA = document.getElementById("eAg"); eN.textContent = ""; eA.textContent = "";
+    if (!n) { eN.textContent = "请输入渠道名称"; ok = false; }
+    else if (["全站", "自然流量", "全网数据", "789bingo", "789games"].indexOf(n.toLowerCase()) >= 0 || R.some(function (r, i) { return i !== editing && r.ch.toLowerCase() === n.toLowerCase(); })) { eN.textContent = "渠道名称已存在或为保留名称"; ok = false; }
+    if (!ag.length) { eA.textContent = "请至少选择一个代理"; ok = false; }
+    else if (ok) { var cf = conflict(n, p, ag); if (cf) { eA.textContent = cf; ok = false; } }
+    if (!ok) return;
+    var NOW = "2026-11-06 11:20:00", bt = {}, ob = editing == null ? {} : (R[editing].bt || {});
+    ag.forEach(function (a) { bt[a] = ob[a] || (editing == null || R[editing].ag.indexOf(a) < 0 ? NOW : R[editing].up); });   /* 绑定时间：原有代理保留原绑定时间，新勾选的代理记为本次保存时间 */
+    if (editing == null) { R.push({ ch: n, p: p, ag: ag, bt: bt, on: true, up: "2026-11-06 11:20:00", by: "运营账号A" }); if (!p) TOP.push(n); closeForm(); draw(); msg("已新建渠道「" + n + "」，群里已显示该按钮" + (p ? "；已全选父级「" + p + "」的人员自动勾选该子渠道" : "")); return; }   /* 新建子渠道：已全选父级的人员自动勾选，其余已登记人员默认不勾选 */
+    var r = R[editing], old = r.ch;
+    var kidsOf = R.filter(function (x) { return x.p === old; }), lost = [];
+    function within(a) { return ag.indexOf(a) >= 0 || ag.some(function (t) { return desc(t).indexOf(a) >= 0; }); }
+    kidsOf.forEach(function (c) { if (!c.ag.filter(within).length) lost.push(c.ch); });
+    if (lost.length) { eA.textContent = "子渠道「" + lost.join("、") + "」将不剩任何代理，请先调整子渠道"; return; }
+    kidsOf.forEach(function (c) { c.ag = c.ag.filter(within); c.p = n; });
+    /* 顶层顺序：改名同步；顶层改成子渠道时从 TOP 去掉，子渠道改成顶层时排到最后 */
+    var ti = TOP.indexOf(old);
+    if (ti >= 0 && p) TOP.splice(ti, 1); else if (ti >= 0) TOP[ti] = n; else if (!p) TOP.push(n);
+    r.ch = n; r.p = p; r.ag = ag; r.bt = bt; r.up = NOW; r.by = "运营账号A";
+    closeForm(); draw(); msg("保存成功，下次生成的报表按新配置统计");
   };
-  document.getElementById("rows").addEventListener("click", function (e) { var b = e.target.closest("[data-edit]"); if (b) open(+b.dataset.edit); });
-
+  function openDel(i) {
+    delIdx = i; var r = R[i], blocked = hasKids(r.ch);
+    document.getElementById("cfmT").textContent = blocked ? "不能删除" : "确认删除渠道";
+    document.getElementById("cfmP").textContent = blocked ? "渠道「" + r.ch + "」下还有子渠道，请先删除或改挂它的子渠道。" : "删除渠道「" + r.ch + "」后，群里的该按钮和人员配置里的该渠道一并去掉，不能恢复；已发出的报表不受影响。确定删除？";
+    document.getElementById("cfmOk").hidden = blocked; document.getElementById("cfmNo").textContent = blocked ? "知道了" : "取消";
+    document.getElementById("cfm").hidden = false;
+  }
+  function openView(n) {
+    var cnt = R.filter(function (r) { return !r.p; }).length;
+    document.getElementById("cfmT").textContent = "渠道详情：" + n;
+    document.getElementById("cfmP").innerHTML = n === "全站"
+      ? "类型：默认渠道（不可删除、不可编辑）<br>父级：" + SITE + "（子站）<br>查询范围：当前子站全部数据，不按代理筛选。"
+      : "类型：默认渠道（不可删除、不可编辑）<br>父级：" + SITE + "（子站）<br>查询范围：全站数据排除当前 " + cnt + " 个顶层渠道所绑代理及其全部下级代理名下用户后的数据，即未归入任何自建渠道的用户，包括平台默认线和未绑定渠道的代理（含投注站、五级邀请、域名绑定代理）名下用户，不代表无推广来源。<br>新建、编辑、删除渠道后，范围自动更新。";
+    document.getElementById("cfmOk").hidden = true; document.getElementById("cfmNo").textContent = "关闭";
+    document.getElementById("cfm").hidden = false;
+  }
+  document.getElementById("cfmNo").onclick = function () { document.getElementById("cfm").hidden = true; };
+  document.getElementById("cfmOk").onclick = function () { var n = R[delIdx].ch; R.splice(delIdx, 1); var ti = TOP.indexOf(n); if (ti >= 0) TOP.splice(ti, 1); document.getElementById("cfm").hidden = true; draw(); msg("已删除渠道「" + n + "」"); };
+  document.getElementById("rows").addEventListener("click", function (e) {
+    var b = e.target.closest("[data-view]"); if (b) { openView(b.dataset.view); return; }
+    b = e.target.closest("[data-ov]"); if (b) { openOv(b.dataset.ov); return; }
+    b = e.target.closest("[data-dead]"); if (b) { document.getElementById("cfmT").textContent = "无可用代理：" + b.dataset.dead; document.getElementById("cfmP").textContent = "渠道「" + b.dataset.dead + "」所绑代理在代理管理里已全部删除或停用，视为未绑定代理，群里不显示该按钮。请点「编辑」重新绑定代理。"; document.getElementById("cfmOk").hidden = true; document.getElementById("cfmNo").textContent = "知道了"; document.getElementById("cfm").hidden = false; return; }
+    b = e.target.closest("[data-sw]"); if (b && !b.disabled) { var x = anyByName(b.dataset.sw); x.on = !x.on; draw(); msg(x.on ? "已在群里显示「" + x.ch + "」" : "已在群里隐藏「" + x.ch + "」" + (hasKids(x.ch) ? "，其子渠道一起隐藏" : "")); return; }
+    b = e.target.closest("[data-ed]"); if (b) { openForm(+b.dataset.ed); return; }
+    b = e.target.closest("[data-del]"); if (b) openDel(+b.dataset.del);
+  });
   function show(view) {
-    if (["list", "edit", "empty"].indexOf(view) < 0) view = "list";
-    R = JSON.parse(JSON.stringify(BASE));
-    if (view === "empty") R[2].ag = [];
-    close(); draw();
-    if (view === "edit") open(1);
+    if (["list", "add", "addsub", "edit", "overlap", "moved", "del", "delpar", "viewnat", "off", "offpar", "nobind", "rename", "none"].indexOf(view) < 0) view = "list";
+    R = JSON.parse(JSON.stringify(BASE)); FIX = JSON.parse(JSON.stringify(FIX0)); TREE = JSON.parse(JSON.stringify(TREE0));
+    /* 演示代理换上级：oem_b_01（已绑定到「oem」）在代理管理里换到 kk_sms_g12（「短信」的绑定代理）下面 */
+    MOVED = {};
+    if (view === "moved") { TREE.oem_partner_b = ["oem_b_02"]; TREE.kk_sms_g12.push("oem_b_01"); MOVED.oem_b_01 = "2026-11-04 10:00:00"; }   /* 11-04 换上级：10-28 已进入「oem」，11-04 才进入「短信」，仍计入「oem」 */
+    if (view === "none") R = [];
+    if (view === "off") R[2].on = false;
+    if (view === "offpar") R[3].on = false;   /* 关闭父级「谷歌」：子渠道一起隐藏 */
+    if (view === "nobind") R[2].dead = true;   /* 「网红」所绑代理已在代理管理里全部删除或停用 */
+    TOP = FIX.map(function (x) { return x.ch; }).concat(R.filter(function (r) { return !r.p; }).map(function (r) { return r.ch; }));
+    closeForm(); document.getElementById("cfm").hidden = true; draw();
+    if (view === "add") openForm(null, "");
+    if (view === "addsub") openForm(null, "谷歌");
+    if (view === "edit") openForm(3);
+    if (view === "rename") { openForm(3); document.getElementById("chName").value = "谷歌广告"; nameHint(); }
+    /* 演示重叠拦截：新建顶层渠道勾选 oem_partner_b，其下级 oem_b_01 已属于顶层渠道「oem」 */
+    if (view === "overlap") { openForm(null, ""); document.getElementById("chName").value = "OEM二组"; setCk("oem_partner_b", true); closed.oem_partner_b = false; drawTree(); document.getElementById("dlgOk").click(); }
+    if (view === "del") openDel(4);
+    if (view === "delpar") openDel(3);
+    if (view === "viewnat") openView("自然流量");
     if (location.hash.slice(1) !== view) history.replaceState(null, "", "#" + view);
     if (window.self !== window.top) window.parent.postMessage({ type: "proto-view", view: view }, "*");
   }

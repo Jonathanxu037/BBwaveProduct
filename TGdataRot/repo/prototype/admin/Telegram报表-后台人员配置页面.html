@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Telegram报表-后台人员配置页面</title>
+<link rel="stylesheet" href="../../assets/style.css">
+<style>.bo-tabs a{padding:9px 14px;font-size:13px;color:#555;border-bottom:2px solid transparent;text-decoration:none}.bo-tabs a:hover{color:#409EFF}.bo-tabs a.on{color:#409EFF;border-bottom-color:#409EFF}
+.tr-sw{all:unset;cursor:pointer;width:36px;height:18px;border-radius:9px;background:#DCDFE6;position:relative;display:inline-block;vertical-align:middle}
+.tr-sw::after{content:"";position:absolute;left:2px;top:2px;width:14px;height:14px;border-radius:50%;background:#fff;transition:left .15s}
+.tr-sw[aria-checked="true"]{background:#409EFF}.tr-sw[aria-checked="true"]::after{left:20px}
+.tr-empty{text-align:center!important;color:#909399!important;padding:28px 0!important}
+.tr-tag{display:inline-block;background:#ECF5FF;border:1px solid #D9ECFF;color:#409EFF;border-radius:3px;font-size:12px;padding:0 6px;line-height:20px;margin:1px 2px 1px 0}
+.tr-ck{display:inline-flex;align-items:center;gap:4px;margin-right:12px;color:#606266;cursor:pointer}
+.ep-exp{color:#F56C6C}.ag-tree{border:1px solid #DCDFE6;border-radius:4px;padding:4px 8px;background:#fff;max-width:360px}.ag-n{display:flex;align-items:center;gap:4px;line-height:26px;font-size:13px}.ag-n label{display:inline-flex;align-items:center;gap:4px;cursor:pointer}.ag-n small{color:#909399;font-size:12px}.ag-t{width:14px;text-align:center;color:#909399;font-size:11px}</style>
+</head>
+<body>
+<!-- 后台原型：整页为本需求新增；示例数据一律虚构；昵称从群「BBwave平台数据」自动获取。视图：#list 列表 / #new 添加 / #edit 编辑 / #del 删除确认 / #empty 空列表 -->
+<div class="with-nav">
+<div class="adm-stage">
+  <div class="bo">
+    <div class="bo-top1"><span>当前时间：2026/11/04 14:32:08</span><span class="sp">简体中文</span><span>运营账号A ▾</span></div>
+    <div class="bo-top2"><span>在线人数<b class="bo-n r">1,286</b></span><span>当日注册<b class="bo-n g">1,302</b></span><span>当日充值成功<b class="bo-n g">2,417</b></span><span>提款<b class="bo-n g">936</b></span><span>风控审核<b class="bo-n r">4</b></span></div>
+    <div class="bo-body">
+      <nav class="bo-menu" aria-label="后台菜单">
+        <div class="mt">菜单 ≡</div>
+        <div class="g">用户管理</div><div class="g">财务管理</div><div class="g">代理管理</div>
+        <div class="g open">系统管理</div>
+        <div class="i">系统参数</div><div class="i on">Telegram报表配置</div>
+      </nav>
+      <div class="bo-main">
+        <div class="bo-crumb">位置 › 系统管理 › <b>Telegram报表配置</b>（<span id="siteName">789Bingo</span> 后台）</div>
+        <div class="bo-tabs" role="tablist">
+          <a role="tab" class="on" aria-selected="true" href="Telegram报表-后台人员配置页面.html">人员配置</a>
+          <a role="tab" aria-selected="false" href="Telegram报表-后台渠道配置页面.html">渠道配置</a>
+          <a role="tab" aria-selected="false" href="Telegram报表-后台机器人管理页面.html">机器人管理</a>
+        </div>
+        <div class="bo-filter">
+          <label>状态 <select class="bo-inp" id="fSt" data-dev="D123"><option value="">全部</option><option>启用</option><option>停用</option></select></label>
+          <input class="bo-inp" id="fKw" style="width:200px" placeholder="Telegram ID 或昵称" aria-label="关键字" data-dev="D123">
+          <button class="bo-btn q" type="button" id="fGo" data-dev="D123">查询</button>
+          <button class="bo-btn" type="button" id="fReset" data-dev="D123">重置</button>
+          <button class="bo-btn n" type="button" data-go="new" data-dev="D68" style="margin-left:auto">+ 添加人员</button>
+        </div>
+        <div class="bo-content">
+          <p class="ui-reqnote" id="reqNote"></p>
+          <table>
+            <tr><th><span class="ui-nw">Telegram ID<i class="qm" tabindex="0" data-tip="人员本人的 Telegram 数字 ID。未开通权限的人在群里发命令、点键盘或按钮时，机器人会提示其 ID，按其提供的 ID 填入即可。">?</i></span></th><th><span class="ui-nw">Telegram 昵称<i class="qm" tabindex="0" data-tip="从授权群自动获取，与群里显示一致，后台不能修改。">?</i></span></th><th><span class="ui-nw">可查看渠道<i class="qm" tabindex="0" data-tip="该人员在本子站按钮下可查看的渠道和代理线查询。添加时默认不勾选，至少勾选一个渠道（「代理线查询」不算）。">?</i></span></th><th>状态</th><th>添加时间</th><th>操作人</th><th>操作</th></tr>
+            <tbody id="rows"></tbody>
+          </table>
+          <div class="bo-page" id="pager" role="navigation" aria-label="分页" data-dev="D124">
+            <span>共 <b id="pgTotal">0</b> 条</span>
+            <label>每页 <select id="pgSize" aria-label="每页条数"><option>10</option><option selected>20</option><option>50</option><option>100</option></select> 条</label>
+            <button type="button" id="pgPrev" aria-label="上一页">‹</button>
+            <span id="pgNums"></span>
+            <button type="button" id="pgNext" aria-label="下一页">›</button>
+            <label>前往 <input id="pgGo" inputmode="numeric" aria-label="前往页码" value="1"> 页</label>
+          </div>
+          <p style="font-size:12px;color:#909399;margin:10px 0 0">示例数据均为虚构。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="bo-mask" id="dlg" hidden>
+    <div class="bo-dlg" role="dialog" aria-modal="true" aria-labelledby="dlgT" style="width:min(560px,92vw)">
+      <h4 id="dlgT">添加人员</h4>
+      <div class="frow" style="align-items:start"><label for="fmId" style="padding-top:6px"><span class="req">*</span>Telegram ID<i class="qm" tabindex="0" data-tip="人员本人的 Telegram 数字 ID（正整数），编辑时不能修改。">?</i></label><div class="fctl"><input class="bo-inp" id="fmId" style="width:220px" placeholder="如 583920999" inputmode="numeric" data-dev="D69"><div class="ferr" id="eId"></div></div></div>
+      <div class="frow"><span class="fl">Telegram 昵称</span><div class="fctl" id="fmNick" data-dev="D84" style="color:#606266"></div></div>
+      <div class="frow" style="align-items:start"><span class="fl" style="padding-top:2px"><span class="req">*</span>可查看渠道</span><div class="fctl" id="fmChs" data-dev="D77"></div></div>
+      <div class="frow"><span class="fl"></span><div class="fctl"><div class="ferr" id="eChs"></div></div></div>
+      <div class="frow"><span class="fl">状态</span><div class="fctl"><button type="button" class="tr-sw" id="fmSt" role="switch" aria-checked="true" aria-label="状态" data-dev="D125"></button><span id="fmStT">启用</span></div></div>
+      <div class="row2"><button class="bo-btn" type="button" data-cancel id="dlgNo">取消</button><button class="bo-btn q" type="button" id="dlgOk">保存</button></div>
+    </div>
+  </div>
+  <div class="bo-mask" id="cfm" hidden>
+    <div class="bo-dlg" role="dialog" aria-modal="true" aria-labelledby="cfmT">
+      <h4 id="cfmT">确认删除</h4>
+      <p style="margin:0" id="cfmP"></p>
+      <div class="row2"><button class="bo-btn" type="button" data-cancel id="cfmNo">取消</button><button class="bo-btn q" type="button" id="cfmOk">删除</button></div>
+    </div>
+  </div>
+
+  <aside class="notes adm-notes">
+    <h2>后台人员配置页面</h2>
+    <p class="sub">789Bingo 后台、789Games 后台 › 系统管理 › Telegram报表配置 › 人员配置（整页为本需求新增），配置流程第二步：先在渠道配置建好渠道，再登记人员。新站 789Games 和旧站 789Bingo 两个子站后台各自登记可查看本子站数据的人员及其可查看渠道；同一个人在两个后台用同一个 Telegram ID，在全部子站都有权限时自动可看全网数据。</p>
+    <h3>模拟场景</h3>
+    <div class="sim">
+      <button type="button" data-go="list"><span class="simtag">人员配置</span>列表</button>
+      <button type="button" data-go="games"><span class="simtag">789Games 后台</span>人员配置列表</button>
+      <button type="button" data-go="new"><span class="simtag">人员配置</span>添加</button>
+      <button type="button" data-go="edit"><span class="simtag">人员配置</span>编辑</button>
+      <button type="button" data-go="del"><span class="simtag">人员配置</span>删除确认</button>
+      <button type="button" data-go="empty"><span class="simtag">人员配置</span>空列表</button>
+    </div>
+    <h3>规则批注</h3>
+    <ol>
+      <li><b>群 + 人员双重授权</b>：只有在对接的群（由技术配置，目前为「BBwave平台数据」）里操作，且已在本页登记并启用，才生成报表。权限长期有效，不再需要时停用或删除。<span class="ref">PRD 规则 N4 · F01-03</span></li>
+      <li><b>适用子站与 Telegram ID</b>：系统按 Telegram ID 识别同一个人。在哪个子站后台登记并启用，群里就显示哪个子站按钮；全部子站后台都登记并启用同一个 Telegram ID，自动显示「全网数据」，少一个子站都不显示。两边填的 ID 不一致时当作两个人。新增子站同理，新子站后台也有本页。<span class="ref">PRD 规则 N35 · F01-03</span></li>
+      <li><b>首页</b>：两个及以上子站有权限，首页为一级菜单；只有一个子站权限，首页为该子站的二级菜单（不显示「⬅ 返回上一级」「🏠 首页菜单」）。权限按人员在群里操作时的配置判断。<span class="ref">PRD 规则 N2、N35 · F05-03</span></li>
+      <li><b>Telegram 昵称</b>：不填姓名，系统按 Telegram ID 从授权群自动获取，与群里显示一致，机器人 @ 人员时也用它；人员改昵称后，下次在群里操作时自动更新；还没进群显示「未进群」；后台不能修改。<span class="ref">PRD 5.1 人员配置 · F05-03</span></li>
+      <li><b>可查看渠道</b>：按渠道配置的父子关系树状显示全站、自然流量、自建渠道和代理线查询。勾父级时子渠道全部勾上；取消某个子渠道时父级半选，群里下一级菜单不显示「父级·全渠道」，列表显示如「谷歌（部分：谷歌品牌词）」。添加时默认不勾选，至少勾选一个渠道（「代理线查询」不算）。新建顶层渠道时已登记人员默认不勾选；新建子渠道时，已全选其父级的人员自动勾选。全网数据下只显示每个子站都勾选的渠道（取交集）；代理线查询在全网数据下只查勾选了它的子站。<br><b>无可查看渠道</b>：渠道被删光时保留登记，列表标红「无可查看渠道」。人员在某个范围没有可显示的渠道（含渠道被设为群里不显示、无可用代理）时，群里回复「你没有可查看的渠道，请联系管理员开通。」；有代理线查询权限的仍可用「🔍 代理线查询」。<span class="ref">PRD 5.1 人员配置、5.2 渠道配置、规则 N23、N39、N65 · F05-03</span></li>
+      <li><b>没有权限时</b>：未登记或已停用的人员操作时，机器人在群里回复「@昵称 你还没有报表查看权限，请联系管理员开通。你的 Telegram ID：xxx」（点消息里的按钮时只弹同一句，不 @），1 分钟后删除，也计入发送限制。<span class="ref">PRD 规则 N43 · F01-04</span></li>
+      <li><b>群内共享</b>：报表发在群里，群成员都能看到；个人权限只控制能发起哪些查询。入群成员由 Telegram 群主和群管理员控制，只拉可以看全部报表数据的人。删除或停用人员后，他已看到的报表收不回，仍在群里时能看到别人查询的报表，需要时请把他移出群。<span class="ref">PRD 规则 N36、5.1 人员配置 · F01-03</span></li>
+      <li><b>保存后生效</b>：添加、编辑、删除、启用、停用保存后立即生效，机器人不在群里群发；被修改的人员下次在群里发消息或点按钮时，机器人先按新权限 @ 他发送本人的首页菜单，再按当前权限处理这次操作。<span class="ref">PRD 规则 N61 · F05-03</span></li>
+      <li><b>发送前再校验</b>：报表排队期间权限被停用或删除的，发送前再校验一次，不通过则取消发送。<span class="ref">PRD 规则 N50 · F02-03</span></li>
+      <li><b>校验</b>：Telegram ID 为正整数、不能重复，编辑时不能修改；可查看渠道至少勾选一个渠道（「代理线查询」不算），否则提示「至少选择一个渠道」；在渠道配置里设为群里不显示的渠道仍可勾选，重新显示后才对人员出现。<span class="ref">PRD 5.1 人员配置 · F05-03</span></li>
+      <li><b>列表</b>：按添加时间倒序，每页 20 条；关键字匹配 Telegram ID 或昵称；筛选后回到第 1 页；删除后当前页为空时回到上一页。保存、删除记入操作日志（沿用现有）。<span class="ref">PRD 5.1 人员配置、5.4 列表分页、规则 N56 · F05-03</span></li>
+      <li><b>操作权限</b>：沿用后台现有「角色 → 权限组 → 菜单 / 按钮权限」配置，分四项授予：查看三个页面；编辑人员配置；编辑渠道配置；机器人管理。本页的添加、编辑、删除、启用和停用需要「编辑人员配置」权限。<span class="ref">PRD 规则 N56 · F05-03</span></li>
+    </ol>
+    <div class="pager"><a href="../front/Telegram报表-机器人对话页.html">← 上一页：机器人对话页</a><a href="Telegram报表-后台渠道配置页面.html">下一页：后台渠道配置页面 →</a></div>
+  </aside>
+</div>
+</div>
+<script>window.NAV_ROOT = "../../";</script>
+<script src="../../assets/nav-data.js"></script>
+<script src="../../assets/nav.js"></script>
+<script>
+(function () {
+  var CHS = ["全站", "自然流量", "cicc", "短信", "网红", "谷歌", "谷歌品牌词", "品牌词PH", "谷歌通用词", "oem", "代理线查询"];
+  var CH_KIDS = { "谷歌": ["谷歌品牌词", "谷歌通用词"], "谷歌品牌词": ["品牌词PH"] };   /* 渠道配置里的父子关系（演示，层级不限） */
+  function chParent(c) { for (var p in CH_KIDS) if (CH_KIDS[p].indexOf(c) >= 0) return p; return null; }
+  function descK(c) { var out = []; (CH_KIDS[c] || []).forEach(function (k) { out.push(k); out = out.concat(descK(k)); }); return out; }
+  /* 列表显示：全选显示「全部」；某渠道只勾了部分下级时写「谷歌（部分：谷歌通用词、品牌词PH）」 */
+  function chText(chs) {
+    if (chs.length === CHS.length) return "全部";
+    if (!chs.some(function (c) { return c !== "代理线查询"; })) return '<span style="color:#F56C6C">无可查看渠道</span>' + (chs.length ? "（仅代理线查询）" : "");   /* 渠道被删光：保留登记，群里查询时回复没有可查看的渠道 */
+    return CHS.filter(function (c) { return !chParent(c); }).map(function (c) {
+      if (chs.indexOf(c) >= 0) return c;
+      var part = descK(c).filter(function (k) { return chs.indexOf(k) >= 0 && chs.indexOf(chParent(k)) < 0; });
+      return part.length ? c + "（部分：" + part.join("、") + "）" : "";
+    }).filter(Boolean).join("、");
+  }
+  /* 可查看渠道树：逐级缩进；勾上级 = 下级全部勾上；下级没全勾时上级为半选（下一级菜单不显示该渠道的全渠道） */
+  function drawChTree(sel) {
+    function node(c, d) {
+      var k = CH_KIDS[c] || [];
+      return '<div class="ag-n" style="padding-left:' + (d * 18) + 'px"><span class="ag-t">' + (k.length ? "▾" : "") + '</span><label><input type="checkbox" data-c="' + c + '"' + (sel.indexOf(c) >= 0 ? " checked" : "") + ">" + c + "</label>" + (k.length ? "<small>" + descK(c).length + " 个下级渠道</small>" : "") + "</div>" + k.map(function (s) { return node(s, d + 1); }).join("");
+    }
+    document.getElementById("fmChs").innerHTML = '<div class="ag-tree">' + CHS.filter(function (c) { return !chParent(c); }).map(function (c) { return node(c, 0); }).join("") + "</div>";
+    Object.keys(CH_KIDS).forEach(function (p) { var x = document.querySelector('#fmChs [data-c="' + p + '"]'); x.indeterminate = !x.checked && descK(p).some(function (k) { return sel.indexOf(k) >= 0; }); });
+  }
+  function pickedCh() { return [].slice.call(document.querySelectorAll("#fmChs input:checked")).map(function (x) { return x.dataset.c; }); }
+  var NICKS = ["Kevin", "Mia Ops", "Leo", "Anna 财务", "Jay BD", "Coco", "Sam PM", "Ivy", "Ray", "Nina BD", "Tom", "CS Lily"];
+  function seed() {
+    var a = [];
+    for (var i = 0; i < 24; i++) a.push({ id: String(583920100 + i * 37), nick: i === 5 ? "" : NICKS[i % NICKS.length] + (i >= NICKS.length ? " 2" : ""), chs: i === 11 ? ["代理线查询"] : i % 4 === 2 ? ["全站", "短信", "谷歌品牌词"] : CHS.slice(), on: i % 9 !== 7, at: "2026-11-" + String(4 - Math.floor(i / 9)).padStart(2, "0") + " " + String(13 - (i % 9)).padStart(2, "0") + ":0" + (i % 10) + ":00"   /* 示例添加时间都早于后台当前时间 14:32:08，按添加时间倒序 */, by: i % 2 ? "运营账号B" : "运营账号A" });
+    return a;
+  }
+  var ALL, VIEW = [], PG = { size: 20, page: 1 }, editing = null, delIdx = null, SITE = "789Bingo";
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+  function msg(t) { var m = document.createElement("div"); m.className = "bo-msg ok"; m.textContent = t; m.setAttribute("role", "status"); document.body.appendChild(m); setTimeout(function () { m.remove(); }, 1800); }
+  function nick(r) { return r.nick ? esc(r.nick) : '<span style="color:#909399">未进群</span>'; }
+  function filter() {
+    var s = document.getElementById("fSt").value, k = document.getElementById("fKw").value.trim().toLowerCase();
+    VIEW = ALL.filter(function (r) { return (!s || (s === "启用") === r.on) && (!k || r.id.indexOf(k) >= 0 || r.nick.toLowerCase().indexOf(k) >= 0); });
+  }
+  function pages() { return Math.max(1, Math.ceil(VIEW.length / PG.size)); }
+  function draw() {
+    var n = pages(); PG.page = Math.min(Math.max(1, PG.page), n);
+    var rows = VIEW.slice((PG.page - 1) * PG.size, PG.page * PG.size);
+    document.getElementById("rows").innerHTML = rows.length ? rows.map(function (r) {
+      var i = ALL.indexOf(r);
+      return "<tr><td>" + r.id + '</td><td data-dev="D84">' + nick(r) + '</td><td class="w">' + chText(r.chs) + '</td><td><button type="button" class="tr-sw" role="switch" aria-checked="' + r.on + '" aria-label="状态" data-sw="' + i + '" data-dev="D72"></button> <span class="' + (r.on ? "st-on" : "st-off") + '">' + (r.on ? "启用" : "停用") + "</span></td><td>" + r.at + "</td><td>" + r.by +
+        '</td><td><button class="bo-btn link" type="button" data-ed="' + i + '" data-dev="D73">编辑</button><button class="bo-btn link" type="button" data-del="' + i + '" data-dev="D73">删除</button></td></tr>';
+    }).join("") : '<tr><td colspan="7" class="tr-empty">暂无数据</td></tr>';
+    document.getElementById("pgTotal").textContent = VIEW.length;
+    var box = document.getElementById("pgNums"); box.textContent = "";
+    for (var i = 1; i <= n; i++) { var b = document.createElement("button"); b.type = "button"; b.textContent = i; if (i === PG.page) b.setAttribute("aria-current", "page"); b.onclick = (function (k) { return function () { PG.page = k; draw(); }; })(i); box.appendChild(b); }
+    document.getElementById("pgPrev").disabled = PG.page <= 1; document.getElementById("pgNext").disabled = PG.page >= n; document.getElementById("pgGo").value = PG.page;
+  }
+  document.getElementById("pgPrev").onclick = function () { PG.page--; draw(); };
+  document.getElementById("pgNext").onclick = function () { PG.page++; draw(); };
+  document.getElementById("pgSize").onchange = function () { PG.size = +this.value; PG.page = 1; draw(); };
+  document.getElementById("pgGo").onkeydown = function (e) { if (e.key === "Enter") { var v = parseInt(this.value, 10); PG.page = isNaN(v) ? PG.page : v; draw(); } };
+  document.getElementById("fGo").onclick = function () { filter(); PG.page = 1; draw(); };
+  document.getElementById("fReset").onclick = function () { ["fSt", "fKw"].forEach(function (id) { document.getElementById(id).value = ""; }); filter(); PG.page = 1; draw(); };
+
+  function setSt(on) { document.getElementById("fmSt").setAttribute("aria-checked", on); document.getElementById("fmStT").textContent = on ? "启用" : "停用"; }
+  document.getElementById("fmSt").onclick = function () { setSt(this.getAttribute("aria-checked") !== "true"); };
+  function openForm(i) {
+    editing = i; var r = i == null ? null : ALL[i];
+    document.getElementById("dlgT").textContent = r ? "编辑人员" : "添加人员";
+    var id = document.getElementById("fmId"); id.value = r ? r.id : ""; id.disabled = !!r;
+    document.getElementById("fmNick").innerHTML = r ? nick(r) + '<span style="color:#909399;font-size:12px">（自动获取，不能修改）</span>' : '<span style="color:#909399;font-size:12px">保存后按 Telegram ID 从授权群自动获取</span>';
+    var selC = r ? r.chs : [];   /* 添加时默认不勾选，至少勾选一个渠道才能保存 */
+    drawChTree(selC);
+    setSt(r ? r.on : true);
+    ["eId", "eChs"].forEach(function (k) { document.getElementById(k).textContent = ""; });
+    document.getElementById("dlg").hidden = false;
+  }
+  function closeForm() { document.getElementById("dlg").hidden = true; }
+  document.getElementById("dlgNo").onclick = closeForm;
+  document.getElementById("dlgOk").onclick = function () {
+    var id = document.getElementById("fmId").value.trim(), ok = true;
+    var chs = pickedCh();
+    ["eId", "eChs"].forEach(function (k) { document.getElementById(k).textContent = ""; });
+    if (editing == null) {
+      if (!id) { document.getElementById("eId").textContent = "请输入 Telegram ID"; ok = false; }
+      else if (!/^[1-9]\d{0,14}$/.test(id)) { document.getElementById("eId").textContent = "Telegram ID 格式不正确"; ok = false; }
+      else if (ALL.some(function (r) { return r.id === id; })) { document.getElementById("eId").textContent = "该 Telegram ID 已登记"; ok = false; }
+    }
+    if (!chs.some(function (c) { return c !== "代理线查询"; })) { document.getElementById("eChs").textContent = "至少选择一个渠道"; ok = false; }   /* 「代理线查询」不算渠道 */
+    if (!ok) return;
+    var on = document.getElementById("fmSt").getAttribute("aria-checked") === "true";
+    if (editing == null) { ALL.unshift({ id: id, nick: "", chs: chs, on: on, at: "2026-11-04 14:32:08", by: "运营账号A" }); PG.page = 1; }
+    else { var r = ALL[editing]; r.chs = chs; r.on = on; }
+    filter(); closeForm(); draw(); msg("保存成功，立即生效");
+  };
+  function openDel(i) { delIdx = i; document.getElementById("cfmP").textContent = "删除后，" + (ALL[i].nick || "该人员") + "（" + ALL[i].id + "）立即不能在群里查询 " + SITE + " 报表；仍在群里时能看到别人查询的报表，需要时请把他移出群。已发出的报表不受影响。确定删除？"; document.getElementById("cfm").hidden = false; }
+  document.getElementById("cfmNo").onclick = function () { document.getElementById("cfm").hidden = true; };
+  document.getElementById("cfmOk").onclick = function () { ALL.splice(delIdx, 1); filter(); document.getElementById("cfm").hidden = true; draw(); msg("删除成功"); };
+  document.getElementById("rows").addEventListener("click", function (e) {
+    var b = e.target.closest("[data-sw]"); if (b) { var r = ALL[+b.dataset.sw]; r.on = !r.on; filter(); draw(); msg(r.on ? "已启用" : "已停用"); return; }
+    b = e.target.closest("[data-ed]"); if (b) { openForm(+b.dataset.ed); return; }
+    b = e.target.closest("[data-del]"); if (b) openDel(+b.dataset.del);
+  });
+  document.getElementById("fmChs").addEventListener("change", function (e) {
+    var x = e.target.closest("[data-c]"); if (!x) return; var c = x.dataset.c, sel = pickedCh(), d = descK(c);
+    sel = sel.filter(function (s) { return d.indexOf(s) < 0; }); if (x.checked) sel = sel.concat(d);   /* 勾上级 = 下级全部勾上；取消上级 = 下级全部取消 */
+    for (var p = chParent(c); p; p = chParent(p)) { var all = CH_KIDS[p].every(function (k) { return sel.indexOf(k) >= 0; }); sel = sel.filter(function (s) { return s !== p; }); if (all) sel.push(p); }   /* 逐级向上：下级全勾时上级自动勾上，否则半选 */
+    drawChTree(sel);
+  });
+  function show(view) {
+    if (["list", "games", "new", "edit", "del", "empty"].indexOf(view) < 0) view = "list";
+    SITE = view === "games" ? "789Games" : "789Bingo"; document.getElementById("siteName").textContent = SITE;
+    document.getElementById("reqNote").textContent = "配置流程第二步：先在渠道配置建好渠道，再登记人员。在本页登记并启用的人员，群里显示 " + SITE.toUpperCase() + " 按钮；在全部子站后台都登记并启用的，自动显示「全网数据」。同一个人在 789Games 和 789Bingo 后台须填同一个 Telegram ID。昵称从授权群自动获取。";
+    ALL = view === "empty" ? [] : view === "games" ? seed().slice(0, 9) : seed(); filter(); PG.page = 1;
+    closeForm(); document.getElementById("cfm").hidden = true; draw();
+    if (view === "new") openForm(null);
+    if (view === "edit") openForm(1);
+    if (view === "del") openDel(0);
+    if (location.hash.slice(1) !== view) history.replaceState(null, "", "#" + view);
+    if (window.self !== window.top) window.parent.postMessage({ type: "proto-view", view: view }, "*");
+  }
+  window.addEventListener("hashchange", function () { show(location.hash.slice(1) || "list"); });
+  document.addEventListener("click", function (e) { var b = e.target.closest("[data-go]"); if (b) { e.preventDefault(); show(b.dataset.go); } });
+  show(location.hash.slice(1) || "list");
+})();
+</script>
+</body>
+</html>
