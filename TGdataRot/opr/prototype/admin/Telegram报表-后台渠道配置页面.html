@@ -68,7 +68,7 @@
       <div class="frow" style="align-items:start"><label for="tgParent" style="padding-top:6px"><span class="req">*</span>父级渠道<i class="qm" tabindex="0" data-tip="默认为当前子站。选已有渠道时，本渠道为其子渠道，只能从其绑定代理里选。">?</i></label><div class="fctl"><select class="bo-inp" id="tgParent" style="width:220px" data-dev="D92"></select><div style="font-size:12px;color:#909399" id="pHint"></div></div></div>
       <div class="frow" style="align-items:start"><span class="fl" style="padding-top:6px"><span class="req">*</span>绑定代理<i class="qm" tabindex="0" data-tip="按代理上下级树状显示，默认折叠、只显示首级代理；勾选上级代理时其下级全部勾上。">?</i></span>
         <div class="fctl" data-dev="D93">
-          <input class="bo-inp" id="agQ" style="width:220px;margin-bottom:6px" placeholder="搜索代理账号" aria-label="搜索代理账号">
+          <input class="bo-inp" id="agQ" data-dev="D93" style="width:220px;margin-bottom:6px" placeholder="搜索代理账号" aria-label="搜索代理账号">
           <div class="ag-tree" id="aTree"></div>
           <div style="font-size:12px;color:#606266;margin-top:4px" id="aSum"></div>
           <div class="ferr" id="eAg"></div>
@@ -82,7 +82,7 @@
     <div class="bo-dlg" role="dialog" aria-modal="true" aria-labelledby="cfmT">
       <h4 id="cfmT">确认删除渠道</h4>
       <p style="margin:0" id="cfmP"></p>
-      <div class="row2"><button class="bo-btn" type="button" data-cancel id="cfmNo">取消</button><button class="bo-btn q" type="button" id="cfmOk">删除</button></div>
+      <div class="row2"><button class="bo-btn" type="button" data-cancel id="cfmNo">取消</button><button class="bo-btn q" type="button" id="cfmOk" data-dev="D97">删除</button></div>
     </div>
   </div>
 

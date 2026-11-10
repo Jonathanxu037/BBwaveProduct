@@ -64,7 +64,7 @@
       <div class="frow" style="align-items:start"><label for="fmUser" style="padding-top:6px"><span class="req">*</span>用户名<i class="qm" tabindex="0" data-tip="机器人在 Telegram 的用户名，以 bot 结尾，不加 @，如 bbwave_report_a_bot。各子站以用户名识别为同一个机器人。">?</i></label><div class="fctl"><input class="bo-inp" id="fmUser" style="width:240px" placeholder="如 bbwave_report_a_bot" data-dev="D127"><div class="ferr" id="eUser"></div></div></div>
       <div class="frow" style="align-items:start"><label for="fmToken" style="padding-top:6px"><span class="req" id="tkReq">*</span>Token<i class="qm" tabindex="0" data-tip="在 Telegram 创建机器人时得到的访问凭证，全部子站共用，更换后同步生效。编辑时留空表示不修改；泄露时先在 Telegram 作废旧 Token，再填新 Token。">?</i></label><div class="fctl"><input class="bo-inp" id="fmToken" type="password" style="width:240px" autocomplete="off" placeholder="粘贴机器人 Token" data-dev="D41"><button class="bo-btn" type="button" id="fmTest" data-dev="D42">测试连接</button><span class="bm-res" id="testRes" role="status"></span><div class="ferr" id="eToken"></div></div></div>
       <div class="frow"><span class="fl">状态</span><div class="fctl"><button type="button" class="tr-sw" id="fmSt" role="switch" aria-checked="true" aria-label="状态" data-dev="D128"></button><span id="fmStT">启用</span></div></div>
-      <div class="row2"><button class="bo-btn" type="button" data-cancel id="dlgNo">取消</button><button class="bo-btn q" type="button" id="dlgOk">保存</button></div>
+      <div class="row2"><button class="bo-btn" type="button" data-cancel id="dlgNo">取消</button><button class="bo-btn q" type="button" id="dlgOk" data-dev="D40">保存</button></div>
     </div>
   </div>
   <div class="bo-mask" id="cfm" hidden>
@@ -72,7 +72,7 @@
       <h4 id="cfmT">确认删除</h4>
       <p style="margin:0" id="cfmP"></p>
       <div class="ferr" id="eDel"></div>
-      <div class="row2"><button class="bo-btn" type="button" data-cancel id="cfmNo">取消</button><button class="bo-btn q" type="button" id="cfmOk">删除</button></div>
+      <div class="row2"><button class="bo-btn" type="button" data-cancel id="cfmNo">取消</button><button class="bo-btn q" type="button" id="cfmOk" data-dev="D46">删除</button></div>
     </div>
   </div>
   <div class="bo-mask" id="ban" hidden>
