@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>用户分享追踪-需求要点</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<div class="with-nav">
+<div class="desk"><article class="paper">
+
+<h1 class="doc-title">用户分享追踪 · 需求要点 · v1.0</h1>
+<div class="doc-meta"><span>版本：v1.0</span><span>端：H5、App（iOS / Android）、管理后台</span><span>依据：<a href="用户分享追踪-需求开发PRD文档.html">需求开发 PRD 文档</a></span></div>
+<hr class="doc-rule">
+
+<h2 id="k1">一句话需求</h2>
+<div class="oneline">789Bingo 和 789Games 两站管理后台「活动中心 › 新用户转盘活动」的创建活动 / 编辑页新增「分享任务配置」，每个活动单独配置。开启后，在该活动中单次中奖金额满足触发条件（金额固定 ₱789，判断方式可选「大于等于」或「等于」，默认「大于等于」）的新用户成为受限用户：进入游戏和提交提款前必须绑定谷歌邮箱；提交提款时还必须通过「去分享」唤起 Facebook 1 次、Messenger 3 次（次数可配置），完成一次永久有效。分享链接和分享方式与邀请好友页一致，分享文案中的金额动态获取。后台另新增「分享用户记录」页签。现有提款校验不变。</div>
+
+<h2 id="k2">业务流程</h2>
+<div class="flow">
+  <div class="fs key"><div class="no">1</div><div><b>活动中奖</b>：新用户转盘活动已开启分享任务，单次中奖金额 ≥ 或 = ₱789（判断方式按活动配置，含第 3 次转盘大礼包）→ 中奖时标记为受限用户</div></div>
+  <div class="fa">↓</div>
+  <div class="fs"><div class="no">2</div><div><b>点击游戏</b>：未绑定谷歌邮箱 → 弹出绑定谷歌邮箱弹窗，不进入游戏；已绑定 → 直接进入游戏</div></div>
+  <div class="fa">↓</div>
+  <div class="fs"><div class="no">3</div><div><b>绑定成功</b>：弹窗关闭，进入刚才点击的游戏</div></div>
+  <div class="fa">↓</div>
+  <div class="fs key"><div class="no">4</div><div><b>提交提款</b>：未绑定谷歌邮箱 → 先弹绑定谷歌邮箱弹窗；已绑定且分享任务未完成 → 弹出分享任务弹窗；两种情况都不生成提款订单；已完成分享 → 直接继续提款流程</div></div>
+  <div class="fa">↓</div>
+  <div class="fs"><div class="no">5</div><div><b>完成分享</b>：通过「去分享」唤起 Facebook 1 次、Messenger 3 次 → 分享任务完成，永久有效</div></div>
+  <div class="fa">↓</div>
+  <div class="fs key"><div class="no">6</div><div><b>完成后自动关闭</b>：分享任务弹窗自动关闭，停留在提款页 → 用户再点「提交」→ 按现有提款流程校验</div></div>
+</div>
+<div class="brs">
+  <div class="bc"><h5>A - Google 授权</h5><p class="s"><b>授权成功 → 进入游戏</b><small>取消或失败：回到弹窗，提示「绑定失败，请重试」</small></p></div>
+  <div class="bc"><h5>B - 没有 Google 账号</h5><p class="s"><b>注册 Google 账号 → 返回 → 使用 Google 绑定</b><small>打开 Google 官方注册页，绑定弹窗保持打开</small></p></div>
+  <div class="bc br"><h5>C - 唤起失败</h5><p class="s"><b>App 和 H5 页面都打不开 → 不计次</b><small>提示「无法打开分享，请稍后重试」；已计次数保留</small></p></div>
+</div>
+
+<h2 id="k3">开发功能点</h2>
+<div class="fpcard" id="F01-01">
+  <h3><span class="code">F01-01</span>中奖判定与标记<a href="用户分享追踪-需求开发PRD文档.html#F01-01">查看 PRD ›</a></h3>
+  <div class="fpgrid">
+    <b>要做什么</b>
+    <ul><li>新用户转盘活动出中奖结果时，按单次中奖金额判断；第 3 次转盘的大礼包也计入。</li><li>以转盘转出的中奖结果为准：领取方式为「手动领取」时，不论是否领取、何时领取，转出结果即标记，中奖金额和中奖时间取转出结果时的值。</li><li>满足触发条件时，中奖即标记为受限用户，记录触发受限的活动编号、中奖金额和中奖时间；受限用户只按第一次触发受限的活动配置执行。</li><li>不分 App 版本；只对本功能上线后参与新用户转盘并中奖的新用户生效，上线前已有的用户（老用户）不受限制。</li></ul>
+    <b>公式</b>
+    <div class="formula">受限 ＝ 该活动分享任务开启 且 单次中奖金额 [≥ 或 ＝] ₱789（判断方式按活动配置，默认 ≥；多次中奖不累加）</div>
+    <b>涉及端</b>
+    <div class="ends"><span>后端</span></div>
+  </div>
+</div>
+<div class="fpcard" id="F01-02">
+  <h3><span class="code">F01-02</span>开关与配置变化<a href="用户分享追踪-需求开发PRD文档.html#F01-02">查看 PRD ›</a></h3>
+  <div class="fpgrid">
+    <b>要做什么</b>
+    <ul><li>活动的分享任务关闭：该活动不再标记；由它标记的受限用户进入游戏和提交提款都不再弹窗，之后在其他活动再中奖也不再受限。重新开启后恢复拦截（已绑定、已完成分享任务、已手动解除的项目不恢复）。活动本身关闭或到达结束时间，不影响已标记的受限用户。</li><li>配置以保存成功的时间生效：修改判断方式只影响之后的中奖，已有标记不撤销。</li><li>修改分享渠道或要求次数：已完成的用户不受影响；未完成的用户按新配置判断，已计次数保留；按新配置已满足的，保存后立即记为已完成。</li></ul>
+    <b>公式</b>
+    <div class="formula">未完成用户是否完成 ＝ 每个已启用渠道的已计次数 ≥ 该渠道新的要求次数</div>
+    <b>涉及端</b>
+    <div class="ends"><span>后端</span></div>
+  </div>
+</div>
+<div class="fpcard" id="F02-01">
+  <h3><span class="code">F02-01</span>进入游戏校验<a href="用户分享追踪-需求开发PRD文档.html#F02-01">查看 PRD ›</a></h3>
+  <div class="fpgrid">
+    <b>要做什么</b>
+    <ul><li>受限用户通过任何方式打开游戏时判断：未绑定时弹出绑定谷歌邮箱弹窗，不进入游戏；已绑定时直接进入游戏。绕过前端直接进入游戏同样拦截。</li><li>判断失败或超时时放行进入本次游戏；下次进入游戏仍重新判断，恢复正常后未绑定的受限用户照常要求绑定。</li><li>点 × 关闭后停留在原页面；再点游戏仍弹出，直到绑定成功。</li><li>绑定成功后永久记为已绑定，之后解绑 Google 账号也不恢复拦截。</li></ul>
+    <b>公式</b>
+    <div class="formula">弹窗 ＝ 受限 且 该活动分享任务开启 且 强制绑定谷歌邮箱开启 且 未绑定谷歌邮箱 且 未手动解除绑定要求<br>已绑定谷歌邮箱 ＝ 已关联 Google 账号 或 已认证邮箱后缀为 @gmail.com（不区分大小写）</div>
+    <b>涉及端</b>
+    <div class="ends"><span>C 端</span><span>后端</span></div>
+  </div>
+</div>
+<div class="fpcard" id="F02-02">
+  <h3><span class="code">F02-02</span>Google 授权绑定<a href="用户分享追踪-需求开发PRD文档.html#F02-02">查看 PRD ›</a></h3>
+  <div class="fpgrid">
+    <b>要做什么</b>
+    <ul><li>H5 和 App 都支持 Google 授权绑定。授权成功：关联该 Google 账号，提示「绑定成功」，进入刚才点击的游戏；从提款页弹出时停留在提款页。</li><li>取消授权或授权失败：回到弹窗，提示「绑定失败，请重试」。</li><li>该邮箱已被其他账号绑定：提示「该邮箱已绑定其他账号」，不绑定，弹窗保持打开。</li></ul>
+    <b>公式</b>
+    <div class="formula">-</div>
+    <b>涉及端</b>
+    <div class="ends"><span>C 端</span><span>后端</span></div>
+  </div>
+</div>
+<div class="fpcard" id="F02-03">
+  <h3><span class="code">F02-03</span>注册 Google 账号引导<a href="用户分享追踪-需求开发PRD文档.html#F02-03">查看 PRD ›</a></h3>
+  <div class="fpgrid">
+    <b>要做什么</b>
+    <ul><li>点「注册 Google 账号」打开 Google 官方注册页（H5 在新标签页打开，App 在系统浏览器打开）。</li><li>绑定弹窗保持打开；用户返回后点「使用 Google 绑定」完成绑定。</li></ul>
+    <b>公式</b>
+    <div class="formula">-</div>
+    <b>涉及端</b>
+    <div class="ends"><span>C 端</span><span>后端</span></div>
+  </div>
+</div>
+<div class="fpcard" id="F03-01">
+  <h3><span class="code">F03-01</span>提交提款校验<a href="用户分享追踪-需求开发PRD文档.html#F03-01">查看 PRD ›</a></h3>
+  <div class="fpgrid">
+    <b>要做什么</b>
+    <ul><li>受限用户在提款页点「提交」时依次判断：① 需要绑定谷歌邮箱时弹出绑定谷歌邮箱弹窗（说明「绑定后继续提款」）；② 分享任务未完成时弹出分享任务弹窗；拦截时都不生成提款订单；③ 已完成分享时直接继续提款流程。</li><li>绕过前端直接提交同样拦截。</li></ul>
+    <b>公式</b>
+    <div class="formula">前提 ＝ 受限 且 该活动分享任务开启<br>① 弹绑定 ＝ 强制绑定谷歌邮箱开启 且 未绑定谷歌邮箱 且 未手动解除绑定要求<br>② 弹分享任务 ＝ 不需要弹绑定 且 提款分享任务开启 且 分享任务未完成 且 未手动解除分享任务</div>
+    <b>涉及端</b>
+    <div class="ends"><span>C 端</span><span>后端</span></div>
+  </div>
+</div>
+<div class="fpcard" id="F03-02">
+  <h3><span class="code">F03-02</span>分享与计次<a href="用户分享追踪-需求开发PRD文档.html#F03-02">查看 PRD ›</a></h3>
+  <div class="fpgrid">
+    <b>要做什么</b>
+    <ul><li>点「去分享」按渠道先唤起 App；未安装 App 时唤起 H5 页面。唤起成功即计 1 次，不判断用户是否发布或发送；弹窗外的分享（如邀请好友页）不计次。</li><li>App 和 H5 页面都打不开：提示「无法打开分享，请稍后重试」，不计次。</li><li>某渠道达到要求次数后按钮显示「已完成」、不可点；已计次数一直保留，不按天清零。</li><li>分享内容与邀请好友页一致：链接用用户自己的邀请链接（与「My Link」相同）；Facebook 带链接和分享文案（{amount} 替换为中奖金额）；Messenger 只带链接。好友通过链接注册按现有邀请好友规则处理。</li></ul>
+    <b>公式</b>
+    <div class="formula">完成 ＝ 每个已启用渠道的唤起次数 ≥ 该渠道要求次数（本版本 Facebook 1、Messenger 3）</div>
+    <b>涉及端</b>
+    <div class="ends"><span>C 端</span><span>后端</span></div>
+  </div>
+</div>
+<div class="fpcard" id="F03-03">
+  <h3><span class="code">F03-03</span>完成后自动关闭<a href="用户分享追踪-需求开发PRD文档.html#F03-03">查看 PRD ›</a></h3>
+  <div class="fpgrid">
+    <b>要做什么</b>
+    <ul><li>最后一次唤起成功、所有已启用渠道都达到要求次数时，分享任务弹窗自动关闭，提示「分享任务已完成」。</li><li>停留在提款页，保留已填的金额和提款方式；用户再点「提交」按现有提款流程处理。</li><li>分享任务完成一次永久有效：以后提款不再弹出分享任务弹窗。</li></ul>
+    <b>公式</b>
+    <div class="formula">-</div>
+    <b>涉及端</b>
+    <div class="ends"><span>C 端</span><span>后端</span></div>
+  </div>
+</div>
+<div class="fpcard" id="F05-01">
+  <h3><span class="code">F05-01</span>分享任务配置<a href="用户分享追踪-需求开发PRD文档.html#F05-01">查看 PRD ›</a></h3>
+  <div class="fpgrid">
+    <b>要做什么</b>
+    <ul><li>位置：「活动中心 › 新用户转盘活动」的创建活动 / 编辑页新增「分享任务配置」区块，每个活动单独配置，新建活动默认关闭；活动列表在「状态」后新增「分享任务」列。</li><li>配置项：分享任务开关；触发条件（判断方式可选大于等于或等于，金额固定 ₱789）；强制绑定谷歌邮箱开关；提款分享任务开关；分享渠道表（启用、要求次数）；分享文案（支持 {amount}、{USER_INVITE_LINK}）和文案预览。</li><li>以保存成功的时间生效；关闭分享任务时其他字段的值保留，重新开启时显示上次保存的值。</li></ul>
+    <b>公式</b>
+    <div class="formula">金额 ₱789 只读；已启用渠道的要求次数为 1–10 的整数；提款分享任务开启时至少启用 1 个渠道；文案必填、≤ 800 字符（表情计 1 个字符，不校验语言），只支持两个变量</div>
+    <b>涉及端</b>
+    <div class="ends"><span>后台前端</span><span>后端</span></div>
+  </div>
+</div>
+<div class="fpcard" id="F05-02">
+  <h3><span class="code">F05-02</span>分享用户记录<a href="用户分享追踪-需求开发PRD文档.html#F05-02">查看 PRD ›</a></h3>
+  <div class="fpgrid">
+    <b>要做什么</b>
+    <ul><li>筛选：会员账号、活动编号、任务状态（全部 / 未完成 / 已完成 / 手动解除）；列表分页，每页条数可选 10 / 20 / 50，默认 10；导出当前筛选下的全部记录，超过 5 万行转到「数据报表 › 报表下载」生成。</li><li>列表字段：会员账号、活动编号、中奖金额、中奖时间、绑定状态、分享进度、任务状态、操作（手动解除）。</li><li>触发活动的「分享任务」关闭时绑定状态、分享进度、任务状态都显示「-」，「手动解除」置灰；「强制绑定谷歌邮箱」关闭时绑定状态显示「-」；「提款分享任务」关闭时分享进度和任务状态显示「-」。</li></ul>
+    <b>公式</b>
+    <div class="formula">-</div>
+    <b>涉及端</b>
+    <div class="ends"><span>后台前端</span><span>后端</span></div>
+  </div>
+</div>
+<div class="fpcard" id="F05-03">
+  <h3><span class="code">F05-03</span>手动解除限制<a href="用户分享追踪-需求开发PRD文档.html#F05-03">查看 PRD ›</a></h3>
+  <div class="fpgrid">
+    <b>要做什么</b>
+    <ul><li>对单个受限用户选择解除项（绑定谷歌邮箱、提款分享任务，至少选一项）并填写原因；被勾选的项目解除后不再限制，之后在其他活动再中奖也不再受限。</li><li>只能解除正在生效的项目（显示「未绑定」「未完成」的项目）；两名运营同时解除不同项目时，按解除项分别生效。</li><li>操作人、时间和原因记在平台现有的后台「日志管理 › 操作日志」，本页不展示。</li></ul>
+    <b>公式</b>
+    <div class="formula">可提交 ＝ 至少选一项 且 原因 1–200 字</div>
+    <b>涉及端</b>
+    <div class="ends"><span>后台前端</span><span>后端</span></div>
+  </div>
+</div>
+
+</article></div>
+</div>
+<script>window.NAV_ROOT = "../";</script>
+<script src="../assets/nav-data.js"></script>
+<script src="../assets/nav.js"></script>
+</body>
+</html>

@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>用户分享追踪-客服QA</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body class="qa-page" data-lang="both">
+<div class="with-nav">
+<div class="desk"><article class="paper qa">
+
+<h1 class="doc-title">用户分享追踪 · 客服 QA<span class="qa-sub">Share Task for Big Spin Winners · Customer Service Q&amp;A</span></h1>
+<div class="doc-meta"><span>版本 / Version：v1.0</span><span>适用 / For：客服 Customer Service</span><span>依据 / Based on：PRD、后台操作手册 Admin Manual</span></div>
+<div class="qa-lang" role="group" aria-label="语言 Language">
+  <button type="button" data-l="both" aria-pressed="true">双语 Bilingual</button>
+  <button type="button" data-l="zh" aria-pressed="false">中文</button>
+  <button type="button" data-l="en" aria-pressed="false">English</button>
+</div>
+<hr class="doc-rule">
+
+<h2 id="q0">适用范围 <span class="en-t">Scope</span></h2>
+<div class="bi"><div class="zh">789Bingo、789Games 两站（H5、App）。适用于受限用户：本功能上线后，在已开启分享任务的新用户转盘活动中，单次中奖金额满足触发条件的新用户（金额固定 ₱789，按活动配置为「大于等于」或「等于」，默认大于等于；第 3 次转盘的大礼包也计入）。</div><div class="en">789Bingo and 789Games (H5 and App). Applies to restricted players: after this feature goes live, new users whose single prize in a New User Spin Wheel promotion with the share task turned on meets the trigger condition (fixed at ₱789; set per promotion as "₱789 or more" or "exactly ₱789", default "₱789 or more"; the third-spin bonus pack also counts).</div></div>
+
+<h2 id="q1">这次改了什么 <span class="en-t">What changed</span></h2>
+<div class="bi"><div class="zh">① 受限用户进入游戏前必须绑定谷歌邮箱（用 Google 账号授权；没有 Google 账号的，先去 Google 官方注册）。② 受限用户提交提款时，未绑定谷歌邮箱的先绑定，再完成分享任务（在弹窗里点「去分享」，按弹窗显示的次数完成），完成一次永久有效。本功能上线前已有的用户、不满足触发条件的玩家不受影响；现有提款审核规则不变。</div><div class="en">① Restricted players must link a Google email before playing (by signing in with Google; players without a Google account create one on Google first). ② When a restricted player submits a withdrawal, they must first link a Google email if they have not, then complete the share task in the pop-up (tap "Share" the number of times shown). Once completed, it is never required again. Players who joined before this feature went live and players who do not meet the trigger condition are not affected. Existing withdrawal review rules stay the same.</div></div>
+
+<h2 id="q2">客服核查步骤 <span class="en-t">How to check</span></h2>
+<ol class="qa-steps">
+  <li class="bi"><div class="zh"><b>是否受限</b>：在后台「活动中心 › 新用户转盘活动 › 分享用户记录」按会员账号搜索；查得到记录，且「绑定状态」为「未绑定」或「任务状态」为「未完成」时，玩家当前受限；显示「-」「已绑定」「已完成」「手动解除」的项目已不再限制。可同时查看「活动编号」和「中奖金额」。</div><div class="en"><b>Restricted or not</b>: In 活动中心 › 新用户转盘活动 › 分享用户记录 (Promotions › New User Spin › Share Records), search by account. The player is currently restricted only if a record is found and 绑定状态 (Link Status) shows 未绑定 (Not linked) or 任务状态 (Task Status) shows 未完成 (Not completed). Items showing "-", 已绑定 (Linked), 已完成 (Completed) or 手动解除 (Manually removed) no longer apply. You can also check 活动编号 (Promotion ID) and 中奖金额 (Prize Amount).</div></li>
+  <li class="bi"><div class="zh"><b>绑定和分享进度</b>：查看同一条记录的「绑定状态」「分享进度」「任务状态」。</div><div class="en"><b>Linking and share progress</b>: In the same record, check 绑定状态 (Link Status), 分享进度 (Share Progress) and 任务状态 (Task Status).</div></li>
+</ol>
+
+<h2 id="q3">问答 <span class="en-t">Q&amp;A</span></h2>
+<section class="qa-card" id="qa1">
+  <h3><span class="qa-no">1</span><span class="bi-inline"><span class="zh">为什么我不能玩游戏，要绑定谷歌邮箱？</span><span class="en">Why do I have to link a Google email before playing?</span></span></h3>
+  <div class="qa-row"><b>回复玩家<small>Reply</small></b>
+    <div class="bi"><div class="en qa-reply">Congratulations on your big win! To keep your account secure, please link a Google email first by tapping "Continue with Google". If you don't have a Google account, tap "Create Google Account", sign up, then come back and tap "Continue with Google". You can play right after linking.<button type="button" class="qa-copy">复制 Copy</button></div>
+    <div class="zh">恭喜中大奖！为了账户安全，请先点「使用 Google 绑定」绑定谷歌邮箱。没有 Google 账号的，先点「注册 Google 账号」完成注册，回来再点「使用 Google 绑定」。绑定后即可开始游戏。</div></div></div>
+  <div class="qa-row"><b>客服核查<small>Check</small></b>
+    <div class="bi"><div class="zh">分享用户记录里「绑定状态」是否为「未绑定」。</div><div class="en">Check that 绑定状态 (Link Status) in Share Records shows 未绑定 (Not linked).</div></div></div>
+  <div class="qa-row"><b>转交<small>Escalate</small></b>
+    <div class="bi"><div class="zh">绑定状态为「已绑定」但玩家仍被要求绑定时，转技术。</div><div class="en">If Link Status shows linked but the player is still asked to link, escalate to Tech.</div></div></div>
+</section>
+<section class="qa-card" id="qa2">
+  <h3><span class="qa-no">2</span><span class="bi-inline"><span class="zh">提示「该邮箱已绑定其他账号」怎么办？</span><span class="en">It says "This email is linked to another account".</span></span></h3>
+  <div class="qa-row"><b>回复玩家<small>Reply</small></b>
+    <div class="bi"><div class="en qa-reply">Each Google account can only be linked to one player account. Please tap "Continue with Google" again and choose a Google account that has not been linked before.<button type="button" class="qa-copy">复制 Copy</button></div>
+    <div class="zh">一个 Google 账号只能绑定一个平台账号。请再点「使用 Google 绑定」，换一个没有绑定过的 Google 账号授权。</div></div></div>
+  <div class="qa-row"><b>客服核查<small>Check</small></b>
+    <div class="bi"><div class="zh">无需核查。</div><div class="en">No check needed.</div></div></div>
+  <div class="qa-row"><b>转交<small>Escalate</small></b>
+    <div class="bi"><div class="zh">玩家坚持该邮箱是本人的，或疑似被他人冒用时，转运营。</div><div class="en">If the player insists the email is theirs, or the email may have been used by someone else, escalate to Operations.</div></div></div>
+</section>
+<section class="qa-card" id="qa3">
+  <h3><span class="qa-no">3</span><span class="bi-inline"><span class="zh">为什么提款要先分享？</span><span class="en">Why do I need to share before withdrawing?</span></span></h3>
+  <div class="qa-row"><b>回复玩家<small>Reply</small></b>
+    <div class="bi"><div class="en qa-reply">Big spin winners need to complete a one-time share task before withdrawing: tap "Share" in the pop-up the number of times shown. Then tap "Submit" again to withdraw. You won't be asked again.<button type="button" class="qa-copy">复制 Copy</button></div>
+    <div class="zh">转盘大奖玩家提款前需完成一次分享任务：在弹窗里点「去分享」，按弹窗显示的次数完成分享。完成后再点「提交」即可提款，以后不再要求。</div></div></div>
+  <div class="qa-row"><b>客服核查<small>Check</small></b>
+    <div class="bi"><div class="zh">分享用户记录里的「任务状态」和「分享进度」。</div><div class="en">Check 任务状态 (Task Status) and 分享进度 (Share Progress) in Share Records.</div></div></div>
+  <div class="qa-row"><b>转交<small>Escalate</small></b>
+    <div class="bi"><div class="zh">玩家强烈投诉，或无法使用 Facebook / Messenger 时，转运营评估是否手动解除。</div><div class="en">If the player complains strongly or cannot use Facebook / Messenger, escalate to Operations to decide whether to remove the restriction manually.</div></div></div>
+</section>
+<section class="qa-card" id="qa4">
+  <h3><span class="qa-no">4</span><span class="bi-inline"><span class="zh">我分享了，进度没有增加？</span><span class="en">I shared, but the progress didn't go up.</span></span></h3>
+  <div class="qa-row"><b>回复玩家<small>Reply</small></b>
+    <div class="bi"><div class="en qa-reply">We only count each time you tap "Share" in the pop-up and Facebook or Messenger opens (in the app, or on its web page if the app is not installed). Shares made outside the pop-up, such as from the Invite Friends page, are not counted. Please tap "Share" in the pop-up again.<button type="button" class="qa-copy">复制 Copy</button></div>
+    <div class="zh">只计在弹窗里点「去分享」并成功打开 Facebook / Messenger 的次数（打开 App，或未安装 App 时打开 H5 页面）；在弹窗外自己分享（如邀请好友页）不计。请在弹窗里再点一次「去分享」。</div></div></div>
+  <div class="qa-row"><b>客服核查<small>Check</small></b>
+    <div class="bi"><div class="zh">「分享进度」里对应渠道的次数是否增加。</div><div class="en">Check whether the count for that channel in 分享进度 (Share Progress) went up.</div></div></div>
+  <div class="qa-row"><b>转交<small>Escalate</small></b>
+    <div class="bi"><div class="zh">玩家能提供从弹窗「去分享」打开 Facebook / Messenger 的截图，但「分享进度」没有增加时，转技术。</div><div class="en">If the player has a screenshot showing Facebook / Messenger opened from "Share" in the pop-up, but 分享进度 (Share Progress) did not go up, escalate to Tech.</div></div></div>
+</section>
+<section class="qa-card" id="qa6">
+  <h3><span class="qa-no">5</span><span class="bi-inline"><span class="zh">为什么提款时要我先绑定谷歌邮箱？</span><span class="en">Why do I have to link a Google email before withdrawing?</span></span></h3>
+  <div class="qa-row"><b>回复玩家<small>Reply</small></b>
+    <div class="bi"><div class="en qa-reply">For account security, big spin winners need to link a Google email first. Tap "Continue with Google" to link it, then tap "Submit" again to continue your withdrawal. If you signed up with Google, your account is already linked.<button type="button" class="qa-copy">复制 Copy</button></div>
+    <div class="zh">为了账户安全，转盘大奖玩家需先绑定谷歌邮箱。点「使用 Google 绑定」完成绑定后，再点「提交」继续提款。用 Google 登录注册的账号已视为已绑定。</div></div></div>
+  <div class="qa-row"><b>客服核查<small>Check</small></b>
+    <div class="bi"><div class="zh">分享用户记录里的「绑定状态」。</div><div class="en">Check 绑定状态 (Link Status) in Share Records.</div></div></div>
+  <div class="qa-row"><b>转交<small>Escalate</small></b>
+    <div class="bi"><div class="zh">绑定状态为「已绑定」但玩家仍被要求绑定时，转技术。</div><div class="en">If Link Status shows linked but the player is still asked to link, escalate to Tech.</div></div></div>
+</section>
+
+<section class="qa-card" id="qa7">
+  <h3><span class="qa-no">6</span><span class="bi-inline"><span class="zh">活动已经结束了，为什么提款还要分享？</span><span class="en">The promotion has ended. Why do I still need to share before withdrawing?</span></span></h3>
+  <div class="qa-row"><b>回复玩家<small>Reply</small></b>
+    <div class="bi"><div class="en qa-reply">The share task still applies after the promotion ends. Please tap "Share" in the pop-up the number of times shown. You only need to do this once.<button type="button" class="qa-copy">复制 Copy</button></div>
+    <div class="zh">活动结束后，分享任务仍然有效。请在弹窗里点「去分享」，按弹窗显示的次数完成分享。只需完成一次。</div></div></div>
+  <div class="qa-row"><b>客服核查<small>Check</small></b>
+    <div class="bi"><div class="zh">分享用户记录里的「任务状态」和「分享进度」。</div><div class="en">Check 任务状态 (Task Status) and 分享进度 (Share Progress) in Share Records.</div></div></div>
+  <div class="qa-row"><b>转交<small>Escalate</small></b>
+    <div class="bi"><div class="zh">玩家强烈投诉时，转运营评估是否手动解除。</div><div class="en">If the player complains strongly, escalate to Operations to decide whether to remove the restriction manually.</div></div></div>
+</section>
+
+<h2 id="q4">转交与升级 <span class="en-t">Escalation</span></h2>
+<div class="tbl"><table class="qa-tbl">
+  <thead><tr><th>情况 <small>Situation</small></th><th>转给 <small>To</small></th></tr></thead>
+  <tbody>
+    <tr><td class="bi"><div class="zh">已绑定谷歌邮箱或已完成分享任务，仍被拦截；点「去分享」已打开 Facebook / Messenger，但没有计次</div><div class="en">Still blocked after linking a Google email or completing the share task; Facebook / Messenger opened from "Share" but was not counted</div></td><td class="bi"><div class="zh">技术</div><div class="en">Tech</div></td></tr>
+    <tr><td class="bi"><div class="zh">玩家无法使用 Facebook / Messenger，或强烈投诉，需要评估手动解除</div><div class="en">The player cannot use Facebook / Messenger, or complains strongly; manual removal of the restriction needs review</div></td><td class="bi"><div class="zh">运营</div><div class="en">Operations</div></td></tr>  </tbody>
+</table></div>
+
+<h2 id="q5">资料未覆盖的问题 <span class="en-t">Not covered yet</span></h2>
+<ul class="qa-open">
+    <li class="bi"><div class="zh">暂无。说明：用 Google 授权绑定谷歌邮箱不算邮箱认证，不发邮箱认证奖励（已确认）。</div><div class="en">None. Note: linking a Google email via Google sign-in does not count as email verification, so no email verification reward is given (confirmed).</div></li>
+</ul>
+
+</article></div>
+</div>
+<script>window.NAV_ROOT = "../";</script>
+<script src="../assets/nav-data.js"></script>
+<script src="../assets/nav.js"></script>
+<script>
+(function () {
+  /* 语言切换：双语 / 中文 / English，记在本机浏览器 */
+  var KEY = "用户分享追踪功能需求-客服QA-lang";
+  function set(l) {
+    document.body.dataset.lang = l;
+    document.querySelectorAll(".qa-lang button").forEach(function (b) { b.setAttribute("aria-pressed", b.dataset.l === l); });
+    try { localStorage.setItem(KEY, l); } catch (e) {}
+  }
+  document.querySelectorAll(".qa-lang button").forEach(function (b) { b.onclick = function () { set(b.dataset.l); }; });
+  try { var s = localStorage.getItem(KEY); if (s) set(s); } catch (e) {}
+  /* 复制英文回复 */
+  document.addEventListener("click", function (e) {
+    var b = e.target.closest(".qa-copy"); if (!b) return;
+    var box = b.parentNode.cloneNode(true); box.querySelector(".qa-copy").remove();
+    var text = box.textContent.trim();
+    function done(ok) { b.textContent = ok ? "已复制 Copied" : "复制失败 Failed"; setTimeout(function () { b.textContent = "复制 Copy"; }, 1500); }
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(function () { done(true); }, function () { done(fallback(text)); });
+    else done(fallback(text));
+  });
+  function fallback(text) {
+    var t = document.createElement("textarea"); t.value = text; t.style.cssText = "position:fixed;left:-9999px"; document.body.appendChild(t); t.select();
+    var ok = false; try { ok = document.execCommand("copy"); } catch (e) {}
+    t.remove(); return ok;
+  }
+})();
+</script>
+</body>
+</html>

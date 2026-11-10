@@ -1,0 +1,300 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>用户分享追踪-开发自查清单</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<div class="with-nav">
+  <header class="ck-head" id="ckhead">
+    <div class="ck-top">
+      <div>
+        <div class="k">789Bingo&amp;789Games · 功能自查</div>
+        <h1>用户分享追踪 · 开发自查清单 · <span id="hdVer">v1.0</span></h1>
+        <div class="d">勾选状态保存在本机浏览器，按角色分别保存；换电脑或换浏览器后看不到，留档请导出 CSV。</div>
+      </div>
+      <div class="ck-total"><b id="tp">0%</b><span id="tn">0 / 0 项</span><div class="pbar"><i id="tb" style="width:0"></i></div></div>
+    </div>
+    <div class="filters">
+      <div class="fgroup" data-g="role"><span class="gl">角色</span></div>
+      <div class="fgroup" data-g="type"><span class="gl">类型</span></div>
+      <div class="fgroup" data-g="state"><span class="gl">状态</span></div>
+      <div class="fgroup"><button class="pill" type="button" id="exall">全部展开</button><button class="pill" type="button" id="coall">全部收起</button><button class="pill" type="button" id="csv">导出 CSV</button><button class="pill" type="button" id="prt">打印</button></div>
+      <button class="clearbtn" type="button" id="clear">清空勾选</button>
+    </div>
+  </header>
+  <div class="split" id="split">
+    <div class="ck-left" id="list"></div>
+    <div class="divider" id="divider" role="separator" aria-label="拖动调整宽度"></div>
+    <div class="ck-right">
+      <div class="rhead">PRD 需求文档 <button type="button" id="up" aria-label="上一处标注">↑</button><button type="button" id="dn" aria-label="下一处标注">↓</button><span class="cnt2" id="hitn"></span></div>
+      <iframe id="prd" src="用户分享追踪-需求开发PRD文档.html" title="PRD 需求文档"></iframe>
+    </div>
+  </div>
+</div>
+
+<script>
+/* 顶栏右侧「在新标签页打开」。左侧目录栏默认始终显示，方便跳到其他页面；
+   需要更宽的两栏时，点目录栏右上角「隐藏」，再点顶栏「展开目录」恢复（需求包框架规范第 3.1.5 节） */
+window.NAV_NEWWIN_TEXT = "在新标签页打开";
+window.addEventListener("navtoggle", function () { setTimeout(fitHead, 0); });
+</script>
+<script>window.NAV_ROOT = "../";</script>
+<script src="../assets/nav-data.js"></script>
+<script src="../assets/nav.js"></script>
+<script>
+/* 自查项：[类型, 适用角色, 关键, 检查什么, 预期结果, 新增或修改的版本]。新自查项只追加在各组末尾，保证已有编号不变。
+   类型 fn 功能 / bd 边界值 / ex 异常 / un 非常规；角色 d 设计 / f 前端 / b 后端 / q 测试。功能点名称与 PRD 保持一致。
+   预期结果写用户或运营看到的业务结果，不写字段值、接口返回、状态码和测试工具（生成内容规范第五章第 0 节「只写产品层面」）。 */
+var DATA = [
+ { c: "F01", n: "受限用户标记", s: [
+  { c: "F01-01", n: "中奖判定与标记", i: [
+   ["fn", "bq", 1, "活动 1208 已开启分享任务，用户在该活动单次中奖 ₱789", "分享用户记录出现该用户：活动编号 1208，任务状态「未完成」"],
+   ["fn", "bq", 1, "活动 1207 未开启分享任务，用户在该活动单次中奖 ₱789", "不标记为受限用户，分享用户记录里没有该用户"],
+   ["bd", "bq", 1, "判断方式为「等于」：用户分别单次中奖 ₱788、₱789、₱790", "只有中奖 ₱789 的用户被标记"],
+   ["bd", "bq", 1, "判断方式为「大于等于」：用户分别单次中奖 ₱788、₱789、₱790", "中奖 ₱788 的用户不标记；中奖 ₱789、₱790 的用户被标记"],
+   ["bd", "bq", 0, "同一用户两次转盘分别中奖 ₱500、₱300", "不标记（按单次中奖判断，不累加）"],
+   ["bd", "bq", 1, "判断方式为「大于等于」：用户第 3 次转盘大礼包中奖 ₱800", "被标记为受限用户"],
+   ["bd", "bq", 1, "活动领取方式为「手动领取」，用户转出 ₱789 后未领取", "转出结果即标记为受限用户；分享用户记录的中奖金额、中奖时间为转出结果时的金额和时间"]
+  ]},
+  { c: "F01-02", n: "开关与配置变化", i: [
+   ["fn", "bq", 1, "关闭活动 1208 的分享任务后，由它标记的受限用户点游戏、提交提款", "都不弹窗；之后在该活动中奖满足条件的用户不标记；这些受限用户在其他活动再中奖也不受限"],
+   ["fn", "bq", 0, "活动 1208 状态改为关闭，或到达结束时间", "由它标记的用户仍是受限用户，按该活动的分享任务配置拦截"],
+   ["fn", "bq", 0, "重新开启活动 1208 的分享任务", "由它标记、未绑定谷歌邮箱或未完成分享任务的用户恢复拦截；已手动解除的项目不恢复；区块显示上次保存的值"],
+   ["bd", "bq", 0, "判断方式由「大于等于」改为「等于」并保存", "此前中奖 ₱1,000 已标记的用户仍是受限用户；保存后中奖 ₱1,000 的用户不标记"],
+   ["bd", "bq", 1, "Messenger 要求次数由 3 改为 2，或由 3 改为 4", "改为 2：已唤起 2 次的用户保存后记录立即显示「已完成」，提交提款不弹分享任务弹窗；改为 4：未完成的用户需唤起满 4 次；已完成的用户都不受影响"]
+  ]}
+ ]},
+ { c: "F02", n: "强制绑定谷歌邮箱", s: [
+  { c: "F02-01", n: "进入游戏校验", i: [
+   ["fn", "fbq", 1, "未绑定谷歌邮箱的受限用户，分别从首页、分类、搜索、最近玩过、收藏、游戏内切换游戏、横幅和活动页里的游戏链接打开游戏", "每种方式都弹出绑定谷歌邮箱弹窗，不进入游戏"],
+   ["fn", "fq", 0, "用 Google 三方登录的受限用户、已认证邮箱为 @Gmail.com 的受限用户点游戏", "直接进入游戏，不弹窗"],
+   ["un", "fq", 0, "点 × 关闭弹窗后再点游戏；点遮罩", "点 × 后停留在原页面，再点游戏仍弹出；点遮罩不关闭弹窗"],
+   ["un", "bq", 1, "绕过前端直接进入游戏", "同样拦截，不进入游戏"],
+   ["ex", "fbq", 0, "点游戏时判断是否需要绑定失败或超时；之后判断恢复正常再点游戏", "判断失败时放行进入本次游戏，不提示；恢复正常后，未绑定的受限用户点游戏照常弹出绑定谷歌邮箱弹窗"],
+   ["un", "bq", 0, "受限用户绑定成功后解绑 Google 账号，再点游戏", "直接进入游戏，不再弹绑定弹窗"],
+   ["fn", "bq", 0, "运营手动解除某受限用户的「绑定谷歌邮箱」后，该用户点游戏", "直接进入游戏，不弹绑定弹窗"],
+   ["fn", "dfbq", 1, "本功能点涉及的每个控件：按 PRD 附录 D 逐个核对", "实现与 PRD 附录 D 的说明一致"]
+  ]},
+  { c: "F02-02", n: "Google 授权绑定", i: [
+   ["fn", "fbq", 1, "分别在 H5 和 App 从游戏入口弹出绑定弹窗后，Google 授权成功", "提示「绑定成功」，进入刚才点击的游戏；分享用户记录的绑定状态显示「已绑定」"],
+   ["ex", "fq", 0, "取消授权或授权失败", "回到弹窗，提示「绑定失败，请重试」"],
+   ["ex", "bq", 1, "授权的 Google 邮箱已被其他账号绑定", "提示「该邮箱已绑定其他账号」，不绑定，弹窗保持打开"],
+   ["un", "fq", 0, "授权进行中连续点「使用 Google 绑定」", "按钮显示加载、不可点，只发起一次授权"]
+  ]},
+  { c: "F02-03", n: "注册 Google 账号引导", i: [
+   ["fn", "fq", 1, "分别在 H5 和 App 点「注册 Google 账号」", "H5 在新标签页打开 Google 官方注册页；App 在系统浏览器打开"],
+   ["fn", "fq", 1, "注册完成或放弃注册后返回", "绑定弹窗仍在，不进入游戏；点「使用 Google 绑定」可完成绑定"],
+   ["ex", "fq", 0, "Google 注册页打不开", "提示「无法打开页面，请稍后重试」，弹窗保持打开"],
+   ["fn", "dq", 0, "查看绑定弹窗内容", "没有手填邮箱和验证码的入口"]
+  ]}
+ ]},
+ { c: "F03", n: "提款分享任务", s: [
+  { c: "F03-01", n: "提交提款校验", i: [
+   ["fn", "fbq", 1, "未绑定谷歌邮箱的受限用户在提款页点「提交」", "先弹出绑定谷歌邮箱弹窗，说明文字为「绑定后继续提款」，不生成提款订单；绑定成功后停留在提款页，再点「提交」才判断分享任务"],
+   ["fn", "fbq", 1, "已绑定谷歌邮箱、分享任务未完成的受限用户点「提交」", "弹出分享任务弹窗，提款记录里没有新订单"],
+   ["fn", "fbq", 0, "用 Google 三方登录、分享任务未完成的受限用户在提款页点「提交」", "不弹绑定谷歌邮箱弹窗，直接弹出分享任务弹窗，不生成提款订单"],
+   ["un", "bq", 1, "绕过前端直接提交提款", "同样拦截，不生成提款订单"],
+   ["fn", "fq", 0, "非受限用户提交提款", "按现有提款流程处理，不弹窗"],
+   ["ex", "fq", 0, "提交时网络异常", "提示「网络异常，请重试」，保留已填内容"]
+  ]},
+  { c: "F03-02", n: "分享与计次", i: [
+   ["fn", "fbq", 1, "已安装 Facebook / Messenger App 时点「去分享」，唤起后不发布、直接返回", "唤起 App，对应进度 +1；达到要求次数后按钮显示「已完成」、不可点"],
+   ["fn", "fq", 1, "未安装 App 时点「去分享」", "唤起对应的 H5 页面（未登录时由页面要求登录），对应进度 +1"],
+   ["ex", "fq", 0, "App 和 H5 页面都打不开", "提示「无法打开分享，请稍后重试」，不计次"],
+   ["un", "bq", 0, "受限用户在邀请好友页分享到 Facebook / Messenger", "分享任务进度不变"],
+   ["fn", "fbq", 1, "分别点 Facebook、Messenger 的「去分享」，查看打开的链接和内容", "链接为用户邀请链接（与邀请好友页「My Link」相同）；Facebook 带文案，{amount} 显示为实际中奖金额（如 1,000.50）；Messenger 只带链接"],
+   ["fn", "bq", 0, "好友通过分享链接注册", "按现有邀请好友规则自动带入邀请码，绑定为分享人的邀请好友"],
+   ["fn", "fbq", 1, "Messenger 进度为 2/3 时关闭弹窗，换设备登录后再提交提款", "Messenger 进度仍为 2/3"],
+   ["un", "bq", 0, "同一账号在两台设备分别点「去分享」", "不区分设备，按账号累计，每次唤起成功各计 1 次；达到要求次数后多出的次数不计入进度"],
+   ["bd", "fq", 0, "后台停用某个分享渠道", "弹窗不显示该渠道，完成条件不要求该渠道"],
+   ["fn", "dfbq", 1, "本功能点涉及的每个控件：按 PRD 附录 D 逐个核对", "实现与 PRD 附录 D 的说明一致"]
+  ]},
+  { c: "F03-03", n: "完成后自动关闭", i: [
+   ["fn", "fbq", 1, "最后一次唤起成功，所有已启用渠道都达到要求次数", "弹窗自动关闭，提示「分享任务已完成」；停留在提款页，已填的金额和提款方式不变；弹窗里没有「继续提款」按钮"],
+   ["fn", "fbq", 1, "弹窗自动关闭后再点「提交」", "按现有提款流程生成一笔提款订单"],
+   ["un", "fbq", 1, "弹窗自动关闭后连续多次点「提交」", "只生成一笔提款订单"],
+   ["fn", "bq", 1, "分享任务完成后再次提交提款", "不再弹出分享任务弹窗"]
+  ]}
+ ]},
+ { c: "F05", n: "运营后台", s: [
+  { c: "F05-01", n: "分享任务配置", i: [
+   ["fn", "fbq", 1, "创建活动 / 编辑活动", "「活动参数设定」之后有「分享任务配置」区块；新建活动默认关闭，只显示开关；开启后触发条件金额显示 ₱789、不可修改；保存后活动列表「分享任务」列显示「开启」"],
+   ["bd", "fbq", 1, "已启用渠道的要求次数填 0 或 11", "提示「请输入 1–10 的整数」，不保存"],
+   ["bd", "fbq", 1, "提款分享任务开启，Facebook、Messenger 都停用", "提示「请至少启用 1 个分享渠道」，不保存"],
+   ["fn", "fbq", 1, "分享文案分别写 {prize}；写 ₱{amount} 和 {USER_INVITE_LINK}", "写 {prize} 时提示「只支持 {amount}、{USER_INVITE_LINK}」；写 ₱{amount} 和 {USER_INVITE_LINK} 时预览显示 ₱789 和示例链接"],
+   ["bd", "fbq", 1, "提款分享任务开启，已启用渠道的要求次数为空", "提示「请输入 1–10 的整数」，不保存"],
+   ["fn", "fbq", 0, "校验通过后保存", "提示「保存成功」，以保存成功的时间生效，之后的中奖按新配置判断"],
+   ["bd", "fbq", 0, "分享任务关闭、区块里的要求次数为空或文案为空时保存", "不校验区块里的其他字段，保存成功"],
+   ["bd", "fbq", 1, "分享文案输入他加禄语和表情；输入超过 800 字符", "他加禄语和表情可保存，每个表情计 1 个字符；超过 800 字符时提示「最多 800 字符」，不保存"]
+  ]},
+  { c: "F05-02", n: "分享用户记录", i: [
+   ["fn", "fbq", 1, "按会员账号、活动编号、任务状态筛选", "列表按条件刷新，回到第 1 页"],
+   ["fn", "fq", 0, "查看分享进度列和操作列", "分享进度在一列显示，如「Facebook 1/1 · Messenger 2/3」；操作列只有「手动解除」"],
+   ["bd", "fbq", 0, "列表分页：记录超过一页、刚好一页、为空；每页条数改为 10、20、50", "默认每页 10 条；总条数和页数正确，翻页不重复、不遗漏"],
+   ["fn", "bq", 0, "点「导出」；导出超过 5 万行", "导出当前筛选下的全部记录，不受分页限制；超过 5 万行时提示已转到「数据报表 › 报表下载」生成，文件保存 7 天"],
+   ["fn", "fbq", 0, "触发活动关闭「强制绑定谷歌邮箱」或「提款分享任务」", "关闭前者时绑定状态显示「-」，关闭后者时分享进度和任务状态显示「-」；显示「-」的项目不可手动解除"],
+   ["fn", "fbq", 0, "触发活动关闭「分享任务」", "该活动标记的用户记录保留，绑定状态、分享进度、任务状态都显示「-」，「手动解除」置灰"]
+  ]},
+  { c: "F05-03", n: "手动解除限制", i: [
+   ["fn", "fbq", 1, "勾选「提款分享任务」、填写原因后点「确认解除」", "该用户提交提款不再弹出分享任务弹窗；记录显示「手动解除」"],
+   ["bd", "fq", 0, "不选解除项或不填原因；原因输入 201 字", "「确认解除」不可点；原因最多输入 200 字"],
+   ["un", "bq", 0, "两名运营同时分别解除同一用户的「绑定谷歌邮箱」和「提款分享任务」", "两项都生效；后提交的项目全部已被解除时，提示「该用户已解除，请刷新」"],
+   ["fn", "fq", 0, "绑定状态不是「未绑定」、任务状态也不是「未完成」的用户", "「手动解除」置灰"],
+   ["fn", "bq", 0, "已手动解除分享任务（未完成分享）的用户，在其他开启分享任务的活动再次中奖 ₱789", "不再受限，提交提款时不弹分享任务弹窗"]
+  ]}
+ ]}
+];
+/* VER：文档版本号（如 v1.3，和 PRD 需求版本管理表一致），不是迭代名。
+   ITER：多迭代需求包的迭代名（如 "v1.0"、"完整需求"，需求包框架规范第 3 节），单版本需求留空。
+   勾选状态按「需求 + 迭代 + 文档版本」分开保存；升版本后第一次打开时，自动找本机保存过的、版本号比 VER 小的最近一版，
+   沿用其中没有改动的自查项的勾选（本版新增或修改的项，即 it.v === VER 的项，清空重查）。不需要手工填写上一版本。 */
+var VER = "v1.0", ITER = "", BASE = "用户分享追踪功能需求-" + (ITER ? ITER + "-" : ""), KEY = BASE + VER + "-checklist";
+document.getElementById("hdVer").textContent = VER;   /* 标题版本号跟着 VER 显示，升版本只改 VER */
+var PREV = (function () {
+  function vn(v) { var m = /^v(\d+)\.(\d+)$/.exec(v || ""); return m ? (+m[1]) * 1000 + (+m[2]) : -1; }
+  var best = "", bestN = -1, cur = vn(VER);
+  try { for (var i = 0; i < localStorage.length; i++) { var k = localStorage.key(i); if (k.indexOf(BASE) !== 0 || !/-checklist$/.test(k)) continue;
+    var v = k.slice(BASE.length, -"-checklist".length), n = vn(v); if (n >= 0 && n < cur && n > bestN) { best = k; bestN = n; } } } catch (e) {}
+  return best;
+})();
+var RN = { d: "设计", f: "前端", b: "后端", q: "测试" }, TN = { fn: "功能", bd: "边界值", ex: "异常", un: "非常规" };
+var F = { role: "all", type: "all", state: "all" };
+var store = {};
+try { store = JSON.parse(localStorage.getItem(KEY) || "null"); } catch (e) { store = null; }
+try { var sv = JSON.parse(localStorage.getItem(KEY + "-filters") || "{}"); if (sv.role) F = sv; } catch (e) {}
+/* 新版本首次打开：沿用上一版未改动自查项的勾选；本版新增或修改的自查项清空 */
+var MIGRATE = store === null; if (MIGRATE) store = {};
+function save() { try { localStorage.setItem(KEY, JSON.stringify(store)); localStorage.setItem(KEY + "-filters", JSON.stringify(F)); } catch (e) {} }
+function done(it, role) {
+  var rs = role === "all" ? it.r.split("") : [role];
+  return rs.every(function (r) { return store[r + ":" + it.id]; });
+}
+function setDone(it, on) { (F.role === "all" ? it.r.split("") : [F.role]).forEach(function (r) { if (on) store[r + ":" + it.id] = 1; else delete store[r + ":" + it.id]; }); }
+/* 展开数据 */
+var ITEMS = [];
+DATA.forEach(function (fp) { fp.s.forEach(function (s) { s.i.forEach(function (x, k) {
+  var it = { id: s.c + "-" + (k + 1), fp: fp, sub: s, t: x[0], r: x[1], key: !!x[2], q: x[3], e: x[4], v: x[5] || "" }; ITEMS.push(it); s.items = (s.items || []).concat(it);
+}); }); });
+function inRole(it) { return F.role === "all" || it.r.indexOf(F.role) >= 0; }
+function visible(it) {
+  if (!inRole(it)) return false;
+  if (F.type === "fn" && it.t !== "fn") return false;
+  if (F.type === "bd" && it.t !== "bd") return false;
+  if (F.type === "ex" && it.t !== "ex" && it.t !== "un") return false;
+  var d = done(it, F.role);
+  if (F.state === "todo" && d) return false;
+  if (F.state === "done" && !d) return false;
+  if (F.state === "key" && !it.key) return false;
+  return true;
+}
+function stat(list) { var n = list.length, c = list.filter(function (it) { return done(it, F.role); }).length; return { n: n, c: c, p: n ? Math.round(c * 100 / n) : 0 }; }
+var closed = {};
+function render() {
+  var html = "";
+  DATA.forEach(function (fp) {
+    var all = []; fp.s.forEach(function (s) { all = all.concat(s.items.filter(inRole)); });
+    var vis = all.filter(visible); if (!vis.length) return;
+    var st = stat(all), tag = st.c === 0 ? '<span class="stt">未开始</span>' : st.c === st.n ? '<span class="stt done">已完成</span>' : '<span class="stt ing">进行中</span>';
+    html += '<section class="fpc' + (closed[fp.c] ? " closed" : "") + '" data-fp="' + fp.c + '"><div class="fpc-h">' +
+      '<button class="tri" type="button" data-tog="' + fp.c + '" aria-label="展开或收起">▼</button><span class="code">' + fp.c + '</span><span class="nm">' + fp.n + "</span>" + tag +
+      '<span class="mbar"><i style="width:' + st.p + '%"></i></span><span class="num">' + st.c + " / " + st.n + "</span>" +
+      '<button class="selall" type="button" data-sel="' + fp.c + '">全选本组</button><button class="gopr" type="button" data-pr="' + fp.c + '">查看 PRD ›</button></div><div class="fpc-b">';
+    fp.s.forEach(function (s) {
+      var sv = s.items.filter(visible); if (!sv.length) return;
+      var ss = stat(s.items.filter(inRole));
+      html += '<div class="sub-h"><span class="code2">' + s.c + '</span><span class="nm">' + s.n + '</span><span class="mbar"><i style="width:' + ss.p + '%"></i></span><span class="num">' + ss.c + " / " + ss.n + '</span><button class="gopr" type="button" data-pr="' + s.c + '">查看 PRD ›</button></div><ul class="items">';
+      sv.forEach(function (it) {
+        var d = done(it, F.role);
+        html += '<li class="' + (d ? "done" : "") + (it.v ? " vmark" + (it.v === VER ? "" : " old") : "") + '"><input type="checkbox" data-id="' + it.id + '"' + (d ? " checked" : "") + ' aria-label="' + it.q.replace(/"/g, "&quot;") + '"><div><span class="tx">' + it.q +
+          '<span class="tags"><span class="lb t-' + it.t + '">' + TN[it.t] + "</span>" + it.r.split("").map(function (r) { return '<span class="lb r-' + r + '">' + RN[r] + "</span>"; }).join("") + (it.key ? '<span class="lb key">关键</span>' : "") +
+          (it.v ? '<sup class="vtag' + (it.v === VER ? "" : " old") + '" title="' + it.v + '">' + it.v + "</sup>" : "") +
+          '</span></span><span class="ex">预期：' + it.e + "</span></div></li>";
+      });
+      html += "</ul>";
+    });
+    html += "</div></section>";
+  });
+  document.getElementById("list").innerHTML = html || '<div class="empty">当前筛选下没有检查项</div>';
+  var t = stat(ITEMS.filter(inRole));
+  document.getElementById("tp").textContent = t.p + "%";
+  document.getElementById("tn").textContent = t.c + " / " + t.n + " 项";
+  document.getElementById("tb").style.width = t.p + "%";
+}
+var byId = {}; ITEMS.forEach(function (it) { byId[it.id] = it; });
+if (MIGRATE && PREV) { try { var old = JSON.parse(localStorage.getItem(PREV) || "{}"); Object.keys(old).forEach(function (k) { var it = byId[k.split(":")[1]]; if (it && it.v !== VER) store[k] = old[k]; }); } catch (e) {} save(); }
+var list = document.getElementById("list");
+list.addEventListener("change", function (e) { var id = e.target.dataset.id; if (!id) return; setDone(byId[id], e.target.checked); save(); render(); });
+list.addEventListener("click", function (e) {
+  var b = e.target.closest("button"); if (!b) return;
+  if (b.dataset.tog) { closed[b.dataset.tog] = !closed[b.dataset.tog]; b.closest(".fpc").classList.toggle("closed"); }
+  if (b.dataset.sel) {
+    var its = ITEMS.filter(function (it) { return it.fp.c === b.dataset.sel && visible(it); });
+    var allOn = its.every(function (it) { return done(it, F.role); });
+    its.forEach(function (it) { setDone(it, !allOn); }); save(); render();
+  }
+  if (b.dataset.pr) showPRD(b.dataset.pr);
+});
+/* 查看 PRD：宽屏在右栏定位并标荧光蓝；窄屏在新页面打开 */
+var frame = document.getElementById("prd"), ready = false, pending = null;
+frame.addEventListener("load", function () { ready = true; if (pending) { frame.contentWindow.postMessage({ type: "prd-show", code: pending }, "*"); pending = null; } });
+function showPRD(code) {
+  if (window.matchMedia("(max-width:699px)").matches) { window.open("用户分享追踪-需求开发PRD文档.html#" + code, "_blank"); return; }
+  if (!ready) { pending = code; return; }   /* PRD 还没加载完：加载完成后再定位 */
+  frame.contentWindow.postMessage({ type: "prd-show", code: code }, "*");
+}
+document.getElementById("up").onclick = function () { frame.contentWindow.postMessage({ type: "prd-step", dir: -1 }, "*"); };
+document.getElementById("dn").onclick = function () { frame.contentWindow.postMessage({ type: "prd-step", dir: 1 }, "*"); };
+window.addEventListener("message", function (e) {
+  var d = e.data || {}; if (d.type !== "prd-hits") return;
+  document.getElementById("hitn").textContent = d.total ? "第 " + (d.pos + 1) + " / " + d.total + " 处标注" : "";
+});
+/* 筛选 */
+var GROUPS = { role: [["all", "全部"], ["d", "设计"], ["f", "前端"], ["b", "后端"], ["q", "测试"]], type: [["all", "全部"], ["fn", "功能"], ["bd", "边界值"], ["ex", "异常与非常规操作"]], state: [["all", "全部"], ["todo", "未完成"], ["done", "已完成"], ["key", "仅关键项"]] };
+Object.keys(GROUPS).forEach(function (g) {
+  var box = document.querySelector('[data-g="' + g + '"]');
+  GROUPS[g].forEach(function (o) {
+    var b = document.createElement("button"); b.type = "button"; b.className = "pill"; b.textContent = o[1]; b.setAttribute("aria-pressed", F[g] === o[0]);
+    b.onclick = function () { F[g] = o[0]; box.querySelectorAll(".pill").forEach(function (x) { x.setAttribute("aria-pressed", x === b); }); save(); render(); };
+    box.appendChild(b);
+  });
+});
+document.getElementById("exall").onclick = function () { closed = {}; render(); };
+document.getElementById("coall").onclick = function () { DATA.forEach(function (fp) { closed[fp.c] = true; }); render(); };
+document.getElementById("prt").onclick = function () { window.print(); };
+document.getElementById("clear").onclick = function () {
+  var m = document.createElement("div"); m.className = "cfm";
+  m.innerHTML = '<div role="dialog" aria-modal="true"><p><b>清空勾选</b></p><p>将清空本需求 ' + VER + ' 在本浏览器里所有角色的勾选，不能撤销。</p><div class="row2"><button class="obtn" type="button" data-x="0">取消</button><button class="obtn" type="button" data-x="1" style="border-color:#C00000;color:#C00000">确认清空</button></div></div>';
+  m.onclick = function (e) { var x = e.target.dataset.x; if (x === undefined) return; if (x === "1") { store = {}; save(); render(); } m.remove(); };
+  document.body.appendChild(m);
+};
+document.getElementById("csv").onclick = function () {
+  var rows = [["大功能点", "子功能点", "编号", "类型", "适用角色", "关键", "检查什么", "预期结果", "设计", "前端", "后端", "测试"]];
+  ITEMS.forEach(function (it) {
+    rows.push([it.fp.c + " " + it.fp.n, it.sub.c + " " + it.sub.n, it.id, TN[it.t], it.r.split("").map(function (r) { return RN[r]; }).join("/"), it.key ? "是" : "",
+      it.q, it.e].concat(["d", "f", "b", "q"].map(function (r) { return it.r.indexOf(r) < 0 ? "-" : store[r + ":" + it.id] ? "已勾" : "未勾"; })));
+  });
+  var csv = "﻿" + rows.map(function (r) { return r.map(function (c) { return '"' + String(c).replace(/"/g, '""') + '"'; }).join(","); }).join("\r\n");
+  var a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([csv], { type: "text/csv;charset=utf-8" })); a.download = "用户分享追踪-开发自查清单-" + VER + ".csv";
+  document.body.appendChild(a); a.click(); a.remove();
+};
+/* 分隔条拖动 */
+(function () {
+  var split = document.getElementById("split"), dv = document.getElementById("divider"), drag = false;
+  dv.addEventListener("mousedown", function (e) { drag = true; frame.style.pointerEvents = "none"; e.preventDefault(); });
+  window.addEventListener("mouseup", function () { drag = false; frame.style.pointerEvents = ""; });
+  window.addEventListener("mousemove", function (e) {
+    if (!drag) return;
+    var r = split.getBoundingClientRect(), p = Math.min(70, Math.max(25, (e.clientX - r.left) * 100 / r.width));
+    split.style.setProperty("--lw", p + "%");
+  });
+})();
+/* 分栏高度 = 视口 - 顶栏 - 头图 */
+function fitHead() { document.getElementById("split").style.setProperty("--headh", document.getElementById("ckhead").offsetHeight + "px"); }
+window.addEventListener("resize", fitHead);
+render(); setTimeout(fitHead, 0);
+</script>
+</body>
+</html>

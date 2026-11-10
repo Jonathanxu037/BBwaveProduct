@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>用户分享追踪-提款分享任务弹窗</title>
+<link rel="stylesheet" href="../../assets/style.css">
+<style>
+.us-desc{font-size:12.5px;color:var(--app-muted);margin:0}
+.us-item{display:grid;grid-template-columns:36px 1fr auto;gap:10px;align-items:center;background:var(--app-bg);border:1px solid var(--app-line);border-radius:12px;padding:10px 12px}
+.us-ico{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;font-weight:800;color:#fff;font-style:normal}
+.us-name{display:grid;gap:2px;font-weight:700;font-size:14px}
+.us-name small{font-weight:400;font-size:12px;color:var(--app-muted);font-variant-numeric:tabular-nums}
+.us-name small.ok{color:var(--app-ok)}
+.us-share{all:unset;cursor:pointer;padding:7px 14px;border-radius:999px;background:var(--app-gold);color:var(--app-gold-ink);font-weight:700;font-size:12.5px;white-space:nowrap}
+.us-share[disabled]{background:transparent;border:1px solid var(--app-ok);color:var(--app-ok);cursor:default;padding:6px 13px}
+.us-done{text-align:center;color:var(--app-ok);font-weight:700}
+.us-amt{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.us-amt button{all:unset;cursor:pointer;text-align:center;padding:9px 0;border-radius:8px;background:var(--app-card);border:1px solid var(--app-line);font-size:13px}
+.us-amt button[aria-pressed="true"]{border-color:var(--app-gold);color:var(--app-gold)}
+.us-ok{display:grid;place-items:center;gap:10px;flex:1;text-align:center}
+.us-ok i{width:70px;height:70px;border-radius:50%;background:var(--app-ok);display:grid;place-items:center;font-style:normal;font-size:34px;color:#10141c}
+.us-gbtn{all:unset;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;height:46px;border-radius:12px;background:#fff;color:#1f1f1f;font-weight:700;font-size:14.5px}
+.us-gbtn b{width:22px;height:22px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(#ea4335 0 25%,#fbbc05 0 50%,#34a853 0 75%,#4285f4 0);color:#fff;font-size:12px}
+.us-gbtn[disabled]{opacity:.6;cursor:wait}
+.us-tip{font-size:11.5px;color:var(--app-muted);text-align:center;margin:-4px 0 0}
+</style>
+</head>
+<body>
+<div class="with-nav">
+<div class="stage">
+  <div class="app" role="region" aria-label="手机画面">
+    <div class="sb"><span>9:41</span><span>●●● 5G</span></div>
+
+    <!-- ============ 提款页 ============ -->
+    <div class="view" id="vWd">
+      <div class="topline"><a class="back" href="#wd" aria-label="返回">‹</a>提款</div>
+      <div class="card-app"><div class="row"><span class="us-desc">可提款余额</span><b>₱1,289.00</b></div></div>
+      <div class="field">
+        <label for="amt">提款金额</label>
+        <div class="inp"><span class="pre">₱</span><input id="amt" inputmode="numeric" value="800"></div>
+      </div>
+      <div class="us-amt" id="quick"><button type="button" data-v="100">100</button><button type="button" data-v="300">300</button><button type="button" data-v="800" aria-pressed="true">800</button></div>
+      <div class="field">
+        <label>提款方式</label>
+        <div class="inp"><span>GCash · 0917****321</span></div>
+      </div>
+      <button class="btn" type="button" id="submit" data-dev="D10">提交</button>
+    </div>
+
+    <!-- ============ 提款已提交 ============ -->
+    <div class="view" id="vDone" hidden>
+      <div class="topline"><a class="back" href="#wd" aria-label="返回">‹</a>提款</div>
+      <div class="us-ok"><i>✓</i><b>提款申请已提交</b><p class="us-desc" id="doneAmt">₱800.00 · GCash</p></div>
+    </div>
+
+    <!-- ============ 分享任务弹窗 ============ -->
+    <div class="ov" id="shareOv" hidden>
+      <div class="dlg glow" role="dialog" aria-modal="true" aria-labelledby="shT">
+        <h3 id="shT">完成分享即可提款</h3>
+        <p class="us-desc" id="shDesc">完成以下分享，永久解锁提款</p>
+        <div class="us-item" id="rowFb">
+          <i class="us-ico" style="background:#1877F2">f</i>
+          <div class="us-name">Facebook<small id="fbP" data-dev="D11">0/1</small></div>
+          <button class="us-share" type="button" id="fbBtn" data-dev="D12">去分享</button>
+        </div>
+        <div class="us-item" id="rowMs">
+          <i class="us-ico" style="background:linear-gradient(135deg,#00B2FF,#A033FF)">m</i>
+          <div class="us-name">Messenger<small id="msP" data-dev="D13">0/3</small></div>
+          <button class="us-share" type="button" id="msBtn" data-dev="D14">去分享</button>
+        </div>
+        <button class="x-close" type="button" aria-label="关闭" data-cancel id="shX" data-dev="D15">×</button>
+      </div>
+    </div>
+
+    <!-- ============ 绑定谷歌邮箱弹窗（未绑定时提款先弹，与点游戏时同一个弹窗） ============ -->
+    <div class="ov" id="bindOv" hidden>
+      <div class="dlg glow" role="dialog" aria-modal="true" aria-labelledby="bindT">
+        <h3 id="bindT">绑定谷歌邮箱</h3>
+        <p class="us-desc">绑定后继续提款</p>
+        <button class="us-gbtn" type="button" id="gBtn" data-dev="D03"><b>G</b><span id="gTxt">使用 Google 绑定</span></button>
+        <div class="ui-or">或</div>
+        <button class="btn ghost" type="button" id="regBtn" data-dev="D04">注册 Google 账号</button>
+        <p class="us-tip">注册后点「使用 Google 绑定」</p>
+        <button class="x-close" type="button" aria-label="关闭" data-cancel id="bindX" data-dev="D05">×</button>
+      </div>
+    </div>
+
+    <div class="toast" id="toast" role="status" hidden></div>
+  </div>
+
+  <aside class="notes">
+    <h2>提款分享任务弹窗</h2>
+    <p class="sub">受限用户在提款页点「提交」时：未绑定谷歌邮箱，先弹出绑定谷歌邮箱弹窗；已绑定且分享任务未完成，弹出分享任务弹窗；两种情况都不生成提款订单。带淡色光晕的是本需求新增的控件。</p>
+    <h3>模拟场景</h3>
+    <div class="sim">
+      <button type="button" data-go="wd"><span class="simtag">状态</span>提款页</button>
+      <button type="button" id="simBind"><span class="simtag">状态</span>未绑定 · 绑定谷歌邮箱弹窗</button>
+      <button type="button" id="simOpen"><span class="simtag">状态</span>弹窗 · 当前进度</button>
+      <button type="button" id="simPart"><span class="simtag">状态</span>弹窗 · 进行中（1/1、2/3）</button>
+    </div>
+    <h3>模拟操作</h3>
+    <div class="sim" id="simPanel"></div>
+    <h3>规则批注</h3>
+    <ol>
+      <li><b>先绑定</b>：受限用户 且「强制绑定谷歌邮箱」开启 且 未绑定谷歌邮箱 且 未手动解除绑定要求时，点「提交」先弹出绑定谷歌邮箱弹窗，说明文字为「绑定后继续提款」，不生成提款订单；绑定成功提示「绑定成功」并停留在提款页，用户再点「提交」才判断分享任务。<span class="ref">PRD 规则 N11 · F03-01 提交提款校验</span></li>
+      <li><b>分享拦截</b>：受限用户不需要先绑定 且「提款分享任务」开启 且 分享任务未完成 且 未手动解除分享任务时，点「提交」弹出分享任务弹窗，不生成提款订单；已完成分享时直接继续提款流程。绕过前端直接提交同样拦截。<span class="ref">PRD 规则 N11 · F03-01 提交提款校验</span></li>
+      <li><b>完成条件</b>：后台「分享渠道」里每个已启用的渠道，唤起次数都达到要求次数（本版本 Facebook 1 次、Messenger 3 次）；停用的渠道不要求，也不在弹窗显示。<span class="ref">PRD 规则 N12 · F03-02 分享与计次</span></li>
+      <li><b>计次</b>：点弹窗「去分享」后成功唤起 Facebook / Messenger（App，或 H5 页面）即计 1 次，不判断用户是否发布或发送；在邀请好友页等弹窗外分享不计次。某渠道达到要求次数后，按钮显示「已完成」、不可点。<span class="ref">PRD 规则 N13</span></li>
+      <li><b>进度保留</b>：关闭弹窗、退出登录或换设备后，已计次数保留，不按天清零；下次提交提款时从已有进度继续。点 × 关闭等同取消，不提交提款。<span class="ref">PRD 规则 N14</span></li>
+      <li><b>完成后自动关闭</b>：最后一次唤起成功、所有已启用渠道都达到要求次数时，弹窗自动关闭，提示「分享任务已完成」，停留在提款页并保留已填的金额和提款方式；用户再点「提交」按现有提款流程处理。分享任务完成一次永久有效：以后提款不再弹出分享任务弹窗。演示方法：点「弹窗 · 进行中」，再点一次 Messenger「去分享」。<span class="ref">PRD 规则 N15 · F03-03 完成后自动关闭</span></li>
+      <li><b>唤起顺序</b>：分享按渠道先唤起 App；未安装 App 时唤起对应的 H5 页面，未登录时由页面要求用户登录，登录与否不影响计次。App 和 H5 页面都打不开时提示「无法打开分享，请稍后重试」，不计次。<span class="ref">PRD 规则 N17</span></li>
+      <li><b>修改配置</b>：后台修改分享渠道或要求次数后，已完成的用户不受影响；未完成的用户按新配置判断，已计次数保留；按新配置已满足的用户，保存后立即记为已完成，提交提款不再弹出分享任务弹窗（可在模拟操作里修改次数演示）。<span class="ref">PRD 规则 N16</span></li>
+      <li><b>分享内容（与邀请好友页一致）</b>：链接用用户自己的邀请链接（与邀请好友页「My Link」相同）。Facebook 打开分享对话框，带后台配置的分享文案，文案中的 {amount} 替换为该用户触发受限的那次中奖金额；Messenger 打开发送对话框，只带链接。好友通过链接注册，按现有邀请好友规则处理。<span class="ref">PRD 规则 N18、N26 · F03-02 分享与计次</span></li>
+    </ol>
+    <div class="pager"><a href="用户分享追踪-绑定谷歌邮箱弹窗.html">← 上一页：绑定谷歌邮箱弹窗</a><span></span></div>
+  </aside>
+</div>
+</div>
+<script>window.NAV_ROOT = "../../";</script>
+<script src="../../assets/nav-data.js"></script>
+<script src="../../assets/nav.js"></script>
+<script src="../../assets/proto-en.js"></script>
+<script src="../../assets/proto.js"></script>
+<script>
+P.init({ defaults: { platform: "H5", master: true, bindOn: true, shareOn: true, needFb: "1", needMs: "3", wdUser: "bound", fb: 0, ms: 0, done: false, shareRes: "app", gResult: "ok" } });
+/* 每次打开本页都从「未分享」开始：清掉其他原型页留下的分享进度。本页用户状态单独用 wdUser，不和绑定弹窗页共用 */
+P.set("fb", 0); P.set("ms", 0); P.set("done", false);
+P.panel(document.getElementById("simPanel"), [
+  { title: "切换端", items: [{ type: "select", key: "platform", label: "端", options: ["H5", "iOS", "Android"] }] },
+  { title: "切换后台配置项", items: [
+    { type: "check", key: "master", label: "分享任务（活动开关）" },
+    { type: "check", key: "bindOn", label: "强制绑定谷歌邮箱" },
+    { type: "check", key: "shareOn", label: "提款分享任务" },
+    { type: "select", key: "needFb", label: "Facebook 渠道", options: [["0", "停用"], ["1", "启用 · 要求 1 次"], ["2", "启用 · 要求 2 次"]] },
+    { type: "select", key: "needMs", label: "Messenger 渠道", options: [["0", "停用"], ["2", "启用 · 要求 2 次"], ["3", "启用 · 要求 3 次"], ["4", "启用 · 要求 4 次"]] }
+  ] },
+  { title: "设置用户状态", items: [{ type: "radio", key: "wdUser", options: [["bound", "受限·已绑定"], ["unbound", "受限·未绑定"], ["normal", "非受限用户"]] }] },
+  { title: "Google 授权结果", items: [{ type: "select", key: "gResult", label: "授权返回", options: [["ok", "成功"], ["cancel", "用户取消"], ["taken", "邮箱已绑定其他账号"]] }] },
+  { title: "唤起结果", items: [{ type: "select", key: "shareRes", label: "点「去分享」后", options: [["app", "已安装 App · 唤起 App"], ["web", "未安装 App · 唤起 H5 页面"], ["fail", "App 和 H5 页面都打不开"]] }] },
+  { title: "演示值说明", items: [{ type: "note", text: "每次打开本页，进度都从未分享开始（0/1、0/3）。示例账号、余额、GCash 号码均为虚构。" }] },
+  { items: [{ type: "reset" }] }
+]);
+function need(k) { return +P.get(k); }
+function isDone() {
+  if (P.get("done")) return true;
+  var ok = P.get("fb") >= need("needFb") && P.get("ms") >= need("needMs") && (need("needFb") + need("needMs") > 0);
+  if (ok) P.set("done", true);
+  return ok;
+}
+function draw() {
+  var nf = need("needFb"), nm = need("needMs"), f = Math.min(P.get("fb"), nf), m = Math.min(P.get("ms"), nm), done = isDone();
+  P.$("rowFb").hidden = nf === 0; P.$("rowMs").hidden = nm === 0;
+  P.$("fbP").textContent = f + "/" + nf; P.$("msP").textContent = m + "/" + nm;
+  P.$("fbP").classList.toggle("ok", f >= nf); P.$("msP").classList.toggle("ok", m >= nm);
+  [["fbBtn", f >= nf], ["msBtn", m >= nm]].forEach(function (x) { P.$(x[0]).disabled = x[1]; P.$(x[0]).textContent = x[1] ? "已完成" : "去分享"; });
+}
+function show(view) {
+  var V = { wd: "vWd", done: "vDone" }; if (!V[view]) view = "wd";
+  Object.keys(V).forEach(function (k) { P.$(V[k]).hidden = k !== view; });
+  if (location.hash.slice(1) !== view) history.replaceState(null, "", "#" + view);
+  if (window.self !== window.top) window.parent.postMessage({ type: "proto-view", view: view }, "*");
+}
+function openShare() { show("wd"); draw(); P.$("shareOv").hidden = false; }
+function submitWd() {
+  P.$("shareOv").hidden = true;
+  var a = parseFloat(P.$("amt").value) || 0;
+  P.$("doneAmt").textContent = "₱" + a.toFixed(2) + " · GCash"; show("done");
+}
+/* 提交：受限用户先看是否绑定谷歌邮箱，未绑定先弹绑定（绑定成功后停留在提款页，再点提交才判断分享）；已绑定再看分享任务（N11） */
+P.$("submit").onclick = function () {
+  var u = P.get("wdUser"), restricted = P.get("master") && u !== "normal";
+  if (!restricted) return submitWd();
+  if (u === "unbound" && P.get("bindOn")) { show("wd"); P.$("bindOv").hidden = false; return; }
+  if (!P.get("shareOn") || isDone()) return submitWd();
+  openShare();
+};
+P.$("gBtn").onclick = function () {
+  var b = this; b.disabled = true; P.$("gTxt").textContent = "授权中…";
+  setTimeout(function () {
+    b.disabled = false; P.$("gTxt").textContent = "使用 Google 绑定";
+    var r = P.get("gResult");
+    if (r === "ok") { P.set("wdUser", "bound"); P.$("bindOv").hidden = true; P.toast("绑定成功"); }
+    else if (r === "taken") P.toast("该邮箱已绑定其他账号");
+    else P.toast("绑定失败，请重试");
+  }, 800);
+};
+P.$("regBtn").onclick = function () { P.toast("已打开 Google 注册页（外部页面）"); };
+P.$("bindX").onclick = function () { P.$("bindOv").hidden = true; };
+P.$("simBind").onclick = function () { P.set("wdUser", "unbound"); show("wd"); P.$("shareOv").hidden = true; P.$("bindOv").hidden = false; };
+function share(key, needKey) {
+  var r = P.get("shareRes");
+  if (r === "fail") return P.toast("无法打开分享，请稍后重试");
+  if (P.get(key) < need(needKey)) P.set(key, P.get(key) + 1);
+  draw();
+  /* 所有渠道都达到次数：弹窗自动关闭，停留在提款页，已填内容保留（N15） */
+  if (isDone()) setTimeout(function () { P.$("shareOv").hidden = true; P.toast("分享任务已完成"); }, 400);
+}
+P.$("fbBtn").onclick = function () { share("fb", "needFb"); };
+P.$("msBtn").onclick = function () { share("ms", "needMs"); };
+P.$("shX").onclick = function () { P.$("shareOv").hidden = true; };
+P.$("quick").onclick = function (e) { var b = e.target.closest("button"); if (!b) return; P.$("amt").value = b.dataset.v; this.querySelectorAll("button").forEach(function (x) { x.setAttribute("aria-pressed", x === b); }); };
+P.$("simOpen").onclick = openShare;
+P.$("simPart").onclick = function () { P.set("done", false); P.set("fb", 1); P.set("ms", 2); openShare(); };
+window.addEventListener("proto-change", function (e) { if (e.detail.key === "*") location.reload(); else if (!P.$("shareOv").hidden) draw(); });
+window.addEventListener("hashchange", function () { show(location.hash.slice(1) || "wd"); });
+document.addEventListener("click", function (e) { var b = e.target.closest("[data-go]"); if (b) { e.preventDefault(); P.$("shareOv").hidden = true; P.$("bindOv").hidden = true; show(b.dataset.go); } });
+show(location.hash.slice(1) || "wd");
+</script>
+</body>
+</html>

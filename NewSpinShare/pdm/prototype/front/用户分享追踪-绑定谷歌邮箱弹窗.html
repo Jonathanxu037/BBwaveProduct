@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>用户分享追踪-绑定谷歌邮箱弹窗</title>
+<link rel="stylesheet" href="../../assets/style.css">
+<style>
+.us-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.us-game{all:unset;cursor:pointer;display:grid;gap:6px;justify-items:center;font-size:11.5px;color:var(--app-muted)}
+.us-game i{width:100%;aspect-ratio:1;border-radius:12px;display:grid;place-items:center;font-style:normal;font-weight:800;font-size:13px;color:#fff}
+.us-sec{font-weight:700;font-size:14px;display:flex;justify-content:space-between;align-items:center}
+.us-sec small{font-weight:400;color:var(--app-muted);font-size:11.5px}
+.us-gbtn{all:unset;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;height:46px;border-radius:12px;background:#fff;color:#1f1f1f;font-weight:700;font-size:14.5px}
+.us-gbtn b{width:22px;height:22px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(#ea4335 0 25%,#fbbc05 0 50%,#34a853 0 75%,#4285f4 0);color:#fff;font-size:12px}
+.us-gbtn[disabled]{opacity:.6;cursor:wait}
+.us-desc{font-size:12.5px;color:var(--app-muted);margin:0}
+.us-tip{font-size:11.5px;color:var(--app-muted);text-align:center;margin:-4px 0 0}
+.us-item{display:grid;grid-template-columns:36px 1fr auto;gap:10px;align-items:center;background:var(--app-bg);border:1px solid var(--app-line);border-radius:12px;padding:10px 12px}
+.us-ico{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;font-weight:800;color:#fff;font-style:normal}
+.us-name{display:grid;gap:2px;font-weight:700;font-size:14px}
+.us-name small{font-weight:400;font-size:12px;color:var(--app-muted)}
+.us-name small.ok{color:var(--app-ok)}
+.us-share{all:unset;cursor:pointer;padding:7px 14px;border-radius:999px;background:var(--app-gold);color:var(--app-gold-ink);font-weight:700;font-size:12.5px;white-space:nowrap}
+.us-share[disabled]{background:transparent;border:1px solid var(--app-ok);color:var(--app-ok);cursor:default;padding:6px 13px}
+.us-done{text-align:center;color:var(--app-ok);font-weight:700}
+.us-play{display:grid;place-items:center;gap:10px;flex:1;text-align:center}
+.us-play i{width:120px;height:120px;border-radius:20px;display:grid;place-items:center;font-style:normal;font-size:20px;font-weight:800;background:linear-gradient(135deg,#7b3fe4,#e83e8c);color:#fff}
+.us-gpage{position:absolute;inset:30px 0 0;background:#fff;color:#202124;padding:28px 24px;display:flex;flex-direction:column;gap:14px;z-index:6}
+.us-gpage h4{margin:0;font-size:20px;font-weight:500}
+.us-gpage .gbar{height:40px;border:1px solid #dadce0;border-radius:4px;padding:0 12px;display:flex;align-items:center;color:#80868b;font-size:13px}
+.us-gpage .gbtn{all:unset;cursor:pointer;align-self:flex-end;background:#1a73e8;color:#fff;border-radius:4px;padding:8px 18px;font-size:13px;font-weight:600}
+</style>
+</head>
+<body>
+<div class="with-nav">
+<div class="stage">
+  <div class="app" role="region" aria-label="手机画面">
+    <div class="sb"><span>9:41</span><span>●●● 5G</span></div>
+
+    <!-- ============ 游戏大厅 ============ -->
+    <div class="view" id="vHome">
+      <div class="topline"><span class="logo">789<b>Games</b></span></div>
+      <div class="banner">余额 ₱1,289.00</div>
+      <div class="us-sec">热门游戏<small>全部 ›</small></div>
+      <div class="us-grid">
+        <button class="us-game" type="button" data-game="Super Ace" data-dev="D01"><i style="background:linear-gradient(135deg,#f2b632,#e8590c)">ACE</i>Super Ace</button>
+        <button class="us-game" type="button" data-game="Fortune Gems"><i style="background:linear-gradient(135deg,#12b886,#0b7285)">GEM</i>Fortune Gems</button>
+        <button class="us-game" type="button" data-game="Bingo Carnival"><i style="background:linear-gradient(135deg,#7b3fe4,#e83e8c)">BGO</i>Bingo Carnival</button>
+        <button class="us-game" type="button" data-game="Money Coming"><i style="background:linear-gradient(135deg,#228be6,#364fc7)">$$$</i>Money Coming</button>
+        <button class="us-game" type="button" data-game="Crazy Time"><i style="background:linear-gradient(135deg,#fa5252,#c2255c)">CT</i>Crazy Time</button>
+        <button class="us-game" type="button" data-game="Golden Empire"><i style="background:linear-gradient(135deg,#fab005,#a0522d)">GE</i>Golden Empire</button>
+      </div>
+      <div class="tabbar"><button type="button"><b>⌂</b>首页</button><button type="button"><b>★</b>活动</button><button type="button"><b>▣</b>钱包</button><button type="button"><b>☺</b>我的</button></div>
+    </div>
+
+    <!-- ============ 游戏中 ============ -->
+    <div class="view" id="vGame" hidden>
+      <div class="topline"><a class="back" href="#home" aria-label="返回">‹</a><span id="gameName">Super Ace</span></div>
+      <div class="us-play"><i id="gameIcon">ACE</i><p class="us-desc">游戏加载中…</p></div>
+    </div>
+
+    <!-- ============ 绑定谷歌邮箱弹窗 ============ -->
+    <div class="ov" id="bindOv" hidden>
+      <div class="dlg glow" role="dialog" aria-modal="true" aria-labelledby="bindT">
+        <h3 id="bindT">绑定谷歌邮箱</h3>
+        <p class="us-desc">绑定后即可开始游戏</p>
+        <button class="us-gbtn" type="button" id="gBtn" data-dev="D03"><b>G</b><span id="gTxt">使用 Google 绑定</span></button>
+        <div class="ui-or">或</div>
+        <button class="btn ghost" type="button" id="regBtn" data-dev="D04">注册 Google 账号</button>
+        <p class="us-tip">注册后点「使用 Google 绑定」</p>
+        <button class="x-close" type="button" aria-label="关闭" data-cancel id="bindX" data-dev="D05">×</button>
+      </div>
+    </div>
+
+    <!-- ============ Google 官方注册页（外部页面，示意） ============ -->
+    <div class="us-gpage" id="gPage" hidden>
+      <p class="ui-reqnote">Google 官方注册页示意（外部页面，不在本需求开发范围）：H5 在新标签页打开，App 在系统浏览器打开。</p>
+      <h4>Create a Google Account</h4>
+      <div class="gbar">Name</div>
+      <div class="gbar">Username @gmail.com</div>
+      <div class="gbar">Password</div>
+      <button class="gbtn" type="button" id="gBack">Next</button>
+    </div>
+
+    <div class="toast" id="toast" role="status" hidden></div>
+  </div>
+
+  <aside class="notes">
+    <h2>绑定谷歌邮箱弹窗</h2>
+    <p class="sub">受限用户（本功能上线后，在已开启分享任务的新用户转盘活动中单次中奖金额满足触发条件的新用户；金额固定 ₱789，判断方式默认大于等于，含第 3 次转盘大礼包）未绑定谷歌邮箱时，不能进入任何游戏：点击任一游戏即弹出本弹窗，绑定成功后直接进入刚才点击的游戏。提款时未绑定谷歌邮箱，也会先弹出本弹窗（见提款分享任务弹窗原型）。点游戏不弹分享任务弹窗。带淡色光晕的是本需求新增的控件。</p>
+    <h3>模拟场景</h3>
+    <div class="sim">
+      <button type="button" data-go="home"><span class="simtag">状态</span>游戏大厅</button>
+      <button type="button" id="simDlg"><span class="simtag">状态</span>弹窗 · 默认</button>
+      <button type="button" id="simReg"><span class="simtag">状态</span>Google 注册页（外部）</button>
+      <button type="button" data-go="game"><span class="simtag">状态</span>游戏中</button>
+    </div>
+    <h3>模拟操作</h3>
+    <div class="sim" id="simPanel"></div>
+    <h3>规则批注</h3>
+    <ol>
+      <li><b>弹出条件</b>：受限用户 且「强制绑定谷歌邮箱」开启 且 未绑定谷歌邮箱 且 未手动解除绑定要求时，通过任何方式打开游戏（包括但不限于首页、分类、搜索、最近玩过、收藏、游戏内切换游戏、横幅和活动页里的游戏链接）都弹出本弹窗，不进入游戏；任一条件不满足（如已绑定）时直接进入游戏。绕过前端直接进入游戏同样拦截。判断失败或超时时放行进入本次游戏；下次进入游戏仍重新判断，恢复正常后未绑定的受限用户照常弹出本弹窗。<span class="ref">PRD 规则 N4 · F02-01 进入游戏校验</span></li>
+      <li><b>已绑定判定</b>：满足任一条件即为已绑定谷歌邮箱：已关联 Google 账号；或已认证邮箱后缀为 @gmail.com（不区分大小写）。受限用户绑定成功后永久记为已绑定，之后解绑 Google 账号也不恢复拦截。<span class="ref">PRD 规则 N5 · F02-01 进入游戏校验</span></li>
+      <li><b>关闭弹窗</b>：点右上角 × 等同取消，停留在原页面，不进入游戏；再点游戏仍弹出，直到绑定成功。点遮罩不关闭。<span class="ref">PRD 规则 N6 · F02-01 进入游戏校验</span></li>
+      <li><b>Google 授权</b>：H5 和 App 都支持。授权成功提示「绑定成功」，弹窗关闭并进入刚才点击的游戏；取消授权或授权失败时回到弹窗，提示「绑定失败，请重试」。授权进行中按钮显示加载，不可重复点击。<span class="ref">PRD 规则 N7 · F02-02 Google 授权绑定</span></li>
+      <li><b>注册 Google 账号</b>：打开 Google 官方注册页（H5 在新标签页打开，App 在系统浏览器打开），弹窗保持打开；用户返回后点「使用 Google 绑定」完成绑定。平台不提供手填邮箱的绑定方式。<span class="ref">PRD 规则 N8 · F02-03 注册 Google 账号引导</span></li>
+      <li><b>一个邮箱一个账号</b>：授权的 Google 邮箱已被其他账号绑定时，提示「该邮箱已绑定其他账号」，不绑定，弹窗保持打开。<span class="ref">PRD 规则 N9</span></li>
+      <li><b>Google 三方登录用户</b>：账号本身用 Google 登录的，视为已绑定谷歌邮箱，点游戏直接进入，不弹本弹窗；分享任务只在提交提款时弹出。<span class="ref">PRD 规则 N5、N11</span></li>
+    </ol>
+    <div class="pager"><span></span><a href="用户分享追踪-提款分享任务弹窗.html">下一页：提款分享任务弹窗 →</a></div>
+  </aside>
+</div>
+</div>
+<script>window.NAV_ROOT = "../../";</script>
+<script src="../../assets/nav-data.js"></script>
+<script src="../../assets/nav.js"></script>
+<script src="../../assets/proto-en.js"></script>
+<script src="../../assets/proto.js"></script>
+<script>
+P.init({ defaults: { platform: "H5", master: true, bindOn: true, user: "limited", gResult: "ok" } });
+P.panel(document.getElementById("simPanel"), [
+  { title: "切换端", items: [{ type: "select", key: "platform", label: "端", options: ["H5", "iOS", "Android"] }] },
+  { title: "切换后台配置项", items: [
+    { type: "check", key: "master", label: "分享任务（活动开关）" },
+    { type: "check", key: "bindOn", label: "强制绑定谷歌邮箱" }
+  ] },
+  { title: "设置用户状态", items: [{ type: "radio", key: "user", options: [["limited", "受限·未绑定"], ["bound", "受限·已绑定（含 Google 三方登录）"], ["normal", "非受限用户"]] }] },
+  { title: "Google 授权结果", items: [{ type: "select", key: "gResult", label: "授权返回", options: [["ok", "成功"], ["cancel", "用户取消"], ["taken", "邮箱已绑定其他账号"]] }] },
+  { title: "演示值说明", items: [{ type: "note", text: "Google 注册页是外部页面的示意，点「Next」模拟注册完成并回到弹窗。页面中的数据均为虚构。" }] },
+  { items: [{ type: "reset" }] }
+]);
+var VIEWS = { home: "vHome", game: "vGame" }, pending = null;
+function show(view) {
+  if (!VIEWS[view]) view = "home";
+  Object.keys(VIEWS).forEach(function (k) { P.$(VIEWS[k]).hidden = k !== view; });
+  if (location.hash.slice(1) !== view) history.replaceState(null, "", "#" + view);
+  if (window.self !== window.top) window.parent.postMessage({ type: "proto-view", view: view }, "*");
+}
+function openDlg() { show("home"); P.$("gPage").hidden = true; P.$("bindOv").hidden = false; }
+function enter(name) {
+  P.$("bindOv").hidden = true; P.$("gameName").textContent = name;
+  P.$("gameIcon").textContent = name.split(" ").map(function (w) { return w[0]; }).join("").slice(0, 3).toUpperCase();
+  show("game");
+}
+/* 受限用户未绑定才弹绑定；Google 三方登录的账号视为已绑定，直接进入游戏（N4、N5） */
+function needBind() { var u = P.get("user"); return P.get("master") && P.get("bindOn") && u === "limited"; }
+document.querySelectorAll("[data-game]").forEach(function (b) {
+  b.onclick = function () {
+    pending = b.dataset.game;
+    if (!needBind()) return enter(pending);
+    openDlg();
+  };
+});
+P.$("bindX").onclick = function () { P.$("bindOv").hidden = true; };
+P.$("gBtn").onclick = function () {
+  var b = this; b.disabled = true; P.$("gTxt").textContent = "授权中…";
+  setTimeout(function () {
+    b.disabled = false; P.$("gTxt").textContent = "使用 Google 绑定";
+    var r = P.get("gResult");
+    if (r === "ok") { P.set("user", "bound"); P.toast("绑定成功"); setTimeout(function () { enter(pending || "Super Ace"); }, 900); }
+    else if (r === "taken") P.toast("该邮箱已绑定其他账号");
+    else P.toast("绑定失败，请重试");
+  }, 800);
+};
+P.$("regBtn").onclick = function () { P.$("gPage").hidden = false; };
+P.$("gBack").onclick = function () { P.$("gPage").hidden = true; P.$("bindOv").hidden = false; };
+P.$("simDlg").onclick = function () { pending = "Super Ace"; openDlg(); };
+P.$("simReg").onclick = function () { pending = "Super Ace"; openDlg(); P.$("gPage").hidden = false; };
+window.addEventListener("proto-change", function (e) { if (e.detail.key === "*") location.reload(); });
+window.addEventListener("hashchange", function () { show(location.hash.slice(1) || "home"); });
+document.addEventListener("click", function (e) { var b = e.target.closest("[data-go]"); if (b) { e.preventDefault(); P.$("bindOv").hidden = true; P.$("gPage").hidden = true; show(b.dataset.go); } });
+show(location.hash.slice(1) || "home");
+</script>
+</body>
+</html>

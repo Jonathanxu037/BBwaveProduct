@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>用户分享追踪-后台规则配置</title>
+<link rel="stylesheet" href="../../assets/style.css">
+<style>
+.bo-tabs span{cursor:pointer}.bo-tabs span:hover{color:#409EFF}
+.us-sw{display:inline-flex;align-items:center;gap:6px;cursor:pointer;font-size:13px;color:#606266}
+.us-sw input{width:34px;height:18px;appearance:none;border-radius:9px;background:#DCDFE6;position:relative;cursor:pointer;margin:0;transition:.2s}
+.us-sw input::after{content:"";position:absolute;left:2px;top:2px;width:14px;height:14px;border-radius:50%;background:#fff;transition:.2s}
+.us-sw input:checked{background:#409EFF}.us-sw input:checked::after{left:18px}
+.us-ferr{color:#F56C6C;font-size:12px;margin-left:8px}
+.us-tbl{max-width:560px}
+.us-tbl td,.us-tbl th{font-size:13px;vertical-align:middle}
+.us-tbl .bo-inp{height:28px}
+.us-hint{font-size:12px;color:#909399;margin-top:4px;line-height:1.6}
+.us-hint code{background:#F4F4F5;padding:0 4px;border-radius:3px;color:#606266}
+.us-prev{max-width:420px;background:#F7F8FA;border:1px solid #EBEEF5;border-radius:4px;padding:8px 10px;font-size:13px;color:#303133;white-space:pre-wrap;word-break:break-all}
+.us-ro{font-size:13px;color:#606266}
+.us-old{color:#606266;font-size:13px}
+.us-old .bo-inp{width:110px}
+.us-box{border:1px solid rgba(64,158,255,.35);border-radius:4px;padding:4px 14px 12px;margin-top:8px}
+.us-list td,.us-list th{text-align:center;font-size:12.5px}
+.us-imp{background:#DCDCDC;padding:8px 10px;font-size:13px;color:#303133;max-width:430px;line-height:1.8;margin-top:6px}
+.us-prm{display:flex;align-items:center;gap:10px;padding:6px 0;font-size:13px;color:#303133}
+.us-pl{display:inline-flex;align-items:center;gap:6px;color:#303133}
+.us-impt{font-weight:700;font-size:13px;color:#303133;margin-top:18px}
+</style>
+</head>
+<body>
+<div class="with-nav">
+<div class="adm-stage">
+  <div class="bo">
+    <div class="bo-top1"><span>当前时间：2026/11/09 02:12:53</span><span class="sp">简体中文</span><span>运营账号A ▾</span></div>
+    <div class="bo-top2"><span>在线人数<b class="bo-n r">8</b></span><span>当日注册<b class="bo-n g">1</b></span><span>当日充值成功<b class="bo-n g">0</b></span><span>提款<b class="bo-n g">0</b></span><span>风控审核<b class="bo-n r">1</b></span></div>
+    <div class="bo-body">
+      <nav class="bo-menu" aria-label="后台菜单">
+        <div class="mt">菜单 ≡</div>
+        <div class="g">用户管理</div><div class="g">财务管理</div>
+        <div class="g open">活动中心</div>
+        <div class="i">每日首充活动</div><div class="i on">新用户转盘活动</div><div class="i">新用户首充活动</div><div class="i">邀请好友活动</div>
+        <div class="g">营销管理</div>
+      </nav>
+      <div class="bo-main">
+        <div class="bo-crumb" id="crumb">位置 › 活动中心 › <b>新用户转盘活动</b></div>
+        <div class="bo-tabs" role="tablist">
+          <span role="tab" tabindex="0" class="on" aria-selected="true" data-go="list">活动配置</span>
+          <span role="tab" tabindex="0">活动统计</span>
+          <span role="tab" tabindex="0" class="glow" onclick="location.href='用户分享追踪-后台用户记录.html'">分享用户记录</span>
+        </div>
+
+        <!-- ============ 活动列表（现有） ============ -->
+        <section id="vList" class="bo-content">
+          <div style="margin-bottom:10px"><button class="bo-btn q" type="button" data-go="new">创建活动</button></div>
+          <table class="us-list">
+            <tr><th>活动编号</th><th>活动名称</th><th>活动开始时间</th><th>活动结束时间</th><th>活动总预算</th><th>活动已领金额</th><th>创建人</th><th>创建时间</th><th>状态</th><th class="glow"><span class="ui-nw">分享任务<i class="qm" tabindex="0" data-tip="该活动是否开启分享任务：开启 / -。">?</i></span></th><th>操作</th></tr>
+            <tr><td>1208</td><td>新用户转盘活动</td><td>2026-10-01 00:00:00</td><td>2026-11-30 23:59:59</td><td>999,999,999.00</td><td>12,950.93</td><td>运营账号A</td><td>2026-08-26 15:22:49</td><td>开启</td><td id="shareCol">开启</td><td><button class="bo-btn link" type="button" data-go="edit">编辑</button></td></tr>
+            <tr><td>1207</td><td>新用户转盘活动</td><td>2026-07-28 00:00:00</td><td>2026-08-31 23:59:59</td><td>10,000,000.00</td><td>11,223.00</td><td>运营账号B</td><td>2026-07-29 21:47:13</td><td>关闭</td><td>-</td><td><button class="bo-btn link" type="button" data-go="edit">编辑</button></td></tr>
+            <tr><td>1206</td><td>新用户转盘活动</td><td>2026-08-02 00:00:00</td><td>2026-08-31 23:59:59</td><td>50,000.00</td><td>0.00</td><td>运营账号B</td><td>2026-07-29 21:47:13</td><td>关闭</td><td>-</td><td><button class="bo-btn link" type="button" data-go="edit">编辑</button></td></tr>
+          </table>
+          <div class="bo-page" role="navigation" aria-label="分页"><span>共 <b>3</b> 条</span><button type="button" disabled aria-label="上一页">‹</button><span><button type="button" aria-current="page">1</button></span><button type="button" disabled aria-label="下一页">›</button></div>
+          <p class="ui-reqnote" style="margin-top:10px">活动列表沿用现有，只在「状态」列后新增「分享任务」列（开启 / -）。示例数据均为虚构。</p>
+        </section>
+
+        <!-- ============ 创建 / 编辑活动 ============ -->
+        <section id="vForm" class="bo-content" hidden>
+          <div style="margin-bottom:6px"><button class="bo-btn q" type="button" data-go="list">返回</button></div>
+          <div class="us-old">
+            <div class="fsec">基本信息配置</div>
+            <div class="frow"><span class="fl">活动状态</span><div class="fctl"><label class="us-sw"><input type="checkbox" id="actOn" checked></label></div></div>
+            <div class="frow"><span class="fl"><span class="req">*</span>活动时间</span><div class="fctl"><input class="bo-inp" style="width:300px" id="actTime" value="2026-10-01 00:00:00 ~ 2026-11-30 23:59:59" aria-label="活动时间"></div></div>
+            <div class="frow"><span class="fl">领取方式</span><div class="fctl"><label><input type="radio" name="rc" checked> 手动领取</label>　<label><input type="radio" name="rc"> 自动发放</label></div></div>
+            <div class="frow"><span class="fl">是否需要KYC</span><div class="fctl"><label><input type="radio" name="kyc"> 是</label>　<label><input type="radio" name="kyc" checked> 否</label></div></div>
+            <div class="frow"><span class="fl">是否需要有过充值记录</span><div class="fctl"><label><input type="radio" name="rec"> 是</label>　<label><input type="radio" name="rec" checked> 否</label></div></div>
+            <div class="fsec">大礼包领取配置</div>
+            <div class="frow"><span class="fl">充值区间 / 比例</span><div class="fctl"><input class="bo-inp" placeholder="请输入" aria-label="区间起"> — <input class="bo-inp" placeholder="请输入" aria-label="区间止">　奖金比例 <input class="bo-inp" style="width:70px" aria-label="奖金比例"> %　上限金额 <input class="bo-inp" style="width:90px" aria-label="上限金额"></div></div>
+            <div class="frow"><span class="fl"><span class="req">*</span>触发 KYC 的奖金阈值</span><div class="fctl"><input class="bo-inp" style="width:220px" aria-label="触发 KYC 的奖金阈值"></div></div>
+            <div class="frow"><span class="fl">活动总预算</span><div class="fctl"><input class="bo-inp" style="width:220px" aria-label="活动总预算"></div></div>
+            <div class="fsec">活动参数设定</div>
+            <div class="us-prm">
+              <label class="us-pl"><input type="checkbox"> 同一注册IP累计最多计入</label><input class="bo-inp" style="width:80px" aria-label="同一注册IP累计最多计入账号数"><span>个账号可以申请领取</span>
+            </div>
+            <div class="us-prm">
+              <label class="us-pl"><input type="checkbox"> 同一台设备只能领取</label><input class="bo-inp" style="width:80px" aria-label="同一台设备只能领取次数"><span>次</span>
+            </div>
+            <div class="us-prm">
+              <span class="us-pl" style="color:#909399">白名单导入</span><button class="bo-btn q" type="button">导入文件</button><button class="bo-btn" type="button">模板下载</button>
+            </div>
+            <div class="us-impt">导入结果：</div>
+            <div class="us-imp">总行数: | 有效: | 无效: | 插入: | 已存在:<br>BatchId:</div>
+            <p class="ui-reqnote">以上为现有配置，沿用现有，不改动。</p>
+          </div>
+
+          <!-- 本需求新增 -->
+          <div class="us-box glow">
+            <div class="fsec">分享任务配置</div>
+            <div class="frow"><span class="fl">分享任务<i class="qm" tabindex="0" data-tip="开启后，本活动单次中奖满足触发条件的新用户被标记为受限用户；关闭后，本活动不再标记，由本活动标记的受限用户也不再被拦截。新建活动默认关闭。">?</i></span><div class="fctl"><label class="us-sw"><input type="checkbox" id="master" data-dev="D20"><span id="masterT">关</span></label></div></div>
+            <div id="shareCfg" hidden>
+              <div class="frow"><span class="fl"><span class="req">*</span>触发条件<i class="qm" tabindex="0" data-tip="本活动单次中奖金额与 ₱789 的比较方式。大于等于（默认）：中奖 ≥ ₱789 即受限；等于：只有中奖 = ₱789 才受限。金额固定，不可修改。">?</i></span>
+                <div class="fctl"><span class="us-ro">单次中奖金额</span>
+                  <select class="bo-inp" id="actOp" aria-label="判断方式" style="min-width:100px;margin:0 6px" data-dev="D32"><option value="ge" selected>大于等于</option><option value="eq">等于</option></select>
+                  <span class="us-ro" data-dev="D33">₱789</span></div></div>
+              <div class="frow"><span class="fl">强制绑定谷歌邮箱<i class="qm" tabindex="0" data-tip="开启后，受限用户未绑定谷歌邮箱时，不能进入游戏，也不能提交提款。默认开启。">?</i></span><div class="fctl"><label class="us-sw"><input type="checkbox" id="bindOn" checked data-dev="D22"><span>开</span></label></div></div>
+              <div class="frow"><span class="fl">提款分享任务<i class="qm" tabindex="0" data-tip="开启后，受限用户完成分享任务前不能提交提款。默认开启。">?</i></span><div class="fctl"><label class="us-sw"><input type="checkbox" id="shareOn" checked data-dev="D23"><span>开</span></label></div></div>
+              <div class="frow" style="align-items:start"><span class="fl" style="padding-top:6px"><span class="req">*</span>分享渠道<i class="qm" tabindex="0" data-tip="受限用户需要分享的渠道，及每个渠道要唤起的次数。本版本只有 Facebook、Messenger，默认都启用；「提款分享任务」开启时至少启用 1 个。">?</i></span>
+                <div class="fctl">
+                  <table class="us-tbl">
+                    <tr><th>渠道</th><th data-dev="D24" data-dev-inline>启用</th><th data-dev="D25" data-dev-inline><span class="ui-nw">要求次数<i class="qm" tabindex="0" data-tip="解锁提款需要通过「去分享」唤起该渠道的次数，整数 1–10，渠道启用时必填。Facebook 默认 1，Messenger 默认 3。">?</i></span></th></tr>
+                    <tr><td>Facebook</td><td><label class="us-sw"><input type="checkbox" id="chFb" checked aria-label="启用 Facebook"></label></td><td><input class="bo-inp" id="nFb" style="width:80px" value="1" aria-label="Facebook 要求次数"><span class="us-ferr" id="nFbE"></span></td></tr>
+                    <tr><td>Messenger</td><td><label class="us-sw"><input type="checkbox" id="chMs" checked aria-label="启用 Messenger"></label></td><td><input class="bo-inp" id="nMs" style="width:80px" value="3" aria-label="Messenger 要求次数"><span class="us-ferr" id="nMsE"></span></td></tr>
+                  </table>
+                  <span class="us-ferr" id="chE" style="margin-left:0"></span>
+                  <p class="ui-reqnote" style="margin:6px 0 0">本版本只开放 Facebook、Messenger。新增渠道时只在本表加行，唤起和计次规则相同（PRD N25）。</p>
+                </div></div>
+              <div class="frow" style="align-items:start"><label for="txt" style="padding-top:6px"><span class="req">*</span><span class="ui-nw">分享文案<i class="qm" tabindex="0" data-tip="Facebook 分享时带的文字，Messenger 只带链接。必填，最多 800 字符（每个表情计 1 个字符），不校验语言；只支持变量 {amount}（用户中奖金额）和 {USER_INVITE_LINK}（用户邀请链接）。分享链接自动使用用户邀请链接，不用配置。">?</i></span></label>
+                <div class="fctl">
+                  <textarea class="bo-inp" id="txt" style="width:420px;height:70px;padding:6px 10px" data-dev="D28">Grabe, nakuha ko talaga yung ₱{amount} 😭😂 Try mo rin, baka ikaw na next! 🎉</textarea>
+                  <div class="us-hint">分享链接：用户邀请链接（与邀请好友页「My Link」相同），分享时自动带上，不用配置。<br>可用变量：<code>{amount}</code> 中奖金额（如 789、1,000.50）；<code>{USER_INVITE_LINK}</code> 用户邀请链接。<span id="txtLen">0</span>/800</div>
+                  <span class="us-ferr" id="txtE" style="margin-left:0"></span>
+                </div></div>
+              <div class="frow" style="align-items:start"><span class="fl" style="padding-top:6px">文案预览<i class="qm" tabindex="0" data-tip="按示例中奖金额 789 和示例邀请链接替换变量后的效果，只用于查看。">?</i></span><div class="fctl"><div class="us-prev" id="prev" data-dev="D34"></div><div class="us-hint">示例：中奖金额 789，邀请链接 https://www.789games.com/invite/10000001</div></div></div>
+            </div>
+            <p class="ui-reqnote" style="margin:8px 0 0">本区块为本需求新增，放在「活动参数设定」之后、「保存」按钮之前；每个新用户转盘活动单独配置，新建活动默认关闭。分享任务关闭时，本区块只显示开关（PRD N23）。</p>
+          </div>
+          <div style="display:flex;gap:10px;margin-top:16px">
+            <button class="bo-btn q" type="button" id="save" data-dev="D30">保存</button>
+            <button class="bo-btn" type="button" data-go="list">取消</button>
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
+
+  <aside class="notes adm-notes">
+    <h2>后台新用户转盘活动 · 创建 / 编辑</h2>
+    <p class="sub">活动中心 › 新用户转盘活动 › 活动配置 › 创建活动 / 编辑。本需求在现有表单里新增「分享任务配置」区块（带淡色光晕），在活动列表新增「分享任务」列，并新增「分享用户记录」页签。</p>
+    <h3>模拟场景</h3>
+    <div class="sim">
+      <button type="button" data-go="list"><span class="simtag">活动配置</span>活动列表</button>
+      <button type="button" data-go="new"><span class="simtag">活动配置</span>创建活动（分享任务默认关）</button>
+      <button type="button" data-go="edit"><span class="simtag">活动配置</span>编辑活动 1208（已开启）</button>
+      <button type="button" id="simBad"><span class="simtag">校验</span>填入错误值</button>
+      <button type="button" id="simEq"><span class="simtag">触发条件</span>等于 ₱789</button>
+    </div>
+    <h3>规则批注</h3>
+    <ol>
+      <li><b>位置</b>：只针对新用户转盘活动。每个活动在自己的创建 / 编辑页里单独配置，区块放在「活动参数设定」之后；新建活动默认关闭。<span class="ref">PRD 规则 N23 · F05-01 分享任务配置</span></li>
+      <li><b>分享任务开关</b>：开启后，本活动单次中奖满足触发条件的新用户被标记为受限用户；关闭后，本活动不再标记，由本活动标记的受限用户也不再被拦截（分享用户记录里这些用户的绑定状态、分享进度、任务状态显示「-」，「手动解除」置灰），重新开启后恢复拦截。关闭时区块里其他字段的值保留，重新开启时显示上次保存的值。活动本身关闭或结束，不影响已标记的受限用户。<span class="ref">PRD 规则 N3、N22</span></li>
+      <li><b>触发条件</b>：本活动单次中奖金额「大于等于」或「等于」₱789，默认「大于等于」；第 3 次转盘的大礼包也计入；金额固定，不可修改。修改判断方式只影响保存后的中奖，已标记的受限用户保持受限。<span class="ref">PRD 规则 N1、N2</span></li>
+      <li><b>分享渠道</b>：本版本只有 Facebook（默认 1 次）、Messenger（默认 3 次），默认都启用；渠道启用时要求次数必填，整数 1–10；「提款分享任务」开启时至少启用 1 个渠道。<span class="ref">PRD 规则 N12、N25</span></li>
+      <li><b>分享文案（含分享链接说明）</b>：分享链接固定为用户邀请链接，只在文案下方说明，不用配置；文案必填，≤ 800 字符（每个表情计 1 个字符），不校验语言，只支持 <code>{amount}</code>、<code>{USER_INVITE_LINK}</code> 两个变量。<span class="ref">PRD 规则 N18、N26</span></li>
+      <li><b>受限用户按哪个活动的配置执行</b>：只按第一次触发受限的活动配置执行（绑定和提款开关、分享渠道、要求次数、分享文案）；该活动关闭分享任务或用户被手动解除后，在其他活动再中奖也不再受限。<span class="ref">PRD 规则 N23</span></li>
+      <li><b>保存</b>：分享任务开启时才校验本区块；校验不通过时在对应字段下方提示，不保存。本区块与现有字段一起保存，成功提示「保存成功」并回到活动列表，以保存成功的时间生效，之后的中奖按新配置判断。<span class="ref">PRD 规则 N22</span></li>
+    </ol>
+    <div class="pager"><span></span><a href="用户分享追踪-后台用户记录.html">下一页：后台分享用户记录 →</a></div>
+  </aside>
+</div>
+</div>
+<script>window.NAV_ROOT = "../../";</script>
+<script src="../../assets/nav-data.js"></script>
+<script src="../../assets/nav.js"></script>
+<script>
+(function () {
+  function $(id) { return document.getElementById(id); }
+  /* 金额显示：千分位；有小数时保留 2 位，整数不显示小数（N26） */
+  function fmt(n) { var s = Number(n); return (s % 1 ? s.toFixed(2) : String(s)).replace(/\B(?=(\d{3})+(?!\d))/g, ","); }
+  function render(t, amt, link) { return t.replace(/\{amount\}/g, fmt(amt)).replace(/\{USER_INVITE_LINK\}/g, link); }
+  /* 字数按字符计，每个表情计 1 个字符（N26） */
+  function clen(s) { return Array.from(s).length; }
+  function drawPrev() { var t = $("txt").value; $("txtLen").textContent = clen(t); $("prev").textContent = render(t, 789, "https://www.789games.com/invite/10000001") || "-"; }
+  $("txt").oninput = drawPrev;
+  function setMaster(on) { $("master").checked = on; $("masterT").textContent = on ? "开" : "关"; $("shareCfg").hidden = !on; }
+  $("master").onchange = function () { setMaster(this.checked); };
+  ["bindOn", "shareOn"].forEach(function (id) { $(id).onchange = function () { this.nextElementSibling.textContent = this.checked ? "开" : "关"; }; });
+  [["chFb", "nFb"], ["chMs", "nMs"]].forEach(function (x) { $(x[0]).onchange = function () { $(x[1]).disabled = !this.checked; }; });
+  function intIn(v, a, b) { return /^\d+$/.test(v) && +v >= a && +v <= b; }
+  var VIEWS = { list: "活动配置", new: "创建活动", edit: "编辑活动" };
+  function show(view) {
+    if (!VIEWS[view]) view = "list";
+    $("vList").hidden = view !== "list"; $("vForm").hidden = view === "list";
+    $("crumb").innerHTML = "位置 › 活动中心 › 新用户转盘活动" + (view === "list" ? "" : " › <b>" + VIEWS[view] + "</b>");
+    if (view === "new") { setMaster(false); $("actTime").value = ""; }
+    if (view === "edit") { setMaster(true); $("actTime").value = "2026-10-01 00:00:00 ~ 2026-11-30 23:59:59"; }
+    if (location.hash.slice(1) !== view) history.replaceState(null, "", "#" + view);
+    window.scrollTo(0, 0);
+    if (window.self !== window.top) window.parent.postMessage({ type: "proto-view", view: view }, "*");
+  }
+  window.addEventListener("hashchange", function () { show(location.hash.slice(1) || "list"); });
+  document.addEventListener("click", function (e) { var b = e.target.closest("[data-go]"); if (b) { e.preventDefault(); show(b.dataset.go); } });
+  $("save").onclick = function () {
+    var ok = true;
+    ["nFbE", "nMsE", "chE", "txtE"].forEach(function (id) { $(id).textContent = ""; });
+    function err(id, m) { $(id).textContent = m; ok = false; }
+    if ($("master").checked) {
+      if ($("chFb").checked && !intIn($("nFb").value.trim(), 1, 10)) err("nFbE", "请输入 1–10 的整数");
+      if ($("chMs").checked && !intIn($("nMs").value.trim(), 1, 10)) err("nMsE", "请输入 1–10 的整数");
+      if ($("shareOn").checked && !$("chFb").checked && !$("chMs").checked) err("chE", "请至少启用 1 个分享渠道");
+      var t = $("txt").value;
+      if (!t.trim()) err("txtE", "请输入分享文案");
+      else if (clen(t) > 800) err("txtE", "最多 800 字符");
+      else if ((t.match(/\{[^}]*\}/g) || []).some(function (v) { return v !== "{amount}" && v !== "{USER_INVITE_LINK}"; })) err("txtE", "只支持 {amount}、{USER_INVITE_LINK}");
+    }
+    var m = document.createElement("div"); m.className = "bo-msg " + (ok ? "ok" : "err"); m.setAttribute("role", "status");
+    m.textContent = ok ? "保存成功" : "请检查标红的字段"; document.body.appendChild(m); setTimeout(function () { m.remove(); }, 1800);
+    if (ok) { if (location.hash === "#edit") $("shareCol").textContent = $("master").checked ? "开启" : "-"; setTimeout(function () { show("list"); }, 600); }
+  };
+  $("simBad").onclick = function () { show("edit"); $("chFb").checked = false; $("chMs").checked = false; $("nFb").disabled = $("nMs").disabled = true; $("txt").value = "Won ₱{prize}!"; drawPrev(); $("save").click(); };
+  $("simEq").onclick = function () { show("edit"); $("actOp").value = "eq"; };
+  drawPrev(); show(location.hash.slice(1) || "list");
+})();
+</script>
+</body>
+</html>

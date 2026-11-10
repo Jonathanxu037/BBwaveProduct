@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>用户分享追踪-后台用户记录</title>
+<link rel="stylesheet" href="../../assets/style.css">
+<style>
+.bo-tabs span{cursor:pointer}.bo-tabs span:hover{color:#409EFF}
+.us-t td,.us-t th{font-size:12.5px;white-space:nowrap}
+.us-ok{color:#67C23A}.us-no{color:#E6A23C}.us-man{color:#909399}
+.us-chk{display:flex;gap:16px}
+.us-chk label{display:flex;gap:4px;align-items:center}
+.us-cnt{font-size:12px;color:#909399;text-align:right}
+</style>
+</head>
+<body>
+<div class="with-nav">
+<div class="adm-stage">
+  <div class="bo">
+    <div class="bo-top1"><span>当前时间：2026/11/09 02:13:43</span><span class="sp">简体中文</span><span>运营账号A ▾</span></div>
+    <div class="bo-top2"><span>在线人数<b class="bo-n r">8</b></span><span>当日注册<b class="bo-n g">1</b></span><span>当日充值成功<b class="bo-n g">0</b></span><span>提款<b class="bo-n g">0</b></span><span>风控审核<b class="bo-n r">1</b></span></div>
+    <div class="bo-body">
+      <nav class="bo-menu" aria-label="后台菜单">
+        <div class="mt">菜单 ≡</div>
+        <div class="g">用户管理</div><div class="g">财务管理</div>
+        <div class="g open">活动中心</div>
+        <div class="i">每日首充活动</div><div class="i on">新用户转盘活动</div><div class="i">新用户首充活动</div><div class="i">邀请好友活动</div>
+        <div class="g">营销管理</div>
+      </nav>
+      <div class="bo-main">
+        <div class="bo-crumb">位置 › 活动中心 › 新用户转盘活动 › <b>分享用户记录</b></div>
+        <div class="bo-tabs" role="tablist">
+          <span role="tab" tabindex="0" onclick="location.href='用户分享追踪-后台规则配置.html'">活动配置</span>
+          <span role="tab" tabindex="0">活动统计</span>
+          <span role="tab" tabindex="0" class="on glow" aria-selected="true">分享用户记录</span>
+        </div>
+        <div class="bo-filter">
+          <label>会员账号 <input class="bo-inp" id="fAcc" style="width:140px" placeholder="请输入账号" data-dev="D40"></label>
+          <label>活动编号 <input class="bo-inp" id="fAct" style="width:100px" placeholder="请输入" data-dev="D54"></label>
+          <label>任务状态 <select class="bo-inp" id="fTask" data-dev="D42"><option value="">全部</option><option>未完成</option><option>已完成</option><option>手动解除</option></select></label>
+          <button class="bo-btn q" type="button" id="qBtn" data-dev="D44">搜索</button>
+          <button class="bo-btn" type="button" id="xBtn" data-dev="D45">导出</button>
+        </div>
+        <div class="bo-content" style="overflow-x:auto">
+          <table class="us-t glow" id="tbl">
+            <tr><th>会员账号</th>
+              <th><span class="ui-nw">活动编号<i class="qm" tabindex="0" data-tip="触发该用户受限的新用户转盘活动编号；该用户按这个活动的分享任务配置执行。">?</i></span></th>
+              <th>中奖金额（₱）</th><th>中奖时间</th>
+              <th data-dev="D57" data-dev-inline><span class="ui-nw">绑定状态<i class="qm" tabindex="0" data-tip="该用户是否已绑定谷歌邮箱：已绑定 / 未绑定 / 手动解除；该活动「分享任务」或「强制绑定谷歌邮箱」关闭时显示「-」。">?</i></span></th>
+              <th data-dev="D55" data-dev-inline><span class="ui-nw">分享进度<i class="qm" tabindex="0" data-tip="各已启用渠道的已唤起次数 / 要求次数；该活动「分享任务」或「提款分享任务」关闭时显示「-」。">?</i></span></th>
+              <th data-dev="D58" data-dev-inline><span class="ui-nw">任务状态<i class="qm" tabindex="0" data-tip="分享任务的状态：未完成 / 已完成 / 手动解除；该活动「分享任务」或「提款分享任务」关闭时显示「-」。已完成永久有效。">?</i></span></th>
+              <th>操作</th></tr>
+          </table>
+          <div class="bo-page" id="pager" role="navigation" aria-label="分页">
+            <span>共 <b id="pgTotal">0</b> 条</span>
+            <label>每页 <select id="pgSize" aria-label="每页条数" data-dev="D56"><option selected>10</option><option>20</option><option>50</option></select> 条</label>
+            <button type="button" id="pgPrev" aria-label="上一页">‹</button>
+            <span id="pgNums"></span>
+            <button type="button" id="pgNext" aria-label="下一页">›</button>
+            <label>前往 <input id="pgGo" inputmode="numeric" aria-label="前往页码" value="1"> 页</label>
+          </div>
+          <p style="font-size:12px;color:#909399;margin:10px 0 0">示例数据均为虚构。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 手动解除弹窗 -->
+  <div class="bo-mask" id="uMask" hidden>
+    <div class="bo-dlg" role="dialog" aria-modal="true" aria-labelledby="uT">
+      <h4 id="uT">手动解除限制</h4>
+      <div>会员账号：<b id="uAcc"></b></div>
+      <div class="us-chk" data-dev="D49"><span>解除项：</span><label><input type="checkbox" id="uBind">绑定谷歌邮箱</label><label><input type="checkbox" id="uShare">提款分享任务</label></div>
+      <div><label for="uWhy"><span style="color:#F56C6C">*</span>原因</label><textarea class="bo-inp" id="uWhy" maxlength="200" style="width:100%;height:70px;padding:6px 10px;margin-top:4px" placeholder="请填写原因，如客诉单号" data-dev="D50"></textarea><div class="us-cnt"><span id="uCnt">0</span>/200</div></div>
+      <p style="margin:0;color:#E6A23C;font-size:12px">所选项目解除后不再限制；该用户在其他活动再中奖也不再受限。</p>
+      <div class="row2"><button class="bo-btn" type="button" id="uCancel" data-cancel>取消</button><button class="bo-btn q" type="button" id="uOk" disabled data-dev="D51">确认解除</button></div>
+    </div>
+  </div>
+
+  <aside class="notes adm-notes">
+    <h2>后台分享用户记录</h2>
+    <p class="sub">活动中心 › 新用户转盘活动 › 「分享用户记录」页签（本需求新增，位于「活动配置」「活动统计」之后）。用于查看受限用户的绑定状态和分享进度，可手动解除限制。</p>
+    <h3>模拟场景</h3>
+    <div class="sim">
+      <button type="button" id="simMany"><span class="simtag">列表</span>多页（46 条）</button>
+      <button type="button" id="simEmpty"><span class="simtag">列表</span>空列表</button>
+      <button type="button" id="simFail"><span class="simtag">列表</span>加载失败</button>
+    </div>
+    <h3>规则批注</h3>
+    <ol>
+      <li><b>筛选</b>：会员账号、活动编号精确匹配，任务状态下拉选择；点「搜索」后回到第 1 页。<span class="ref">PRD 6.2 · F05-02 分享用户记录</span></li>
+      <li><b>活动编号</b>：触发该用户受限的新用户转盘活动编号；该用户按这个活动的分享任务配置执行。<span class="ref">PRD 规则 N23</span></li>
+      <li><b>分享进度</b>：一列显示各已启用渠道的「已唤起次数 / 要求次数」，如「Facebook 1/1 · Messenger 2/3」。<span class="ref">PRD 规则 N12</span></li>
+      <li><b>要求关闭时显示「-」</b>：触发活动的「分享任务」关闭时，绑定状态、分享进度、任务状态都显示「-」，「手动解除」置灰，记录保留（示例：活动 1205）；「强制绑定谷歌邮箱」关闭时，绑定状态显示「-」；「提款分享任务」关闭时，分享进度和任务状态显示「-」；显示「-」的项目不可手动解除（示例：活动 1207、1206）。<span class="ref">PRD 6.2 · F05-02 分享用户记录</span></li>
+      <li><b>手动解除</b>：解除项至少选一项，原因必填（1–200 字）；被勾选的项目解除后不再限制，之后在其他活动再中奖也不再受限。只有「未绑定」「未完成」的项目能勾选；两项都不能勾选时按钮置灰。解除后停在当前页。操作人、时间和原因记在平台现有的后台「日志管理 › 操作日志」，本页不展示。<span class="ref">PRD 规则 N20 · F05-03 手动解除限制</span></li>
+      <li><b>分页与导出</b>：可选每页条数 10 / 20 / 50，默认 10 条，按中奖时间倒序；导出全部符合筛选条件的数据，超过 5 万行时转到「数据报表 › 报表下载」生成，文件保存 7 天。<span class="ref">PRD 6.3 列表分页</span></li>
+    </ol>
+    <div class="pager"><a href="用户分享追踪-后台规则配置.html">← 上一页：后台新用户转盘活动 · 创建 / 编辑</a><span></span></div>
+  </aside>
+</div>
+</div>
+<script>window.NAV_ROOT = "../../";</script>
+<script src="../../assets/nav-data.js"></script>
+<script src="../../assets/nav.js"></script>
+<script>
+(function () {
+  function $(id) { return document.getElementById(id); }
+  /* 示例数据：活动 1205 的「分享任务」关闭（三列都显示「-」）；活动 1207 的「提款分享任务」关闭（分享进度、任务状态显示「-」），活动 1206 的「强制绑定谷歌邮箱」关闭（绑定状态显示「-」）；按中奖时间倒序 */
+  function p2(n) { return (n < 10 ? "0" : "") + n; }
+  function make(n) {
+    var a = [];
+    for (var i = 0; i < n; i++) {
+      var fb = i % 3 === 0 ? 1 : 0, ms = i % 4, done = fb >= 1 && ms >= 3, man = i % 11 === 5;
+      var act = i % 5 === 4 ? "1207" : i % 9 === 8 ? "1206" : i % 13 === 12 ? "1205" : "1208", masterOff = act === "1205", shareOff = act === "1207" || masterOff, bindOff = act === "1206" || masterOff;
+      var unb = !bindOff && !man && i % 5 === 1; if (unb) { fb = 0; ms = 0; done = false; }   /* 未绑定的用户还不会有分享进度（N11） */
+      a.push({ acc: "player" + (8801 + i), act: act, amt: i % 3 === 1 ? 1000 : 789,
+        at: "2026-11-0" + (6 - (i % 6)) + " " + p2(9 + i % 12) + ":" + p2(10 + i % 49) + ":00",
+        bind: bindOff ? "-" : man ? "手动解除" : (unb ? "未绑定" : "已绑定"), fb: fb, ms: ms, shareOff: shareOff,
+        task: shareOff ? "-" : man ? "手动解除" : (done ? "已完成" : "未完成") });
+    }
+    return a.sort(function (x, y) { return x.at < y.at ? 1 : x.at > y.at ? -1 : 0; });
+  }
+  var ALL = make(46), DATA = ALL.slice(), PG = { size: 10, page: 1 }, FAIL = false, cur = null;
+  function cls(v) { return v === "已绑定" || v === "已完成" ? "us-ok" : v === "手动解除" || v === "-" ? "us-man" : "us-no"; }
+  function draw() {
+    var t = $("tbl"); while (t.rows.length > 1) t.deleteRow(1);
+    var n = Math.max(1, Math.ceil(DATA.length / PG.size)); PG.page = Math.min(Math.max(1, PG.page), n);
+    if (FAIL || !DATA.length) { var r0 = t.insertRow(); var c0 = r0.insertCell(); c0.colSpan = 8; c0.style.cssText = "text-align:center;color:#909399;padding:24px"; c0.innerHTML = FAIL ? '加载失败，<button class="bo-btn link" type="button" id="retry">请重试</button>' : "暂无数据"; if (FAIL) $("retry").onclick = function () { FAIL = false; draw(); }; }
+    else DATA.slice((PG.page - 1) * PG.size, PG.page * PG.size).forEach(function (x) {
+      var r = t.insertRow();
+      [x.acc, x.act, x.amt.toLocaleString(), x.at].forEach(function (v) { r.insertCell().textContent = v; });
+      var b = r.insertCell(); b.textContent = x.bind; b.className = cls(x.bind);
+      r.insertCell().textContent = x.shareOff ? "-" : "Facebook " + Math.min(x.fb, 1) + "/1 · Messenger " + Math.min(x.ms, 3) + "/3";
+      var s = r.insertCell(); s.textContent = x.task; s.className = cls(x.task);
+      var op = r.insertCell();
+      var u = document.createElement("button"); u.type = "button"; u.className = "bo-btn link"; u.textContent = "手动解除"; u.setAttribute("data-dev", "D52");
+      u.disabled = x.bind !== "未绑定" && x.task !== "未完成"; u.onclick = function () { openUnlock(x); }; op.appendChild(u);
+    });
+    $("pgTotal").textContent = FAIL ? 0 : DATA.length;
+    var box = $("pgNums"); box.textContent = "";
+    for (var i = 1; i <= n; i++) { var bb = document.createElement("button"); bb.type = "button"; bb.textContent = i; if (i === PG.page) bb.setAttribute("aria-current", "page"); bb.onclick = (function (k) { return function () { PG.page = k; draw(); }; })(i); box.appendChild(bb); }
+    $("pgPrev").disabled = PG.page <= 1; $("pgNext").disabled = PG.page >= n; $("pgGo").value = PG.page;
+  }
+  function checkU() { $("uOk").disabled = !(($("uBind").checked || $("uShare").checked) && $("uWhy").value.trim()); $("uCnt").textContent = $("uWhy").value.length; }
+  function openUnlock(x) {
+    cur = x; $("uAcc").textContent = x.acc;
+    $("uBind").checked = false; $("uShare").checked = false; $("uWhy").value = "";
+    $("uBind").disabled = x.bind !== "未绑定"; $("uShare").disabled = x.task !== "未完成"; checkU(); $("uMask").hidden = false;
+  }
+  ["uBind", "uShare"].forEach(function (id) { $(id).onchange = checkU; }); $("uWhy").oninput = checkU;
+  $("uCancel").onclick = function () { $("uMask").hidden = true; };
+  $("uOk").onclick = function () {
+    if ($("uBind").checked) cur.bind = "手动解除";
+    if ($("uShare").checked) cur.task = "手动解除";
+    $("uMask").hidden = true; draw();
+    var m = document.createElement("div"); m.className = "bo-msg ok"; m.setAttribute("role", "status"); m.textContent = "解除成功"; document.body.appendChild(m); setTimeout(function () { m.remove(); }, 1800);
+  };
+  $("qBtn").onclick = function () {
+    var a = $("fAcc").value.trim(), ac = $("fAct").value.trim(), k = $("fTask").value;
+    DATA = ALL.filter(function (x) { return (!a || x.acc === a) && (!ac || x.act === ac) && (!k || x.task === k); }); PG.page = 1; FAIL = false; draw();
+  };
+  $("xBtn").onclick = function () { var m = document.createElement("div"); m.className = "bo-msg ok"; m.setAttribute("role", "status"); m.textContent = "导出成功，共 " + DATA.length + " 条"; document.body.appendChild(m); setTimeout(function () { m.remove(); }, 1800); };
+  $("pgPrev").onclick = function () { PG.page--; draw(); };
+  $("pgNext").onclick = function () { PG.page++; draw(); };
+  $("pgSize").onchange = function () { PG.size = +this.value; PG.page = 1; draw(); };
+  $("pgGo").onkeydown = function (e) { if (e.key === "Enter") { var v = parseInt(this.value, 10); PG.page = isNaN(v) ? PG.page : v; draw(); } };
+  $("simMany").onclick = function () { ALL = make(46); DATA = ALL.slice(); PG.page = 1; FAIL = false; draw(); };
+  $("simEmpty").onclick = function () { DATA = []; PG.page = 1; FAIL = false; draw(); };
+  $("simFail").onclick = function () { FAIL = true; draw(); };
+  draw();
+})();
+</script>
+</body>
+</html>
