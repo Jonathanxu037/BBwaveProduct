@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>单一设备领取奖励限制-需求要点</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<div class="with-nav">
+<div class="desk"><article class="paper">
+
+<h1 class="doc-title">单一设备领取奖励限制 · 需求要点 · v1.0</h1>
+<div class="doc-meta"><span>版本：v1.0</span><span>端：H5、PWA、iOS、Android、管理后台</span><span>依据：<a href="单一设备领取奖励限制-需求开发PRD文档.html">需求开发 PRD 文档</a></span></div>
+<hr class="doc-rule">
+
+<h2 id="k1">一句话需求</h2>
+<div class="oneline">【活动中心】下每个活动的配置页增加「活动奖励领取限制」板块：可勾选同设备、同 IP、同账户，每项设置限制周期（活动期间 / 每天 / 7 天 / 15 天 / 一个月）和最多领取次数，填「0」为不限制。用户领取和系统发放前按配置判定，超过次数不发放。每个活动可配置领取限制白名单，名单内会员不受同设备、同 IP 限制。</div>
+
+<h2 id="k2">判定流程</h2>
+<div class="flowsvg" style="max-width:760px;margin:8px 0 6px">
+<svg viewBox="0 0 740 500" width="100%" role="img" aria-labelledby="fsT fsD" style="display:block;font-family:inherit">
+<title id="fsT">领取判定流程</title>
+<desc id="fsD">领取或发放时依次判断活动现有校验、同账户、白名单、同设备、同 IP，全部通过才发放；任一项超过上限则拦截。</desc>
+<defs><marker id="fsA" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#7A869A"/></marker></defs>
+<g fill="none" stroke="#7A869A" stroke-width="1.6" stroke-linejoin="round" marker-end="url(#fsA)">
+  <path d="M220,50 V78"/>
+  <path d="M220,120 V148"/>
+  <path d="M220,190 V218"/>
+  <path d="M220,260 V288"/>
+  <path d="M220,330 V358"/>
+  <path d="M220,400 V428"/>
+  <path d="M310,100 H408"/>
+  <path d="M310,170 H408"/>
+  <path d="M310,310 H408"/>
+  <path d="M310,380 H408"/>
+  <path d="M130,240 H68 Q60,240 60,248 V442 Q60,450 68,450 H128"/>
+</g>
+<g font-size="12" fill="#606266">
+  <text x="228" y="140">是</text><text x="228" y="210">否</text><text x="228" y="280">否</text><text x="228" y="350">否</text><text x="228" y="420">否</text>
+  <text x="330" y="94">否</text><text x="330" y="164">是</text><text x="330" y="304">是</text><text x="330" y="374">是</text>
+  <text x="70" y="232">是：跳过同设备、同 IP</text>
+</g>
+<g font-size="13" text-anchor="middle">
+  <rect x="130" y="10" width="180" height="40" rx="8" fill="#EEF4FF" stroke="#3B82F6"/><text x="220" y="35" fill="#303133">用户领取 / 系统自动发放</text>
+  <rect x="130" y="80" width="180" height="40" rx="8" fill="#fff" stroke="#7A869A"/><text x="220" y="105" fill="#303133">活动现有校验通过？</text>
+  <rect x="130" y="150" width="180" height="40" rx="8" fill="#fff" stroke="#7A869A"/><text x="220" y="175" fill="#303133">同账户已达上限？</text>
+  <rect x="130" y="220" width="180" height="40" rx="8" fill="#fff" stroke="#7A869A"/><text x="220" y="245" fill="#303133">本活动白名单会员？</text>
+  <rect x="130" y="290" width="180" height="40" rx="8" fill="#fff" stroke="#7A869A"/><text x="220" y="315" fill="#303133">同设备已达上限？</text>
+  <rect x="130" y="360" width="180" height="40" rx="8" fill="#fff" stroke="#7A869A"/><text x="220" y="385" fill="#303133">同 IP 已达上限？</text>
+  <rect x="130" y="430" width="180" height="40" rx="8" fill="#E8F5EE" stroke="#1B7A4C"/><text x="220" y="455" fill="#1B7A4C">发放，计入各项次数</text>
+  <rect x="410" y="80" width="310" height="40" rx="8" fill="#F5F7FA" stroke="#7A869A"/><text x="565" y="105" fill="#303133">按活动现有处理</text>
+  <rect x="410" y="150" width="310" height="40" rx="8" fill="#FDECEC" stroke="#D8242F"/><text x="565" y="175" fill="#B4141E">拦截：本活动领取次数已达上限</text>
+  <rect x="410" y="290" width="310" height="40" rx="8" fill="#FDECEC" stroke="#D8242F"/><text x="565" y="315" fill="#B4141E">拦截：此设备领取次数已达上限</text>
+  <rect x="410" y="360" width="310" height="40" rx="8" fill="#FDECEC" stroke="#D8242F"/><text x="565" y="385" fill="#B4141E">拦截：当前网络领取次数已达上限</text>
+</g>
+</svg>
+<p style="font-size:12.5px;color:#606266;margin:4px 0 0">只判断已勾选且次数大于 0 的项。拦截时不发放、不扣参与次数，自动发放不提示（N6、N8）。需判定的设备标识或 IP 取不到时暂不发放，提示「正在核验领取资格，请稍后再试」（N11）。</p>
+</div>
+
+<h2 id="k3">开发功能点</h2>
+<div class="fpcard" id="F01-01">
+  <h3><span class="code">F01-01</span>领取次数限制判定<a href="单一设备领取奖励限制-需求开发PRD文档.html#F01-01">查看 PRD ›</a></h3>
+  <div class="fpgrid">
+    <b>要做什么</b>
+    <ul><li>活动现有校验通过后、发放前判定；用户领取、自动发放、充值到账都判定（N1、N5、N8）</li><li>次数 = 本活动成功发放的次数；同设备、同 IP 为所有账号合计，同账户为该账号自己；不同活动分别计算（N3）</li><li>周期：活动期间（上线后累计）、每天（自然日）、7 天 / 15 天（含当天往前滚动）、一个月（自然月），均按 GMT+8（N4）</li><li>自动发放取账号最近一次登录的设备和 IP（N8）；活动自身规则照常生效（N9）</li><li>并发时合计成功次数不超过上限；重复点击只发放一次（N12）</li><li>同 IP 含移动网络共用出口 IP 的账号，次数按活动参与规模设置（N10）</li><li><span class="warn-2">※ 现有设备标识能否唯一区分手机待技术确认（Q3），确认前不建议勾选同设备；本版不考虑跨浏览器、浏览器和 App 之间、清缓存或重装后的设备识别（N10）</span></li></ul>
+    <b>公式</b>
+    <div class="formula">该项已领取次数 ≥ 最多领取次数（次数大于 0，当前限制周期内）→ 拦截<br>同设备 / 同 IP 已领取次数 = 该设备 / IP 上所有账号在当前周期内成功领取本活动的次数之和</div>
+    <b>涉及端</b>
+    <div class="ends"><span>H5 / PWA</span><span>iOS</span><span>Android</span><span>后端</span></div>
+  </div>
+</div>
+<div class="fpcard" id="F01-02">
+  <h3><span class="code">F01-02</span>拦截处理与提示<a href="单一设备领取奖励限制-需求开发PRD文档.html#F01-02">查看 PRD ›</a></h3>
+  <div class="fpgrid">
+    <b>要做什么</b>
+    <ul><li>不发放、不扣参与次数、不计次数；转盘和抽奖在转动前拦截；按钮保持可点（N6）</li><li>Toast：同账户「本活动领取次数已达上限」、同设备「此设备领取次数已达上限」、同 IP「当前网络领取次数已达上限」</li><li>充值优惠：选择时超过 → 置灰并显示文案；到账时超过 → 不发优惠，充值照常到账，不新增通知（N7）</li></ul>
+    <b>公式</b>
+    <div class="formula">无</div>
+    <b>涉及端</b>
+    <div class="ends"><span>H5 / PWA</span><span>iOS</span><span>Android</span><span>后端</span></div>
+  </div>
+</div>
+<div class="fpcard" id="F01-03">
+  <h3><span class="code">F01-03</span>设备标识或 IP 获取失败处理<a href="单一设备领取奖励限制-需求开发PRD文档.html#F01-03">查看 PRD ›</a></h3>
+  <div class="fpgrid">
+    <b>要做什么</b>
+    <ul><li>需判定同设备或同 IP 但取不到设备标识或 IP：不发放、不扣次数，Toast「正在核验领取资格，请稍后再试」；自动发放时本次不发放（N11）</li></ul>
+    <b>公式</b>
+    <div class="formula">无</div>
+    <b>涉及端</b>
+    <div class="ends"><span>H5 / PWA</span><span>iOS</span><span>Android</span><span>后端</span></div>
+  </div>
+</div>
+<div class="fpcard" id="F02-01">
+  <h3><span class="code">F02-01</span>活动奖励领取限制板块<a href="单一设备领取奖励限制-需求开发PRD文档.html#F02-01">查看 PRD ›</a></h3>
+  <div class="fpgrid">
+    <b>要做什么</b>
+    <ul><li>所有活动（含以后新增）的配置页加板块：有列表的加在「创建活动」「修改」打开的配置页，无列表的加在直接显示的配置页（清单见 PRD 5.1）</li><li>三项各一行：勾选框、限制周期、最多领取次数（0–9999 整数，0 为不限制）；默认不勾选（N2）</li><li>随活动保存后立即生效；修改后已领取次数不清零；复制活动时一起复制；修改写入现有操作日志（N13）</li></ul>
+    <b>公式</b>
+    <div class="formula">无</div>
+    <b>涉及端</b>
+    <div class="ends"><span>管理后台</span><span>后端</span></div>
+  </div>
+</div>
+<div class="fpcard" id="F02-03">
+  <h3><span class="code">F02-03</span>领取限制白名单<a href="单一设备领取奖励限制-需求开发PRD文档.html#F02-03">查看 PRD ›</a></h3>
+  <div class="fpgrid">
+    <b>要做什么</b>
+    <ul><li>每个活动单独配置；「管理白名单」弹窗（高度为页面 3/4）按会员名添加、查询、移除；添加、移除写入现有操作日志（N15）</li><li>名单内会员跳过同设备、同 IP，同账户照常；其领取仍计入设备和 IP 次数</li><li>添加、移除立即生效；创建活动时需先保存活动；复制活动不复制白名单；列表默认 20 条、添加时间倒序</li></ul>
+    <b>公式</b>
+    <div class="formula">无</div>
+    <b>涉及端</b>
+    <div class="ends"><span>管理后台</span><span>后端</span></div>
+  </div>
+</div>
+<div class="fpcard" id="F02-02">
+  <h3><span class="code">F02-02</span>新用户转盘原配置并入<a href="单一设备领取奖励限制-需求开发PRD文档.html#F02-02">查看 PRD ›</a></h3>
+  <div class="fpgrid">
+    <b>要做什么</b>
+    <ul><li>去掉原有设备、IP 两项，改用本板块（N14）</li><li>上线迁移：设备项 → 「同设备 · 活动期间 · 原值」；IP 项口径不同，不迁移，上线当天由运营填写</li></ul>
+    <b>公式</b>
+    <div class="formula">无</div>
+    <b>涉及端</b>
+    <div class="ends"><span>管理后台</span><span>后端</span></div>
+  </div>
+</div>
+
+</article></div>
+</div>
+<script>window.NAV_ROOT = "../";</script>
+<script src="../assets/nav-data.js"></script>
+<script src="../assets/nav.js"></script>
+</body>
+</html>

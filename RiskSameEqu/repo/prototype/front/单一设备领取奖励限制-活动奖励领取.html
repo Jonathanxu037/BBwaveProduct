@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>单一设备领取奖励限制-活动奖励领取</title>
+<link rel="stylesheet" href="../../assets/style.css">
+<style>
+.rw-card{margin:14px 12px;padding:16px;border-radius:12px;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.08);text-align:center}
+.rw-card .rw-t{margin:0 0 4px;font-size:16px;font-weight:700;color:#303133}
+.rw-card .rw-amt{font-size:30px;font-weight:700;color:#D8242F;margin:8px 0}
+.rw-card .rw-sub{font-size:12px;color:#909399;margin-bottom:4px}
+.rw-card .btn{display:block;width:100%;margin:12px 0 0}
+.rw-card .btn[disabled]{background:#C0C4CC;border-color:#C0C4CC;color:#fff;cursor:not-allowed}
+.dp{margin:14px 12px;display:grid;gap:10px}
+.dp-amt{background:#fff;border-radius:12px;padding:14px 16px;font-size:22px;font-weight:700;color:#303133}
+.dp-amt small{display:block;font-size:12px;font-weight:400;color:#909399}
+.dp-t{font-size:13px;color:#606266;margin:4px 2px 0}
+.dp-o{display:flex;align-items:center;gap:10px;background:#fff;border:1px solid #DCDFE6;border-radius:10px;padding:12px 14px;font-size:14px;color:#303133;cursor:pointer}
+.dp-o input{margin:0}
+.dp-o.off{background:#F5F7FA;color:#C0C4CC;cursor:not-allowed}
+.dp-o.off .dp-why{display:block;font-size:12px;color:#D8242F}
+.dp-why{display:none}
+.dp .btn{width:100%}
+</style>
+</head>
+<body>
+<div class="with-nav">
+<div class="stage">
+  <div class="app" role="region" aria-label="手机画面">
+    <div class="sb"><span>9:41</span><span>●●● 5G</span></div>
+    <div class="view" id="vMain">
+      <div class="topline"><a class="back" href="#default" aria-label="返回">‹</a>活动中心</div>
+      <div class="rw-card">
+        <div class="rw-t">登录送彩金</div>
+        <div class="rw-sub">每日 1 次</div>
+        <div class="rw-amt">₱7.89</div>
+        <button class="btn" type="button" id="claim" data-dev="D01">领取</button>
+      </div>
+    </div>
+    <div class="view" id="vDep" hidden>
+      <div class="topline"><a class="back" href="#default" aria-label="返回">‹</a>充值</div>
+      <div class="dp">
+        <div class="dp-amt"><small>充值金额</small>₱500</div>
+        <div class="dp-t">选择优惠</div>
+        <label class="dp-o off"><input type="radio" name="dpo" disabled><span>每日首充 5%<span class="dp-why">此设备领取次数已达上限</span></span></label>
+        <label class="dp-o"><input type="radio" name="dpo"><span>充值活动 10%</span></label>
+        <label class="dp-o"><input type="radio" name="dpo" checked><span>不使用优惠</span></label>
+        <button class="btn" type="button">充值</button>
+      </div>
+    </div>
+    <div class="toast" id="toast" role="status" hidden></div>
+  </div>
+
+  <aside class="notes">
+    <h2>活动奖励领取（通用示例）</h2>
+    <p class="sub">所有活动的领取环节按本页规则处理，以「登录送彩金」（每个账号每日 1 次）为例。页面不新增控件，只新增 Toast。</p>
+    <h3>模拟场景</h3>
+    <div class="sim">
+      <button type="button" data-go="default"><span class="simtag">状态</span>可领取</button>
+      <button type="button" data-go="success"><span class="simtag">状态</span>领取成功</button>
+      <button type="button" data-go="acc"><span class="simtag">拦截</span>同账户达上限</button>
+      <button type="button" data-go="dev"><span class="simtag">拦截</span>同设备达上限</button>
+      <button type="button" data-go="ip"><span class="simtag">拦截</span>同 IP 达上限</button>
+      <button type="button" data-go="nodevice"><span class="simtag">状态</span>取不到设备标识或 IP</button>
+      <button type="button" data-go="deposit"><span class="simtag">充值页</span>优惠达上限置灰</button>
+    </div>
+    <h3>模拟操作</h3>
+    <div class="sim" id="simPanel"></div>
+    <h3>规则批注</h3>
+    <ol>
+      <li><b>按活动配置判定</b>：只判断本活动已勾选且次数大于 0 的项，某项已领取次数 ≥ 最多领取次数即拦截。<span class="ref">PRD 规则 N2、N3、N4 · F01-01 领取次数限制判定</span></li>
+      <li><b>判定顺序</b>：活动现有校验通过后，按 同账户 → 同设备 → 同 IP 判断，只提示第一项不通过的。<span class="ref">PRD 规则 N5、N9</span></li>
+      <li><b>拦截</b>：不发放、不扣参与次数，按钮保持可点，转盘和抽奖在转动前拦截；Toast：同账户「本活动领取次数已达上限」、同设备「此设备领取次数已达上限」、同 IP「当前网络领取次数已达上限」。<span class="ref">PRD 规则 N6 · F01-02 拦截处理与提示</span></li>
+      <li><b>充值优惠</b>：选择时超过上限 → 优惠置灰并显示对应文案，可不选优惠充值（见「充值页」场景）；到账时超过 → 不发优惠，充值照常到账。<span class="ref">PRD 规则 N7</span></li>
+      <li><b>取不到设备标识或 IP</b>：需判定同设备或同 IP 时取不到，不发放、不扣次数，Toast「正在核验领取资格，请稍后再试」。<span class="ref">PRD 规则 N11 · F01-03 设备标识或 IP 获取失败处理</span></li>
+      <li><b>领取限制白名单</b>：名单内会员跳过同设备、同 IP 判定，同账户照常；其领取仍计入设备和 IP 的次数。<span class="ref">PRD 规则 N15</span></li>
+      <li><b>自动发放</b>：发放前同样判定，超过的账号本次不发放，无提示。<span class="ref">PRD 规则 N8</span></li>
+      <li><b>本版不考虑的识别情况</b>：换浏览器、在浏览器和 App 之间切换、清除缓存或重装 App 后被识别成新设备，以现有标识结果为准；对接三方风控服务后优化。<span class="ref">PRD 规则 N10</span></li>
+    </ol>
+    <h3>评审待确认</h3>
+    <ol>
+      <li><b>设备标识可靠性</b>：现有标识是设备指纹还是 UA、能否唯一区分手机、是否覆盖所有入口和各端，待技术确认；确认前不建议勾选同设备。<span class="ref">PRD 待确认 Q3</span></li>
+    </ol>
+    <div class="pager"><span></span><a href="../admin/单一设备领取奖励限制-后台活动奖励领取限制配置.html">下一页：后台活动奖励领取限制配置 →</a></div>
+  </aside>
+</div>
+</div>
+<script>window.NAV_ROOT = "../../";</script>
+<script src="../../assets/nav-data.js"></script>
+<script src="../../assets/nav.js"></script>
+<script src="../../assets/proto-en.js"></script>
+<script src="../../assets/proto.js"></script>
+<script>
+P.init({ defaults: { accN: "0", devN: "1", ipN: "0", accU: "0", devU: "0", ipU: "0", nodev: false, wl: false } });
+var LIM = [["0", "不限制（不勾选或填 0）"], ["1", "1 次"], ["3", "3 次"]], USED = [["0", "0 次"], ["1", "1 次"], ["3", "3 次"]];
+P.panel(document.getElementById("simPanel"), [
+  { title: "后台活动奖励领取限制（本活动，限制周期：每天）", items: [
+    { type: "select", key: "accN", label: "同账户 最多领取", options: LIM },
+    { type: "select", key: "devN", label: "同设备 最多领取", options: LIM },
+    { type: "select", key: "ipN", label: "同 IP 最多领取", options: LIM },
+    { type: "check", key: "wl", label: "当前会员在本活动的领取限制白名单" }
+  ] },
+  { title: "今天已领取次数", items: [
+    { type: "select", key: "accU", label: "当前账号", options: USED },
+    { type: "select", key: "devU", label: "本设备（所有账号合计）", options: USED },
+    { type: "select", key: "ipU", label: "当前 IP（所有账号合计）", options: USED },
+    { type: "check", key: "nodev", label: "取不到设备标识" }
+  ] },
+  { title: "演示值说明", items: [{ type: "note", text: "设置好后点手机画面里的「领取」看结果。示例数据均为虚构。" }] },
+  { items: [{ type: "reset" }] }
+]);
+</script>
+<script>
+(function () {
+  var MSG = { success: "领取成功", acc: "本活动领取次数已达上限", dev: "此设备领取次数已达上限", ip: "当前网络领取次数已达上限", nodevice: "正在核验领取资格，请稍后再试" };
+  var VIEWS = { default: 1, success: 1, acc: 1, dev: 1, ip: 1, nodevice: 1, deposit: 1 };
+  var btn = document.getElementById("claim");
+  function show(view, quiet) {
+    if (!VIEWS[view]) view = "default";
+    document.getElementById("vMain").hidden = view === "deposit"; document.getElementById("vDep").hidden = view !== "deposit";
+    var done = view === "success";
+    btn.disabled = done; btn.textContent = done ? "已领取" : "领取";
+    if (MSG[view] && !quiet) P.toast(MSG[view]);
+    if (location.hash.slice(1) !== view) history.replaceState(null, "", "#" + view);
+    if (window.self !== window.top) window.parent.postMessage({ type: "proto-view", view: view }, "*");
+  }
+  /* 按模拟状态判定领取结果（PRD N5：同账户 → 同设备 → 同 IP；N11 取不到设备标识） */
+  function over(k) { var n = +P.get(k + "N"); return n > 0 && +P.get(k + "U") >= n; }
+  function result() {
+    if (over("acc")) return "acc";
+    if (P.get("wl")) return "success";   /* 白名单会员跳过同设备、同 IP（N15） */
+    if (+P.get("devN") > 0) { if (P.get("nodev")) return "nodevice"; if (over("dev")) return "dev"; }
+    if (over("ip")) return "ip";
+    return "success";
+  }
+  btn.onclick = function () { show(result()); };
+  window.addEventListener("hashchange", function () { show(location.hash.slice(1) || "default"); });
+  /* 模拟场景按钮同时把模拟操作面板设成对应状态，之后点「领取」得到同样结果（本例限制周期为每天） */
+  var BASE = { accN: "0", devN: "1", ipN: "0", accU: "0", devU: "0", ipU: "0", nodev: false, wl: false };
+  var PRESET = {
+    default: {}, success: {},
+    acc: { accN: "1", accU: "1" },
+    dev: { devN: "1", devU: "1" },
+    ip: { ipN: "3", ipU: "3" },
+    nodevice: { nodev: true },
+    deposit: { devN: "1", devU: "1" }
+  };
+  function applyPreset(v) { var s = Object.assign({}, BASE, PRESET[v] || {}); Object.keys(s).forEach(function (k) { P.set(k, s[k]); }); }
+  document.addEventListener("click", function (e) { var b = e.target.closest("[data-go]"); if (b) { e.preventDefault(); applyPreset(b.dataset.go); show(b.dataset.go); } });
+  show(location.hash.slice(1) || "default");
+})();
+</script>
+</body>
+</html>
