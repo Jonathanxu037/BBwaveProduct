@@ -22,6 +22,10 @@
 .lim-frow{align-items:start}
 .lim-frow>.fl{height:32px;line-height:32px}
 .lim-wl{grid-column:1 / -1;display:flex;align-items:center;gap:10px;height:32px}
+.wl-imp{grid-column:1 / -1;display:grid;gap:8px;margin-top:6px;white-space:normal}
+.wl-imp-h{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.wl-imp-t{font-weight:600;color:#303133}
+.wl-imp-r{background:#DCDFE6;padding:8px 12px;line-height:1.8;color:#303133;max-width:560px}
 .lim-wl b{font-weight:400;color:#606266}
 /* 白名单弹窗高度固定为页面高度的 3/4；表格区域在弹窗内滚动，表头固定 */
 .wl-dlg{width:min(760px,96vw);height:75vh;box-sizing:border-box;grid-template-rows:auto auto auto minmax(0,1fr) auto auto auto}
@@ -83,7 +87,7 @@
           <div id="fields"></div>
           <div id="migrBox"></div>
           <div class="fsec glow">活动奖励领取限制</div>
-          <div class="frow lim-frow"><span class="fl">活动奖励领取限制<i class="qm" tabindex="0" data-tip="限制本活动同一设备、同一 IP、同一账户最多能领取几次。不勾选或填 0 为不限制；保存后立即生效。">?</i></span>
+          <div class="frow lim-frow"><span class="fl">活动奖励领取限制<i class="qm" tabindex="0" data-tip="限制本活动同一设备、同一 IP 最多能领取几次。不勾选或填 0 为不限制；保存后立即生效。">?</i></span>
             <div class="fctl"><div class="lim glow" id="limPage"></div></div></div>
           <div class="row2" style="justify-content:flex-start;padding-left:160px"><button class="bo-btn q" type="button" id="save" data-dev="D14">保存</button><button class="bo-btn" type="button" id="back">返回</button></div>
           <p style="font-size:12px;color:#909399;margin:10px 0 0">示例数据均为虚构。</p>
@@ -102,18 +106,16 @@
       <button type="button" data-go="edit"><span class="simtag">有列表</span>修改活动配置页</button>
       <button type="button" data-go="error"><span class="simtag">有列表</span>保存校验提示</button>
       <button type="button" data-go="direct"><span class="simtag">直接配置</span>KYC认证送彩金活动</button>
-      <button type="button" data-go="whitelist"><span class="simtag">白名单</span>管理白名单弹窗</button>
-      <button type="button" data-go="wlremove"><span class="simtag">白名单</span>移除确认</button>
       <button type="button" data-go="migrate"><span class="simtag">迁移</span>新用户转盘上线后</button>
     </div>
     <h3>规则批注</h3>
     <ol>
       <li><b>适用范围</b>：所有活动（含以后新增）的配置页都有本板块，位于现有配置之后、「保存」之前；用户领取和系统自动发放都按配置判定。<span class="ref">PRD 规则 N1 · F02-01 活动奖励领取限制板块</span></li>
-      <li><b>三项配置</b>：同设备、同 IP、同账户，每项有勾选框、限制周期（活动期间 / 每天 / 7 天 / 15 天 / 一个月）、最多领取次数；不勾选或填 0 为不限制；新建时不勾选。<span class="ref">PRD 规则 N2、N4</span></li>
-      <li><b>次数口径</b>：按本活动成功发放的次数统计，同设备、同 IP 为所有账号合计，同账户为该账号自己；不同活动分别计算。<span class="ref">PRD 规则 N3</span></li>
+      <li><b>两项配置</b>：同设备、同 IP，每项有勾选框、限制周期（活动期间 / 每天 / 7 天 / 15 天 / 一个月）、最多领取次数；不勾选或填 0 为不限制；新建时不勾选；不设同账户项（单账号次数沿用活动自身规则）。<span class="ref">PRD 规则 N2、N4</span></li>
+      <li><b>次数口径</b>：按本活动成功发放的次数统计，同设备、同 IP 为所有账号合计；不同活动分别计算。<span class="ref">PRD 规则 N3</span></li>
       <li><b>保存校验</b>：勾选后次数必填，为 0–9999 的整数；为空「请输入最多领取次数」，不合法「请输入 0–9999 的整数」，均不能保存。演示：清空次数或填 1.5 后点「保存」。<span class="ref">PRD 规则 N13 ①</span></li>
       <li><b>生效</b>：随活动保存后立即生效；活动进行中修改，已领取次数不清零；复制活动时一起复制。<span class="ref">PRD 规则 N13 ②–④</span></li>
-      <li><b>领取限制白名单</b>：只对本活动生效；名单内会员跳过同设备、同 IP，同账户和活动现有规则照常，其领取仍计入设备和 IP 次数。添加、移除立即生效；创建配置页需先保存活动（按钮置灰）。弹窗高度为页面 3/4，表格在弹窗内滚动。演示：输入 nouser 看「会员账号不存在」，输入列表已有账号看「该会员已在白名单中」。<span class="ref">PRD 规则 N15 · F02-03 领取限制白名单</span></li>
+      <li><b>领取限制白名单</b>：沿用后台现有白名单导入组件（导入文件、已导入文件下载、导入结果统计），不改组件；每个活动单独导入，只对本活动生效，随活动「保存」生效。名单内会员跳过同设备、同 IP，其领取仍计入设备和 IP 次数。演示：点「导入文件」看导入结果。<span class="ref">PRD 规则 N15 · F02-03 领取限制白名单</span></li>
       <li><b>新用户转盘</b>：去掉原有设备、IP 两项；设备项迁移为「同设备 · 活动期间 · 原值」，IP 项口径不同不迁移。<span class="ref">PRD 规则 N14 · F02-02 新用户转盘原配置并入</span></li>
     </ol>
     <h3>评审待确认</h3>
@@ -128,13 +130,13 @@
 <script>
 (function () {
   function msg(t, bad) { var m = document.createElement("div"); m.className = "bo-msg " + (bad ? "err" : "ok"); m.textContent = t; m.setAttribute("role", "status"); document.body.appendChild(m); setTimeout(function () { m.remove(); }, 1800); }
-  var ITEMS = [["dev", "同设备"], ["ip", "同 IP"], ["acc", "同账户"]];
+  var ITEMS = [["dev", "同设备"], ["ip", "同 IP"]];
   /* 每个示例活动的配置（虚构） */
   var CFG = {
-    old:  { dev: { on: true, per: "活动期间", n: "1" }, ip: { on: false, per: "活动期间", n: "" }, acc: { on: false, per: "活动期间", n: "" } },
-    kyc:  { dev: { on: true, per: "每天", n: "1" }, ip: { on: true, per: "7 天", n: "5" }, acc: { on: false, per: "活动期间", n: "" } },
-    nus:  { dev: { on: true, per: "活动期间", n: "3" }, ip: { on: false, per: "活动期间", n: "" }, acc: { on: false, per: "活动期间", n: "" } },
-    create: { dev: { on: false, per: "活动期间", n: "" }, ip: { on: false, per: "活动期间", n: "" }, acc: { on: false, per: "活动期间", n: "" } }
+    old:  { dev: { on: true, per: "活动期间", n: "1" }, ip: { on: false, per: "活动期间", n: "" } },
+    kyc:  { dev: { on: true, per: "每天", n: "1" }, ip: { on: true, per: "7 天", n: "5" } },
+    nus:  { dev: { on: true, per: "活动期间", n: "3" }, ip: { on: false, per: "活动期间", n: "" } },
+    create: { dev: { on: false, per: "活动期间", n: "" }, ip: { on: false, per: "活动期间", n: "" } }
   };
   /* 每个活动配置页的现有字段（只作示意，不改动）：[名称, 值, 是否必填] */
   var FIELDS = {
@@ -178,12 +180,18 @@
       sync(); box.appendChild(row);
     });
     var tip = document.createElement("div"); tip.className = "lim-tip"; tip.textContent = "不勾选或填 0 为不限制；次数按本活动成功发放的次数统计。"; box.appendChild(tip);
-    var wl = document.createElement("div"); wl.className = "lim-wl";
-    wl.innerHTML = '<span>领取限制白名单<i class="qm" tabindex="0" data-tip="名单内的会员领取本活动时不做同设备、同 IP 判定，同账户和活动其他条件照常；只对本活动生效。">?</i></span><b></b><button class="bo-btn" type="button">管理白名单</button>';
-    wl.querySelector("b").textContent = "已添加 " + WL[key].length + " 个会员";
-    var mb = wl.querySelector("button"); if (first) mb.setAttribute("data-dev", "D16");
-    if (key === "create") { mb.disabled = true; var tp = document.createElement("span"); tp.className = "old"; tp.textContent = "保存活动后可配置"; wl.appendChild(tp); }
-    mb.onclick = function () { wlDialog(key, function () { wl.querySelector("b").textContent = "已添加 " + WL[key].length + " 个会员"; }); };
+    /* 领取限制白名单：沿用后台现有「白名单导入」组件（PRD N15），原型只示意 */
+    var wl = document.createElement("div"); wl.className = "wl-imp";
+    wl.innerHTML = '<div class="wl-imp-h"><span>领取限制白名单<i class="qm" tabindex="0" data-tip="沿用现有白名单导入。名单内的会员领取本活动时不受同设备、同 IP 限制；只对本活动生效，导入后保存生效。">?</i></span>' +
+      '<button class="bo-btn q" type="button" data-imp="1">导入文件</button><button class="bo-btn q" type="button" data-dl="1">已导入文件下载</button></div>' +
+      '<div class="wl-imp-t">导入结果：</div><div class="wl-imp-r"></div>';
+    var res = wl.querySelector(".wl-imp-r"), done = WL[key].length;
+    function stat(c, t, ok, bad, dup, w, ms) { res.innerHTML = "已清除: " + c + " | 总行数: " + t + " | 有效: " + ok + " | 无效: " + bad + "<br>文件内重复: " + dup + " | 已写入: " + w + " | 耗时: " + ms + " ms"; }
+    stat(0, 0, 0, 0, 0, 0, 0);
+    var ib = wl.querySelector("[data-imp]"), db = wl.querySelector("[data-dl]");
+    if (first) { ib.setAttribute("data-dev", "D20"); db.setAttribute("data-dev", "D21"); res.setAttribute("data-dev", "D22"); }
+    ib.onclick = function () { stat(done, 25, 24, 1, 1, 24, 126); done = 24; msg("导入完成，保存活动后生效"); };
+    db.onclick = function () { msg(done ? "下载已导入的白名单文件（原型不下载）" : "暂无已导入文件", !done); };
     box.appendChild(wl);
   }
   function check(box) { var ok = true, firstBad = null; [].forEach.call(box.querySelectorAll(".lim-row"), function (r) { if (!r._check() && ok) { ok = false; firstBad = r; } }); if (firstBad) firstBad.querySelector("input.bo-inp").focus(); return ok; }
@@ -218,71 +226,11 @@
     menu("old");
     document.getElementById("page").hidden = true; document.getElementById("listView").hidden = false;
   }
-  /* 管理白名单弹窗：查询、添加、移除、分页 */
-  var wlMask = null, cfmMask = null;
-  function wlClose() { if (cfmMask) { cfmMask.remove(); cfmMask = null; } if (wlMask) { wlMask.remove(); wlMask = null; } }
-  function wlDialog(key, onChange, openRemove) {
-    wlClose();
-    var DATA = WL[key], view = DATA, PG = { size: 20, page: 1 };
-    wlMask = document.createElement("div"); wlMask.className = "bo-mask";
-    wlMask.innerHTML = '<div class="bo-dlg wl-dlg" role="dialog" aria-modal="true" aria-label="领取限制白名单"><h4>领取限制白名单</h4>' +
-      '<div class="wl-add"><span><span class="req">*</span>会员账号</span><input class="bo-inp" id="wAcc" placeholder="请输入会员名" style="width:170px" data-dev="D17"><span>备注</span><input class="bo-inp" id="wMemo" maxlength="100" placeholder="选填，最多 100 个字" style="width:200px"><button class="bo-btn n" type="button" id="wAdd">添加</button><div class="ferr" id="wErr"></div></div>' +
-      '<div class="wl-bar"><input class="bo-inp" id="wQ" placeholder="会员账号" style="width:170px" aria-label="查询会员账号"><button class="bo-btn q" type="button" id="wSearch">查询</button><button class="bo-btn" type="button" id="wReset">重置</button></div>' +
-      '<div class="wl-tbl"><table><thead><tr><th>会员账号</th><th>备注</th><th>添加时间</th><th>操作人</th><th>操作</th></tr></thead><tbody id="wBody"></tbody></table></div>' +
-      '<div class="bo-page" role="navigation" aria-label="分页" data-dev="D19"><span>共 <b id="wTotal">0</b> 条</span><label>每页 <select id="wSize" aria-label="每页条数"><option>10</option><option selected>20</option><option>50</option><option>100</option></select> 条</label><button type="button" id="wPrev" aria-label="上一页">‹</button><span id="wNums"></span><button type="button" id="wNext" aria-label="下一页">›</button><label>前往 <input id="wGo" inputmode="numeric" aria-label="前往页码" value="1"> 页</label></div>' +
-      '<p class="wl-note">添加、移除后立即生效。示例数据均为虚构。</p>' +
-      '<div class="row2"><button class="bo-btn q" type="button" id="wClose">关闭</button></div></div>';
-    document.body.appendChild(wlMask);
-    var $ = function (id) { return wlMask.querySelector("#" + id); };
-    function pages() { return Math.max(1, Math.ceil(view.length / PG.size)); }
-    function draw() {
-      var n = pages(); PG.page = Math.min(Math.max(1, PG.page), n);
-      var rows = view.slice((PG.page - 1) * PG.size, PG.page * PG.size), body = $("wBody");
-      body.innerHTML = rows.length ? "" : '<tr><td colspan="5" style="text-align:center;color:#909399">暂无数据</td></tr>';
-      rows.forEach(function (r, k) {
-        var tr = document.createElement("tr");
-        [r.acc, r.memo, r.at, r.by].forEach(function (v) { var td = document.createElement("td"); td.textContent = v; tr.appendChild(td); });
-        var td = document.createElement("td"), b = document.createElement("button"); b.type = "button"; b.className = "bo-btn link"; b.textContent = "移除"; if (k === 0) b.setAttribute("data-dev", "D18");
-        b.onclick = function () { confirmRemove(r); }; td.appendChild(b); tr.appendChild(td); body.appendChild(tr);
-      });
-      $("wTotal").textContent = view.length;
-      var box = $("wNums"); box.textContent = "";
-      for (var i = 1; i <= n; i++) { var pb = document.createElement("button"); pb.type = "button"; pb.textContent = i; if (i === PG.page) pb.setAttribute("aria-current", "page"); pb.onclick = (function (k) { return function () { PG.page = k; draw(); }; })(i); box.appendChild(pb); }
-      $("wPrev").disabled = PG.page <= 1; $("wNext").disabled = PG.page >= n; $("wGo").value = PG.page;
-    }
-    function filter() { var q = $("wQ").value.trim(); view = q ? DATA.filter(function (r) { return r.acc === q; }) : DATA; PG.page = 1; draw(); }
-    function confirmRemove(r) {
-      cfmMask = document.createElement("div"); cfmMask.className = "bo-mask";
-      cfmMask.innerHTML = '<div class="bo-dlg" role="dialog" aria-modal="true" aria-label="移除确认"><h4>提示</h4><p style="margin:0">确定将该会员移出白名单？</p><p style="margin:0;color:#909399" class="rm"></p><div class="row2"><button class="bo-btn" type="button" data-x="0">取消</button><button class="bo-btn q" type="button" data-x="1">确定</button></div></div>';
-      cfmMask.querySelector(".rm").textContent = "会员账号：" + r.acc;
-      cfmMask.onclick = function (e) { var x = e.target.dataset.x; if (x === undefined) return;
-        if (x === "1") { var i = DATA.indexOf(r); if (i >= 0) DATA.splice(i, 1); view = view.filter(function (y) { return y !== r; }); msg("移除成功"); draw(); onChange(); }
-        cfmMask.remove(); cfmMask = null; };
-      document.body.appendChild(cfmMask);
-    }
-    $("wAdd").onclick = function () {
-      var a = $("wAcc").value.trim(), err = $("wErr"); err.textContent = "";
-      if (!a) { err.textContent = "请输入会员账号"; return; }
-      if (a === "nouser") { err.textContent = "会员账号不存在"; return; }
-      if (DATA.some(function (r) { return r.acc === a; })) { err.textContent = "该会员已在白名单中"; return; }
-      DATA.unshift({ acc: a, memo: $("wMemo").value.trim() || "-", at: "2026-11-10 14:30:00", by: "运营账号A" });
-      $("wAcc").value = ""; $("wMemo").value = ""; $("wQ").value = ""; msg("添加成功"); filter(); onChange();
-    };
-    $("wSearch").onclick = filter; $("wReset").onclick = function () { $("wQ").value = ""; filter(); };
-    $("wPrev").onclick = function () { PG.page--; draw(); }; $("wNext").onclick = function () { PG.page++; draw(); };
-    $("wSize").onchange = function () { PG.size = +this.value; PG.page = 1; draw(); };
-    $("wGo").onkeydown = function (e) { if (e.key === "Enter") { var v = parseInt(this.value, 10); if (!isNaN(v)) PG.page = v; draw(); } };
-    $("wClose").onclick = wlClose;
-    draw();
-    if (openRemove && view[0]) confirmRemove(view[0]);
-  }
   function show(v) {
-    if (["list", "create", "edit", "error", "direct", "whitelist", "wlremove", "migrate"].indexOf(v) < 0) v = "edit";
-    wlClose();
+    if (["list", "create", "edit", "error", "direct", "migrate"].indexOf(v) < 0) v = "edit";
     if (v === "list") listView();
     else setPage({ migrate: "nus", direct: "kyc", create: "create" }[v] || "old");
     if (v === "error") { var r = page.querySelector(".lim-row"); r.querySelector("input.bo-inp").value = ""; check(page); }
-    if (v === "whitelist" || v === "wlremove") wlDialog("old", function () { build(page, CFG.old, true, "old"); }, v === "wlremove");
     if (location.hash.slice(1) !== v) history.replaceState(null, "", "#" + v);
     if (window.self !== window.top) window.parent.postMessage({ type: "proto-view", view: v }, "*");
   }

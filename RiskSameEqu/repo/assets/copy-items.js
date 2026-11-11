@@ -8,4 +8,5 @@
 window.COPY_ITEMS = [
   // { id: "T01", page: "【页面名称】", place: "【位置，如：领取成功弹窗标题】", zh: "【中文文案】", en: "【English copy（示意）】", note: "【英文未定稿】" },
   // 多迭代示例：{ id: "T01", iter: "v1.0", lang: "前台英文", use: "弹窗", page: "【页面名称】", place: "【位置】", zh: "【中文】", en: "【English（示意）】", note: "【英文未定稿】" },
+  { id: "T04", lang: "前台英文", use: "Toast", page: "活动奖励领取", place: "领取被限制时的提示（L01 同设备、L02 同 IP、L03 取不到设备标识或 IP）", zh: "奖励领取限制[编号]", en: "Reward claim limit [L01]", note: "英文为新写，未定稿" },
 ];

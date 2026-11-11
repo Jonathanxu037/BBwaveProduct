@@ -151,8 +151,8 @@
   var MAX_MB = 10, BIG_W = 3840, BIG_MB = 5, FIT_W = 2880;
   /* 原型的视图（按页面路径）；没有列出的页面只显示整页 */
   var VIEWS = {
-    "prototype/front/单一设备领取奖励限制-活动奖励领取.html": [["default", "可领取"], ["success", "领取成功"], ["acc", "同账户达上限"], ["dev", "同设备达上限"], ["ip", "同 IP 达上限"], ["nodevice", "取不到设备标识或 IP"], ["deposit", "充值页优惠置灰"]],
-    "prototype/admin/单一设备领取奖励限制-后台活动奖励领取限制配置.html": [["list", "活动列表页"], ["create", "创建活动配置页"], ["edit", "修改活动配置页"], ["error", "保存校验提示"], ["direct", "直接显示的配置页"], ["whitelist", "管理白名单弹窗"], ["wlremove", "白名单移除确认"], ["migrate", "新用户转盘上线后"]]
+    "prototype/front/单一设备领取奖励限制-活动奖励领取.html": [["default", "可领取"], ["success", "领取成功"], ["dev", "L01 同设备达上限"], ["ip", "L02 同 IP 达上限"], ["nodevice", "L03 取不到设备标识或 IP"], ["deposit", "充值页优惠置灰"]],
+    "prototype/admin/单一设备领取奖励限制-后台活动奖励领取限制配置.html": [["list", "活动列表页"], ["create", "创建活动配置页"], ["edit", "修改活动配置页"], ["error", "保存校验提示"], ["direct", "直接显示的配置页"], ["migrate", "新用户转盘上线后"]]
   };
   function $(id) { return document.getElementById(id); }
   function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }

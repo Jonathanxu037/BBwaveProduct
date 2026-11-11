@@ -20,76 +20,75 @@
 <hr class="doc-rule">
 
 <h2 id="q0">适用范围 <span class="en-t">Scope</span></h2>
-<div class="bi"><div class="zh">所有活动，H5、PWA、iOS、Android 均适用。运营按活动设置同一设备、同一网络（IP）、同一账号最多领取几次，限制周期可选活动期间、每天、7 天、15 天或一个月（自然月）。未设置的活动不受限制。</div><div class="en">All promotions on H5, PWA, iOS and Android. For each promotion, Operations sets how many times one device, one network (IP) or one account can claim it, counted over the whole promotion, per day, per 7 or 15 days, or per calendar month. Promotions without these settings are not limited.</div></div>
+<div class="bi"><div class="zh">所有活动，H5、PWA、iOS、Android 均适用。运营按活动设置同一设备、同一网络（IP）最多领取几次，限制周期可选活动期间、每天、7 天、15 天或一个月（自然月）。未设置的活动不受限制。单个账号的领取次数沿用各活动自身规则。</div><div class="en">All promotions on H5, PWA, iOS and Android. For each promotion, Operations sets how many times one device or one network (IP) can claim it, counted over the whole promotion, per day, per 7 or 15 days, or per calendar month. Promotions without these settings are not limited. Each account's own limit follows the promotion's existing rules.</div></div>
 
-<h2 id="q1">这次改了什么 <span class="en-t">What changed</span></h2>
-<div class="bi"><div class="zh">超过次数时不发奖励、不扣参与次数，并提示：账号达到上限「Claim limit reached for this promotion.」，设备达到上限「Claim limit reached on this device.」，网络达到上限「Claim limit reached on this network.」。充值页的优惠达到上限时不可选，玩家仍可不选优惠充值。自动发放的奖励达到上限时不发放，无提示。不同活动分别计算。</div><div class="en">Beyond the limit, no reward is given and no chances are used. The player sees "Claim limit reached for this promotion." (account), "Claim limit reached on this device." (device) or "Claim limit reached on this network." (network). On the deposit page, an offer that has reached its limit cannot be selected, but the player can still deposit without it. Auto-credited rewards beyond the limit are not credited, with no message. Each promotion is counted separately.</div></div>
+<h2 id="q1">提示编号对照 <span class="en-t">Message codes</span></h2>
+<div class="bi"><div class="zh">被限制时，玩家看到统一提示「Reward claim limit [编号]」，不发奖励、不扣参与次数。客服按编号判断原因。充值页的优惠被限制时不可选，下方显示同样的提示。自动发放的奖励被限制时不发放，没有提示。</div><div class="en">When blocked, the player sees "Reward claim limit [code]". No reward is given and no chances are used. Use the code to identify the reason. On the deposit page, a blocked offer cannot be selected and shows the same message. Auto-credited rewards that are blocked are not credited, with no message.</div></div>
+<div class="tbl"><table class="qa-tbl">
+  <thead><tr><th>编号 <small>Code</small></th><th>原因（内部） <small>Reason (internal)</small></th><th>回复玩家 <small>Reply</small></th></tr></thead>
+  <tbody>
+    <tr><td><b>L01</b></td><td class="bi"><div class="zh">这台设备在该活动的领取次数已达上限（设备上所有账号合计）</div><div class="en">This device has reached the claim limit for this promotion (all accounts on the device combined)</div></td><td class="bi"><div class="en">This promotion can only be claimed a limited number of times per device, and the limit on your device has been reached. You can still join other promotions.</div><div class="zh">该活动在每台设备上的领取次数有限，您这台设备已达到上限。其他活动仍可正常参加。</div></td></tr>
+    <tr><td><b>L02</b></td><td class="bi"><div class="zh">当前网络（IP）在该活动的领取次数已达上限（同一网络所有账号合计）</div><div class="en">This network (IP) has reached the claim limit for this promotion (all accounts on the network combined)</div></td><td class="bi"><div class="en">This promotion can only be claimed a limited number of times per network, and the limit on your current network has been reached. Please try another network later, or join other promotions.</div><div class="zh">该活动在每个网络下的领取次数有限，您当前网络已达到上限。可以稍后换一个网络再试，或参加其他活动。</div></td></tr>
+    <tr><td><b>L03</b></td><td class="bi"><div class="zh">暂时无法核验设备或网络，本次未发放，次数未扣</div><div class="en">The device or network could not be verified; nothing was given and no chances were used</div></td><td class="bi"><div class="en">We could not verify your device or network just now. Your chances have not been used. Please refresh the page or reopen the app and try again.</div><div class="zh">刚才没能核验您的设备或网络，您的领取次数没有被扣除。请刷新页面或重新打开 App 后再试。</div></td></tr>
+  </tbody>
+</table></div>
 
 <h2 id="q2">客服核查步骤 <span class="en-t">How to check</span></h2>
 <ol class="qa-steps">
-  <li class="bi"><div class="zh"><b>问清情况</b>：玩家在哪个活动、看到哪句提示、这台设备或这个网络（如家里 Wi-Fi）是否有其他账号（含家人）用过。</div><div class="en"><b>Ask</b>: which promotion, which message, and whether other accounts (including family members) have used this device or network (such as home Wi-Fi).</div></li>
+  <li class="bi"><div class="zh"><b>问清情况</b>：玩家在哪个活动、提示里的编号、这台设备或这个网络（如家里 Wi-Fi）是否有其他账号（含家人）用过。</div><div class="en"><b>Ask</b>: which promotion, the code in the message, and whether other accounts (including family members) have used this device or network (such as home Wi-Fi).</div></li>
   <li class="bi"><div class="zh"><b>判断是否误伤</b>：玩家只用自己的账号，或与家人共用设备、网络且都是正常用户时，转运营核实。</div><div class="en"><b>Judge</b>: if the player only uses their own account, or family members share the device or network and are genuine players, escalate to Operations.</div></li>
-  <li class="bi"><div class="zh"><b>运营处理</b>：核实后把该会员加入这个活动的「领取限制白名单」，立即生效（只对这个活动有效，账号自己的次数上限照常）；也可以调大次数。</div><div class="en"><b>Operations</b>: after checking, Operations adds the member to that promotion's "Claim Limit Whitelist", which takes effect immediately. It only applies to that promotion, and the account's own limit still applies. Operations may also raise the limit.</div></li>
+  <li class="bi"><div class="zh"><b>运营处理</b>：核实后把该会员导入这个活动的「领取限制白名单」并保存活动（只对这个活动有效）；也可以调大次数。</div><div class="en"><b>Operations</b>: after checking, Operations imports the member into that promotion's "Claim Limit Whitelist" and saves the promotion (it only applies to that promotion). Operations may also raise the limit.</div></li>
 </ol>
 
 <h2 id="q3">问答 <span class="en-t">Q&amp;A</span></h2>
 <section class="qa-card" id="qa1">
-  <h3><span class="qa-no">1</span><span class="bi-inline"><span class="zh">为什么提示这台设备或这个网络领取次数已达上限？我从没领过。</span><span class="en">Why does it say the limit is reached on this device or network? I never claimed it.</span></span></h3>
+  <h3><span class="qa-no">1</span><span class="bi-inline"><span class="zh">提示「Reward claim limit [L01]」或「[L02]」，我从没领过，为什么？</span><span class="en">It says "Reward claim limit [L01]" or "[L02]", but I never claimed it. Why?</span></span></h3>
   <div class="qa-row"><b>回复玩家<small>Reply</small></b>
-    <div class="bi"><div class="en qa-reply">Each promotion can only be claimed a limited number of times per device and per network. Another account on this device or network may have already claimed it. You can still join other promotions. If no one else uses this device or network, please tell us your account and we will check for you.<button type="button" class="qa-copy">复制 Copy</button></div>
-    <div class="zh">每个活动在同一设备、同一网络上的领取次数有限，这台设备或这个网络上的其他账号可能已经领取过。其他活动仍可正常参加。如果没有其他人使用这台设备或这个网络，请告诉我们您的账号，我们帮您核查。</div></div></div>
+    <div class="bi"><div class="en qa-reply">This promotion can only be claimed a limited number of times per device and per network. Another account on your device or network may have already claimed it. You can still join other promotions. If no one else uses this device or network, please tell us your account and we will check for you.<button type="button" class="qa-copy">复制 Copy</button></div>
+    <div class="zh">该活动在同一设备、同一网络上的领取次数有限，您设备或网络上的其他账号可能已经领取过。其他活动仍可正常参加。如果没有其他人使用这台设备或这个网络，请告诉我们您的账号，我们帮您核查。</div></div></div>
   <div class="qa-row"><b>客服核查<small>Check</small></b>
-    <div class="bi"><div class="zh">确认玩家账号、活动名称和提示内容，问清设备、网络是否与他人共用。</div><div class="en">Confirm the account, promotion name and message, and whether the device or network is shared.</div></div></div>
+    <div class="bi"><div class="zh">确认账号、活动名称和编号（L01 设备、L02 网络），问清设备、网络是否与他人共用。</div><div class="en">Confirm the account, promotion name and code (L01 device, L02 network), and whether the device or network is shared.</div></div></div>
   <div class="qa-row"><b>转交<small>Escalate</small></b>
     <div class="bi"><div class="zh">玩家坚持没有他人使用，或确属家人共用 → 转运营核实是否加白名单。</div><div class="en">If the player insists no one else uses it, or family members genuinely share it → escalate to Operations to decide on the whitelist.</div></div></div>
 </section>
 <section class="qa-card" id="qa2">
-  <h3><span class="qa-no">2</span><span class="bi-inline"><span class="zh">提示「Claim limit reached for this promotion.」，为什么不能再领了？</span><span class="en">It says "Claim limit reached for this promotion." Why can't I claim again?</span></span></h3>
+  <h3><span class="qa-no">2</span><span class="bi-inline"><span class="zh">提示「Reward claim limit [L03]」怎么办？</span><span class="en">What should I do when I see "Reward claim limit [L03]"?</span></span></h3>
   <div class="qa-row"><b>回复玩家<small>Reply</small></b>
-    <div class="bi"><div class="en qa-reply">You have reached the maximum number of claims for this promotion. Please check the promotion rules, and feel free to join our other promotions.<button type="button" class="qa-copy">复制 Copy</button></div>
-    <div class="zh">您在这个活动的领取次数已达上限。请查看活动规则，也欢迎参加其他活动。</div></div></div>
-  <div class="qa-row"><b>客服核查<small>Check</small></b>
-    <div class="bi"><div class="zh">确认活动名称；这是账号自己的次数上限，不涉及其他账号。</div><div class="en">Confirm the promotion name. This is the account's own limit and does not involve other accounts.</div></div></div>
-  <div class="qa-row"><b>转交<small>Escalate</small></b>
-    <div class="bi"><div class="zh">玩家认为次数不对 → 转运营核实。</div><div class="en">If the player thinks the count is wrong → escalate to Operations.</div></div></div>
-</section>
-<section class="qa-card" id="qa3">
-  <h3><span class="qa-no">3</span><span class="bi-inline"><span class="zh">提示「Verifying your eligibility. Please try again later.」怎么办？</span><span class="en">What should I do when I see "Verifying your eligibility. Please try again later."?</span></span></h3>
-  <div class="qa-row"><b>回复玩家<small>Reply</small></b>
-    <div class="bi"><div class="en qa-reply">We could not verify your device just now. Your chances have not been used. Please refresh the page or reopen the app and try again.<button type="button" class="qa-copy">复制 Copy</button></div>
-    <div class="zh">刚才没能核验您的设备，您的领取次数没有被扣除。请刷新页面或重新打开 App 后再试。</div></div></div>
+    <div class="bi"><div class="en qa-reply">We could not verify your device or network just now. Your chances have not been used. Please refresh the page or reopen the app and try again.<button type="button" class="qa-copy">复制 Copy</button></div>
+    <div class="zh">刚才没能核验您的设备或网络，您的领取次数没有被扣除。请刷新页面或重新打开 App 后再试。</div></div></div>
   <div class="qa-row"><b>客服核查<small>Check</small></b>
     <div class="bi"><div class="zh">问清使用的端（H5、App）和浏览器。</div><div class="en">Ask which platform (H5, app) and browser they use.</div></div></div>
   <div class="qa-row"><b>转交<small>Escalate</small></b>
     <div class="bi"><div class="zh">多次重试仍失败 → 转技术。</div><div class="en">Still failing after several tries → escalate to Tech.</div></div></div>
 </section>
-<section class="qa-card" id="qa4">
-  <h3><span class="qa-no">4</span><span class="bi-inline"><span class="zh">充值页的优惠为什么选不了？</span><span class="en">Why can't I select the offer on the deposit page?</span></span></h3>
+<section class="qa-card" id="qa3">
+  <h3><span class="qa-no">3</span><span class="bi-inline"><span class="zh">充值页的优惠为什么选不了？</span><span class="en">Why can't I select the offer on the deposit page?</span></span></h3>
   <div class="qa-row"><b>回复玩家<small>Reply</small></b>
-    <div class="bi"><div class="en qa-reply">This offer has reached its claim limit for your account, device or network. You can still deposit without the offer, or choose another available offer.<button type="button" class="qa-copy">复制 Copy</button></div>
-    <div class="zh">这个优惠在您的账号、设备或网络上的领取次数已达上限。您仍可以不选优惠充值，或选择其他可用的优惠。</div></div></div>
+    <div class="bi"><div class="en qa-reply">This offer has reached its claim limit on your device or network. You can still deposit without the offer, or choose another available offer.<button type="button" class="qa-copy">复制 Copy</button></div>
+    <div class="zh">这个优惠在您的设备或网络上的领取次数已达上限。您仍可以不选优惠充值，或选择其他可用的优惠。</div></div></div>
   <div class="qa-row"><b>客服核查<small>Check</small></b>
-    <div class="bi"><div class="zh">确认优惠名称和优惠下方的提示内容。</div><div class="en">Confirm the offer name and the message shown under it.</div></div></div>
+    <div class="bi"><div class="zh">确认优惠名称和优惠下方提示里的编号。</div><div class="en">Confirm the offer name and the code shown under it.</div></div></div>
   <div class="qa-row"><b>转交<small>Escalate</small></b>
     <div class="bi"><div class="zh">玩家认为被误伤 → 转运营核实。</div><div class="en">If the player believes it is a mistake → escalate to Operations.</div></div></div>
-<section class="qa-card" id="qa5">
-  <h3><span class="qa-no">5</span><span class="bi-inline"><span class="zh">这次为什么没收到自动发放的奖励（如登录彩金）？</span><span class="en">Why didn't I receive the auto-credited reward (such as the login bonus) this time?</span></span></h3>
+</section>
+<section class="qa-card" id="qa4">
+  <h3><span class="qa-no">4</span><span class="bi-inline"><span class="zh">这次为什么没收到自动发放的奖励（如登录彩金）？</span><span class="en">Why didn't I receive the auto-credited reward (such as the login bonus) this time?</span></span></h3>
   <div class="qa-row"><b>回复玩家<small>Reply</small></b>
-    <div class="bi"><div class="en qa-reply">Each promotion can only be credited a limited number of times per account, device and network. This reward may have already been credited to another account on your device or network, or your account has reached its limit. Please tell us your account and we will check for you.<button type="button" class="qa-copy">复制 Copy</button></div>
-    <div class="zh">每个活动在同一账号、设备、网络上的发放次数有限。这次奖励可能已发给您设备或网络上的其他账号，或您的账号已达到上限。请告诉我们您的账号，我们帮您核查。</div></div></div>
+    <div class="bi"><div class="en qa-reply">Each promotion can only be credited a limited number of times per device and per network. This reward may have already been credited to another account on your device or network. Please tell us your account and we will check for you.<button type="button" class="qa-copy">复制 Copy</button></div>
+    <div class="zh">每个活动在同一设备、同一网络上的发放次数有限，这次奖励可能已发给您设备或网络上的其他账号。请告诉我们您的账号，我们帮您核查。</div></div></div>
   <div class="qa-row"><b>客服核查<small>Check</small></b>
     <div class="bi"><div class="zh">确认账号、活动名称和应发放日期，问清设备、网络是否与他人共用。</div><div class="en">Confirm the account, promotion name and expected date, and whether the device or network is shared.</div></div></div>
   <div class="qa-row"><b>转交<small>Escalate</small></b>
-    <div class="bi"><div class="zh">转运营核实；确属误伤时，运营可把会员加入该活动的白名单。</div><div class="en">Escalate to Operations; if it is a mistake, Operations can add the member to that promotion's whitelist.</div></div></div>
+    <div class="bi"><div class="zh">转运营核实；确属误伤时，运营可把会员导入该活动的白名单。</div><div class="en">Escalate to Operations; if it is a mistake, Operations can import the member into that promotion's whitelist.</div></div></div>
 </section>
 
 <h2 id="q4">转交与升级 <span class="en-t">Escalation</span></h2>
 <div class="tbl"><table class="qa-tbl">
   <thead><tr><th>情况 <small>Situation</small></th><th>转给 <small>To</small></th></tr></thead>
   <tbody>
-    <tr><td class="bi"><div class="zh">玩家认为被误伤（共用设备或网络）</div><div class="en">Player believes it is a mistake (shared device or network)</div></td><td class="bi"><div class="zh">运营</div><div class="en">Operations</div></td></tr>
+    <tr><td class="bi"><div class="zh">L01、L02：玩家认为被误伤（共用设备或网络）</div><div class="en">L01, L02: player believes it is a mistake (shared device or network)</div></td><td class="bi"><div class="zh">运营</div><div class="en">Operations</div></td></tr>
     <tr><td class="bi"><div class="zh">自动发放的奖励没收到</div><div class="en">Auto-credited reward not received</div></td><td class="bi"><div class="zh">运营</div><div class="en">Operations</div></td></tr>
-    <tr><td class="bi"><div class="zh">一直提示「Verifying your eligibility」</div><div class="en">Keeps seeing "Verifying your eligibility"</div></td><td class="bi"><div class="zh">技术</div><div class="en">Tech</div></td></tr>
+    <tr><td class="bi"><div class="zh">L03：多次重试仍失败</div><div class="en">L03: still failing after several tries</div></td><td class="bi"><div class="zh">技术</div><div class="en">Tech</div></td></tr>
     <tr><td class="bi"><div class="zh">被拦截后余额减少或次数被扣；充值后本金没到账</div><div class="en">Balance dropped or chances were used after being blocked; deposit not credited</div></td><td class="bi"><div class="zh">技术</div><div class="en">Tech</div></td></tr>
   </tbody>
 </table></div>
@@ -97,8 +96,9 @@
 <h2 id="q5">内部说明 <span class="en-t">Internal notes</span></h2>
 <ul class="qa-open">
   <li class="bi"><div class="zh">（内部说明，不对玩家解释）本版同一设备换浏览器、在网页和 App 之间切换、清除缓存或重装 App 后，可能被识别成新设备，属已知情况，后续对接三方风控服务后优化。玩家询问设备如何识别时，转运营。</div><div class="en">(Internal only, do not explain to players) In this version, switching browsers, switching between the website and the app, clearing cache or reinstalling the app may make the same device look like a new one. This is known and will be improved after a third-party risk control service is connected. Escalate questions about how devices are identified to Operations.</div></li>
-  <li class="bi"><div class="zh">（内部说明）充值到账时优惠因达到上限未发放时，系统不另行通知玩家；玩家询问时，说明该优惠在其账号、设备或网络上的领取次数已达上限，充值金额已正常到账。</div><div class="en">(Internal only) When a deposit is credited but the offer is not given because the limit was reached, the player is not notified. If asked, explain that the offer has reached its claim limit for their account, device or network, and that the deposit has been credited normally.</div></li>
+  <li class="bi"><div class="zh">（内部说明）充值到账时优惠因达到上限未发放时，系统不另行通知玩家；玩家询问时，说明该优惠在其设备或网络上的领取次数已达上限，充值金额已正常到账。</div><div class="en">(Internal only) When a deposit is credited but the offer is not given because the limit was reached, the player is not notified. If asked, explain that the offer has reached its claim limit on their device or network, and that the deposit has been credited normally.</div></li>
 </ul>
+
 </article></div>
 </div>
 <script>window.NAV_ROOT = "../";</script>
