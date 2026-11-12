@@ -15,7 +15,7 @@
 .ep-exp{color:#F56C6C}.ag-tree{border:1px solid #DCDFE6;border-radius:4px;padding:4px 8px;background:#fff;max-width:360px}.ag-n{display:flex;align-items:center;gap:4px;line-height:26px;font-size:13px}.ag-n label{display:inline-flex;align-items:center;gap:4px;cursor:pointer}.ag-n small{color:#909399;font-size:12px}.ag-t{width:14px;text-align:center;color:#909399;font-size:11px}</style>
 </head>
 <body>
-<!-- 后台原型：整页为本需求新增；示例数据一律虚构；昵称从群「BBwave平台数据」自动获取。视图：#list 列表 / #new 添加 / #edit 编辑 / #del 删除确认 / #empty 空列表 -->
+<!-- 后台原型：整页为本需求新增；示例数据一律虚构；昵称在人员私聊机器人时自动获取。视图：#list 列表 / #new 添加 / #edit 编辑 / #del 删除确认 / #empty 空列表 -->
 <div class="with-nav">
 <div class="adm-stage">
   <div class="bo">
@@ -45,7 +45,7 @@
         <div class="bo-content">
           <p class="ui-reqnote" id="reqNote"></p>
           <table>
-            <tr><th><span class="ui-nw">Telegram ID<i class="qm" tabindex="0" data-tip="人员本人的 Telegram 数字 ID。未开通权限的人在群里发命令、点键盘或按钮时，机器人会提示其 ID，按其提供的 ID 填入即可。">?</i></span></th><th><span class="ui-nw">Telegram 昵称<i class="qm" tabindex="0" data-tip="从授权群自动获取，与群里显示一致，后台不能修改。">?</i></span></th><th><span class="ui-nw">可查看渠道<i class="qm" tabindex="0" data-tip="该人员在本子站按钮下可查看的渠道和代理线查询。添加时默认不勾选，至少勾选一个渠道（「代理线查询」不算）。">?</i></span></th><th>状态</th><th>添加时间</th><th>操作人</th><th>操作</th></tr>
+            <tr><th data-ch="tgid"><span class="ui-nw">Telegram ID<i class="qm" tabindex="0" data-tip="人员本人的 Telegram 数字 ID。人员打开机器人私聊链接点「开始」后，机器人回复带其 ID 的未开通回复，人员手动抄写发来，按其提供的 ID 填入。">?</i></span></th><th><span class="ui-nw">Telegram 昵称<i class="qm" tabindex="0" data-tip="登记后，人员私聊机器人时自动获取，与 Telegram 里显示一致，后台不能修改；还没获取到时显示「待获取」。">?</i></span></th><th data-ch="chs"><span class="ui-nw">可查看渠道<i class="qm" tabindex="0" data-tip="该人员在本子站可查看的渠道和代理线查询。添加时默认不勾选，至少勾选一个渠道（「代理线查询」不算）。">?</i></span></th><th>状态</th><th data-ch="at">添加时间（GMT+8）</th><th>操作人</th><th>操作</th></tr>
             <tbody id="rows"></tbody>
           </table>
           <div class="bo-page" id="pager" role="navigation" aria-label="分页" data-dev="D124">
@@ -95,17 +95,18 @@
     </div>
     <h3>规则批注</h3>
     <ol>
-      <li><b>群 + 人员双重授权</b>：只有在对接的群（由技术配置，目前为「BBwave平台数据」）里操作，且已在本页登记并启用，才生成报表。权限长期有效，不再需要时停用或删除。<span class="ref">PRD 规则 N4 · F01-03</span></li>
-      <li><b>适用子站与 Telegram ID</b>：系统按 Telegram ID 识别同一个人。在哪个子站后台登记并启用，群里就显示哪个子站按钮；全部子站后台都登记并启用同一个 Telegram ID，自动显示「全网数据」，少一个子站都不显示。两边填的 ID 不一致时当作两个人。新增子站同理，新子站后台也有本页。<span class="ref">PRD 规则 N35 · F01-03</span></li>
-      <li><b>首页</b>：两个及以上子站有权限，首页为一级菜单；只有一个子站权限，首页为该子站的二级菜单（不显示「⬅ 返回上一级」「🏠 首页菜单」）。权限按人员在群里操作时的配置判断。<span class="ref">PRD 规则 N2、N35 · F05-03</span></li>
-      <li><b>Telegram 昵称</b>：不填姓名，系统按 Telegram ID 从授权群自动获取，与群里显示一致，机器人 @ 人员时也用它；人员改昵称后，下次在群里操作时自动更新；还没进群显示「未进群」；后台不能修改。<span class="ref">PRD 5.1 人员配置 · F05-03</span></li>
-      <li><b>可查看渠道</b>：按渠道配置的父子关系树状显示全站、自然流量、自建渠道和代理线查询。勾父级时子渠道全部勾上；取消某个子渠道时父级半选，群里下一级菜单不显示「父级·全渠道」，列表显示如「谷歌（部分：谷歌品牌词）」。添加时默认不勾选，至少勾选一个渠道（「代理线查询」不算）。新建顶层渠道时已登记人员默认不勾选；新建子渠道时，已全选其父级的人员自动勾选。全网数据下只显示每个子站都勾选的渠道（取交集）；代理线查询在全网数据下只查勾选了它的子站。<br><b>无可查看渠道</b>：渠道被删光时保留登记，列表标红「无可查看渠道」。人员在某个范围没有可显示的渠道（含渠道被设为群里不显示、无可用代理）时，群里回复「你没有可查看的渠道，请联系管理员开通。」；有代理线查询权限的仍可用「🔍 代理线查询」。<span class="ref">PRD 5.1 人员配置、5.2 渠道配置、规则 N23、N39、N65 · F05-03</span></li>
-      <li><b>没有权限时</b>：未登记或已停用的人员操作时，机器人在群里回复「@昵称 你还没有报表查看权限，请联系管理员开通。你的 Telegram ID：xxx」（点消息里的按钮时只弹同一句，不 @），1 分钟后删除，也计入发送限制。<span class="ref">PRD 规则 N43 · F01-04</span></li>
-      <li><b>群内共享</b>：报表发在群里，群成员都能看到；个人权限只控制能发起哪些查询。入群成员由 Telegram 群主和群管理员控制，只拉可以看全部报表数据的人。删除或停用人员后，他已看到的报表收不回，仍在群里时能看到别人查询的报表，需要时请把他移出群。<span class="ref">PRD 规则 N36、5.1 人员配置 · F01-03</span></li>
-      <li><b>保存后生效</b>：添加、编辑、删除、启用、停用保存后立即生效，机器人不在群里群发；被修改的人员下次在群里发消息或点按钮时，机器人先按新权限 @ 他发送本人的首页菜单，再按当前权限处理这次操作。<span class="ref">PRD 规则 N61 · F05-03</span></li>
+      <li><b>人员授权</b>：人员和机器人私聊使用；已在本页登记并启用的人员才能查询本子站报表。权限长期有效，不再需要时停用或删除。<span class="ref">PRD 规则 N4、N35 · F01-03</span></li>
+      <li><b>开通人员</b>：① 运营把机器人管理页顶部的私聊链接发给人员；② 人员打开后点「开始」，收到带本人 Telegram ID 的未开通回复，手动抄写 ID 发给运营（回复受内容保护，不能转发）；③ 有「编辑人员配置」权限的运营在需要的子站人员配置登记这个 ID 并勾选渠道；④ 人员发 /menu 即可使用。<span class="ref">PRD 规则 N68 · F01-03、F05-03</span></li>
+      <li><b>适用子站与 Telegram ID</b>：系统按 Telegram ID 识别同一个人。在哪个子站后台登记并启用，私聊菜单里就显示哪个子站按钮；全部子站后台都登记并启用同一个 Telegram ID，自动显示「全网数据」，少一个子站都不显示。两边填的 ID 不一致时当作两个人。新增子站同理，新子站后台也有本页。<span class="ref">PRD 规则 N35 · F01-03</span></li>
+      <li><b>首页</b>：两个及以上子站有权限，首页为一级菜单；只有一个子站权限，首页为该子站的二级菜单（不显示「⬅ 返回上一级」「🏠 首页菜单」）。权限按人员操作时的配置判断。<span class="ref">PRD 规则 N2 · F01-02</span></li>
+      <li><b>Telegram 昵称</b>：不填姓名，人员私聊机器人时按 Telegram ID 自动获取，与 Telegram 里显示一致；人员改昵称后，下次私聊操作时自动更新；登记后人员还没私聊过机器人时显示「待获取」，人员下次私聊时获取；添加时提示「登记后，人员下次私聊机器人时按 Telegram ID 自动获取」；后台不能修改。<span class="ref">PRD 5.1 人员配置、5.5 · F05-03</span></li>
+      <li><b>可查看渠道</b>：按渠道配置的父子关系树状显示全站、自然流量、自建渠道和代理线查询。勾父级时子渠道全部勾上；取消某个子渠道时父级半选，下一级菜单不显示「父级·全渠道」，列表显示如「谷歌（部分：谷歌品牌词）」。添加时默认不勾选，至少勾选一个渠道（「代理线查询」不算）。新建顶层渠道时已登记人员默认不勾选；新建子渠道时，已全选其父级的人员自动勾选。全网数据下只显示每个子站都勾选的渠道（取交集）；代理线查询在全网数据下只查勾选了它的子站。<br><b>无可查看渠道</b>：渠道被删光时保留登记，列表标红「无可查看渠道」。人员在某个范围没有可显示的渠道（含渠道被设为菜单不显示、无可用代理）时，机器人回复「你没有可查看的渠道，请联系管理员开通。」；有代理线查询权限的仍可用「🔍 代理线查询」。<span class="ref">PRD 5.1 人员配置、规则 N65 · F05-03</span></li>
+      <li><b>未开通回复</b>：未登记或已停用的人员点「开始」、发任何命令（含不支持的命令）、点键盘，机器人都回复「你还没有报表查看权限，请联系管理员开通。你的 Telegram ID：xxx」（点消息里的按钮时只弹同一句），不自动删除；同一个 Telegram ID 10 分钟内只回复 1 次，其余消息不回应，不占发送额度；排队时排在已登记人员的报表和菜单之后。回复受内容保护，不能转发，本人手动抄写 ID。<span class="ref">PRD 规则 N43、N57 · F01-04</span></li>
+      <li><b>按人隔离</b>：报表只发到查询人本人的私聊，其他人看不到。删除或停用人员后，他已收到的报表收不回，按原定时间（发出满 24 小时）删除。<span class="ref">PRD 规则 N36 · F01-03</span></li>
+      <li><b>保存后生效</b>：添加、编辑、删除、启用、停用保存后立即生效，机器人不主动推送；被修改的人员下次发消息或点按钮时：这次操作本身会打开菜单或生成报表的，直接按新权限处理；点的按钮已不可用的，发新首页菜单并只弹「该渠道已不可用，请在新菜单里选择」；其他操作先按新权限发本人首页菜单，再按当前权限处理；被删除或停用的按未开通回复处理。<span class="ref">PRD 规则 N37、N61 · F05-03</span></li>
       <li><b>发送前再校验</b>：报表排队期间权限被停用或删除的，发送前再校验一次，不通过则取消发送。<span class="ref">PRD 规则 N50 · F02-03</span></li>
-      <li><b>校验</b>：Telegram ID 为正整数、不能重复，编辑时不能修改；可查看渠道至少勾选一个渠道（「代理线查询」不算），否则提示「至少选择一个渠道」；在渠道配置里设为群里不显示的渠道仍可勾选，重新显示后才对人员出现。<span class="ref">PRD 5.1 人员配置 · F05-03</span></li>
-      <li><b>列表</b>：按添加时间倒序，每页 20 条；关键字匹配 Telegram ID 或昵称；筛选后回到第 1 页；删除后当前页为空时回到上一页。保存、删除记入操作日志（沿用现有）。<span class="ref">PRD 5.1 人员配置、5.4 列表分页、规则 N56 · F05-03</span></li>
+      <li><b>校验</b>：Telegram ID 为正整数、不能重复，编辑时不能修改；可查看渠道至少勾选一个渠道（「代理线查询」不算），否则提示「至少选择一个渠道」；在渠道配置里设为菜单不显示的渠道仍可勾选，重新显示后才对人员出现。<span class="ref">PRD 5.1 人员配置 · F05-03</span></li>
+      <li><b>列表</b>：按添加时间倒序，每页 20 条；关键字匹配 Telegram ID 或昵称；筛选后回到第 1 页；删除后当前页为空时回到上一页。本页时间均为 GMT+8（表头「添加时间（GMT+8）」）。保存、删除记入操作日志（沿用现有）；操作日志沿用现有显示时区（789Bingo 为 −04:00），与本页时间可能相差 12 小时。<span class="ref">PRD 5.1 人员配置、5.4 列表分页、规则 N56 · F05-03</span></li>
       <li><b>操作权限</b>：沿用后台现有「角色 → 权限组 → 菜单 / 按钮权限」配置，分四项授予：查看三个页面；编辑人员配置；编辑渠道配置；机器人管理。本页的添加、编辑、删除、启用和停用需要「编辑人员配置」权限。<span class="ref">PRD 规则 N56 · F05-03</span></li>
     </ol>
     <div class="pager"><a href="../front/Telegram报表-机器人对话页.html">← 上一页：机器人对话页</a><a href="Telegram报表-后台渠道配置页面.html">下一页：后台渠道配置页面 →</a></div>
@@ -124,7 +125,7 @@
   /* 列表显示：全选显示「全部」；某渠道只勾了部分下级时写「谷歌（部分：谷歌通用词、品牌词PH）」 */
   function chText(chs) {
     if (chs.length === CHS.length) return "全部";
-    if (!chs.some(function (c) { return c !== "代理线查询"; })) return '<span style="color:#F56C6C">无可查看渠道</span>' + (chs.length ? "（仅代理线查询）" : "");   /* 渠道被删光：保留登记，群里查询时回复没有可查看的渠道 */
+    if (!chs.some(function (c) { return c !== "代理线查询"; })) return '<span style="color:#F56C6C">无可查看渠道</span>' + (chs.length ? "（仅代理线查询）" : "");   /* 渠道被删光：保留登记，查询时回复没有可查看的渠道 */
     return CHS.filter(function (c) { return !chParent(c); }).map(function (c) {
       if (chs.indexOf(c) >= 0) return c;
       var part = descK(c).filter(function (k) { return chs.indexOf(k) >= 0 && chs.indexOf(chParent(k)) < 0; });
@@ -150,7 +151,7 @@
   var ALL, VIEW = [], PG = { size: 20, page: 1 }, editing = null, delIdx = null, SITE = "789Bingo";
   function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
   function msg(t) { var m = document.createElement("div"); m.className = "bo-msg ok"; m.textContent = t; m.setAttribute("role", "status"); document.body.appendChild(m); setTimeout(function () { m.remove(); }, 1800); }
-  function nick(r) { return r.nick ? esc(r.nick) : '<span style="color:#909399">未进群</span>'; }
+  function nick(r) { return r.nick ? esc(r.nick) : '<span style="color:#909399">待获取</span>'; }
   function filter() {
     var s = document.getElementById("fSt").value, k = document.getElementById("fKw").value.trim().toLowerCase();
     VIEW = ALL.filter(function (r) { return (!s || (s === "启用") === r.on) && (!k || r.id.indexOf(k) >= 0 || r.nick.toLowerCase().indexOf(k) >= 0); });
@@ -182,7 +183,7 @@
     editing = i; var r = i == null ? null : ALL[i];
     document.getElementById("dlgT").textContent = r ? "编辑人员" : "添加人员";
     var id = document.getElementById("fmId"); id.value = r ? r.id : ""; id.disabled = !!r;
-    document.getElementById("fmNick").innerHTML = r ? nick(r) + '<span style="color:#909399;font-size:12px">（自动获取，不能修改）</span>' : '<span style="color:#909399;font-size:12px">保存后按 Telegram ID 从授权群自动获取</span>';
+    document.getElementById("fmNick").innerHTML = r ? nick(r) + '<span style="color:#909399;font-size:12px">（自动获取，不能修改）</span>' : '<span style="color:#909399;font-size:12px">登记后，人员下次私聊机器人时按 Telegram ID 自动获取</span>';
     var selC = r ? r.chs : [];   /* 添加时默认不勾选，至少勾选一个渠道才能保存 */
     drawChTree(selC);
     setSt(r ? r.on : true);
@@ -207,7 +208,7 @@
     else { var r = ALL[editing]; r.chs = chs; r.on = on; }
     filter(); closeForm(); draw(); msg("保存成功，立即生效");
   };
-  function openDel(i) { delIdx = i; document.getElementById("cfmP").textContent = "删除后，" + (ALL[i].nick || "该人员") + "（" + ALL[i].id + "）立即不能在群里查询 " + SITE + " 报表；仍在群里时能看到别人查询的报表，需要时请把他移出群。已发出的报表不受影响。确定删除？"; document.getElementById("cfm").hidden = false; }
+  function openDel(i) { delIdx = i; document.getElementById("cfmP").textContent = "删除后，" + (ALL[i].nick || "该人员") + "（" + ALL[i].id + "）立即不能查询 " + SITE + " 报表；他已收到的报表按原定时间删除。确定删除？"; document.getElementById("cfm").hidden = false; }
   document.getElementById("cfmNo").onclick = function () { document.getElementById("cfm").hidden = true; };
   document.getElementById("cfmOk").onclick = function () { ALL.splice(delIdx, 1); filter(); document.getElementById("cfm").hidden = true; draw(); msg("删除成功"); };
   document.getElementById("rows").addEventListener("click", function (e) {
@@ -224,7 +225,7 @@
   function show(view) {
     if (["list", "games", "new", "edit", "del", "empty"].indexOf(view) < 0) view = "list";
     SITE = view === "games" ? "789Games" : "789Bingo"; document.getElementById("siteName").textContent = SITE;
-    document.getElementById("reqNote").textContent = "配置流程第二步：先在渠道配置建好渠道，再登记人员。在本页登记并启用的人员，群里显示 " + SITE.toUpperCase() + " 按钮；在全部子站后台都登记并启用的，自动显示「全网数据」。同一个人在 789Games 和 789Bingo 后台须填同一个 Telegram ID。昵称从授权群自动获取。";
+    document.getElementById("reqNote").textContent = "配置流程第二步：先在渠道配置建好渠道，再登记人员。在本页登记并启用的人员，私聊菜单里显示 " + SITE.toUpperCase() + " 按钮；在全部子站后台都登记并启用的，自动显示「全网数据」。同一个人在 789Games 和 789Bingo 后台须填同一个 Telegram ID。开通人员：把机器人管理页顶部的私聊链接发给人员，人员点「开始」后把收到的 Telegram ID 发来，在本页登记并勾选渠道，人员发 /menu 即可使用。昵称在人员私聊机器人时自动获取。本页时间均为 GMT+8。";
     ALL = view === "empty" ? [] : view === "games" ? seed().slice(0, 9) : seed(); filter(); PG.page = 1;
     closeForm(); document.getElementById("cfm").hidden = true; draw();
     if (view === "new") openForm(null);

@@ -4,7 +4,7 @@
    需求不涉及前台或后台时，删掉对应的三级目录和原型文件；不涉及后台时删掉「后台操作手册」。 */
 window.NAV_DATA = {
   role: "opr",   /* 发布站点的角色：运营 */
-  title: "Telegram报表（v1.1）", href: "index.html",
+  title: "Telegram报表（v1.2）", href: "index.html",
   api: "https://oc-feedback.jonathanxu037.workers.dev", oprKey: "opr-7e295e9a66a7f703410b6d0465a447d00dc311f40eb66150",   /* 云端存储接口和运营写入口令；用 .claude/tools/set_cloud_api.ps1 修改 */
   // brand: "【左侧目录栏标题，不写时自动取上面 title 去掉版本号】",   /* 目录栏顶部显示需求标题（需求包框架规范第 3.2 节） */
   showChanges: false,   /* 运营需求确认页是否显示原型修改标注（版本痕迹）：默认 false 不显示，需要时改成 true（需求包框架规范第 6.1 节） */

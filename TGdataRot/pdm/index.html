@@ -18,21 +18,22 @@
   </div>
 
   <section class="reqcard">
-    <div class="reqcard-h"><b>Telegram报表 · Telegram 机器人查看两站渠道实时报表 · v1.1</b><small>Telegram报表功能需求</small></div>
+    <div class="reqcard-h"><b>Telegram报表 · Telegram 机器人查看两站渠道实时报表 · v1.2</b><small>Telegram报表功能需求</small></div>
     <div class="reqcard-b">
       <div>
-        <p style="margin:0 0 6px">新建 Telegram 报表机器人「BBWave报表助手」，在授权群「BBwave平台数据」内，已在 789Bingo、789Games 后台登记的人员按子站（789BINGO、789GAMES、全网数据）选择渠道或模糊搜索代理线，生成今日、昨日、前日 12 项指标及较昨日同时段对比的报表图片，发出满 15 分钟或生成新报表时自动删除；两个子站后台【系统管理 › Telegram报表配置】新增人员配置、渠道配置、机器人管理三个标签页。对接哪个群、初始服务机器人和发送限制由技术配置；各子站按自己平台的时区统计。</p>
+        <p style="margin:0 0 6px">新建 Telegram 报表机器人「BBWave报表助手」，已在 789Bingo、789Games 后台登记的人员与机器人私聊，按范围（789BINGO、789GAMES、全网数据）选择渠道或模糊搜索代理线，生成今日、昨日、前日 12 项指标及较昨日同时段对比的报表图片，发到本人私聊，发出满 24 小时自动删除；两个子站后台【系统管理 › Telegram报表配置】新增人员配置、渠道配置、机器人管理三个标签页。初始服务机器人和发送限制由技术配置；各子站按自己平台的时区统计。</p>
         <div class="facts">
           <div><b>1</b><span>前台原型页面</span></div>
           <div><b>3</b><span>后台原型页面</span></div>
           <div><b>5</b><span>大功能点</span></div>
           <div><b>16</b><span>子功能点</span></div>
-          <div><b>60</b><span>本需求规则</span></div>
-          <div><b>12</b><span>待确认事项</span></div>
+          <div><b>63</b><span>本需求规则</span></div>
+          <div><b>15</b><span>待确认事项</span></div>
         </div>
-        <p style="margin:0"><span class="warn-2">※ 本期群内共享：人员权限只控制能发起哪些查询，群里的报表所有成员都能看到；报表发出满 15 分钟自动删除，群里生成新报表时旧报表立即删除（PRD 3.2 子站、人员与群、3.7 生成、发送与删除）。</span></p>
+        <p style="margin:0"><span class="warn-2">※ 报表只发到查询人本人私聊，发出满 24 小时自动删除；满 48 小时仍未删除的，后台标记并通知后台管理员，由其通知人员手动删除。更换服务机器人后，人员须打开新机器人私聊并点「开始」（PRD 3.2 子站与人员、3.7 生成、发送与删除、3.8 机器人与子站停止出报表）。</span></p>
         <div class="tbl" style="margin-top:12px"><table class="mini">
           <tr><th>版本号</th><th>时间</th><th>修改人</th><th>概述</th></tr>
+          <tr><td>v1.2</td><td>2026-11-11</td><td>Joshua</td><td>人员与机器人私聊一对一：菜单、代理线查询和报表都在私聊收发；报表 24 小时自动删除；更换服务机器人时私聊通知并在后台显示链接。</td></tr>
           <tr><td>v1.1</td><td>2026-11-10</td><td>Joshua</td><td>按当前原型同步全文：两站人员权限、多级菜单、渠道自建与对账、三天报表图片、15 分钟自动删除，后台人员配置、渠道配置、机器人管理。</td></tr>
           <tr><td>v1.0</td><td>2026-11-04</td><td>Joshua</td><td>创建Telegram报表 v1.0</td></tr>
         </table></div>

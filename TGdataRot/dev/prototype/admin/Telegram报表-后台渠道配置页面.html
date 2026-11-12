@@ -43,7 +43,7 @@
           <a role="tab" aria-selected="false" href="Telegram报表-后台机器人管理页面.html">机器人管理</a>
         </div>
         <div class="bo-content">
-          <p class="ui-reqnote">本页的「渠道」指推广渠道，按绑定代理划分（所绑代理及其全部下级代理名下用户的数据），与充值渠道、出款渠道、新用户注册全链路跟踪的渠道筛选和广告投放的投放渠道（Facebook、TikTok、Google）无关；投放渠道的用户按其投手代理计入绑定了该代理的渠道。一个渠道就是群里的一个按钮：名称即按钮文字，顺序即「位置」，「群里显示」控制自建渠道是否出现（「全站」「自然流量」始终显示）。一级按钮由技术配置，后台不能管理。</p>
+          <p class="ui-reqnote">本页的「渠道」指推广渠道，按绑定代理划分（所绑代理及其全部下级代理名下用户的数据），与充值渠道、出款渠道、新用户注册全链路跟踪的渠道筛选和广告投放的投放渠道（Facebook、TikTok、Google）无关；投放渠道的用户按其投手代理计入绑定了该代理的渠道。一个渠道就是菜单里的一个按钮：名称即按钮文字，顺序即「位置」，「菜单显示」控制自建渠道是否出现（「全站」「自然流量」始终显示）。一级按钮由技术配置，后台不能管理。</p>
           <div class="bm-sec">
             <div class="bo-filter" style="margin:4px 0 8px;padding:0;border:0">
               <span class="fsec" style="margin:0">渠道</span>
@@ -51,7 +51,7 @@
               <button class="bo-btn n" type="button" id="addCh" data-dev="D94" style="margin-left:auto">+ 新建渠道</button>
             </div>
             <table>
-              <tr><th>位置</th><th>渠道名称</th><th><span class="ui-nw">父级渠道<i class="qm" tabindex="0" data-tip="默认为当前子站（如 789Bingo）；选已有渠道时，本渠道为其子渠道。">?</i></span></th><th><span class="ui-nw">绑定代理<i class="qm" tabindex="0" data-tip="查询条件：这些代理及其全部下级代理名下的用户都计入本渠道。">?</i></span></th><th><span class="ui-nw">群里显示<i class="qm" tabindex="0" data-tip="只有自建渠道有此开关：关闭后群里对所有人隐藏该按钮，人员配置里的勾选保留；关闭父级时其全部子渠道一起隐藏。隐藏不影响统计。默认渠道「全站」「自然流量」始终显示。">?</i></span></th><th>最后修改</th><th>操作</th></tr>
+              <tr><th>位置</th><th>渠道名称</th><th><span class="ui-nw">父级渠道<i class="qm" tabindex="0" data-tip="默认为当前子站（如 789Bingo）；选已有渠道时，本渠道为其子渠道。">?</i></span></th><th data-ch="bind"><span class="ui-nw">绑定代理<i class="qm" tabindex="0" data-tip="查询条件：这些代理及其全部下级代理名下的用户都计入本渠道；未归入任何自建渠道的用户计入「自然流量」（投注站按大代理处理）。">?</i></span></th><th><span class="ui-nw">菜单显示<i class="qm" tabindex="0" data-tip="只有自建渠道有此开关：关闭后菜单里对所有人隐藏该按钮，人员配置里的勾选保留；关闭父级时其全部子渠道一起隐藏。隐藏不影响统计。默认渠道「全站」「自然流量」始终显示。">?</i></span></th><th data-ch="mt">最后修改（GMT+8）</th><th>操作</th></tr>
               <tbody id="rows"></tbody>
             </table>
           </div>
@@ -64,7 +64,7 @@
   <div class="bo-mask" id="dlg" hidden>
     <div class="bo-dlg" role="dialog" aria-modal="true" aria-labelledby="dlgT" style="width:min(580px,92vw)">
       <h4 id="dlgT">新建渠道</h4>
-      <div class="frow" style="align-items:start"><label for="chName" style="padding-top:6px"><span class="req">*</span>渠道名称<i class="qm" tabindex="0" data-tip="即群里的按钮文字，显示为「📊 渠道名称」。">?</i></label><div class="fctl"><input class="bo-inp" id="chName" style="width:220px" placeholder="1–10 个字符，如 谷歌品牌词" data-dev="D95"><div class="ferr" id="eName"></div><div style="font-size:12px;color:#E6A23C" id="nHint"></div></div></div>
+      <div class="frow" style="align-items:start"><label for="chName" style="padding-top:6px"><span class="req">*</span>渠道名称<i class="qm" tabindex="0" data-tip="即菜单里的按钮文字，显示为「📊 渠道名称」。">?</i></label><div class="fctl"><input class="bo-inp" id="chName" style="width:220px" placeholder="1–10 个字符，如 谷歌品牌词" data-dev="D95"><div class="ferr" id="eName"></div><div style="font-size:12px;color:#E6A23C" id="nHint"></div></div></div>
       <div class="frow" style="align-items:start"><label for="tgParent" style="padding-top:6px"><span class="req">*</span>父级渠道<i class="qm" tabindex="0" data-tip="默认为当前子站。选已有渠道时，本渠道为其子渠道，只能从其绑定代理里选。">?</i></label><div class="fctl"><select class="bo-inp" id="tgParent" style="width:220px" data-dev="D92"></select><div style="font-size:12px;color:#909399" id="pHint"></div></div></div>
       <div class="frow" style="align-items:start"><span class="fl" style="padding-top:6px"><span class="req">*</span>绑定代理<i class="qm" tabindex="0" data-tip="按代理上下级树状显示，默认折叠、只显示首级代理；勾选上级代理时其下级全部勾上。">?</i></span>
         <div class="fctl" data-dev="D93">
@@ -88,7 +88,7 @@
 
   <aside class="notes adm-notes">
     <h2>后台渠道配置页面</h2>
-    <p class="sub">系统管理 › Telegram报表配置 › 渠道配置。新建、编辑、删除渠道，设置是否在群里显示（整页为本需求新增）。</p>
+    <p class="sub">系统管理 › Telegram报表配置 › 渠道配置。新建、编辑、删除渠道，设置是否在菜单显示（整页为本需求新增）。</p>
     <h3>模拟场景</h3>
     <div class="sim">
       <button type="button" data-go="list"><span class="simtag">渠道配置</span>渠道列表</button>
@@ -100,33 +100,33 @@
       <button type="button" data-go="del"><span class="simtag">渠道配置</span>删除「oem」确认</button>
       <button type="button" data-go="delpar"><span class="simtag">渠道配置</span>删除有子渠道的「谷歌」</button>
       <button type="button" data-go="viewnat"><span class="simtag">渠道配置</span>查看默认渠道「自然流量」</button>
-      <button type="button" data-go="off"><span class="simtag">渠道配置</span>「网红」群里不显示</button>
-      <button type="button" data-go="offpar"><span class="simtag">渠道配置</span>父级「谷歌」群里不显示（子渠道一起隐藏）</button>
+      <button type="button" data-go="off"><span class="simtag">渠道配置</span>「网红」菜单不显示</button>
+      <button type="button" data-go="offpar"><span class="simtag">渠道配置</span>父级「谷歌」菜单不显示（子渠道一起隐藏）</button>
       <button type="button" data-go="nobind"><span class="simtag">渠道配置</span>「网红」所绑代理已全部删除或停用</button>
       <button type="button" data-go="rename"><span class="simtag">渠道配置</span>改名「谷歌」（另一子站有同名渠道）</button>
       <button type="button" data-go="none"><span class="simtag">渠道配置</span>还没有自建渠道</button>
     </div>
     <h3>规则批注</h3>
     <ol>
-      <li><b>渠道即按钮</b>：一个渠道就是群里一个按钮（显示为「📊 名称」）。按钮顺序按列表「位置」：「全站」「自然流量」在前，其余按创建时间，子渠道排在父级后面；排列规则（每行 1–3 个、下一级的「父级·全渠道」、「🔍 代理线查询」和返回类按钮）见机器人对话页「按钮布局」。人员只看到自己有权限的按钮。<span class="ref">PRD 规则 N9、N38 · F05-01</span></li>
+      <li><b>渠道即按钮</b>：一个渠道就是菜单里一个按钮（显示为「📊 名称」）。按钮顺序按列表「位置」：「全站」「自然流量」在前，其余按创建时间，子渠道排在父级后面；排列规则（每行 1–3 个、下一级的「父级·全渠道」、「🔍 代理线查询」和返回类按钮）见机器人对话页「按钮布局」。人员只看到自己有权限的按钮。<span class="ref">PRD 规则 N9、N38 · F05-01</span></li>
       <li><b>渠道和查询条件</b>：渠道只是名称标识；渠道数据 = 所绑代理及其全部下级代理名下用户的数据，因此每个自建渠道至少绑定一个代理。「渠道」的含义和排除范围见页面顶部说明。<span class="ref">PRD 规则 N6 · F05-01</span></li>
-      <li><b>默认渠道</b>：「全站」「自然流量」不能删除、不能编辑，只能查看详情；始终在群里显示，没有开关。全站 = 当前子站全部数据；自然流量 = 全站 − 各顶层渠道合计，即未归入任何自建渠道的用户，包括平台默认线和未绑定渠道的代理（含投注站、五级邀请、域名绑定代理）名下用户，不代表无推广来源。各顶层渠道 + 自然流量 = 全站；子渠道包含在父级里，不重复计算。<span class="ref">PRD 规则 N6 · F05-01</span></li>
-      <li><b>新建渠道</b>：渠道名称、父级、绑定代理三项必填。名称 1–10 个字符（中文、英文字母、数字、符号各算 1 个，去掉首尾空格后计算），不能重名（不区分大小写），不能用「全站」「自然流量」「全网数据」或子站名称。自建渠道最多 20 个（含子渠道），满 20 个时「新建渠道」置灰。新建后排在同级最后，默认在群里显示。<span class="ref">PRD 5.2 渠道配置 · F05-01</span></li>
+      <li><b>默认渠道</b>：「全站」「自然流量」不能删除、不能编辑，只能查看详情；始终在菜单显示，没有开关。全站 = 当前子站全部数据；自然流量 = 全站 − 各顶层渠道合计，即未归入任何自建渠道的用户，包括平台默认线和未绑定渠道的代理（含投注站、五级邀请、域名绑定代理）名下用户，不代表无推广来源。各顶层渠道 + 自然流量 = 全站；子渠道包含在父级里，不重复计算。<span class="ref">PRD 规则 N6 · F05-01</span></li>
+      <li><b>新建渠道</b>：渠道名称、父级、绑定代理三项必填。名称 1–10 个字符（中文、英文字母、数字、符号各算 1 个，去掉首尾空格后计算），不能重名（不区分大小写），不能用「全站」「自然流量」「全网数据」或子站名称。自建渠道最多 20 个（含子渠道），满 20 个时「新建渠道」置灰。新建后排在同级最后，默认在菜单显示。<span class="ref">PRD 5.2 渠道配置 · F05-01</span></li>
       <li><b>父级渠道</b>：默认为当前子站，也可选本子站任一自建渠道（含子渠道），层级不限；下拉框按层级缩进（├─ / └─），编辑时本渠道及其下级置灰。父级是子站时可选本子站全部大代理、代理；父级是渠道时只能从父级渠道的绑定代理及其下级里选。<span class="ref">PRD 5.2 渠道配置 · F05-01</span></li>
       <li><b>绑定代理</b>：取自本子站的大代理、代理（投注站按大代理处理，不单列层级；投注站名下如挂有其他大代理，整枝勾选投注站即包含这些大代理及其全部下级），树状显示，默认折叠、只显示首级，可搜索。勾上级时下级全部勾上；取消某个下级时上级半选。整枝勾选只保存最上层代理（以后新增的下级自动包含），部分勾选保存勾上的下级。未选时提示「请至少选择一个代理」。父级是子站时，已在其他顶层渠道范围内的代理置灰，显示「已属于渠道「xx」」；子渠道的代理同时属于父级，不算重复。<span class="ref">PRD 规则 N6、N7 · F05-01</span></li>
       <li><b>渠道对账（不重叠）</b>：同一子站内，一个代理（含其全部下级）只能归属一个顶层渠道；子渠道的代理必须在父级范围内。保存时拦截并提示：「代理 xx 已在顶层渠道「yy」的范围内，不能再绑定到「zz」」「代理 xx 的下级 ww 已在顶层渠道「yy」的范围内，不能再绑定到「zz」」「代理 xx 不在父级渠道「yy」的范围内，不能绑定到「zz」」。不保留历史绑定关系：查询任何日期都按查询时的绑定关系和用户当前所属代理统计；已发出的报表不变。<span class="ref">PRD 规则 N7 · F05-01</span></li>
-      <li><b>代理换上级导致重叠</b>：代理换上级在代理管理里操作（本需求不改代理管理），可能让同一代理同时在两个顶层渠道范围内。重叠期间按该代理<b>进入各顶层渠道范围的时间</b>判断，先进入的为准，换上级不改变已有归属：例如 oem_b_01 于 10-28 直接绑定到「oem」，11-04 换到「短信」的绑定代理 kk_sms_g12 下面，仍计入「oem」。重叠部分的用户只计入一次，各顶层渠道 + 自然流量仍等于全站。冲突的各渠道名称旁标红「范围重叠」，悬停或点击显示重叠的代理、各自的进入时间和统计归属；编辑冲突的渠道时重叠的代理标红，取消勾选后可保存；消除后标记自动消失。<br><b>其他影响归属的现有操作</b>：会员变更代理、直属会员转移、投注站用户转移后，用户随新代理计入新渠道，查询任何日期都按新归属；会员变更代理时测试标识随新代理改变，用户可能由计入变为不计入（或相反），全站、全网数据和各渠道已查过的历史日数据都会变化。大代理变更代理线不改变渠道归属；部分代理停用仍按绑定关系统计，所绑代理全部停用按「无可用代理」处理；停用代理能否被代理线查询搜到待确认。<span class="ref">PRD 规则 N44、N62、待确认 Q14 · F05-01</span></li>
-      <li><b>无可用代理</b>：所绑代理在代理管理里全部被删除或停用时，视为未绑定代理：群里不显示，本页该行标红「无可用代理」，提示运营重新绑定。<span class="ref">PRD 规则 N9 · F05-01</span></li>
-      <li><b>群里显示</b>：只有自建渠道有此开关。关闭后群里对所有人隐藏，人员配置的勾选保留，重新打开后回到原位置。关闭父级时子渠道一起隐藏（子渠道开关置灰，显示「随父级隐藏」）；关闭子渠道时，下一级菜单不显示它，「父级·全渠道」照常显示且含其数据。隐藏不影响统计：自然流量照常扣除，人员可查看该渠道时代理线查询照常可搜。<span class="ref">PRD 规则 N9、N64 · F05-01</span></li>
+      <li><b>代理换上级导致重叠</b>：代理换上级在代理管理里操作（本需求不改代理管理），可能让同一代理同时在两个顶层渠道范围内。重叠期间按该代理<b>进入各顶层渠道范围的时间</b>判断，先进入的为准（直接绑定按绑定时间；随上级进入的，取上级绑定时间与换到该上级下面的时间中较晚的一个），换上级不改变已有归属：例如 oem_b_01 于 10-28 直接绑定到「oem」，11-04 换到「短信」的绑定代理 kk_sms_g12 下面，仍计入「oem」。重叠部分的用户只计入一次，各顶层渠道 + 自然流量仍等于全站。冲突的各渠道名称旁标红「范围重叠」，悬停或点击显示重叠的代理、各自的进入时间和统计归属；编辑冲突的渠道时重叠的代理标红，取消勾选后可保存；消除后标记自动消失。<br><b>其他影响归属的现有操作</b>：会员变更代理、直属会员转移、投注站用户转移后，用户随新代理计入新渠道，查询任何日期都按新归属；会员变更代理时测试标识随新代理改变，用户可能由计入变为不计入（或相反），全站、全网数据和各渠道已查过的历史日数据都会变化。大代理变更代理线不改变渠道归属；部分代理停用仍按绑定关系统计，所绑代理全部停用按「无可用代理」处理；停用代理能否被代理线查询搜到待确认。<span class="ref">PRD 规则 N44、N62、待确认 Q14 · F05-01</span></li>
+      <li><b>无可用代理</b>：所绑代理在代理管理里全部被删除或停用时，视为未绑定代理：菜单不显示，本页该行标红「无可用代理」，提示运营重新绑定。<span class="ref">PRD 规则 N9 · F05-01</span></li>
+      <li><b>菜单显示</b>：只有自建渠道有此开关。关闭后菜单里对所有人隐藏，人员配置的勾选保留，重新打开后回到原位置。关闭父级时子渠道一起隐藏（子渠道开关置灰，显示「随父级隐藏」）；关闭子渠道时，下一级菜单不显示它，「父级·全渠道」照常显示且含其数据。隐藏不影响统计：自然流量照常扣除，人员可查看该渠道时代理线查询照常可搜。<span class="ref">PRD 规则 N64 · F05-01</span></li>
       <li><b>编辑渠道</b>：可改名称、父级和代理。有下级的渠道改父级时下级随之移动，改父级后从新父级的代理里重新选。父级去掉某个代理时，子渠道里属于它的部分一并去掉；子渠道因此不剩代理时不能保存，提示先调整子渠道。另一子站有同名渠道时改名，输入框下直接提示「改名后，全网数据下的「原名称」按钮将不再显示，直到各子站名称一致」，点保存即保存，不再弹确认。保存后提示「保存成功，下次生成的报表按新配置统计」，已发出的报表和菜单不变。<span class="ref">PRD 规则 N8 · F05-01</span></li>
-      <li><b>删除渠道</b>：确认后立即删除，群里的按钮和人员配置里的该渠道一并去掉，不能恢复；已发出的报表不受影响。有子渠道的渠道不能直接删除，提示「请先删除或改挂它的子渠道」。<span class="ref">PRD 5.2 渠道配置 · F05-01</span></li>
-      <li><b>联动和生效</b>：新建的渠道自动加入人员配置的可查看渠道选项：新建顶层渠道时已登记人员默认不勾选；新建子渠道时，已全选其父级的人员自动勾选，其余不勾选。改动保存后立即生效，不在群里群发；本子站已登记人员下次在群里操作时，先收到按新配置发出的首页菜单。新建、编辑、删除、开关显示记入操作日志，需要「编辑渠道配置」权限。<span class="ref">PRD 规则 N8、N37、N56、N61 · F05-01</span></li>
+      <li><b>删除渠道</b>：确认后立即删除，菜单里的按钮和人员配置里的该渠道一并去掉，不能恢复；已发出的报表不受影响。有子渠道的渠道不能直接删除，提示「请先删除或改挂它的子渠道」。<span class="ref">PRD 5.2 渠道配置、规则 N65 · F05-01</span></li>
+      <li><b>联动和生效</b>：新建的渠道自动加入人员配置的可查看渠道选项：新建顶层渠道时已登记人员默认不勾选；新建子渠道时，已全选其父级的人员自动勾选，其余不勾选。改动保存后立即生效，不主动推送；本子站已登记人员下次发消息或点按钮时：这次操作本身会打开菜单或生成报表的，直接按新配置处理；点的按钮已不可用的，发新首页菜单并只弹「该渠道已不可用，请在新菜单里选择」；其他操作先收到按新配置发出的首页菜单，再按当前权限处理。新建、编辑、删除、开关显示记入操作日志，需要「编辑渠道配置」权限。本页时间均为 GMT+8（表头「最后修改（GMT+8）」）；操作日志沿用现有显示时区（789Bingo 为 −04:00），与本页时间可能相差 12 小时。<span class="ref">PRD 5.1 人员配置、5.2 渠道配置、规则 N8、N56、N61 · F05-01</span></li>
       <li><b>全部子站</b>：每个子站后台各配本子站的渠道和代理；渠道按名称合并（不区分大小写）。全网数据下只显示全部子站都有、且人员在全部子站都勾选的渠道，层级和顺序以 789Bingo 后台为准；同名渠道在两站父级不同时不显示。<span class="ref">PRD 规则 N45 · F05-01</span></li>
       <li><b>后续扩展：自然流量细分</b>（本版不做）：自然流量是排除各渠道后剩下的数据，不能当父级渠道细分；后续可按进站来源细分（如直接访问、搜索引擎、应用商店、社交媒体），前提是已记录进站来源（现有「新用户注册全链路跟踪」有进站埋点和渠道筛选，可评估复用）。<span class="ref">扩展性，待后续需求</span></li>
     </ol>
     <h3>评审待确认</h3>
     <ol>
-      <li><b>渠道可新建、修改、删除</b>：渠道由运营在本页新建、编辑、删除，支持父级渠道；渠道即群里按钮（PRD 待确认事项「渠道是否需要运营在后台自行新建、修改、删除」已确认）。<span class="ref">PRD 待确认 Q6</span></li>
+      <li><b>渠道可新建、修改、删除</b>：渠道由运营在本页新建、编辑、删除，支持父级渠道；渠道即菜单按钮（PRD 待确认事项「渠道是否需要运营在后台自行新建、修改、删除」已确认）。<span class="ref">PRD 待确认 Q6</span></li>
       <li><b>789Games 后台</b>：与 789Bingo 为同一套系统，菜单位置和结构相同（已确认）。<span class="ref">PRD 待确认 Q7</span></li>
     </ol>
     <div class="pager"><a href="Telegram报表-后台人员配置页面.html">← 上一页：后台人员配置页面</a><a href="Telegram报表-后台机器人管理页面.html">下一页：后台机器人管理页面 →</a></div>
@@ -165,9 +165,9 @@
   /* 按层级展开：顶层按 TOP 顺序，下级按创建顺序逐层跟在父级后面；_d 为层级深度（0 = 顶层） */
   function ordered() { var out = []; function add(x, d) { x._d = d; out.push(x); R.filter(function (r) { return r.p === x.ch; }).forEach(function (c) { add(c, d + 1); }); } TOP.forEach(function (n) { add(anyByName(n), 0); }); return out; }
   function descCh(n) { var out = []; R.filter(function (r) { return r.p === n; }).forEach(function (c) { out.push(c.ch); out = out.concat(descCh(c.ch)); }); return out; }
-  /* 「群里显示」开关只给自建渠道；默认渠道全站、自然流量始终显示，没有开关 */
-  function sw(on, key, off) { return '<button type="button" class="tr-sw" role="switch" aria-checked="' + on + '" aria-label="群里显示" data-sw="' + esc(key) + '" data-dev="D80"' + (off ? " disabled" : "") + "></button>"; }
-  /* 群里是否显示：本渠道开关打开、父级（逐级）也显示，且绑定代理没有全部被删除或停用 */
+  /* 「菜单显示」开关只给自建渠道；默认渠道全站、自然流量始终显示，没有开关 */
+  function sw(on, key, off) { return '<button type="button" class="tr-sw" role="switch" aria-checked="' + on + '" aria-label="菜单显示" data-sw="' + esc(key) + '" data-dev="D80"' + (off ? " disabled" : "") + "></button>"; }
+  /* 菜单里是否显示：本渠道开关打开、父级（逐级）也显示，且绑定代理没有全部被删除或停用 */
   function vis(r) { return r.on && !r.dead && (!r.p || vis(byName(r.p))); }
   /* 代理换上级（在代理管理里操作）后，顶层渠道之间可能出现重叠：统计以代理先进入范围的顶层渠道为准，换上级不改变已有归属；冲突的各渠道标红「范围重叠」。
      进入时间：直接绑定的 = 绑定时间（bt）；经上级进入的 = 上级绑定时间与该代理换到这个上级下面的时间（MOVED）中较晚的一个。与渠道最后修改时间无关；演示数据未单独列出绑定时间的代理，以渠道最后修改时间代替 */
@@ -205,7 +205,7 @@
       if (r.fixed) return '<tr style="background:#F5F7FA"><td>' + p + "</td><td>" + r.ch + ' <span style="font-size:11px;padding:0 4px;color:#909399;border:1px solid #DCDFE6;border-radius:3px">默认</span></td><td>' + SITE + '<span style="color:#909399">（子站）</span></td><td class="w" style="color:#606266">' + r.d + '</td><td style="color:#909399">始终显示</td><td>系统</td>' +
         '<td><button class="bo-btn link" type="button" data-view="' + r.ch + '" data-dev="D98">查看</button></td></tr>';
       var i = R.indexOf(r);
-      return "<tr><td>" + p + "</td><td>" + (r.p ? '<span style="color:#C0C4CC;padding-left:' + ((r._d - 1) * 14) + 'px">└ </span>' : "") + esc(r.ch) + (ov[r.ch] ? '<button type="button" class="ov-tag" data-ov="' + esc(r.ch) + '" data-dev="D122" title="' + esc(ov[r.ch].join("\n")) + '">范围重叠</button>' : "") + (r.dead ? '<button type="button" class="ov-tag" data-dead="' + esc(r.ch) + '" data-dev="D129" title="所绑代理已全部删除或停用，群里不显示该按钮，请重新绑定代理">无可用代理</button>' : "") + "</td><td>" + (r.p ? esc(r.p) : SITE + '<span style="color:#909399">（子站）</span>') + '</td><td class="w" data-dev="D20">' + r.ag.map(esc).join("、") + (r.dead ? '<br><span style="color:#F56C6C;font-size:12px">已全部删除或停用</span>' : "") + "</td><td>" + sw(r.on, r.ch, parHid) + (parHid ? '<span style="font-size:12px;color:#909399;margin-left:4px">随父级隐藏</span>' : "") + "</td><td>" + r.up + "<br>" + r.by +
+      return "<tr><td>" + p + "</td><td>" + (r.p ? '<span style="color:#C0C4CC;padding-left:' + ((r._d - 1) * 14) + 'px">└ </span>' : "") + esc(r.ch) + (ov[r.ch] ? '<button type="button" class="ov-tag" data-ov="' + esc(r.ch) + '" data-dev="D122" title="' + esc(ov[r.ch].join("\n")) + '">范围重叠</button>' : "") + (r.dead ? '<button type="button" class="ov-tag" data-dead="' + esc(r.ch) + '" data-dev="D129" title="所绑代理已全部删除或停用，菜单不显示该按钮，请重新绑定代理">无可用代理</button>' : "") + "</td><td>" + (r.p ? esc(r.p) : SITE + '<span style="color:#909399">（子站）</span>') + '</td><td class="w" data-dev="D20">' + r.ag.map(esc).join("、") + (r.dead ? '<br><span style="color:#F56C6C;font-size:12px">已全部删除或停用</span>' : "") + "</td><td>" + sw(r.on, r.ch, parHid) + (parHid ? '<span style="font-size:12px;color:#909399;margin-left:4px">随父级隐藏</span>' : "") + "</td><td>" + r.up + "<br>" + r.by +
         '</td><td class="ui-nw"><button class="bo-btn link" type="button" data-ed="' + i + '" data-dev="D96">编辑</button><button class="bo-btn link" type="button" data-del="' + i + '" data-dev="D97">删除</button></td></tr>';
     }).join("") + (R.length ? "" : '<tr><td colspan="7" style="text-align:center;color:#909399;padding:20px 0">还没有自建渠道，请点「+ 新建渠道」；此时自然流量 = 全站</td></tr>') +
       '<tr style="background:#FAFAFA"><td>渠道下方</td><td>🔍 代理线查询 <span style="font-size:11px;color:#909399">功能按钮</span></td><td>-</td><td class="w" style="color:#606266">回复代理账号即可查询；单独一行，排在返回类按钮上方，按人员配置显示</td><td>-</td><td>系统</td><td>-</td></tr>' +
@@ -305,7 +305,7 @@
     if (!ok) return;
     var NOW = "2026-11-06 11:20:00", bt = {}, ob = editing == null ? {} : (R[editing].bt || {});
     ag.forEach(function (a) { bt[a] = ob[a] || (editing == null || R[editing].ag.indexOf(a) < 0 ? NOW : R[editing].up); });   /* 绑定时间：原有代理保留原绑定时间，新勾选的代理记为本次保存时间 */
-    if (editing == null) { R.push({ ch: n, p: p, ag: ag, bt: bt, on: true, up: "2026-11-06 11:20:00", by: "运营账号A" }); if (!p) TOP.push(n); closeForm(); draw(); msg("已新建渠道「" + n + "」，群里已显示该按钮" + (p ? "；已全选父级「" + p + "」的人员自动勾选该子渠道" : "")); return; }   /* 新建子渠道：已全选父级的人员自动勾选，其余已登记人员默认不勾选 */
+    if (editing == null) { R.push({ ch: n, p: p, ag: ag, bt: bt, on: true, up: "2026-11-06 11:20:00", by: "运营账号A" }); if (!p) TOP.push(n); closeForm(); draw(); msg("已新建渠道「" + n + "」，菜单里已显示该按钮" + (p ? "；已全选父级「" + p + "」的人员自动勾选该子渠道" : "")); return; }   /* 新建子渠道：已全选父级的人员自动勾选，其余已登记人员默认不勾选 */
     var r = R[editing], old = r.ch;
     var kidsOf = R.filter(function (x) { return x.p === old; }), lost = [];
     function within(a) { return ag.indexOf(a) >= 0 || ag.some(function (t) { return desc(t).indexOf(a) >= 0; }); }
@@ -321,7 +321,7 @@
   function openDel(i) {
     delIdx = i; var r = R[i], blocked = hasKids(r.ch);
     document.getElementById("cfmT").textContent = blocked ? "不能删除" : "确认删除渠道";
-    document.getElementById("cfmP").textContent = blocked ? "渠道「" + r.ch + "」下还有子渠道，请先删除或改挂它的子渠道。" : "删除渠道「" + r.ch + "」后，群里的该按钮和人员配置里的该渠道一并去掉，不能恢复；已发出的报表不受影响。确定删除？";
+    document.getElementById("cfmP").textContent = blocked ? "渠道「" + r.ch + "」下还有子渠道，请先删除或改挂它的子渠道。" : "删除渠道「" + r.ch + "」后，菜单里的该按钮和人员配置里的该渠道一并去掉，不能恢复；已发出的报表不受影响。确定删除？";
     document.getElementById("cfmOk").hidden = blocked; document.getElementById("cfmNo").textContent = blocked ? "知道了" : "取消";
     document.getElementById("cfm").hidden = false;
   }
@@ -339,8 +339,8 @@
   document.getElementById("rows").addEventListener("click", function (e) {
     var b = e.target.closest("[data-view]"); if (b) { openView(b.dataset.view); return; }
     b = e.target.closest("[data-ov]"); if (b) { openOv(b.dataset.ov); return; }
-    b = e.target.closest("[data-dead]"); if (b) { document.getElementById("cfmT").textContent = "无可用代理：" + b.dataset.dead; document.getElementById("cfmP").textContent = "渠道「" + b.dataset.dead + "」所绑代理在代理管理里已全部删除或停用，视为未绑定代理，群里不显示该按钮。请点「编辑」重新绑定代理。"; document.getElementById("cfmOk").hidden = true; document.getElementById("cfmNo").textContent = "知道了"; document.getElementById("cfm").hidden = false; return; }
-    b = e.target.closest("[data-sw]"); if (b && !b.disabled) { var x = anyByName(b.dataset.sw); x.on = !x.on; draw(); msg(x.on ? "已在群里显示「" + x.ch + "」" : "已在群里隐藏「" + x.ch + "」" + (hasKids(x.ch) ? "，其子渠道一起隐藏" : "")); return; }
+    b = e.target.closest("[data-dead]"); if (b) { document.getElementById("cfmT").textContent = "无可用代理：" + b.dataset.dead; document.getElementById("cfmP").textContent = "渠道「" + b.dataset.dead + "」所绑代理在代理管理里已全部删除或停用，视为未绑定代理，菜单不显示该按钮。请点「编辑」重新绑定代理。"; document.getElementById("cfmOk").hidden = true; document.getElementById("cfmNo").textContent = "知道了"; document.getElementById("cfm").hidden = false; return; }
+    b = e.target.closest("[data-sw]"); if (b && !b.disabled) { var x = anyByName(b.dataset.sw); x.on = !x.on; draw(); msg(x.on ? "已在菜单显示「" + x.ch + "」" : "已在菜单隐藏「" + x.ch + "」" + (hasKids(x.ch) ? "，其子渠道一起隐藏" : "")); return; }
     b = e.target.closest("[data-ed]"); if (b) { openForm(+b.dataset.ed); return; }
     b = e.target.closest("[data-del]"); if (b) openDel(+b.dataset.del);
   });

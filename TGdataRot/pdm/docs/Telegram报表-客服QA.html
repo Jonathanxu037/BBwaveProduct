@@ -11,26 +11,26 @@
 <div class="desk"><article class="paper qa">
 
 <h1 class="doc-title">Telegram报表 · 客服 QA（内部答疑）</h1>
-<div class="doc-meta"><span>版本：v1.1</span><span>适用：运营、客服回答内部同事的问题</span><span>依据：PRD、后台操作手册</span></div>
+<div class="doc-meta"><span>版本：v1.2</span><span>适用：运营、客服回答内部同事的问题</span><span>依据：PRD、后台操作手册</span></div>
 <hr class="doc-rule">
 
 <h2 id="q0">适用范围</h2>
-<p>内部人员使用的 Telegram 报表机器人「BBWave报表助手」，只在授权群「BBwave平台数据」使用，配置在两站后台【系统管理 › Telegram报表配置】。玩家用不了，本页只写内部同事的问题和答疑口径。</p>
+<p>内部人员使用的 Telegram 报表机器人「BBWave报表助手」，人员与机器人私聊使用，配置在两站后台【系统管理 › Telegram报表配置】。玩家用不了，本页只写内部同事的问题和答疑口径。</p>
 
 <h2 id="q1">这次改了什么</h2>
-<p>已在后台登记的同事可在群里按范围（789BINGO、789GAMES、全网数据）查看各渠道和代理线的今日、昨日、前日数据及较昨日同时段对比。报表是图片，发出满 15 分钟或有新报表时自动删除，不能转发、保存；群内所有成员都能看到。</p>
+<p>已在后台登记的同事打开机器人私聊点「开始」后，可按范围（789BINGO、789GAMES、全网数据）查看各渠道和代理线的今日、昨日、前日数据及较昨日同时段对比。报表是图片，只发到本人私聊，发出满 24 小时自动删除，不能转发、保存。</p>
 
 <h2 id="q2">回答前的核查步骤</h2>
 <ol class="qa-steps">
   <li><b>人员权限</b>：【人员配置】按 Telegram ID 查是否存在、是否启用、勾了哪些渠道和「代理线查询」；两站分别查，ID 要一致。</li>
-  <li><b>渠道状态</b>：【渠道配置】看该渠道和父级「群里显示」是否开启，是否标红「范围重叠」「无可用代理」。</li>
-  <li><b>机器人状态</b>：【机器人管理】看总停用开关、「服务中」、状态和「未删除 N 份」。</li>
+  <li><b>渠道状态</b>：【渠道配置】看该渠道和父级「菜单显示」是否开启，是否标红「范围重叠」「无可用代理」。</li>
+  <li><b>机器人状态</b>：【机器人管理】看总停用开关、当前服务机器人和私聊链接、状态和「未删除 N 份」。</li>
 </ol>
 
 <h2 id="q3">问答</h2>
 <section class="qa-card" id="qa1">
   <h3><span class="qa-no">1</span><span>同事问：机器人说我没有报表查看权限，或没有可查看的渠道？</span></h3>
-  <div class="qa-row"><b>答疑口径</b><div>机器人只给后台登记并启用的人员用。请把回复里的 Telegram ID 发给运营登记，看两站要用同一 ID。「没有可查看的渠道」是你勾的渠道已删除、隐藏或无可用代理（全网数据下也可能两站勾的渠道没有相同的），需运营调整。</div></div>
+  <div class="qa-row"><b>答疑口径</b><div>机器人只给后台登记并启用的人员用。请把回复里的 Telegram ID 手动抄写发给运营登记（这条回复不能转发），看两站要用同一 ID。同一 ID 10 分钟内只回复 1 次，没再收到回复属正常，不用反复发。「没有可查看的渠道」是你勾的渠道已删除、隐藏或无可用代理（全网数据下也可能两站勾的渠道没有相同的），需运营调整。</div></div>
   <div class="qa-row"><b>回答前查什么</b><div>核查步骤 1、2。</div></div>
   <div class="qa-row"><b>找谁处理</b><div>运营；配置都正确仍提示无权限时转技术。</div></div>
 </section>
@@ -41,32 +41,32 @@
   <div class="qa-row"><b>找谁处理</b><div>运营。</div></div>
 </section>
 <section class="qa-card" id="qa3">
-  <h3><span class="qa-no">3</span><span>同事问：群里某个渠道按钮不见了，或点了提示「该渠道已不可用」？</span></h3>
-  <div class="qa-row"><b>答疑口径</b><div>按钮按当前权限和配置显示；后台改过配置后请发 /menu 重新打开菜单。全网数据下的渠道要两站都有同名渠道、父级相同、都为你勾选。</div></div>
+  <h3><span class="qa-no">3</span><span>同事问：菜单里某个渠道按钮不见了，或点了提示「该渠道已不可用」？</span></h3>
+  <div class="qa-row"><b>答疑口径</b><div>按钮按当前权限和配置显示。后台改过配置后，你下次操作时机器人按新权限处理；点到已不可用的渠道会收到新首页菜单并提示「该渠道已不可用，请在新菜单里选择」，在新菜单里重新选即可。全网数据下的渠道要两站都有同名渠道、父级相同、都为你勾选。</div></div>
   <div class="qa-row"><b>回答前查什么</b><div>核查步骤 1、2；全网数据下另一站有没有同名渠道。</div></div>
   <div class="qa-row"><b>找谁处理</b><div>运营。</div></div>
 </section>
 <section class="qa-card" id="qa4">
   <h3><span class="qa-no">4</span><span>同事问：报表怎么不见了？</span></h3>
-  <div class="qa-row"><b>答疑口径</b><div>发出满 15 分钟自动删除，或有人生成了新报表（失败、排队超时、未找到代理时不删）。重新查询即可。</div></div>
+  <div class="qa-row"><b>答疑口径</b><div>报表发出满 24 小时自动删除。重新查询即可。</div></div>
   <div class="qa-row"><b>回答前查什么</b><div>不用核查。</div></div>
   <div class="qa-row"><b>找谁处理</b><div>不需要转交。</div></div>
 </section>
 <section class="qa-card" id="qa5">
-  <h3><span class="qa-no">5</span><span>同事问：报表一直没删除，群里提醒「报表未能自动删除，请手动删除」？</span></h3>
-  <div class="qa-row"><b>答疑口径</b><div>删除失败会自动重试；最早一份满 24 小时仍未删除时提醒群主和管理员。请群主或管理员手动删除。</div></div>
-  <div class="qa-row"><b>回答前查什么</b><div>核查步骤 3：「未删除 N 份」、状态是否「异常」。</div></div>
-  <div class="qa-row"><b>找谁处理</b><div>群主或管理员；机器人状态异常时转技术。</div></div>
+  <h3><span class="qa-no">5</span><span>同事问：报表过了删除时间还在？</span></h3>
+  <div class="qa-row"><b>答疑口径</b><div>删除失败会自动重试，排队时实际删除可能晚几分钟；发出满 48 小时仍未删除时机器人无法再删，请在私聊里手动删除该报表。屏蔽了机器人的，请解除屏蔽后手动删除。</div></div>
+  <div class="qa-row"><b>回答前查什么</b><div>核查步骤 3：发出它的机器人是否有「未删除 N 份」、是否疑似封禁或 Token 失效。</div></div>
+  <div class="qa-row"><b>找谁处理</b><div>本人手动删除；后台管理员通知后在【机器人管理】清除标记；机器人疑似封禁或 Token 失效时转技术。</div></div>
 </section>
 <section class="qa-card" id="qa6">
   <h3><span class="qa-no">6</span><span>同事问：机器人说「报表服务暂停中」或「报表机器人暂不可用，正在更换」？</span></h3>
-  <div class="qa-row"><b>答疑口径</b><div>这个子站和全网数据的渠道报表暂时不能查；全网代理线查询只查另一站，结果注明「某子站 暂停中」。另一站照常，请稍后再试。</div></div>
-  <div class="qa-row"><b>回答前查什么</b><div>核查步骤 3：「暂停中」看总停用开关；「暂不可用」看机器人是否停用、疑似封禁、Token 失效或异常。</div></div>
-  <div class="qa-row"><b>找谁处理</b><div>运营；疑似封禁、Token 失效或异常时同时转技术。</div></div>
+  <div class="qa-row"><b>答疑口径</b><div>「暂停中」是该子站总停用开关已打开；「暂不可用」是该子站的服务机器人被手动停用、暂时没有可接替的机器人。这个子站和全网数据的渠道报表暂时不能查；全网代理线查询只查另一站，结果注明「某子站 暂停中」。另一站照常，请稍后再试。</div></div>
+  <div class="qa-row"><b>回答前查什么</b><div>核查步骤 3：「暂停中」看总停用开关；「暂不可用」看服务机器人是否被手动停用、有没有可接替的机器人。</div></div>
+  <div class="qa-row"><b>找谁处理</b><div>运营；没有可接替的机器人时同时转技术。</div></div>
 </section>
 <section class="qa-card" id="qa7">
   <h3><span class="qa-no">7</span><span>同事问：机器人的数据和后台平台报表对不上？</span></h3>
-  <div class="qa-row"><b>答疑口径</b><div>今日是实时数据，平台报表每 30 分钟统计一次，会有差异。昨日、前日应一致：子站下对该站对应时区的日报表，全网数据下对两站合计；金额四舍五入到个位比较；不计测试用户。</div></div>
+  <div class="qa-row"><b>答疑口径</b><div>今日是实时数据，平台报表每 30 分钟统计一次，会有差异。昨日、前日应一致：子站下对该站对应时区的日报表（789Bingo 为 UTC+8，789Games 由技术按平台时区确定），全网数据下对两站合计；金额四舍五入到个位比较；不计测试用户。</div></div>
   <div class="qa-row"><b>回答前查什么</b><div>对方比的是哪个子站、哪一天、哪一种日报表。</div></div>
   <div class="qa-row"><b>找谁处理</b><div>按口径仍不一致时转技术。</div></div>
 </section>
@@ -83,25 +83,39 @@
   <div class="qa-row"><b>找谁处理</b><div>运营。</div></div>
 </section>
 <section class="qa-card" id="qa10">
-  <h3><span class="qa-no">10</span><span>同事问：点按钮提示「仅 @某人 可操作」「请发 /menu 打开你的菜单」或「报表生成中，请稍候」？</span></h3>
-  <div class="qa-row"><b>答疑口径</b><div>按钮只有发起人能点，请发 /menu 打开自己的菜单。「请发 /menu 打开你的菜单」表示服务机器人已更换，旧按钮失效。「报表生成中」表示群里已有报表在生成，发出后再查。</div></div>
+  <h3><span class="qa-no">10</span><span>同事问：机器人提示「报表机器人已更换，请打开 @用户名 并点「开始」」或「报表生成中，请稍候」？</span></h3>
+  <div class="qa-row"><b>答疑口径</b><div>「已更换」是更换通知，表示服务机器人换了，请点消息里的「打开 @用户名」或打开运营发的私聊链接（以后台机器人管理页显示的链接为准），进入新机器人私聊点「开始」，旧机器人不再处理查询。更换通知发出满 24 小时自动删除。「报表生成中」表示你已有一份报表在生成，发出后再查。</div></div>
   <div class="qa-row"><b>回答前查什么</b><div>不用核查。</div></div>
   <div class="qa-row"><b>找谁处理</b><div>不需要转交。</div></div>
+</section>
+
+<section class="qa-card" id="qa11">
+  <h3><span class="qa-no">11</span><span>同事问：怎么开始用机器人？打开后没有菜单？</span></h3>
+  <div class="qa-row"><b>答疑口径</b><div>按这个顺序开通：① 打开运营发的机器人私聊链接（t.me/用户名），点「开始」；② 机器人回复你的 Telegram ID，这条回复不能转发，请手动抄写发给运营；③ 运营登记后，发 /menu 即收到首页菜单。机器人只在你操作后回复，除更换通知外不主动发消息；屏蔽过机器人的要先解除屏蔽。报表机器人永远不会要求输入后台账号、密码或验证码。</div></div>
+  <div class="qa-row"><b>回答前查什么</b><div>核查步骤 1；核查步骤 3 的当前服务机器人，确认对方打开的是它。</div></div>
+  <div class="qa-row"><b>找谁处理</b><div>运营；已登记、已点「开始」仍无任何回复时转技术（可能是服务机器人疑似封禁或 Token 失效）。</div></div>
+</section>
+
+<section class="qa-card" id="qa12">
+  <h3><span class="qa-no">12</span><span>客服同事问：玩家说找到了「BBWave报表助手」或收到它的中文回复，怎么答？</span></h3>
+  <div class="qa-row"><b>答疑口径</b><div>这是公司内部工具，不是客服，请通过站内在线客服或官方 Telegram 客服联系（英文话术按现有口径翻译）。</div></div>
+  <div class="qa-row"><b>回答前查什么</b><div>不用核查。</div></div>
+  <div class="qa-row"><b>找谁处理</b><div>不需要转交；玩家反映有人冒充该机器人索要账号、密码时转运营。</div></div>
 </section>
 
 <h2 id="q4">转交与升级</h2>
 <div class="tbl"><table class="qa-tbl" data-fit>
   <tr><th>情况</th><th>转给</th><th>转交时附上</th></tr>
   <tr><td>开通或取消权限、勾选渠道、按钮不见了、总停用开关打开</td><td>运营</td><td>Telegram ID、要看的子站和渠道</td></tr>
-  <tr><td>配置正确仍无权限、昨日数据按口径仍对不上、多次生成失败、疑似封禁、Token 失效、不在群或权限不足</td><td>技术</td><td>Telegram ID、子站、查询对象、发生时间（GMT+8）、群里提示截图</td></tr>
-  <tr><td>报表满 24 小时未能自动删除</td><td>群主或管理员</td><td>群里的提醒消息</td></tr>
+  <tr><td>配置正确仍无权限、昨日数据按口径仍对不上、多次生成失败、疑似封禁、Token 失效</td><td>技术</td><td>Telegram ID、子站、查询对象、发生时间（GMT+8）、机器人回复的原文</td></tr>
+  <tr><td>报表满 48 小时未能自动删除</td><td>本人手动删除；后台管理员清除标记</td><td>报表的发出时间（GMT+8）</td></tr>
 </table></div>
 
 <h2 id="q5">资料未覆盖的问题</h2>
 <ul class="qa-open">
   <li>停用的代理能否被搜到：未确认（PRD 10. 待确认事项），转技术。</li>
   <li>平台报表日报表是否含测试用户：未确认（PRD 10. 待确认事项），涉及测试用户的差异转技术。</li>
-  <li>两站平台时区和对数用哪一版日报表：未确认（PRD 10. 待确认事项），涉及切日的差异转技术。</li>
+  <li>总投注额、有效投注额、GGR 按下注时间还是结算时间归日，对数用平台报表哪一列：未确认（PRD 10. 待确认事项 Q25），涉及投注类的差异转技术。</li>
 </ul>
 </article></div>
 </div>
