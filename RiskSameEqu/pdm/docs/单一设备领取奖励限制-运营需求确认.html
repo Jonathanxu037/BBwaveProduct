@@ -12,7 +12,7 @@
 
 <header class="ck-head oc-head">
   <div class="k">OPERATION CONFIRM</div>
-  <h1>单一设备领取奖励限制 · 运营需求确认 · <span id="hdVer">v1.0</span></h1>
+  <h1>单一设备领取奖励限制 · 运营需求确认 · <span id="hdVer">v1.1</span></h1>
   <div class="d">上方切换查看原型，下方填写意见并「添加」到右侧列表；勾选要提交的意见，点「确认提交」保存为一个版本的运营需求修改意见。<span class="oc-role" id="role"></span></div>
 </header>
 <div class="oc-note" role="note">※ 运营提交的意见（含截图）、产品回复和补充都保存在云端，换电脑、换浏览器都能看到，每分钟自动刷新。产品回复后，这条意见不能再修改或删除，只能补充；封板后只有产品能补充。重新打包上传不会删除或覆盖这些记录。『下载』『复制』只用于留档或贴到 Jira。</div>
@@ -134,7 +134,7 @@
 <script>
 (function () {
   /* ITER：多迭代需求包的迭代标签（如 "v1.0"、"完整需求"，和 TOPIC 里的标签一致），单版本留空。填了以后：原型下拉只列本迭代 prototype/<迭代文件夹>/ 下的页面，名称写「迭代 · 页面名」，标题带迭代 */
-  var ROOT = "../", TOPIC = "单一设备领取奖励限制", VER = "v1.0", ITER = "";
+  var ROOT = "../", TOPIC = "单一设备领取奖励限制", VER = "v1.1", ITER = "";
   /* 标题里的版本号跟着 VER 显示：升版本只改 VER 一处（需求包框架规范第 12.1 节「升版本要改的位置」） */
   document.getElementById("hdVer").textContent = VER;
   if (ITER) {   /* 多迭代：页面标题和浏览器标题带迭代（需求包框架规范第 3 节「页面标题带迭代号」） */
@@ -152,7 +152,7 @@
   /* 原型的视图（按页面路径）；没有列出的页面只显示整页 */
   var VIEWS = {
     "prototype/front/单一设备领取奖励限制-活动奖励领取.html": [["default", "可领取"], ["success", "领取成功"], ["dev", "L01 同设备已绑定其他账号"], ["ip", "L02 同 IP 已绑定其他账号"], ["nodevice", "L03 取不到设备标识或 IP"], ["deposit", "充值页优惠置灰"]],
-    "prototype/admin/单一设备领取奖励限制-后台活动奖励领取限制配置.html": [["list", "老用户充值转盘列表"], ["create", "创建活动配置页"], ["edit", "修改活动配置页"], ["error", "保存校验提示"], ["direct", "KYC 认证送彩金活动（活动无自身名单）"], ["wlact", "导入签到活动（活动有自身名单）"], ["onlydev", "每日首充活动（只加同设备）"]]
+    "prototype/admin/单一设备领取奖励限制-后台活动奖励领取限制配置.html": [["list", "活动限制管理列表（第 1 页）"], ["page2", "列表第 2 页"],["refresh", "新建一期后刷新"], ["ended", "已结束的一期（老用户充值转盘）"], ["edit", "配置弹窗：KYC 认证送彩金（单次领取类）"], ["error", "保存校验提示"], ["multi", "配置弹窗：签到（多次领取类）"], ["wl", "配置弹窗：导入签到（有自身名单）"], ["fixed", "配置弹窗：每日首充活动（原有限制已删除，周期可选）"], ["firstdep", "配置弹窗：新用户首充（周期可选）"]]
   };
   function $(id) { return document.getElementById(id); }
   function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }

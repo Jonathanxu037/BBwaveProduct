@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>单一设备领取奖励限制-v1.0-活动中心现状清单</title>
+<link rel="stylesheet" href="../../assets/style.css">
+<style>
+.st-use{color:#1E8E4E;font-weight:700}
+.st-drop{color:#C0392B;font-weight:700}
+.yes{font-weight:700}
+.sum{display:flex;flex-wrap:wrap;gap:10px;margin:10px 0 16px}
+.sum div{flex:1 1 150px;border:1px solid var(--line);border-radius:8px;padding:8px 12px;font-size:12.5px}
+.sum b{display:block;font-size:20px}
+.st-wait{color:#B5601A;font-weight:700}
+.site-tabs{display:flex;gap:6px;border-bottom:2px solid var(--line);margin:6px 0 14px;padding-top:6px}
+.site-tabs button{all:unset;cursor:pointer;padding:8px 18px;border:1px solid var(--line);border-bottom:0;border-radius:8px 8px 0 0;font-size:14px;font-weight:700;color:#606266;background:#F5F7FA;margin-bottom:-2px}
+.site-tabs button[aria-selected="true"]{background:var(--paper,#fff);color:#303133;border-color:var(--line);border-bottom:2px solid var(--paper,#fff)}
+.site-tabs button:focus-visible{outline:2px solid #409EFF;outline-offset:2px}
+.ops-ok{color:#1E8E4E}
+.ops-re{color:#B5601A;font-weight:700}
+.ops-cd{color:#1560A8;font-weight:700}
+.site-note{background:#FDF6EC;border:1px solid #F5DAB1;border-radius:8px;padding:8px 12px;font-size:12.5px;margin:0 0 12px}
+</style>
+</head>
+<body>
+<div class="with-nav">
+<div class="desk"><article class="paper">
+
+<h1 class="doc-title">单一设备领取奖励限制 · 历史版本 v1.0 · 活动中心现状清单 · v1.0</h1>
+<div class="doc-meta"><span>核对时间：2026-11-12（GMT+8）</span><span>范围：789Bingo（老站）、789Games（新站）管理后台【活动中心】</span><span>依据：QA 环境后台配置页、前台页面实测和页面代码；技术侧《单一设备领取奖励限制 · 产品对齐清单》（2026-11-11，各站 main 分支代码）；运营活动可用性反馈（2026-11-13）</span></div>
+<hr class="doc-rule">
+
+<div class="site-tabs" role="tablist" aria-label="站点">
+  <button type="button" role="tab" id="tb-bingo" aria-controls="tab-bingo" aria-selected="true">789Bingo（老站）</button>
+  <button type="button" role="tab" id="tb-games" aria-controls="tab-games" aria-selected="false">789Games（新站）</button>
+</div>
+
+<section id="tab-bingo" role="tabpanel" aria-labelledby="tb-bingo">
+<h2 id="s1">结论</h2>
+<div class="sum">
+  <div>活动菜单<b>19</b></div>
+  <div>使用<b class="st-use">17</b></div>
+  <div>未上线<b class="st-drop">2</b></div>
+  <div>有 IP 限制<b>10</b></div>
+  <div>有单一设备限制<b>2</b></div>
+  <div>有白名单类名单<b>12</b></div>
+  <div>运营反馈：可直接使用 / 条件可用 / 需复测<b>9 / 1 / 8</b></div>
+</div>
+<ul>
+  <li><b>运营反馈（2026-11-13）</b>：可直接使用 9 个；条件可用 1 个（返水：老站已写死使用另外一套返水活动）；需复测 8 个（绑定手机号码、KYC 认证送彩金、登录送彩金、幸运转盘、每日首充、新用户首充、新用户充值活动计划、导入签到）。返现充值转盘未上线，运营未提及。</li>
+  <li>现有 IP 限制大多是「同一 IP 每天有 N 个账号可以领取」，限制的是账号数，不是领取次数，周期只有「每天」。各活动的叫法和开关方式都不一样，多数活动当前数值偏大或没有勾选，实际起不到防护作用。</li>
+  <li>现有 IP 限制还有三个缺陷（对齐清单第一节）：取不到 IP 时直接放行；并发领取时会超过上限；实际会比设置的账号数多放 1 个。技术建议另开修复单处理。</li>
+  <li>只有新用户转盘和完成任务砸金蛋两个活动有设备限制。砸金蛋的名额在后台页面上看不到，运营无法修改。</li>
+  <li>现有「白名单」有三种含义：参与名单（只有名单内会员能参加）、指定名单（指定会员参加）、奖励档位名单。它们都不是「免除领取限制」的名单，不能直接当作本需求的领取限制白名单。</li>
+</ul>
+
+<h2 id="s2">判断口径</h2>
+<ul>
+  <li><b>使用</b>：后台可配置，前台有入口、有活动展示，或活动自动发放。<b>废弃</b>：生产代码还在，但前台（含全部按需加载页面）没有该活动的任何入口和请求。<b>未上线</b>：只在 QA 环境有、生产代码中没有，或产品决定暂按未上线处理（幸运转盘，2026-11-13）。</li>
+  <li><b>IP 限制 / 设备限制</b>：以技术侧对生产代码的梳理为准。「有」表示系统有这套判定（不论当前是否打开）；后台有配置项但系统不读取的，写「无（配置项不生效）」。</li>
+  <li><b>白名单</b>：写明名单的作用，便于和本需求的领取限制白名单区分。</li>
+</ul>
+
+<h2 id="s2b">接入方式（2026-11-12 确认，详见 PRD 规则 N17「接入方式」）</h2>
+<div class="tbl"><table data-fit>
+<colgroup><col style="width:22%"><col style="width:48%"><col style="width:30%"></colgroup>
+<tr><th>方式</th><th>做法</th><th>活动</th></tr>
+<tr><td><b>A 完整接入</b></td><td>同设备、同 IP 两项 + 领取限制白名单；活动自身有名单时，按 N16（每项下方的「本活动白名单用户也受此限制」）勾选名单内会员是否受限</td><td>绑定手机号码、KYC 认证送彩金、登录送彩金、签到、导入签到；圣诞闯关、实物奖品、Crown Rush；以及以后新增的活动</td></tr>
+<tr><td><b>B 两项 + 沿用原白名单</b></td><td>同设备、同 IP 两项；不另设领取限制白名单，沿用活动现有白名单，名单内会员是否受限按 N16 勾选</td><td>老用户充值转盘、导入用户登录送彩金、返现充值转盘</td></tr>
+<tr><td><b>C 只加同设备</b></td><td>只有同设备一项；IP 沿用活动现有限制，白名单沿用活动现有名单；先判断现有 IP 限制，再判断同设备</td><td>充值活动、消费活动、负盈利活动、新盈利活动 V2、每日首充、新用户首充、新用户充值活动计划、邀请好友；幸运转盘（暂定未上线，上线时接入）</td></tr>
+<tr><td><b>D 不改</b></td><td>沿用当前已有逻辑，不加本板块</td><td>新用户转盘、完成任务砸金蛋</td></tr>
+</table></div>
+
+<h2 id="s3">活动现状表</h2>
+<div class="tbl"><table data-fit>
+<colgroup><col style="width:4%"><col style="width:12%"><col style="width:7%"><col style="width:9%"><col style="width:16%"><col style="width:12%"><col style="width:14%"><col style="width:26%"></colgroup>
+<tr><th>序号</th><th>活动（后台菜单）</th><th>状态</th><th>运营反馈（2026-11-13）</th><th>目前是否有 IP 限制</th><th>目前是否有单一设备限制</th><th>目前是否有白名单</th><th>处理方案（2026-11-12 确认）</th></tr>
+<tr><td>1</td><td>老用户充值转盘<br>Recharge Wheel for Old Users</td><td class="st-use">使用</td><td class="ops-ok">可直接使用</td><td>无</td><td>无</td><td class="yes">有：名单导入，名单内会员使用专属奖励档位</td><td><b>B 两项 + 沿用原白名单</b>：按本需求加同设备、同 IP 两项；不另设领取限制白名单，沿用活动现有白名单，名单内会员是否受限按 N16 勾选。</td></tr>
+<tr><td>2</td><td>绑定手机号码<br>Bind Phone Activity</td><td class="st-use">使用</td><td class="ops-re">需复测</td><td>无（只有「同一手机号只能领取一次」）</td><td>无</td><td>无</td><td><b>A 完整接入</b>：按本需求设计（同设备、同 IP 两项 + 领取限制白名单）。</td></tr>
+<tr><td>3</td><td>KYC 认证送彩金<br>KYC Certification Bonus Activity</td><td class="st-use">使用</td><td class="ops-re">需复测</td><td>无</td><td>无</td><td>无</td><td><b>A 完整接入</b>：按本需求设计（同设备、同 IP 两项 + 领取限制白名单）。</td></tr>
+<tr><td>4</td><td>登录送彩金<br>Login Bonus Activity</td><td class="st-use">使用</td><td class="ops-re">需复测</td><td>无</td><td>无</td><td>无</td><td><b>A 完整接入</b>：按本需求设计（同设备、同 IP 两项 + 领取限制白名单）。</td></tr>
+<tr><td>5</td><td>导入用户登录送彩金<br>Imported User Login Bonus Activity</td><td class="st-use">使用</td><td class="ops-ok">可直接使用</td><td>无</td><td>无</td><td class="yes">有：导入手机号名单，只有名单内会员能领取（参与名单）</td><td><b>B 两项 + 沿用原白名单</b>：按本需求加同设备、同 IP 两项；不另设领取限制白名单，沿用活动现有白名单（参与名单），名单内会员是否受限按 N16 勾选。领取类型为单次领取类（活动期内每人只能领一次，按次数判定；是否每人只能领一次待技术确认，PRD Q12）。</td></tr>
+<tr><td>6</td><td>充值活动<br>Recharge Activity</td><td class="st-use">使用</td><td class="ops-ok">可直接使用</td><td class="yes">有：活动条件「同一 IP 每天有 N 个账号可以申领」（当前已勾选，N = 3）。条件里另有「同一 IP 每天仅领 N 次」，配置后不生效</td><td>无</td><td class="yes">有：指定名单，指定会员参加</td><td><b>C 只加同设备</b>：板块只有同设备一项；IP 沿用活动现有限制，白名单沿用活动现有名单；先判断现有 IP 限制，再判断同设备。</td></tr>
+<tr><td>7</td><td>消费活动（含「返水」）<br>Consumption Activity</td><td class="st-use">使用</td><td class="ops-cd">条件可用：旧站已写死使用另外一套返水活动（PRD 待确认 Q10）</td><td class="yes">有：「同 IP 只有一个账号可以参与」开关，同一 IP 每天只允许 1 个账号（个数固定为 1，不能修改）</td><td>无</td><td class="yes">有：指定名单</td><td><b>C 只加同设备</b>：板块只有同设备一项；IP 沿用活动现有限制，白名单沿用活动现有名单；先判断现有 IP 限制，再判断同设备。</td></tr>
+<tr><td>8</td><td>负盈利活动<br>Rebate</td><td class="st-use">使用</td><td class="ops-ok">可直接使用</td><td class="yes">有：同一 IP 每天有 N 个账号可以领取（可勾选）</td><td>无</td><td class="yes">有：指定名单</td><td><b>C 只加同设备</b>：板块只有同设备一项；IP 沿用活动现有限制，白名单沿用活动现有名单；先判断现有 IP 限制，再判断同设备。</td></tr>
+<tr><td>9</td><td>新盈利活动 V2<br>Negative Profit V2</td><td class="st-use">使用</td><td class="ops-ok">可直接使用</td><td class="yes">有：同一 IP 每天有 N 个账号可以领取（可勾选；进行中的活动未勾选）</td><td>无</td><td>无</td><td><b>C 只加同设备</b>：板块只有同设备一项；IP 沿用活动现有限制（活动无白名单）；先判断现有 IP 限制，再判断同设备。</td></tr>
+<tr><td>10</td><td>幸运转盘<br>Lucky Wheel</td><td class="st-drop">未上线<br><small>暂定（2026-11-13）；生产代码仍在，前台无入口</small></td><td class="ops-re">需复测</td><td class="yes">有：「同 IP 只有一个账号可以参与」开关，同一 IP 每天只允许 1 个账号（个数固定为 1；当前关闭）</td><td>无</td><td>无</td><td><b>C 只加同设备</b>（上线时接入）：已有「同 IP 只有一个账号可以参与」开关，参照同类活动（消费活动）处理；板块只有同设备一项，IP 沿用该开关。</td></tr>
+<tr><td>11</td><td>每日首充<br>Daily Recharge Activity</td><td class="st-use">使用</td><td class="ops-re">需复测</td><td class="yes">有：同一 IP 每天有 N 个账号可以申领（当前 N = 1000，相当于不限制）。条件里另有「同一 IP 每天仅领 N 次」，配置后不生效</td><td>无</td><td class="yes">有：指定名单</td><td><b>C 只加同设备</b>：板块只有同设备一项；IP 沿用活动现有限制，白名单沿用活动现有名单；先判断现有 IP 限制，再判断同设备。</td></tr>
+<tr><td>12</td><td>新用户转盘<br>New User Spin-the-Wheel Event</td><td class="st-use">使用</td><td class="ops-ok">可直接使用</td><td class="yes">有：同一领取 IP 每天最多领取 N 次（开关 + 次数）。后台文字写的是「同一注册 IP 累计最多计入 N 个账号」，和实际判定不一致</td><td class="yes">有：同一台设备在活动期间最多领取 N 次（开关 + 次数，按浏览器指纹统计）</td><td class="yes">有：导入手机号和指定奖励金额，用来给名单内会员发指定奖励，不是免除限制</td><td><b>D 不改</b>：沿用当前已有逻辑（原设备、IP 限制和白名单都不变），不加本板块。</td></tr>
+<tr><td>13</td><td>返现充值转盘<br>Cashback &amp; Deposit Bonus Wheel</td><td class="st-drop">未上线</td><td>未提及</td><td>无</td><td>无</td><td class="yes">有：白名单导入</td><td><b>B 两项 + 沿用原白名单</b>：按本需求加同设备、同 IP 两项；不另设领取限制白名单，沿用活动现有白名单，名单内会员是否受限按 N16 勾选。注意生产代码中暂无此活动，上线时再接入。</td></tr>
+<tr><td>14</td><td>新用户首充<br>Newbie First Deposit Activity</td><td class="st-use">使用</td><td class="ops-re">需复测</td><td class="yes">有：同一 IP 每天有 N 个账号可以申领（当前 N = 10000，相当于不限制）</td><td>无</td><td class="yes">有：指定名单</td><td><b>C 只加同设备</b>：板块只有同设备一项；IP 沿用活动现有限制，白名单沿用活动现有名单；先判断现有 IP 限制，再判断同设备。</td></tr>
+<tr><td>15</td><td>新用户充值活动计划<br>New User Recharge Activity Plan</td><td class="st-use">使用</td><td class="ops-re">需复测</td><td>无（有「每天同 IP 次数」配置项，当前为 0，系统不读取）</td><td>无</td><td class="yes">有：名单导入，名单类活动只对名单内会员生效（参与名单）</td><td><b>C 只加同设备</b>：板块只有同设备一项；IP 沿用活动现有逻辑，白名单沿用活动现有名单；先判断 IP，再判断同设备。现有「每天同 IP 次数」代码不读取：由技术确认生产环境是否生效，生效则按 C 方式做，不生效改为 A 完整接入（PRD Q8 ③，2026-11-13 确认）。</td></tr>
+<tr><td>16</td><td>邀请好友<br>Invite Friends Activity</td><td class="st-use">使用</td><td class="ops-ok">可直接使用</td><td class="yes">有：「IP 限制」开关 + 次数，同一注册 IP 最多计入 N 个好友（当前关闭）</td><td>无</td><td>无（只有黑名单）</td><td><b>C 只加同设备</b>：板块只有同设备一项；IP 沿用活动现有「IP 限制」（好友计入规则），黑名单沿用；先判断现有 IP 限制，再判断同设备。</td></tr>
+<tr><td>17</td><td>签到<br>Daily Check-in Activity</td><td class="st-use">使用</td><td class="ops-ok">可直接使用</td><td>无（有「相同 IP 可领账号个数」配置项，当前为 9999999，系统不读取）</td><td>无</td><td>无</td><td><b>A 完整接入</b>：按本需求设计（同设备、同 IP 两项 + 领取限制白名单）。</td></tr>
+<tr><td>18</td><td>导入签到（白名单签到）<br>Check-in activity (import)</td><td class="st-use">使用</td><td class="ops-re">需复测</td><td>无（同签到，配置项不生效）</td><td>无</td><td class="yes">有：导入名单，只有名单内会员能参加（参与名单）</td><td><b>A 完整接入</b>：与签到相同；活动自身有参与名单，名单内会员是否受限按 N16 勾选。</td></tr>
+<tr><td>19</td><td>完成任务砸金蛋<br>Golden Egg Bonus Activity</td><td class="st-use">使用</td><td class="ops-ok">可直接使用</td><td class="yes">有：同 IP 每天名额（新活动默认 100，后台页面看不到、改不了）</td><td class="yes">有：同设备每天名额（新活动默认 100，后台页面看不到、改不了）</td><td class="yes">有：名单导入（白名单、黑名单）</td><td><b>D 不改</b>：沿用当前已有逻辑（同 IP、同设备每天名额不变），不加本板块。</td></tr>
+</table></div>
+
+<h2 id="s4">生产代码中有、但 789Bingo 活动中心没有独立菜单的活动</h2>
+<p>以下活动在 789Bingo 生产代码（main 分支）中存在（技术侧《产品对齐清单》第一节），但 789Bingo QA 后台的活动中心没有独立菜单，前台也没有找到入口。由技术确认是否还在用，在用的再定接入方式（PRD Q7，2026-11-13 确认）。</p>
+<div class="tbl"><table data-fit>
+<colgroup><col style="width:22%"><col style="width:26%"><col style="width:14%"><col style="width:38%"></colgroup>
+<tr><th>活动</th><th>目前是否有 IP 限制</th><th>目前是否有单一设备限制</th><th>说明</th></tr>
+<tr><td>新人七日签到</td><td class="yes">有：同一 IP 每天 N 个账号（勾选活动条件并填 N）</td><td>无</td><td>签到时判定。前台有入口地址，但打开后跳回首页。</td></tr>
+<tr><td>代理活动</td><td class="yes">有：同一 IP 每天 N 个账号（勾选活动条件并填 N）</td><td>无</td><td>只在会员申请发放时判定，自动发放不判定；「同一 IP 每天仅领 N 次」配置后不生效。</td></tr>
+<tr><td>新用户签到</td><td>无（只在查询页判定，领取时不拦截）</td><td>无</td><td>领取接口里的判定已被注释，直接领取不受限制。</td></tr>
+<tr><td>圣诞抽奖、圣诞点灯、DropBall 预约、投篮活动</td><td class="yes">有：「同 IP 只有一个账号可以参与」开关（个数固定 1）</td><td>无</td><td>789Bingo 前台只有圣诞主题样式，没有活动入口。</td></tr>
+<tr><td>兑换码</td><td class="yes">有：同一 IP 每天最多使用 N 次（填非 0 生效）</td><td>无</td><td>唯一按次数计的现有 IP 限制。</td></tr>
+<tr><td>周五奖励、周五白名单奖励、VIP 奖励、抽奖（彩票式）、通用活动、金蛋活动（旧）、PP 活动、代理 GGR</td><td>无</td><td>无</td><td>技术侧在发放代码中没有查到 IP 或设备判定（不等于确认没有）。通用活动后台有 IP 字段，但代码不执行。</td></tr>
+<tr><td>皇冠冲榜</td><td>—</td><td>—</td><td>生产代码中没有，只在 QA 环境。前台只有「皇冠冲榜弹窗」开关（当前为 0）。</td></tr>
+</table></div>
+
+<h2 id="s5">待确认</h2>
+<ol>
+  <li>幸运转盘暂定为未上线（2026-11-13），上线时按 C 方式接入；后端代码仍在，是否正式下线菜单需技术确认。</li>
+  <li>设备标识用哪个（对齐清单 Q-A，即 PRD 待确认 Q3）：已确认由技术确定（2026-11-13）。现有三个标识都由客户端上报，可以伪造；老版本客户端可能不上报。</li>
+  <li>没有独立菜单的活动由技术确认是否还在用；邮箱认证奖励按 A 完整接入；全部活动一次上线（PRD Q7，2026-11-13 确认）。19 个菜单活动的接入方式已于 2026-11-12 确认，见上方「接入方式」。</li>
+  <li>签到、导入签到、新用户充值活动计划中「不生效的 IP 配置项」，上线时是否去掉：需技术确认后台改动范围。</li>
+  <li>登录送彩金：本次核对时重新登录没有触发发放，是否每天只在第一次登录时发放，需技术确认。</li>
+  <li>返水：运营反馈老站已写死使用另外一套返水活动。活动中心【消费活动】里的返水配置是否还生效、由技术确认现有限制是否生效，生效则按 C 方式补充同设备限制即可（PRD Q10）。</li>
+  <li>运营标为「需复测」的 8 个活动：由技术确认代码在生产环境是否生效、活动是否可用（PRD Q12），结果回来后更新本表的「状态」和「运营反馈」。</li>
+</ol>
+
+</section>
+
+<section id="tab-games" role="tabpanel" aria-labelledby="tb-games" hidden>
+<div class="site-note"><b>核对方式：</b>2026-11-12 登录 789Games QA 后台，逐个读取【活动中心】18 个菜单的开关、活动时间、IP 和设备数值、名单；在 QA 前台查看各活动入口，并实际领取一次。IP、设备的判定口径以技术侧《产品对齐清单》中 789Games 生产代码（main 分支）的梳理为准。</div>
+
+<h2 id="g1">结论</h2>
+<div class="sum">
+  <div>活动菜单<b>18</b></div>
+  <div>使用<b class="st-use">17</b></div>
+  <div>未上线<b class="st-drop">1</b></div>
+  <div>有 IP 限制<b>10</b></div>
+  <div>有单一设备限制<b>2</b></div>
+  <div>有白名单类名单<b>11</b></div>
+  <div>运营反馈：可直接使用 / 条件可用 / 需复测<b>9 / 1 / 8</b></div>
+</div>
+<ul>
+  <li><b>运营反馈（2026-11-13）</b>：可直接使用 9 个；条件可用 1 个（返水活动：新站可用）；需复测 8 个（绑定手机号码、KYC 认证送彩金、登录送彩金、抽奖、每日首充、新用户首充、新用户充值活动计划、签到（白名单））。</li>
+  <li><b>新用户转盘正在进行</b>：IP、设备两项都已开启，但数值都是 9999999，相当于不限制。前台实测抽中 ₱3，余额从 ₱18.80 变为 ₱21.80；另有「一台设备只给一个账号」的全局限制，当前是否打开待技术确认。</li>
+  <li>现有 IP 限制大多只按账号数、只支持「每天」；多数数值偏大（如 1000、10000、9999999）或没有勾选，起不到防护作用。现有 IP 限制还有三个缺陷（技术侧《产品对齐清单》）：取不到 IP 时直接放行；并发领取时会超过上限；实际会比设置的账号数多放 1 个。</li>
+  <li>只有新用户转盘和砸金蛋送彩金活动有设备限制；砸金蛋的名额在后台页面上看不到，运营无法修改。</li>
+  <li>签到、签到（白名单）、每日首充、新用户充值活动计划的开关虽然开着，但活动时间已在 10-31 结束；前台签到显示不可领取。</li>
+</ul>
+
+<h2 id="g3">活动现状表</h2>
+<div class="tbl"><table data-fit>
+<colgroup><col style="width:4%"><col style="width:12%"><col style="width:13%"><col style="width:9%"><col style="width:17%"><col style="width:15%"><col style="width:11%"><col style="width:19%"></colgroup>
+<tr><th>序号</th><th>活动（后台菜单）</th><th>状态</th><th>运营反馈（2026-11-13）</th><th>目前是否有 IP 限制</th><th>目前是否有单一设备限制</th><th>目前是否有白名单</th><th>处理方案</th></tr>
+<tr><td>1</td><td>老用户充值转盘</td><td class="st-use">使用<br><small>「老用户转盘活动」开启，至 12-30</small></td><td class="ops-ok">可直接使用</td><td>无</td><td>无</td><td class="yes">有：白名单导入（名单内会员使用专属奖励档位）</td><td><b>B 两项 + 沿用原白名单</b></td></tr>
+<tr><td>2</td><td>绑定手机号码活动</td><td class="st-use">使用<br><small>开关开启</small></td><td class="ops-re">需复测</td><td>无（只有「同一手机号只能领取一次」）</td><td>无</td><td>无</td><td><b>A 完整接入</b></td></tr>
+<tr><td>3</td><td>KYC认证送彩金活动</td><td class="st-use">使用<br><small>开关开启；前台账户页显示「Get ₱101 After KYC」</small></td><td class="ops-re">需复测</td><td>无</td><td>无</td><td>无</td><td><b>A 完整接入</b></td></tr>
+<tr><td>4</td><td>登录送彩金活动</td><td class="st-use">使用<br><small>开关开启，至 2027-01-01</small></td><td class="ops-re">需复测</td><td>无</td><td>无</td><td>无</td><td><b>A 完整接入</b></td></tr>
+<tr><td>5</td><td>登录送彩金活动（白名单）</td><td class="st-use">使用<br><small>列表中的活动当前都已关闭</small></td><td class="ops-ok">可直接使用</td><td>无</td><td>无</td><td class="yes">有：导入手机号名单，只有名单内会员能领取（参与名单）</td><td><b>B 两项 + 沿用原白名单</b>；单次领取类（是否每人只能领一次待技术确认，PRD Q12）</td></tr>
+<tr><td>6</td><td>充值活动</td><td class="st-use">使用<br><small>开启，11-01～11-30；前台充值页显示分档优惠（最高 16%、封顶 ₱7,890），活动列表有「Deposit」</small></td><td class="ops-ok">可直接使用</td><td class="yes">有：同一 IP 每天有 N 个账号可以申领（已勾选，N = 3）；「同一 IP 每天仅领 N 次」不生效</td><td>无</td><td class="yes">有：指定名单</td><td><b>C 只加同设备</b></td></tr>
+<tr><td>7</td><td>返水活动</td><td class="st-use">使用<br><small>「返水」开启，11-01～11-30；前台活动列表可见</small></td><td class="ops-cd">条件可用：新站可用</td><td class="yes">有：「同 IP 只有一个账号可以参与」开关（个数固定 1）</td><td>无</td><td class="yes">有：指定名单</td><td><b>C 只加同设备</b></td></tr>
+<tr><td>8</td><td>输返活动</td><td class="st-use">使用<br><small>「baiceshi」开启，10-01～11-30</small></td><td class="ops-ok">可直接使用</td><td class="yes">有：同一 IP 每天 N 个账号（可勾选），只在页面申请领取时判定</td><td>无</td><td class="yes">有：指定名单</td><td><b>C 只加同设备</b></td></tr>
+<tr><td>9</td><td>新输返活动</td><td class="st-use">使用<br><small>「新盈利活动1」开启，11-01～11-30</small></td><td class="ops-ok">可直接使用</td><td class="yes">有：同一 IP 每天 N 个账号（可勾选）；自动发放，取最后登录 IP</td><td>无</td><td>无</td><td><b>C 只加同设备</b></td></tr>
+<tr><td>10</td><td>抽奖活动</td><td class="st-drop">未上线<br><small>暂定（2026-11-13）；前台没有任何入口</small></td><td class="ops-re">需复测</td><td class="yes">有：「同 IP 只有一个账号可以参与」开关（个数固定 1，当前关闭）</td><td>无</td><td>无</td><td><b>C 只加同设备</b>（上线时接入）：已有「同 IP 只有一个账号可以参与」开关，参照同类活动（返水活动）处理</td></tr>
+<tr><td>11</td><td>每日首充活动</td><td class="st-use">使用<br><small>开关开启，但活动时间 10-06～10-31 已结束</small></td><td class="ops-re">需复测</td><td class="yes">有：同一 IP 每天有 N 个账号可以申领（已勾选，N = 1000，相当于不限制）；「同一 IP 每天仅领 N 次」不生效</td><td>无</td><td class="yes">有：指定名单</td><td><b>C 只加同设备</b></td></tr>
+<tr><td>12</td><td>新用户转盘活动</td><td class="st-use">使用<br><small>活动 1204 开启，11-01～12-31；前台弹窗实测抽中 ₱3</small></td><td class="ops-ok">可直接使用</td><td class="yes">有：同一领取 IP 每天最多领取 N 次（已开启，N = 9999999，相当于不限制）</td><td class="yes">有两套：① 同一台设备活动期间最多领取 N 次（已开启，N = 9999999，相当于不限制）；② 一台设备在一个活动里只给一个账号（全局开关，当前状态待技术确认）</td><td class="yes">有：白名单导入（手机号 + 指定奖励金额）</td><td><b>D 不改</b>：沿用当前已有逻辑</td></tr>
+<tr><td>13</td><td>新用户首充活动</td><td class="st-use">使用<br><small>当前关闭</small></td><td class="ops-re">需复测</td><td class="yes">有：同一 IP 每天有 N 个账号可以申领（已勾选，N = 10000，相当于不限制）</td><td>无</td><td class="yes">有：指定名单</td><td><b>C 只加同设备</b></td></tr>
+<tr><td>14</td><td>新用户充值活动计划</td><td class="st-use">使用<br><small>「新用户首充活动计划测试」开启，但 10-31 已结束</small></td><td class="ops-re">需复测</td><td>无（「每天同 IP 次数」配置项不生效）</td><td>无</td><td class="yes">有：参与名单</td><td><b>C 只加同设备</b>；现有 IP 配置可能不生效：由技术确认，生效按 C，不生效改为 A 完整接入（PRD Q8 ③）</td></tr>
+<tr><td>15</td><td>邀请好友活动</td><td class="st-use">使用<br><small>开启</small></td><td class="ops-ok">可直接使用</td><td class="yes">有：「IP 限制」开关 + 次数，同一注册 IP 最多计入 N 个好友（当前关闭）</td><td>无</td><td>无（只有黑名单）</td><td><b>C 只加同设备</b></td></tr>
+<tr><td>16</td><td>签到活动</td><td class="st-use">使用<br><small>开关开启，但 08-31～10-31 已结束；前台显示不可领取</small></td><td class="ops-ok">可直接使用</td><td>无（「相同 IP 可领账号个数」为 9999999，代码不读）</td><td>无</td><td>无</td><td><b>A 完整接入</b></td></tr>
+<tr><td>17</td><td>签到活动(白名单)</td><td class="st-use">使用<br><small>开关开启，但 09-24～10-31 已结束</small></td><td class="ops-re">需复测</td><td>无（同签到，配置项不生效）</td><td>无</td><td class="yes">有：导入名单，只有名单内会员能参加（参与名单）</td><td><b>A 完整接入</b></td></tr>
+<tr><td>18</td><td>砸金蛋送彩金活动</td><td class="st-use">使用<br><small>活动 1244 开启，11-01～11-30；前台入口可见</small></td><td class="ops-ok">可直接使用</td><td class="yes">有：同 IP 每天 100 个名额（没有开关，后台页面不可配）</td><td class="yes">有：同设备每天 100 个名额（没有开关，后台页面不可配）</td><td class="yes">有：名单导入（白名单、黑名单）</td><td><b>D 不改</b>：沿用当前已有逻辑</td></tr>
+</table></div>
+
+
+<h2 id="g6">生产代码中有、789Games 后台没有菜单的活动</h2>
+<p>以下活动在 789Games 生产代码（main 分支）中存在（技术侧《产品对齐清单》），但 789Games QA 后台【活动中心】没有菜单，前台也没有找到入口。由技术确认是否还在用，在用的再定接入方式（PRD Q7）。</p>
+<div class="tbl"><table data-fit>
+<colgroup><col style="width:24%"><col style="width:46%"><col style="width:30%"></colgroup>
+<tr><th>活动</th><th>现有 IP / 设备限制（代码口径）</th><th>说明</th></tr>
+<tr><td>新人七日签到</td><td>同一 IP 每天 N 个账号（勾选条件并填 N），签到时判定</td><td>前台有入口地址，打开后跳回首页</td></tr>
+<tr><td>代理活动</td><td>同一 IP 每天 N 个账号，只在会员申请时判定，自动发放不判定</td><td>—</td></tr>
+<tr><td>圣诞抽奖、圣诞点灯、DropBall 预约、投篮活动</td><td>「同 IP 只有一个账号可以参与」开关（个数固定 1）</td><td>—</td></tr>
+<tr><td>兑换码</td><td>同一 IP 每天最多使用 N 次（唯一按次数计）</td><td>—</td></tr>
+<tr><td>新用户签到</td><td>只在查询页判定，领取时不拦截</td><td>—</td></tr>
+<tr><td>周五奖励、周五白名单奖励、VIP 奖励、抽奖（彩票式）、通用活动、金蛋活动（旧）、PP 活动、代理 GGR</td><td>发放代码中没有查到 IP 或设备判定（不等于确认没有）</td><td>—</td></tr>
+</table></div>
+
+<h2 id="g5">待确认</h2>
+<ol>
+  <li>新用户转盘「一台设备只给一个账号」的全局开关当前是否打开：后台页面看不到这个开关，需技术确认。</li>
+  <li>抽奖活动暂定为未上线（2026-11-13），上线时按 C 方式接入。</li>
+  <li>上表中后台没有菜单的活动：由技术确认是否还在用（PRD Q7）。</li><li>运营标为「需复测」的 8 个活动：由技术确认代码在生产环境是否生效、活动是否可用（PRD Q12）。</li>
+</ol>
+</section>
+
+<script>
+(function () {
+  var tabs = [].slice.call(document.querySelectorAll('.site-tabs [role="tab"]'));
+  function show(id) {
+    tabs.forEach(function (t) {
+      var on = t.getAttribute('aria-controls') === id;
+      t.setAttribute('aria-selected', on ? 'true' : 'false');
+      t.tabIndex = on ? 0 : -1;
+      document.getElementById(t.getAttribute('aria-controls')).hidden = !on;
+    });
+    try { localStorage.setItem('actStatusTab', id); } catch (e) {}
+  }
+  tabs.forEach(function (t, i) {
+    t.addEventListener('click', function () { show(t.getAttribute('aria-controls')); });
+    t.addEventListener('keydown', function (e) {
+      if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+      var n = tabs[(i + (e.key === 'ArrowRight' ? 1 : tabs.length - 1)) % tabs.length]; n.focus(); n.click();
+    });
+  });
+  var saved = null; try { saved = localStorage.getItem('actStatusTab'); } catch (e) {}
+  var hash = location.hash.slice(1);
+  show(hash === 'tab-games' || hash === 'tab-bingo' ? hash : (saved === 'tab-games' ? 'tab-games' : 'tab-bingo'));
+  window.addEventListener('hashchange', function () { var h = location.hash.slice(1); if (h === 'tab-games' || h === 'tab-bingo') show(h); });
+})();
+</script>
+
+</article></div>
+</div><script>window.NAV_ROOT = "../../";</script>
+<script src="../../assets/nav-data.js"></script>
+<script src="../../assets/nav.js"></script>
+</body>
+</html>

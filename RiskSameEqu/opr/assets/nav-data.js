@@ -4,25 +4,24 @@
    需求不涉及前台或后台时，删掉对应的三级目录和原型文件；不涉及后台时删掉「后台操作手册」。 */
 window.NAV_DATA = {
   role: "opr",   /* 发布站点的角色：运营 */
-  title: "单一设备领取奖励限制（v1.0）", href: "index.html",
+  title: "单一设备领取奖励限制（v1.1）", href: "index.html",
   api: "https://oc-feedback.jonathanxu037.workers.dev", oprKey: "opr-7e295e9a66a7f703410b6d0465a447d00dc311f40eb66150",   /* 云端存储接口和运营写入口令；用 .claude/tools/set_cloud_api.ps1 修改 */
+  siteTag: "789BINGO & 789GAMES",   /* 目录栏和产品密码页最上方的站点标识；不写时显示「789BINGO」（用户 2026-11-13 要求本需求两站都标） */
   // brand: "【左侧目录栏标题，不写时自动取上面 title 去掉版本号】",   /* 目录栏顶部显示需求标题（需求包框架规范第 3.2 节） */
   showChanges: false,   /* 运营需求确认页是否显示原型修改标注（版本痕迹）：默认 false 不显示，需要时改成 true（需求包框架规范第 6.1 节） */
   roles: [],   /* 入口页「需求与原型中心」只有产品能看 */
   home: { opr: "docs/单一设备领取奖励限制-需求修改总结.html", dev: "docs/单一设备领取奖励限制-需求要点.html", repo: "docs/单一设备领取奖励限制-需求开发PRD文档.html" },   /* 各角色打开后的默认页；产品是入口页 */
   children: [
+    { title: "版本管理", href: "docs/单一设备领取奖励限制-需求开发PRD文档.html", bar: "#D8242F", children: [
+    { title: "本期适用版本", href: "docs/单一设备领取奖励限制-需求修改总结.html", bar: "#1B7A4C", children: [   /* 栏目标题打开 v1.1 版本需求说明（用户 2026-11-13，参照 VIP会员体系） */
+    { title: "v1.1版本", href: "docs/单一设备领取奖励限制-需求修改总结.html", bar: "#E8C06A", children: [
+      { title: "版本需求说明", href: "docs/单一设备领取奖励限制-版本需求说明.html", type: "doc", roles: ["dev"] },   /* 只有产品和开发可看，同 VIP会员体系 */
     { title: "原型页面", href: "prototype/front/单一设备领取奖励限制-活动奖励领取.html", bar: "#D8242F", children: [
       { title: "前台页面", href: "prototype/front/单一设备领取奖励限制-活动奖励领取.html", bar: "#3B82F6", children: [
         { title: "活动奖励领取", href: "prototype/front/单一设备领取奖励限制-活动奖励领取.html", type: "page" }
       ]},
       { title: "后台页面", href: "prototype/admin/单一设备领取奖励限制-后台活动奖励领取限制配置.html", bar: "#8C6EDC", children: [
-        { title: "后台活动奖励领取限制配置", href: "prototype/admin/单一设备领取奖励限制-后台活动奖励领取限制配置.html", type: "admin" }
-      ]},
-      { title: "附录", href: "docs/单一设备领取奖励限制-活动中心现状清单.html", bar: "#7A869A", children: [
-        { title: "活动中心现状清单", href: "docs/单一设备领取奖励限制-活动中心现状清单.html", type: "doc", roles: ["dev", "opr"], children: [
-          { title: "789Bingo（老站）", href: "docs/单一设备领取奖励限制-活动中心现状清单.html#tab-bingo" },
-          { title: "789Games（新站）", href: "docs/单一设备领取奖励限制-活动中心现状清单.html#tab-games" }
-        ]}
+        { title: "后台活动限制管理", href: "prototype/admin/单一设备领取奖励限制-后台活动奖励领取限制配置.html", type: "admin" }
       ]}
     ]},
     { title: "文档资料", href: "docs/单一设备领取奖励限制-需求要点.html", bar: "#2E9A58", children: [
@@ -53,6 +52,9 @@ window.NAV_DATA = {
       { title: "需求修改总结", href: "docs/单一设备领取奖励限制-需求修改总结.html", type: "doc", roles: ["opr"] },
       { title: "运营需求确认", href: "docs/单一设备领取奖励限制-运营需求确认.html", type: "doc", roles: ["opr"] },
       { title: "文案确认", href: "docs/单一设备领取奖励限制-文案确认.html", type: "doc", roles: ["opr"] }
+    ]}
+    ]}
+    ]}
     ]}
   ]
 };

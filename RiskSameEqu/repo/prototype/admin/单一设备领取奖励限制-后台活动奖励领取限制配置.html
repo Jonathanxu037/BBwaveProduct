@@ -3,13 +3,28 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>单一设备领取奖励限制-后台活动奖励领取限制配置</title>
+<title>单一设备领取奖励限制-后台活动限制管理</title>
 <link rel="stylesheet" href="../../assets/style.css">
 <style>
-.bo-tabs{flex-wrap:wrap}
-.old{color:#909399}
-/* 三行共用一张网格：每列宽度取三行中最宽的内容，文字和控件上下对齐 */
-.lim{display:grid;grid-template-columns:repeat(6,max-content) minmax(0,1fr);column-gap:10px;row-gap:10px;align-items:center;white-space:nowrap}
+/* 本页类名统一加前缀 sdl-（单一设备领取限制），避免和模板通用样式重名 */
+.bo-mask[hidden]{display:none}
+.sdl-ck{display:inline-flex;align-items:center;gap:6px;cursor:pointer;color:#606266}
+.sdl-ck input{margin:0}
+.sdl-sub{font-size:12px;color:#909399;line-height:1.7}
+.bo td.sdl-w{white-space:normal;min-width:150px}
+.bo td.sdl-act{vertical-align:middle;background:#fff;font-weight:600}
+.bo td.sdl-none,.sdl-none{color:#C0C4CC}
+.sdl-empty{text-align:center!important;color:#909399!important;padding:28px 8px!important}
+.sdl-foot{font-size:12px;color:#909399;margin:10px 0 0}
+/* 配置限制弹窗 */
+.bo-dlg.sdl-dlg{width:min(820px,94vw);max-height:calc(100vh - 40px);overflow-y:auto;gap:10px}
+.sdl-meta{font-size:12px;color:#909399;margin-top:-4px}
+/* 右上角「×」：点击与「取消」相同（PRD 5.1「取消 / ×」）；标题右侧留出位置 */
+.sdl-dlg #dlgT{padding-right:30px}
+.sdl-dlg .fsec{margin:6px 0 0}
+.sdl-dlg .row2{margin-top:6px}
+/* 两行限制项共用一张网格：每列宽度取两行中最宽的内容，文字和控件上下对齐 */
+.lim{display:grid;grid-template-columns:repeat(6,max-content) minmax(0,1fr);column-gap:10px;row-gap:10px;align-items:center;white-space:nowrap;padding-left:14px}
 .lim-row{display:contents}
 .lim-row>*{margin:0;line-height:32px}
 .lim-row label.ck{display:inline-flex;align-items:center;gap:6px;height:32px;cursor:pointer}
@@ -17,278 +32,462 @@
 .lim-row select.bo-inp{width:110px;height:32px;line-height:normal;box-sizing:border-box}
 .lim-row input.bo-inp{width:90px;height:32px;line-height:normal;box-sizing:border-box}
 .lim-row .dis{opacity:.45}
-.lim-row .ferr{color:#F56C6C;font-size:12px;padding:0}
+/* 次数错误提示显示在输入框下方（第 5 列起） */
+.lim-row .ferr{grid-column:5 / -1;color:#F56C6C;font-size:12px;line-height:18px;margin-top:-8px;padding:0}
+.lim-row .ferr:empty{display:none}
+/* 多次领取类活动：次数输入框的位置显示灰字（PRD N18）；周期固定时同样用灰字 */
+.lim-row .lim-first{grid-column:span 3;color:#909399;font-size:12px}
+.lim-row .lim-fix{color:#909399;font-size:12px}
 .lim-tip{grid-column:1 / -1;color:#909399;font-size:12px;line-height:20px}
-.lim-frow{align-items:start}
-.lim-frow>.fl{height:32px;line-height:32px}
-.lim-wl{grid-column:1 / -1;display:flex;align-items:center;gap:10px;height:32px}
-.wl-imp{grid-column:1 / -1;display:grid;gap:8px;margin-top:6px;white-space:normal}
+.lim-wlopt{grid-column:2 / -1;display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-top:-6px;line-height:20px;font-size:12.5px;color:#606266;white-space:normal}
+.lim-wlopt label{display:inline-flex;align-items:center;gap:6px;cursor:pointer;white-space:nowrap}
+.lim-wlopt label input{margin:0}
+.lim-wlopt .hint{color:#909399;font-size:12px;white-space:nowrap}
+.lim-wlopt.dis{opacity:.45}
+.wl-imp{display:grid;gap:8px;padding-left:14px}
 .wl-imp-h{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
 .wl-imp-t{font-weight:600;color:#303133}
 .wl-imp-r{background:#DCDFE6;padding:8px 12px;line-height:1.8;color:#303133;max-width:560px}
-.lim-wl b{font-weight:400;color:#606266}
-/* 多次领取类活动：次数输入框的位置显示灰字（PRD N18） */
-.lim-row .lim-first{grid-column:span 3;color:#909399;font-size:12px}
-.frow>.fl{white-space:nowrap}
-.lim-wlopt{grid-column:2 / -1;display:flex;align-items:center;gap:6px;margin-top:-6px;line-height:20px;font-size:12.5px;color:#606266;white-space:normal}
-.lim-wlopt{flex-wrap:wrap}
-.lim-wlopt label{display:inline-flex;align-items:center;gap:6px;cursor:pointer;white-space:nowrap}
-.lim-wlopt .hint{white-space:nowrap}
-.lim-wlopt label input{margin:0}
-.lim-wlopt .hint{color:#909399;font-size:12px}
-.lim-wlopt.dis{opacity:.45}
-.migr{background:#FDF6EC;border:1px solid #F5DAB1;color:#B5601A;font-size:12.5px;padding:8px 10px;border-radius:4px;margin:4px 0 8px}
 </style>
 </head>
 <body>
 <div class="with-nav">
 <div class="adm-stage">
   <div class="bo">
-    <div class="bo-top1"><span>当前时间：2026/11/10 14:30:00</span><span class="sp">简体中文</span><span>运营账号A ▾</span></div>
+    <div class="bo-top1"><span>当前时间：2026/11/13 14:30:00</span><span class="sp">简体中文</span><span>运营账号A ▾</span></div>
     <div class="bo-top2"><span>在线人数<b class="bo-n r">12</b></span><span>当日注册<b class="bo-n g">8</b></span><span>当日充值成功<b class="bo-n g">15</b></span><span>提款<b class="bo-n g">0</b></span><span>风控审核<b class="bo-n r">1</b></span></div>
     <div class="bo-body">
       <nav class="bo-menu" aria-label="后台菜单">
         <div class="mt">菜单 ≡</div>
-        <div class="g open">活动中心</div>
-        <div class="i" id="mOld">老用户充值转盘</div><div class="i">绑定手机号码活动</div><div class="i" id="mKyc">KYC认证送彩金活动</div><div class="i">登录送彩金活动</div><div class="i">导入用户登录送彩金活动</div><div class="i">充值活动</div><div class="i">消费活动</div><div class="i">负盈利活动</div><div class="i">新盈利活动V2</div><div class="i" id="mDfr">每日首充活动</div><div class="i" id="mNew">新用户转盘活动</div><div class="i">新用户首充活动</div><div class="i">新用户充值活动计划</div><div class="i">邀请好友活动</div><div class="i">签到活动</div><div class="i" id="mImp">导入签到活动</div><div class="i">完成任务砸金蛋</div><div class="i">…（以后新增的活动）</div>
+        <div class="g">会员管理</div>
+        <div class="g open">活动配置</div>
+        <div class="i">活动中心</div>
+        <div class="i on glow" data-dev="D15">活动限制管理</div>
+        <div class="i">…（活动配置下的现有菜单）</div>
+        <div class="g">日志管理</div>
         <div class="g">系统管理</div>
       </nav>
       <div class="bo-main">
-        <div class="bo-crumb">位置 › 活动中心 › <b id="crumb">老用户充值转盘</b></div>
-        <div class="bo-tabs" role="tablist"><span role="tab" class="on" aria-selected="true">活动配置</span><span role="tab">活动统计</span></div>
-        <section class="bo-content" id="listView" hidden>
-          <div class="bo-filter">
-            <span>活动名称：</span><input class="bo-inp" placeholder="请输入" style="width:150px" aria-label="活动名称">
-            <span>创建人：</span><input class="bo-inp" placeholder="请输入" style="width:150px" aria-label="创建人">
-            <button class="bo-btn q" type="button">搜索</button>
-            <button class="bo-btn q glow" type="button" data-go="create" data-dev="D15">创建活动</button>
-          </div>
-          <table>
-            <thead><tr><th>序号</th><th>活动编号</th><th>活动名称</th><th>活动开始时间</th><th>活动结束时间</th><th>创建人</th><th>状态</th><th>操作</th></tr></thead>
-            <tbody>
-              <tr><td>1</td><td>1106</td><td>老用户转盘活动</td><td>2026-09-30 12:00:00</td><td>2027-01-30 12:00:00</td><td>运营账号A</td><td>开启</td><td><button class="bo-btn link glow" type="button" data-go="edit">修改</button></td></tr>
-              <tr><td>2</td><td>1203</td><td>老用户转盘测试</td><td>2026-07-21 12:00:00</td><td>2026-10-14 12:00:00</td><td>运营账号B</td><td>关闭</td><td><button class="bo-btn link" type="button" data-go="edit">修改</button></td></tr>
-            </tbody>
+        <div class="bo-crumb">位置 › 活动配置 › <b>活动限制管理</b></div>
+        <div class="bo-tabs" role="tablist"><span role="tab" class="on" aria-selected="true">活动限制管理</span></div>
+        <div class="bo-filter glow" data-ch="filter">
+          <span>活动名称：</span><select class="bo-inp" id="fName" style="width:200px" aria-label="活动名称" data-dev="D28"><option value="">全部</option></select>
+          <button class="bo-btn q" type="button" id="fGo" data-dev="D28">搜索</button>
+          <span class="ui-nw"><button class="bo-btn" type="button" id="fRe" data-dev="D28">刷新</button><i class="qm" tabindex="0" data-tip="重新读取活动中心的全部活动和各期，保留当前活动名称的选择；新生成的一期默认沿用该活动上一期的配置，没有上一期的期和新建的不分期活动默认不限制。">?</i></span>
+        </div>
+        <section class="bo-content glow">
+          <table data-ch="list">
+            <thead><tr>
+              <th data-dev="D25" data-dev-inline data-ch="col-name">活动名称</th>
+              <th data-dev="D26" data-dev-inline data-ch="col-period">期数 / 状态与有效期<i class="qm" tabindex="0" data-tip="分期活动按创建先后显示「第 N 期」和该期名称、状态、有效期；不分期的活动显示当前状态和有效期，长期有效的显示「长期」。已过结束时间的显示「已结束」。有效期与活动中心该活动（期）配置页显示的时间一致，时区相同。">?</i></th>
+              <th data-ch="col-dev">设备限制<i class="qm" tabindex="0" data-tip="不限制：未勾选，或数量为 0；「周期 · N 次」：同一设备在周期内最多领取 N 次；「周期 · 最多 N 个账号」：周期内同一设备只允许前 N 个领取的账号领取。">?</i></th>
+              <th data-ch="col-ip">IP 限制<i class="qm" tabindex="0" data-tip="不限制：未勾选，或数量为 0；「周期 · N 次」：同一 IP 在周期内最多领取 N 次；「周期 · 最多 N 个账号」：周期内同一 IP 只允许前 N 个领取的账号领取。">?</i></th>
+              <th data-ch="col-wl">白名单导入<i class="qm" tabindex="0" data-tip="显示领取限制白名单「已导入 N 人」或「未导入」，名单内会员不受设备限制、IP 限制。">?</i></th>
+              <th>操作<i class="qm" tabindex="0" data-tip="点「配置」设置本活动（分期活动为本期）的设备限制、IP 限制和白名单导入，保存后立即生效。">?</i></th>
+            </tr></thead>
+            <tbody id="tb"></tbody>
           </table>
-          <p style="font-size:12px;color:#909399;margin:10px 0 0">列表页不改动；在点「创建活动」或「修改」打开的配置页中增加「活动奖励领取限制」板块。示例数据均为虚构。</p>
-        </section>
-        <section class="bo-content" id="page">
-          <div id="fields"></div>
-          <div id="migrBox"></div>
-          <div class="fsec glow">活动奖励领取限制</div>
-          <div class="frow lim-frow"><span class="fl">活动奖励领取限制<i class="qm" tabindex="0" id="limQm" data-tip="">?</i></span>
-            <div class="fctl"><div class="lim glow" id="limPage"></div></div></div>
-          <div class="row2" style="justify-content:flex-start;padding-left:160px"><button class="bo-btn q" type="button" id="save" data-dev="D14">保存</button><button class="bo-btn" type="button" id="back">返回</button></div>
-          <p style="font-size:12px;color:#909399;margin:10px 0 0">示例数据均为虚构。</p>
+          <div class="bo-page" id="pager" aria-label="分页"></div>
+          <p class="sdl-foot">示例数据均为虚构。</p>
         </section>
       </div>
     </div>
   </div>
 
   <aside class="notes adm-notes">
-    <h2>后台活动奖励领取限制配置</h2>
-    <p class="sub">各活动配置页新增「活动奖励领取限制」板块（淡色光晕为新增内容）。有列表的活动，加在「创建活动」「修改」（或「编辑」）打开的配置页；没有列表的，加在进入菜单直接显示的配置页。各活动的入口和接入方式见 PRD 5.1（活动配置页：活动奖励领取限制板块）。</p>
+    <h2>后台活动限制管理</h2>
+    <p class="sub">在【活动配置】菜单下新增栏目「活动限制管理」，统一配置各活动的同设备、同 IP、领取限制白名单三项（淡色光晕为新增内容）。各活动配置页不加限制板块，只删除原有的同 IP、同设备配置项（PRD 规则 N14）。</p>
     <h3>模拟场景</h3>
     <div class="sim">
-      <button type="button" data-go="direct"><span class="simtag">A 完整接入</span>KYC认证送彩金活动（单次领取，活动无自身名单）</button>
-      <button type="button" data-go="error"><span class="simtag">A 完整接入</span>KYC认证送彩金活动 · 保存校验提示（单次领取）</button>
-      <button type="button" data-go="wlact"><span class="simtag">A 完整接入</span>导入签到活动（多次领取，活动有自身名单）</button>
-      <button type="button" data-go="list"><span class="simtag">B 两项 + 原白名单</span>老用户充值转盘列表</button>
-      <button type="button" data-go="create"><span class="simtag">B 两项 + 原白名单</span>老用户充值转盘 · 创建活动配置页（多次领取）</button>
-      <button type="button" data-go="edit"><span class="simtag">B 两项 + 原白名单</span>老用户充值转盘 · 修改活动配置页（多次领取）</button>
-      <button type="button" data-go="onlydev"><span class="simtag">C 只加同设备</span>每日首充活动（多次领取）</button>
+      <button type="button" data-go="list"><span class="simtag">列表</span>默认列表（第 1 页）</button>
+      <button type="button" data-go="page2"><span class="simtag">列表</span>第 2 页</button>
+      <button type="button" data-go="refresh"><span class="simtag">列表</span>活动中心新建一期，刷新后出现</button>
+      <button type="button" data-go="edit"><span class="simtag">弹窗</span>KYC认证送彩金活动（单次领取类，无自身名单）</button>
+      <button type="button" data-go="error"><span class="simtag">弹窗</span>KYC认证送彩金活动 · 保存校验提示</button>
+      <button type="button" data-go="multi"><span class="simtag">弹窗</span>签到活动（多次领取类，无自身名单）</button>
+      <button type="button" data-go="wl"><span class="simtag">弹窗</span>导入签到活动（多次领取类，有自身名单）</button>
+      <button type="button" data-go="fixed"><span class="simtag">弹窗</span>每日首充活动（原有限制已删除，周期可选）</button>
+      <button type="button" data-go="firstdep"><span class="simtag">弹窗</span>新用户首充活动（单次领取类，周期可选）</button>
+      <button type="button" data-go="ended"><span class="simtag">弹窗</span>老用户充值转盘 · 第 2 期（已结束）</button>
+    </div>
+    <h3>模拟操作</h3>
+    <div class="sim">
+      <button type="button" id="opNew">活动中心新建一期：老用户充值转盘第 4 期（复制第 3 期生成）</button>
+      <button type="button" id="opDel">活动中心删除一期：老用户充值转盘第 1 期</button>
+      <button type="button" id="opReset">清空原型状态</button>
     </div>
     <h3>规则批注</h3>
     <ol>
-      <li><b>适用范围</b>：活动按 A–D 四种方式接入（见下一条），板块位于现有配置之后、「保存」之前；用户领取、系统自动发放、审核、人工和批量发放都按该活动的配置判定。<span class="ref">PRD 规则 N1、N19 · F02-01 活动奖励领取限制板块</span></li>
-      <li><b>接入方式</b>：A 完整接入（两项 + 领取限制白名单，以后新增的活动也按 A）；B 两项 + 沿用活动原白名单（不显示领取限制白名单）；C 只加同设备（IP 沿用活动现有条件，先判断现有 IP 限制，再判断同设备）；D 不改（新用户转盘、完成任务砸金蛋，不加板块）。各活动的方式见 PRD 5.1。演示：切换上方各场景，对比板块差异。<span class="ref">PRD 规则 N14、N17 · F02-02 活动接入方式</span></li>
-      <li><b>两项配置</b>：同设备、同 IP（C 方式只有同设备），每项有勾选框、限制周期（活动期间 / 每天 / 7 天 / 15 天 / 一个月）；单次领取类活动另有最多领取次数，不勾选或填 0 为不限制；多次领取类活动不显示次数，该位置显示灰字「只允许首个领取的账号领取」，不勾选为不限制。新建活动时各项都不勾选，限制周期默认「活动期间」；活动原有限制已有统计周期的（C 方式，如每日首充原有 IP 限制按每天），新增项的周期固定沿用原有周期「每天」、不可选（演示：「每日首充活动」）；新用户首充（单次领取类）例外，同设备项显示下拉，可选五种周期，默认「活动期间」；不设同账户项（单个账号的次数沿用活动自身规则）。各活动的领取类型见 PRD 5.1。演示：对比「KYC认证送彩金活动」（单次）和其他场景（多次）。<span class="ref">PRD 规则 N2、N4、N18</span></li>
+      <li><b>入口与权限</b>：菜单【活动配置 › 活动限制管理】，789Bingo、789Games 两站都在【活动配置】下新增这个栏目（789Games 没有【活动配置】菜单时一并新增）；新增权限项「活动限制管理」，在后台【权限管理】中由平台管理员分配。各活动配置页不加限制板块，只删除原有的同 IP、同设备配置项。<span class="ref">PRD 规则 N17</span></li>
+      <li><b>统一配置</b>：活动中心的所有活动（含新用户转盘、完成任务砸金蛋）都可配置同设备、同 IP、领取限制白名单三项；上线时按实际代码读取已有的活动，读到的都出现在列表里，以后新增的活动也自动出现。各活动原有的同 IP、同设备限制全部删除（后台活动配置页上对应的配置项一起去掉），统一按本栏目的配置限制；上线时系统把原有数据自动迁移到本栏目（直接按上线时生产环境的配置迁移，迁移结果就是列表里显示的当前配置，运营上线后核对、补配；如「同一 IP 每天有 N 个账号可以申领」→ IP 限制 · 每天，多次领取类「最多 N 个账号」、单次领取类「最多领取 N 次」；新站新用户转盘以活动自身数值为准，「一台设备只给一个账号」全局开关删除、不迁移；新站新用户转盘的全局白名单 → 该活动各期的白名单导入；原数值超过 999999 的按 999999 迁移；789Bingo 独立配置的返水活动上线时读不到原有限制配置，按不限制上线，由运营在本栏目配置）。活动自身的领取规则（单账号次数、同一手机号只能领一次、完成任务砸金蛋同 IP、同设备每天名额（活动规则：例如本栏目 IP 限制设为每天最多 1 个账号，即每天 100 个名额由 100 个不同 IP 各 1 个账号参与），邀请好友「同设备不允许互相邀请」和「IP 限制」（同一注册 IP 最多计入 N 个好友，属于邀请资格规则，保留、不迁移））照常生效；本栏目的 IP 限制对邀请好友另外生效，限制同一 IP 下最多几个账号能领取。用户领取、系统自动发放、审核、人工和批量发放，都按本栏目对该活动（分期活动为该期）的配置判定。<span class="ref">PRD 规则 N1、N17、N19</span></li>
+      <li><b>读取活动中心</b>：每次进入本栏目或点「刷新」，都重新读取活动中心的全部活动和各期。新建的活动、新建的期自动出现：新的一期（新建或复制生成）默认沿用该活动上一期的配置（设备限制、IP 限制、「本活动白名单用户也受此限制」和白名单导入的名单），运营可在本栏目修改；该活动的第一期和不分期的新活动默认不限制。已结束、关闭的活动和期照常列出，可查看和配置，配置对之后的领取生效；在活动中心删除的活动或期从列表消失，配置一起失效；删除某一期后，剩下的期重新按创建先后编号。列表包含活动中心的全部活动（含需复测的活动，状态按线上数据显示）和 789Bingo 独立配置的返水活动。<b>开发注意：以后每次新增活动，都要同步更新本栏目的活动清单，让新活动出现在列表里。</b>演示：点「活动中心新建一期，刷新后出现」；或先点模拟操作，再点列表上方「刷新」。<span class="ref">PRD 规则 N17</span></li>
+      <li><b>列表</b>：分期活动（有活动列表、可建多期）每期一行，不分期的活动一个活动一行；按活动中心菜单顺序排列，同一活动按期数倒序。列：① 活动名称，同一活动的多期合并为一个单元格；② 期数 / 状态与有效期：分期活动显示「第 N 期」（按活动列表创建先后编号），下方小字为期名、状态、有效期，不分期的活动显示当前状态和有效期，长期有效写「长期」，有效期与活动中心该活动（期）配置页显示的时间一致（同一时区，列头「?」写明时区）；③ 设备限制、④ IP 限制：未勾选显示「不限制」，单次领取类显示「周期 · N 次」（次数为 0 显示「不限制」），多次领取类显示「周期 · 最多 N 个账号」（数量为 0 显示「不限制」）；⑤ 白名单导入：「已导入 N 人」或「未导入」。③–⑤ 只显示本活动（本期）这三项当前的配置情况；⑥ 操作「配置」。<span class="ref">PRD 规则 N17</span></li>
+      <li><b>搜索与分页</b>：「活动名称」下拉列表，选项为「全部」和列表中的每个活动（每次读取活动中心后更新），选择后点「搜索」，只显示该活动的全部行（分期活动的各期）；默认「全部」。「刷新」保留当前选择，所选活动已删除时回到「全部」。搜索后回到第 1 页。分页沿用后台现有分页，每页 20 条，可切换为 50 条。演示：「第 2 页」。<span class="ref">PRD 规则 N17 ⑦⑧</span></li>
+      <li><b>配置弹窗：两项限制</b>：点「配置」打开「配置限制」弹窗，标题为「配置限制 · 活动名称 · 第 N 期」（不分期的活动不带期数）。同设备、同 IP 各一行，每行有勾选框、限制周期（活动期间 / 每天 / 7 天 / 15 天 / 一个月，默认「活动期间」）；单次领取类填「最多领取 N 次」，多次领取类填「最多 N 个账号」；不勾选或填 0 为不限制。不设同账户项（单个账号的次数沿用活动自身规则）。各活动的领取类型见 PRD 5.1。<span class="ref">PRD 规则 N2、N18</span></li>
+      <li><b>限制周期</b>：所有活动的设备限制、IP 限制都可选「活动期间 / 每天 / 7 天 / 15 天 / 一个月」，默认「活动期间」。演示：「每日首充活动」。<span class="ref">PRD 规则 N4</span></li>
       <li><b>单次领取类：次数口径</b>：每个账号只能领一次，按本活动成功发放的次数统计，同设备、同 IP 为所有账号合计，次数即该设备或 IP 上能领取的账号数；不同活动分别计算。<span class="ref">PRD 规则 N3</span></li>
-      <li><b>多次领取类：绑定首个领取的账号</b>：勾选后，限制周期内首个在该设备（或 IP）成功领取本活动的账号与之绑定，其他账号领取本活动的任何奖励都被拦截（同设备 L01、同 IP L02）；绑定账号自己的多次领取按活动原规则；同设备、同 IP 分别绑定。解除绑定：「每天」「一个月」在下一个周期开始时解除；「7 天」「15 天」按滚动窗口，领取当天往前 7 / 15 个自然日内该设备（或 IP）有其他账号成功领取过即拦截，否则可以领取并成为新的绑定账号（例：选 7 天，账号 A 最后一次在设备 X 领取是 2026-11-04，账号 B 在 2026-11-10 被拦截，2026-11-11 可以领取）；「活动期间」一直绑定。<span class="ref">PRD 规则 N18</span></li>
-      <li><b>保存校验（只对单次领取类的次数）</b>：勾选后次数必填，为 0–9999 的整数；为空时提示「请输入最多领取次数」，不是 0–9999 的整数时提示「请输入 0–9999 的整数」，两种情况都不能保存，焦点停在出错的输入框。演示：点「保存校验提示」，或在 KYC认证送彩金活动清空次数、填 1.5 后点「保存」。<span class="ref">PRD 规则 N13 ①</span></li>
-      <li><b>生效</b>：随活动保存，保存后立即生效；活动进行中修改设置，已领取次数不清零，取消勾选期间成功发放的次数同样计入；复制活动时一起复制；留痕沿用【日志管理 › 操作日志】。<span class="ref">PRD 规则 N13 ②–⑤</span></li>
-      <li><b>审核、人工和批量发放</b>：① 审核发放：申请时被拦截不生成申请，Toast「奖励领取限制[编号]」；审核时被拦截，【派奖审核】和该活动「活动统计」的这条记录显示「奖励领取限制[编号]」，默认不发放，玩家申请记录沿用「未通过」，审核人可以强制通过（照常发放、计入次数、不改变已有绑定）。转盘、抽奖类只在转动前判定，中奖后进入派奖审核的，审核时不再判定。② 人工发放、批量发放：被拦截的记录显示原因，不随批量发出；不能强制发放，确需发放走现有【修改余额审批】人工加款。本页不演示审核和发放页面。<span class="ref">PRD 规则 N19</span></li>
-      <li><b>领取限制白名单（只在 A 方式显示）</b>：沿用后台现有白名单导入组件（导入文件、已导入文件下载、导入结果统计），不改组件；每个活动单独导入，只对本活动生效，随活动「保存」生效。名单内会员跳过同设备、同 IP 判定，其领取仍计入该设备和该 IP 的次数。演示：点「导入文件」查看导入结果。<span class="ref">PRD 规则 N15 · F02-03 领取限制白名单</span></li>
-      <li><b>活动白名单是否受限制</b>：活动自身有白名单（参与名单、指定名单、指定奖励名单）时，同设备、同 IP 每项下方多一个勾选框「本活动白名单用户也受此限制」，默认勾选。勾选：名单中的会员同样按该项判定，右侧灰字「（名单内会员也按此项限制）」；不勾选：名单中的全部会员跳过该项判定，其领取仍计入该设备和该 IP 的次数（多次领取类同样绑定该设备和 IP），右侧灰字「（名单内全部会员不受此项限制）」。活动没有自身名单时不显示。B、C 方式「沿用原白名单」，即通过这个勾选框决定名单内会员是否受限。领取限制白名单中的会员始终跳过两项判定。演示：点「导入签到活动（活动有自身名单）」「修改活动配置页」（老用户充值转盘）「每日首充活动」，对比「KYC认证送彩金活动（活动无自身名单）」。<span class="ref">PRD 规则 N16 · F02-01 活动奖励领取限制板块</span></li>
+      <li><b>多次领取类：最多 N 个账号</b>：勾选并填 N 后，限制周期内按各账号在该设备（或 IP）首次成功领取本活动的先后取前 N 个，作为有效绑定账号；有效绑定账号已满 N 个且当前账号不在其中时，领取本活动的任何奖励都被拦截（同设备 L01、同 IP L02），未满 N 个时领取成功并成为有效绑定账号；这 N 个账号自己的多次领取按活动原规则；N=1 即只允许首个领取的账号；同设备、同 IP 分别绑定。周期：「每天」「一个月」在下一个周期开始时清空；「7 天」「15 天」按滚动窗口，领取当天往前 7 / 15 个自然日内在该设备（或 IP）成功领取过本活动的账号，按窗口内首次成功领取的先后取前 N 个，窗口内账号数 ≥ N 且当前账号不在前 N 个中时拦截，否则可以领取（例：选 7 天、最多 1 个账号，账号 A 最后一次在设备 X 领取是 2026-11-04，账号 B 在 2026-11-10 被拦截，2026-11-11 可以领取）；「活动期间」整个活动期间累计。活动进行中重新勾选或调小账号数并保存后，同样按首次成功领取的先后只保留前 N 个，其余账号从保存起被拦截。<span class="ref">PRD 规则 N13 ③、N18</span></li>
+      <li><b>活动白名单是否受限制</b>：活动自身有白名单（参与名单、指定名单、指定奖励名单）时，同设备、同 IP 每项下方多一个勾选框「本活动白名单用户也受此限制」（名单名称按该活动现有叫法），默认勾选。勾选：名单中的会员同样按该项判定，右侧灰字「（名单内会员也按此项限制）」；不勾选：名单中的全部会员跳过该项判定，其领取仍计入该设备和该 IP 的次数（多次领取类同样绑定该设备和 IP），右侧灰字「（名单内全部会员不受此项限制）」。活动没有自身名单时不显示。演示：对比「导入签到活动」和「签到活动」。<span class="ref">PRD 规则 N16</span></li>
+      <li><b>领取限制白名单</b>：所有活动都有，沿用后台现有白名单导入组件（导入文件、已导入文件下载、导入结果），不改组件。每个活动单独导入，分期活动每期单独导入，只对本活动（本期）生效，导入后点「保存」才生效，点「取消」不生效。名单内会员跳过同设备、同 IP 判定，其领取仍计入该设备和该 IP 的次数；与活动自身原有的名单相互独立。演示：在弹窗里点「导入文件」查看导入结果。<span class="ref">PRD 规则 N15</span></li>
+      <li><b>保存与取消</b>：「保存」校验已勾选项的数量：为空时单次领取类提示「请输入最多领取次数」、多次领取类提示「请输入最多账号数」，不是 0–999999 的整数提示「请输入 0–999999 的整数」，提示显示在输入框下方，不能保存，焦点停在出错的输入框；校验通过提示「保存成功」、关闭弹窗、列表该行摘要刷新，立即生效。「取消」或右上角「×」关闭弹窗，不保存本次修改（含导入的白名单）。活动进行中修改设置，已领取次数和已绑定账号不清零，取消勾选期间成功发放的次数同样计入；多次领取类重新勾选或调小账号数时只保留前 N 个已绑定账号。每次保存记入【日志管理 › 操作日志】（操作人、时间、活动名称、期数和该期的活动名称、修改前后的配置）。演示：点「保存校验提示」，或在弹窗里清空次数、填 1.5 后点「保存」。<span class="ref">PRD 规则 N13</span></li>
+      <li><b>审核、人工和批量发放</b>：① 审核发放：申请时被拦截不生成申请，Toast「奖励领取限制[编号]」；审核时被拦截，【派奖审核】和该活动「活动统计」的这条记录显示「奖励领取限制[编号]」，默认不发放，玩家申请记录沿用「未通过」，审核人可以强制通过（照常发放、不改变已有绑定；单次领取类计入次数，多次领取类只放行这一次，该账号不加入已绑定账号）。转盘、抽奖类只在转动前判定，中奖后进入派奖审核的，审核时不再判定。② 人工发放、批量发放：被拦截的记录显示原因，不随批量发出；不能强制发放，确需发放走现有【修改余额审批】人工加款。本页不演示审核和发放页面。<span class="ref">PRD 规则 N19</span></li>
     </ol>
     <h3>评审待确认</h3>
-    <ol><li><b>设备标识</b>：用哪个设备标识、取不到时是否改用其他标识，由技术确定（已确认）。<span class="ref">PRD 待确认 Q3</span></li>
-    <li><b>未列入的活动与分批上线</b>：已确认：邮箱认证奖励按 A 接入，其余无菜单活动由技术确认是否在用；全部活动一次上线。<span class="ref">PRD 待确认 Q7</span></li>
-    <li><b>幸运转盘、返现充值转盘、新用户充值活动计划</b>：幸运转盘已确认暂定未上线、上线时按 C 方式接入；返现充值转盘何时上线；新用户充值活动计划由技术确认现有 IP 限制是否生效，生效按 C 方式，不生效改为 A 方式。<span class="ref">PRD 待确认 Q8</span></li></ol>
+    <ol>
+      <li><b>设备标识</b>：用哪个设备标识、取不到时是否改用其他标识，由技术确定（已确认）。<span class="ref">PRD 待确认 Q3</span></li>
+      <li><b>789Games 菜单位置</b>：两站都在【活动配置】下，789Games 没有【活动配置】菜单时随本需求新增（已确认）。<span class="ref">PRD 待确认 Q13</span></li>
+      <li><b>未列入的活动与上线</b>：上线时按实际代码读取已有的活动，读到的都出现在列表（含邮箱认证奖励，按单次领取类）；全部活动一次上线。幸运转盘前台暂定未上线，在活动中心有配置页，照常列入本页（状态按线上数据显示），可提前配置，前台上线后配置对领取生效；返现充值转盘未上线（本页示例数据未列出），进入活动中心后自动列入本页。<span class="ref">PRD 待确认 Q7、Q8</span></li>
+    </ol>
     <div class="pager"><a href="../front/单一设备领取奖励限制-活动奖励领取.html">← 上一页：活动奖励领取</a><span></span></div>
   </aside>
 </div>
+
+<!-- 配置限制弹窗 -->
+<div class="bo-mask" id="dlgMask" hidden>
+  <div class="bo-dlg sdl-dlg" role="dialog" aria-modal="true" aria-labelledby="dlgT" data-ch="dlg">
+    <button type="button" class="x-close" id="dlgX" aria-label="关闭" title="关闭" data-dev="D29">×</button>
+    <h4 id="dlgT">配置限制</h4>
+    <div class="sdl-meta" id="dlgMeta"></div>
+    <div class="ui-reqnote" id="dlgNote"></div>
+    <div class="fsec">设备限制与 IP 限制<i class="qm" tabindex="0" id="limQm" data-tip="">?</i></div>
+    <div class="lim" id="lim"></div>
+    <div class="fsec">白名单导入<i class="qm" tabindex="0" data-tip="名单内的会员领取本活动时不受设备限制、IP 限制，其他条件照常；只对本活动（分期活动为本期）生效，导入后点「保存」才生效。">?</i></div>
+    <div class="wl-imp" id="wlBox"></div>
+    <div class="row2"><button class="bo-btn" type="button" id="dlgCancel" data-cancel data-dev="D29">取消</button><button class="bo-btn q" type="button" id="dlgSave" data-dev="D14">保存</button></div>
+  </div>
 </div>
+</div>
+
 <script>window.NAV_ROOT = "../../";</script>
 <script src="../../assets/nav-data.js"></script>
 <script src="../../assets/nav.js"></script>
 <script>
 (function () {
+  function $(id) { return document.getElementById(id); }
   function msg(t, bad) { var m = document.createElement("div"); m.className = "bo-msg " + (bad ? "err" : "ok"); m.textContent = t; m.setAttribute("role", "status"); document.body.appendChild(m); setTimeout(function () { m.remove(); }, 1800); }
-  var ITEMS = [["dev", "同设备"], ["ip", "同 IP"]];
-  /* 每个示例活动的配置（虚构） */
-  var CFG = {
-    old:  { dev: { on: true, per: "活动期间", n: "1" }, ip: { on: false, per: "活动期间", n: "" } },
-    kyc:  { dev: { on: true, per: "每天", n: "1" }, ip: { on: true, per: "7 天", n: "5" } },
-    imp:  { dev: { on: true, per: "每天", n: "1", wlApply: true }, ip: { on: true, per: "每天", n: "10", wlApply: false } },
-    dfr:  { dev: { on: true, per: "每天", n: "1", wlApply: true } },
-    create: { dev: { on: false, per: "活动期间", n: "" }, ip: { on: false, per: "活动期间", n: "" } }
-  };
-  /* 接入方式（PRD N17）：A 两项 + 领取限制白名单；B 两项、沿用原白名单；C 只有同设备 */
-  var MODE = { old: "B", create: "B", kyc: "A", imp: "A", dfr: "C" };
-  /* 领取类型（PRD 5.1）：once 单次领取类（显示次数，N3）；multi 多次领取类（不显示次数，只允许首个领取的账号领取，N18） */
-  var TYPE = { old: "multi", create: "multi", kyc: "once", imp: "multi", dfr: "multi" };
-  /* 活动原有限制的统计周期（PRD N4）：有原有限制的活动，新增项周期固定沿用，不可选；每日首充原有 IP 限制按「每天」 */
-  var FIXPER = { dfr: "每天" };
-  /* 每个活动配置页的现有字段（只作示意，不改动）：[名称, 值, 是否必填] */
-  var FIELDS = {
-    old: [["基础配置"], ["活动名称", "老用户转盘活动", 1], ["活动开始时间", "2026-09-30 12:00:00"], ["活动结束时间", "2027-01-30 12:00:00"], ["领取方式", "手动领取"], ["范围配置 · 奖励配置"], ["白名单导入", "沿用现有（本活动白名单），已导入 86 人"], ["（活动现有配置）", "沿用现有，不改动"]],
-    create: [["基础配置"], ["活动名称", "", 1], ["活动开始时间", ""], ["活动结束时间", ""], ["领取方式", "手动领取"], ["范围配置 · 奖励配置"], ["白名单导入", "沿用现有（本活动白名单）"], ["（活动现有配置）", "沿用现有，不改动"]],
-    dfr: [["活动状态", "开启"], ["活动时间", "2026-11-01 00:00:00 ~ 2026-11-30 23:59:59"], ["充值奖励配置", "沿用现有，不改动"], ["活动条件", "沿用现有：同一 IP 每天有 1000 个账号可以申领（同 IP 仍在这里设置）"], ["指定名单", "沿用现有，已添加 15 人"]],
-    kyc: [["活动状态", "开启"], ["奖励金额", "18.8"], ["奖金所需流水", "1"], ["提示气泡文字", "Get {amount} after KYC"]],
-    imp: [["活动状态", "开启"], ["活动时间", "2026-11-01 00:00:00 ~ 2026-11-30 23:59:59"], ["签到奖励配置", "沿用现有，不改动"], ["白名单导入", "沿用现有（本活动参与名单），已导入 1,200 人"]]
-  };
-  var TITLE = { old: "老用户充值转盘", create: "老用户充值转盘", kyc: "KYC认证送彩金活动", imp: "导入签到活动", dfr: "每日首充活动" };
-  /* 活动自身有白名单（参与名单、指定名单、指定奖励名单）的示例活动：限制项下方显示「本活动白名单用户也受此限制」 */
-  var HAS_ACT_WL = { old: "白名单", create: "白名单", imp: "白名单", dfr: "指定名单" };
-  /* 板块标题「?」帮助提示（PRD 5.3），按领取类型和接入方式显示 */
-  function helpTip(type, mode) {
-    if (type === "once") return mode === "C"
-      ? "限制本活动同一设备最多能领取几次（每个账号只能领一次，次数即账号数）。不勾选或填 0 为不限制；保存后立即生效。同 IP 沿用上方活动条件中的设置。"
-      : "限制本活动同一设备、同一 IP 最多能领取几次（每个账号只能领一次，次数即账号数）。不勾选或填 0 为不限制；保存后立即生效。";
-    return mode === "C"
-      ? "勾选后，每个周期内同一设备只允许首个领取的账号领取本活动的奖励，其他账号都不能领取。同 IP 沿用上方活动条件中的设置。"
-      : "勾选后，每个周期内同一设备、同一 IP 只允许首个领取的账号领取本活动的奖励，其他账号都不能领取。";
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;" }[c]; }); }
+  function clone(o) { return JSON.parse(JSON.stringify(o)); }
+  /* 演示反馈：只显示在模拟操作面板里，页面上不显示（需求包框架规范第 4 节） */
+  function note(text, btn) {
+    var fb = btn.nextElementSibling && btn.nextElementSibling.classList.contains("simfb") ? btn.nextElementSibling : null;
+    if (!fb) { fb = document.createElement("div"); fb.className = "simfb"; fb.setAttribute("role", "status"); btn.parentNode.insertBefore(fb, btn.nextSibling); }
+    fb.innerHTML = '<span class="simfbtag">原型演示</span>' + esc(text) + '<span class="simfbtip">演示反馈，页面上不显示</span>';
   }
-  /* 渲染活动奖励领取限制板块；first 为真时给控件加研发说明编号 */
-  function build(box, cfg, first, key) {
-    box.innerHTML = "";
-    var mode = MODE[key] || "A", once = (TYPE[key] || "once") === "once";
-    ITEMS.filter(function (it) { return mode !== "C" || it[0] === "dev"; }).forEach(function (it, k) {
-      var c = cfg[it[0]], row = document.createElement("div"); row.className = "lim-row";
-      var lab = document.createElement("label"); lab.className = "ck";
-      var cb = document.createElement("input"); cb.type = "checkbox"; cb.checked = c.on; if (first && k === 0) cb.setAttribute("data-dev", "D11");
-      lab.appendChild(cb); lab.appendChild(document.createTextNode(it[1])); row.appendChild(lab);
-      var t1 = document.createElement("span"); t1.textContent = "限制周期"; row.appendChild(t1);
-      /* 活动原有限制已有统计周期的（C 方式），新增项的周期固定沿用原有限制，不可选（PRD N4） */
-      var sel, fix = FIXPER[key];
-      if (fix) { sel = document.createElement("span"); sel.className = "lim-first"; c.per = fix; sel.textContent = fix + "（沿用活动原有限制的周期）"; }
-      else {
-        sel = document.createElement("select"); sel.className = "bo-inp"; sel.setAttribute("aria-label", it[1] + "限制周期");
-        ["活动期间", "每天", "7 天", "15 天", "一个月"].forEach(function (o) { var op = document.createElement("option"); op.textContent = o; if (o === c.per) op.selected = true; sel.appendChild(op); });
+
+  var ITEMS = [["dev", "设备限制"], ["ip", "IP 限制"]];
+  var PERS = ["活动期间", "每天", "7 天", "15 天", "一个月"];
+  var LONG = "长期";
+  function tm(a, b) { return a + " 00:00:00～" + b + " 23:59:59"; }
+  /* 一项限制：on 是否勾选，per 限制周期，n 最多领取次数（单次领取类）或最多账号数（多次领取类），wlApply 本活动白名单用户也受此限制（默认勾选） */
+  function it(on, per, n, wa) { return { on: !!on, per: per || "活动期间", n: n == null ? "" : String(n), wlApply: wa !== false }; }
+  /* 一个活动（或一期）的配置：同设备、同 IP、领取限制白名单人数 */
+  function cf(dev, ip, wl) { return { dev: dev || it(false), ip: ip || it(false), wl: wl || 0 }; }
+  var DAY = { dev: "每天", ip: "每天" };
+  var NOV = tm("2026-11-01", "2026-11-30"), OCT = tm("2026-10-01", "2026-10-31");
+
+  /* 模拟【活动中心】的活动（789Bingo 菜单顺序，数据虚构）。
+     type：once 单次领取类（显示次数，N3）；multi 多次领取类（填最多账号数，周期内只允许前 N 个领取的账号领取，N18）。
+     wl：活动自身名单的叫法（有名单时显示「本活动××用户也受此限制」，N16）。
+     periods：分期活动的各期。 */
+  var ACTS0 = [
+    { k: "old", name: "老用户充值转盘", type: "multi", wl: "白名单", periods: [
+      { n: 3, t: "老用户转盘活动11月", st: "开启", tm: NOV, cfg: cf(it(true, "活动期间"), it(true, "每天", null, false)) },
+      { n: 2, t: "老用户转盘活动10月", st: "已结束", tm: OCT, cfg: cf(it(true, "活动期间")) },
+      { n: 1, t: "老用户转盘测试", st: "关闭", tm: tm("2026-09-01", "2026-09-30") }] },
+    { k: "bind", name: "绑定手机号码活动", type: "once", st: "开启", tm: LONG, cfg: cf(it(true, "活动期间", 1), it(true, "活动期间", 3)) },
+    { k: "kyc", name: "KYC认证送彩金活动", type: "once", st: "开启", tm: LONG, cfg: cf(it(true, "每天", 1), it(true, "7 天", 5)) },
+    { k: "login", name: "登录送彩金活动", type: "multi", st: "开启", tm: "2026-11-01 00:00:00～2027-01-01 23:59:59" },
+    { k: "implogin", name: "导入用户登录送彩金活动", type: "once", wl: "白名单", periods: [
+      { n: 2, t: "11月回流用户", st: "开启", tm: NOV, cfg: cf(it(true, "活动期间", 1)) },
+      { n: 1, t: "10月回流用户", st: "已结束", tm: OCT }] },
+    { k: "dep", name: "充值活动", type: "multi", wl: "指定名单", st: "开启", tm: NOV, cfg: cf(it(true, "每天")) },
+    { k: "cons", name: "消费活动", type: "multi", wl: "指定名单", periods: [
+      { n: 2, t: "返水11月", st: "开启", tm: NOV, cfg: cf(null, it(true, "每天")) },
+      { n: 1, t: "返水10月", st: "已结束", tm: OCT }] },
+    { k: "rebate", name: "返水活动（独立配置）", type: "multi", st: "开启", tm: LONG },   /* 789Bingo 写死使用的那套返水活动，也列入；上线时读不到原有限制配置就按不限制，由运营在本栏目配置（用户 2026-11-13） */
+    { k: "neg", name: "负盈利活动", type: "multi", wl: "指定名单", periods: [
+      { n: 1, t: "负盈利返还11月", st: "开启", tm: NOV }] },
+    { k: "v2", name: "新盈利活动V2", type: "multi", periods: [
+      { n: 1, t: "新盈利活动11月", st: "开启", tm: NOV }] },
+    { k: "lucky", name: "幸运转盘", type: "multi", st: "关闭", tm: LONG },
+    { k: "dfr", name: "每日首充活动", type: "multi", wl: "指定名单", st: "开启", tm: NOV, cfg: cf(it(true, "每天"), null, 15) },
+    { k: "nuspin", name: "新用户转盘活动", type: "multi", wl: "白名单", periods: [
+      { n: 2, t: "新用户转盘11–12月", st: "开启", tm: tm("2026-11-01", "2026-12-31") },
+      { n: 1, t: "新用户转盘10月", st: "已结束", tm: OCT }] },
+    { k: "nfd", name: "新用户首充活动", type: "once", wl: "指定名单", st: "开启", tm: tm("2026-11-01", "2026-12-31"), cfg: cf(it(true, "活动期间", 3)) },
+    { k: "nplan", name: "新用户充值活动计划", type: "multi", wl: "白名单", periods: [
+      { n: 2, t: "12月充值计划", st: "关闭", tm: tm("2026-12-01", "2026-12-31") },
+      { n: 1, t: "11月充值计划", st: "开启", tm: NOV }] },
+    { k: "invite", name: "邀请好友活动", type: "multi", st: "开启", tm: LONG },
+    { k: "sign", name: "签到活动", type: "multi", st: "开启", tm: NOV, cfg: cf(it(true, "每天"), it(true, "每天")) },
+    { k: "impsign", name: "导入签到活动", type: "multi", wl: "白名单", st: "开启", tm: NOV, cfg: cf(it(true, "每天"), it(true, "每天", null, false)) },
+    { k: "egg", name: "完成任务砸金蛋", type: "multi", wl: "白名单", st: "开启", tm: NOV }
+  ];
+  var INIT = JSON.stringify(ACTS0), ACTS = JSON.parse(INIT);
+  function act(k) { return ACTS.filter(function (a) { return a.k === k; })[0]; }
+
+  /* 列表数据：进入页面或点「刷新」时从活动中心读取一次；配置存在活动（或该期）上，刷新后保留 */
+  var ROWS = [];
+  function load() {
+    ROWS = [];
+    ACTS.forEach(function (a) {
+      /* 期号按创建先后重新编号：删除某一期后，剩下的期重新按顺序编号（n 为创建顺序，no 为显示的期号） */
+      if (a.periods) a.periods.slice().sort(function (x, y) { return x.n - y.n; }).forEach(function (p, i) { p.no = i + 1; });
+      var list = a.periods ? a.periods.slice().sort(function (x, y) { return y.n - x.n; }) : [null];
+      list.forEach(function (p) {
+        var src = p || a;
+        if (!src.cfg) { var pv = p ? prevOf(a, p) : null; src.cfg = pv ? clone(pv.cfg) : cf(); }   /* 新的一期默认沿用上一期的配置；第一期和不分期的新活动默认不限制 */
+        if (a.type === "multi") ITEMS.forEach(function (x) { var c = src.cfg[x[0]]; if (c.on && c.n === "") c.n = "1"; });   /* 示例：多次领取类已勾选项默认 1 个账号 */
+        ROWS.push({ a: a, p: p, src: src });
+      });
+    });
+  }
+  function stOf(r) { return r.p ? r.p.st : r.a.st; }
+  function tmOf(r) { return r.p ? r.p.tm : r.a.tm; }
+  function configured(r) { var c = r.src.cfg; return c.dev.on || c.ip.on || c.wl > 0; }
+  function sumItem(r, k) {
+    var x = r.src.cfg[k];
+    if (!x.on) return "不限制";
+    if (r.a.type === "once") return +x.n ? x.per + " · " + x.n + " 次" : "不限制";
+    return +x.n ? x.per + " · 最多 " + x.n + " 个账号" : "不限制";
+  }
+
+  /* 筛选和分页 */
+  var F = { name: "" }, page = 1, size = 20;
+  function rows() {
+    return ROWS.filter(function (r) {
+      var nm = r.a.name + " " + (r.p ? r.p.t : "");
+      return !F.name || r.a.name === F.name;
+    });
+  }
+  function stSpan(s) { return '<span class="' + (s === "开启" ? "st-on" : "st-off") + '">' + esc(s) + "</span>"; }
+  function render() {
+    var list = rows(), tb = $("tb"), pages = Math.max(1, Math.ceil(list.length / size));
+    if (page > pages) page = pages;
+    tb.innerHTML = "";
+    if (!list.length) { tb.innerHTML = '<tr><td class="sdl-empty" colspan="6">暂无数据</td></tr>'; }
+    var cur = list.slice((page - 1) * size, page * size);
+    cur.forEach(function (r, i) {
+      var tr = document.createElement("tr"), c = r.src.cfg, h = "";
+      /* 同一活动的多期：第一列合并单元格，只在本页该活动的第一行显示活动名称 */
+      if (!i || cur[i - 1].a !== r.a) {
+        var n = 1; while (cur[i + n] && cur[i + n].a === r.a) n++;
+        h += '<td class="sdl-w sdl-act"' + (n > 1 ? ' rowspan="' + n + '"' : "") + ">" + esc(r.a.name) + "</td>";
       }
-      if (first && k === 0) sel.setAttribute("data-dev", "D12");
+      h += r.p
+        ? "<td><b>第 " + r.p.no + ' 期</b><div class="sdl-sub">' + esc(r.p.t) + '</div><div class="sdl-sub">' + stSpan(stOf(r)) + " · " + esc(tmOf(r)) + "</div></td>"
+        : "<td>" + stSpan(stOf(r)) + '<div class="sdl-sub">' + esc(tmOf(r)) + "</div></td>";
+      ITEMS.forEach(function (x) { var s = sumItem(r, x[0]); h += "<td" + (s === "不限制" ? ' class="sdl-none"' : "") + ">" + esc(s) + "</td>"; });
+      h += "<td>" + (c.wl ? "已导入 " + c.wl + " 人" : '<span class="sdl-none">未导入</span>');
+      h += "</td><td></td>";
+      tr.innerHTML = h;
+      var b = document.createElement("button"); b.type = "button"; b.className = "bo-btn link"; b.textContent = "配置"; b.setAttribute("data-dev", "D27");
+      b.onclick = function () { openDlg(r); };
+      tr.lastChild.appendChild(b); tb.appendChild(tr);
+    });
+    pager(list.length, pages);
+  }
+  /* 分页条：沿用后台现有分页（共几条、每页条数、页码、上一页 / 下一页、前往某页） */
+  function pager(total, pages) {
+    var pg = $("pager"); pg.innerHTML = "";
+    function add(n) { pg.appendChild(n); return n; }
+    function btn(t, p, dis, cur) { var b = document.createElement("button"); b.type = "button"; b.textContent = t; b.disabled = !!dis; if (cur) b.setAttribute("aria-current", "page"); b.onclick = function () { page = p; render(); }; return add(b); }
+    var s = document.createElement("span"); s.textContent = "共 " + total + " 条"; add(s);
+    var sel = document.createElement("select"); sel.setAttribute("aria-label", "每页条数");
+    [20, 50].forEach(function (n) { var o = document.createElement("option"); o.value = n; o.textContent = n + " 条/页"; if (n === size) o.selected = true; sel.appendChild(o); });
+    sel.onchange = function () { size = +sel.value; page = 1; render(); }; add(sel);
+    btn("上一页", page - 1, page <= 1);
+    for (var i = 1; i <= pages; i++) btn(String(i), i, false, i === page);
+    btn("下一页", page + 1, page >= pages);
+    var g = document.createElement("span"); g.textContent = "前往"; add(g);
+    var inp = document.createElement("input"); inp.setAttribute("aria-label", "前往页码"); inp.inputMode = "numeric";
+    inp.onkeydown = function (e) { if (e.key !== "Enter") return; var v = parseInt(inp.value, 10); if (isNaN(v)) return; page = Math.min(Math.max(v, 1), pages); render(); };
+    add(inp);
+    var y = document.createElement("span"); y.textContent = "页"; add(y);
+  }
+  function readFilter() { F.name = $("fName").value; page = 1; }
+  /* 活动名称下拉：选项为「全部」和活动中心的全部活动（每次读取活动中心后重建）；当前选中的活动已删除时回到「全部」 */
+  function nameOpts() {
+    var sel = $("fName"), names = ACTS.map(function (a) { return a.name; });
+    if (F.name && names.indexOf(F.name) < 0) F.name = "";
+    sel.innerHTML = "<option value=\"\">全部</option>" + names.map(function (n) { return "<option>" + esc(n) + "</option>"; }).join("");
+  }
+  function writeFilter() { nameOpts(); $("fName").value = F.name; }
+  $("fGo").onclick = function () { readFilter(); render(); };
+  $("fRe").onclick = function () { load(); readFilter(); render(); };
+
+  /* ===== 配置限制弹窗 ===== */
+  var cur = null, draft = null;
+  function helpTip(once) {
+    return once
+      ? "限制本活动同一设备、同一 IP 最多能领取几次（每个账号只能领一次，次数即账号数）。不勾选或填 0 为不限制；保存后立即生效。"
+      : "勾选后，每个周期内同一设备、同一 IP 只允许前 N 个领取的账号领取本活动的奖励，其他账号都不能领取；这 N 个账号自己的多次领取按活动原规则。不勾选或填 0 为不限制；保存后立即生效。";
+  }
+  /* 渲染两行限制项；每次打开弹窗都重建，第一行控件带研发说明编号 */
+  function buildLim(r) {
+    var box = $("lim"), once = r.a.type === "once";
+    box.innerHTML = "";
+    ITEMS.forEach(function (x, k) {
+      var c = draft[x[0]], row = document.createElement("div"); row.className = "lim-row";
+      var lab = document.createElement("label"); lab.className = "ck";
+      var cb = document.createElement("input"); cb.type = "checkbox"; cb.checked = c.on; if (k === 0) cb.setAttribute("data-dev", "D11");
+      lab.appendChild(cb); lab.appendChild(document.createTextNode(x[1])); row.appendChild(lab);
+      var t1 = document.createElement("span"); t1.textContent = "限制周期"; row.appendChild(t1);
+      var sel;
+      {
+        sel = document.createElement("select"); sel.className = "bo-inp"; sel.setAttribute("aria-label", x[1] + "限制周期");
+        PERS.forEach(function (o) { var op = document.createElement("option"); op.textContent = o; if (o === c.per) op.selected = true; sel.appendChild(op); });
+        sel.onchange = function () { c.per = sel.value; };
+      }
+      if (k === 0) sel.setAttribute("data-dev", "D12");
       row.appendChild(sel);
-      /* 单次领取类：最多领取次数输入框；多次领取类：该位置显示灰字（PRD N2、N18） */
-      var t2 = null, inp = null, t3 = null, first1 = null;
+      var t2 = null, inp = null, t3 = null, first1 = null, err = null;
       if (once) {
         t2 = document.createElement("span"); t2.textContent = "最多领取"; row.appendChild(t2);
-        inp = document.createElement("input"); inp.className = "bo-inp"; inp.inputMode = "numeric"; inp.placeholder = "0–9999"; inp.value = c.n; inp.setAttribute("aria-label", it[1] + "最多领取次数"); if (first && k === 0) inp.setAttribute("data-dev", "D13");
+        inp = document.createElement("input"); inp.className = "bo-inp"; inp.inputMode = "numeric"; inp.placeholder = "0–999999"; inp.value = c.n; inp.setAttribute("aria-label", x[1] + "最多领取次数"); if (k === 0) inp.setAttribute("data-dev", "D13");
         row.appendChild(inp);
         t3 = document.createElement("span"); t3.textContent = "次"; row.appendChild(t3);
+        err = document.createElement("div"); err.className = "ferr"; err.setAttribute("role", "alert"); row.appendChild(err);
+        inp.oninput = function () { c.n = inp.value; err.textContent = ""; };
       } else {
-        first1 = document.createElement("span"); first1.className = "lim-first"; first1.textContent = "只允许首个领取的账号领取"; if (first && k === 0) first1.setAttribute("data-dev", "D24");
-        row.appendChild(first1);
+        /* 多次领取类：最多账号数，周期内同一设备（IP）只允许前 N 个领取的账号领取（PRD N18） */
+        t2 = document.createElement("span"); t2.textContent = "最多"; row.appendChild(t2);
+        inp = document.createElement("input"); inp.className = "bo-inp"; inp.inputMode = "numeric"; inp.placeholder = "0–999999"; inp.value = c.n; inp.setAttribute("aria-label", x[1] + "最多账号数"); if (k === 0) { inp.setAttribute("data-dev", "D24"); inp.setAttribute("data-ch", "max-acc"); }
+        row.appendChild(inp);
+        t3 = document.createElement("span"); t3.textContent = "个账号"; row.appendChild(t3);
+        err = document.createElement("div"); err.className = "ferr"; err.setAttribute("role", "alert"); row.appendChild(err);
+        inp.oninput = function () { c.n = inp.value; err.textContent = ""; };
       }
-      var err = document.createElement("div"); err.className = "ferr"; row.appendChild(err);
       /* 活动自身有白名单时，该项下方加「本活动白名单用户也受此限制」，默认勾选（PRD N16） */
       var opt = null, ocb = null;
-      if (HAS_ACT_WL[key]) {
-        if (c.wlApply === undefined) c.wlApply = true;
+      if (r.a.wl) {
         opt = document.createElement("div"); opt.className = "lim-wlopt";
         var ol = document.createElement("label");
-        ocb = document.createElement("input"); ocb.type = "checkbox"; ocb.checked = c.wlApply; if (first && k === 0) ocb.setAttribute("data-dev", "D23");
-        ocb.setAttribute("aria-label", it[1] + "：本活动" + HAS_ACT_WL[key] + "用户也受此限制");
-        ol.appendChild(ocb); ol.appendChild(document.createTextNode("本活动" + HAS_ACT_WL[key] + "用户也受此限制"));
+        ocb = document.createElement("input"); ocb.type = "checkbox"; ocb.checked = c.wlApply; if (k === 0) ocb.setAttribute("data-dev", "D23");
+        ocb.setAttribute("aria-label", x[1] + "：本活动" + r.a.wl + "用户也受此限制");
+        ol.appendChild(ocb); ol.appendChild(document.createTextNode("本活动" + r.a.wl + "用户也受此限制"));
         var qm = document.createElement("i"); qm.className = "qm"; qm.tabIndex = 0; qm.textContent = "?";
-        qm.setAttribute("data-tip", "勾选：活动名单内会员也按该项限制；不勾选：名单内全部会员不受该项限制，但其领取仍计入次数。" + (MODE[key] === "A" ? "领取限制白名单中的会员始终跳过同设备、同 IP 判定。" : ""));
+        qm.setAttribute("data-tip", "勾选：活动名单内会员也按该项限制；不勾选：名单内全部会员不受该项限制，但其领取仍计入次数。领取限制白名单中的会员始终不受同设备、同 IP 限制。");
         var hint = document.createElement("span"); hint.className = "hint";
-        function hintText() { hint.textContent = ocb.checked ? "（名单内会员也按此项限制）" : "（名单内全部会员不受此项限制）"; }
+        var hintText = function () { hint.textContent = ocb.checked ? "（名单内会员也按此项限制）" : "（名单内全部会员不受此项限制）"; };
         ocb.onchange = function () { c.wlApply = ocb.checked; hintText(); };
         hintText();
         opt.appendChild(ol); opt.appendChild(qm); opt.appendChild(hint); row.appendChild(opt);
       }
-      function sync() { c.on = cb.checked; sel.disabled = !c.on; if (inp) inp.disabled = !c.on; [t1, sel, t2, inp, t3, first1].forEach(function (e) { if (e) e.classList.toggle("dis", !c.on); }); if (opt) { ocb.disabled = !c.on; opt.classList.toggle("dis", !c.on); } if (!c.on) err.textContent = ""; }
-      cb.onchange = sync; sel.onchange = function () { c.per = sel.value; }; if (inp) inp.oninput = function () { c.n = inp.value; err.textContent = ""; };
+      function sync() {
+        c.on = cb.checked;
+        if (sel.tagName === "SELECT") sel.disabled = !c.on;
+        if (inp) inp.disabled = !c.on;
+        [t1, sel, t2, inp, t3, first1].forEach(function (e) { if (e) e.classList.toggle("dis", !c.on); });
+        if (opt) { ocb.disabled = !c.on; opt.classList.toggle("dis", !c.on); }
+        if (!c.on && err) err.textContent = "";
+      }
+      cb.onchange = sync;
+      /* 保存校验：已勾选项的次数（单次领取类）或账号数（多次领取类）（PRD N13 ①） */
       row._check = function () {
-        if (!c.on || !inp) return true;   /* 多次领取类没有次数，不校验 */
+        if (!c.on || !inp) return true;
         var v = inp.value.trim();
-        if (!v) { err.textContent = "请输入最多领取次数"; return false; }
-        if (!/^\d{1,4}$/.test(v)) { err.textContent = "请输入 0–9999 的整数"; return false; }
+        if (!v) { err.textContent = once ? "请输入最多领取次数" : "请输入最多账号数"; return false; }
+        if (!/^\d{1,6}$/.test(v)) { err.textContent = "请输入 0–999999 的整数"; return false; }
         return true;
       };
+      row._inp = inp;
       sync(); box.appendChild(row);
     });
-    var tip = document.createElement("div"); tip.className = "lim-tip"; tip.textContent = (once ? "不勾选或填 0 为不限制；次数按本活动成功发放的次数统计。" : "不勾选为不限制；勾选后，每个周期内同一设备（或 IP）只允许首个领取的账号领取。") + (mode === "C" ? "同 IP 沿用上方活动条件中的设置。" : ""); box.appendChild(tip);
-    if (mode !== "A") return;   /* B、C 方式不设领取限制白名单，沿用活动现有名单（PRD N17） */
-    /* 领取限制白名单：沿用后台现有「白名单导入」组件（PRD N15），原型只示意 */
-    var wl = document.createElement("div"); wl.className = "wl-imp";
-    wl.innerHTML = '<div class="wl-imp-h"><span>领取限制白名单<i class="qm" tabindex="0" data-tip="沿用现有白名单导入。名单内的会员领取本活动时不受同设备、同 IP 限制，其他条件照常；只对本活动生效，导入后保存活动才生效。">?</i></span>' +
-      '<button class="bo-btn q" type="button" data-imp="1">导入文件</button><button class="bo-btn q" type="button" data-dl="1">已导入文件下载</button></div>' +
-      '<div class="wl-imp-t">导入结果：</div><div class="wl-imp-r"></div>';
-    var res = wl.querySelector(".wl-imp-r"), done = 0;
+    var tip = document.createElement("div"); tip.className = "lim-tip";
+    tip.textContent = once ? "不勾选或填 0 为不限制；次数按本活动成功发放的次数统计。" : "不勾选或填 0 为不限制；勾选后，每个周期内同一设备（或 IP）只允许前 N 个领取的账号领取。";
+    box.appendChild(tip);
+  }
+  /* 领取限制白名单：沿用后台现有「白名单导入」组件（PRD N15），原型只示意 */
+  function buildWl() {
+    var box = $("wlBox");
+    box.innerHTML = '<div class="wl-imp-h"><button class="bo-btn q" type="button" id="wlImp">导入文件</button><button class="bo-btn q" type="button" id="wlDl">已导入文件下载</button></div>' +
+      '<div class="wl-imp-t">导入结果：</div><div class="wl-imp-r" id="wlRes"></div>';
+    var res = $("wlRes"), ib = $("wlImp"), db = $("wlDl");
+    ib.setAttribute("data-dev", "D20"); db.setAttribute("data-dev", "D21"); res.setAttribute("data-dev", "D22");
     function stat(c, t, ok, bad, dup, w, ms) { res.innerHTML = "已清除: " + c + " | 总行数: " + t + " | 有效: " + ok + " | 无效: " + bad + "<br>文件内重复: " + dup + " | 已写入: " + w + " | 耗时: " + ms + " ms"; }
     stat(0, 0, 0, 0, 0, 0, 0);
-    var ib = wl.querySelector("[data-imp]"), db = wl.querySelector("[data-dl]");
-    if (first) { ib.setAttribute("data-dev", "D20"); db.setAttribute("data-dev", "D21"); res.setAttribute("data-dev", "D22"); }
-    ib.onclick = function () { stat(done, 25, 24, 1, 1, 24, 126); done = 24; msg("导入完成，保存活动后生效"); };
-    db.onclick = function () { msg(done ? "下载已导入的白名单文件（原型不下载）" : "暂无已导入文件", !done); };
-    box.appendChild(wl);
+    ib.onclick = function () { stat(draft.wl, 25, 24, 1, 1, 24, 126); draft.wl = 24; msg("导入完成，点「保存」后生效"); };
+    db.onclick = function () { msg(draft.wl ? "下载已导入的白名单文件（原型不下载）" : "暂无已导入文件", !draft.wl); };
   }
-  function check(box) { var ok = true, firstBad = null; [].forEach.call(box.querySelectorAll(".lim-row"), function (r) { if (!r._check() && ok) { ok = false; firstBad = r; } }); if (firstBad) firstBad.querySelector("input.bo-inp").focus(); return ok; }
+  function openDlg(r) {
+    cur = r; draft = clone(r.src.cfg);
+    var once = r.a.type === "once";
+    $("dlgT").textContent = "配置限制 · " + r.a.name + (r.p ? " · 第 " + r.p.no + " 期" : "");
+    $("dlgMeta").textContent = (r.p ? r.p.t + " · " : "") + stOf(r) + " · 有效期 " + tmOf(r);
+    $("dlgNote").textContent = (once ? "领取类型：单次领取类（每个账号只能领一次），显示最多领取次数。" : "领取类型：多次领取类（一个账号可领取不止一次），填写最多账号数。") +
+      "" +
+      (r.a.wl ? "本活动有自身名单（" + r.a.wl + "），两项下方显示名单内会员是否也受限制。" : "");
+    $("limQm").setAttribute("data-tip", helpTip(once));
+    buildLim(r); buildWl();
+    $("dlgMask").hidden = false;
+    var f = $("lim").querySelector("input[type=checkbox]"); if (f) f.focus();
+  }
+  /* 上一期：同一活动里创建顺序在本期之前、离本期最近的一期，且已有配置 */
+  function prevOf(a, cur) {
+    return a.periods.filter(function (p) { return p.n < cur.n && p.cfg; }).sort(function (x, y) { return y.n - x.n; })[0] || null;
+  }
+  function closeDlg() { $("dlgMask").hidden = true; cur = null; draft = null; }
+  function check() {
+    var bad = null;
+    [].forEach.call($("lim").querySelectorAll(".lim-row"), function (row) { if (!row._check() && !bad) bad = row; });
+    if (bad) bad._inp.focus();
+    return !bad;
+  }
+  $("dlgCancel").onclick = closeDlg;
+  $("dlgX").onclick = function (e) { e.preventDefault(); closeDlg(); };   /* 右上角「×」与「取消」相同：不保存，关闭弹窗 */
+  $("dlgSave").onclick = function () {
+    if (!check()) return;
+    cur.src.cfg = draft; closeDlg(); render(); msg("保存成功");
+  };
 
-  var page = document.getElementById("limPage"), curKey = "old";
-  function menu(key) {
-    ["mOld", "mKyc", "mImp", "mDfr"].forEach(function (id) { document.getElementById(id).classList.remove("on"); });
-    document.getElementById({ kyc: "mKyc", imp: "mImp", dfr: "mDfr" }[key] || "mOld").classList.add("on");
-    document.getElementById("crumb").textContent = TITLE[key];
+  /* ===== 模拟操作：活动中心新建 / 删除一期，点「刷新」后列表更新 ===== */
+  function addNew() {
+    var o = act("old");
+    if (o.periods.some(function (p) { return p.n === 4; })) return false;
+    o.periods.push({ n: 4, t: "老用户转盘活动12月", st: "关闭", tm: tm("2026-12-01", "2026-12-31") });   /* 复制生成；刷新后默认沿用第 3 期的配置 */
+    return true;
   }
-  function setPage(key) {
-    menu(key);
-    document.getElementById("listView").hidden = true; document.getElementById("page").hidden = false;
-    var fb = document.getElementById("fields"); fb.innerHTML = "";
-    FIELDS[key].forEach(function (f) {
-      if (f.length === 1) { var s = document.createElement("div"); s.className = "fsec"; s.textContent = f[0]; fb.appendChild(s); return; }
-      var r = document.createElement("div"); r.className = "frow";
-      var l = document.createElement("span"); l.className = "fl"; l.innerHTML = (f[2] ? '<span class="req">*</span>' : ""); l.appendChild(document.createTextNode(f[0]));
-      var c = document.createElement("div"); c.className = "fctl";
-      if (/沿用现有/.test(f[1])) { c.className += " old"; c.textContent = f[1]; }
-      else { var i = document.createElement("input"); i.className = "bo-inp"; i.style.width = "300px"; i.value = f[1]; i.placeholder = "请输入"; i.setAttribute("aria-label", f[0]); c.appendChild(i); }
-      r.appendChild(l); r.appendChild(c); fb.appendChild(r);
-    });
-    document.getElementById("back").hidden = key === "kyc" || key === "imp" || key === "dfr";   /* 直接配置的活动没有列表，只有「保存」 */
-    var mb = document.getElementById("migrBox"); mb.innerHTML = "";
-    var MODE_TIP = {
-      A: "接入方式 A 完整接入：同设备、同 IP 两项 + 领取限制白名单。",
-      B: "接入方式 B 两项 + 沿用原白名单：同设备、同 IP 两项；不设领取限制白名单，沿用上方活动现有白名单，名单内会员是否受限按每项下方的勾选。",
-      C: "接入方式 C 只加同设备：同 IP 沿用上方活动条件（配置和提示不变），先判断现有 IP 限制，再判断同设备；同设备的限制周期固定沿用原有 IP 限制的周期（每天），不可选（新用户首充例外，可选五种周期）；不设领取限制白名单，指定名单内会员是否受限按同设备下方的勾选。"
-    };
-    var TYPE_TIP = {
-      once: "领取类型：单次领取类（每个账号只能领一次），显示最多领取次数。",
-      multi: "领取类型：多次领取类（一个账号可领取不止一次），不显示次数，勾选后每个周期内同一设备（或 IP）只允许首个领取的账号领取。"
-    };
-    var d = document.createElement("div"); d.className = "migr"; d.textContent = MODE_TIP[MODE[key] || "A"] + TYPE_TIP[TYPE[key] || "once"] + "（本提示仅在原型中说明接入方式和领取类型，后台不显示）"; mb.appendChild(d);
-    document.getElementById("limQm").setAttribute("data-tip", helpTip(TYPE[key] || "once", MODE[key] || "A"));
-    build(page, CFG[key], true, key); curKey = key;
-  }
-  document.getElementById("save").onclick = function () { if (check(page)) msg("保存成功"); };
-  document.getElementById("back").onclick = function () { show("list"); };
-  function listView() {
-    menu("old");
-    document.getElementById("page").hidden = true; document.getElementById("listView").hidden = false;
-  }
+  $("opNew").onclick = function () {
+    note(addNew() ? "活动中心已新建老用户充值转盘第 4 期（复制第 3 期生成）；点列表上方「刷新」后出现在列表，默认沿用第 3 期的配置。" : "第 4 期已存在；点列表上方「刷新」查看。", this);
+  };
+  $("opDel").onclick = function () {
+    var o = act("old"), n = o.periods.length;
+    o.periods = o.periods.filter(function (p) { return p.n !== 1; });
+    note(n !== o.periods.length ? "活动中心已删除老用户充值转盘第 1 期；点列表上方「刷新」后从列表消失，配置一起失效，剩下的期重新按顺序编号（原第 2、3 期变为第 1、2 期）。" : "第 1 期已删除；点「清空原型状态」可恢复。", this);
+  };
+  $("opReset").onclick = function () {
+    ACTS = JSON.parse(INIT); F = { name: "" }; page = 1; size = 20;
+    closeDlg(); load(); writeFilter(); render();
+    note("已恢复初始示例数据。", this);
+  };
+
+  /* ===== 场景（hash） ===== */
+  var SCN = {
+    list: null, page2: null, refresh: null,
+    edit: ["kyc"], error: ["kyc"], multi: ["sign"], wl: ["impsign"], fixed: ["dfr"], firstdep: ["nfd"], ended: ["old", 2]
+  };
   function show(v) {
-    if (["list", "create", "edit", "error", "direct", "wlact", "onlydev"].indexOf(v) < 0) v = "edit";
-    if (v === "list") listView();
-    else setPage({ direct: "kyc", error: "kyc", create: "create", wlact: "imp", onlydev: "dfr" }[v] || "old");
-    /* 保存校验提示：用单次领取类活动（KYC认证送彩金）演示，清空同设备次数后点「保存」（PRD N13 ①） */
-    if (v === "error") { var r = page.querySelector(".lim-row"); r.querySelector("input.bo-inp").value = ""; check(page); }
+    if (!SCN.hasOwnProperty(v)) v = "list";
+    closeDlg();
+    F = { name: "" }; page = 1;
+    if (v === "refresh") { addNew(); load(); }
+    if (v === "page2") page = 2;
+    writeFilter(); render();
+    var t = SCN[v];
+    if (t) {
+      var r = ROWS.filter(function (x) { return x.a.k === t[0] && (!t[1] || (x.p && x.p.n === t[1])); })[0];
+      if (r) openDlg(r);
+    }
+    /* 保存校验提示：KYC认证送彩金（单次领取类）清空同设备次数后点「保存」（PRD N13 ①） */
+    if (v === "error" && draft) { var inp = $("lim").querySelector("input.bo-inp"); inp.value = ""; draft.dev.n = ""; check(); }
     if (location.hash.slice(1) !== v) history.replaceState(null, "", "#" + v);
     if (window.self !== window.top) window.parent.postMessage({ type: "proto-view", view: v }, "*");
   }
-  window.addEventListener("hashchange", function () { show(location.hash.slice(1) || "edit"); });
+  window.addEventListener("hashchange", function () { show(location.hash.slice(1) || "list"); });
   document.addEventListener("click", function (e) { var b = e.target.closest("[data-go]"); if (b) { e.preventDefault(); show(b.dataset.go); } });
-  show(location.hash.slice(1) || "edit");
+  load();
+  show(location.hash.slice(1) || "list");
 })();
 </script>
 </body>
