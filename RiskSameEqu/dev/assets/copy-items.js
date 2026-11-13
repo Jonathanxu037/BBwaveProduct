@@ -8,5 +8,8 @@
 window.COPY_ITEMS = [
   // { id: "T01", page: "【页面名称】", place: "【位置，如：领取成功弹窗标题】", zh: "【中文文案】", en: "【English copy（示意）】", note: "【英文未定稿】" },
   // 多迭代示例：{ id: "T01", iter: "v1.0", lang: "前台英文", use: "弹窗", page: "【页面名称】", place: "【位置】", zh: "【中文】", en: "【English（示意）】", note: "【英文未定稿】" },
-  { id: "T04", lang: "前台英文", use: "Toast", page: "活动奖励领取", place: "领取被限制时的提示（L01 同设备、L02 同 IP、L03 取不到设备标识或 IP）", zh: "奖励领取限制[编号]", en: "Reward claim limit [L01]", note: "英文为新写，未定稿" },
+  { id: "T05", lang: "客服英文", use: "客服回复", page: "客服QA", place: "活动名称：老用户充值转盘", zh: "老用户充值转盘", en: "Old User Deposit Spin", note: "新译，请运营按线上实际英文名提供" },
+  { id: "T06", lang: "客服英文", use: "客服回复", page: "客服QA", place: "活动名称：返现充值转盘", zh: "返现充值转盘", en: "Cashback Deposit Spin", note: "新译，请运营按线上实际英文名提供" },
+  { id: "T07", lang: "客服英文", use: "客服回复", page: "客服QA", place: "后台菜单：修改余额审批", zh: "修改余额审批", en: "Balance Adjustment Approval", note: "新译，请运营按线上实际英文名提供" },
+  { id: "T08", lang: "客服英文", use: "客服回复", page: "客服QA", place: "活动名称：绑定手机号码", zh: "绑定手机号码", en: "Bind Mobile Number", note: "新译，请运营按线上实际英文名提供" },
 ];

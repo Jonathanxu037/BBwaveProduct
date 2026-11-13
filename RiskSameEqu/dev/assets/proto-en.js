@@ -14,7 +14,7 @@ window.PROTO_EN = {
   "充值": "Deposit",
   "充值金额": "Deposit amount",
   "选择优惠": "Choose an offer",
-  "每日首充 5%": "Daily first deposit 5%（示意）",
   "充值活动 10%": "Deposit bonus 10%（示意）",
+  "新用户充值优惠 20%": "New member deposit bonus 20%（示意）",
   "不使用优惠": "No offer"
 };

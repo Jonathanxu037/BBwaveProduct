@@ -16,6 +16,12 @@ window.NAV_DATA = {
       ]},
       { title: "后台页面", href: "prototype/admin/单一设备领取奖励限制-后台活动奖励领取限制配置.html", bar: "#8C6EDC", children: [
         { title: "后台活动奖励领取限制配置", href: "prototype/admin/单一设备领取奖励限制-后台活动奖励领取限制配置.html", type: "admin" }
+      ]},
+      { title: "附录", href: "docs/单一设备领取奖励限制-活动中心现状清单.html", bar: "#7A869A", children: [
+        { title: "活动中心现状清单", href: "docs/单一设备领取奖励限制-活动中心现状清单.html", type: "doc", roles: ["dev", "opr"], children: [
+          { title: "789Bingo（老站）", href: "docs/单一设备领取奖励限制-活动中心现状清单.html#tab-bingo" },
+          { title: "789Games（新站）", href: "docs/单一设备领取奖励限制-活动中心现状清单.html#tab-games" }
+        ]}
       ]}
     ]},
     { title: "文档资料", href: "docs/单一设备领取奖励限制-需求要点.html", bar: "#2E9A58", children: [
