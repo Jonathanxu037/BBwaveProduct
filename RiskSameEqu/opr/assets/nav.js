@@ -122,9 +122,9 @@
     if (!n.href || n.type) return n.href;
     var p = pageOf[n.href.split("#")[0]];
     if (!p || visible(p)) return n.href;
-    var first = null;
-    (function f(x) { if (first) return; if (x.type && x.href && visible(x)) { first = x.href; return; } (x.children || []).forEach(function (c) { if (visible(c)) f(c); }); })(n);
-    return first || n.href;
+    var first = null, home = homeOf(), hasHome = false;
+    (function f(x) { if (x.type && x.href && visible(x)) { if (!first) first = x.href; if (x.href === home) hasHome = true; return; } (x.children || []).forEach(function (c) { if (visible(c)) f(c); }); })(n);
+    return hasHome ? home : (first || n.href);   /* 分组里有该角色的默认页时优先指向默认页（如运营→需求修改总结、报告→PRD） */
   }
   /* 默认展开：一级、二级栏目常开；另外只展开当前页面所在的那一条（点到哪一级，就展开那一级的列表） */
   var KEEP = 2;
@@ -575,13 +575,15 @@ function isPubAdmin() {
   }
   function drop() { if (LIFT) LIFT.style.display = "none"; liftFor = null; }
   /* 图例：页面上有绿点时，在顶栏（原型画面外，不盖住原型、规则批注和模拟面板）常驻一条说明，前面放同色圆点。
-     只在开发、产品角色出现（本段开头已按角色返回）；内容不随英文化翻译，由这里按语言选择中文或英文；英文模式（发布站点 PROTO_LANG = "en"，或本地 ?lang=en）显示英文。没有顶栏时贴在页面左下角。 */
+     只在开发、产品角色出现（本段开头已按角色返回）；内容不随英文化翻译，由这里按语言选择中文或英文；英文模式（发布站点 PROTO_LANG = "en"，或本地 ?lang=en）显示英文；后台原型页始终中文。没有顶栏时贴在页面左下角。 */
   var hinted = false;
   function hint() {
     if (hinted) return; hinted = true;
     var q = /[?&]lang=(en|zh)\b/.exec(location.search), mode = q && q[1];
     try { mode = mode || sessionStorage.getItem("proto-lang"); } catch (e) {}
     var en = (mode || window.PROTO_LANG || "zh") === "en";
+    /* 只有前台原型英文化；后台原型页（路径含 /admin/）画面始终是中文，图例也用中文 */
+    if (/\/admin\//i.test(location.pathname)) en = false;
     var d = document.createElement("div"); d.className = "ui-devhint";
     d.innerHTML = "<i></i><span>" + (en
       ? "Green dots mark dev notes: not in development scope, for developer reference only. Hover to expand, click to view."

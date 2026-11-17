@@ -13,7 +13,7 @@ window.NAV_DATA = {
   roles: [],   /* 入口页「需求与原型中心」只有产品能看 */
   home: { opr: "docs/单一设备领取奖励限制-需求修改总结.html", dev: "docs/单一设备领取奖励限制-需求要点.html", repo: "docs/单一设备领取奖励限制-需求开发PRD文档.html" },   /* 各角色打开后的默认页；产品是入口页 */
   children: [
-    { title: "版本管理", href: "docs/单一设备领取奖励限制-需求开发PRD文档.html", bar: "#D8242F", children: [   /* 2026-11-13 用户要求：本期适用版本 v1.1、历史版本 v1.0（由 v1.0 原样复制封存，只有产品可看） */
+    { title: "版本管理", href: "docs/单一设备领取奖励限制-需求开发PRD文档.html", bar: "#D8242F", children: [   /* 2026-11-13 用户要求的版本目录结构 */
     { title: "本期适用版本", href: "docs/单一设备领取奖励限制-版本需求说明.html", bar: "#1B7A4C", children: [   /* 栏目标题打开 v1.1 版本需求说明（用户 2026-11-13，参照 VIP会员体系） */
     { title: "v1.1版本", href: "docs/单一设备领取奖励限制-版本需求说明.html", bar: "#E8C06A", children: [
       { title: "版本需求说明", href: "docs/单一设备领取奖励限制-版本需求说明.html", type: "doc", roles: ["dev"] },   /* 只有产品和开发可看，同 VIP会员体系 */

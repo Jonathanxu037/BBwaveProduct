@@ -11,7 +11,7 @@ window.NAV_DATA = {
   roles: [],   /* 入口页「需求与原型中心」只有产品能看 */
   home: { opr: "docs/单一设备领取奖励限制-需求修改总结.html", dev: "docs/单一设备领取奖励限制-需求要点.html", repo: "docs/单一设备领取奖励限制-需求开发PRD文档.html" },   /* 各角色打开后的默认页；产品是入口页 */
   children: [
-    { title: "版本管理", href: "docs/单一设备领取奖励限制-需求开发PRD文档.html", bar: "#D8242F", children: [
+    { title: "版本管理", href: "docs/单一设备领取奖励限制-需求开发PRD文档.html", bar: "#D8242F", children: [   /* 2026-11-13 用户要求的版本目录结构 */
     { title: "本期适用版本", href: "docs/单一设备领取奖励限制-版本需求说明.html", bar: "#1B7A4C", children: [   /* 栏目标题打开 v1.1 版本需求说明（用户 2026-11-13，参照 VIP会员体系） */
     { title: "v1.1版本", href: "docs/单一设备领取奖励限制-版本需求说明.html", bar: "#E8C06A", children: [
       { title: "版本需求说明", href: "docs/单一设备领取奖励限制-版本需求说明.html", type: "doc", roles: ["dev"] },   /* 只有产品和开发可看，同 VIP会员体系 */
@@ -46,14 +46,9 @@ window.NAV_DATA = {
         { title: "附录 D 页面控件说明", href: "docs/单一设备领取奖励限制-需求开发PRD文档.html#appD" }
       ]},
       { title: "开发自查清单", href: "docs/单一设备领取奖励限制-开发自查清单.html", type: "doc", roles: ["dev"] },
-      { title: "后台操作手册", href: "docs/单一设备领取奖励限制-后台操作手册.html", type: "doc", roles: ["opr"] },
-      { title: "客服QA", href: "docs/单一设备领取奖励限制-客服QA.html", type: "doc", roles: ["opr"] },
-      { title: "需求修改总结", href: "docs/单一设备领取奖励限制-需求修改总结.html", type: "doc", roles: ["opr"] },
-      { title: "运营需求确认", href: "docs/单一设备领取奖励限制-运营需求确认.html", type: "doc", roles: ["opr"] },
-      { title: "文案确认", href: "docs/单一设备领取奖励限制-文案确认.html", type: "doc", roles: ["opr"] }
     ]}
     ]}
-    ]}
+    ]},
     ]}
   ]
 };
