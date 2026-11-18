@@ -7,6 +7,7 @@ window.NAV_DATA = {
   title: "VIP会员体系（v1.3）", href: "index.html",
   api: "https://oc-feedback.jonathanxu037.workers.dev", oprKey: "opr-7e295e9a66a7f703410b6d0465a447d00dc311f40eb66150",   /* 云端存储接口和运营写入口令；用 .claude/tools/set_cloud_api.ps1 修改 */
   gate: { salt: "5f202a3109204c31149af70c1e39d0f7", hash: "8235a12748d17c8d8bf9661c8708d27a28b080b4738427d22272cb51dbb63faf" },   /* 产品入口密码（只存哈希，不存明文）；用 .claude/tools/set_pdm_password.ps1 修改 */
+  siteTag: "789Bingo&789Games",   /* 目录栏和产品密码页最上方的站点标识：本需求覆盖两个站（用户 2026-11-18 确认）；只针对老站写 "789Bingo"，只针对新站写 "789Games"（需求包框架规范第 3.2 节） */
   showChanges: false,   /* 运营需求确认页是否显示原型修改标注（版本痕迹）：默认 false 不显示，需要时改成 true（需求包框架规范第 6.1 节） */
   roles: [],   /* 入口页「需求与原型中心」只有产品能看 */
   home: { opr: "docs/v1.3/VIP会员体系-需求修改总结.html", dev: "docs/v1.3/VIP会员体系-需求要点.html", repo: "docs/v1.3/VIP会员体系-需求开发PRD文档.html" },   /* 各角色打开后的默认页；产品是入口页。2026-10-27 v1.0、v1.1、完整需求已移入「版本规划 › 历史版本」封存，只有产品可看；同日新建 v1.2 迭代；2026-10-31 v1.2 移入历史版本封存，新建 v1.3 迭代（由 v1.2 复制），默认页改为 v1.3 的页面 */
@@ -20,7 +21,7 @@ window.NAV_DATA = {
               { title: "VIP通知页面", href: "prototype/v1.3/front/VIP会员体系-VIP通知页面.html", type: "page" }
             ]},
             { title: "后台页面", href: "prototype/v1.3/admin/VIP会员体系-后台VIP配置页面.html", children: [
-              { title: "后台VIP会员等级配置页面", href: "prototype/v1.3/admin/VIP会员体系-后台VIP配置页面.html", type: "admin" }   /* 2026-10-28 按现网【用户管理 › 会员等级】三个页签重做，合并为一个页面；文件名沿用以保留已有链接和运营意见；2026-10-29 名称统一为「后台VIP会员等级配置页面」 */
+              { title: "后台VIP会员等级配置页面", href: "prototype/v1.3/admin/VIP会员体系-后台VIP配置页面.html", type: "admin" }   /* 2026-10-28 按现网【用户管理 › 会员等级】三个页签重做，合并为一个页面；文件名沿用以保留已有链接和运营意见；2026-10-29 名称统一为「后台VIP会员等级配置页面」；Q125、Q129（用户 2026-11-18）：本需求不涉及免打扰、金额区间，「消息通知配置页面」目录项已删除 */
             ]}
           ]},
           { title: "需求文档", href: "docs/v1.3/VIP会员体系-需求要点.html", children: [
@@ -38,7 +39,7 @@ window.NAV_DATA = {
               { title: "文案确认", href: "docs/v1.3/VIP会员体系-文案确认.html", type: "doc", roles: ["opr"] },
               { title: "后台操作手册", href: "docs/v1.3/VIP会员体系-后台操作手册.html", type: "doc", roles: ["opr"], children: [
               { title: "01 VIP会员系统与规则配置", href: "docs/v1.3/VIP会员体系-后台操作手册.html#m1" },   /* Y11（用户 2026-11-09）：与手册第 01 节对应 */
-              { title: "01A 通知配置", href: "docs/v1.3/VIP会员体系-后台操作手册.html#m2s" }   /* 2026-10-30 用户要求短信提醒独立成节 */
+              { title: "01A 通知配置", href: "docs/v1.3/VIP会员体系-后台操作手册.html#m2s" }   /* 2026-10-30 用户要求短信提醒独立成节；Q125、Q129（用户 2026-11-18）：本需求不涉及免打扰、金额区间，「01C 消息通知配置」#m2n 目录项已删除 */
             ] },
               { title: "客服QA", href: "docs/v1.3/VIP会员体系-客服QA.html", type: "doc", roles: ["opr"] },
               { title: "需求问题", href: "docs/v1.3/VIP会员体系-需求问题.html", type: "doc", roles: ["opr"] }

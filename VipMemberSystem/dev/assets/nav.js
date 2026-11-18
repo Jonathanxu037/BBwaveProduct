@@ -61,7 +61,7 @@
   }
   function showGate() {
     var g = document.createElement("div"); g.className = "pdm-gate"; g.setAttribute("role", "dialog"); g.setAttribute("aria-modal", "true"); g.setAttribute("aria-labelledby", "pgT");
-    g.innerHTML = '<form class="pdm-gate-box" autocomplete="off"><div class="k">789BINGO</div><h1 id="pgT"></h1><p>请输入访问密码</p>' +
+    g.innerHTML = '<form class="pdm-gate-box" autocomplete="off"><div class="k">' + (function () { var k = (window.NAV_DATA && NAV_DATA.siteTag) || "789BINGO"; return String(k).replace(/&/g, "&amp;").replace(/</g, "&lt;"); })() + '</div><h1 id="pgT"></h1><p>请输入访问密码</p>' +
       '<input type="password" inputmode="numeric" autocomplete="current-password" aria-label="访问密码" maxlength="64"><div class="err" role="alert"></div>' +
       '<button type="submit">进入</button><p class="pg-tip">密码请向该需求的产品管理人获取。</p></form>';
     /* 标题：<当前需求名称>-产品管理（需求名称取目录根节点标题，去掉版本号） */
@@ -216,7 +216,7 @@
     /* 目录栏 */
     var aside = document.createElement("aside");
     aside.className = "sidenav"; aside.setAttribute("aria-label", "目录");
-    aside.innerHTML = '<div class="sn-brand"><div class="k">789BINGO</div><div class="t"></div></div>' +
+    aside.innerHTML = '<div class="sn-brand"><div class="k">' + (function () { var k = (window.NAV_DATA && NAV_DATA.siteTag) || "789BINGO"; return String(k).replace(/&/g, "&amp;").replace(/</g, "&lt;"); })() + '</div><div class="t"></div></div>' +
       '<div class="sn-tools"><input type="search" placeholder="搜索当前需求下的页" aria-label="搜索目录"><button type="button" data-a="all">全部展开</button><button type="button" data-a="reset">恢复默认</button></div>' +
       '<div class="sn-tree"></div>';
     var treeBox = aside.querySelector(".sn-tree");

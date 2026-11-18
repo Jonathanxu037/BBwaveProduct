@@ -60,16 +60,16 @@
 <div class="desk"><article class="paper">
 
 <h1 class="doc-title">VIP会员体系-v1.3-版本需求说明</h1>
-<div class="doc-meta"><span>更新日期：2026-11-09（GMT+8）</span><span>适用：v1.3</span><span>可见角色：产品、开发</span><span>依据：v1.3 原型和需求开发PRD文档 v1.3（2026-11-09），规则和数值以 PRD 为准</span></div>
+<div class="doc-meta"><span>更新日期：2026-11-18（GMT+8）</span><span>适用：v1.3</span><span>可见角色：产品、开发</span><span>依据：v1.3 原型和需求开发PRD文档 v1.3（2026-11-18），规则和数值以 PRD 为准</span></div>
 <hr class="doc-rule">
 
 <h2 id="s1">一、一句话概述</h2>
-<p class="vs-one">把现网会员等级改造为 VIP 体系：累计双门槛实时升级，<span class="vmark" data-v="v1.3">按月考核每月奖金标准保级或降级，玩家领取升级、每月、生日三类奖金<button class="vtag" data-v="v1.3">v1.3</button></span>。</p>
-<div style="background:#FFF5F5;border-left:4px solid #C00000;padding:8px 12px;margin:10px 0;border-radius:0 4px 4px 0;font-size:12.5px"><span class="vmark" data-v="v1.3"><b>总原则</b>：与平台已有功能重复的部分（如免打扰与发送时段限制、短信发送与失败处理、站内信和推送通道、操作日志、结算告警等），以平台现有逻辑为准，本需求的对应内容可不开发；VIP 会员体系本身（等级、升级奖金、每月奖金、生日奖金、结算、领取、暂停与放行、作废与补发等）是本需求的核心，必须按本需求的逻辑开发（用户 2026-11-09）。<button class="vtag" data-v="v1.3">v1.3</button></span></div>
+<p class="vs-one">把现网会员等级改造为 VIP 体系：累计双门槛实时升级，<span class="vmark" data-v="v1.3">按月考核月度流水门槛保级或降级，玩家领取升级、每月、生日三类奖金<button class="vtag" data-v="v1.3">v1.3</button></span>。<span class="vmark" data-v="v1.3">新站 789Games、老站 789Bingo 两站都做，同一套规则和页面，配置、数据、结算、统计按站点独立（用户 2026-11-17）。<button class="vtag" data-v="v1.3">v1.3</button></span></p>
+<div style="background:#FFF5F5;border-left:4px solid #C00000;padding:8px 12px;margin:10px 0;border-radius:0 4px 4px 0;font-size:12.5px"><span class="vmark" data-v="v1.3"><b>总原则</b>：与平台已有功能重复的部分（如短信发送与失败处理、站内信和推送通道、操作日志等），以平台现有逻辑为准，本需求的对应内容可不开发；VIP 会员体系本身（等级、升级奖金、每月奖金、生日奖金、结算、领取、暂停与放行、作废与补发等）是本需求的核心，必须按本需求的逻辑开发（用户 2026-11-09）。本需求只做 VIP，VIP 短信和推送固定在每天 10:00–21:00（GMT+8）发送，不设免打扰和短信金额门槛（Q129）；结算异常由技术侧监控，告知运维值班人员或技术人员，不是运营后台功能（Q130）（用户 2026-11-18）。<button class="vtag" data-v="v1.3">v1.3</button></span></div>
 
 <h2 id="s2">二、业务流程图</h2>
 <div class="vf-wrap">
-<svg class="no-ref" viewBox="0 0 1220 452" role="img" aria-labelledby="vfT" xmlns="http://www.w3.org/2000/svg" font-family="inherit">
+<svg class="no-ref" viewBox="0 0 1110 452" role="img" aria-labelledby="vfT" xmlns="http://www.w3.org/2000/svg" font-family="inherit">
 <title id="vfT">VIP 会员体系业务流程图：中间一行为主流程，上方为后台配置、结算异常和通知分支，下方为升级弹窗、KYC 和风控分支</title>
 <defs>
   <marker id="aUp" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2F6FDB"/></marker>
@@ -91,7 +91,6 @@
   <path d="M720,222 H742" stroke="#1E9A66" marker-end="url(#aBn)"/>
   <path d="M842,222 H864" stroke="#1E9A66" marker-end="url(#aBn)"/>
   <path d="M964,222 H986" stroke="#1E9A66" marker-end="url(#aBn)"/>
-  <path d="M1086,222 H1108" stroke="#D9821A" stroke-dasharray="6 4" marker-end="url(#aNt)"/>
   <!-- 后台配置 -->
   <path d="M60,58 V200" stroke="#5E6E82" marker-end="url(#aCf)"/>
   <path d="M232,36 H254" stroke="#5E6E82" stroke-dasharray="6 4" marker-end="url(#aCf)"/>
@@ -140,17 +139,16 @@
   <g><title>每月奖金：按 k 级生成，k = VIP0 不发（N14）</title><rect x="620" y="200" width="100" height="44" rx="10" fill="#1E9A66"/><text x="670" y="229" fill="#fff">每月奖金</text></g>
   <g><title>生日奖金：生日所在月结算后按等级生成（N21）</title><rect x="742" y="200" width="100" height="44" rx="10" fill="#1E9A66"/><text x="792" y="229" fill="#fff">生日奖金</text></g>
   <g><title>待领取：手动领取的奖金，领奖有效期默认 15 天（N52）</title><rect x="864" y="200" width="100" height="44" rx="10" fill="#1E9A66"/><text x="914" y="229" fill="#fff">待领取</text></g>
-  <g><title>领取到账：玩家领取或自动领取到账，生成流水（N28、N53）</title><rect x="986" y="200" width="100" height="44" rx="10" fill="#1E9A66"/><text x="1036" y="229" fill="#fff">领取到账</text></g>
-  <g><title>已到账通知：自动领取到账、放行或补发直接到账、关闭VIP会员系统时勾选发放到账时发站内信、推送和到账提醒短信；玩家自己点领取到账时不发（N35、N37）</title><rect x="1108" y="200" width="100" height="44" rx="10" fill="#FDF2E3" stroke="#D9821A" stroke-width="2"/><text x="1158" y="229" fill="#9A5A0C">到账通知</text></g>
+  <g><title>领取到账：玩家领取或自动领取到账，生成流水；到账不发短信、站内信和推送（N28、N53，Q126，用户 2026-11-18）</title><rect x="986" y="200" width="100" height="44" rx="10" fill="#1E9A66"/><text x="1036" y="229" fill="#fff">领取到账</text></g>
   <!-- 上方：后台配置 -->
-  <g><title>体系开关：「VIP会员系统」，默认关闭，同时控制前台 VIP中心显示；关闭时未领取奖金勾选发放或作废；修改等级表须先关闭；再次开启时按最新配置重新核算（N26、N27）</title><rect x="10" y="14" width="100" height="44" rx="10" fill="#EEF1F5" stroke="#5E6E82" stroke-width="2"/><text x="60" y="43" fill="#3F4B5B">体系开关</text></g>
+  <g><title>体系开关：「VIP会员系统」，默认关闭，同时控制前台 VIP中心显示；关闭时未领取奖金全部发放或全部作废；修改等级表须先关闭；再次开启时按最新配置重新核算（N26、N27）</title><rect x="10" y="14" width="100" height="44" rx="10" fill="#EEF1F5" stroke="#5E6E82" stroke-width="2"/><text x="60" y="43" fill="#3F4B5B">体系开关</text></g>
   <g><title>增删等级：只在最高一级增删，重新开启时全部玩家重算（N49、N50、N55）</title><rect x="132" y="14" width="100" height="44" rx="10" fill="#EEF1F5" stroke="#5E6E82" stroke-width="2"/><text x="182" y="43" fill="#3F4B5B">增删等级</text></g>
-  <g><title>全量重算：上线结算、再次开启（含关闭期间下调门槛、增删等级后的重新核算）、KYC 切换都按此任务执行（N59）</title><rect x="254" y="14" width="100" height="44" rx="10" fill="#EEF1F5" stroke="#5E6E82" stroke-width="2"/><text x="304" y="43" fill="#3F4B5B">全量重算</text></g>
-  <g><title>结算时间：每月 1–28 日可配，默认 1 日 13:00（N12）</title><rect x="376" y="14" width="100" height="44" rx="10" fill="#EEF1F5" stroke="#5E6E82" stroke-width="2"/><text x="426" y="43" fill="#3F4B5B">结算时间</text></g>
+  <g><title>全量重算：上线结算、再次开启（关闭期间有配置修改的，开启时按新规则和累计数据重新核算全部玩家等级，可升可降；只新增等级的不全量重算，Q131，用户 2026-11-18）都按此任务执行（N59）</title><rect x="254" y="14" width="100" height="44" rx="10" fill="#EEF1F5" stroke="#5E6E82" stroke-width="2"/><text x="304" y="43" fill="#3F4B5B">全量重算</text></g>
+  <g><title>结算时间：研发配置，固定每月 1 日 04:00:00（GMT+8）开始结算上一自然月，后台不提供设置（N12，用户 2026-11-17）</title><rect x="376" y="14" width="100" height="44" rx="10" fill="#EEF1F5" stroke="#5E6E82" stroke-width="2"/><text x="426" y="43" fill="#3F4B5B">结算时间</text></g>
   <g><title>门槛奖金：关闭期间保存，重新开启时生效；新配置用于尚未结算的考核月份，含重新开启所在月（N11、N43）</title><rect x="132" y="104" width="100" height="44" rx="10" fill="#EEF1F5" stroke="#5E6E82" stroke-width="2"/><text x="182" y="133" fill="#3F4B5B">门槛奖金</text></g>
   <!-- 上方：结算异常、通知、过期 -->
   <g><title>结算未完成：单人重试 3 次仍失败，技术补结算后运营点「完成」（N19）</title><rect x="498" y="104" width="100" height="44" rx="10" fill="#F3EEFA" stroke="#7A4BC2" stroke-width="2"/><text x="548" y="133" fill="#5A3296">结算未完成</text></g>
-  <g><title>生日提醒：生日奖金为手动领取且后台勾选时才发（默认勾选），时间点可选（N36）</title><rect x="742" y="104" width="100" height="44" rx="10" fill="#FDF2E3" stroke="#D9821A" stroke-width="2"/><text x="792" y="133" fill="#9A5A0C">生日提醒</text></g>
+  <g><title>生日提醒：生日奖金为手动领取且后台勾选时才发（默认勾选），生日当天 10:00–21:00 发；1 日生日在当月结算完成后、10:00–21:00 内发（N36，Q127、Q129，用户 2026-11-18）</title><rect x="742" y="104" width="100" height="44" rx="10" fill="#FDF2E3" stroke="#D9821A" stroke-width="2"/><text x="792" y="133" fill="#9A5A0C">生日提醒</text></g>
   <g><title>待领取奖金通知：每天首次进入平台弹 1 次（N56）</title><rect x="864" y="14" width="100" height="44" rx="10" fill="#FDF2E3" stroke="#D9821A" stroke-width="2"/><text x="914" y="43" fill="#9A5A0C">待领取奖金通知</text></g>
   <g><title>过期作废：超过领奖有效期变为「已过期」，不能补发；手动奖金保留生成时确定的截止日期（N52）</title><rect x="986" y="104" width="100" height="44" rx="10" fill="#E7F5EE" stroke="#1E9A66" stroke-width="2"/><text x="1036" y="133" fill="#136B46">过期作废</text></g>
   <!-- 下方：升级奖金与弹窗 -->
@@ -158,7 +156,7 @@
   <g><title>升级弹窗：升级时任何页面（含第三方游戏页）弹平台现网升级弹窗，画面、音效、分档沿用现网（N34）</title><rect x="498" y="296" width="100" height="44" rx="10" fill="#FDF2E3" stroke="#D9821A" stroke-width="2"/><text x="548" y="325" fill="#9A5A0C">升级弹窗</text></g>
   <g><title>弹窗领取：有手动领取金额时点「领取」到账后关闭；未领取就退出的，下次进入平台补弹（N34）</title><rect x="620" y="296" width="100" height="44" rx="10" fill="#FDF2E3" stroke="#D9821A" stroke-width="2"/><text x="670" y="325" fill="#9A5A0C">弹窗领取</text></g>
   <!-- 下方：KYC 与风控 -->
-  <g><title>KYC 限制：开启时未完成 KYC 只累计、不定级（N23）</title><rect x="132" y="384" width="100" height="44" rx="10" fill="#FBEAEA" stroke="#D14343" stroke-width="2"/><text x="182" y="413" fill="#A32626">KYC限制</text></g>
+  <g><title>需完成 KYC：未完成 KYC 只累计、不定级（N23）</title><rect x="132" y="384" width="100" height="44" rx="10" fill="#FBEAEA" stroke="#D14343" stroke-width="2"/><text x="182" y="413" fill="#A32626">需完成 KYC</text></g>
   <g><title>风控暂停：冻结、风险分 ≥ 70 等，奖金暂停发放，运营放行或作废（N31–N33）</title><rect x="986" y="384" width="100" height="44" rx="10" fill="#FBEAEA" stroke="#D14343" stroke-width="2"/><text x="1036" y="413" fill="#A32626">风控暂停</text></g>
 </g>
 </svg>
@@ -188,8 +186,9 @@
 <p class="bp-k"><b>作用</b>界定谁算玩家、谁参与 VIP。</p>
 <div class="bp-k"><b>逻辑</b><ul>
 <li>玩家：前台有账号、能正常充值和游戏的账户。<span class="vmark" data-v="v1.3">账号状态为「待审核」的不算玩家（不定级、不结算、不生成奖金，审核通过后在下一次充值或注单结算时按实时升级判定）；会员类型不区分；PWA 与 H5 相同，Maya / Glife 小程序不显示 VIP中心，等级和奖金照常计算，在 App 或 H5 领取（用户 2026-11-10）。<button class="vtag" data-v="v1.3">v1.3</button></span></li>
-<li>参与条件：<span class="vmark" data-v="v1.3">「VIP会员系统」开启<button class="vtag" data-v="v1.3">v1.3</button></span>；「KYC 限制」开启时须已通过 KYC。</li>
+<li>参与条件：<span class="vmark" data-v="v1.3">「VIP会员系统」开启<button class="vtag" data-v="v1.3">v1.3</button></span>；<span class="vmark" data-v="v1.3">须已完成 KYC（用户 2026-11-18）<button class="vtag" data-v="v1.3">v1.3</button></span>。</li>
 <li><span class="vmark" data-v="v1.3">参与资格按月末 23:59:59 的状态判定。<button class="vtag" data-v="v1.3">v1.3</button></span></li>
+<li><span class="vmark" data-v="v1.3">站点：新站 789Games、老站 789Bingo 都上线，各自独立上线、独立开关「VIP会员系统」；等级表、领取方式、有效期、流水倍数、通知内容在各自后台独立设置；两站账号相互独立，等级、累计、奖金、月度结算、活动奖励统计、结算记录、操作日志不互通、不合并统计（用户 2026-11-17）。<button class="vtag" data-v="v1.3">v1.3</button></span></li>
 </ul></div>
 <table class="vs-t sc"><colgroup><col class="a"><col></colgroup><thead><tr><th>场景</th><th>方案</th></tr></thead><tbody>
 <tr><td>正常（含风险分 40–69）</td><td>全部照常</td></tr>
@@ -204,7 +203,7 @@
 <div class="bp-k"><b>逻辑</b><ul>
 <li>默认 VIP1–VIP24、SUPER VIP 共 25 级；未达 VIP1 为 VIP0（门槛、奖金固定 0）。</li>
 <li>等级名按位置生成，最高一级始终叫 SUPER VIP；增删等级后等级改名，已有奖金和记录仍归属同一等级标识。</li>
-<li>每人存当前等级和历史最高 H：当前可降，H 只升不降。</li>
+<li>每人存当前等级和历史最高 H：当前可降，<span class="vmark" data-v="v1.3">H 在正常运行期间只升不降；重新开启时重新核算的，H 按核算结果重置（Q131，用户 2026-11-18）<button class="vtag" data-v="v1.3">v1.3</button></span>。</li>
 <li>段位：VIP0 黑铁、最高级荣耀，中间分青铜至星耀 6 段（默认每段 4 级）。</li>
 </ul></div>
 <table class="vs-t sc"><colgroup><col class="a"><col></colgroup><thead><tr><th>场景</th><th>方案</th></tr></thead><tbody>
@@ -224,9 +223,9 @@
 </ul></div>
 <table class="vs-t sc"><colgroup><col class="a"><col></colgroup><thead><tr><th>场景</th><th>方案</th></tr></thead><tbody>
 <tr><td>撤单</td><td>扣累计；<span class="vmark" data-v="v1.3">原注单所属月份的结算尚未开始的，同时扣回该月有效投注；已开始的只扣累计（用户 2026-11-10）<button class="vtag" data-v="v1.3">v1.3</button></span></td></tr>
-<tr><td><span class="vmark" data-v="v1.3">撤单、充值撤销<button class="vtag" data-v="v1.3">v1.3</button></span></td><td><span class="vmark" data-v="v1.3">被撤销的单子计入了达到某级的判定时，去掉它按当时累计重新判定、回退达不到的等级；达到之后才产生的只扣累计、不回退（不限当月，已结算月份不重算）；被回退的各级未到账（待领取、暂停发放（含风控和领取结果异常）、发放失败）的升级奖金系统作废（「撤单」或「充值撤销」），领取中的按规则 N29 挂起、确认未到账的改为系统作废，已到账不追回；关闭「VIP会员系统」期间、KYC 冻结期间发生的回退照常执行（只改当前等级、历史最高并系统作废），不通知，重新开启时只升不降、不撤销已执行的回退（撤销场景清单见 Q100，用户 2026-11-10）；再次达到时已到账的不再发、因撤销作废的重新生成（用户 2026-11-06；金额和奖励类型沿用被作废的那笔，有效期从重新达到当天起算，用户 2026-11-09；重新生成的升级奖金按当时的领取方式处理，自动领取的直接到账并发已到账通知，手动领取的为待领取，等级调整补偿一律先为待领取，用户 2026-11-10）<button class="vtag" data-v="v1.3">v1.3</button></span></td></tr>
+<tr><td><span class="vmark" data-v="v1.3">撤单、充值撤销<button class="vtag" data-v="v1.3">v1.3</button></span></td><td><span class="vmark" data-v="v1.3">被撤销的单子计入了达到某级的判定时，去掉它按当时累计重新判定、回退达不到的等级；达到之后才产生的只扣累计、不回退（不限当月，已结算月份不重算）；被回退的各级未到账（待领取、暂停发放（含风控和领取结果异常）、发放失败）的升级奖金系统作废（「撤单」或「充值撤销」），领取中的按规则 N29 挂起、确认未到账的改为系统作废，已到账不追回；关闭「VIP会员系统」期间、KYC 冻结期间发生的回退照常执行（只改当前等级、历史最高并系统作废），不通知，重新开启时不撤销已执行的回退（撤销场景清单见 Q100，用户 2026-11-10；重新开启时是否重新核算按 Q131，用户 2026-11-18）；再次达到时已到账的不再发、因撤销作废的重新生成（用户 2026-11-06；金额和奖励类型沿用被作废的那笔，有效期从重新达到当天起算，用户 2026-11-09；重新生成的升级奖金按当时的领取方式处理，自动领取的直接到账（不发到账通知，Q126，用户 2026-11-18），手动领取的为待领取，等级调整补偿一律先为待领取，用户 2026-11-10）<button class="vtag" data-v="v1.3">v1.3</button></span></td></tr>
 <tr><td>单人单月撤单扣回 &gt; ₱100,000<span class="vmark" data-v="v1.3">，或充值撤销、扣回合计 &gt; ₱100,000（用户 2026-11-10）<button class="vtag" data-v="v1.3">v1.3</button></span></td><td>告警，未领奖金暂停（撤单复核），已到账的不追回<span class="vmark" data-v="v1.3">；全部撤单复核记录被放行或作废后视为复核解除（用户 2026-11-10）<button class="vtag" data-v="v1.3">v1.3</button></span></td></tr>
-<tr><td>10-31 23:50 结算、11-01 14:00 入库</td><td>计入 11 月，10 月不重算</td></tr>
+<tr><td><span class="vmark" data-v="v1.3">10-31 23:50 结算、11-01 05:00 入库（晚于 04:00 结算开始，用户 2026-11-17）<button class="vtag" data-v="v1.3">v1.3</button></span></td><td>计入 11 月，10 月不重算</td></tr>
 </tbody></table>
 <p class="bp-ref"><b>依据</b>N3 累计充值 · N4 有效投注 · N5 撤单与回退</p></div>
 
@@ -247,26 +246,23 @@
 </tbody></table>
 <p class="bp-ref"><b>依据</b>N7 升级条件 · N8 实时升级 · N10 降级后不立即升回 · N18 结算期间的实时升级</p></div>
 
-<div class="bp c-rk"><h3>KYC 限制</h3>
-<p class="bp-k"><b>作用</b>控制未完成 KYC 的玩家能否参与。</p>
+<div class="bp c-rk"><h3><span class="vmark" data-v="v1.3">需完成 KYC<button class="vtag" data-v="v1.3">v1.3</button></span></h3>
+<p class="bp-k"><b>作用</b><span class="vmark" data-v="v1.3">玩家完成 KYC 后才能享受 VIP 各等级福利，两站相同（用户 2026-11-18）。<button class="vtag" data-v="v1.3">v1.3</button></span></p>
 <div class="bp-k"><b>逻辑</b><ul>
-<li>开启（默认）：未通过 KYC 只累计，不定级、不发奖、不结算。</li>
+<li><span class="vmark" data-v="v1.3">未完成 KYC：只累计，不定级、不发奖、不结算、不发生日提醒，VIP中心显示 KYC 引导（用户 2026-11-18）。<button class="vtag" data-v="v1.3">v1.3</button></span></li>
 <li>完成 KYC：按累计定级，补发已达等级的升级奖金；期间<span class="vmark" data-v="v1.3">每月奖金<button class="vtag" data-v="v1.3">v1.3</button></span>、生日奖金不补。</li>
-<li>关闭：等级和奖金不要求 KYC，生日奖金仍须 KYC 出生日期；<span class="vmark" data-v="v1.3">关闭须经负责人确认<button class="vtag" data-v="v1.3">v1.3</button></span>。</li>
-<li>开 → 关：未定级玩家按累计定级，不补发、不弹窗（Q51 KYC 限制关闭时的定级，已定）。</li>
-<li>关 → 开：未完成 KYC 的冻结等级，未到账奖金暂停；完成 KYC 后解冻。</li>
-<li>切换须<span class="vmark" data-v="v1.3">确认框<button class="vtag" data-v="v1.3">v1.3</button></span> + 谷歌验证码。</li>
+<li><span class="vmark" data-v="v1.3">完成 KYC 指后台 KYC 状态为「完全认证」（前台 Fully Verified），「部分认证」「待复审」「补充信息」等其他状态都按未完成 KYC 处理（用户 2026-11-18）。<button class="vtag" data-v="v1.3">v1.3</button></span></li>
+<li><span class="vmark" data-v="v1.3">KYC 被撤销（已定级玩家从「完全认证」变成其他状态）：等级冻结，未到账奖金暂停（原因「未完成 KYC（KYC 被撤销）」），这类暂停不能放行，可以作废；重新完成 KYC 后自动解冻（用户 2026-11-18）。<button class="vtag" data-v="v1.3">v1.3</button></span></li>
+<li><span class="vmark" data-v="v1.3">「VIP会员系统」关闭期间重新完成 KYC 的：在重新开启时按累计定级，关闭期间有配置修改的随重新核算一起处理（Q131，用户 2026-11-18）。<button class="vtag" data-v="v1.3">v1.3</button></span></li>
 </ul></div>
 <table class="vs-t sc"><colgroup><col class="a"><col></colgroup><thead><tr><th>场景</th><th>方案</th></tr></thead><tbody>
 <tr><td>累计 ₱260,000 / ₱52,000 完成 KYC</td><td>定 VIP4，补发 ₱92；<span class="vmark" data-v="v1.3">现网升级弹窗显示 VIP4 和合计 ₱92，不逐级列出<button class="vtag" data-v="v1.3">v1.3</button></span></td></tr>
 <tr><td>上线时够 VIP2，到 VIP4 才完成 KYC</td><td>只补 VIP3、VIP4 共 ₱66</td></tr>
-<tr><td>冻结期间累计达更高级，玩家自己完成 KYC 解冻</td><td>解冻后升级并发奖，暂停奖金<span class="vmark" data-v="v1.3">中生成时为手动领取的<button class="vtag" data-v="v1.3">v1.3</button></span>恢复待领取<span class="vmark" data-v="v1.3">，生成时为自动领取的直接到账并发已到账通知（生日奖金生日当天起到账，用户 2026-11-10）<button class="vtag" data-v="v1.3">v1.3</button></span></td></tr>
-<tr><td><span class="vmark" data-v="v1.3">「KYC 限制」开 → 关，冻结玩家的暂停奖金恢复<button class="vtag" data-v="v1.3">v1.3</button></span></td><td><span class="vmark" data-v="v1.3">与运营放行一致：发 1 条待领取站内信和推送，不弹升级弹窗，次日起计入待领取奖金通知（用户 2026-11-02）</span></td></tr>
-<tr><td><span class="vmark" data-v="v1.3">体系关闭期间完成 KYC，重新开启<button class="vtag" data-v="v1.3">v1.3</button></span></td><td><span class="vmark" data-v="v1.3">「KYC 限制」开启时：关闭前累计已达到的等级在重新开启时按 KYC 定级补发（不弹升级弹窗，发待领取站内信和推送）；关闭期间新达到的记「不发放（重新开启核算）」（用户 2026-11-10）</span></td></tr>
-<tr><td><span class="vmark" data-v="v1.3">再次关闭「KYC 限制」解冻的玩家<button class="vtag" data-v="v1.3">v1.3</button></span></td><td><span class="vmark" data-v="v1.3">冻结期间新达到的等级记「不发放（KYC 限制关闭定级）」，与从未定级玩家一致，不弹升级弹窗（用户 2026-11-09）<button class="vtag" data-v="v1.3">v1.3</button></span></td></tr>
-<tr><td>体系关闭时切换</td><td>只记开关值，重开时按当时值处理</td></tr>
+<tr><td><span class="vmark" data-v="v1.3">KYC 被撤销冻结期间累计达更高级，重新完成 KYC 解冻<button class="vtag" data-v="v1.3">v1.3</button></span></td><td>解冻后升级并发奖，暂停奖金<span class="vmark" data-v="v1.3">中生成时为手动领取的<button class="vtag" data-v="v1.3">v1.3</button></span>恢复待领取<span class="vmark" data-v="v1.3">，生成时为自动领取的直接到账（生日奖金生日当天起到账，用户 2026-11-10；不发到账通知，Q126，用户 2026-11-18）<button class="vtag" data-v="v1.3">v1.3</button></span></td></tr>
+<tr><td><span class="vmark" data-v="v1.3">解冻后暂停奖金恢复为待领取<button class="vtag" data-v="v1.3">v1.3</button></span></td><td><span class="vmark" data-v="v1.3">与运营放行一致：发 1 条待领取站内信和推送，不弹升级弹窗，次日起计入待领取奖金通知（用户 2026-11-02）</span></td></tr>
+<tr><td><span class="vmark" data-v="v1.3">体系关闭期间完成 KYC，重新开启<button class="vtag" data-v="v1.3">v1.3</button></span></td><td><span class="vmark" data-v="v1.3">关闭前累计已达到的等级在重新开启时按 KYC 定级补发（不弹升级弹窗，待领取站内信即时生成，推送按 10:00–21:00 发送窗口发）；关闭期间新达到的记「不发放（重新开启核算）」（用户 2026-11-10）；关闭期间有配置修改（只新增等级的除外）的，随开启时的重新核算一起处理（Q131、Q132，用户 2026-11-18）</span></td></tr>
 </tbody></table>
-<p class="bp-ref"><b>依据</b>N23 KYC 限制开启 · N24 KYC 限制关闭 · N25 KYC 限制切换</p></div>
+<p class="bp-ref"><b>依据</b><span class="vmark" data-v="v1.3">N23 需完成 KYC · N25 KYC 被撤销与冻结 · Q124（用户 2026-11-18）<button class="vtag" data-v="v1.3">v1.3</button></span></p></div>
 
 <div class="bp c-st"><h3>上线结算</h3>
 <p class="bp-k"><b>作用</b>首次开启时一次性定级，作为后续起点。</p>
@@ -282,15 +278,15 @@
 <tr><td>累计 ₱120,000 / ₱19,999</td><td>定 VIP2</td></tr>
 <tr><td>10-28 上线，生日 10-30 / 10-05</td><td>10-30 生成；10-05 不补</td></tr>
 <tr><td>上线时未完成 KYC</td><td>只记上线结算等级，完成 KYC 时只补更高等级</td></tr>
-<tr><td><span class="vmark" data-v="v1.3">开启后的月度结算<button class="vtag" data-v="v1.3">v1.3</button></span></td><td><span class="vmark" data-v="v1.3">结算时间点不早于第一次开启时刻 + 28 天（恰好满 28 天也算）才结算；之前的结算时间点不评定等级（等级不变）、不发每月奖金，照常为当月生日、且生日不早于开启日期的玩家生成生日奖金。例：10-28 开启，满 28 天为 11-25；11-01 不评定等级、不发每月奖金，生成 11 月生日奖金；12-01 起正常结算（结算 11 月）。开启确认框显示「预计首次结算：YYYY-MM-DD，评定 YYYY-MM」；默认结算时间下最晚开启：31 天月份 4 日 13:00、30 天月份 3 日 13:00、2 月 1 日 13:00（闰年 2 日 13:00），结算日为 D 日时后移 D − 1 天，建议每月 1 日 13:00 前开启</span></td></tr>
+<tr><td><span class="vmark" data-v="v1.3">开启后的月度结算<button class="vtag" data-v="v1.3">v1.3</button></span></td><td><span class="vmark" data-v="v1.3">结算时间点不早于第一次开启时刻 + 28 天（恰好满 28 天也算）才结算；之前的结算时间点不评定等级（等级不变）、不发每月奖金，照常为当月生日、且生日不早于开启日期的玩家生成生日奖金。例：10-28 开启，满 28 天为 11-25；11-01 不评定等级、不发每月奖金，生成 11 月生日奖金；12-01 起正常结算（结算 11 月）。开启确认框显示「预计首次结算：YYYY-MM-DD，评定 YYYY-MM」；结算时间固定为每月 1 日 04:00（研发配置），要让下一个 1 日 04:00 首次结算，最晚开启：31 天月份 4 日 04:00、30 天月份 3 日 04:00、2 月 1 日 04:00（闰年 2 日 04:00），建议每月 1 日结算完成后至 3 日 04:00 前开启（2 月须在 2 月 1 日 04:00 前，闰年 2 日 04:00 前，用户 2026-11-17）</span></td></tr>
 </tbody></table>
-<p class="bp-ref"><b>依据</b>N26 VIP 体系开关与上线结算 · N23 KYC 限制开启 · Q38 上线当月结算 · Q39 上线当月生日奖金</p></div>
+<p class="bp-ref"><b>依据</b>N26 VIP 体系开关与上线结算 · <span class="vmark" data-v="v1.3">N23 需完成 KYC<button class="vtag" data-v="v1.3">v1.3</button></span> · Q38 上线当月结算 · Q39 上线当月生日奖金</p></div>
 
 <div class="bp c-st"><h3>月度结算</h3>
 <p class="bp-k"><b>作用</b>按上月有效投注评定次月等级和<span class="vmark" data-v="v1.3">每月奖金<button class="vtag" data-v="v1.3">v1.3</button></span>。</p>
 <div class="bp-k"><b>逻辑</b><ul>
 <li>考核等级 C = 月末 23:59:59 的当前等级；当月升级的按新等级考核整月。</li>
-<li>k = 当月有效投注达到<span class="vmark" data-v="v1.3">每月奖金标准（前台叫「每月奖金投注」）<button class="vtag" data-v="v1.3">v1.3</button></span>的最高等级，不超过 H。</li>
+<li>k = 当月有效投注达到<span class="vmark" data-v="v1.3">月度流水门槛（前台叫「每月奖金投注」）<button class="vtag" data-v="v1.3">v1.3</button></span>的最高等级，不超过 H。</li>
 <li><span class="vmark" data-v="v1.3">结算资格：结算时间点不早于第一次开启「VIP会员系统」的时刻 + 28 天才评定等级和发每月奖金，之前的结算时间点只生成生日奖金；再次开启不重新计 28 天。月末仍为正常、结算时已停用的玩家照常结算该月等级，但不生成奖金（用户 2026-11-10）。<button class="vtag" data-v="v1.3">v1.3</button></span></li>
 <li>k = C 保级；k &gt; C 恢复到 k（可多级）；k &lt; C 降 1 级。</li>
 <li>每月最多降 1 级，VIP1 降为 VIP0；H 不变。</li>
@@ -307,21 +303,19 @@
 </tbody></table>
 <p class="bp-ref"><b>依据</b>N13 考核等级 · N14 每月奖金等级 k 与保级 · N15 降级 · N16 降级后恢复 · N17 VIP0 · N18 结算期间的实时升级</p></div>
 
-<div class="bp c-cf"><h3>结算时间配置</h3>
-<p class="bp-k"><b>作用</b>后台设定每月结算时刻。</p>
+<div class="bp c-cf"><h3>结算时间</h3>
+<p class="bp-k"><b>作用</b><span class="vmark" data-v="v1.3">每月固定时刻结算上一自然月（用户 2026-11-17）。<button class="vtag" data-v="v1.3">v1.3</button></span></p>
 <div class="bp-k"><b>逻辑</b><ul>
-<li>每月 [1–28] 日 时:分，默认 1 日 13:00。</li>
-<li>考核范围固定为上一自然月，不随结算日变。</li>
-<li>从下一个未到的结算时间点生效；保存弹确认框，不需谷歌验证码。</li>
-<li>结算中（含整次失败待补跑）不能改。</li>
+<li><span class="vmark" data-v="v1.3">由研发配置，固定每月 1 日 04:00:00（GMT+8）开始，后台不提供设置（用户 2026-11-17）。<button class="vtag" data-v="v1.3">v1.3</button></span></li>
+<li>考核范围固定为上一自然月。</li>
+<li><span class="vmark" data-v="v1.3">结算开始为界：撤单归属、投注月份归属；结算完成为起点：每月奖金、生日奖金生成和有效期起算（用户 2026-11-17）。<button class="vtag" data-v="v1.3">v1.3</button></span></li>
 </ul></div>
 <table class="vs-t sc"><colgroup><col class="a"><col></colgroup><thead><tr><th>场景</th><th>方案</th></tr></thead><tbody>
-<tr><td>10-28 改为每月 5 日 02:00</td><td>11-05 02:00 结算 10 月</td></tr>
-<tr><td>本月未结算且新时间已过</td><td>保存后 5 分钟内触发</td></tr>
-<tr><td>结算日 10 日，生日 11-05</td><td>11-10 结算后生成，立即可领；<span class="vmark" data-v="v1.3">有效期从 11-10 起算<button class="vtag" data-v="v1.3">v1.3</button></span></td></tr>
-<tr><td>结算日 10 日，生日 11-20</td><td>11-10 生成，11-20 起可领</td></tr>
+<tr><td><span class="vmark" data-v="v1.3">11-01 00:00 至 04:00 开始的结算完成前<button class="vtag" data-v="v1.3">v1.3</button></span></td><td><span class="vmark" data-v="v1.3">前台仍显示「10 月投注」，结算完成后静默更新（用户 2026-11-17）<button class="vtag" data-v="v1.3">v1.3</button></span></td></tr>
+<tr><td><span class="vmark" data-v="v1.3">生日 11-01<button class="vtag" data-v="v1.3">v1.3</button></span></td><td><span class="vmark" data-v="v1.3">11-01 结算完成后生成，立即可领，有效期从 11-01 起算（用户 2026-11-17）<button class="vtag" data-v="v1.3">v1.3</button></span></td></tr>
+<tr><td><span class="vmark" data-v="v1.3">生日 11-20<button class="vtag" data-v="v1.3">v1.3</button></span></td><td><span class="vmark" data-v="v1.3">11-01 结算生成，11-20 起可领（用户 2026-11-17）<button class="vtag" data-v="v1.3">v1.3</button></span></td></tr>
 </tbody></table>
-<p class="bp-ref"><b>依据</b>N12 统计周期与结算时刻 · N21 资格与生成 · Q43 结算时间可配置后的细节</p></div>
+<p class="bp-ref"><b>依据</b>N12 统计周期与结算时刻 · N21 资格与生成 · Q107 后台去掉结算时间和告警时间设置</p></div>
 
 <div class="bp c-st"><h3>结算未完成</h3>
 <p class="note">参见 <a href="VIP会员体系-需求开发PRD文档.html#n19">PRD 规则 N19：旧月重新结算、继续结算的补奖保护</a>。</p>
@@ -330,10 +324,10 @@
 <li>单人失败：当天自动重试 3 次（间隔由技术确定），仍失败记「未完成」，等级不变、不发<span class="vmark" data-v="v1.3">每月奖金<button class="vtag" data-v="v1.3">v1.3</button></span>，状态「部分完成」。</li>
 <li>整次失败：自动重试 3 次，仍失败为「结算失败」，技术修复后「重新结算」补跑；补跑前配置锁定。</li>
 <li>补结算按考核月生效的配置；<span class="vmark" data-v="v1.3">每月奖金有效期从补结算完成当天起算，生日奖金从生日和补结算完成日中较晚的一天起算<button class="vtag" data-v="v1.3">v1.3</button></span>。</li>
-<li>结算开始 + 30 分钟（可配 10–240）未完成告警，重试结束后再发汇总告警。</li>
+<li><span class="vmark" data-v="v1.3">首次及每月结算都由程序自动执行、无人值守，不要求运营确认「已完成」；结算异常（单人重试后仍失败、整次结算失败、到点未开始、超时未完成）由技术侧监控处理，告知运维值班人员或技术人员，不是运营后台功能，VIP 后台不设告警（Q130，用户 2026-11-18）。<button class="vtag" data-v="v1.3">v1.3</button></span></li>
 <li>下月结算前须补完；跨月未补只阻塞该玩家。</li>
 <li><span class="vmark" data-v="v1.3">失败原因固定 7 类（当月投注数据未就绪、注单回滚或作废、账号状态变化、结算时玩家正在操作、等级配置不一致、数据异常、系统超时或短暂不可用）加「其他」，明细可按原因筛选。<button class="vtag" data-v="v1.3">v1.3</button></span></li>
-<li><span class="vmark" data-v="v1.3">「VIP会员系统」关闭期间可以「重新结算」：关闭期间累计照常统计，考核数据一律截至考核月月末 23:59:59，不因关闭截断（用户 2026-11-09）；考核等级 C 和每月奖金等级上限 H 取考核月最后一天 23:59:59 的值，月末之后的回退不改变该月的 C 和 H；月末快照的 C 或 H 为关闭期间被删除的等级的，按删除重算后的对应等级替代（规则 N55 ②）；奖金生成为待领取，关闭期间不能领、不发通知；重新开启后每月奖金从重新开启当天起算有效期，生日奖金从生日和重新开启日中较晚的一天起算（同规则 N27 ③ⓓ），并发待领取通知；设为自动领取的重新开启时到账，生日奖金除外：生日已到的立即到账，未到的生日当天 00:00 到账（规则 N53 ③ⓒ，用户 2026-11-10）。关闭期间不能「继续结算」；整次结算失败待补跑时关闭，状态保持「结算失败」。<button class="vtag" data-v="v1.3">v1.3</button></span></li>
+<li><span class="vmark" data-v="v1.3">「VIP会员系统」关闭期间可以「重新结算」：关闭期间累计照常统计，考核数据一律截至考核月月末 23:59:59，不因关闭截断（用户 2026-11-09）；考核等级 C 和每月奖金等级上限 H 取考核月最后一天 23:59:59 的值，月末之后的回退不改变该月的 C 和 H；月末快照的 C 或 H 为关闭期间被删除的等级的，按删除重算后的对应等级替代（规则 N55 ②）；奖金生成为待领取，关闭期间不能领、不发通知；重新开启后每月奖金从重新开启当天起算有效期，生日奖金从生日和重新开启日中较晚的一天起算（同规则 N27 ③ⓓ），并发待领取通知（站内信即时生成，推送按 10:00–21:00 发送窗口发，Q132，用户 2026-11-18）；设为自动领取的重新开启时到账，生日奖金除外：生日已到的立即到账，未到的生日当天 00:00 到账（规则 N53 ③ⓒ，用户 2026-11-10）。关闭期间不能「继续结算」；整次结算失败待补跑时关闭，状态保持「结算失败」。<button class="vtag" data-v="v1.3">v1.3</button></span></li>
 <li><span class="vmark" data-v="v1.3">继续结算（已中止的月份）：须先重新开启，不受 28 天限制，按被中止结算点原有的资格执行；每月奖金有效期从完成日、生日奖金从生日与生成日中较晚的一天起算；执行中为「结算中」并锁定配置；权限归「重新结算」。中止的月份到下一个结算点仍未继续的，下一个结算点照常执行，中止月份开启后仍可继续结算。<button class="vtag" data-v="v1.3">v1.3</button></span></li>
 </ul></div>
 <table class="vs-t sc"><colgroup><col class="a"><col></colgroup><thead><tr><th>场景</th><th>方案</th></tr></thead><tbody>
@@ -349,7 +343,7 @@
 <div class="bp-k"><b>逻辑</b><ul>
 <li>跨多级逐级生成，每级 1 笔，终身一次。</li>
 <li>降级后再达、过期未领都不再生成；金额为 0 不生成。</li>
-<li>门槛下调、新增等级触发的（含等级调整补偿）一律先待领取，<span class="vmark" data-v="v1.3">在重新开启「VIP会员系统」时生成，重新开启后<button class="vtag" data-v="v1.3">v1.3</button></span> 24 小时内可整批作废。</li>
+<li>门槛下调、新增等级触发的（含等级调整补偿）一律先待领取，<span class="vmark" data-v="v1.3">在重新开启「VIP会员系统」时生成，活动奖励统计「说明」列标「配置变更」，配错时由运营逐条作废未领取的（没有整批作废，用户 2026-11-17）。<button class="vtag" data-v="v1.3">v1.3</button></span></li>
 <li><span class="vmark" data-v="v1.3">未过期的升级奖金（含等级调整补偿）可与新一笔一起领取（第 18 批 X01）。<button class="vtag" data-v="v1.3">v1.3</button></span></li>
 </ul></div>
 <table class="vs-t sc"><colgroup><col class="a"><col></colgroup><thead><tr><th>场景</th><th>方案</th></tr></thead><tbody>
@@ -358,14 +352,14 @@
 <tr><td>增删等级重算，原等级奖金未领</td><td>作废；新增等级时补 1 笔等级调整补偿（≤ 原金额），<span class="vmark" data-v="v1.3">删除等级时不补偿<button class="vtag" data-v="v1.3">v1.3</button></span></td></tr>
 <tr><td>领过被删等级奖金</td><td>到达的第 1 个新增等级不发</td></tr>
 </tbody></table>
-<p class="bp-ref"><b>依据</b>N9 升级奖金 · N11 门槛修改后的重算 · N23 KYC 限制开启 · N55 增删等级后的重算</p></div>
+<p class="bp-ref"><b>依据</b>N9 升级奖金 · N11 门槛修改后的重算 · <span class="vmark" data-v="v1.3">N23 需完成 KYC<button class="vtag" data-v="v1.3">v1.3</button></span> · N55 增删等级后的重算</p></div>
 
 <div class="bp c-bn"><h3><span class="vmark" data-v="v1.3">每月奖金<button class="vtag" data-v="v1.3">v1.3</button></span><small>前后台统一叫「每月奖金」</small></h3>
 <p class="bp-k"><b>作用</b>每月按当月有效投注档位发放的奖金。</p>
 <div class="bp-k"><b>逻辑</b><ul>
 <li>按 k 级金额生成，保级、恢复、降级都发；k = VIP0 不发。</li>
 <li>每人每个结算月份最多 1 笔。</li>
-<li><span class="vmark" data-v="v1.3">每月奖金标准<button class="vtag" data-v="v1.3">v1.3</button></span>和金额在重新开启时生效，适用于届时尚未结算的考核月份；已结算月份不变。</li>
+<li><span class="vmark" data-v="v1.3">月度流水门槛<button class="vtag" data-v="v1.3">v1.3</button></span>和每月奖金金额在重新开启时生效，适用于届时尚未结算的考核月份；已结算月份不变。</li>
 <li>结算完成时生成，有效期从当天起算。</li>
 </ul></div>
 <table class="vs-t sc"><colgroup><col class="a"><col></colgroup><thead><tr><th>场景</th><th>方案</th></tr></thead><tbody>
@@ -379,17 +373,19 @@
 <p class="bp-k"><b>作用</b>每年一次的生日福利。</p>
 <div class="bp-k"><b>逻辑</b><ul>
 <li>生日所在月结算完成时，按结算后等级生成；之后升降不改金额。</li>
-<li>条件：有 KYC 出生日期；结算后 ≥ VIP1 且金额 &gt; 0；<span class="vmark" data-v="v1.3">「VIP会员系统」开启<button class="vtag" data-v="v1.3">v1.3</button></span>。</li>
-<li><span class="vmark" data-v="v1.3">以 KYC 认证的出生日期为准，不可修改（完成 KYC = 后台 KYC 状态为「已认证」，用户 2026-11-09）。「不可修改」指 VIP 不跟着改：现有改生日入口沿用现有、不做改动，生日奖金只认生成时 KYC 记录的出生日期，当年已生成的不重发、不作废（用户 2026-11-10）。<button class="vtag" data-v="v1.3">v1.3</button></span></li>
-<li>同一 KYC 身份同年只发 1 个账号（先生成的，同批取注册最早）。</li>
-<li>生日当天 00:00 起可领（奖金在生日之后才生成的，生成时起可领）；<span class="vmark" data-v="v1.3">有效期起算日 = 生日和奖金生成日中较晚的一天（用户 2026-11-02）<button class="vtag" data-v="v1.3">v1.3</button></span>；每人每年 1 笔。</li>
+<li>条件：<span class="vmark" data-v="v1.3">已完成 KYC（完全认证）且有 KYC 出生日期（用户 2026-11-18）<button class="vtag" data-v="v1.3">v1.3</button></span>；结算后 ≥ VIP1 且金额 &gt; 0；<span class="vmark" data-v="v1.3">「VIP会员系统」开启<button class="vtag" data-v="v1.3">v1.3</button></span>。</li>
+<li><span class="vmark" data-v="v1.3">以 KYC 认证的出生日期为准，不可修改（完成 KYC = 后台 KYC 状态为「完全认证」，用户 2026-11-18）。「不可修改」指 VIP 不跟着改：现有改生日入口沿用现有、不做改动，生日奖金只认生成时 KYC 记录的出生日期，当年已生成的不重发、不作废（用户 2026-11-10）。<button class="vtag" data-v="v1.3">v1.3</button></span></li>
+<li>同一 KYC 身份同年只发 1 个账号（先生成的，同批取注册最早）。<span class="vmark" data-v="v1.3">在每个站点内各自判断，同一身份在 789Games、789Bingo 可各领 1 笔（用户 2026-11-17）。<button class="vtag" data-v="v1.3">v1.3</button></span></li>
+<li>生日当天 00:00 起可领（奖金在生日之后才生成的，生成时起可领）；<span class="vmark" data-v="v1.3">有效期起算日 = 生日和奖金生成日中较晚的一天（用户 2026-11-02）<button class="vtag" data-v="v1.3">v1.3</button></span>；<span class="vmark" data-v="v1.3">每个账号每个自然年最多 1 笔，同一 KYC 身份在同一站点每个自然年也最多 1 笔（用户 2026-11-18）<button class="vtag" data-v="v1.3">v1.3</button></span>。</li>
 </ul></div>
 <table class="vs-t sc"><colgroup><col class="a"><col></colgroup><thead><tr><th>场景</th><th>方案</th></tr></thead><tbody>
 <tr><td>生日 10-13，结算后 VIP14</td><td>₱488，10-13 至 10-27 可领</td></tr>
 <tr><td>结算后降为 VIP5</td><td>按 VIP5 发 ₱88</td></tr>
 <tr><td>生日在 1 日</td><td>结算前显示「待发放」，结算完成后可领；<span class="vmark" data-v="v1.3">有效期从结算完成当天起算<button class="vtag" data-v="v1.3">v1.3</button></span></td></tr>
 <tr><td>结算后为 VIP0，或结算后才完成 KYC</td><td>当年不生成、不补</td></tr>
+<tr><td><span class="vmark" data-v="v1.3">KYC 完全认证但没有出生日期<button class="vtag" data-v="v1.3">v1.3</button></span></td><td><span class="vmark" data-v="v1.3">不生成生日奖金，不发生日提醒（用户 2026-11-18）<button class="vtag" data-v="v1.3">v1.3</button></span></td></tr>
 <tr><td>2 月 29 日生日</td><td>非闰年按 2 月 28 日</td></tr>
+<tr><td><span class="vmark" data-v="v1.3">同一 KYC 身份在两站都有账号<button class="vtag" data-v="v1.3">v1.3</button></span></td><td><span class="vmark" data-v="v1.3">两站各按本站等级生成 1 笔，互不影响（用户 2026-11-17）<button class="vtag" data-v="v1.3">v1.3</button></span></td></tr>
 </tbody></table>
 <p class="bp-ref"><b>依据</b>N20 金额 · N21 资格与生成 · N22 领取与有效期</p></div>
 
@@ -421,14 +417,15 @@
 <p class="bp-k"><b>作用</b>拦截风险账号的奖金，由运营人工处理。</p>
 <div class="bp-k"><b>逻辑</b><ul>
 <li>触发：账号冻结（含原因「自我排除」）、风险分 ≥ 70、禁止投注、临时冻结；40–69 照常。</li>
-<li>等级照算，奖金为「暂停发放（风控）」；暂停期间不发 VIP 通知，解除后不补发；放行时按放行结果发待领取或已到账通知。</li>
+<li>等级照算，奖金为「暂停发放（风控）」；暂停期间不发 VIP 通知，解除后不补发；<span class="vmark" data-v="v1.3">放行后恢复为待领取的发待领取通知（站内信即时生成，推送按 10:00–21:00 发送窗口发、窗口外顺延，Q132），直接到账的不发通知（Q126，用户 2026-11-18）<button class="vtag" data-v="v1.3">v1.3</button></span>。</li>
+<li><span class="vmark" data-v="v1.3">暂停原因为「未完成 KYC（KYC 被撤销）」的不能放行：「确认放行」置灰，提示「该会员 KYC 已被撤销，重新完成 KYC 后自动恢复」；可以作废（用户 2026-11-18）。<button class="vtag" data-v="v1.3">v1.3</button></span></li>
 <li>解除后不自动恢复，运营逐条放行或作废。</li>
 <li>放行：手动领取的恢复待领取（有效期不顺延，已过期直接到账）；自动领取的直接到账<span class="vmark" data-v="v1.3">（生日奖金在生日前放行的，生日当天到账）<button class="vtag" data-v="v1.3">v1.3</button></span>；<span class="vmark" data-v="v1.3">玩家仍处于风控暂停状态时不能放行（原因为「撤单复核」的不受此限；原因为「领取结果异常」的同样受此限制，用户 2026-11-10）<button class="vtag" data-v="v1.3">v1.3</button></span><span class="vmark" data-v="v1.3">；该玩家全部「撤单复核」记录都放行或作废后视为复核解除，之后新生成的奖金按正常规则处理（用户 2026-11-10）<button class="vtag" data-v="v1.3">v1.3</button></span>。</li>
 <li><span class="vmark" data-v="v1.3">暂停原因为「领取结果异常」（规则 N29，不算玩家处于风控暂停）的，放行一律直接到账，不恢复为待领取；仍受「玩家仍在风控暂停时不能放行」和「生日奖金生日当天起才能到账」的限制。<button class="vtag" data-v="v1.3">v1.3</button></span></li>
 <li>补发：只对人工作废、发放失败的原记录，最多 1 次，直接到账<span class="vmark" data-v="v1.3">；生日前的生日奖金不能补发，生日当天起才能补发<button class="vtag" data-v="v1.3">v1.3</button></span>。</li>
-<li><span class="vmark" data-v="v1.3">领取中（领取结果未确认，规则 N29）：前台提示「领取处理中，请稍后查看」，该行显示「领取中…」、不可点，不计入「领取 ₱x」、红点和待领取奖金通知；确认前任何入口都不能再领或补发；后台不能放行、作废、补发、整批作废，不列入关闭系统确认框；确认后为已到账、待领取或暂停发放（领取结果异常）。<button class="vtag" data-v="v1.3">v1.3</button></span></li>
+<li><span class="vmark" data-v="v1.3">领取中（领取结果未确认，规则 N29）：前台提示「领取处理中，请稍后查看」，该行显示「领取中…」、不可点，不计入「领取 ₱x」、红点和待领取奖金通知；确认前任何入口都不能再领或补发；后台不能放行、作废、补发，不计入关闭系统确认框的待领取合计；确认后为已到账、待领取或暂停发放（领取结果异常）。<button class="vtag" data-v="v1.3">v1.3</button></span></li>
 <li>作废和补发不能同一账号；<span class="vmark" data-v="v1.3">不设第二人审批，放行、补发不分金额，确认后直接执行（用户 2026-10-31）<button class="vtag" data-v="v1.3">v1.3</button></span>。</li>
-<li><span class="vmark" data-v="v1.3">VIP会员系统关闭期间放行的手动领取类奖金直接到账（生日前的生日奖金除外：只解除暂停、改为待领取，生日前不可领，重新开启后按原可领日领取，规则 N32 ⑤，用户 2026-11-09），并发已到账通知（用户 2026-11-02）。<button class="vtag" data-v="v1.3">v1.3</button></span></li>
+<li><span class="vmark" data-v="v1.3">VIP会员系统关闭期间放行的手动领取类奖金直接到账（生日前的生日奖金除外：只解除暂停、改为待领取，生日前不可领，重新开启后按原可领日领取，规则 N32 ⑤，用户 2026-11-09），不发到账通知（Q126，用户 2026-11-18）。<button class="vtag" data-v="v1.3">v1.3</button></span></li>
 </ul></div>
 <table class="vs-t sc"><colgroup><col class="a"><col></colgroup><thead><tr><th>场景</th><th>方案</th></tr></thead><tbody>
 <tr><td>风险分 75 时升级</td><td><span class="vmark" data-v="v1.3">照常弹现网升级弹窗，只显示恭喜升级和等级，不显示奖金行<button class="vtag" data-v="v1.3">v1.3</button></span></td></tr>
@@ -446,19 +443,21 @@
 <li><span class="vmark" data-v="v1.3">升级：任何页面（含第三方游戏页）只弹平台现网升级弹窗，画面、音效、分档和 3 秒内合并沿用现网（自动关闭时长和画面分档由技术确定）；标题「Congratulations! You've leveled up to VIPn!」；弹窗内不设「查看权益」（用户 2026-10-31）。<button class="vtag" data-v="v1.3">v1.3</button></span></li>
 <li><span class="vmark" data-v="v1.3">有手动领取金额：只显示手动领取的金额 +「领取」，没有 ×、不自动关闭；领取失败不关闭、可重试，风控命中或已在别处领取提示后关闭；一次领多笔部分失败时成功的到账，弹窗只留失败金额并提示重试；某笔恰好已被作废时提示「奖金已失效」，这笔从弹窗去掉、其余照常，只剩这笔时关闭（用户 2026-11-02）。<span class="vmark" data-v="v1.3">领取失败时同样不显示 ×，在「领取」下方显示「稍后再领」：点击关闭弹窗，奖金保持待领取、截止日期不变，不再补弹，次日起计入待领取奖金通知（用户 2026-11-06）。<button class="vtag" data-v="v1.3">v1.3</button></span>没有手动领取金额（全部自动、风控暂停，或各级升级奖金都为 0）：按现网时长自动关闭（由技术确定），可点 ×；合计只算大于 0 的等级。<button class="vtag" data-v="v1.3">v1.3</button></span></li>
 <li>跨多级、连续升级、KYC 定级只显示最终等级和合计；<span class="vmark" data-v="v1.3">弹窗未领取就退出 App、刷新或断线的，下次进入平台原生页面补弹（不重放动画音效），直到领取、过期、风控暂停、系统关闭或被作废；补弹排在待领取奖金通知之前。<button class="vtag" data-v="v1.3">v1.3</button></span></li>
-<li>待领取奖金通知：每天首次进入平台原生页面弹 1 次，合并手动领取的待领奖金；<span class="vmark" data-v="v1.3">升级当天不叠加（「升级当天」只指首次弹出升级弹窗的那一天，不按升级时间所在的自然日；之后的补弹日照常弹，排在补弹之后，不重复列补弹里的升级奖金）；生日奖金单独弹出的当天，排在生日弹窗之后，不重复列生日奖金；<button class="vtag" data-v="v1.3">v1.3</button></span>「查看权益」定位当前等级卡，有待领取的等级在刻度上显示红点、该卡显示「领取 ₱x」按钮；<span class="vmark" data-v="v1.3">通知按钮只有「领取」「查看权益」，没有 ×，点遮罩或按 Esc 不关闭，全部领取失败时弹窗不关（用户 2026-11-05）。<button class="vtag" data-v="v1.3">v1.3</button></span></li>
-<li>站内信、推送：生成待领取时发（写截止日期，英文如「Oct 27」）；<span class="vmark" data-v="v1.3">等级调整补偿生成时不发，到账用「升级奖金已到账」那条<button class="vtag" data-v="v1.3">v1.3</button></span>；<span class="vmark" data-v="v1.3">已到账通知只在自动领取到账、放行或补发直接到账、关闭 VIP会员系统时手动发放到账时发，玩家自己点领取到账时不发；标题和正文由运营在「通知配置」输入，每条可分别关闭站内信或推送；一次升多级只发 1 条（用户 2026-11-02）。<button class="vtag" data-v="v1.3">v1.3</button></span></li>
+<li>待领取奖金通知：每天首次进入平台原生页面弹 1 次，合并手动领取的待领奖金；<span class="vmark" data-v="v1.3">升级当天不叠加（「升级当天」只指首次弹出升级弹窗的那一天，不按升级时间所在的自然日；之后的补弹日照常弹，排在补弹之后，不重复列补弹里的升级奖金）；生日奖金单独弹出的当天，排在生日弹窗之后，不重复列生日奖金；<button class="vtag" data-v="v1.3">v1.3</button></span><span class="vmark" data-v="v1.3">每月奖金领取弹窗弹出的当天同样不列这笔每月奖金，次日起提醒（用户 2026-11-17）；<button class="vtag" data-v="v1.3">v1.3</button></span>「查看权益」定位当前等级卡，有待领取的等级在刻度上显示红点、该卡显示「领取 ₱x」按钮；<span class="vmark" data-v="v1.3">通知按钮只有「领取」「查看权益」，没有 ×，点遮罩或按 Esc 不关闭，全部领取失败时弹窗不关（用户 2026-11-05）。<button class="vtag" data-v="v1.3">v1.3</button></span></li>
+<li>站内信、推送：生成待领取时发（写截止日期，英文如「Oct 27」）；<span class="vmark" data-v="v1.3">发送时间：站内信触发时即时生成；推送只在每天 10:00–21:00（GMT+8）发，升级奖金生成时发，每月奖金结算完成后发，生日奖金生日当天发，窗口外触发的顺延到下一个窗口，见下方「通知配置与短信」（Q127、Q129，用户 2026-11-18）<button class="vtag" data-v="v1.3">v1.3</button></span>；<span class="vmark" data-v="v1.3">等级调整补偿生成时不发，到账时也不发（Q126，用户 2026-11-18）<button class="vtag" data-v="v1.3">v1.3</button></span>；<span class="vmark" data-v="v1.3">奖金到账不发站内信和推送（自动领取到账、放行或补发直接到账、关闭 VIP会员系统时手动发放到账、玩家自己点领取到账都不发，Q126，用户 2026-11-18）；标题和正文由运营在「通知配置」输入，每条可分别关闭站内信或推送；一次升多级只发 1 条（用户 2026-11-02）。<button class="vtag" data-v="v1.3">v1.3</button></span></li>
 <li><span class="vmark" data-v="v1.3">升级弹窗本身不埋点，领取操作仍记录奖金领取事件（用户 2026-11-02）。<button class="vtag" data-v="v1.3">v1.3</button></span></li>
 <li>弹窗顺序：强制公告 &gt; VIP 弹窗 &gt; 活动弹窗，同时只显示一个。</li>
 </ul></div>
 <table class="vs-t sc"><colgroup><col class="a"><col></colgroup><thead><tr><th>场景</th><th>方案</th></tr></thead><tbody>
 <tr><td>第三方游戏页无法叠加</td><td><span class="vmark" data-v="v1.3">游戏中不弹，回到平台页面再弹<button class="vtag" data-v="v1.3">v1.3</button></span></td></tr>
-<tr><td>升级奖金自动领取</td><td><span class="vmark" data-v="v1.3">弹窗奖金行显示到账金额，自动关闭；另发到账站内信和推送<button class="vtag" data-v="v1.3">v1.3</button></span></td></tr>
+<tr><td>升级奖金自动领取</td><td><span class="vmark" data-v="v1.3">弹窗奖金行显示到账金额，自动关闭；不发到账短信、站内信和推送（Q126，用户 2026-11-18）<button class="vtag" data-v="v1.3">v1.3</button></span></td></tr>
 <tr><td>升级手动 + 生日自动，3 秒内合并</td><td><span class="vmark" data-v="v1.3">只显示手动领取的升级奖金和「领取」<button class="vtag" data-v="v1.3">v1.3</button></span></td></tr>
 <tr><td>风控暂停</td><td>弹窗只显示等级，不发站内信、推送</td></tr>
 <tr><td>三类都自动领取</td><td>没有配置变更批次、切换前手动存量等可手动领取记录时，才不弹待领取奖金通知</td></tr>
-<tr><td>上线结算、月结恢复、增删等级重算、KYC 限制关闭定级、<span class="vmark" data-v="v1.3">VIP会员系统关闭期间<button class="vtag" data-v="v1.3">v1.3</button></span></td><td>不弹升级弹窗</td></tr>
-<tr><td><span class="vmark" data-v="v1.3">生日奖金手动领取<button class="vtag" data-v="v1.3">v1.3</button></span></td><td><span class="vmark" data-v="v1.3">单独弹出时显示「₱x 生日奖金待领取」和「领取」，可在弹窗领取，没领的不补弹（在 VIP中心和待领取奖金通知领取）；自动领取时沿用现网生日弹窗；与升级合并且都手动时同一弹窗分两行显示升级奖金和生日奖金，点「领取」一起领取；升级自动 + 生日手动时为同一个弹窗：第一行升级奖金到账金额，第二行「₱x 生日奖金待领取」和「领取」；按生日单独弹出的规则处理（没有 ×、不补弹，用户 2026-11-10）</span></td></tr>
+<tr><td>上线结算、月结恢复、增删等级重算、<span class="vmark" data-v="v1.3">VIP会员系统关闭期间<button class="vtag" data-v="v1.3">v1.3</button></span></td><td>不弹升级弹窗</td></tr>
+<tr><td><span class="vmark" data-v="v1.3">生日奖金手动领取<button class="vtag" data-v="v1.3">v1.3</button></span></td><td><span class="vmark" data-v="v1.3">单独弹出时用统一领取弹窗（现网升级弹窗的样式和交互，标题「生日快乐！」，用户 2026-11-17），显示「₱x 生日奖金待领取」和「领取」，可在弹窗领取，没领的不补弹（在 VIP中心和待领取奖金通知领取）；自动领取时沿用现网生日弹窗；与升级合并且都手动时同一弹窗分两行显示升级奖金和生日奖金，点「领取」一起领取；升级自动 + 生日手动时为同一个弹窗：第一行升级奖金到账金额，第二行「₱x 生日奖金待领取」和「领取」；按生日单独弹出的规则处理（没有 ×、不补弹，用户 2026-11-10）；1 日生日玩家在当月结算完成前已进入过平台的，结算完成后首次进入时弹 1 次生日弹窗，与每月奖金弹窗合并为一个弹窗（用户 2026-11-18）</span></td></tr>
+<tr><td><span class="vmark" data-v="v1.3">每月奖金手动领取<button class="vtag" data-v="v1.3">v1.3</button></span></td><td><span class="vmark" data-v="v1.3">月度结算生成该玩家的每月奖金后，玩家第一次进入平台原生页面时弹统一领取弹窗「{M} 月每月奖金来了！」+「₱x 每月奖金待领取」+「领取」，弹 1 次、不补弹，第三方游戏页不弹；失败时显示「稍后再领」；当天待领取奖金通知不列这笔，次日起提醒；自动领取、暂停发放（风控）、「VIP会员系统」关闭、账号状态不符时不弹（用户 2026-11-17）；同时有多笔待领取每月奖金（补结算的上月 + 当月）时弹窗每笔一行、标月份（与详情一致），标题 {M} 取最新月份，首次进入时已不是待领取的（已过期、已作废、已发放）不弹（用户 2026-11-18）</span></td></tr>
+<tr><td><span class="vmark" data-v="v1.3">多类同时要弹<button class="vtag" data-v="v1.3">v1.3</button></span></td><td><span class="vmark" data-v="v1.3">同一次进入有升级、生日、每月中两类以上手动领取奖金要弹的，合并为一个弹窗，按升级、生日、每月分行，标题取排在最前一类；点一次「领取」全部领取，部分失败只留失败的那行；合并里的升级奖金仍补弹，生日、每月不补弹（用户 2026-11-17）</span></td></tr>
 <tr><td><span class="vmark" data-v="v1.3">VIP会员系统关闭后点旧 VIP 站内信、推送<button class="vtag" data-v="v1.3">v1.3</button></span></td><td><span class="vmark" data-v="v1.3">关闭前和关闭期间发出的都只显示内容、不跳转；直接打开 VIP中心链接回平台首页（用户 2026-11-02）</span></td></tr>
 </tbody></table>
 <p class="bp-ref"><b>依据</b>N34 现网升级弹窗 · N37 站内信与 APP 推送 · N56 待领取奖金通知 · N46 老版本 App · N27 VIP 体系关闭 · Q78 系统关闭后旧通知不跳转</p></div>
@@ -467,56 +466,61 @@
 <p class="note">参见 <a href="VIP会员体系-需求开发PRD文档.html#notify-actual-length">PRD 第 6 章：通知发送时实际长度校验及超长处理</a>。</p>
 <p class="bp-k"><b>作用</b>运营配置 VIP 短信、站内信和推送的发送与内容。</p>
 <div class="bp-k"><b>逻辑</b><ul>
-<li><span class="vmark" data-v="v1.3">后台「通知配置」：顶部免打扰时段（默认 21:00:00–09:59:59，开始 = 结束表示不设，顺延到时段结束后发送）；每条可勾选「遵守免打扰」（默认勾选）。<button class="vtag" data-v="v1.3">v1.3</button></span></li>
-<li><span class="vmark" data-v="v1.3">短信 2 条、站内信与推送 6 条（升级 / 每月 / 生日 × 待领取 / 已到账）的内容由运营手动输入，对外只发英文（变量按英文输出，如 {截止日期}「Oct 27」、{月份}「Oct」、{奖金类型}「Upgrade Bonus」）：正文 ≤ 500 字、标题 ≤ 50 字，按变量替换后的英文最长取值计算；保存后一直保留，取消勾选不清空，未保存的修改刷新后丢弃（用户 2026-10-31、11-02）。<button class="vtag" data-v="v1.3">v1.3</button></span></li>
+<li><span class="vmark" data-v="v1.3">VIP「通知消息配置」只管生日提醒短信、3 条待领取站内信和推送的发送开关和内容（用户 2026-11-17）；本需求不设免打扰和不发送短信的金额区间，没有「遵守免打扰」勾选；短信和推送发送时间固定为每天 10:00–21:00（GMT+8），站内信即时生成（Q129，用户 2026-11-18）。<button class="vtag" data-v="v1.3">v1.3</button></span></li>
+<li><span class="vmark" data-v="v1.3">短信 1 条（生日提醒）、站内信与推送 3 条（升级 / 每月 / 生日奖金待领取）的内容由运营手动输入；奖金到账不发短信、站内信和推送（Q126，用户 2026-11-18）。对外只发英文（变量按英文输出，如 {截止日期}「Oct 27」、{月份}「Oct」）：正文 ≤ 500 字、标题 ≤ 50 字，按变量替换后的英文最长取值计算；保存后一直保留，取消勾选不清空，未保存的修改刷新后丢弃（用户 2026-10-31、11-02）。<button class="vtag" data-v="v1.3">v1.3</button></span></li>
 <li><span class="vmark" data-v="v1.3">站内信与推送配置区每条可分别勾选「站内信」「推送」，都不勾选 = 该条不发。<button class="vtag" data-v="v1.3">v1.3</button></span></li>
+<li><span class="vmark" data-v="v1.3">发送时间（技术写死、后台不设置）：VIP 短信和待领取 APP 推送只在每天 10:00–21:00（GMT+8）发送；触发时在窗口内的立即发，不在窗口内的顺延到下一个窗口（10:00 前触发的当天 10:00 发，21:00 后触发的次日 10:00 发）；待领取站内信在触发时即时生成，不受此限（用户 2026-11-18）。触发时机：① 升级奖金待领取：奖金生成时；② 每月奖金待领取：当月结算完成时；补结算、重新结算、单人补结算生成的，生成时；③ 生日：生日提醒短信和生日奖金待领取在玩家生日当天，1 日生日在当月结算完成时，生日奖金在生日当天或之后才生成的（Q120 补发）在生成时；④ 运营放行、KYC 解冻、重新开启「VIP会员系统」后恢复为待领取的，在恢复时（Q127、Q129、Q132，用户 2026-11-18）。<button class="vtag" data-v="v1.3">v1.3</button></span></li>
 <li><span class="vmark" data-v="v1.3">「通知配置」是同一个页签：短信在上、站内信与推送在下，默认全部展开；点「保存通知配置」只保存本页，不需要谷歌验证码；站内信和推送沿用平台现有站内信和 OneSignal 推送通道。<button class="vtag" data-v="v1.3">v1.3</button></span></li>
-<li><span class="vmark" data-v="v1.3">到账提醒：默认勾选；发送范围同已到账通知（自动领取到账、放行或补发直接到账、关闭 VIP会员系统时手动发放到账），跨多级合并 1 条；批量手动发放时每个玩家每种奖金类型合并 1 条；三种都手动领取时也可勾选。<button class="vtag" data-v="v1.3">v1.3</button></span></li>
-<li><span class="vmark" data-v="v1.3">生日提醒：只向生日奖金为手动领取的玩家发送，每人每年最多 1 条；修改发送时间时确认框提示受影响人数，新时间点已过且本年未发的当天补发 1 条；默认勾选，时间点可选（生日所在月结算完成后 / 前三天 / 前一天 / 当天，默认当天，后三项 10:00 发）；发送时奖金还没生成的，金额按当前等级生日奖金、截止日期按「生日和结算日中较晚的一天 + 有效期 − 1」预计。<button class="vtag" data-v="v1.3">v1.3</button></span></li>
-<li>沿用平台现有短信通道；金额写「PHP」；&lt; ₱1 不发短信；短信量和费用由技术评估，沿用现有机制。</li>
-<li><span class="vmark" data-v="v1.3">免打扰顺延的消息发送前复查：待领取类须奖金仍待领取、系统开启、仍勾选；已到账类只看仍勾选；内容按发送时配置，金额和截止日期按触发时；改时段按新时段重算；时段结束后分批发送（用户 2026-11-02）。<button class="vtag" data-v="v1.3">v1.3</button></span></li>
+<li><span class="vmark" data-v="v1.3">奖金到账（含自动领取、放行或补发直接到账、关闭 VIP会员系统时「确认发放」到账）不发 VIP 的到账短信、站内信和推送（Q126）；到账产生账变的，按平台现有账变短信规则发送账变短信，VIP 不另设（Q133，用户 2026-11-18）。<button class="vtag" data-v="v1.3">v1.3</button></span></li>
+<li><span class="vmark" data-v="v1.3">生日提醒：只向生日奖金为手动领取、今年生日奖金为待领取的玩家发送，每人每年最多 1 条；默认勾选；发送时间由技术写死、后台不设置：生日当天 10:00–21:00（GMT+8）发，1 日生日在该玩家当月结算完成后发（补结算的在补结算完成后发），都按 10:00–21:00 发送窗口，窗口外顺延（Q127、Q129，用户 2026-11-18）；金额和截止日期按该笔生日奖金的实际值，发送前复查仍为待领取才发（用户 2026-11-17）。2 日至月末生日、生日当天 10:00 生日奖金还没生成的（补结算、重新结算、继续结算后才生成），奖金生成后补发 1 条（按发送窗口，生日之后某天 10:00 前生成的当天 10:00 发），与 1 日生日一致（用户 2026-11-18）。<button class="vtag" data-v="v1.3">v1.3</button></span></li>
+<li>沿用平台现有短信通道；金额写「PHP」；<span class="vmark" data-v="v1.3">生日提醒短信不按金额判断是否发送（Q129，用户 2026-11-18）<button class="vtag" data-v="v1.3">v1.3</button></span>；短信量和费用由技术评估，沿用现有机制。</li>
+<li><span class="vmark" data-v="v1.3">顺延到下一个发送窗口的消息发送前复查：待领取类须奖金仍待领取、系统开启、该条仍勾选（奖金到账不发通知，Q126）；内容按发送时配置，金额和截止日期按触发时；每天 10:00 集中发出的由系统分批发送，节奏由技术确定（Q129，用户 2026-11-18）。<button class="vtag" data-v="v1.3">v1.3</button></span></li>
 </ul></div>
 <table class="vs-t sc"><colgroup><col class="a"><col></colgroup><thead><tr><th>场景</th><th>方案</th></tr></thead><tbody>
-<tr><td>玩家自己点领取到账</td><td>不发短信、站内信和推送</td></tr>
-<tr><td>21:30 自动到账</td><td>勾选「遵守免打扰」时短信、推送次日 10:00 发，站内信即时</td></tr>
-<tr><td>风控暂停、VIP会员系统关闭、未完成 KYC（限制开启）<span class="vmark" data-v="v1.3">、生日奖金为自动领取、自我限制 / 冷静期（用户 2026-11-10）<button class="vtag" data-v="v1.3">v1.3</button></span></td><td>生日提醒不发</td></tr>
+<tr><td><span class="vmark" data-v="v1.3">奖金到账（玩家自己领取、自动领取、放行或补发直接到账、关闭时确认发放）<button class="vtag" data-v="v1.3">v1.3</button></span></td><td><span class="vmark" data-v="v1.3">不发 VIP 的短信、站内信和推送（Q126）；产生账变的按平台现有账变短信规则发账变短信（Q133，用户 2026-11-18）<button class="vtag" data-v="v1.3">v1.3</button></span></td></tr>
+<tr><td><span class="vmark" data-v="v1.3">21:30 生成升级奖金（待领取）<button class="vtag" data-v="v1.3">v1.3</button></span></td><td><span class="vmark" data-v="v1.3">待领取站内信 21:30 即时生成；推送顺延到次日 10:00 发，发送前已领取的不发（Q129，用户 2026-11-18）<button class="vtag" data-v="v1.3">v1.3</button></span></td></tr>
+<tr><td><span class="vmark" data-v="v1.3">每月 1 日结算在 09:00 完成 / 10:30 完成<button class="vtag" data-v="v1.3">v1.3</button></span></td><td><span class="vmark" data-v="v1.3">每月奖金待领取推送：09:00 完成的 10:00 发；10:30 完成的完成后发；站内信在结算完成时即时生成（Q127、Q129，用户 2026-11-18）<button class="vtag" data-v="v1.3">v1.3</button></span></td></tr>
+<tr><td><span class="vmark" data-v="v1.3">玩家生日（含 1 日生日）<button class="vtag" data-v="v1.3">v1.3</button></span></td><td><span class="vmark" data-v="v1.3">生日提醒短信和生日奖金待领取推送在生日当天 10:00–21:00 发，1 日生日在当月结算完成后、10:00–21:00 内发；生日奖金待领取站内信在生日当天（1 日生日在结算完成时）即时生成（Q127、Q129，用户 2026-11-18）<button class="vtag" data-v="v1.3">v1.3</button></span></td></tr>
+<tr><td><span class="vmark" data-v="v1.3">运营 05:00 放行、手动领取的奖金恢复为待领取<button class="vtag" data-v="v1.3">v1.3</button></span></td><td><span class="vmark" data-v="v1.3">待领取站内信放行时即时生成；推送当天 10:00 发，22:00 放行的次日 10:00 发（Q132，用户 2026-11-18）<button class="vtag" data-v="v1.3">v1.3</button></span></td></tr>
+<tr><td>风控暂停、VIP会员系统关闭、未完成 KYC<span class="vmark" data-v="v1.3">、生日奖金为自动领取、自我限制 / 冷静期（用户 2026-11-10）<button class="vtag" data-v="v1.3">v1.3</button></span></td><td>生日提醒不发</td></tr>
 <tr><td><span class="vmark" data-v="v1.3">内容为空、超长或含本条没有的变量<button class="vtag" data-v="v1.3">v1.3</button></span></td><td><span class="vmark" data-v="v1.3">标红、不保存，直接定位到第一个出错字段并展开该条<button class="vtag" data-v="v1.3">v1.3</button></span></td></tr>
 </tbody></table>
-<p class="bp-ref"><b>依据</b>N35 到账提醒短信 · N36 生日提醒 · N37 站内信与 APP 推送 · N38 免打扰时段 · N39 短信金额写法</p></div>
+<p class="bp-ref"><b>依据</b>N35 到账不发通知（Q126） · N36 生日提醒 · N37 站内信与 APP 推送 · N38 发送时间 · N39 短信金额写法<span class="vmark" data-v="v1.3"> · Q127 待领取提醒发送时间 · Q129 发送时间窗 · Q132 恢复为待领取的通知 · Q133 账变短信（用户 2026-11-18）<button class="vtag" data-v="v1.3">v1.3</button></span></p></div>
 
 <div class="bp c-cf"><h3>新增和删除等级</h3>
 <p class="bp-k"><b>作用</b>运营调整等级数量。</p>
 <div class="bp-k"><b>逻辑</b><ul>
 <li>新增：加在最高一级之上，名为 SUPER VIP，原 SUPER VIP 改名 VIPn；一次 1 级、不设上限、单独保存。</li>
 <li><span class="vmark" data-v="v1.3">新等级三项奖金在等级表新增行里填写（默认 0），影响预览里只核对、不填写（用户 2026-10-31）。<button class="vtag" data-v="v1.3">v1.3</button></span></li>
-<li>删除：只能删最高一级，<span class="vmark" data-v="v1.3">不能撤销；被删等级未领取的升级奖金作废、不补偿<button class="vtag" data-v="v1.3">v1.3</button></span>；至少保留 1 个 VIP 等级。</li>
+<li>删除：只能删最高一级，<span class="vmark" data-v="v1.3">不能撤销；被删等级未领取的升级奖金作废、不补偿<button class="vtag" data-v="v1.3">v1.3</button></span>；至少保留 1 个 VIP 等级<span class="vmark" data-v="v1.3">；该级已有玩家（本站当前等级为该级的人数大于 0）时不能删除，「删除」置灰，提示「该等级已有 N 名玩家，不能删除」（Q128，用户 2026-11-18）<button class="vtag" data-v="v1.3">v1.3</button></span>。</li>
 <li><span class="vmark" data-v="v1.3">重新开启「VIP会员系统」时全部玩家重算<button class="vtag" data-v="v1.3">v1.3</button></span>：不弹窗、不发站内信、不算降级。</li>
-<li><span class="vmark" data-v="v1.3">修改等级表（门槛、三种奖金、每月奖金标准、新增 / 删除等级）须先关闭「VIP会员系统」：开启时等级表置灰，提示「请先关闭 VIP会员系统再修改」；关闭期间保存只做影响预览试算并保存配置，作废、重算、生成奖金在重新开启时统一执行；其他配置保持现方式。<button class="vtag" data-v="v1.3">v1.3</button></span></li>
+<li><span class="vmark" data-v="v1.3">修改等级表（门槛、三种奖金、月度流水门槛、新增 / 删除等级）须先关闭「VIP会员系统」：开启时等级表置灰，提示「请先关闭 VIP会员系统再修改」；关闭期间保存只做影响预览试算并保存配置，作废、重算、生成奖金在重新开启时统一执行；其他配置保持现方式。<button class="vtag" data-v="v1.3">v1.3</button></span></li>
 <li>结算期间、重算期间不能增删。</li>
 <li><span class="vmark" data-v="v1.3">新增等级只能加在最高一级之后，三项门槛都必须大于当前最高一级的对应门槛；新增的等级从重新开启时起参与还没结算的月份的考核；已删除的等级不再作为每月奖金等级 k 的候选。<button class="vtag" data-v="v1.3">v1.3</button></span></li>
 </ul></div>
 <table class="vs-t sc"><colgroup><col class="a"><col></colgroup><thead><tr><th>场景</th><th>方案</th></tr></thead><tbody>
 <tr><td>原最高级奖金已领，累计够新等级</td><td>升到新等级，不发新等级奖金</td></tr>
 <tr><td>原最高级 ₱118,888 未领，新等级 ₱188,888</td><td>原记录作废，补偿 ₱118,888 待领取</td></tr>
+<tr><td><span class="vmark" data-v="v1.3">删除最高级，该级有 1 名玩家<button class="vtag" data-v="v1.3">v1.3</button></span></td><td><span class="vmark" data-v="v1.3">不能删除，提示「该等级已有 1 名玩家，不能删除」；0 名时才能删除（用户 2026-11-18）<button class="vtag" data-v="v1.3">v1.3</button></span></td></tr>
 <tr><td>删除最高级，降级玩家 H 被删</td><td>H 下调为累计能满足的最高级（不低于当前）</td></tr>
 <tr><td>删后再新增</td><td>领过被删级奖金者，首个新增级不发</td></tr>
 </tbody></table>
-<p class="bp-ref"><b>依据</b>N49 新增等级 · N50 删除等级 · N55 增删等级后的重算 · N59 全量重算任务</p></div>
+<p class="bp-ref"><b>依据</b>N49 新增等级 · N50 删除等级 · N55 增删等级后的重算 · N59 全量重算任务<span class="vmark" data-v="v1.3"> · Q128 该级有玩家不能删除（用户 2026-11-18）<button class="vtag" data-v="v1.3">v1.3</button></span></p></div>
 
 <div class="bp c-cf"><h3>门槛和奖金修改</h3>
-<p class="bp-k"><b>作用</b>调整门槛、<span class="vmark" data-v="v1.3">每月奖金标准<button class="vtag" data-v="v1.3">v1.3</button></span>和三类奖金金额。</p>
+<p class="bp-k"><b>作用</b>调整门槛、<span class="vmark" data-v="v1.3">月度流水门槛<button class="vtag" data-v="v1.3">v1.3</button></span>和三类奖金金额。</p>
 <div class="bp-k"><b>逻辑</b><ul>
 <li>门槛三列逐级严格递增，整数 1–99,999,999,999；奖金 0–9,999,999.99。</li>
 <li>保存前影响预览试算，完成后才能保存；须谷歌验证码。</li>
-<li>门槛下调：重新开启时全量重算升级（只升不降），奖金先待领取，<span class="vmark" data-v="v1.3">不弹升级弹窗，只发待领取站内信和推送<button class="vtag" data-v="v1.3">v1.3</button></span>。</li>
-<li>门槛上调：已达等级不降，已发不追回。</li>
-<li><span class="vmark" data-v="v1.3">等级表在重新开启时生效；每月奖金标准和金额适用于届时尚未结算的考核月份。已生成奖金的金额和流水倍数不变。<button class="vtag" data-v="v1.3">v1.3</button></span></li>
+<li>门槛下调：<span class="vmark" data-v="v1.3">重新开启时按新门槛和累计数据重新核算全部玩家等级，可升可降，历史最高按核算结果重置（Q131，用户 2026-11-18）<button class="vtag" data-v="v1.3">v1.3</button></span>，奖金先待领取，<span class="vmark" data-v="v1.3">不弹升级弹窗，只发待领取站内信和推送<button class="vtag" data-v="v1.3">v1.3</button></span>。</li>
+<li>门槛上调：<span class="vmark" data-v="v1.3">重新开启时同样按新门槛和累计数据重新核算，可升可降，当前等级和历史最高都按核算结果；已发不追回（Q131，用户 2026-11-18）<button class="vtag" data-v="v1.3">v1.3</button></span>。</li>
+<li><span class="vmark" data-v="v1.3">等级表在重新开启时生效；月度流水门槛和每月奖金金额适用于届时尚未结算的考核月份。已生成奖金的金额和流水倍数不变。<button class="vtag" data-v="v1.3">v1.3</button></span></li>
 <li><span class="vmark" data-v="v1.3">不设第二人审批：流水倍数修改确认后直接生效，等级表保存后在重新开启时生效，不区分金额和变动比例（用户 2026-10-31）。<button class="vtag" data-v="v1.3">v1.3</button></span></li>
 <li><span class="vmark" data-v="v1.3">金额核对提醒：影响预览中奖金单项变动超过 ±50%、或高于高一级同类奖金的标红，门槛任一列下调超过 20% 也标红（用户 2026-11-09）；原值为 0 的不按比例，只按高于高一级 / 低于低一级判断；新增行奖金为 0 也标红；提示「变动较大，请核对」，勾选「已核对标红的奖金」才能保存（不是审批）。本次配置变更批次（门槛下调生成的升级奖金和等级调整补偿）合计超过 ₱100,000 时标红，须勾选「已核对金额」才能保存。试算失败显示「试算失败，请重试」和「重试」，确认按钮保持置灰。<button class="vtag" data-v="v1.3">v1.3</button></span></li>
 </ul></div>
 <table class="vs-t sc"><colgroup><col class="a"><col></colgroup><thead><tr><th>场景</th><th>方案</th></tr></thead><tbody>
 <tr><td>VIP5 累计充值改为 = VIP4</td><td>标红，不保存</td></tr>
-<tr><td><span class="vmark" data-v="v1.3">10-25 关闭系统并修改 VIP5 每月奖金标准，11-05 重新开启<button class="vtag" data-v="v1.3">v1.3</button></span></td><td><span class="vmark" data-v="v1.3">11-03 关闭期间重新结算 10 月用旧配置；11-06 才重新结算 10 月用新配置；重新开启所在的 11 月也用新配置<button class="vtag" data-v="v1.3">v1.3</button></span></td></tr>
+<tr><td><span class="vmark" data-v="v1.3">10-25 关闭系统并修改 VIP5 月度流水门槛，11-05 重新开启<button class="vtag" data-v="v1.3">v1.3</button></span></td><td><span class="vmark" data-v="v1.3">11-03 关闭期间重新结算 10 月用旧配置；11-06 才重新结算 10 月用新配置；重新开启所在的 11 月也用新配置<button class="vtag" data-v="v1.3">v1.3</button></span></td></tr>
 <tr><td>VIP5 升级奖金 ₱48 → ₱80</td><td><span class="vmark" data-v="v1.3">谷歌验证码确认后保存配置，重新开启时生效<button class="vtag" data-v="v1.3">v1.3</button></span></td></tr>
 <tr><td>结算期间修改</td><td>输入框置灰</td></tr>
 <tr><td>两人同时保存</td><td>后者提示刷新，不覆盖</td></tr>
@@ -528,17 +532,17 @@
 <div class="bp-k"><b>逻辑</b><ul>
 <li><span class="vmark" data-v="v1.3">「VIP会员系统」即体系开关，默认关闭；开启时前台显示 VIP中心并执行 VIP 逻辑，关闭时前台隐藏 VIP中心入口和页面（用户 2026-11-02）<button class="vtag" data-v="v1.3">v1.3</button></span>；开关都须确认 + 谷歌验证码；<span class="vmark" data-v="v1.3">月度结算或等级重算进行中不能开启，但可以关闭（谷歌验证码 + 二次确认），关闭后中止当前任务；已结算玩家的等级和奖金照常有效，中止的月度结算在 VIP月度结算记录显示「已中止」，重新开启后可「继续结算」，只结算未结算的玩家（用户 2026-11-02）<button class="vtag" data-v="v1.3">v1.3</button></span>。</li>
 <li>首次开启：执行上线结算。</li>
-<li>关闭期间：累计照常；停止升级、结算、生成奖金和 VIP 通知（不弹升级弹窗、不补弹，不发待领取奖金通知、站内信、推送和生日提醒）。<span class="vmark" data-v="v1.3">可做的操作：修改并保存等级表、「重新结算」、放行、人工作废、补发、整批作废（24 小时内）；其他配置按规则 N44 ⑥；不能「继续结算」（用户 2026-11-10）。<button class="vtag" data-v="v1.3">v1.3</button></span></li>
-<li><span class="vmark" data-v="v1.3">关闭时的未领取奖金：确认框列出全部「待领取」（共 N 名用户、M 笔、合计，含各类小计和等级调整补偿）；勾选的确认后直接到账（「系统关闭手动发放」）并发已到账通知；未勾选的作废（「系统作废：系统关闭」），不能补发、不通知；风控标签逐笔显示，玩家当前处于风控暂停（含 KYC 冻结）的整行置灰、全部保持原状态，否则只处理待领取的几笔，「暂停发放（领取结果异常）」的不能勾选、保持原状态（用户 2026-11-10）；勾选发放的合计超过 ₱100,000 时标红，须勾选「已核对金额」才能确认关闭（用户 2026-11-10）；未到可领日的生日奖金不列入勾选，在表格下方单独显示小计、保持原状态（关闭期间不可领，重新开启后按原可领日领取，有效期从生日和重新开启日中较晚的一天起算，用户 2026-11-05、11-06；关闭时已到可领日的按勾选结果发放或作废）；每笔显示截止日期；被中止结算月份已生成的奖金不列入勾选，在表格下方单独显示小计、保持原状态（关闭期间暂停领取；重新开启后每月奖金从重新开启当天起算有效期，生日奖金从生日和重新开启日中较晚的一天起算，用户 2026-11-10）；配置变更批次列入勾选，按勾选结果发放或作废；何时关闭由运营判断（如结算日的第二天）；关闭期间到了结算时间点的月份不自动结算，显示「未结算（系统关闭）」，运营可「重新结算」，生成每月奖金和生日奖金；已到账通知每个玩家每种奖金类型合并 1 条（用户 2026-11-02）。<button class="vtag" data-v="v1.3">v1.3</button></span></li>
-<li>再次开启：<span class="vmark" data-v="v1.3">按最新配置重核全部玩家（含之前中止未处理的）：只升不降、已发放不追回，降级中的玩家不回升；关闭期间玩家自己投注、充值达到的等级不发奖；因关闭期间下调门槛新达到的等级照常生成升级奖金（待领取）；因新增等级新达到的只按等级调整补偿处理，重算前历史最高那一级已领的不再发；都不弹升级弹窗；等级表修改在重新开启时刻生效；不重新计 28 天。<button class="vtag" data-v="v1.3">v1.3</button></span></li>
+<li>关闭期间：累计照常；停止升级、结算、生成奖金和 VIP 通知（不弹升级弹窗、不补弹，不发待领取奖金通知、站内信、推送和生日提醒）。<span class="vmark" data-v="v1.3">可做的操作：修改并保存等级表、「重新结算」、放行、人工作废、补发；其他配置按规则 N44 ⑥；不能「继续结算」（用户 2026-11-10）。<button class="vtag" data-v="v1.3">v1.3</button></span></li>
+<li><span class="vmark" data-v="v1.3">关闭时的未领取奖金（用户 2026-11-17 改版）：确认框只显示一行红色加粗文字「共有 N 名会员，共 ₱X 为待领取状态」，没有会员表格和逐人勾选；按钮「确认发放」（全部直接到账，「系统关闭手动发放」，不发到账通知，Q126，用户 2026-11-18）、「确认作废」（全部作废，「系统作废：系统关闭」，不能补发、不通知）、「取消」（不关闭）；待领取为 0 时为「确认关闭」「取消」；须填谷歌验证码；没有「已核对金额」勾选（取代 Z02）；暂停发放（风控，含风控暂停、KYC 冻结的玩家）、领取结果异常、领取中的不计入、保持原状态；未到可领日的生日奖金不计入、保持原状态（关闭期间不可领，重新开启后按原可领日领取，有效期从生日和重新开启日中较晚的一天起算，用户 2026-11-05、11-06）；被中止结算月份已生成的奖金不计入、保持原状态（关闭期间暂停领取；重新开启后每月奖金从重新开启当天起算有效期，生日奖金从生日和重新开启日中较晚的一天起算，用户 2026-11-10）；配置变更批次计入待领取，随按钮发放或作废；何时关闭由运营判断（如结算日的第二天）；关闭期间到了结算时间点的月份不自动结算，显示「未结算（系统关闭）」，运营可「重新结算」，生成每月奖金和生日奖金（用户 2026-11-02）。<button class="vtag" data-v="v1.3">v1.3</button></span></li>
+<li>再次开启：<span class="vmark" data-v="v1.3">关闭期间有配置修改（只新增等级的除外）的，开启那一刻按新的 VIP 规则和玩家累计数据（累计充值、累计有效投注等）重新核算全部玩家等级（含之前中止未处理的、关闭期间重新完成 KYC 的）；结果可升可降，当前等级和历史最高都按核算结果重置，降级中的玩家直接按累计结果定级，已发奖金不追回；原「只升不降、降级中的玩家不回升」只适用于正常运行期间，重新核算时已被 Q131 取代；没有修改的不重新核算；只新增等级、不改其他配置的不做全量重算，累计已达到新等级门槛的玩家升到新等级并按规则发升级奖金（沿用原新增等级规则），其他玩家不变（Q131，用户 2026-11-18）；关闭期间玩家自己投注、充值达到的等级不发奖；因关闭期间下调门槛新达到的等级照常生成升级奖金（待领取）；因新增等级新达到的只按等级调整补偿处理，重算前历史最高那一级已领的不再发；都不弹升级弹窗；等级表修改在重新开启时刻生效；不重新计 28 天。<button class="vtag" data-v="v1.3">v1.3</button></span></li>
 </ul></div>
 <table class="vs-t sc"><colgroup><col class="a"><col></colgroup><thead><tr><th>场景</th><th>方案</th></tr></thead><tbody>
 <tr><td>结算时刻体系处于关闭</td><td>该月不自动结算，显示「未结算（系统关闭）」，可手动重新结算</td></tr>
 <tr><td><span class="vmark" data-v="v1.3">短暂关闭后再次开启（如 11-05 关闭、当天再开启）<button class="vtag" data-v="v1.3">v1.3</button></span></td><td><span class="vmark" data-v="v1.3">不重新计 28 天，12-01 照常结算 11 月；关闭期间达到的等级在重新开启时定级，但不发升级奖金；结算可手动重新结算</span></td></tr>
-<tr><td><span class="vmark" data-v="v1.3">降级中玩家（当前 VIP3、历史最高 VIP5、累计满足 VIP5）再次开启<button class="vtag" data-v="v1.3">v1.3</button></span></td><td><span class="vmark" data-v="v1.3">不回升，仍为 VIP3；只有累计超过 VIP5 才升到新等级（记「不发放（重新开启核算）」）</span></td></tr>
+<tr><td><span class="vmark" data-v="v1.3">降级中玩家（当前 VIP3、历史最高 VIP5、累计满足 VIP5）再次开启<button class="vtag" data-v="v1.3">v1.3</button></span></td><td><span class="vmark" data-v="v1.3">关闭期间没有配置修改（或只新增等级）：不重新核算，仍为 VIP3；关闭期间有配置修改：按累计直接定级为 VIP5，历史最高按核算结果为 VIP5，VIP5 升级奖金以前已生成过的不再发（Q131，用户 2026-11-18）<button class="vtag" data-v="v1.3">v1.3</button></span></td></tr>
 <tr><td>关闭期间累计达 VIP6</td><td>重开定 VIP6，记「不发放（重新开启核算）」</td></tr>
 <tr><td><span class="vmark" data-v="v1.3">关闭期间下调门槛，重新开启后玩家再投注、充值才达到新等级<button class="vtag" data-v="v1.3">v1.3</button></span></td><td><span class="vmark" data-v="v1.3">按重新开启时刻的累计区分：用旧门槛也能达到的算玩家自己达到，只有按新门槛才能达到的算因门槛下调达到；重新开启后新增投注、充值才达到的按实时升级处理，不归入这一批，与执行先后无关（规则 N59 ③，用户 2026-11-09）<button class="vtag" data-v="v1.3">v1.3</button></span></td></tr>
-<tr><td><span class="vmark" data-v="v1.3">关闭期间运营放行风控暂停的手动领取类奖金<button class="vtag" data-v="v1.3">v1.3</button></span></td><td><span class="vmark" data-v="v1.3">直接到账，发已到账通知；站内信点击不跳转</span></td></tr>
+<tr><td><span class="vmark" data-v="v1.3">关闭期间运营放行风控暂停的手动领取类奖金<button class="vtag" data-v="v1.3">v1.3</button></span></td><td><span class="vmark" data-v="v1.3">直接到账，不发到账通知（Q126，用户 2026-11-18）；之前收到的站内信点击不跳转</span></td></tr>
 <tr><td><span class="vmark" data-v="v1.3">手动发放到账失败<button class="vtag" data-v="v1.3">v1.3</button></span></td><td><span class="vmark" data-v="v1.3">自动重试 3 次，仍失败记「发放失败」，可作废或补发，不发通知</span></td></tr>
 <tr><td>上线后需回滚</td><td>关闭体系；已到账不追回</td></tr>
 </tbody></table>
@@ -560,7 +564,7 @@
 <tr><td>老版本 App</td><td><span class="vmark" data-v="v1.3">原 LEVEL 和 VIP 特权等功能全部作废；「VIP会员系统」第一次开启前强制更新到含 VIP中心的版本（用户 2026-11-02）<button class="vtag" data-v="v1.3">v1.3</button></span></td></tr>
 </tbody></table>
 <div class="bp-k"><b>受影响的现有页面</b><ul>
-<li><span class="vmark" data-v="v1.3">头像角标显示 VIPn；头像框按 8 个段位；头像本身不变（玩家上传的、选的平台头像、默认头像都不变），VIP 等级只体现在头像框和角标上（第 18 批 X25）。系统未第一次开启或已关闭时，不显示 VIP 角标和头像框、沿用现网默认样式和现行默认头像，点头像进个人中心；「KYC 限制」下未定级、被冻结的玩家不显示角标；四端都验收（用户 2026-11-02）。<button class="vtag" data-v="v1.3">v1.3</button></span></li>
+<li><span class="vmark" data-v="v1.3">头像角标显示 VIPn；头像框按 8 个段位；头像本身不变（玩家上传的、选的平台头像、默认头像都不变），VIP 等级只体现在头像框和角标上（第 18 批 X25）。系统未第一次开启或已关闭时，不显示 VIP 角标和头像框、沿用现网默认样式和现行默认头像，点头像进个人中心；未完成 KYC 未定级、KYC 被撤销而冻结的玩家不显示角标（用户 2026-11-18）；四端都验收（用户 2026-11-02）。<button class="vtag" data-v="v1.3">v1.3</button></span></li>
 <li><span class="vmark" data-v="v1.3">入口名称「VIP Center」，原 Level Center（已登录、未登录两版）下线；Level 30 及以上权益取消（运营通知玩家、客服按 QA 答复）；聊天室播报显示奖金名称（用户 2026-10-31）。<button class="vtag" data-v="v1.3">v1.3</button></span></li>
 </ul></div>
 <p class="bp-ref"><b>依据</b>N40 替换原会员等级 · N41 支付层级不同步 · N46 老版本 App · N47 去掉旧版 VIP · N48 旧奖励作废 · 第 4 章受影响的现有页面</p></div>
@@ -568,7 +572,7 @@
 <div class="bp c-cf"><h3>后台报表</h3>
 <p class="bp-k"><b>作用</b>供运营核对奖金和结算结果。</p>
 <div class="bp-k"><b>逻辑</b><ul>
-<li>活动奖励统计：按会员、类型、状态、结算月份、生成时间筛选<span class="vmark" data-v="v1.3">，「过滤测试用户」默认勾选（测试用户按平台现有测试用户标识判断，与其他报表一致，照常参加 VIP，用户 2026-11-10；VIP月度结算记录同样有此筛选；活动费用统计默认排除测试用户，用户 2026-11-09）<button class="vtag" data-v="v1.3">v1.3</button></span>；放行、作废、补发、重试、整批作废、导出；<span class="vmark" data-v="v1.3">「查询总计」按 8 种状态分列笔数和金额，为 0 的也列出（用户 2026-11-02）<button class="vtag" data-v="v1.3">v1.3</button></span>。</li>
+<li>活动奖励统计：按会员、类型、状态、结算月份筛选<span class="vmark" data-v="v1.3">，进入页签时默认选中最近一个结算月份（Q119，用户 2026-11-18）<button class="vtag" data-v="v1.3">v1.3</button></span><span class="vmark" data-v="v1.3">，「过滤测试用户」默认勾选（测试用户按平台现有测试用户标识判断，与其他报表一致，照常参加 VIP，用户 2026-11-10；VIP月度结算记录同样有此筛选；活动费用统计默认排除测试用户，用户 2026-11-09）<button class="vtag" data-v="v1.3">v1.3</button></span>；放行、作废、补发、重试、导出（没有整批作废；筛选栏没有生成时间，列表按生成时间倒序，用户 2026-11-17）；<span class="vmark" data-v="v1.3">「查询总计」按 8 种状态分列笔数和金额，为 0 的也列出（用户 2026-11-02）<button class="vtag" data-v="v1.3">v1.3</button></span>。</li>
 <li>奖金状态 8 种：已到账、待领取、暂停发放（风控）、已过期、已作废、不发放、发放失败、领取中。</li>
 <li>VIP月度结算记录：每月一行，含参与、升级、等级变更、保级、恢复、降级、失败人数和已到账；明细可筛选、导出、重新结算、完成。</li>
 <li><span class="vmark" data-v="v1.3">其他报表：VIP 三类奖金计入活动费用报表，同样计入活动报表、营销活动数据报表（ROI）、平台报表活动领取用户、财务数据活动总额、各资金报表的活动金额、资金明细活动奖励金额，新增的 3 个 VIP 账变类型按活动类统计，口径与活动费用报表一致（用户 2026-11-10）。<button class="vtag" data-v="v1.3">v1.3</button></span></li>
@@ -617,30 +621,31 @@
 <table class="vs-t kv"><colgroup><col class="a"><col><col class="c"></colgroup><thead><tr><th>项目</th><th>规则 / 数值</th><th>依据</th></tr></thead><tbody>
 <tr><td>VIP 等级数</td><td>默认 25 级（VIP1–VIP24、SUPER VIP）+ VIP0；可增删，不设上限，至少 1 级</td><td>N1、N49、N50</td></tr>
 <tr><td>升级门槛（累计有效投注 / 累计充值）</td><td>VIP1 ₱10,000 / ₱2,000；VIP5 ₱500,000 / ₱100,000；SUPER VIP ₱1,000,000,000 / ₱1,000,000,000</td><td>7.2 默认值</td></tr>
-<tr><td><span class="vmark" data-v="v1.3">每月奖金标准（前台「每月奖金投注」）<button class="vtag" data-v="v1.3">v1.3</button></span></td><td>VIP1 ₱5,000；VIP5 ₱100,000；SUPER VIP ₱60,000,000</td><td>7.2 默认值</td></tr>
+<tr><td><span class="vmark" data-v="v1.3">月度流水门槛（前台「每月奖金投注」）<button class="vtag" data-v="v1.3">v1.3</button></span></td><td>VIP1 ₱5,000；VIP5 ₱100,000；SUPER VIP ₱60,000,000</td><td>7.2 默认值</td></tr>
 <tr><td>升级奖金</td><td>VIP1 ₱8；VIP5 ₱48；SUPER VIP ₱118,888；全部合计 ₱305,400</td><td>7.2、3.3</td></tr>
 <tr><td><span class="vmark" data-v="v1.3">每月奖金<button class="vtag" data-v="v1.3">v1.3</button></span></td><td>VIP1 ₱6；VIP5 ₱38；SUPER VIP ₱100,000</td><td>7.2 默认值</td></tr>
 <tr><td>生日奖金</td><td>VIP1–VIP5 ₱88；VIP6–VIP10 ₱188 … VIP24 ₱2,888；SUPER VIP ₱5,888</td><td>N20</td></tr>
 <tr><td>取值范围</td><td>门槛整数 1–99,999,999,999，逐级严格递增；奖金 0–9,999,999.99，填 0 不发</td><td>7.2、7.3</td></tr>
 <tr><td>领奖有效期</td><td>默认 15 天（1–20），含起算当天至第 N 天 23:59:59；三类各一项；生日奖金从生日和生成日中较晚的一天起算</td><td>N22、N52、Q25 领奖有效期</td></tr>
 <tr><td>领取方式</td><td>三类各自手动 / 自动，默认都手动；<span class="vmark" data-v="v1.3">每笔手动记录都有截止日期，只按自己的截止日期过期，生成新奖金时不作废旧记录<button class="vtag" data-v="v1.3">v1.3</button></span></td><td>N52、N53、Q30 领取方式</td></tr>
-<tr><td>月度结算时间</td><td>默认每月 1 日 13:00（可选 1–28 日）；考核上一自然月</td><td>N12、Q43 结算时间可配置</td></tr>
+<tr><td>月度结算时间</td><td><span class="vmark" data-v="v1.3">研发配置，固定每月 1 日 04:00:00（GMT+8）开始，后台不提供设置；考核上一自然月（用户 2026-11-17）<button class="vtag" data-v="v1.3">v1.3</button></span></td><td>N12、Q107 去掉结算时间设置、Q109 结算时间 04:00</td></tr>
 <tr><td><span class="vmark" data-v="v1.3">结算资格<button class="vtag" data-v="v1.3">v1.3</button></span></td><td><span class="vmark" data-v="v1.3">结算时间点不早于第一次开启 + 28 天（恰好满 28 天也算）才结算；之前的结算时间点不评定等级、不发每月奖金，只生成生日奖金；再次开启不重新计 28 天</span></td><td>N26</td></tr>
 <tr><td>结算重试</td><td>单人、整次都自动重试 3 次（间隔由技术确定）</td><td>N19、Q35 结算未完成的处理</td></tr>
-<tr><td>结算告警时间</td><td>结算开始 + 30 分钟（10–240 可配），重试结束另发汇总</td><td>N19、Q52 结算告警</td></tr>
+<tr><td>结算告警</td><td><span class="vmark" data-v="v1.3">结算无人值守、程序自动执行；结算失败、到点未开始、超时未完成由技术侧监控处理，告知运维值班人员或技术人员，不是运营后台功能，VIP 后台不设告警（Q130，用户 2026-11-18）<button class="vtag" data-v="v1.3">v1.3</button></span></td><td>N19、Q107 去掉告警时间设置、Q130</td></tr>
 <tr><td>流水倍数</td><td>默认 1（0–50），按生成时固定；<span class="vmark" data-v="v1.3">修改须谷歌验证码，确认后直接生效<button class="vtag" data-v="v1.3">v1.3</button></span>；前台不显示</td><td>N28、Q60 前台不显示流水</td></tr>
-<tr><td>免打扰时段</td><td><span class="vmark" data-v="v1.3">默认 21:00:00–09:59:59（可改，开始 = 结束表示不设），顺延到时段结束后发；每条短信、推送可设是否遵守；站内信即时<button class="vtag" data-v="v1.3">v1.3</button></span></td><td>N38</td></tr>
-<tr><td>短信门槛</td><td>到账金额 &lt; ₱1 不发短信；短信金额写「PHP」</td><td>N35、N39</td></tr>
-<tr><td><span class="vmark" data-v="v1.3">通知内容<button class="vtag" data-v="v1.3">v1.3</button></span></td><td><span class="vmark" data-v="v1.3">运营手动输入，只发英文：正文 ≤ 500 字、标题 ≤ 50 字，按变量替换后的英文最长取值计算（{奖金类型} 按「Birthday Bonus」「Upgrade Bonus」中较长的「Birthday Bonus」计；等级调整补偿也输出 Upgrade Bonus，用户 2026-11-10）</span></td><td>N35–N37</td></tr>
+<tr><td><span class="vmark" data-v="v1.3">发送时间<button class="vtag" data-v="v1.3">v1.3</button></span></td><td><span class="vmark" data-v="v1.3">VIP 短信和待领取 APP 推送只在每天 10:00–21:00（GMT+8）发送，窗口外触发的顺延到下一个窗口（10:00 前触发的当天 10:00 发，21:00 后触发的次日 10:00 发）；待领取站内信即时生成，不受此限；技术写死、后台不设置（Q129，用户 2026-11-18）<button class="vtag" data-v="v1.3">v1.3</button></span></td><td>N38、Q129</td></tr>
+<tr><td>短信门槛</td><td><span class="vmark" data-v="v1.3">生日提醒短信不按金额判断（Q129）；VIP 不发到账短信（Q126）；到账产生账变的，按平台现有账变短信规则发账变短信（Q133，用户 2026-11-18）<button class="vtag" data-v="v1.3">v1.3</button></span>；短信金额写「PHP」</td><td>N35、N36、N39</td></tr>
+<tr><td><span class="vmark" data-v="v1.3">通知内容<button class="vtag" data-v="v1.3">v1.3</button></span></td><td><span class="vmark" data-v="v1.3">运营手动输入，只发英文：正文 ≤ 500 字、标题 ≤ 50 字，按变量替换后的英文最长取值计算（用户 2026-11-10）</span></td><td>N35–N37</td></tr>
 <tr><td>风控暂停</td><td>账号冻结（含原因「自我排除」）、风险分 ≥ 70、禁止投注、临时冻结；40–69 照常</td><td>N31、Q12 风控暂停范围</td></tr>
-<tr><td><span class="vmark" data-v="v1.3">第二人审批<button class="vtag" data-v="v1.3">v1.3</button></span></td><td><span class="vmark" data-v="v1.3">不设（用户 2026-10-31）：流水倍数修改（等级表保存后在重新开启时生效）、放行、补发、作废、整批作废确认后直接生效</span></td><td>Q65 补发与审批规则、Q71 不设第二人审批</td></tr>
+<tr><td><span class="vmark" data-v="v1.3">第二人审批<button class="vtag" data-v="v1.3">v1.3</button></span></td><td><span class="vmark" data-v="v1.3">不设（用户 2026-10-31）：流水倍数修改（等级表保存后在重新开启时生效）、放行、补发、作废确认后直接生效</span></td><td>Q65 补发与审批规则、Q71 不设第二人审批</td></tr>
 <tr><td>撤单复核</td><td>单人单月撤单扣回 &gt; ₱100,000 转人工<span class="vmark" data-v="v1.3">；充值撤销、扣回合计 &gt; ₱100,000 同样转人工；全部撤单复核记录被放行或作废后解除（用户 2026-11-10）<button class="vtag" data-v="v1.3">v1.3</button></span></td><td>N5、Q66 撤单复核</td></tr>
-<tr><td>整批作废</td><td>门槛下调、新增等级在重新开启时生成的升级奖金和等级调整补偿，重新开启后 24 小时内可整批作废</td><td>N33</td></tr>
-<tr><td>发放次数</td><td>升级奖金：每人每级 1 笔；每月奖金：每人每个结算月份 1 笔；生日奖金：每人每年 1 笔</td><td>N9、N14、N21</td></tr>
-<tr><td>默认开关</td><td><span class="vmark" data-v="v1.3">「VIP会员系统」关闭；「KYC 限制」开启；生日提醒勾选（生日当天）；到账提醒勾选；推送 6 条站内信、推送都勾选；每条遵守免打扰<button class="vtag" data-v="v1.3">v1.3</button></span></td><td>第 12 章、N36、N35</td></tr>
+<tr><td>配置变更记录</td><td><span class="vmark" data-v="v1.3">门槛下调、新增等级在重新开启时生成的升级奖金和等级调整补偿，「说明」列标「配置变更」；没有整批作废，配错时逐条作废（用户 2026-11-17）<button class="vtag" data-v="v1.3">v1.3</button></span></td><td>N33</td></tr>
+<tr><td>发放次数</td><td>升级奖金：每人每级 1 笔；每月奖金：每人每个结算月份 1 笔；生日奖金：<span class="vmark" data-v="v1.3">每个账号每个自然年最多 1 笔，同一 KYC 身份在同一站点每个自然年也最多 1 笔（用户 2026-11-18）<button class="vtag" data-v="v1.3">v1.3</button></span></td><td>N9、N14、N21</td></tr>
+<tr><td>默认开关</td><td><span class="vmark" data-v="v1.3">「VIP会员系统」关闭；生日提醒勾选（生日当天）；3 条待领取通知站内信、推送都勾选；奖金到账不发通知（Q126，用户 2026-11-18）<button class="vtag" data-v="v1.3">v1.3</button></span></td><td>第 12 章、N36、N35</td></tr>
 <tr><td>段位</td><td>默认每段 4 级：青铜 VIP1–4 … 星耀 VIP21–24；VIP0 黑铁、SUPER VIP 荣耀</td><td>N51</td></tr>
 <tr><td>等级加载与超时</td><td><span class="vmark" data-v="v1.3">前台全部等级一次加载、不分页；刻度超过 30 个时省略显示<button class="vtag" data-v="v1.3">v1.3</button></span>；前台加载超过 10 秒提示加载失败</td><td>7.6、第 9 章</td></tr>
-<tr><td>上线方式</td><td>版本照常发布、开关默认关闭；调好首轮配置再开启；不灰度</td><td>N26、Q6 上线方式、Q55 不灰度</td></tr>
+<tr><td>上线方式</td><td>版本照常发布、开关默认关闭；调好首轮配置再开启；不灰度<span class="vmark" data-v="v1.3">；新站 789Games、老站 789Bingo 各自按 PRD 第 11、12 章上线步骤执行，可分别开启，验收在两站各验一遍（用户 2026-11-17）<button class="vtag" data-v="v1.3">v1.3</button></span></td><td>N26、Q6 上线方式、Q55 不灰度<span class="vmark" data-v="v1.3">、Q115 两站都做<button class="vtag" data-v="v1.3">v1.3</button></span></td></tr>
+<tr><td><span class="vmark" data-v="v1.3">站点<button class="vtag" data-v="v1.3">v1.3</button></span></td><td><span class="vmark" data-v="v1.3">两站同一套规则和页面；配置、账号、等级、累计、奖金、结算、统计、日志按站点独立，不互通；生日奖金「同一 KYC 身份每年 1 笔」按站点各自判断；短信、站内信、推送默认内容和前台画面中的站名按站点写（789Bingo / 789Games，用户 2026-11-17）</span></td><td>Q115 两站都做</td></tr>
 </tbody></table>
 
 <h3 class="vs-h3" style="--bar:#D14343">② 未完全确认的问题</h3>
@@ -648,32 +653,34 @@
 <tr><td>Q14</td><td>前台文案、VIP 规则全文和短信英文定稿（文案确认页逐条定稿，不设期限）</td><td>运营</td><td class="st-open">待确认</td></tr>
 <tr><td><span class="vmark" data-v="v1.3">Q100<button class="vtag" data-v="v1.3">v1.3</button></span></td><td><span class="vmark" data-v="v1.3">撤单、改单、充值撤销扣回的场景清单（哪些场景触发扣回和等级回退，规则 N5，用户 2026-11-10）<button class="vtag" data-v="v1.3">v1.3</button></span></td><td>研发</td><td class="st-open">待确认</td></tr>
 <tr><td><span class="vmark" data-v="v1.3">Q101<button class="vtag" data-v="v1.3">v1.3</button></span></td><td><span class="vmark" data-v="v1.3">旧 VIP 特权表去掉后，返水按什么配置执行（规则 N47，用户 2026-11-10）<button class="vtag" data-v="v1.3">v1.3</button></span></td><td>技术、风控</td><td class="st-open">待确认</td></tr>
+<tr><td><span class="vmark" data-v="v1.3">Q114<button class="vtag" data-v="v1.3">v1.3</button></span></td><td><span class="vmark" data-v="v1.3">新站 789Games 现状与老站 789Bingo 的差异清单（现有菜单、现网升级弹窗、等级中心入口、短信与推送通道、【公告管理】菜单、KYC、风控、活动费用报表等，资料只覆盖老站），技术评审时核对（用户 2026-11-17）<button class="vtag" data-v="v1.3">v1.3</button></span></td><td>研发、产品</td><td class="st-open">待确认</td></tr>
 
 <tr><td>14.1</td><td>VIP 规则全文（4.1）；规则第 9、10 条在全手动、全自动、混合三种领取方式下的中英文<span class="vmark" data-v="v1.3">，以及领取与有效期一条（文案确认 T01–T03）<button class="vtag" data-v="v1.3">v1.3</button></span></td><td>运营</td><td class="st-open">待定稿</td></tr>
-<tr><td>14.1</td><td><span class="vmark" data-v="v1.3">短信「生日提醒」「到账提醒」默认内容的英文（文案确认 T11）<button class="vtag" data-v="v1.3">v1.3</button></span></td><td>运营</td><td class="st-open">待定稿</td></tr>
-<tr><td>14.1</td><td><span class="vmark" data-v="v1.3">现网升级弹窗（手动领取的奖金行和「领取」）、待领取奖金通知、站内信和推送 6 条默认内容、聊天室播报奖金名称（文案确认 T08–T10、T14）<button class="vtag" data-v="v1.3">v1.3</button></span></td><td>运营</td><td class="st-open">待定稿</td></tr>
+<tr><td>14.1</td><td><span class="vmark" data-v="v1.3">短信「生日提醒」默认内容的英文（文案确认 T11，Q126，用户 2026-11-18）<button class="vtag" data-v="v1.3">v1.3</button></span></td><td>运营</td><td class="st-open">待定稿</td></tr>
+<tr><td>14.1</td><td><span class="vmark" data-v="v1.3">现网升级弹窗（手动领取的奖金行和「领取」）、待领取奖金通知、站内信和推送 3 条（待领取）默认内容（Q126，用户 2026-11-18）、聊天室播报奖金名称（文案确认 T08–T10、T14）<button class="vtag" data-v="v1.3">v1.3</button></span></td><td>运营</td><td class="st-open">待定稿</td></tr>
+<tr><td>14.1</td><td><span class="vmark" data-v="v1.3">生日、每月奖金领取弹窗的标题和奖金行（「生日快乐！」「{M} 月每月奖金来了！」，文案确认 T15，用户 2026-11-17）<button class="vtag" data-v="v1.3">v1.3</button></span></td><td>运营</td><td class="st-open">待定稿</td></tr>
 <tr><td>14.1</td><td>后台各页面提示（以原型为准）</td><td>运营</td><td class="st-open">待定稿</td></tr>
 <tr><td>4.2</td><td>等级表「?」奖金领取规则弹窗全文（<span class="vmark" data-v="v1.3">文案确认 T04<button class="vtag" data-v="v1.3">v1.3</button></span>）</td><td>运营</td><td class="st-open">待确认</td></tr>
 <tr><td>资料未覆盖</td><td><span class="vmark" data-v="v1.3">「VIP会员系统」<button class="vtag" data-v="v1.3">v1.3</button></span>、风险分的测试环境值；上线前按生产配置核对（3.5）</td><td>运营</td><td class="st-open">待核对</td></tr>
 <tr><td>资料未覆盖</td><td>原 LEVEL、旧版 VIP 历史记录的查询方式，需要时由技术查询（第 11 章）</td><td>研发</td><td class="st-open">待确认</td></tr>
 </tbody></table>
-<p class="vs-note">问题表的已定事项及后续补充以 PRD 附录 Q 表为准；Q14 文案定稿仍由运营确认<span class="vmark" data-v="v1.3">，Q100 由研发确认，Q101 由技术、风控确认（用户 2026-11-10）<button class="vtag" data-v="v1.3">v1.3</button></span>。</p>
+<p class="vs-note">问题表的已定事项及后续补充以 PRD 附录 Q 表为准；Q14 文案定稿仍由运营确认<span class="vmark" data-v="v1.3">，Q100 由研发确认，Q101 由技术、风控确认（用户 2026-11-10）<button class="vtag" data-v="v1.3">v1.3</button></span><span class="vmark" data-v="v1.3">，Q114 由研发、产品在技术评审时确认（用户 2026-11-17）<button class="vtag" data-v="v1.3">v1.3</button></span>。</p>
 
 <h3 class="vs-h3" style="--bar:#D9821A">③ 需运营确认</h3>
 <table class="vs-t ls"><colgroup><col class="a"><col><col class="c"></colgroup><thead><tr><th>#</th><th>事项</th><th>依据</th></tr></thead><tbody>
 <tr><td>1</td><td>在「文案确认」页逐条定稿前台文案、规则、短信和推送英文</td><td>Q14 文案定稿、14.1</td></tr>
-<tr><td>2</td><td>开启前调好首轮配置：门槛、奖金、领取方式、领奖有效期、<span class="vmark" data-v="v1.3">通知配置<button class="vtag" data-v="v1.3">v1.3</button></span>、月度结算时间</td><td>N26、Q6 上线方式、第 12 章</td></tr>
-<tr><td>3</td><td>核对上线结算预览和首次结算试算（各级人数、金额），与产品确认后开启；<span class="vmark" data-v="v1.3">负责人确认成本上限后再开启（第 11 章，用户 2026-11-10）；<button class="vtag" data-v="v1.3">v1.3</button></span><span class="vmark" data-v="v1.3">第一次开启满 28 天后的第一个结算时间点才开始月度结算（之前的结算时间点只生成生日奖金）；建议每月 1 日 13:00 前开启，最晚开启时间见后台操作手册「操作时间建议」<button class="vtag" data-v="v1.3">v1.3</button></span></td><td>第 11 章、Q38 上线当月结算</td></tr>
-<tr><td>4</td><td><span class="vmark" data-v="v1.3">在「通知配置」核对短信 2 条、站内信与推送 6 条的内容和发送勾选（默认内容见文案确认 T10、T11），并按生日提醒发送时间点调整生日提醒内容<button class="vtag" data-v="v1.3">v1.3</button></span></td><td>N35–N37</td></tr>
-<tr><td>5</td><td><span class="vmark" data-v="v1.3">关闭「VIP会员系统」前，先在活动奖励统计核对待领取奖金，确认框里逐个勾选发放或作废；修改等级表须先关闭「VIP会员系统」，何时关闭、开启由运营按后台操作手册「操作时间建议」判断（如结算日的第二天关闭）<button class="vtag" data-v="v1.3">v1.3</button></span></td><td>N27、N52</td></tr>
+<tr><td>2</td><td>开启前调好首轮配置：门槛、奖金、领取方式、领奖有效期、<span class="vmark" data-v="v1.3">通知配置；VIP 可单独开启，不依赖其他需求（Q129，用户 2026-11-18）<button class="vtag" data-v="v1.3">v1.3</button></span></td><td>N26、Q6 上线方式、第 12 章</td></tr>
+<tr><td>3</td><td>核对上线结算预览和首次结算试算（各级人数、金额），与产品确认后开启；<span class="vmark" data-v="v1.3">负责人确认成本上限后再开启（第 11 章，用户 2026-11-10）；<button class="vtag" data-v="v1.3">v1.3</button></span><span class="vmark" data-v="v1.3">第一次开启满 28 天后的第一个结算时间点才开始月度结算（之前的结算时间点只生成生日奖金）；建议每月 1 日结算完成后至 3 日 04:00 前开启（2 月须在 2 月 1 日 04:00 前，用户 2026-11-17），最晚开启时间见后台操作手册「操作时间建议」<button class="vtag" data-v="v1.3">v1.3</button></span></td><td>第 11 章、Q38 上线当月结算</td></tr>
+<tr><td>4</td><td><span class="vmark" data-v="v1.3">在「通知配置」核对短信 1 条（生日提醒）、站内信与推送 3 条（待领取）的内容和发送勾选（Q126，用户 2026-11-18）（默认内容见文案确认 T10、T11）；生日提醒在生日当天 10:00–21:00 发送，1 日生日在当月结算完成后、10:00–21:00 内发送，10:00 时生日奖金还没生成的生成后补发（Q120、Q127、Q129，用户 2026-11-18），内容按当天可领核对（用户 2026-11-17）<button class="vtag" data-v="v1.3">v1.3</button></span></td><td>N35–N37</td></tr>
+<tr><td>5</td><td><span class="vmark" data-v="v1.3">关闭「VIP会员系统」前，先在活动奖励统计核对待领取奖金，确认框里点「确认发放」或「确认作废」一起处理全部待领取（用户 2026-11-17）；修改等级表须先关闭「VIP会员系统」，何时关闭、开启由运营按后台操作手册「操作时间建议」判断（如结算日的第二天关闭）<button class="vtag" data-v="v1.3">v1.3</button></span></td><td>N27、N52</td></tr>
 <tr><td>6</td><td>上线前核对 VIP 站内信、推送点击进入 VIP中心（<span class="vmark" data-v="v1.3">VIP会员系统关闭后，关闭前和关闭期间发出的 VIP 站内信、推送都只显示内容、不跳转，直接打开 VIP中心链接回平台首页<button class="vtag" data-v="v1.3">v1.3</button></span>）</td><td>3.5、第 12 章、Q78 系统关闭后旧通知不跳转</td></tr>
 <tr><td>7</td><td>在【活动目的管理】给「VIP会员体系」标「留存」</td><td>N45</td></tr>
-<tr><td>8</td><td><span class="vmark" data-v="v1.3">关闭「KYC 限制」须经负责人确认<button class="vtag" data-v="v1.3">v1.3</button></span></td><td>N24、Q18 KYC 限制开关</td></tr>
-<tr><td>9</td><td>各级每月奖金标准和每月奖金金额拉开差距，避免削弱保级动力</td><td>第 13 章</td></tr>
-<tr><td>10</td><td>首次月度结算值守：结算开始后 30 分钟内确认「已完成」，并核对每月奖金笔数和金额</td><td>第 12 章</td></tr>
-<tr><td>11</td><td>上线后第一周每日核对到账合计与资金明细，看领取率、过期率<span class="vmark" data-v="v1.3">（只统计生成时为手动领取、有效期已结束的记录，口径见 PRD 8.4，用户 2026-11-10）<button class="vtag" data-v="v1.3">v1.3</button></span></td><td>第 12 章、8.4</td></tr>
-<tr><td>12</td><td>上线前按生产配置核对测试环境值</td><td>3.5</td></tr>
-<tr><td>13</td><td><span class="vmark" data-v="v1.3">版本发布前列出配置了旧 VIP 等级的消费活动，逐个选「接受不限 / 发布前暂停 / 改用其他条件」，交产品确认（用户 2026-11-10）<button class="vtag" data-v="v1.3">v1.3</button></span></td><td>第 12 章、4.5</td></tr>
+<tr><td>8</td><td>各级月度流水门槛和每月奖金金额拉开差距，避免削弱保级动力</td><td>第 13 章</td></tr>
+<tr><td>9</td><td><span class="vmark" data-v="v1.3">首次及每月结算由程序自动执行、无人值守，不需确认「已完成」；结算异常由技术侧监控并告知运维值班人员或技术人员（Q130）；结算完成后运营核对每月奖金笔数和金额（用户 2026-11-18）<button class="vtag" data-v="v1.3">v1.3</button></span></td><td>第 12 章、Q118 结算无人值守</td></tr>
+<tr><td>10</td><td>上线后第一周每日核对到账合计与资金明细，看领取率、过期率<span class="vmark" data-v="v1.3">（只统计生成时为手动领取、有效期已结束的记录，口径见 PRD 8.4，用户 2026-11-10）<button class="vtag" data-v="v1.3">v1.3</button></span></td><td>第 12 章、8.4</td></tr>
+<tr><td>11</td><td>上线前按生产配置核对测试环境值</td><td>3.5</td></tr>
+<tr><td>12</td><td><span class="vmark" data-v="v1.3">版本发布前列出配置了旧 VIP 等级的消费活动，逐个选「接受不限 / 发布前暂停 / 改用其他条件」，交产品确认（用户 2026-11-10）<button class="vtag" data-v="v1.3">v1.3</button></span></td><td>第 12 章、4.5</td></tr>
+<tr><td>13</td><td><span class="vmark" data-v="v1.3">在新站 789Games、老站 789Bingo 后台分别完成以上配置、核对和开启（两站配置不互相同步，可分别开启）；通知默认内容里的站名按本站核对（用户 2026-11-17）<button class="vtag" data-v="v1.3">v1.3</button></span></td><td>Q115 两站都做、第 11、12 章</td></tr>
 </tbody></table>
 
 <h3 class="vs-h3" style="--bar:#5E6E82">④ 需研发确认</h3>
@@ -685,7 +692,7 @@
 <tr><td>5</td><td><span class="vmark" data-v="v1.3">App 强制更新：最低版本号由技术确定，更新提示文案由运营定稿（写入 PRD 第 12 章）<button class="vtag" data-v="v1.3">v1.3</button></span></td><td>N46、Q58 老版本 Level Center</td></tr>
 <tr><td>6</td><td><span class="vmark" data-v="v1.3">刻度超过 30 个时的省略显示方式（以设计稿为准）<button class="vtag" data-v="v1.3">v1.3</button></span></td><td>7.6</td></tr>
 <tr><td>7</td><td>撤单、改单的识别来源和时效（确认后补写进 PRD）</td><td>N4</td></tr>
-<tr><td>8</td><td><span class="vmark" data-v="v1.3">平台已有短信、推送发送时段限制（免打扰）或结算告警逻辑的，不另开发，沿用现有逻辑，验收时核对现有功能对 VIP 通知和结算生效；平台没有的按本需求开发和验收；<button class="vtag" data-v="v1.3">v1.3</button></span><span class="vmark" data-v="v1.3">站内信和推送沿用平台现有站内信和 OneSignal 推送通道<button class="vtag" data-v="v1.3">v1.3</button></span></td><td>N37、N38</td></tr>
+<tr><td>8</td><td><span class="vmark" data-v="v1.3">VIP 短信和待领取推送按 10:00–21:00 发送窗口开发和验收，待领取站内信即时生成（Q129，用户 2026-11-18）；结算异常由技术侧监控，告知运维值班人员或技术人员（Q130，用户 2026-11-18）；<button class="vtag" data-v="v1.3">v1.3</button></span><span class="vmark" data-v="v1.3">站内信和推送沿用平台现有站内信和 OneSignal 推送通道<button class="vtag" data-v="v1.3">v1.3</button></span></td><td>N37、N38</td></tr>
 <tr><td>9</td><td>短信、推送沿用现有能力：次数上限、发送记录、失败处理（短信发送失败不补发，超过每人每天次数上限的不发；推送记录在【公告管理 › 消息推送 › 推送记录】查，用户 2026-11-09）</td><td>N35、Q53 短信沿用现有功能</td></tr>
 <tr><td>10</td><td>新增 3 个账变类型（具体实现由技术确定）</td><td>N28</td></tr>
 <tr><td>11</td><td>单人结算失败的原因固定 7 类加「其他」，可按原因筛选</td><td>7.5.1、Q35 结算未完成的处理</td></tr>
@@ -693,6 +700,7 @@
 <tr><td>13</td><td>本期无 VIP会员数据、等级变动查询页；会员详情 4 个 VIP 只读项之外的数据，客服核查依赖技术查询</td><td>7.5.4、Q23 后台功能补回范围</td></tr>
 <tr><td>14</td><td><span class="vmark" data-v="v1.3">「VIP会员系统」第一次开启前导出并回填成本估算，交负责人确认成本上限（用户 2026-11-10）<button class="vtag" data-v="v1.3">v1.3</button></span></td><td>第 11 章</td></tr>
 <tr><td>15</td><td><span class="vmark" data-v="v1.3">撤单、改单、充值撤销扣回的场景清单（Q100）；返水去掉后按什么配置执行（Q101，与风控一起确认）<button class="vtag" data-v="v1.3">v1.3</button></span></td><td>N5、N47</td></tr>
+<tr><td>16</td><td><span class="vmark" data-v="v1.3">技术评审时核对新站 789Games 现状与老站的差异（Q114），有实质不一致的补进 PRD；两站的配置、数据、结算、统计、日志按站点独立实现，两站各自上线、各自验收（用户 2026-11-17）<button class="vtag" data-v="v1.3">v1.3</button></span></td><td>Q114、Q115</td></tr>
 </tbody></table>
 
 </article></div>
