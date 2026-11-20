@@ -98,6 +98,15 @@
       "version": "v1.0",
       "createdAt": "2026-11-10T08:16:03.218Z",
       "lastUploadAt": null
+    },
+    {
+      "id": 12,
+      "name": "圣诞闯关附加游戏快捷操作栏添加按钮",
+      "owner": "David",
+      "folder": "QuickButtons",
+      "version": "v1.0",
+      "createdAt": "2026-11-20T02:37:31.139Z",
+      "lastUploadAt": null
     }
   ]
 }
