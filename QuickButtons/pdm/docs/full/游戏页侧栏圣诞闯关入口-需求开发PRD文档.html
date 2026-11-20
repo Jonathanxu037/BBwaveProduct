@@ -1,0 +1,602 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>游戏页侧栏圣诞闯关入口-完整需求-需求开发PRD文档</title>
+<link rel="stylesheet" href="../../assets/style.css">
+</head>
+<body>
+<div class="with-nav">
+<div id="fp-banner" class="fp-banner" hidden><span id="fp-text"></span><button type="button" id="fp-clear">清除标注</button></div>
+<div class="desk"><article class="paper" id="doc">
+
+<h1 class="doc-title">游戏页侧栏圣诞闯关入口-完整需求-需求开发PRD文档 · 游戏页浮动侧栏新增流水闯关（Crown Rush）入口（完整版）· v1.0</h1>
+<div class="doc-meta"><span>版本：v1.0</span><span>平台：789Bingo（PH）</span><span>端：H5、iOS、Flutter 安卓、运营后台</span><span>状态：确认中</span><span>时区：GMT+8</span></div>
+<hr class="doc-rule">
+
+<h2 id="ver">需求版本管理表</h2>
+<div class="tbl"><table id="vtable" data-fit>
+<tr><th>版本号</th><th>时间</th><th>修改人</th><th>概述</th><th>涉及章节</th></tr>
+<tr data-v="v1.0" data-sum="创建游戏页侧栏圣诞闯关入口 v1.0"><td>v1.0</td><td>2026-11-19</td><td>Joshua</td><td class="w">创建游戏页侧栏圣诞闯关入口 v1.0</td><td>全文</td></tr>
+</table></div>
+
+<h2 id="toc">全文目录</h2>
+<nav class="toc-full" aria-label="全文目录"><ol id="toc-list"></ol></nav>
+
+<h2 id="c0">0. 本迭代范围</h2>
+<p>完整需求（完整版）：在老站 789Bingo 游戏页浮动侧栏上新增适用所有期的流水闯关（前台名称 Crown Rush）入口，一期接一期自动显示，并在运营后台「活动配置 › 游戏页侧栏入口」统一管理。完整需求以后排期。与其他章节冲突时，以本章为准。</p>
+<p><span class="warn-2">※ 本版本包含 v1.0 全部内容，全部规则在本文档中完整写出，不需要另看 v1.0 PRD；与 v1.0 的对应和替代关系见 0.2。</span></p>
+<div class="tbl"><table data-fit>
+<tr><th>类别</th><th>本迭代包含</th><th>顺延至</th></tr>
+<tr data-fp="F01-01 F01-02 F01-03 F01-04"><td>H5</td><td class="w">所有带浮动侧栏的游戏页，在 Reload 和 G 图标之间新增入口；后台总开关开启且有一期流水闯关开着就显示；点击离开游戏并进入目标活动的落地页。上线时间以后排期</td><td>-</td></tr>
+<tr data-fp="F01-04"><td>iOS、Flutter 安卓</td><td class="w">同 H5，随排期后的 App 发版上线；老版本 App 和安卓原生老包不显示</td><td>-</td></tr>
+<tr data-fp="F03-01 F03-02 F03-03 F03-04"><td>运营后台</td><td class="w">新增「活动配置 › 游戏页侧栏入口」设置页：总开关、目标活动（自动 / 指定某一期）、按钮图标、按钮文字、保存记录（5. 运营后台需求）</td><td>-</td></tr>
+<tr data-fp="F02-01"><td>数据埋点</td><td class="w">入口曝光、点击</td><td>-</td></tr>
+<tr><td>不做</td><td class="w">PC；安卓原生老包；按钮自己的显示时间（跟活动时间走）；流水闯关以外的活动类型；红点和角标；流水闯关活动规则、页面、数值和活动后台的任何改动；侧栏其他按钮；建 Jira 单</td><td>不顺延</td></tr>
+</table></div>
+<p><span class="warn-2">※ 与「游戏快捷侧边栏」需求（侧栏升级：去掉 Reload、新增 Mini Banner）的关系、升级后入口位置和后台设置页的去向，见 10. 风险与依赖。</span></p>
+
+<h3 id="c0-1">0.1 评审结论补充（2026-11-19）</h3>
+<div class="tbl"><table data-fit>
+<tr><th>事项</th><th>规则</th></tr>
+<tr data-fp="F01-02"><td>显示规则</td><td class="w">后台总开关开启时，有任一期流水闯关开着（预热中、进行中、领奖期）就显示入口，全部关闭才隐藏（N4）</td></tr>
+<tr data-fp="F01-03"><td>多期同时开着</td><td class="w">理论上不会出现；如果出现，在开着的各期中进入最新创建的那一期（N7）</td></tr>
+<tr data-fp="F01-02"><td>挂起</td><td class="w">某一期被挂起时，选了「展示活动公告」的照常算开着，没选的当这期没开着（N4）</td></tr>
+<tr data-fp="F03-01 F03-02 F03-03 F03-04"><td>后台方案</td><td class="w">方案 B：「活动配置」下单独的「游戏页侧栏入口」设置页；要一键关闭，关后玩家下次展开侧栏不显示；能指定某一期；图标和文字都能换；不设按钮自己的时间；活动类型现在只放流水闯关（大当家第十一轮 HQ1–HQ7）</td></tr>
+<tr><td>与游戏快捷侧边栏</td><td class="w">本需求优先，按现在线上的侧栏开发上线；侧边栏升级排期时由那个需求带上本按钮，本设置页并进「游戏快捷侧边栏管理」，侧栏小横幅不列流水闯关（第九轮、第十一轮 HQ8）</td></tr>
+<tr data-fp="F01-02 F01-03"><td>版本拆分</td><td class="w">v1.0 迅速版只认圣诞这一期，先上线；完整需求以后排期（第十轮）</td></tr>
+<tr data-fp="F01-01"><td>按钮文字和图标</td><td class="w">默认文字「Quest」、默认图标与现有按钮同一风格；后台可换，换后同样受 N2 约束（N2、N18、N19）</td></tr>
+<tr data-fp="F01-03"><td>离开失败、落地页返回</td><td class="w">与点 Home 失败时一致（N12）；返回按落地页现有逻辑（N13）</td></tr>
+<tr data-fp="F01-02"><td>游戏中状态变化</td><td class="w">按侧栏每次展开时的状态显示；读取失败本次不显示（N5）</td></tr>
+<tr data-fp="F01-04"><td>谁能看到按钮</td><td class="w">看得到侧栏 G 图标的账号就看得到按钮；设了充值或投注上限的玩家照常显示（N9）</td></tr>
+<tr data-fp="F01-01"><td>合规</td><td class="w">按钮不另加合规标识，由落地页负责；求助热线本次不做；内容和打扰限制见 N2</td></tr>
+<tr data-fp="F02-01"><td>埋点</td><td class="w">只记平台账号，未登录玩家不为本需求新增采集设备信息；不设点击率目标（6.3 事件清单）</td></tr>
+</table></div>
+<p>以上为大当家 2026-11-19 答复确认的结论。</p>
+
+<h3 id="c0-2">0.2 本版本与 v1.0 的对应关系</h3>
+<p>「v1.0 已有」= v1.0 迅速版已有、本版本照样保留；「升级替代」= 本版本规则替代 v1.0 规则，以本版本为准；「新增」= 只有本版本有。</p>
+<div class="tbl"><table data-fit>
+<tr><th>项目</th><th>v1.0 迅速版</th><th>本版本（完整需求）</th><th>关系</th></tr>
+<tr data-fp="F01-01"><td>位置</td><td class="w">Reload 与 G 图标之间</td><td class="w">同 v1.0（N1）</td><td>v1.0 已有</td></tr>
+<tr data-fp="F01-01"><td>样式与文字</td><td class="w">与现有按钮同一风格，文字 Quest；不加红点、角标、动效；合规只写一句摘要</td><td class="w">同 v1.0，禁用内容和打扰限制写全（N2）；后台可换图标和文字（N17、N18）</td><td>v1.0 已有 + 新增</td></tr>
+<tr data-fp="F01-01 F01-04"><td>适用页面与人群</td><td class="w">所有带侧栏的游戏页；看得到 G 图标就看得到</td><td class="w">同 v1.0（N3、N9）</td><td>v1.0 已有</td></tr>
+<tr data-fp="F01-02"><td>显示规则</td><td class="w">只认圣诞这一期：预热中、进行中、领奖期显示，下架后隐藏；其他期开着也不显示</td><td class="w">任一期开着就显示，全部关闭才隐藏；后台总开关和指定某一期（N4、N14、N15）</td><td>升级替代：「只认圣诞这一期」升级为「任一期」</td></tr>
+<tr data-fp="F01-02"><td>挂起</td><td class="w">展示公告的照常显示，没展示的不显示；挂起功能上线前不生效</td><td class="w">同 v1.0，适用每一期（N4）</td><td>v1.0 已有</td></tr>
+<tr data-fp="F01-02"><td>游戏中状态变化、读取失败</td><td class="w">以每次展开时为准；下架后才点显示「活动已下架」；读取失败本次不显示</td><td class="w">同 v1.0，另加后台设置读取（N5）</td><td>v1.0 已有</td></tr>
+<tr data-fp="F01-03"><td>点击与目标活动</td><td class="w">按 Home 方式离开游戏，进圣诞这一期落地页；运营上线前交活动编号</td><td class="w">按 Home 方式离开游戏，进目标活动：自动选最新创建的一期或后台指定的一期；不用再交编号（N6、N7）</td><td>升级替代</td></tr>
+<tr data-fp="F01-03"><td>重复点击、返回、离开失败</td><td class="w">重复点击和返回沿用现有；离开失败同 Home</td><td class="w">同 v1.0（N8、N12、N13）</td><td>v1.0 已有</td></tr>
+<tr data-fp="F01-04"><td>端与版本</td><td class="w">H5、iOS、Flutter 安卓；PC、老版本 App、安卓原生老包不显示</td><td class="w">同 v1.0（N10）</td><td>v1.0 已有</td></tr>
+<tr data-fp="F02-01"><td>埋点</td><td class="w">只记曝光次数和点击次数，不算人数；上报失败不影响跳转</td><td class="w">次数照记，另加已登录人数、点击率和目标活动维度（N11、6 章）</td><td>v1.0 已有 + 新增</td></tr>
+<tr data-fp="F01-04"><td>上线与回滚</td><td class="w">H5 圣诞预热前上线，App 下一次发版；没有开关，App 写死编号只能发版纠错</td><td class="w">以后排期；有总开关可一键关闭（9 章）</td><td>升级替代</td></tr>
+<tr data-fp="F03-01 F03-02 F03-03 F03-04"><td>后台设置页</td><td class="w">-</td><td class="w">「活动配置 › 游戏页侧栏入口」（5 章）</td><td>新增</td></tr>
+<tr><td>待确认</td><td class="w">Q16 App 是否 H5 框架、Q17 Home 现状、Q18 冷静期和 Self-Exclusion 冻结账号</td><td class="w">同号同内容保留，另加 Q19–Q23、TQ1、TQ6（11 章）</td><td>v1.0 已有 + 新增</td></tr>
+<tr><td>与游戏快捷侧边栏</td><td class="w">本需求优先，侧边栏排期时带上本按钮</td><td class="w">同 v1.0，另定设置页并进侧栏管理（10 章）</td><td>v1.0 已有 + 新增</td></tr>
+</table></div>
+
+<h2 id="c1">1. 项目概述</h2>
+<div class="tbl"><table data-fit>
+<tr><th>项目</th><th>说明</th></tr>
+<tr><td>需求描述</td><td class="w">在老站 789Bingo 游戏页浮动侧栏（H5、iOS、Flutter 安卓）的 Reload 与 G 图标之间新增流水闯关（Crown Rush）入口按钮：后台总开关开启时，有任一期流水闯关处于预热中、进行中或领奖期就显示，全部关闭时隐藏；点击后按 Home 的方式离开游戏，进入目标活动的落地页。运营在后台「活动配置 › 游戏页侧栏入口」可一键关闭、指定某一期、更换图标和文字。侧栏其他按钮和活动本身的规则、页面均不变。</td></tr>
+<tr><td>背景与目标</td><td class="w">流水闯关现有入口都在大厅，玩家在游戏中没有入口；流水闯关会一期接一期上线，入口要自动接上，出问题时能一键关闭。<span class="cell-sub">依据：原始需求；大当家第三至第五轮、第十轮、第十一轮答复</span></td></tr>
+<tr><td>成功指标</td><td class="w">入口点击率 ＝ 点击人数 ÷ 曝光人数（按自然日，GMT+8）。不设目标值，上线后看数据；统计方式见 6.4 运营看板指标。</td></tr>
+<tr><td>多端范围</td><td class="w">H5：做；iOS、Flutter 安卓：做（随发版）；安卓原生老包、PC：不做；运营后台：做。</td></tr>
+<tr><td>名词</td><td class="w">「入口」：本需求在侧栏新增的按钮。「开着」：某一期流水闯关处于预热中、进行中或领奖期（活动结束后、下架前），挂起且展示公告的也算。「目标活动」：点击入口时要进入的那一期（N7）。「设置页」：后台「活动配置 › 游戏页侧栏入口」。</td></tr>
+<tr><td>时间与时区</td><td class="w">活动状态以服务端时间为准，GMT+8；各期准确时间以流水闯关后台配置为准。</td></tr>
+</table></div>
+
+<h2 id="c2">2. 整体业务流程</h2>
+<h3 id="c2-1">2.1 主流程（玩家视角）</h3>
+<div class="flow">
+  <div class="fs key" data-fp="F01-01"><div class="no">1</div><div><b>进入游戏</b>：玩家进入任一带浮动侧栏的游戏页（H5 / iOS / Flutter 安卓）</div></div>
+  <div class="fa">↓</div>
+  <div class="fs" data-fp="F01-02"><div class="no">2</div><div><b>展开侧栏</b>：点 G 图标 → 按后台设置和各期状态决定是否显示入口（见 <a href="#c2-2">2.2 入口显示分支</a>）</div></div>
+  <div class="fa">↓</div>
+  <div class="fs key" data-fp="F01-03"><div class="no">3</div><div><b>点入口</b>：确定目标活动（见 <a href="#c2-3">2.3 目标活动分支</a>）→ 按 Home 现有方式离开游戏</div></div>
+  <div class="fa">↓</div>
+  <div class="fs key" data-fp="F01-03"><div class="no">4</div><div><b>进入落地页</b>：按目标活动状态显示预热页、进行中页、结束页或公告</div></div>
+</div>
+<h3 id="c2-2">2.2 入口显示分支（按后台设置和活动状态）</h3>
+<div class="brs">
+  <div class="bc" data-fp="F01-02 F03-01"><h5>A - 总开关关闭</h5><p class="s"><b>不显示入口</b><small>不管有没有活动开着</small></p></div>
+  <div class="bc" data-fp="F01-02"><h5>B - 自动 · 至少一期开着</h5><p class="s"><b>显示入口</b><small>没有一期开着时不显示</small></p></div>
+  <div class="bc" data-fp="F01-02 F03-02"><h5>C - 指定某一期</h5><p class="s"><b>这一期开着才显示</b><small>这一期没开着时不显示（Q19）；下架后回到自动（Q20）</small></p></div>
+</div>
+<h3 id="c2-3">2.3 目标活动分支</h3>
+<div class="brs">
+  <div class="bc" data-fp="F01-03"><h5>A - 自动 · 只有一期开着</h5><p class="s"><b>进入这一期</b></p></div>
+  <div class="bc" data-fp="F01-03"><h5>B - 自动 · 多期同时开着</h5><p class="s"><b>进入最新创建的一期</b><small>理论上不会出现</small></p></div>
+  <div class="bc" data-fp="F01-03 F03-02"><h5>C - 指定某一期</h5><p class="s"><b>进入指定的这一期</b></p></div>
+</div>
+<h3 id="c2-4">2.4 后台操作流程（运营视角）</h3>
+<div class="flow">
+  <div class="fs key" data-fp="F03-01"><div class="no">1</div><div><b>平时</b>：不用操作；流水闯关新一期进入预热，入口自动出现</div></div>
+  <div class="fa">↓</div>
+  <div class="fs" data-fp="F03-02 F03-03"><div class="no">2</div><div><b>需要时</b>：打开设置页 → 关闭总开关 / 指定某一期 / 换图标或文字 → 保存</div></div>
+  <div class="fa">↓</div>
+  <div class="fs" data-fp="F03-04"><div class="no">3</div><div><b>生效</b>：玩家下次展开侧栏时按新设置显示；每次保存记一条保存记录</div></div>
+</div>
+<h3 id="c2-5">2.5 系统时序（后端视角）</h3>
+<div class="tbl"><table data-fit>
+<tr><th>触发</th><th>执行方</th><th>动作</th></tr>
+<tr data-fp="F03-04"><td>运营保存设置</td><td>后台</td><td class="w">校验后保存，记一条保存记录</td></tr>
+<tr data-fp="F01-02 F02-01"><td>侧栏展开</td><td>前端</td><td class="w">按当前后台设置和各期状态判断是否显示入口；显示时记 1 次曝光</td></tr>
+<tr data-fp="F01-03 F02-01"><td>点入口</td><td>前端</td><td class="w">按点击时的设置和状态确定目标活动；记 1 次点击；按 Home 现有方式离开游戏</td></tr>
+<tr data-fp="F01-03"><td>打开落地页</td><td>活动服务（沿用现有）</td><td class="w">按服务端时间返回目标活动状态</td></tr>
+<tr data-fp="F03-02"><td>指定的那一期下架或被删除</td><td>后台</td><td class="w">按 N16 处理（建议回到自动），记一条系统保存记录</td></tr>
+</table></div>
+<p>具体实现由技术确定。</p>
+
+<h2 id="c3">3. 业务规则</h2>
+<h3 id="c3-1">3.1 现状（不改动，仅作依据）</h3>
+<div class="tbl"><table data-fit>
+<tr><th>规则</th><th>说明</th><th>依据</th></tr>
+<tr><td>游戏内快捷侧栏</td><td class="w">G 图标浮标，默认折叠贴边，可拖拽；展开后有 Home、Deposit、Reload。安卓在右上角，iOS 在左上角</td><td>789Bingo平台知识库.md「游戏内快捷键」</td></tr>
+<tr><td>活动状态</td><td class="w">未开始 → 预热中 → 进行中 → 领奖缓冲 → 已下架，按时间自动流转；后续版本支持「挂起」，可选展示活动公告；只有「未开始」可改活动配置</td><td><span class="no-ref">流水闯关活动 v1.0 PRD 规则 N3；v1.1 需求要点 F21-01、F21-02</span></td></tr>
+<tr><td>活动入口</td><td class="w">现有入口后台不提供配置，由技术按活动逐个添加</td><td><span class="no-ref">流水闯关活动 v1.0 PRD 0.1「活动落地页入口」</span></td></tr>
+<tr><td>多期活动</td><td class="w">多期可以同时上线，时间可以重叠，各期独立</td><td><span class="no-ref">流水闯关活动 v1.0 PRD 规则 N2</span></td></tr>
+<tr><td>落地页</td><td class="w">每期一个落地页，按状态显示预热页、进行中页、结束页；已下架显示「活动已下架」；底部有「18+」合规小字</td><td><span class="no-ref">流水闯关活动 v1.0 PRD 第 5 章</span></td></tr>
+<tr><td>后台活动配置菜单</td><td class="w">轮播图、活动图素材等「入口位置」类配置集中在「活动配置」下的独立页面</td><td>789Bingo管理后台知识库.md 4.10「活动配置」</td></tr>
+</table></div>
+
+<h3 id="c3-2">3.2 本需求规则</h3>
+<div class="tbl"><table data-fit>
+<tr><th>编号</th><th>规则</th><th>起因</th><th>功能点</th></tr>
+<tr id="n1" data-fp="F01-01" data-brief="入口放在侧栏 Reload 和 G 图标之间、紧挨 G 图标；其他按钮不变"><td>N1</td><td class="w">入口放在侧栏 Reload 和 G 图标之间，紧挨 G 图标。Home、Deposit、Reload 不变。iOS 侧栏在左上角时顺序不变。</td><td class="w">用户答复 3</td><td><span class="fp">F01-01</span> 入口位置与样式</td></tr>
+<tr id="n2" data-fp="F01-01 F03-03" data-brief="入口样式与现有按钮一致；文字和图标的禁用内容和打扰限制只在本条定义"><td>N2</td><td class="w">默认图标与 Home、Deposit、Reload 同一风格（图标在上、文字在下，尺寸和配色一致），不做节日专属形象；默认文字「Quest」（T01）。<br><b>禁用内容（全文只在本条定义）</b>：按钮文字和图标不出现奖金金额、币种符号、百分比，不使用 FREE、WIN、BONUS、JACKPOT、GUARANTEED、EASY MONEY 及同类暗示必赢、免费得钱的词语；图标不使用钞票、金币堆、钱袋、老虎机中奖等金钱或中奖画面；不写倒计时、名额等催促内容。<br><b>打扰限制</b>：不加红点和角标；不加闪烁、跳动、旋转等动效；不因活动状态变化自动展开侧栏或弹出提示；不另加合规标识。<br>后台更换的图标和文字同样遵守本条。</td><td class="w">用户答复 5、6；文案第七轮；合规审核 C03、C04、C06 原文</td><td><span class="fp">F01-01</span> 入口位置与样式</td></tr>
+<tr id="n3" data-fp="F01-01" data-brief="所有带侧栏的游戏页都显示入口；侧栏自身行为沿用现状"><td>N3</td><td class="w">所有带浮动侧栏的游戏页都适用，不分厂商和品类；侧栏折叠、展开、拖拽、贴边沿用现状；入口只在侧栏展开时显示。</td><td class="w">用户答复 2</td><td><span class="fp">F01-01</span> 入口位置与样式</td></tr>
+<tr id="n4" data-fp="F01-02 F03-01 F03-02" data-brief="总开关开启时：自动模式下任一期开着就显示；指定模式下指定的那一期开着才显示；挂起看是否展示公告"><td>N4</td><td class="w">显示入口 ＝ 后台总开关开启 且 满足下面之一：<br>① 目标活动为「自动」：至少有一期流水闯关开着；<br>② 目标活动为「指定某一期」：指定的这一期开着（这一期没开着时不显示，见 Q19）。<br>「开着」= 预热中、进行中或领奖期；某一期被挂起时，选了「展示活动公告」的算开着，没选的当这期没开着。未开始（含到预热时间但关卡未配置）、已下架都不算开着。各期状态按各自时间自动流转，以服务端时间（GMT+8）为准；按钮不设自己的显示时间。以后新建的流水闯关活动自动适用，运营不用另外操作。示例见 3.3。</td><td class="w">用户答复 4；第三、四轮；第十一轮 HQ2、HQ3、HQ5、HQ6</td><td><span class="fp">F01-02</span> 入口显示时机</td></tr>
+<tr id="n5" data-fp="F01-02" data-brief="以侧栏每次展开时的状态和设置为准；读取失败本次不显示"><td>N5</td><td class="w">以侧栏每次展开时的后台设置和活动状态为准。入口已经显示、点击前一刻目标活动已下架且没有其他可进的活动时，照常离开游戏，落地页显示「活动已下架」。读取设置或活动状态失败时，本次展开不显示入口，侧栏其他按钮照常。</td><td class="w">第四轮确认</td><td><span class="fp">F01-02</span> 入口显示时机</td></tr>
+<tr id="n6" data-fp="F01-03" data-brief="点入口：按 Home 现有方式离开游戏，再打开目标活动的落地页"><td>N6</td><td class="w">点击入口 → 按 Home 现有方式离开游戏（注单结算、未结算局、免费次数使用中与点 Home 一致）→ 打开目标活动（N7）的落地页，按该期状态显示预热页、进行中页、结束页或公告。</td><td class="w">用户答复 7；Home 现状见 Q17</td><td><span class="fp">F01-03</span> 点击离开游戏并跳转落地页</td></tr>
+<tr id="n7" data-fp="F01-03 F03-02" data-brief="自动：一期开着进这一期，多期开着进最新创建的一期；指定：进指定的这一期"><td>N7</td><td class="w">目标活动按点击时的设置和状态确定：「自动」时，只有一期开着进这一期，多期同时开着（理论上不会出现）进开着的各期中最新创建的一期；「指定某一期」时，进指定的这一期。</td><td class="w">第九轮原话「显示目前最新的活动，即最新创建且已经开始预热（以及后续状态）的活动」；第十一轮 HQ3</td><td><span class="fp">F01-03</span> 点击离开游戏并跳转落地页</td></tr>
+<tr id="n8" data-fp="F01-03" data-brief="重复点击入口只离开一次游戏、只打开一个落地页"><td>N8</td><td class="w">离开游戏过程中重复点击入口，只离开一次游戏、只打开一个落地页。</td><td class="w">规范「并发与重复」</td><td><span class="fp">F01-03</span> 点击离开游戏并跳转落地页</td></tr>
+<tr id="n9" data-fp="F01-04" data-brief="看得到侧栏 G 图标的账号就看得到按钮，不另判断"><td>N9</td><td class="w">可见人群与侧栏 G 图标一致：看得到 G 图标的账号，满足 N4 就看得到入口；不另按登录、KYC、风控列表、账号状态、自我排除或冷静期判断；设了充值或投注上限的玩家照常显示。进入落地页后按流水闯关现有规则处理。</td><td class="w">用户答复 9；第八轮 C01、C02</td><td><span class="fp">F01-04</span> 人群、端与版本</td></tr>
+<tr id="n10" data-fp="F01-04" data-brief="H5、iOS、Flutter 安卓做；PC、老版本 App、安卓原生老包不显示"><td>N10</td><td class="w">H5、iOS、Flutter 安卓三端都做，上线时间以后排期，App 随排期后的发版。PC、老版本 App、安卓原生老包不显示。</td><td class="w">第五、九轮</td><td><span class="fp">F01-04</span> 人群、端与版本</td></tr>
+<tr id="n11" data-fp="F02-01" data-brief="记录入口曝光和点击，口径见 6. 数据埋点"><td>N11</td><td class="w">记录入口的曝光和点击，口径见 6. 数据埋点；上报失败不影响入口显示和跳转。</td><td class="w">用户答复 8</td><td><span class="fp">F02-01</span> 入口曝光与点击</td></tr>
+<tr id="n12" data-fp="F01-03" data-brief="离开游戏失败或断网时，与点 Home 失败时一致"><td>N12</td><td class="w">点入口后离开游戏失败或断网，处理和提示与点 Home 失败时一致。</td><td class="w">第四轮确认</td><td><span class="fp">F01-03</span> 点击离开游戏并跳转落地页</td></tr>
+<tr id="n13" data-fp="F01-03" data-brief="从入口进入落地页后点返回，按落地页现有返回逻辑"><td>N13</td><td class="w">从入口进入落地页后点返回，按落地页现有返回逻辑，不自动回到原游戏。</td><td class="w">第四轮确认</td><td><span class="fp">F01-03</span> 点击离开游戏并跳转落地页</td></tr>
+<tr id="n14" data-fp="F03-01" data-brief="总开关默认开；关闭并保存后玩家下次展开侧栏不显示入口；重新打开同样下次展开时恢复"><td>N14</td><td class="w">设置页「是否显示」总开关，默认开启。关闭并保存后，所有游戏页的入口在玩家下次展开侧栏时不再显示；重新开启并保存后，下次展开时按 N4 恢复。关闭前弹出确认。</td><td class="w">第十一轮 HQ2</td><td><span class="fp">F03-01</span> 总开关</td></tr>
+<tr id="n15" data-fp="F03-02" data-brief="目标活动默认自动；可指定一期未下架的流水闯关活动"><td>N15</td><td class="w">「活动类型」现在只有「流水闯关」。「目标活动」二选一，默认「自动」（开着的各期中最新创建的一期）；选「指定某一期」时必须从下拉里选一期，下拉只列未下架、未删除的流水闯关活动，显示活动名称、活动编号、当前状态和预热开始至下架时间。没选期次时不能保存，提示「请选择要指定的活动」。保存后，玩家下次展开侧栏时生效。</td><td class="w">第十一轮 HQ3、HQ7</td><td><span class="fp">F03-02</span> 目标活动</td></tr>
+<tr id="n16" data-fp="F03-02" data-brief="指定的那一期下架或被删除后，建议自动回到自动模式并记一条系统记录"><td>N16</td><td class="w">指定的那一期到达下架时间或在流水闯关后台被删除后：建议目标活动自动回到「自动」，设置页顶部提示「原指定的活动『活动名』已下架，已回到自动」，保存记录里记一条操作人为「系统」的记录（见 Q20）。</td><td class="w">资料未覆盖，建议方案</td><td><span class="fp">F03-02</span> 目标活动</td></tr>
+<tr id="n17" data-fp="F03-03" data-brief="可上传图标替换默认图标；格式和尺寸由设计给出；可恢复默认"><td>N17</td><td class="w">「按钮图标」可上传一张替换默认图标；不上传或点「恢复默认」时用默认图标。格式建议 PNG 透明背景、正方形，具体尺寸和文件大小上限由设计按现有三个按钮的图标给出（见 Q22）；不符合时不上传，提示「图标格式或尺寸不符合要求」。上传后在设置页显示侧栏预览。图标内容遵守 N2，由运营上传前自查。</td><td class="w">第十一轮 HQ4</td><td><span class="fp">F03-03</span> 图标与文字</td></tr>
+<tr id="n18" data-fp="F03-03" data-brief="按钮文字可改：必填，只允许英文字母和空格，有长度上限，命中禁用词不能保存"><td>N18</td><td class="w">「按钮文字」默认「Quest」，可修改：必填；只允许英文字母和空格（从源头挡住金额、币种符号和百分比）；长度上限以 Home 按钮宽度为准，由设计给出（见 Q21）；保存时按 N2 的禁用词校验，不区分大小写，命中时不能保存，提示「按钮文字包含禁用内容：命中的词」。改文字前建议先找书记员王德发定稿。</td><td class="w">第十一轮 HQ4；合规审核 C03</td><td><span class="fp">F03-03</span> 图标与文字</td></tr>
+<tr id="n19" data-fp="F03-04" data-brief="保存后玩家下次展开侧栏生效；每次保存记一条保存记录"><td>N19</td><td class="w">设置页所有改动点「保存」后才生效，玩家下次展开侧栏时按新设置显示；从保存到前台生效的时间具体由技术确定。离开页面时有未保存的改动，提示「有未保存的改动，确定离开？」。每次保存记一条保存记录：操作时间（GMT+8）、操作人、改了什么（改前 → 改后）。</td><td class="w">第十一轮 HQ2；规范「后台操作日志」</td><td><span class="fp">F03-04</span> 保存与记录</td></tr>
+<tr id="n20" data-fp="F03-04" data-brief="设置页按后台菜单权限控制：有编辑权限才能改和保存，只有查看权限时只读"><td>N20</td><td class="w">设置页加入后台菜单权限，分「查看」和「编辑」：有编辑权限才能改和保存；只有查看权限时，页面只读、不显示保存按钮；没有权限时菜单不显示。权限分配沿用后台现有角色权限配置（见 Q23）。</td><td class="w">规范「后台操作日志与权限」</td><td><span class="fp">F03-04</span> 保存与记录</td></tr>
+</table></div>
+<p>本需求不涉及数值。</p>
+
+<h3 id="c3-3">3.3 显示规则示例</h3>
+<div class="tbl"><table data-fit>
+<tr><th>场景</th><th>后台设置</th><th>活动状态</th><th>结果</th></tr>
+<tr data-fp="F01-02"><td>1</td><td>总开关关闭</td><td>任意</td><td class="w">不显示</td></tr>
+<tr data-fp="F01-02"><td>2</td><td>开启 · 自动</td><td>只有一期预热中 / 进行中 / 领奖期</td><td class="w">显示，进这一期</td></tr>
+<tr data-fp="F01-02"><td>3</td><td>开启 · 自动</td><td>两期开着</td><td class="w">显示，进最新创建的一期</td></tr>
+<tr data-fp="F01-02"><td>4</td><td>开启 · 自动</td><td>圣诞这一期已下架、另一期进行中</td><td class="w">显示，进另一期</td></tr>
+<tr data-fp="F01-02"><td>5</td><td>开启 · 自动</td><td>各期都未开始或已下架</td><td class="w">不显示</td></tr>
+<tr data-fp="F01-02"><td>6</td><td>开启 · 自动</td><td>唯一一期被挂起且展示公告</td><td class="w">显示，进落地页看公告</td></tr>
+<tr data-fp="F01-02"><td>7</td><td>开启 · 自动</td><td>唯一一期被挂起且不展示公告</td><td class="w">不显示</td></tr>
+<tr data-fp="F01-02 F03-02"><td>8</td><td>开启 · 指定 A 期</td><td>A 期进行中</td><td class="w">显示，进 A 期</td></tr>
+<tr data-fp="F01-02 F03-02"><td>9</td><td>开启 · 指定 A 期</td><td>A 期未开始、B 期进行中</td><td class="w">不显示（Q19）</td></tr>
+<tr data-fp="F01-02 F03-02"><td>10</td><td>开启 · 指定 A 期</td><td>A 期已下架</td><td class="w">回到自动，按场景 2–5 判断（Q20）</td></tr>
+<tr data-fp="F01-02"><td>11</td><td>任意</td><td>读取设置或状态失败</td><td class="w">本次不显示</td></tr>
+</table></div>
+
+<h3 id="c3-4">3.4 与知识库的冲突与取舍</h3>
+<p>比对的知识库：<code>789Bingo平台知识库.md</code>、<code>789Bingo管理后台知识库.md</code>、<code>Nustar_789Bingo_分析与竞品报告.md</code>。按「暂停结合 Jira」要求，未比对两份 Jira 知识库。</p>
+<div class="tbl"><table data-fit>
+<tr><th>冲突点</th><th>说法 A（出处）</th><th>说法 B（出处）</th><th>以哪个为准</th></tr>
+<tr data-fp="F01-04"><td class="w">Self-Exclusion 玩家能否登录、进游戏页</td><td class="w">申请后账号停用，暂时不能登录（789Bingo平台知识库.md 3.1）</td><td class="w">存在由 Self-Exclusion 触发的冻结，冻结账号可以登录（同上）</td><td class="w">以开发确认的现状为准（Q18）</td></tr>
+</table></div>
+
+<h3 id="c3-5">3.5 依赖的现有后台配置</h3>
+<div class="tbl"><table data-fit>
+<tr><th>配置项</th><th>菜单位置</th><th>测试环境值</th><th>关联功能点</th></tr>
+<tr data-fp="F01-02 F03-02"><td>各期流水闯关的时间节点、关卡、挂起设置</td><td class="w">流水闯关现有后台活动配置</td><td>资料未覆盖</td><td><span class="fp">F01-02</span> 入口显示时机</td></tr>
+<tr data-fp="F03-04"><td>后台角色和菜单权限</td><td class="w">后台现有角色权限配置</td><td>资料未覆盖</td><td><span class="fp">F03-04</span> 保存与记录</td></tr>
+</table></div>
+<p><span class="warn-2">※ 测试环境值只用于测试和原型演示，和生产环境不一定相同；上线前由运营按生产配置核对。</span></p>
+
+<h2 id="c4">4. 前台页面一：游戏页浮动侧栏</h2>
+<p>原型：<a href="../../prototype/full/front/游戏页侧栏圣诞闯关入口-游戏页浮动侧栏.html">游戏页浮动侧栏</a>；<a href="../../prototype/full/front/游戏页侧栏圣诞闯关入口-活动落地页跳转示意.html">活动落地页跳转示意</a>。前台没有列表。</p>
+<div class="tbl"><table data-fit>
+<tr><th>模块 / 状态</th><th>功能与交互要求</th></tr>
+<tr data-fp="F01-01"><td>入口 <span class="fp">F01-01</span></td><td class="w">位置见 N1，样式、禁用内容和打扰限制见 N2；图标和文字按后台设置显示（N17、N18）。</td></tr>
+<tr data-fp="F01-02"><td>显示与隐藏 <span class="fp">F01-02</span></td><td class="w">见 N4、N5 和 3.3 显示规则示例。不显示时侧栏与现状一致；状态还没读到时先不显示，其他按钮不等待。</td></tr>
+<tr data-fp="F01-03"><td>点击 <span class="fp">F01-03</span></td><td class="w">见 N6、N7、N8、N12、N13；落地页沿用现有，本需求不改。</td></tr>
+<tr data-fp="F01-04"><td>端与人群 <span class="fp">F01-04</span></td><td class="w">见 N9、N10。</td></tr>
+</table></div>
+
+<h2 id="c5">5. 运营后台需求</h2>
+<p>原型：<a href="../../prototype/full/admin/游戏页侧栏圣诞闯关入口-后台游戏页侧栏入口设置.html">后台游戏页侧栏入口设置</a>。操作说明见<a href="游戏页侧栏圣诞闯关入口-后台操作手册.html">后台操作手册</a>。</p>
+<h3 id="c5-1">5.1 设置页：活动配置 › 游戏页侧栏入口</h3>
+<p>单独一个设置页，没有新建和删除，只有一份设置。页面分「设置」「保存记录」两个标签页。</p>
+<div class="tbl"><table data-fit>
+<tr><th>功能</th><th>说明</th></tr>
+<tr data-fp="F03-01"><td>是否显示 <span class="fp">F03-01</span></td><td class="w">开关，默认开；关闭时弹确认「关闭后所有游戏页都不显示侧栏入口，玩家下次展开侧栏生效。确定关闭？」，右上角 × 等同取消（N14）。</td></tr>
+<tr data-fp="F03-02"><td>活动类型 <span class="fp">F03-02</span></td><td class="w">只读显示「流水闯关」（N15）。</td></tr>
+<tr data-fp="F03-02"><td>目标活动 <span class="fp">F03-02</span></td><td class="w">单选「自动」「指定某一期」，默认自动；自动时下方灰字显示「当前会进入：活动名（状态）」，没有开着的活动时显示「当前没有开着的活动，入口不显示」。选指定时出现下拉（N15、N16）。</td></tr>
+<tr data-fp="F03-03"><td>按钮图标 <span class="fp">F03-03</span></td><td class="w">上传、恢复默认、侧栏预览（N17）。</td></tr>
+<tr data-fp="F03-03"><td>按钮文字 <span class="fp">F03-03</span></td><td class="w">输入框，默认 Quest，失焦和保存时校验（N18），错误提示显示在输入框下方。</td></tr>
+<tr data-fp="F03-04"><td>保存 / 取消 <span class="fp">F03-04</span></td><td class="w">保存：校验全部通过才保存，成功提示「保存成功，玩家下次展开侧栏时生效」；保存中按钮置灰，防止重复提交；保存失败提示「保存失败，请重试」，页面保留已填内容。取消：恢复到上次保存的设置（N19）。</td></tr>
+<tr data-fp="F03-04"><td>保存记录 <span class="fp">F03-04</span></td><td class="w">列表：操作时间（GMT+8）、操作人（运营账号或「系统」）、改动内容（改前 → 改后）（N19）。</td></tr>
+<tr data-fp="F03-04"><td>权限 <span class="fp">F03-04</span></td><td class="w">见 N20。</td></tr>
+</table></div>
+<h3 id="c5-2">5.2 列表分页</h3>
+<div class="tbl"><table data-fit>
+<tr><th>列表（所在页面）</th><th>分页方式</th><th>每页条数（默认 / 可选）</th><th>默认排序</th><th>筛选、操作后停在哪一页</th><th>空列表 / 加载失败</th><th>导出</th></tr>
+<tr data-fp="F03-04"><td class="w">保存记录（设置页 › 保存记录）</td><td>页码分页</td><td>20 / 10、20、50、100</td><td class="w">操作时间倒序，同一时间按记录编号倒序</td><td class="w">没有筛选；切换每页条数回到第 1 页</td><td class="w">空列表显示「暂无保存记录」；加载失败显示「加载失败，点击重试」</td><td>不涉及</td></tr>
+</table></div>
+<p>页码超出范围时取首页或末页；后台同类日志列表的每页条数与现有不同时以现有为准。</p>
+<h3 id="c5-3">5.3 帮助提示内容</h3>
+<div class="tbl"><table data-fit>
+<tr><th>数据项 / 操作</th><th>说明内容</th></tr>
+<tr data-fp="F03-01"><td>是否显示</td><td class="w">总开关。关闭后所有游戏页都不显示侧栏入口，玩家下次展开侧栏生效。</td></tr>
+<tr data-fp="F03-02"><td>活动类型</td><td class="w">入口只用于流水闯关活动。</td></tr>
+<tr data-fp="F03-02"><td>目标活动</td><td class="w">自动：进开着的各期中最新创建的一期，不用每期操作。指定：只进选中的那一期，那一期没开着时入口不显示。</td></tr>
+<tr data-fp="F03-03"><td>按钮图标</td><td class="w">PNG 透明背景、正方形，尺寸见上传提示；不传用默认图标。不能有金额、钞票、金币、中奖画面。</td></tr>
+<tr data-fp="F03-03"><td>按钮文字</td><td class="w">英文字母和空格，长度见输入框提示；不能用 FREE、WIN、BONUS 等词，改前先找文案定稿。</td></tr>
+<tr data-fp="F03-04"><td>保存记录</td><td class="w">每次保存的时间、操作人和改动内容；「系统」表示指定的活动下架后自动回到自动。</td></tr>
+</table></div>
+
+<h2 id="c6">6. 数据埋点</h2>
+<h3 id="c6-1">6.1 分析目标</h3>
+<p data-fp="F02-01">评估游戏内入口的导流效果。</p>
+<h3 id="c6-2">6.2 分析维度</h3>
+<div class="tbl"><table data-fit>
+<tr><th>维度</th><th>业务含义</th></tr>
+<tr><td>日期</td><td class="w">自然日，GMT+8</td></tr>
+<tr><td>端</td><td class="w">H5 / iOS / Flutter 安卓</td></tr>
+<tr><td>目标活动及阶段</td><td class="w">进入的是哪一期、处于哪个阶段；是自动还是指定</td></tr>
+<tr><td>游戏</td><td class="w">游戏厂商、游戏名称</td></tr>
+</table></div>
+<h3 id="c6-3">6.3 事件清单</h3>
+<div class="tbl"><table data-fit>
+<tr><th>事件</th><th>触发时机</th><th>业务口径</th><th>端</th><th>功能点</th></tr>
+<tr data-fp="F02-01"><td>入口曝光</td><td class="w">侧栏展开且入口显示在画面上</td><td class="w">同一次展开只记 1 次；不显示时不记。只记平台账号（未登录不记账号）；未登录玩家不为本需求新增采集设备信息；告知和保存期限沿用现有隐私政策</td><td>H5、iOS、Flutter</td><td><span class="fp">F02-01</span></td></tr>
+<tr data-fp="F02-01"><td>入口点击</td><td class="w">点击入口、开始离开游戏</td><td class="w">重复点击只记 1 次。记录内容同「入口曝光」</td><td>H5、iOS、Flutter</td><td><span class="fp">F02-01</span></td></tr>
+</table></div>
+<h3 id="c6-4">6.4 运营看板指标</h3>
+<div class="tbl"><table data-fit>
+<tr><th>指标</th><th>口径</th><th>阈值</th></tr>
+<tr data-fp="F02-01"><td>曝光次数 / 人数</td><td class="w">按自然日统计；人数只按已登录账号去重</td><td>-</td></tr>
+<tr data-fp="F02-01"><td>点击次数 / 人数</td><td class="w">同上</td><td>-</td></tr>
+<tr data-fp="F02-01"><td>点击率</td><td class="w">已登录点击人数 ÷ 已登录曝光人数，同一自然日、同一端</td><td>-（不设）</td></tr>
+</table></div>
+<p data-fp="F02-01">沿用平台现有前端埋点通道（TQ6），上线第一天按端核对有没有缺报。</p>
+
+<h2 id="c7">7. 接口与异常</h2>
+<div class="tbl"><table data-fit>
+<tr><th>场景</th><th>处理方式</th><th>用户提示</th></tr>
+<tr data-fp="F01-02"><td>读取设置或活动状态失败</td><td class="w">本次展开不显示入口（N5）</td><td>无</td></tr>
+<tr data-fp="F01-03"><td>当前局未结算、免费次数使用中</td><td class="w">与点 Home 一致（N6），现状见 Q17</td><td>与 Home 一致</td></tr>
+<tr data-fp="F01-03"><td>离开游戏失败、断网</td><td class="w">与点 Home 失败时一致（N12）</td><td>与 Home 一致</td></tr>
+<tr data-fp="F01-03"><td>点击前一刻目标活动下架，另一期还开着（自动模式）</td><td class="w">按点击时的状态重新确定，进还开着的那一期（N7）</td><td>无</td></tr>
+<tr data-fp="F01-02"><td>点击前一刻没有可进的活动</td><td class="w">落地页显示「活动已下架」（N5）</td><td>沿用现有</td></tr>
+<tr data-fp="F03-04"><td>后台保存失败</td><td class="w">不生效，页面保留已填内容（N19）</td><td>「保存失败，请重试」</td></tr>
+<tr data-fp="F03-04"><td>两个运营同时改设置</td><td class="w">以后保存的为准，两次都记保存记录</td><td>无</td></tr>
+<tr data-fp="F03-03"><td>按钮文字命中禁用词或超长</td><td class="w">不能保存（N18）</td><td>输入框下方提示</td></tr>
+<tr data-fp="F03-02"><td>指定的那一期下架或被删除</td><td class="w">按 N16 处理（Q20）</td><td>设置页顶部提示</td></tr>
+<tr data-fp="F02-01"><td>埋点上报失败</td><td class="w">不影响入口显示和跳转（N11）</td><td>无</td></tr>
+</table></div>
+<p>具体实现由技术确定。</p>
+
+<h2 id="c8">8. 验收标准</h2>
+<h3 id="c8-1">8.1 用户故事与验收条目</h3>
+<p>优先级：P0 = 完整版上线时必须有；P1 = 可以跟 App 发版。</p>
+<h4 data-fp="F01-01">US-01 游戏中看到入口 [P0]</h4>
+<p data-fp="F01-01">作为在游戏中的玩家，我希望在侧栏看到流水闯关入口，以便不用退回大厅。</p>
+<ol>
+<li data-fp="F01-01"><span class="fp">F01-01</span> 正常：Given 总开关开启、有一期活动进行中 When 展开侧栏 Then 依次是 Home、Deposit、Reload、入口、G 图标，样式符合 N2。</li>
+<li data-fp="F01-01"><span class="fp">F01-01</span> 边界：Given 3 个不同厂商、品类的带侧栏游戏 When 展开侧栏 Then 都显示入口；侧栏不会自动展开。</li>
+</ol>
+<h4 data-fp="F01-02">US-02 入口跟着活动自动显示和隐藏 [P0]</h4>
+<p data-fp="F01-02">作为运营，我希望一期接一期上线时入口自动接上，以便不用每期操作。</p>
+<ol>
+<li data-fp="F01-02"><span class="fp">F01-02</span> 正常：按 3.3 显示规则示例场景 1–11 逐条验证，结果一致。</li>
+<li data-fp="F01-02"><span class="fp">F01-02</span> 边界：Given 只有一期，预热开始日为 D 日 When D-1 日 23:59:59 展开 Then 不显示；When D 日 00:00:00 之后展开 Then 显示；下架日 E 日 23:59:59 之前显示，E+1 日 00:00:00 之后不显示。</li>
+<li data-fp="F01-02"><span class="fp">F01-02</span> 边界：Given 新建一期活动并进入预热，后台没做任何操作 When 展开侧栏 Then 入口自动显示。</li>
+<li data-fp="F01-02"><span class="fp">F01-02</span> 异常：Given 读取设置或状态失败 When 展开侧栏 Then 不显示入口，其他按钮正常。</li>
+</ol>
+<h4 data-fp="F01-03">US-03 点入口进入活动 [P0]</h4>
+<p data-fp="F01-03">作为玩家，我希望点入口后直接进入活动落地页。</p>
+<ol>
+<li data-fp="F01-03"><span class="fp">F01-03</span> 正常：Given 自动、只有一期进行中 When 点入口 Then 按 Home 方式离开游戏，进入这一期进行中页。</li>
+<li data-fp="F01-03"><span class="fp">F01-03</span> 边界：Given 自动、两期开着 When 点入口 Then 进最新创建的一期；Given 指定 A 期且 A 期开着 When 点入口 Then 进 A 期。</li>
+<li data-fp="F01-03"><span class="fp">F01-03</span> 异常：Given 当前局未结算、断网或离开失败 When 点入口 Then 与点 Home 相同；连续点 3 次只跳一次。</li>
+<li data-fp="F01-03"><span class="fp">F01-03</span> 正常：Given 从入口进入落地页 When 点返回 Then 按落地页现有返回逻辑。</li>
+</ol>
+<h4 data-fp="F01-04">US-04 可见人群与 G 图标一致 [P0]</h4>
+<p data-fp="F01-04">作为玩家，我看到入口的条件和 G 图标一致。</p>
+<ol>
+<li data-fp="F01-04"><span class="fp">F01-04</span> 正常：Given 看得到 G 图标的账号（含未 KYC、设了上限的） When 有活动开着时展开侧栏 Then 显示入口。</li>
+<li data-fp="F01-04"><span class="fp">F01-04</span> 异常：Given 看不到 G 图标的账号 When 进入游戏 Then 也看不到入口。</li>
+</ol>
+<h4 data-fp="F02-01">US-05 统计入口效果 [P0]</h4>
+<p data-fp="F02-01">作为运营，我希望统计入口的曝光和点击。</p>
+<ol>
+<li data-fp="F02-01"><span class="fp">F02-01</span> 正常：Given 有一期开着 When 展开一次并点入口 Then 曝光、点击各记 1 次，带端、目标活动、游戏信息。</li>
+<li data-fp="F02-01"><span class="fp">F02-01</span> 异常：Given 入口不显示 When 展开侧栏 Then 不记曝光；上报失败不影响跳转。</li>
+</ol>
+<h4 data-fp="F03-01">US-06 一键关闭入口 [P0]</h4>
+<p data-fp="F03-01">作为运营，我希望活动出问题时能一键关掉游戏内入口。</p>
+<ol>
+<li data-fp="F03-01"><span class="fp">F03-01</span> 正常：Given 入口正在显示 When 关闭总开关并确认保存 Then 玩家下次展开侧栏不显示入口；重新开启保存后下次展开恢复。</li>
+<li data-fp="F03-01"><span class="fp">F03-01</span> 异常：Given 关闭总开关时弹出确认 When 点取消或右上角 × Then 开关保持开启，不保存。</li>
+</ol>
+<h4 data-fp="F03-02">US-07 指定进入某一期 [P0]</h4>
+<p data-fp="F03-02">作为运营，我希望在需要时把入口指向某一期。</p>
+<ol>
+<li data-fp="F03-02"><span class="fp">F03-02</span> 正常：Given 选「指定某一期」并选 A 期 When 保存 Then 玩家下次展开侧栏时，入口只跟 A 期，点击进 A 期。</li>
+<li data-fp="F03-02"><span class="fp">F03-02</span> 异常：Given 选了「指定某一期」但没选期次 When 保存 Then 不能保存，提示「请选择要指定的活动」；下拉里没有已下架、已删除的活动。</li>
+<li data-fp="F03-02"><span class="fp">F03-02</span> 边界：Given 指定的 A 期到达下架时间 Then 按 N16 处理（确认后的口径），保存记录多一条「系统」记录。</li>
+</ol>
+<h4 data-fp="F03-03">US-08 更换图标和文字 [P1]</h4>
+<p data-fp="F03-03">作为运营，我希望按季节换按钮图标和文字。</p>
+<ol>
+<li data-fp="F03-03"><span class="fp">F03-03</span> 正常：Given 上传符合要求的图标、文字改为合规的英文 When 保存 Then 预览和前台都显示新图标和文字；点「恢复默认」后回到默认图标。</li>
+<li data-fp="F03-03"><span class="fp">F03-03</span> 异常：Given 文字为空、含数字或符号、超长、或含 FREE（不区分大小写，如 free） When 保存 Then 不能保存并提示原因；图标格式或尺寸不符时不能上传。</li>
+</ol>
+<h4 data-fp="F03-04">US-09 保存记录与权限 [P0]</h4>
+<p data-fp="F03-04">作为运营主管，我希望知道谁在什么时候改了什么。</p>
+<ol>
+<li data-fp="F03-04"><span class="fp">F03-04</span> 正常：Given 运营保存一次修改 When 打开保存记录 Then 最上面一条显示操作时间、操作人和改前 → 改后。</li>
+<li data-fp="F03-04"><span class="fp">F03-04</span> 异常：Given 只有查看权限的账号 When 打开设置页 Then 页面只读、没有保存按钮；保存中重复点保存只提交一次。</li>
+<li data-fp="F03-04"><span class="fp">F03-04</span> 边界：Given 保存记录超过 20 条 When 翻页、改每页条数 Then 按 5.2 列表分页表现。</li>
+</ol>
+<h4 data-fp="F01-04">US-10 App 端看到入口 [P1]</h4>
+<p data-fp="F01-04">作为 App 玩家，我希望在 iOS、Flutter 安卓 App 里也能看到入口。</p>
+<ol>
+<li data-fp="F01-04"><span class="fp">F01-04</span> 正常：Given 已升级的 App When 展开侧栏 Then 表现同 H5，且跟随后台设置。</li>
+<li data-fp="F01-04"><span class="fp">F01-04</span> 异常：Given PC、老版本 App、安卓原生老包 When 打开游戏页 Then 不显示入口。</li>
+</ol>
+<h3 id="c8-2">8.2 跨端验收矩阵</h3>
+<div class="tbl"><table data-fit>
+<tr><th>验收点</th><th>功能点编号</th><th>H5</th><th>iOS 原生</th><th>Flutter</th><th>后台</th></tr>
+<tr data-fp="F01-01"><td class="w">位置、样式</td><td><span class="fp">F01-01</span></td><td>✓</td><td>✓</td><td>✓</td><td>-</td></tr>
+<tr data-fp="F01-02"><td class="w">显示规则示例 1–11</td><td><span class="fp">F01-02</span></td><td>✓</td><td>✓</td><td>✓</td><td>-</td></tr>
+<tr data-fp="F01-03"><td class="w">离开游戏、目标活动、重复点击、返回</td><td><span class="fp">F01-03</span></td><td>✓</td><td>✓</td><td>✓</td><td>-</td></tr>
+<tr data-fp="F01-04"><td class="w">人群、老版本、安卓原生老包</td><td><span class="fp">F01-04</span></td><td>✓</td><td>✓</td><td>✓</td><td>-</td></tr>
+<tr data-fp="F02-01"><td class="w">埋点</td><td><span class="fp">F02-01</span></td><td>✓</td><td>✓</td><td>✓</td><td>-</td></tr>
+<tr data-fp="F03-01 F03-02 F03-03"><td class="w">总开关、目标活动、图标文字在前台生效</td><td><span class="fp">F03-01</span></td><td>✓</td><td>✓</td><td>✓</td><td>✓</td></tr>
+<tr data-fp="F03-04"><td class="w">保存、校验、保存记录、权限</td><td><span class="fp">F03-04</span></td><td>-</td><td>-</td><td>-</td><td>✓</td></tr>
+</table></div>
+
+<h2 id="c9">9. 上线方式</h2>
+<ul>
+<li data-fp="F01-03">上线前：测试环境配两期时间重叠的活动，按 3.3 示例逐条核对；后台给运营角色配好查看 / 编辑权限。</li>
+<li data-fp="F01-04">上线顺序：以后排期；后台和 H5 先上，iOS、Flutter 随排期后的发版。</li>
+<li data-fp="F01-02 F01-03">和 v1.0 的衔接：完整版上线后替换 v1.0 只认圣诞这一期的判断；设置页初始为「开启 · 自动 · 默认图标 · Quest」，前台表现和 v1.0 在圣诞这一期期间一致。</li>
+<li data-fp="F03-01">开关：设置页总开关可一键关闭（N14），这是线上出问题时的首选处理方式。</li>
+<li>回滚：关闭总开关即可在前台隐藏入口；如需移除功能，H5 回退版本，App 端处理方式由技术确定。</li>
+</ul>
+
+<h2 id="c10">10. 风险与依赖</h2>
+<div class="tbl"><table data-fit>
+<tr><th>风险</th><th>等级</th><th>应对</th></tr>
+<tr><td class="w">与「游戏快捷侧边栏」需求的关系：该需求规划去掉 Reload、新增 Mini Banner 和「游戏快捷侧边栏管理」后台</td><td>中</td><td class="w">本需求优先，按现在线上的侧栏开发上线。侧栏升级排期时，由那个需求带上本按钮：放在 CS 客服和 G 图标之间，不占用 Mini Banner；本设置页整块并进「游戏快捷侧边栏管理」；Mini Banner 的活动选项里不列流水闯关，避免侧栏出现两个入口。那个需求的文档本次不改。（第九轮、第十一轮 HQ8）</td></tr>
+<tr><td class="w">运营更换的图标含禁用内容（系统认不出图片内容）</td><td>中</td><td class="w">帮助提示和操作手册写明 N2，上传前自查；文字由系统按禁用词校验</td></tr>
+<tr><td class="w">指定某一期后忘了改回，下一期开始时入口不显示</td><td>中</td><td class="w">目标活动旁显示当前会进入哪一期；指定的那一期下架后按 N16 处理（Q20）</td></tr>
+<tr><td class="w">后端拿不到所有期的活动状态</td><td>中</td><td class="w">TQ1，排期前确认</td></tr>
+<tr><td class="w">侧栏多一个按钮后变宽，可能遮挡部分游戏画面</td><td>低</td><td class="w">设计稿阶段按最窄屏幕核对；如有遮挡报大当家决定，入口尺寸始终与其他按钮一致</td></tr>
+<tr><td class="w">流水闯关落地页合规小字写「18+」，与平台 21 岁规定不一致</td><td>中</td><td class="w">由二当家另行处理；本需求不改落地页</td></tr>
+</table></div>
+<p>依赖：流水闯关活动和落地页按现有需求上线；Home 现有离开流程；后台角色权限配置（3.5）。</p>
+
+<h2 id="c11">11. 待确认事项</h2>
+<div class="tbl"><table data-fit>
+<tr><th>编号</th><th>事项</th><th>负责人</th><th>预计确认时间</th><th>状态</th></tr>
+<tr id="q19" data-brief="指定的那一期还没开始预热时，入口显示吗"><td>Q19</td><td class="w">运营指定了某一期，但这一期还没开始预热（别的期正开着），入口显示吗？建议：不显示，指定了就只跟这一期走；设置页下拉旁提示「这一期开着时入口才显示」。</td><td>大当家</td><td>排期前</td><td>待确认</td></tr>
+<tr id="q20" data-brief="指定的那一期下架或被删除后，入口怎么办"><td>Q20</td><td class="w">指定的那一期下架或被删除后怎么办？建议：自动回到「自动」，下一期照常自动接上；设置页顶部提示一次，保存记录记一条「系统」记录。另一个选择是入口隐藏，等运营手动改，但容易忘。</td><td>大当家</td><td>排期前</td><td>待确认</td></tr>
+<tr id="q21" data-brief="按钮文字最长几个字符"><td>Q21</td><td class="w">按钮文字最长几个字符？建议：以 Home 按钮宽度为准，由设计给出上限（预计约 8 个英文字符），书记员王德发确认常用写法放得下。</td><td>设计、书记员王德发</td><td>设计稿阶段</td><td>待确认</td></tr>
+<tr id="q22" data-brief="上传图标的格式、尺寸和大小上限"><td>Q22</td><td class="w">上传图标的格式、尺寸和文件大小上限？建议：PNG 透明背景、正方形，尺寸和大小上限由设计按现有三个按钮图标给出。</td><td>设计</td><td>设计稿阶段</td><td>待确认</td></tr>
+<tr id="q23" data-brief="设置页的编辑权限给哪些角色"><td>Q23</td><td class="w">设置页的「编辑」权限给哪些后台角色？建议：默认只给运营主管，普通运营只有「查看」，在后台现有角色权限里配置。</td><td>大当家</td><td>上线前</td><td>待确认</td></tr>
+<tr id="tq1" data-brief="能否一次拿到所有期流水闯关活动的当前状态"><td>TQ1</td><td class="w">能否一次拿到所有期流水闯关活动（含以后新建的）的当前状态。建议：有就直接用；没有就由后端补一个只读能力，并按 N7 统一给出目标活动。</td><td>开发（后端）</td><td>排期前</td><td>待确认</td></tr>
+<tr id="q16" data-brief="App 进入游戏后的游戏页（含侧栏）是不是调用 H5 网页框架"><td>Q16</td><td class="w">【v1.0 已有】目前 App（iOS、Flutter 安卓）进入游戏后，游戏页和侧栏是不是调用 H5 网页的框架（大当家原话「确定目前该进入游戏后app版是否也是调取的H5网页的框架」；技术评审 TQ4）。知识库资料未覆盖。建议：开发说明现状；来自 H5 就按 App 版本号屏蔽老版本，原生就随 App 发版。</td><td>开发（App 负责人）</td><td>v1.0 H5 上线前</td><td>待确认</td></tr>
+<tr id="q17" data-brief="Home 在当前局未结算、免费次数使用中时现在怎么处理，入口照做"><td>Q17</td><td class="w">【v1.0 已有】Home 在当前局未结算、免费次数使用中时的现状（技术评审 TQ2）。建议：开发说明现状，入口复用 Home 同一段离开流程。</td><td>开发（负责侧栏的前端）</td><td>v1.0 H5 上线前</td><td>待确认</td></tr>
+<tr id="q18" data-brief="冷静期账号和因 Self-Exclusion 被冻结的账号，能否登录、进游戏页、看到 G 图标"><td>Q18</td><td class="w">【v1.0 已有】冷静期账号和因 Self-Exclusion 被冻结的账号，能否登录、能否进游戏页（含游客试玩）、看不看得到 G 图标（技术评审 TQ3）。建议：开发说明现状；看得到的报大当家决定是否在 G 图标或活动层面统一处理，本需求不单独加判断。</td><td>开发（后端）；处理方式由大当家确认</td><td>v1.0 H5 上线前（2026-11-25 前）</td><td>待确认</td></tr>
+<tr id="tq6" data-brief="三端现有埋点通道和出数方式"><td>TQ6</td><td class="w">三端现有埋点通道和出数方式。建议：沿用现有通道；没有统一通道时与数据组约定。</td><td>开发、数据组</td><td>排期前</td><td>待确认</td></tr>
+</table></div>
+<p>已确认的事项见 0.1 评审结论补充。Q16–Q18 与 v1.0 同号同内容；Q1–Q15 编号已使用过，不再复用；TQ1、TQ6 沿用技术评审编号。</p>
+<h3 id="c11-1">11.1 未定文案清单</h3>
+<div class="tbl"><table data-fit>
+<tr><th>文案位置</th><th>示意文案</th><th>负责人</th><th>状态</th></tr>
+<tr data-fp="F01-01"><td>侧栏入口默认文字（T01）</td><td class="w">英文「Quest」，原型中文「闯关」</td><td>书记员王德发</td><td>已定稿（大当家 2026-11-19 选定）</td></tr>
+<tr data-fp="F03-01 F03-02 F03-03 F03-04"><td>后台设置页提示语（关闭确认、校验提示、保存提示、下架回到自动提示）</td><td class="w">见 5.1、N15–N19（后台中文）</td><td>书记员王德发</td><td>待定稿</td></tr>
+</table></div>
+
+<h2 id="c12">12. 各角色协作 Tips</h2>
+<div class="roles-cards">
+  <div class="rc" style="--c:#C89A3C"><h4>设计</h4><ul><li>先给出图标格式尺寸（Q22）和文字长度上限（Q21）；默认图标照现有三个按钮的线宽、尺寸和蓝色做。</li></ul></div>
+  <div class="rc" style="--c:#6A2BB8"><h4>前端</h4><ul><li>每次展开侧栏读取后台设置和活动状态；点入口复用 Home 的离开流程。</li></ul></div>
+  <div class="rc" style="--c:#1560A8"><h4>后端</h4><ul><li>设置只有一份；保存记录只增不改；指定期下架后的处理按 Q20 确认结果实现。</li></ul></div>
+  <div class="rc" style="--c:#1B7A4C"><h4>测试</h4><ul><li>按 3.3 显示规则示例逐条验证；后台校验覆盖空值、数字符号、超长、禁用词大小写。</li></ul></div>
+  <div class="rc" style="--c:#B5601A"><h4>运营</h4><ul><li>平时不用操作；出问题时关总开关；指定某一期后记得改回自动。</li></ul></div>
+  <div class="rc" style="--c:#8A1020"><h4>客服</h4><ul><li>入口和 Home 一样会先离开游戏。回复口径见客服 QA。</li></ul></div>
+</div>
+
+<h2 id="appA">附录 A 评审清单核对</h2>
+<h3 id="appA-1">A.1 通用评审清单</h3>
+<div class="tbl"><table data-fit>
+<tr><th>项</th><th>结论</th><th>位置</th></tr>
+<tr><td>1. 合规</td><td class="w">禁用内容和打扰限制只在 N2 定义；后台文字按禁用词校验</td><td>N2、N18</td></tr>
+<tr><td>2. 资金</td><td class="w">不涉及新资金逻辑</td><td>N6</td></tr>
+<tr><td>3. 口径</td><td class="w">曝光、点击、点击率</td><td>6. 数据埋点</td></tr>
+<tr><td>4. 防刷与风控</td><td class="w">不涉及：只是入口</td><td>N9</td></tr>
+<tr><td>5. 多端范围</td><td class="w">H5、iOS、Flutter、后台；PC、安卓原生老包不做</td><td>N10、8.2</td></tr>
+<tr><td>6. 后台配套</td><td class="w">新增设置页</td><td>5. 运营后台需求</td></tr>
+<tr><td>7. 系统约束</td><td class="w">复用 Home 离开流程；读取各期状态</td><td>N6、TQ1</td></tr>
+<tr><td>8. 性能</td><td class="w">读不到设置或状态时先不显示</td><td>N5</td></tr>
+<tr><td>9. 安全</td><td class="w">设置页按菜单权限控制，保存记录可追溯</td><td>N19、N20</td></tr>
+<tr><td>10. 上线方式</td><td class="w">有一键关闭开关</td><td>9. 上线方式</td></tr>
+<tr><td>11. 验收</td><td class="w">已写</td><td>8. 验收标准</td></tr>
+<tr><td>12. 工单规范</td><td class="w">本次不建 Jira 单</td><td>0. 本迭代范围</td></tr>
+</table></div>
+<h3 id="appA-2">A.2 异常边界覆盖</h3>
+<div class="tbl"><table data-fit>
+<tr><th>类别</th><th>本需求处理位置</th></tr>
+<tr><td>边界值</td><td class="w">按钮文字长度（N18、Q21）；图标尺寸（N17、Q22）</td></tr>
+<tr><td>时间</td><td class="w">N4、N5；8.1 US-02</td></tr>
+<tr><td>异常</td><td class="w">7. 接口与异常</td></tr>
+<tr><td>并发与重复</td><td class="w">N8；两个运营同时保存（7. 接口与异常）；保存防重复提交（5.1）</td></tr>
+<tr><td>状态</td><td class="w">挂起（N4）；指定期下架（N16）</td></tr>
+<tr><td>用户与权限</td><td class="w">N9；后台权限 N20</td></tr>
+<tr><td>端与版本</td><td class="w">N10</td></tr>
+<tr><td>数据</td><td class="w">6. 数据埋点；保存记录（N19）</td></tr>
+</table></div>
+
+<h2 id="appB">附录 B 原型对照表</h2>
+<div class="tbl"><table data-fit>
+<tr><th>原型页面</th><th>功能点</th><th>可演示的交互</th><th>是否模拟</th></tr>
+<tr data-fp="F01-01 F01-02"><td><a href="../../prototype/full/front/游戏页侧栏圣诞闯关入口-游戏页浮动侧栏.html">游戏页浮动侧栏</a></td><td><span class="fp">F01-02</span> 入口显示时机</td><td class="w">两期活动状态；无活动开着、一期开着、多期开着、圣诞期结束另一期开着；游戏中下架；读取失败；切换端</td><td>模拟操作面板</td></tr>
+<tr data-fp="F01-03"><td><a href="../../prototype/full/front/游戏页侧栏圣诞闯关入口-活动落地页跳转示意.html">活动落地页跳转示意</a></td><td><span class="fp">F01-03</span> 点击离开游戏并跳转落地页</td><td class="w">进哪一期；按状态显示各页；返回</td><td>真实交互（落地页为示意）</td></tr>
+<tr data-fp="F03-01 F03-02 F03-03 F03-04"><td><a href="../../prototype/full/admin/游戏页侧栏圣诞闯关入口-后台游戏页侧栏入口设置.html">后台游戏页侧栏入口设置</a></td><td><span class="fp">F03-01</span> 总开关</td><td class="w">关闭确认；自动 / 指定某一期；上传和恢复默认图标；文字校验（空、数字符号、超长、禁用词）；保存成功和失败；保存记录分页；只读权限；指定期下架回到自动</td><td>真实交互 + 模拟操作面板</td></tr>
+</table></div>
+
+<h2 id="appC">附录 C 前台文案中英对照</h2>
+<p>由页面自动读取 <code>assets/proto-en.js</code> 生成，不手写。</p>
+<div class="tbl"><table id="enTable"><tr><th>序号</th><th>中文（原型制作用）</th><th>英文（界面实际文案）</th></tr></table></div>
+
+<h2 id="appD">附录 D 页面控件说明</h2>
+<p>由页面自动读取 <code>assets/dev-notes.js</code> 生成，只列本迭代的控件。</p>
+<div class="tbl"><table id="devTable" class="dev-tbl" data-fit data-iter="full"><tr><th>编号</th><th>控件</th><th>说明</th><th>计算公式与规则</th></tr></table></div>
+
+</article></div>
+</div>
+<script>window.NAV_ROOT = "../../";</script>
+<script src="../../assets/nav-data.js"></script>
+<script src="../../assets/nav.js"></script>
+<script src="../../assets/proto-en.js"></script>
+<script src="../../assets/dev-notes.js"></script>
+<script>
+(function () {
+  var FP = {
+    F01: "游戏页侧栏流水闯关入口", "F01-01": "入口位置与样式", "F01-02": "入口显示时机", "F01-03": "点击离开游戏并跳转落地页", "F01-04": "人群、端与版本",
+    F02: "数据埋点", "F02-01": "入口曝光与点击",
+    F03: "后台游戏页侧栏入口设置", "F03-01": "总开关", "F03-02": "目标活动", "F03-03": "图标与文字", "F03-04": "保存与记录"
+  };
+  var doc = document.getElementById("doc");
+  Object.keys(FP).forEach(function (code) {
+    if (code.length === 3 || document.getElementById(code)) return;
+    var el = [].filter.call(doc.querySelectorAll('[data-fp~="' + code + '"]'), function (e) { var f = e.querySelector(".fp"); return f && f.textContent === code; })[0] || doc.querySelector('[data-fp~="' + code + '"]');
+    if (!el) return;
+    if (!el.id) { el.id = code; return; }
+    var a = document.createElement("span"); a.id = code; (el.tagName === "TR" ? el.cells[0] : el).prepend(a);
+  });
+  Object.keys(FP).forEach(function (code) {
+    if (code.length !== 3 || document.getElementById(code)) return;
+    var el = doc.querySelector('[data-fp~="' + code + '"]') || doc.querySelector('[data-fp^="' + code + '-"]');
+    if (!el) return;
+    var s = document.createElement("span"); s.id = code; (el.tagName === "TR" ? el.cells[0] : el).prepend(s);
+  });
+  var list = document.getElementById("toc-list"), sub = null;
+  doc.querySelectorAll("h2, h3").forEach(function (h) {
+    if (h.id === "toc" || !h.id) return;
+    var li = document.createElement("li"), a = document.createElement("a");
+    a.href = "#" + h.id; a.textContent = h.textContent; li.appendChild(a);
+    if (h.tagName === "H2") { list.appendChild(li); sub = document.createElement("ol"); li.appendChild(sub); } else if (sub) sub.appendChild(li);
+  });
+  list.querySelectorAll("ol").forEach(function (o) { if (!o.children.length) o.remove(); });
+  (function () {
+    var t = document.getElementById("enTable"), D = window.PROTO_EN || {}, keys = Object.keys(D); if (!t) return;
+    if (!keys.length) { var r0 = t.insertRow(); var c0 = r0.insertCell(); c0.colSpan = 3; c0.className = "w"; c0.textContent = "还没有填写英文对照（打包前在 assets/proto-en.js 填写）。"; return; }
+    keys.forEach(function (k, i) { var r = t.insertRow(); r.insertCell().textContent = i + 1; var a = r.insertCell(); a.className = "w"; a.textContent = k; var b = r.insertCell(); b.className = "w"; b.textContent = D[k]; });
+  })();
+  (function () {
+    var t = document.getElementById("devTable"), D = window.DEV_NOTES || {}, it = t ? t.getAttribute("data-iter") || "" : "";
+    if (!t) return;
+    var ids = Object.keys(D).filter(function (k) { var x = D[k].iter; return !it || !x || [].concat(x).indexOf(it) >= 0; });
+    if (!ids.length) { var r0 = t.insertRow(); var c0 = r0.insertCell(); c0.colSpan = 4; c0.className = "w"; c0.textContent = "还没有填写控件说明。"; return; }
+    function line(box, k, v, cls) { if (!v) return; var p = document.createElement("div"); var b = document.createElement("span"); b.className = "dev-k"; b.textContent = k + "："; p.appendChild(b); var s = document.createElement("span"); if (cls) s.className = cls; s.textContent = v; p.appendChild(s); box.appendChild(p); }
+    var page = null;
+    ids.forEach(function (k) {
+      var d = D[k];
+      if (d.page !== page) { page = d.page; var g = t.insertRow(); var gc = g.insertCell(); gc.colSpan = 4; gc.className = "w"; gc.innerHTML = "<b></b>"; gc.firstChild.textContent = page || "（未写所在页面）"; }
+      var r = t.insertRow(); r.id = "dev-" + k; r.setAttribute("data-brief", (d.name || k) + "：" + (d.what || ""));
+      var c1 = r.insertCell(); c1.className = "dev-id"; c1.textContent = k;
+      r.insertCell().textContent = d.name || "";
+      var c3 = r.insertCell(); c3.className = "w"; line(c3, "作用", d.what); line(c3, "场景与状态", d.scene); line(c3, "交互结果", d.result); line(c3, "限制", d.limit);
+      var c4 = r.insertCell(); c4.className = "w"; line(c4, "公式", d.formula, "dev-f"); line(c4, "规则", d.rules);
+    });
+    function goDev() { var h = decodeURIComponent(location.hash.slice(1)); if (!/^dev-/.test(h)) return; var row = document.getElementById(h); if (!row) return; doc.querySelectorAll("tr.dev-hit").forEach(function (x) { x.classList.remove("dev-hit"); }); row.classList.add("dev-hit"); row.scrollIntoView({ block: "center", behavior: "instant" }); }
+    var moved = false;
+    ["wheel", "touchmove", "keydown"].forEach(function (ev) { window.addEventListener(ev, function () { moved = true; }, { once: true, passive: true }); });
+    function again() { if (!moved) goDev(); }
+    goDev();
+    window.addEventListener("load", function () { again(); setTimeout(again, 400); setTimeout(again, 1200); });
+    window.addEventListener("hashchange", function () { moved = false; goDev(); });
+  })();
+  (function () {
+    function cols(tbl) { var cs = tbl.querySelectorAll("col"); if (cs.length) return cs; var first = tbl.rows[0]; if (!first) return cs; var n = 0; [].forEach.call(first.cells, function (c) { n += c.colSpan || 1; }); var g = document.createElement("colgroup"); for (var i = 0; i < n; i++) g.appendChild(document.createElement("col")); tbl.insertBefore(g, tbl.firstChild); return tbl.querySelectorAll("col"); }
+    function fit(tbl, force) {
+      var cl = cols(tbl); if (!cl.length) return;
+      var n = cl.length, W = tbl.parentNode.clientWidth; if (!W) return;
+      if (!force && tbl._fitW === W) return; tbl._fitW = W;
+      var MIN = 44, STEP = Math.max(4, Math.round(W / 120)), rows = [].slice.call(tbl.rows), len = [];
+      for (var c = 0; c < n; c++) { var m = 1; rows.forEach(function (r) { var cell = r.cells[c]; if (cell && cell.colSpan === 1) m = Math.max(m, cell.textContent.trim().length); }); len.push(Math.sqrt(m)); }
+      var mn = []; for (var k = 0; k < n; k++) mn.push(MIN);
+      rows.forEach(function (r) { for (var k = 0; k < r.cells.length && k < n; k++) { var cell = r.cells[k]; if (cell.colSpan !== 1) continue; [].forEach.call(cell.querySelectorAll(".fp,.nw,.ui-nw,code,nobr"), function (e) { mn[k] = Math.max(mn[k], e.offsetWidth + 18); }); } });
+      var sum = len.reduce(function (a, b) { return a + b; }, 0), w = len.map(function (l, i) { return Math.max(mn[i], Math.floor(W * l / sum)); });
+      var cells = [].slice.call(tbl.querySelectorAll("th,td")), rg = document.createRange();
+      function apply() { var s = w.reduce(function (a, b) { return a + b; }, 0); for (var i = 0; i < n; i++) cl[i].style.width = (w[i] / s * 100).toFixed(3) + "%"; var t = 0; cells.forEach(function (x) { rg.selectNodeContents(x); t += rg.getBoundingClientRect().height; }); return tbl.offsetHeight * 1000 + t; }
+      var best = apply(), guard = 0, improved = true;
+      while (improved && guard++ < 150) {
+        improved = false; var move = null;
+        [1, 2, 4, 8].forEach(function (k) { var d = STEP * k; for (var to = 0; to < n; to++) for (var from = 0; from < n; from++) { if (to === from || w[from] - d < mn[from]) continue; w[from] -= d; w[to] += d; var h = apply(); if (h < best - 0.5) { best = h; move = [from, to, d]; } w[from] += d; w[to] -= d; } });
+        if (move) { w[move[0]] -= move[2]; w[move[1]] += move[2]; improved = true; }
+        apply();
+      }
+    }
+    function fitAll(force) { doc.querySelectorAll("table[data-fit]").forEach(function (t) { fit(t, force === true); }); }
+    var tm = 0; function later() { clearTimeout(tm); tm = setTimeout(fitAll, 150); }
+    window.addEventListener("resize", later); window.addEventListener("navtoggle", later);
+    var loaded = document.readyState === "complete" ? Promise.resolve() : new Promise(function (r) { window.addEventListener("load", r); });
+    Promise.all([loaded, document.fonts && document.fonts.ready ? document.fonts.ready : null]).then(function () { fitAll(true); });
+  })();
+  var banner = document.getElementById("fp-banner"), hits = [], pos = -1;
+  function report() { try { if (parent !== window) parent.postMessage({ type: "prd-hits", total: hits.length, pos: pos }, "*"); } catch (e) {} }
+  function clearHit() { doc.querySelectorAll(".fp-hit,.fp-cur").forEach(function (e) { e.classList.remove("fp-hit", "fp-cur"); }); hits = []; pos = -1; banner.hidden = true; }
+  function go(i) { if (!hits.length) return; pos = (i + hits.length) % hits.length; hits.forEach(function (h) { h.classList.remove("fp-cur"); }); hits[pos].classList.add("fp-cur"); hits[pos].scrollIntoView({ block: "center", behavior: "instant" }); report(); }
+  window.PRD_CODE_HL = true;
+  function mentions(code, add) {
+    var re = new RegExp("\\b" + code + "\\b"), w = document.createTreeWalker(doc, NodeFilter.SHOW_TEXT), n;
+    while ((n = w.nextNode())) {
+      if (!re.test(n.nodeValue) || !n.parentNode.closest || n.parentNode.closest("h1,h2,h3,.toc-full,#fp-banner,script,style")) continue;
+      var p = n.parentNode.closest("button") ? n.parentNode.closest("button").parentNode : n.parentNode;
+      add(p.closest("tr,li,p,dd,blockquote,h4") || p.closest(".vmark") || p);
+    }
+  }
+  function applyHit() {
+    var code = decodeURIComponent(location.hash.slice(1)), set = [];
+    clearHit();
+    function add(e) { if (e && set.indexOf(e) < 0 && !set.some(function (s) { return s.contains(e); })) { set = set.filter(function (s) { return !e.contains(s); }); set.push(e); } }
+    var title = "";
+    if (/^F\d{2}(-\d{2})?$/.test(code) && FP[code]) {
+      doc.querySelectorAll("[data-fp]").forEach(function (e) { if (e.dataset.fp.split(/\s+/).some(function (c) { return c === code || c.indexOf(code + "-") === 0; })) add(e); });
+      var big = code.slice(0, 3); title = code.length > 3 ? big + " " + FP[big] + " › " + code + " " + FP[code] : code + " " + FP[code];
+    } else if (/^[NQ]\d{1,3}$/.test(code)) {
+      var row = document.getElementById(code.toLowerCase()); if (!row) { report(); return; }
+      add(row); mentions(code, add); title = code + " " + (row.getAttribute("data-brief") || "");
+    } else if (/^D\d{2,3}$/.test(code)) {
+      var d = (window.DEV_NOTES || {})[code]; if (!d) { report(); return; }
+      String(d.rules || "").split(/[、,，\s]+/).forEach(function (r) { var m = /^[NQ]\d{1,3}/.exec(r); var e = m && document.getElementById(m[0].toLowerCase()); if (e) add(e); });
+      add(document.getElementById("dev-" + code)); mentions(code, add); title = code + " " + (d.name || "");
+    } else { report(); return; }
+    hits = set.filter(Boolean).sort(function (a, b) { return a.compareDocumentPosition(b) & 4 ? -1 : 1; });
+    hits.forEach(function (e) { e.classList.add("fp-hit"); });
+    if (!hits.length) { report(); return; }
+    if (title.length > 60) title = title.slice(0, 60) + "…";
+    document.getElementById("fp-text").textContent = "正在查看：" + title + "（共标出 " + hits.length + " 处，已跳到最前面一处）";
+    banner.hidden = false; go(0);
+    var moved = false, stop = function () { moved = true; };
+    ["wheel", "touchstart", "keydown", "mousedown"].forEach(function (ev) { window.addEventListener(ev, stop, { once: true, passive: true, capture: true }); });
+    [300, 900, 2000].forEach(function (ms) { setTimeout(function () { if (!moved && hits.length) go(pos); }, ms); });
+  }
+  document.getElementById("fp-clear").onclick = function () { clearHit(); history.replaceState(null, "", location.pathname); report(); };
+  window.addEventListener("message", function (e) { var d = e.data || {}; if (d.type === "prd-step") go(pos + d.dir); if (d.type === "prd-show") { if (location.hash === "#" + d.code) applyHit(); else location.hash = d.code; } });
+  window.addEventListener("hashchange", applyHit);
+  applyHit();
+})();
+</script>
+</body>
+</html>

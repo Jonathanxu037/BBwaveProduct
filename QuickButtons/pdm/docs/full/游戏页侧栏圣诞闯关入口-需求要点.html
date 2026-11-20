@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>游戏页侧栏圣诞闯关入口-完整需求-需求要点</title>
+<link rel="stylesheet" href="../../assets/style.css">
+<style>
+/* 侧栏示意图（xs- 前缀，避免和模板通用样式重名） */
+.xs-demo{display:flex;align-items:center;gap:0;background:#fff;border:1px solid var(--line);border-radius:24px;padding:4px 4px 4px 12px;width:max-content;max-width:100%;margin:8px 0 4px;box-shadow:0 2px 6px rgba(0,0,0,.12);flex-wrap:wrap}
+.xs-demo span{display:grid;place-items:center;min-width:52px;padding:4px 2px;font-size:12px;font-weight:700;color:#1E4FBF}
+.xs-demo span.new{outline:2px dashed #C00000;outline-offset:-2px;border-radius:6px;color:#C00000}
+.xs-demo i{width:36px;height:36px;border-radius:50%;background:#1b5fd6;color:#fff;font-style:normal;font-weight:900;display:grid;place-items:center;margin-left:4px}
+</style>
+</head>
+<body>
+<div class="with-nav">
+<div class="desk"><article class="paper">
+
+<h1 class="doc-title">游戏页侧栏圣诞闯关入口-完整需求 · 需求要点 · v1.0</h1>
+<div class="doc-meta"><span>版本：v1.0</span><span>端：网页版、苹果 App、安卓 App</span><span>依据：<a href="游戏页侧栏圣诞闯关入口-需求开发PRD文档.html">需求开发 PRD 文档</a></span></div>
+<hr class="doc-rule">
+
+<h2 id="k1">一句话需求</h2>
+<div class="oneline">在老站 789Bingo 游戏页浮动侧栏（H5、iOS、Flutter 安卓）的 Reload 与 G 图标之间新增流水闯关（Crown Rush）入口按钮：后台总开关开启时，有任一期流水闯关处于预热中、进行中或领奖期就显示，全部关闭时隐藏；点击后按 Home 的方式离开游戏，进入目标活动的落地页。运营在后台「活动配置 › 游戏页侧栏入口」可一键关闭、指定某一期、更换图标和文字。侧栏其他按钮和活动本身的规则、页面均不变。本版本包含 v1.0 全部内容。</div>
+
+<h2 id="k2">业务流程</h2>
+<div class="flow">
+  <div class="fs key"><div class="no">1</div><div><b>进入游戏</b>：任意一个带侧栏的游戏</div></div>
+  <div class="fa">↓</div>
+  <div class="fs"><div class="no">2</div><div><b>打开侧栏</b>：有流水闯关活动开着，就看到入口按钮</div></div>
+  <div class="fa">↓</div>
+  <div class="fs key"><div class="no">3</div><div><b>点入口按钮</b>：和点 Home 一样先退出游戏，已下的注照常结算</div></div>
+  <div class="fa">↓</div>
+  <div class="fs"><div class="no">4</div><div><b>进落地页</b>：活动在哪个阶段，就显示哪个阶段的页面</div></div>
+</div>
+<div class="brs">
+  <div class="bc"><h5>A - 有一期活动开着</h5><p class="s"><b>显示按钮，点了进这一期</b><small>开着 = 预热中、进行中或领奖期</small></p></div>
+  <div class="bc"><h5>B - 几期同时开着</h5><p class="s"><b>显示按钮，点了进最新创建的那一期</b><small>一般不会出现；例：圣诞这期在领奖、后建的新一期在预热 → 进新一期</small></p></div>
+  <div class="bc"><h5>C - 一期都没开着</h5><p class="s"><b>不显示按钮</b><small>电脑版、没更新的旧版 App 也不显示</small></p></div>
+</div>
+
+<h2 id="k3">开发功能点</h2>
+<div class="fpcard" id="F01-01">
+  <h3><span class="code">F01-01</span>入口位置与样式<a href="游戏页侧栏圣诞闯关入口-需求开发PRD文档.html#F01-01">查看 PRD ›</a></h3>
+  <div class="xs-demo" aria-label="侧栏示意"><span>Home</span><span>Deposit</span><span>Reload</span><span class="new">Quest</span><i>G</i></div>
+  <div class="fpgrid">
+    <b>要做什么</b>
+    <ul><li>入口按钮放在 Reload 和 G 图标中间，紧挨 G 图标。</li><li>苹果 App 侧栏在左上角，按钮顺序一样。</li><li>新画一个图标，和旁边按钮一个风格，不要圣诞专属图案。</li><li>按钮文字为 Quest（通用名称，各期活动共用，不写「圣诞」）。</li><li>文字和图标里不能有金额和 FREE、WIN 这类词，也不能画钞票、金币（完整清单见 PRD N2）。</li><li>不加红点和角标，不闪、不跳，不会自己弹开侧栏；按钮上不另加合规标识；其他按钮不动。</li><li>所有带侧栏的游戏都显示。</li></ul>
+    <b>公式</b>
+    <div class="formula">无</div>
+    <b>涉及端</b>
+    <div class="ends"><span>H5</span><span>iOS</span><span>Flutter 安卓</span></div>
+  </div>
+</div>
+<div class="fpcard" id="F01-02">
+  <h3><span class="code">F01-02</span>入口显示时机<a href="游戏页侧栏圣诞闯关入口-需求开发PRD文档.html#F01-02">查看 PRD ›</a></h3>
+  <div class="fpgrid">
+    <b>要做什么</b>
+    <ul><li>每次打开侧栏时，看所有期流水闯关有没有一期开着。</li><li>圣诞这期结束了，只要还有别的期开着，按钮照样显示。</li><li>查不到活动状态时，这次先不显示。</li><li>以后新开的活动自动生效。</li><li>被挂起时：选了展示公告的照常算开着，没选的当没开着。</li><li>后台关了总开关就不显示；后台指定了某一期就只跟这一期。</li></ul>
+    <b>公式</b>
+    <div class="formula">显示按钮 ＝ 后台总开关开 且 （自动：至少一期开着；指定：指定的那一期开着） 且 状态查得到</div>
+    <b>涉及端</b>
+    <div class="ends"><span>H5</span><span>iOS</span><span>Flutter 安卓</span><span>后端（沿用活动状态）</span></div>
+  </div>
+</div>
+<div class="fpcard" id="F01-03">
+  <h3><span class="code">F01-03</span>点击离开游戏并跳转落地页<a href="游戏页侧栏圣诞闯关入口-需求开发PRD文档.html#F01-03">查看 PRD ›</a></h3>
+  <div class="fpgrid">
+    <b>要做什么</b>
+    <ul><li>退出游戏的方式和 Home 完全一样，失败或断网时也一样。</li><li>点的那一刻再决定进哪一期。</li><li>连点几下也只跳一次。</li><li>点的那一刻所有期都下架了：落地页显示「活动已下架」。</li><li>在落地页点返回，按落地页原来的返回方式，不自动回游戏。</li></ul>
+    <b>公式</b>
+    <div class="formula">进哪一期 ＝ 只有一期开着 → 这一期；几期开着 → 开着的几期里最新创建的那一期（还没开始预热的不算）</div>
+    <b>涉及端</b>
+    <div class="ends"><span>H5</span><span>iOS</span><span>Flutter 安卓</span></div>
+  </div>
+</div>
+<div class="fpcard" id="F01-04">
+  <h3><span class="code">F01-04</span>人群、端与版本<a href="游戏页侧栏圣诞闯关入口-需求开发PRD文档.html#F01-04">查看 PRD ›</a></h3>
+  <div class="fpgrid">
+    <b>要做什么</b>
+    <ul><li>看得到 G 图标的人就看得到这个按钮（前提是有活动开着），不再另外按登录、实名、黑名单、自我排除、冷静期去判断。</li><li>设了充值或投注上限的玩家照常显示。</li><li>进了落地页以后，没登录的、受限账号按活动原来的规则处理。</li><li>电脑版不做；没更新的旧版 App 不显示；安卓原生老包不加按钮。</li><li>完整版以后排期；网页版先上，两个 App 跟排期后的发版。</li></ul>
+    <b>公式</b>
+    <div class="formula">显示按钮还要满足：网页版，或已更新的苹果 / 安卓 App</div>
+    <b>涉及端</b>
+    <div class="ends"><span>H5</span><span>iOS</span><span>Flutter 安卓</span></div>
+  </div>
+</div>
+<div class="fpcard" id="F02-01">
+  <h3><span class="code">F02-01</span>入口曝光与点击<a href="游戏页侧栏圣诞闯关入口-需求开发PRD文档.html#F02-01">查看 PRD ›</a></h3>
+  <div class="fpgrid">
+    <b>要做什么</b>
+    <ul><li>打开侧栏看到按钮：记 1 次曝光。</li><li>点按钮：记 1 次「点击」，连点只记 1 次。</li><li>同时记下是哪个端、进的是哪一期、在哪个游戏里。</li><li>只记平台账号；没登录的玩家不为这个需求多收设备信息；隐私告知沿用现有政策。</li><li>不设点击率目标，上线后看数据；记录失败不影响跳转。</li></ul>
+    <b>公式</b>
+    <div class="formula">点击率 ＝ 已登录点击人数 ÷ 已登录曝光人数（按天、按端）</div>
+    <b>涉及端</b>
+    <div class="ends"><span>H5</span><span>iOS</span><span>Flutter 安卓</span></div>
+  </div>
+</div>
+<div class="fpcard" id="F03-01">
+  <h3><span class="code">F03-01</span>总开关<a href="游戏页侧栏圣诞闯关入口-需求开发PRD文档.html#F03-01">查看 PRD ›</a></h3>
+  <div class="fpgrid">
+    <b>要做什么</b>
+    <ul><li>后台「活动配置 › 游戏页侧栏入口」加「是否显示」开关，默认开。</li><li>关之前弹确认；保存后玩家下次展开侧栏生效。</li></ul>
+    <b>公式</b><div class="formula">无</div>
+    <b>涉及端</b><div class="ends"><span>后台前端</span><span>后端</span><span>C 端</span></div>
+  </div>
+</div>
+<div class="fpcard" id="F03-02">
+  <h3><span class="code">F03-02</span>目标活动<a href="游戏页侧栏圣诞闯关入口-需求开发PRD文档.html#F03-02">查看 PRD ›</a></h3>
+  <div class="fpgrid">
+    <b>要做什么</b>
+    <ul><li>二选一：自动（默认）/ 指定某一期；指定时从下拉里选，只列没下架、没删除的活动。</li><li>没选期次不能保存。</li><li>指定的那一期下架或被删除：建议自动回到「自动」，待大当家确认。</li></ul>
+    <b>公式</b><div class="formula">无</div>
+    <b>涉及端</b><div class="ends"><span>后台前端</span><span>后端</span></div>
+  </div>
+</div>
+<div class="fpcard" id="F03-03">
+  <h3><span class="code">F03-03</span>图标与文字<a href="游戏页侧栏圣诞闯关入口-需求开发PRD文档.html#F03-03">查看 PRD ›</a></h3>
+  <div class="fpgrid">
+    <b>要做什么</b>
+    <ul><li>能上传图标、能恢复默认，有侧栏预览；格式尺寸由设计给出。</li><li>文字默认 Quest，必填，只能英文字母和空格，有长度上限，用了 FREE、WIN 这类词不能保存（不分大小写）。</li></ul>
+    <b>公式</b><div class="formula">能保存 ＝ 文字不为空 且 只含字母和空格 且 不超上限 且 不含禁用词</div>
+    <b>涉及端</b><div class="ends"><span>后台前端</span><span>后端</span><span>C 端</span></div>
+  </div>
+</div>
+<div class="fpcard" id="F03-04">
+  <h3><span class="code">F03-04</span>保存与记录<a href="游戏页侧栏圣诞闯关入口-需求开发PRD文档.html#F03-04">查看 PRD ›</a></h3>
+  <div class="fpgrid">
+    <b>要做什么</b>
+    <ul><li>点保存才生效；保存中不能重复点；失败保留已填内容。</li><li>每次保存记一条：时间、谁、改了什么；列表分页，默认每页 20 条。</li><li>只有查看权限的人看到的是只读页面。</li></ul>
+    <b>公式</b><div class="formula">无</div>
+    <b>涉及端</b><div class="ends"><span>后台前端</span><span>后端</span></div>
+  </div>
+</div>
+
+</article></div>
+</div>
+<script>window.NAV_ROOT = "../../";</script>
+<script src="../../assets/nav-data.js"></script>
+<script src="../../assets/nav.js"></script>
+</body>
+</html>

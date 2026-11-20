@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>游戏页侧栏圣诞闯关入口-v1.0-活动落地页跳转示意</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<style>
+.xs-hero{border-radius:12px;padding:18px 14px;text-align:center;background:linear-gradient(160deg,#7a0f1e,#2b0a3d);border:1px solid #c9a24a}
+.xs-hero h3{margin:0 0 4px;font-size:22px;color:#f6c94b;letter-spacing:.03em}
+.xs-hero p{margin:0;font-size:12.5px;color:#f2e6c8}
+.xs-state{display:inline-block;margin-top:8px;padding:2px 10px;border-radius:10px;background:#f2b632;color:#2a1d00;font-size:11.5px;font-weight:700}
+.xs-lobby{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.xs-lobby div{height:70px;border-radius:8px;background:var(--app-card);border:1px solid var(--app-line);display:grid;place-items:center;font-size:12px;color:var(--app-muted)}
+.xs-legal{font-size:10.5px;color:var(--app-muted);text-align:center;margin-top:auto}
+</style>
+</head>
+<body>
+<div class="with-nav">
+<div class="stage">
+  <div class="app" role="region" aria-label="手机画面">
+    <div class="sb"><span>9:41</span><span>●●● 5G</span></div>
+    <div class="view" id="vLand">
+      <div class="topline"><a class="back" href="#lobby" data-go="lobby" data-dev="D09" aria-label="返回">‹</a>Crown Rush</div>
+      <div class="ui-reqnote">落地页沿用圣诞这一期流水闯关现有设计和文案，本需求不改；这里只示意从按钮进入后看到哪一页（画面文字和黄色标签为演示用）。</div>
+      <div class="xs-hero" data-dev="D08">
+        <h3>Crown Rush</h3>
+        <p id="landTxt"></p>
+        <span class="xs-state" id="landTag"></span>
+      </div>
+      <div class="card-app" id="loginCard" hidden>
+        <b>登录后查看奖励</b>
+        <button class="btn" type="button" data-go="login" data-dev="D10">登录</button>
+      </div>
+      <div class="xs-legal">18+ Play responsibly · The platform reserves final interpretation of this event</div>
+    </div>
+    <div class="view" id="vLogin" hidden>
+      <div class="topline"><a class="back" href="#land" data-go="land" aria-label="返回">‹</a>登录</div>
+      <div class="ui-reqnote">平台现有登录页，本需求不改。登录成功后回到落地页。</div>
+      <button class="btn" type="button" id="doLogin">登录</button>
+    </div>
+    <div class="view" id="vLobby" hidden>
+      <div class="topline">首页</div>
+      <div class="ui-reqnote">平台首页大厅（示意）。从落地页点返回沿用落地页现有返回逻辑（规则 N6），这里只是示意。</div>
+      <div class="xs-lobby"><div>游戏</div><div>游戏</div><div>游戏</div><div>游戏</div><div>游戏</div><div>游戏</div></div>
+      <a class="btn ghost" href="游戏页侧栏圣诞闯关入口-游戏页浮动侧栏.html">进入游戏</a>
+    </div>
+    <div class="toast" id="toast" role="status" hidden></div>
+  </div>
+
+  <aside class="notes">
+    <h2>活动落地页跳转示意 · v1.0</h2>
+    <p class="sub">点按钮离开游戏后进入圣诞这一期流水闯关（Crown Rush）落地页。落地页全部沿用现有需求，本需求只确定进哪一页。</p>
+    <h3>模拟场景</h3>
+    <div class="sim">
+      <button type="button" data-st="pre"><span class="simtag">圣诞期</span>预热中 → 预热页</button>
+      <button type="button" data-st="on"><span class="simtag">圣诞期</span>进行中 → 进行中页</button>
+      <button type="button" data-st="buffer"><span class="simtag">圣诞期</span>领奖期 → 结束页</button>
+      <button type="button" data-st="susp1"><span class="simtag">圣诞期</span>已挂起（展示公告）→ 公告</button>
+      <button type="button" data-st="off"><span class="simtag">圣诞期</span>点击时刚下架 → 活动已下架</button>
+      <button type="button" data-lg="out"><span class="simtag">用户</span>未登录（沿用现有）</button>
+      <button type="button" data-lg="in"><span class="simtag">用户</span>已登录</button>
+    </div>
+    <h3>模拟操作</h3>
+    <div class="sim" id="simPanel"></div>
+    <h3>规则批注</h3>
+    <ol>
+      <li><b>跳转目标</b>：只进圣诞这一期落地页（运营上线前提供活动编号）。<span class="ref">PRD 规则 N7 · F01-03 点击离开游戏并跳转落地页</span></li>
+      <li><b>按状态显示</b>：预热中 → 预热页；进行中 → 进行中页；领奖期 → 结束页；已挂起且展示公告 → 公告；点击时刚下架 → 「活动已下架」。<span class="ref">PRD 规则 N4、N5、N6 · F01-03</span></li>
+      <li><b>未登录、返回、加载失败</b>：沿用落地页现有处理。<span class="ref">PRD 规则 N6 · F01-03</span></li>
+    </ol>
+    <div class="pager"><a href="游戏页侧栏圣诞闯关入口-游戏页浮动侧栏.html">← 上一页：游戏页浮动侧栏</a><span></span></div>
+  </aside>
+</div>
+</div>
+<script>window.NAV_ROOT = "../../../";</script>
+<script src="../../../assets/nav-data.js"></script>
+<script src="../../../assets/nav.js"></script>
+<script src="../../../assets/proto-en.js"></script>
+<script src="../../../assets/proto.js"></script>
+<script>
+P.init({ defaults: { platform: "H5", appver: "new", x: "on", y: "none", login: "in", readFail: false, open: true, imp: 0, clk: 0 } });
+P.panel(document.getElementById("simPanel"), [
+  { title: "演示值说明", items: [{ type: "note", text: "落地页加载失败沿用落地页现有处理，原型不演示具体画面；画面文字为示意" }] },
+  { items: [{ type: "reset" }] }
+]);
+var TXT = { pre: ["活动即将开始", "预热页"], on: ["查看圣诞闯关进度和奖励", "进行中页"], buffer: ["活动已结束，下架前可领取奖励", "结束页"], susp1: ["活动公告（示意）", "已挂起 · 公告"], off: ["活动已下架", "活动已下架"] };
+function paintLand() {
+  var st = P.get("x"); if (!TXT[st]) st = "off";
+  var out = P.get("login") === "out" && st !== "off" && st !== "susp1";
+  P.$("landTxt").textContent = out ? "登录后查看闯关进度和奖励" : TXT[st][0];
+  P.$("landTag").textContent = "圣诞期 · " + TXT[st][1];
+  P.$("loginCard").hidden = !out;
+}
+var VIEWS = { land: "vLand", login: "vLogin", lobby: "vLobby" };
+function show(view) {
+  if (!VIEWS[view]) view = "land";
+  Object.keys(VIEWS).forEach(function (k) { document.getElementById(VIEWS[k]).hidden = k !== view; });
+  if (view === "land") paintLand();
+  if (location.hash.slice(1) !== view) history.replaceState(null, "", "#" + view);
+  if (window.self !== window.top) window.parent.postMessage({ type: "proto-view", view: view }, "*");
+}
+window.addEventListener("hashchange", function () { show(location.hash.slice(1) || "land"); });
+document.addEventListener("click", function (e) { var b = e.target.closest("[data-go]"); if (b) { e.preventDefault(); show(b.dataset.go); } });
+P.$("doLogin").onclick = function () { P.set("login", "in"); show("land"); };
+document.querySelectorAll("[data-st]").forEach(function (b) { b.onclick = function () { P.set("x", b.dataset.st); show("land"); P.note("已设为：" + b.textContent.replace(/^圣诞期/, ""), b); }; });
+document.querySelectorAll("[data-lg]").forEach(function (b) { b.onclick = function () { P.set("login", b.dataset.lg); show("land"); P.note("已设为：" + b.textContent.replace(/^用户/, ""), b); }; });
+window.addEventListener("proto-change", function (e) { if (e.detail.key === "*") show("land"); });
+show(location.hash.slice(1) || "land");
+</script>
+</body>
+</html>

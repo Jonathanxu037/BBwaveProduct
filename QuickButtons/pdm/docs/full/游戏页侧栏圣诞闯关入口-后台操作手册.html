@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>游戏页侧栏圣诞闯关入口-完整需求-后台操作手册</title>
+<link rel="stylesheet" href="../../assets/style.css">
+</head>
+<body>
+<div class="with-nav">
+  <header class="mh">
+    <div class="k">789BINGO · 后台操作手册 <span class="vp">v1.0</span></div>
+    <h1>游戏页侧栏圣诞闯关入口-完整需求 · 游戏页侧栏入口设置操作手册</h1>
+    <p>写给运营和客服：老站 789Bingo 游戏页侧栏流水闯关入口（按钮文字默认 Quest）的后台设置，适用完整版上线后。</p>
+    <div class="btns"><a class="b1" href="../../prototype/full/admin/游戏页侧栏圣诞闯关入口-后台游戏页侧栏入口设置.html">打开后台原型 ›</a><a class="b2" href="游戏页侧栏圣诞闯关入口-需求开发PRD文档.html">查看 PRD ›</a></div>
+  </header>
+
+  <div class="mk">
+    <b>重要结论</b>
+    <ul>
+      <li>平时不用操作：流水闯关新一期进入预热，游戏里的入口自动出现，全部下架自动隐藏（PRD「3.2 本需求规则」N4）。</li>
+      <li>出问题时关「是否显示」并保存，玩家下次展开侧栏就看不到入口（N14）。</li>
+      <li>按钮不设自己的显示时间，完全跟各期活动时间走（PRD「0.1 评审结论补充」）。</li>
+      <li><span class="warn-2">※ 换图标、改文字时，文字和图标不能有金额、币种符号、百分比、FREE、WIN、BONUS、JACKPOT、GUARANTEED、EASY MONEY 这类词，不能用钞票、金币、钱袋、中奖画面和倒计时、名额（N2）。</span></li>
+    </ul>
+  </div>
+
+  <div class="mbody">
+    <nav class="mtoc" aria-label="手册目录">
+      <a href="#m0">整体操作流程</a>
+      <a href="#m1">01 游戏页侧栏入口设置</a>
+      <a href="#m2">02 保存记录</a>
+      <a href="#m8">后台通用</a>
+      <a href="#m9">常见问题</a>
+    </nav>
+    <div>
+      <section class="mcard" id="m0">
+        <h2>整体操作流程</h2>
+        <div class="msteps">
+          <div class="mstep"><i>1</i><div>在流水闯关后台照常新建每一期活动（不用为入口做任何事）。</div></div>
+          <div class="mstep"><i>2</i><div>需要时打开「活动配置 › 游戏页侧栏入口」：关闭入口、指定某一期、换图标或文字。</div></div>
+          <div class="mstep"><i>3</i><div>点「保存」，玩家下次展开侧栏时生效。</div></div>
+          <div class="mstep"><i>4</i><div>在「保存记录」查看谁在什么时候改了什么。</div></div>
+        </div>
+      </section>
+
+      <section class="mcard" id="m1">
+        <h2><span class="no2">01</span>游戏页侧栏入口设置</h2>
+        <h3>做什么用</h3>
+        <p>控制玩家在游戏页侧栏看到的流水闯关入口：开关、进哪一期、图标和文字。</p>
+        <h3>菜单路径与权限</h3>
+        <p>活动配置 › 游戏页侧栏入口。需要该菜单的「编辑」权限才能修改；只有「查看」权限时页面只读。权限给哪些角色待确认（PRD「11. 待确认事项」Q23）。</p>
+        <h3>字段说明</h3>
+        <table data-fit>
+          <tr><th>字段</th><th>含义</th><th>默认值</th></tr>
+          <tr><td>是否显示</td><td>总开关。关闭后所有游戏页都不显示侧栏入口，玩家下次展开侧栏生效。</td><td>开启</td></tr>
+          <tr><td>活动类型</td><td>入口只用于流水闯关活动。</td><td>流水闯关（不可改）</td></tr>
+          <tr><td>目标活动</td><td>自动：进开着的各期中最新创建的一期，不用每期操作。指定：只进选中的那一期，那一期没开着时入口不显示。</td><td>自动</td></tr>
+          <tr><td>按钮图标</td><td>PNG 透明背景、正方形，尺寸见上传提示；不传用默认图标。不能有金额、钞票、金币、中奖画面。</td><td>默认图标</td></tr>
+          <tr><td>按钮文字</td><td>英文字母和空格，长度见输入框提示；不能用 FREE、WIN、BONUS 等词，改前先找文案定稿。</td><td>Quest</td></tr>
+        </table>
+        <h3>操作步骤</h3>
+        <div class="msteps">
+          <div class="mstep"><i>1</i><div><b>紧急关闭</b>：点「是否显示」开关 → 确认弹窗点「确定关闭」→ 点「保存」。</div></div>
+          <div class="mstep"><i>2</i><div><b>指定某一期</b>：目标活动选「指定某一期」→ 下拉选活动 → 「保存」。用完记得改回「自动」。</div></div>
+          <div class="mstep"><i>3</i><div><b>换图标</b>：点「上传图标」→ 看侧栏预览 → 「保存」；要换回点「恢复默认」再保存。</div></div>
+          <div class="mstep"><i>4</i><div><b>改文字</b>：先找书记员王德发定稿 → 输入 → 「保存」；提示不合规时按提示修改。</div></div>
+        </div>
+        <h3>生效时间</h3>
+        <p>点「保存」后，玩家下次展开侧栏时生效；具体延迟由技术确定。没点保存的改动不生效，点「取消」恢复到上次保存的设置。</p>
+        <h3>注意事项</h3>
+        <ul>
+          <li><span class="warn-2">※ 指定的那一期没开着时，入口不显示（建议口径，待确认 Q19）；指定的那一期下架后，系统会回到「自动」并在页面顶部提示（建议口径，待确认 Q20）。</span></li>
+          <li>某一期被挂起时：选了「展示活动公告」的照常显示入口，没选的当这期没开着。</li>
+          <li>系统认不出图片内容，图标是否合规由上传的人自查。</li>
+        </ul>
+      </section>
+
+      <section class="mcard" id="m2">
+        <h2><span class="no2">02</span>保存记录</h2>
+        <h3>做什么用</h3>
+        <p>查看每次保存的时间（GMT+8）、操作人和改动内容（改前 → 改后）。操作人为「系统」表示指定的活动下架后自动回到自动。</p>
+        <h3>怎么看</h3>
+        <p>「保存记录」标签页；按操作时间倒序，每页默认 20 条，可选 10 / 20 / 50 / 100。记录不能删改，不能导出。</p>
+      </section>
+
+      <section class="mcard" id="m8">
+        <h2>后台通用</h2>
+        <ul>
+          <li>权限：菜单权限分「查看」「编辑」，在后台现有角色权限里配置。</li>
+          <li>操作日志：每次保存自动记一条保存记录。</li>
+          <li>两个人同时改：以后保存的为准，两次都有记录。</li>
+        </ul>
+      </section>
+
+      <section class="mcard" id="m9">
+        <h2>常见问题</h2>
+        <dl class="faq">
+          <dt>新一期活动上线，我要来这里设置吗？</dt>
+          <dd>不用。目标活动是「自动」时，新一期进入预热就自动显示。</dd>
+          <dt>关掉开关后，玩家马上看不到吗？</dt>
+          <dd>玩家下次展开侧栏时看不到；正在展开的侧栏要收起再展开才更新。</dd>
+          <dt>为什么指定了某一期，游戏里却没有入口？</dt>
+          <dd>那一期还没开始预热或已被挂起且不展示公告。改回「自动」或等那一期开始预热。</dd>
+          <dt>按钮文字保存不了？</dt>
+          <dd>检查是否为空、有数字或符号、超长，或用了 FREE、WIN 这类禁用词（不分大小写）。</dd>
+          <dt>能不能给按钮单独设显示时间？</dt>
+          <dd>不能。按钮跟各期活动时间走（预热开始到下架）。</dd>
+        </dl>
+      </section>
+    </div>
+  </div>
+</div>
+<script>window.NAV_ROOT = "../../";</script>
+<script src="../../assets/nav-data.js"></script>
+<script src="../../assets/nav.js"></script>
+</body>
+</html>

@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>游戏页侧栏圣诞闯关入口-完整需求-游戏页浮动侧栏</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<style>
+/* 本页自有类名统一带 xs- 前缀，避免和模板通用样式重名（需求包框架规范第 4 节） */
+.xs-game{position:absolute;inset:30px 0 0;overflow:hidden;background:linear-gradient(180deg,#1d4a52 0%,#173a3f 38%,#123033 100%);display:flex;flex-direction:column}
+.xs-top{height:96px;flex:none;position:relative}
+.xs-menu{position:absolute;left:12px;top:10px;width:40px;height:52px;border-radius:6px;background:#2b2f4a;border:2px solid #c9a24a}
+.xs-title{position:absolute;left:0;right:0;top:60px;text-align:center;font-size:18px;font-weight:800;color:#f6c94b;letter-spacing:.04em;text-shadow:0 2px 0 #7a3b00}
+.xs-reel{margin:18px 14px 0;display:grid;grid-template-columns:repeat(5,1fr);gap:4px;background:#2c5a3a;border:3px solid #8a5a2b;border-radius:6px;padding:6px}
+.xs-reel span{height:58px;display:grid;place-items:center;font-size:26px;font-weight:900;background:#25492f;border-radius:4px;color:#e84c3d}
+.xs-reel span:nth-child(3n){color:#3d7be8}.xs-reel span:nth-child(4n){color:#f2b632}.xs-reel span:nth-child(5n){color:#3ecf8e}
+.xs-bottom{margin-top:auto;padding:12px 16px 18px;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:8px;background:rgba(0,0,0,.35)}
+.xs-bottom div{font-size:12px;color:#f2b632;font-weight:700}
+.xs-bottom div b{display:block;color:#fff;font-size:15px}
+.xs-spin{width:64px;height:64px;border-radius:50%;background:radial-gradient(circle,#3b8ef0,#174a9c);border:3px solid #f2b632;display:grid;place-items:center;font-weight:800;color:#fff;font-size:13px}
+/* 浮动侧栏：白色圆角底板，按钮为蓝色图标 + 下方文字，最右（iOS 同样在最右）为 G 图标 */
+.xs-bar{position:absolute;top:10px;right:10px;display:flex;align-items:center;gap:0;background:#fff;border-radius:24px;padding:3px 3px 3px 10px;box-shadow:0 3px 10px rgba(0,0,0,.4);z-index:3}
+.xs-bar.ios{right:auto;left:10px}
+.xs-bar.closed{background:transparent;box-shadow:none;padding:0}
+.xs-bar.closed .xs-btn{display:none}
+.xs-btn{all:unset;cursor:pointer;display:grid;justify-items:center;gap:1px;min-width:46px;padding:3px 2px;color:#1E4FBF;font-size:10.5px;font-weight:700;line-height:1.2;border-radius:6px;font-family:var(--app-font)}
+.xs-btn svg{width:21px;height:21px;fill:none;stroke:#1E4FBF;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.xs-btn:hover{background:#EEF3FF}
+.xs-btn[hidden]{display:none}
+.xs-g{all:unset;cursor:pointer;width:40px;height:40px;margin-left:4px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#59a8ff,#1b5fd6);color:#fff;font-weight:900;font-size:22px;display:grid;place-items:center;border:3px solid #fff;box-shadow:0 0 0 1px #c8d6f0;font-family:var(--app-font)}
+.xs-tag{position:absolute;left:12px;bottom:118px;right:12px;z-index:2}
+.xs-pc{position:absolute;inset:30px 0 0;display:grid;place-items:center;text-align:center;padding:30px;color:var(--app-muted);font-size:13px;z-index:4;background:#10141c}
+</style>
+</head>
+<body>
+<div class="with-nav">
+<div class="stage">
+  <div class="app" role="region" aria-label="手机画面">
+    <div class="sb"><span>9:41</span><span>●●● 5G</span></div>
+
+    <div class="xs-game" id="game">
+      <div class="xs-top">
+        <div class="xs-menu" aria-hidden="true"></div>
+        <div class="xs-title">示例老虎机</div>
+      </div>
+      <div class="xs-reel" aria-hidden="true">
+        <span>K</span><span>Q</span><span>K</span><span>Q</span><span>A</span>
+        <span>A</span><span>Q</span><span>K</span><span>K</span><span>J</span>
+        <span>J</span><span>K</span><span>K</span><span>7</span><span>A</span>
+      </div>
+      <div class="xs-bottom">
+        <div>余额<b>₱1,000.00</b></div>
+        <div class="xs-spin">旋转</div>
+        <div style="text-align:right">投注<b>₱1.00</b></div>
+      </div>
+
+      <!-- 浮动侧栏 -->
+      <div class="xs-bar" id="bar">
+        <button type="button" class="xs-btn" id="bHome" data-dev="D03" aria-label="首页">
+          <svg viewBox="0 0 24 24"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h5v-6h4v6h5V10"/></svg>首页</button>
+        <button type="button" class="xs-btn" id="bDep" data-dev="D03" aria-label="充值">
+          <svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18"/><path d="M16 14h2"/></svg>充值</button>
+        <button type="button" class="xs-btn" id="bRel" data-dev="D03" aria-label="刷新">
+          <svg viewBox="0 0 24 24"><path d="M20 12a8 8 0 0 1-14 5.3"/><path d="M4 12a8 8 0 0 1 14-5.3"/><path d="M18 3v4h-4"/><path d="M6 21v-4h4"/></svg>刷新</button>
+        <!-- 本需求新增：流水闯关入口（图标是示意：由 UI 设计新图标，与现有按钮同一风格，不做节日专属形象；文字 T01：中文画面「闯关」，英文「Quest」） -->
+        <button type="button" class="xs-btn glow" id="bXmas" data-dev="D01" aria-label="闯关">
+          <svg viewBox="0 0 24 24"><path d="M4 17l-1-9 5 4 4-7 4 7 5-4-1 9z"/><path d="M4 20h16"/><circle cx="12" cy="13.5" r="1.3"/></svg>闯关</button>
+        <button type="button" class="xs-g" id="bG" data-dev="D02" aria-label="展开或收起侧栏">G</button>
+      </div>
+    </div>
+
+    <div class="xs-pc" id="pc" hidden><div>PC 端不在本需求范围：PC 游戏页不显示入口，保持现状。</div></div>
+    <div class="toast" id="toast" role="status" hidden></div>
+  </div>
+
+  <aside class="notes">
+    <h2>游戏页浮动侧栏</h2>
+    <p class="sub">老站 789Bingo 所有带浮动侧栏的游戏页。本需求只在 Reload（画面上「刷新」）和 G 图标之间新增流水闯关入口（带淡色光晕的按钮）；侧栏其他按钮和游戏画面不变。游戏画面为虚构示意；淡色光晕只用于在原型里标出新增按钮，线上不做光晕。演示用两期活动：圣诞期（先创建）和第 2 期（后创建，示意）。本原型包含 v1.0 的全部场景（只开圣诞期时各阶段、挂起、各端、埋点），并加上完整版的多期、后台总开关和指定某一期。</p>
+    <h3>模拟场景</h3>
+    <div class="sim">
+      <button type="button" data-sc="now"><span class="simtag">对比</span>现状：线上侧栏（无入口）</button>
+      <button type="button" data-sc="none"><span class="simtag">活动</span>无活动开着 → 隐藏</button>
+      <button type="button" data-sc="one"><span class="simtag">活动</span>一期开着（圣诞期进行中）</button>
+      <button type="button" data-sc="multi"><span class="simtag">活动</span>多期同时开着（圣诞期领奖、第 2 期预热）→ 进最新创建的第 2 期</button>
+      <button type="button" data-sc="xend"><span class="simtag">活动</span>圣诞期已下架、第 2 期进行中 → 仍显示</button>
+      <button type="button" data-sc="susp"><span class="simtag">活动</span>只有圣诞期且被挂起（不展示公告）→ 隐藏</button>
+      <button type="button" data-sc="swoff"><span class="simtag">后台</span>总开关关闭 → 隐藏</button>
+      <button type="button" data-sc="pick"><span class="simtag">后台</span>指定圣诞期、圣诞期未开始、第 2 期开着 → 隐藏（Q19）</button>
+      <button type="button" data-sc="ios"><span class="simtag">端</span>iOS：侧栏在左上角</button>
+      <button type="button" data-sc="old"><span class="simtag">端</span>未升级的老版本 App</button>
+      <button type="button" data-sc="pc"><span class="simtag">端</span>PC（不做）</button>
+    </div>
+    <h3>模拟操作</h3>
+    <div class="sim" id="simPanel"></div>
+    <div class="sim" id="evtBox"><div class="simgrp">埋点计数</div><div class="simrow" id="evtRow">展开侧栏、点入口时在这里显示演示计数</div></div>
+    <h3>规则批注</h3>
+    <ol>
+      <li><b>位置</b>：展开后从左到右为「首页」「充值」「刷新」、入口、G 图标；入口紧挨 G 图标。iOS 侧栏在左上角，顺序相同。<span class="ref">PRD 规则 N1 · F01-01 入口位置与样式</span></li>
+      <li><b>样式</b>：默认图标与现有按钮同一风格（画面上为示意），默认文字中文画面「闯关」、英文「Quest」；后台可换图标和文字。禁用内容和打扰限制见 PRD N2。<span class="ref">PRD 规则 N2、N17、N18 · F01-01 入口位置与样式</span></li>
+      <li><b>范围</b>：所有带侧栏的游戏页都显示，不分厂商和品类；侧栏折叠、展开、拖拽、贴边沿用现状，入口只在侧栏展开时显示。<span class="ref">PRD 规则 N3 · F01-01 入口位置与样式</span></li>
+      <li><b>显示时机</b>：有任一期流水闯关处于预热中、进行中或领奖期就显示；所有期都未开始、关卡未配置或已下架才隐藏。圣诞期下架后，只要另一期还开着，入口照样显示。挂起时：展示公告的算开着，不展示的当没开着。后台总开关关闭时不显示；后台指定某一期时只跟这一期。示例见 PRD 3.3。<span class="ref">PRD 规则 N4、N14、N15 · F01-02 入口显示时机</span></li>
+      <li><b>游戏中状态变化</b>：以侧栏每次展开时的状态为准；已显示的入口在所有期都下架后点击，落地页显示「活动已下架」；读取活动状态失败时本次不显示入口。<span class="ref">PRD 规则 N5 · F01-02 入口显示时机</span></li>
+      <li><b>点击</b>：按 Home 现有方式离开游戏，已下注单按平台现有规则结算，再打开目标活动的落地页：只有一期开着进这一期；多期同时开着（理论上不会出现），在开着的各期中进最新创建的一期。重复点击只跳转一次；离开失败或断网与点 Home 失败时一致。<span class="ref">PRD 规则 N6、N7、N8、N12 · F01-03 点击离开游戏并跳转落地页</span></li>
+      <li><b>人群</b>：看得到 G 图标的账号就看得到按钮（再满足有活动开着）；不另按登录、KYC、黑名单、账号状态、自我排除或冷静期判断；设了充值或投注上限的玩家照常显示。进入落地页后按活动现有规则处理。<span class="ref">PRD 规则 N9 · F01-04 人群、端与版本</span></li>
+      <li><b>端与版本</b>：H5、iOS、Flutter 安卓显示；PC、未升级的老版本 App、安卓原生老包不显示。<span class="ref">PRD 规则 N10 · F01-04 人群、端与版本</span></li>
+      <li><b>埋点</b>：侧栏展开且入口显示时记 1 次曝光（同一次展开只记 1 次）；点入口记 1 次点击（重复点击只记 1 次）；上报失败不影响跳转。<span class="ref">PRD 规则 N11 · F02-01 入口曝光与点击</span></li>
+      <li><b>首页、充值、刷新</b>：沿用现有，本原型点「首页」只示意回到大厅，点「充值」「刷新」不演示。</li>
+    </ol>
+    <h3>评审待确认</h3>
+    <ol>
+      <li><b>App 进游戏后是不是 H5 框架</b>：影响老版本 App 怎么屏蔽。<span class="ref">PRD 待确认 Q16</span></li>
+      <li><b>当前局未结算、免费次数使用中</b>：与 Home 一致，Home 现状待开发说明。<span class="ref">PRD 待确认 Q17</span></li>
+      <li><b>指定的那一期没开着时</b>：建议不显示。<span class="ref">PRD 待确认 Q19</span></li>
+    </ol>
+    <div class="pager"><span></span><a href="游戏页侧栏圣诞闯关入口-活动落地页跳转示意.html">下一页：活动落地页跳转示意 →</a></div>
+  </aside>
+</div>
+</div>
+<script>window.NAV_ROOT = "../../../";</script>
+<script src="../../../assets/nav-data.js"></script>
+<script src="../../../assets/nav.js"></script>
+<script src="../../../assets/proto-en.js"></script>
+<script src="../../../assets/proto.js"></script>
+<script>
+/* 模拟状态跨页面共享（存在 sessionStorage）。a：圣诞期状态；b：第 2 期状态；platform：端；appver：App 版本；login：登录状态；acct：账号状态 */
+P.init({ defaults: { platform: "H5", appver: "new", a: "on", b: "none", login: "in", acct: "normal", readFail: false, open: true, imp: 0, clk: 0, sw: true, tg: "auto" } });
+var STAGE = [["none", "未开始"], ["nolevel", "到预热时间但关卡未配置"], ["pre", "预热中"], ["on", "进行中"], ["buffer", "领奖期"], ["susp1", "已挂起（展示公告）"], ["susp0", "已挂起（不展示公告）"], ["off", "已下架"]];
+/* 演示用两期活动，按创建先后排列（第 2 期后创建）；多期开着时取开着的各期中最新创建的一期（规则 N7） */
+var ACTS = [{ k: "a", name: "圣诞期", pre: "11-27" }, { k: "b", name: "第 2 期", pre: "12-28" }];
+function isOpen(k) { return ["pre", "on", "buffer", "susp1"].indexOf(P.get(k)) >= 0; }
+/* 目标活动：后台「指定某一期」时只跟这一期（Q19 建议口径）；「自动」时取开着的各期中最新创建的一期（N7） */
+function target() {
+  var tg = P.get("tg");
+  if (tg === "a" || tg === "b") { var x = ACTS.filter(function (y) { return y.k === tg; })[0]; return isOpen(tg) ? x : null; }
+  var open = ACTS.filter(function (x) { return isOpen(x.k); }); return open.length ? open[open.length - 1] : null;
+}
+var keepShown = false;   /* 侧栏展开期间最后一期刚下架：已显示的入口保留到收起（规则 N5） */
+function buildPanel() { P.panel(document.getElementById("simPanel"), [
+  { title: "后台设置（活动配置 › 游戏页侧栏入口）", items: [
+    { type: "check", key: "sw", label: "是否显示（总开关）" },
+    { type: "radio", key: "tg", tag: "目标", options: [["auto", "自动"], ["a", "指定圣诞期"], ["b", "指定第 2 期"]] }
+  ] },
+  { title: "切换端", items: [{ type: "select", key: "platform", label: "端", options: ["H5", "iOS", "Flutter", "安卓原生老包", "PC"] }] },
+  { title: "App 版本（iOS、Flutter）", items: [{ type: "radio", key: "appver", options: [["new", "新版本（含本需求）"], ["old", "未升级的老版本"]] }] },
+  { title: "圣诞期状态（先创建）", items: [{ type: "radio", key: "a", options: STAGE }] },
+  { title: "第 2 期状态（后创建，示意）", items: [{ type: "radio", key: "b", options: STAGE }] },
+  { title: "设置用户状态", items: [
+    { type: "radio", key: "login", options: [["in", "已登录"], ["out", "未登录（游戏允许时）"]] },
+    { type: "radio", key: "acct", options: [["normal", "正常"], ["limit", "禁止投注 / 风控标记"]] }
+  ] },
+  { title: "注入异常", items: [
+    { type: "check", key: "readFail", label: "活动状态读取失败" },
+    { type: "button", label: "侧栏展开期间所有期都到达下架时间", run: function () { var k = isShown(); P.set("a", "off"); P.set("b", "off"); keepShown = k; buildPanel(); render(false); evt(keepShown ? "所有期都已下架：入口保留到收起侧栏，此时点击进入「活动已下架」；收起再展开后不显示" : "所有期都已下架：当前入口未显示"); } },
+    { type: "button", label: "离开游戏失败或断网", run: function () { evt("与点 Home 失败时一致（规则 N12），原型不演示具体提示"); } },
+    { type: "button", label: "埋点上报失败", run: function () { evt("上报失败不影响入口显示和跳转（规则 N11）"); } }
+  ] },
+  { title: "演示值说明", items: [{ type: "note", text: "游戏画面、余额、投注均为虚构；入口图标为示意，默认文字 Quest（已定稿）" }] },
+  { items: [{ type: "reset" }] }
+]); }
+buildPanel();
+
+var bar = P.$("bar"), entry = P.$("bXmas"), evtRow = P.$("evtRow"), leaving = false;
+function stageOk() { return !!target(); }
+function versionOk() { var p = P.get("platform"); return p === "H5" || ((p === "iOS" || p === "Flutter") && P.get("appver") === "new"); }
+function isShown() { return P.get("open") && !entry.hidden; }
+function evt(msg) { P.note(msg || ("曝光 " + P.get("imp") + " 次；点击 " + P.get("clk") + " 次"), evtRow); }
+function render(countImp) {
+  var p = P.get("platform");
+  P.$("pc").hidden = p !== "PC";
+  bar.classList.toggle("ios", p === "iOS");
+  bar.classList.toggle("closed", !P.get("open"));
+  var show = versionOk() && !P.get("readFail") && P.get("sw") && (stageOk() || keepShown);
+  entry.hidden = !show;
+  if (countImp && show && P.get("open")) { P.set("imp", (+P.get("imp") || 0) + 1); evt(); }
+}
+/* G 图标：展开或收起侧栏；每次展开重新判断入口是否显示 */
+P.$("bG").onclick = function () {
+  var open = !P.get("open");
+  if (!open) keepShown = false;
+  P.set("open", open);
+  render(open);
+};
+/* 入口：按 Home 方式离开游戏，再打开目标活动落地页（按点击时的状态确定：一期开着进这一期，多期进其中最新创建的一期）；重复点击只执行一次 */
+entry.onclick = function () {
+  if (leaving) return;
+  leaving = true;
+  var t = target();
+  P.set("tgt", t ? t.k : "");
+  P.set("clk", (+P.get("clk") || 0) + 1); evt("点击记 1 次，进入：" + (t ? t.name : "（所有期都已下架）"));
+  P.set("from", "entry");
+  P.go("游戏页侧栏圣诞闯关入口-活动落地页跳转示意.html", 350);
+};
+P.$("bHome").onclick = function () { P.set("from", "home"); P.go("游戏页侧栏圣诞闯关入口-活动落地页跳转示意.html#lobby"); };
+P.$("bDep").onclick = P.$("bRel").onclick = function () { evt("「充值」「刷新」沿用现有，不在本需求范围"); };
+/* 模拟场景 */
+document.querySelectorAll("[data-sc]").forEach(function (b) {
+  b.onclick = function () {
+    var s = b.dataset.sc; keepShown = false;
+    function h5() { P.set("platform", "H5"); P.set("appver", "new"); P.set("readFail", false); P.set("sw", true); P.set("tg", "auto"); }
+    if (s === "now") { h5(); P.set("a", "none"); P.set("b", "none"); }
+    if (s === "susp") { h5(); P.set("a", "susp0"); P.set("b", "none"); }
+    if (s === "swoff") { h5(); P.set("a", "on"); P.set("b", "none"); P.set("sw", false); }
+    if (s === "pick") { h5(); P.set("a", "none"); P.set("b", "on"); P.set("tg", "a"); }
+    if (s === "none") { h5(); P.set("a", "off"); P.set("b", "none"); }
+    if (s === "one") { h5(); P.set("a", "on"); P.set("b", "none"); }
+    if (s === "multi") { h5(); P.set("a", "buffer"); P.set("b", "pre"); }
+    if (s === "xend") { h5(); P.set("a", "off"); P.set("b", "on"); }
+    if (s === "ios") { P.set("platform", "iOS"); P.set("appver", "new"); if (!target()) P.set("a", "on"); }
+    if (s === "old") { P.set("platform", "Flutter"); P.set("appver", "old"); if (!target()) P.set("a", "on"); }
+    if (s === "pc") { P.set("platform", "PC"); }
+    P.set("open", true); buildPanel(); render(true);
+    var t = target();
+    var msg = { now: "侧栏与线上现状一致，没有入口", none: "圣诞期已下架、第 2 期未开始：没有一期开着，入口隐藏", one: "只有圣诞期开着：显示入口，点击进圣诞期",
+      multi: "两期同时开着：显示入口，点击进最新创建的第 2 期", xend: "圣诞期已下架但第 2 期还开着：入口仍显示，点击进第 2 期",
+      susp: "圣诞期被挂起且不展示公告：当这期没开着，入口隐藏", swoff: "后台总开关关闭：入口隐藏", pick: "后台指定圣诞期但它未开始：入口隐藏（Q19 建议口径）" }[s];
+    P.note(msg || ("已切换" + (t ? "，点击将进入：" + t.name : "")), b);
+  };
+});
+window.addEventListener("proto-change", function (e) { if (e.detail.key === "a" || e.detail.key === "b") keepShown = false; if (e.detail.key !== "imp" && e.detail.key !== "clk") render(false); if (e.detail.key === "*") { keepShown = false; render(false); } });
+render(true);
+</script>
+</body>
+</html>

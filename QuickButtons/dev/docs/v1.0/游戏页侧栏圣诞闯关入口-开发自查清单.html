@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>游戏页侧栏圣诞闯关入口-v1.0-开发自查清单</title>
+<link rel="stylesheet" href="../../assets/style.css">
+</head>
+<body>
+<div class="with-nav">
+  <header class="ck-head" id="ckhead">
+    <div class="ck-top">
+      <div>
+        <div class="k">789BINGO · 功能自查</div>
+        <h1>游戏页侧栏圣诞闯关入口-v1.0 · 开发自查清单 · <span id="hdVer">v1.0</span></h1>
+        <div class="d">勾选状态保存在本机浏览器，按角色分别保存；换电脑或换浏览器后看不到，留档请导出 CSV。</div>
+      </div>
+      <div class="ck-total"><b id="tp">0%</b><span id="tn">0 / 0 项</span><div class="pbar"><i id="tb" style="width:0"></i></div></div>
+    </div>
+    <div class="filters">
+      <div class="fgroup" data-g="role"><span class="gl">角色</span></div>
+      <div class="fgroup" data-g="type"><span class="gl">类型</span></div>
+      <div class="fgroup" data-g="state"><span class="gl">状态</span></div>
+      <div class="fgroup"><button class="pill" type="button" id="exall">全部展开</button><button class="pill" type="button" id="coall">全部收起</button><button class="pill" type="button" id="csv">导出 CSV</button><button class="pill" type="button" id="prt">打印</button></div>
+      <button class="clearbtn" type="button" id="clear">清空勾选</button>
+    </div>
+  </header>
+  <div class="split" id="split">
+    <div class="ck-left" id="list"></div>
+    <div class="divider" id="divider" role="separator" aria-label="拖动调整宽度"></div>
+    <div class="ck-right">
+      <div class="rhead">PRD 需求文档 <button type="button" id="up" aria-label="上一处标注">↑</button><button type="button" id="dn" aria-label="下一处标注">↓</button><span class="cnt2" id="hitn"></span></div>
+      <iframe id="prd" src="游戏页侧栏圣诞闯关入口-需求开发PRD文档.html" title="PRD 需求文档"></iframe>
+    </div>
+  </div>
+</div>
+
+<script>
+window.NAV_NEWWIN_TEXT = "在新标签页打开";
+window.addEventListener("navtoggle", function () { setTimeout(fitHead, 0); });
+</script>
+<script>window.NAV_ROOT = "../../";</script>
+<script src="../../assets/nav-data.js"></script>
+<script src="../../assets/nav.js"></script>
+<script>
+/* 自查项：[类型, 适用角色, 关键, 检查什么, 预期结果, 新增或修改的版本]。类型 fn 功能 / bd 边界值 / ex 异常 / un 非常规；角色 d 设计 / f 前端 / b 后端 / q 测试。 */
+var DATA = [
+ { c: "F01", n: "游戏页侧栏 Quest 按钮", s: [
+  { c: "F01-01", n: "入口位置与样式", i: [
+   ["fn", "dfq", 1, "圣诞这一期进行中，H5 游戏页展开侧栏", "从左到右为 Home、Deposit、Reload、Quest 按钮、G 图标；按钮与其他按钮同一风格、尺寸一致"],
+   ["fn", "dq", 1, "检查按钮文字和图标", "按 PRD N2：没有金额、币种、百分比、FREE、WIN 这类内容"],
+   ["un", "dfq", 0, "进入游戏后不操作，观察侧栏", "按钮不闪烁、不跳动，侧栏不自动展开；没有红点、角标"],
+   ["bd", "fq", 0, "iOS 新版本、3 个不同厂商和品类的游戏分别展开侧栏", "都显示按钮，位置在 Reload 和 G 图标之间"],
+   ["fn", "dfbq", 1, "按 PRD 附录 D 逐个核对控件说明", "实现与说明一致"]
+  ]},
+  { c: "F01-02", n: "入口显示时机", i: [
+   ["fn", "fbq", 1, "圣诞这一期分别处于预热中、进行中、领奖期时展开侧栏", "都显示按钮"],
+   ["fn", "fbq", 1, "圣诞这一期未开始、已下架时展开侧栏", "不显示按钮，侧栏与现状一致"],
+   ["bd", "fbq", 1, "圣诞这一期已下架、另一期流水闯关还开着时展开侧栏", "不显示按钮"],
+   ["bd", "bq", 1, "预热开始日前一日 23:59:59 和当日 00:00:00 之后、下架日 23:59:59 之前和次日 00:00:00 之后各展开一次", "按服务端时间（GMT+8）分别不显示 / 显示 / 显示 / 不显示"],
+   ["ex", "bq", 0, "到预热开始时间但关卡未配置；状态读取失败", "不显示按钮，其他按钮正常，侧栏展开不被拖慢"],
+   ["un", "fq", 0, "侧栏展开期间跨过下架时间，直接点按钮；再收起后展开", "落地页显示「活动已下架」；再展开不显示"],
+   ["ex", "bq", 0, "挂起功能上线后：圣诞这一期挂起且勾选 / 未勾选「展示活动公告」", "勾选的照常显示；未勾选的不显示；恢复后按恢复后的状态显示"]
+  ]},
+  { c: "F01-03", n: "点击离开游戏并跳转落地页", i: [
+   ["fn", "fq", 1, "圣诞这一期进行中，在游戏中点按钮", "按 Home 的方式离开游戏，进入落地页进行中页；预热中、领奖期分别进预热页、结束页"],
+   ["ex", "fbq", 1, "当前局未结算、免费次数使用中、断网或离开失败时点按钮，与点 Home 对比", "表现完全一致"],
+   ["bd", "bq", 1, "测试环境和生产环境各核对一次活动编号", "按钮进入的是圣诞这一期落地页"]
+  ]},
+  { c: "F01-04", n: "端与版本", i: [
+   ["fn", "fq", 1, "已升级的 iOS、Flutter 安卓版本展开侧栏", "显示按钮，表现同 H5"],
+   ["un", "fq", 1, "PC、老版本 App、安卓原生老包进入游戏页", "不显示按钮，其他按钮正常"],
+   ["fn", "fq", 0, "分别用看得到和看不到 G 图标的账号进入游戏", "看得到 G 图标的就看得到按钮，看不到的也看不到"]
+  ]}
+ ]},
+ { c: "F02", n: "数据埋点", s: [
+  { c: "F02-01", n: "入口曝光与点击", i: [
+   ["fn", "fbq", 1, "圣诞这一期开着时展开侧栏一次并点按钮", "曝光次数、点击次数各 +1；按自然日、按端统计"],
+   ["bd", "fq", 0, "侧栏展开后停留 1 分钟；按钮不显示时展开侧栏", "曝光只记 1 次；按钮不显示时不记"],
+   ["ex", "fbq", 1, "埋点上报失败时点按钮", "照常跳转落地页，不提示玩家"]
+  ]}
+ ]}
+];
+var VER = "v1.0", ITER = "v1.0", BASE = "游戏页侧栏圣诞闯关入口功能需求-" + (ITER ? ITER + "-" : ""), KEY = BASE + VER + "-checklist";
+document.getElementById("hdVer").textContent = VER;
+var PREV = (function () {
+  function vn(v) { var m = /^v(\d+)\.(\d+)$/.exec(v || ""); return m ? (+m[1]) * 1000 + (+m[2]) : -1; }
+  var best = "", bestN = -1, cur = vn(VER);
+  try { for (var i = 0; i < localStorage.length; i++) { var k = localStorage.key(i); if (k.indexOf(BASE) !== 0 || !/-checklist$/.test(k)) continue;
+    var v = k.slice(BASE.length, -"-checklist".length), n = vn(v); if (n >= 0 && n < cur && n > bestN) { best = k; bestN = n; } } } catch (e) {}
+  return best;
+})();
+var RN = { d: "设计", f: "前端", b: "后端", q: "测试" }, TN = { fn: "功能", bd: "边界值", ex: "异常", un: "非常规" };
+var F = { role: "all", type: "all", state: "all" };
+var store = {};
+try { store = JSON.parse(localStorage.getItem(KEY) || "null"); } catch (e) { store = null; }
+try { var sv = JSON.parse(localStorage.getItem(KEY + "-filters") || "{}"); if (sv.role) F = sv; } catch (e) {}
+var MIGRATE = store === null; if (MIGRATE) store = {};
+function save() { try { localStorage.setItem(KEY, JSON.stringify(store)); localStorage.setItem(KEY + "-filters", JSON.stringify(F)); } catch (e) {} }
+function done(it, role) { var rs = role === "all" ? it.r.split("") : [role]; return rs.every(function (r) { return store[r + ":" + it.id]; }); }
+function setDone(it, on) { (F.role === "all" ? it.r.split("") : [F.role]).forEach(function (r) { if (on) store[r + ":" + it.id] = 1; else delete store[r + ":" + it.id]; }); }
+var ITEMS = [];
+DATA.forEach(function (fp) { fp.s.forEach(function (s) { s.i.forEach(function (x, k) {
+  var it = { id: s.c + "-" + (k + 1), fp: fp, sub: s, t: x[0], r: x[1], key: !!x[2], q: x[3], e: x[4], v: x[5] || "" }; ITEMS.push(it); s.items = (s.items || []).concat(it);
+}); }); });
+function inRole(it) { return F.role === "all" || it.r.indexOf(F.role) >= 0; }
+function visible(it) {
+  if (!inRole(it)) return false;
+  if (F.type === "fn" && it.t !== "fn") return false;
+  if (F.type === "bd" && it.t !== "bd") return false;
+  if (F.type === "ex" && it.t !== "ex" && it.t !== "un") return false;
+  var d = done(it, F.role);
+  if (F.state === "todo" && d) return false;
+  if (F.state === "done" && !d) return false;
+  if (F.state === "key" && !it.key) return false;
+  return true;
+}
+function stat(list) { var n = list.length, c = list.filter(function (it) { return done(it, F.role); }).length; return { n: n, c: c, p: n ? Math.round(c * 100 / n) : 0 }; }
+var closed = {};
+function render() {
+  var html = "";
+  DATA.forEach(function (fp) {
+    var all = []; fp.s.forEach(function (s) { all = all.concat(s.items.filter(inRole)); });
+    var vis = all.filter(visible); if (!vis.length) return;
+    var st = stat(all), tag = st.c === 0 ? '<span class="stt">未开始</span>' : st.c === st.n ? '<span class="stt done">已完成</span>' : '<span class="stt ing">进行中</span>';
+    html += '<section class="fpc' + (closed[fp.c] ? " closed" : "") + '" data-fp="' + fp.c + '"><div class="fpc-h">' +
+      '<button class="tri" type="button" data-tog="' + fp.c + '" aria-label="展开或收起">▼</button><span class="code">' + fp.c + '</span><span class="nm">' + fp.n + "</span>" + tag +
+      '<span class="mbar"><i style="width:' + st.p + '%"></i></span><span class="num">' + st.c + " / " + st.n + "</span>" +
+      '<button class="selall" type="button" data-sel="' + fp.c + '">全选本组</button><button class="gopr" type="button" data-pr="' + fp.c + '">查看 PRD ›</button></div><div class="fpc-b">';
+    fp.s.forEach(function (s) {
+      var sv = s.items.filter(visible); if (!sv.length) return;
+      var ss = stat(s.items.filter(inRole));
+      html += '<div class="sub-h"><span class="code2">' + s.c + '</span><span class="nm">' + s.n + '</span><span class="mbar"><i style="width:' + ss.p + '%"></i></span><span class="num">' + ss.c + " / " + ss.n + '</span><button class="gopr" type="button" data-pr="' + s.c + '">查看 PRD ›</button></div><ul class="items">';
+      sv.forEach(function (it) {
+        var d = done(it, F.role);
+        html += '<li class="' + (d ? "done" : "") + (it.v ? " vmark" + (it.v === VER ? "" : " old") : "") + '"><input type="checkbox" data-id="' + it.id + '"' + (d ? " checked" : "") + ' aria-label="' + it.q.replace(/"/g, "&quot;") + '"><div><span class="tx">' + it.q +
+          '<span class="tags"><span class="lb t-' + it.t + '">' + TN[it.t] + "</span>" + it.r.split("").map(function (r) { return '<span class="lb r-' + r + '">' + RN[r] + "</span>"; }).join("") + (it.key ? '<span class="lb key">关键</span>' : "") +
+          (it.v ? '<sup class="vtag' + (it.v === VER ? "" : " old") + '" title="' + it.v + '">' + it.v + "</sup>" : "") +
+          '</span></span><span class="ex">预期：' + it.e + "</span></div></li>";
+      });
+      html += "</ul>";
+    });
+    html += "</div></section>";
+  });
+  document.getElementById("list").innerHTML = html || '<div class="empty">当前筛选下没有检查项</div>';
+  var t = stat(ITEMS.filter(inRole));
+  document.getElementById("tp").textContent = t.p + "%";
+  document.getElementById("tn").textContent = t.c + " / " + t.n + " 项";
+  document.getElementById("tb").style.width = t.p + "%";
+}
+var byId = {}; ITEMS.forEach(function (it) { byId[it.id] = it; });
+if (MIGRATE && PREV) { try { var old = JSON.parse(localStorage.getItem(PREV) || "{}"); Object.keys(old).forEach(function (k) { var it = byId[k.split(":")[1]]; if (it && it.v !== VER) store[k] = old[k]; }); } catch (e) {} save(); }
+var list = document.getElementById("list");
+list.addEventListener("change", function (e) { var id = e.target.dataset.id; if (!id) return; setDone(byId[id], e.target.checked); save(); render(); });
+list.addEventListener("click", function (e) {
+  var b = e.target.closest("button"); if (!b) return;
+  if (b.dataset.tog) { closed[b.dataset.tog] = !closed[b.dataset.tog]; b.closest(".fpc").classList.toggle("closed"); }
+  if (b.dataset.sel) { var its = ITEMS.filter(function (it) { return it.fp.c === b.dataset.sel && visible(it); }); var allOn = its.every(function (it) { return done(it, F.role); }); its.forEach(function (it) { setDone(it, !allOn); }); save(); render(); }
+  if (b.dataset.pr) showPRD(b.dataset.pr);
+});
+var frame = document.getElementById("prd"), ready = false, pending = null;
+frame.addEventListener("load", function () { ready = true; if (pending) { frame.contentWindow.postMessage({ type: "prd-show", code: pending }, "*"); pending = null; } });
+function showPRD(code) {
+  if (window.matchMedia("(max-width:699px)").matches) { window.open("游戏页侧栏圣诞闯关入口-需求开发PRD文档.html#" + code, "_blank"); return; }
+  if (!ready) { pending = code; return; }
+  frame.contentWindow.postMessage({ type: "prd-show", code: code }, "*");
+}
+document.getElementById("up").onclick = function () { frame.contentWindow.postMessage({ type: "prd-step", dir: -1 }, "*"); };
+document.getElementById("dn").onclick = function () { frame.contentWindow.postMessage({ type: "prd-step", dir: 1 }, "*"); };
+window.addEventListener("message", function (e) { var d = e.data || {}; if (d.type !== "prd-hits") return; document.getElementById("hitn").textContent = d.total ? "第 " + (d.pos + 1) + " / " + d.total + " 处标注" : ""; });
+var GROUPS = { role: [["all", "全部"], ["d", "设计"], ["f", "前端"], ["b", "后端"], ["q", "测试"]], type: [["all", "全部"], ["fn", "功能"], ["bd", "边界值"], ["ex", "异常与非常规操作"]], state: [["all", "全部"], ["todo", "未完成"], ["done", "已完成"], ["key", "仅关键项"]] };
+Object.keys(GROUPS).forEach(function (g) {
+  var box = document.querySelector('[data-g="' + g + '"]');
+  GROUPS[g].forEach(function (o) {
+    var b = document.createElement("button"); b.type = "button"; b.className = "pill"; b.textContent = o[1]; b.setAttribute("aria-pressed", F[g] === o[0]);
+    b.onclick = function () { F[g] = o[0]; box.querySelectorAll(".pill").forEach(function (x) { x.setAttribute("aria-pressed", x === b); }); save(); render(); };
+    box.appendChild(b);
+  });
+});
+document.getElementById("exall").onclick = function () { closed = {}; render(); };
+document.getElementById("coall").onclick = function () { DATA.forEach(function (fp) { closed[fp.c] = true; }); render(); };
+document.getElementById("prt").onclick = function () { window.print(); };
+document.getElementById("clear").onclick = function () {
+  var m = document.createElement("div"); m.className = "cfm";
+  m.innerHTML = '<div role="dialog" aria-modal="true"><p><b>清空勾选</b></p><p>将清空本需求 ' + ITER + " · " + VER + ' 在本浏览器里所有角色的勾选，不能撤销。</p><div class="row2"><button class="obtn" type="button" data-x="0">取消</button><button class="obtn" type="button" data-x="1" style="border-color:#C00000;color:#C00000">确认清空</button></div></div>';
+  m.onclick = function (e) { var x = e.target.dataset.x; if (x === undefined) return; if (x === "1") { store = {}; save(); render(); } m.remove(); };
+  document.body.appendChild(m);
+};
+document.getElementById("csv").onclick = function () {
+  var rows = [["大功能点", "子功能点", "编号", "类型", "适用角色", "关键", "检查什么", "预期结果", "设计", "前端", "后端", "测试"]];
+  ITEMS.forEach(function (it) {
+    rows.push([it.fp.c + " " + it.fp.n, it.sub.c + " " + it.sub.n, it.id, TN[it.t], it.r.split("").map(function (r) { return RN[r]; }).join("/"), it.key ? "是" : "", it.q, it.e].concat(["d", "f", "b", "q"].map(function (r) { return it.r.indexOf(r) < 0 ? "-" : store[r + ":" + it.id] ? "已勾" : "未勾"; })));
+  });
+  var csv = "﻿" + rows.map(function (r) { return r.map(function (c) { return '"' + String(c).replace(/"/g, '""') + '"'; }).join(","); }).join("\r\n");
+  var a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([csv], { type: "text/csv;charset=utf-8" })); a.download = "游戏页侧栏圣诞闯关入口-v1.0-开发自查清单-" + VER + ".csv";
+  document.body.appendChild(a); a.click(); a.remove();
+};
+(function () {
+  var split = document.getElementById("split"), dv = document.getElementById("divider"), drag = false;
+  dv.addEventListener("mousedown", function (e) { drag = true; frame.style.pointerEvents = "none"; e.preventDefault(); });
+  window.addEventListener("mouseup", function () { drag = false; frame.style.pointerEvents = ""; });
+  window.addEventListener("mousemove", function (e) { if (!drag) return; var r = split.getBoundingClientRect(), p = Math.min(70, Math.max(25, (e.clientX - r.left) * 100 / r.width)); split.style.setProperty("--lw", p + "%"); });
+})();
+function fitHead() { document.getElementById("split").style.setProperty("--headh", document.getElementById("ckhead").offsetHeight + "px"); }
+window.addEventListener("resize", fitHead);
+render(); setTimeout(fitHead, 0);
+</script>
+</body>
+</html>

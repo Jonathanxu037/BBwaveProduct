@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>游戏页侧栏圣诞闯关入口-完整需求-客服QA</title>
+<link rel="stylesheet" href="../../assets/style.css">
+</head>
+<body class="qa-page" data-lang="both">
+<div class="with-nav">
+<div class="desk"><article class="paper qa">
+
+<h1 class="doc-title">游戏页侧栏圣诞闯关入口-完整需求 · 客服 QA<span class="qa-sub">In-Game Crown Rush Shortcut · Customer Service Q&amp;A</span></h1>
+<div class="doc-meta"><span>版本 / Version：v1.0</span><span>适用 / For：客服 Customer Service</span><span>依据 / Based on：PRD</span></div>
+<div class="qa-lang" role="group" aria-label="语言 Language">
+  <button type="button" data-l="both" aria-pressed="true">双语 Bilingual</button>
+  <button type="button" data-l="zh" aria-pressed="false">中文</button>
+  <button type="button" data-l="en" aria-pressed="false">English</button>
+</div>
+<hr class="doc-rule">
+
+<h2 id="q0">适用范围 <span class="en-t">Scope</span></h2>
+<div class="bi"><div class="zh">789Bingo 游戏内浮动侧栏上的流水闯关（Crown Rush）入口，适用所有期流水闯关活动（第一个适用的是圣诞这一期）。适用 H5、iOS App、安卓 App；PC 和旧版安卓原生 App 没有这个入口。H5 在圣诞活动预热开始前上线，App 在包含此功能的新版本上线后才有。按钮文字为 Quest（以上线界面为准），下文称 Quest 按钮。</div><div class="en">The Crown Rush shortcut on the floating in-game sidebar of 789Bingo, for every Crown Rush event (starting with the Christmas one). Available on H5, iOS app and Android app; not available on PC or the old native Android app. H5 goes live before the Christmas event warm-up starts; the apps show it only after updating to the version that includes it. The button label is "Quest" (as shown in the live app); it is called the Quest button below.</div></div>
+
+<h2 id="q1">这次改了什么 <span class="en-t">What changed</span></h2>
+<div class="bi"><div class="zh">玩家在游戏中展开侧栏（点 G 图标），会在 Reload 和 G 图标之间看到 Quest 按钮。点它会像点 Home 一样先离开游戏，再打开 Crown Rush 活动页；同时有几期活动开着时（一般不会出现），打开其中最新的那一期。只要有一期活动处于预热中、进行中或领奖期就显示，所有期都下架后自动隐藏。活动规则和奖励没有任何变化。</div><div class="en">When players open the in-game sidebar (tap the G icon), they see a Quest button between Reload and the G icon. Tapping it leaves the game just like Home, then opens the Crown Rush event page; if several Crown Rush events are running, it opens the newest one. It shows as long as any Crown Rush event is in warm-up, live or claim window, and is hidden automatically after all of them are taken down. Event rules and rewards are unchanged.</div></div>
+
+<h2 id="q2">客服核查步骤 <span class="en-t">How to check</span></h2>
+<ol class="qa-steps">
+  <li class="bi"><div class="zh"><b>问端和版本</b>：玩家用 H5、iOS 还是安卓 App；App 是否已更新到最新版本。PC 和旧版 App 没有这个按钮。</div><div class="en"><b>Ask device and version</b>: H5, iOS or Android app; whether the app is updated to the latest version. PC and older app versions do not have this button.</div></li>
+  <li class="bi"><div class="zh"><b>看活动阶段</b>：对照各期 Crown Rush 活动时间，判断有没有一期处于预热中、进行中或领奖期；所有期都下架后按钮不显示。</div><div class="en"><b>Check the event period</b>: compare with the schedules of all Crown Rush events to see whether any is in warm-up, live or claim window; the button is hidden after all of them are taken down.</div></li>
+  <li class="bi"><div class="zh"><b>问是否展开侧栏</b>：按钮在侧栏里，侧栏收起时只看到 G 图标。</div><div class="en"><b>Ask whether the sidebar is open</b>: the button is inside the sidebar; when collapsed, only the G icon shows.</div></li>
+  <li class="bi"><div class="zh"><b>注单问题</b>：查玩家投注记录，离开游戏时的注单按平台现有规则结算，与点 Home 相同。</div><div class="en"><b>Bet questions</b>: check the player's betting history; bets are settled under the platform's existing rules when leaving the game, the same as tapping Home.</div></li>
+</ol>
+
+<h2 id="q3">问答 <span class="en-t">Q&amp;A</span></h2>
+<section class="qa-card" id="qa1">
+  <h3><span class="qa-no">1</span><span class="bi-inline"><span class="zh">游戏里多了一个 Quest 按钮，是什么？</span><span class="en">What is the new Quest button in the game?</span></span></h3>
+  <div class="qa-row"><b>回复玩家<small>Reply</small></b>
+    <div class="bi"><div class="en qa-reply">It's a shortcut to our Crown Rush event. Tap it to go straight to the event page and check your progress and rewards.<button type="button" class="qa-copy">复制 Copy</button></div>
+    <div class="zh">这是 Crown Rush 活动的快捷入口，点它可以直接进入活动页查看进度和奖励。</div></div></div>
+  <div class="qa-row"><b>客服核查<small>Check</small></b>
+    <div class="bi"><div class="zh">无需核查。</div><div class="en">No check needed.</div></div></div>
+  <div class="qa-row"><b>转交<small>Escalate</small></b>
+    <div class="bi"><div class="zh">不需要。</div><div class="en">Not needed.</div></div></div>
+</section>
+<section class="qa-card" id="qa2">
+  <h3><span class="qa-no">2</span><span class="bi-inline"><span class="zh">我点了这个按钮，为什么游戏退出了？</span><span class="en">I tapped the button, why did my game close?</span></span></h3>
+  <div class="qa-row"><b>回复玩家<small>Reply</small></b>
+    <div class="bi"><div class="en qa-reply">The Quest button works like the Home button: it leaves the game first, then opens the event page. Your bets are settled under our standard rules, the same as when you tap Home. You can open the game again from the lobby at any time.<button type="button" class="qa-copy">复制 Copy</button></div>
+    <div class="zh">Quest 按钮和 Home 按钮一样，会先离开游戏再打开活动页。注单按平台标准规则结算，和点 Home 时相同。你可以随时从大厅重新进入游戏。</div></div></div>
+  <div class="qa-row"><b>客服核查<small>Check</small></b>
+    <div class="bi"><div class="zh">玩家质疑注单或余额时，查投注记录核对该局结算结果。</div><div class="en">If the player questions a bet or balance, check the betting history for that round's settlement.</div></div></div>
+  <div class="qa-row"><b>转交<small>Escalate</small></b>
+    <div class="bi"><div class="zh">注单结算结果与点 Home 时不一致，或余额异常：转技术。</div><div class="en">If the settlement differs from tapping Home, or the balance looks wrong: escalate to Tech.</div></div></div>
+</section>
+<section class="qa-card" id="qa3">
+  <h3><span class="qa-no">3</span><span class="bi-inline"><span class="zh">我在游戏里找不到 Quest 按钮。</span><span class="en">I can't find the Quest button in the game.</span></span></h3>
+  <div class="qa-row"><b>回复玩家<small>Reply</small></b>
+    <div class="bi"><div class="en qa-reply">Please tap the G icon in the game to open the sidebar; the Quest button is next to it. If you are using the app, please update it to the latest version. The button is not available on PC, and it only shows while a Crown Rush event is in warm-up, live or claim window.<button type="button" class="qa-copy">复制 Copy</button></div>
+    <div class="zh">请在游戏里点 G 图标展开侧栏，Quest 按钮就在它旁边。用 App 的请更新到最新版本。PC 没有这个按钮；只在有 Crown Rush 活动处于预热中、进行中或领奖期时显示。</div></div></div>
+  <div class="qa-row"><b>客服核查<small>Check</small></b>
+    <div class="bi"><div class="zh">按「客服核查步骤」1–3 查端、版本、活动阶段和侧栏是否展开。</div><div class="en">Follow steps 1–3 of "How to check": device, version, event period and whether the sidebar is open.</div></div></div>
+  <div class="qa-row"><b>转交<small>Escalate</small></b>
+    <div class="bi"><div class="zh">H5 或最新版 App、有活动处于预热中、进行中或领奖期、侧栏已展开仍没有按钮：转技术，附端、App 版本、游戏名称和截图。</div><div class="en">If on H5 or the latest app, with an event in warm-up, live or claim window and the sidebar open, there is still no button: escalate to Tech with device, app version, game name and a screenshot.</div></div></div>
+</section>
+<section class="qa-card" id="qa4">
+  <h3><span class="qa-no">4</span><span class="bi-inline"><span class="zh">按钮昨天还有，今天没有了。</span><span class="en">The button was there yesterday but it's gone today.</span></span></h3>
+  <div class="qa-row"><b>回复玩家<small>Reply</small></b>
+    <div class="bi"><div class="en qa-reply">The Quest button is hidden automatically when no Crown Rush event is in warm-up, live or claim window. It shows again when the next event's warm-up starts. Please check Promotions for the latest event information.<button type="button" class="qa-copy">复制 Copy</button></div>
+    <div class="zh">没有 Crown Rush 活动处于预热中、进行中或领奖期时，按钮自动隐藏；下一期开始预热时再显示。请到 Promotions 查看最新活动信息。</div></div></div>
+  <div class="qa-row"><b>客服核查<small>Check</small></b>
+    <div class="bi"><div class="zh">核对是否所有期都已过下架时间或被挂起且不展示公告，以及后台「活动配置 › 游戏页侧栏入口」是否关闭了总开关或指定了某一期；都不是的按问答 3 处理。</div><div class="en">Check whether all Crown Rush events have been taken down or suspended without a notice, and whether the switch in Admin (Activity Config › In-Game Sidebar Entry) is off or set to a specific event; if none applies, handle as Q&amp;A 3.</div></div></div>
+  <div class="qa-row"><b>转交<small>Escalate</small></b>
+    <div class="bi"><div class="zh">还有一期没下架但按钮消失：转技术。</div><div class="en">If the button disappears while an event has not been taken down: escalate to Tech.</div></div></div>
+</section>
+<section class="qa-card" id="qa5">
+  <h3><span class="qa-no">5</span><span class="bi-inline"><span class="zh">点按钮后活动页让我登录。</span><span class="en">The event page asks me to log in after tapping the button.</span></span></h3>
+  <div class="qa-row"><b>回复玩家<small>Reply</small></b>
+    <div class="bi"><div class="en qa-reply">Please log in on the event page; after logging in you will be taken back to the event page to see your progress and rewards.<button type="button" class="qa-copy">复制 Copy</button></div>
+    <div class="zh">请在活动页登录，登录后会回到活动页，可以查看进度和奖励。</div></div></div>
+  <div class="qa-row"><b>客服核查<small>Check</small></b>
+    <div class="bi"><div class="zh">无需核查。</div><div class="en">No check needed.</div></div></div>
+  <div class="qa-row"><b>转交<small>Escalate</small></b>
+    <div class="bi"><div class="zh">登录后没有回到活动页：转技术。</div><div class="en">If the player is not taken back to the event page after logging in: escalate to Tech.</div></div></div>
+</section>
+<section class="qa-card" id="qa6">
+  <h3><span class="qa-no">6</span><span class="bi-inline"><span class="zh">我点按钮进的不是我在玩的那期活动。</span><span class="en">The button opened a different Crown Rush event from the one I'm playing.</span></span></h3>
+  <div class="qa-row"><b>回复玩家<small>Reply</small></b>
+    <div class="bi"><div class="en qa-reply">When more than one Crown Rush event is open, the button opens the newest one. You can find the other event in Promotions and claim its rewards there before it is taken down.<button type="button" class="qa-copy">复制 Copy</button></div>
+    <div class="zh">同时有几期 Crown Rush 活动开着时，按钮会打开其中最新的那一期。另一期可以在 Promotions 找到，在它下架前照常领奖。</div></div></div>
+  <div class="qa-row"><b>客服核查<small>Check</small></b>
+    <div class="bi"><div class="zh">核对当时是否有两期以上同时开着。</div><div class="en">Check whether two or more events were running at that time.</div></div></div>
+  <div class="qa-row"><b>转交<small>Escalate</small></b>
+    <div class="bi"><div class="zh">只有一期开着却进了别的活动：转技术。</div><div class="en">If only one event was running but the button opened another: escalate to Tech.</div></div></div>
+</section>
+
+<section class="qa-card" id="qa7">
+  <h3><span class="qa-no">7</span><span class="bi-inline"><span class="zh">我设了充值或投注上限，为什么还能看到这个按钮？</span><span class="en">I set a deposit or betting limit. Why do I still see this button?</span></span></h3>
+  <div class="qa-row"><b>回复玩家<small>Reply</small></b>
+    <div class="bi"><div class="en qa-reply">The button is just a shortcut to the event page and appears for everyone who sees the in-game sidebar. Your limits are still in effect and are not changed by this button.<button type="button" class="qa-copy">复制 Copy</button></div>
+    <div class="zh">这个按钮只是活动页的快捷入口，能看到游戏侧栏的玩家都会看到。你设的上限照常生效，不受这个按钮影响。</div></div></div>
+  <div class="qa-row"><b>客服核查<small>Check</small></b>
+    <div class="bi"><div class="zh">无需核查。</div><div class="en">No check needed.</div></div></div>
+  <div class="qa-row"><b>转交<small>Escalate</small></b>
+    <div class="bi"><div class="zh">玩家要求不再看到营销入口：转运营。</div><div class="en">If the player asks not to see promotional entries: escalate to Operations.</div></div></div>
+</section>
+
+<h2 id="q4">转交与升级 <span class="en-t">Escalation</span></h2>
+<div class="tbl"><table class="qa-tbl">
+  <thead><tr><th>情况 <small>Situation</small></th><th>转给 <small>To</small></th></tr></thead>
+  <tbody>
+    <tr><td class="bi"><div class="zh">有活动处于预热中、进行中或领奖期，H5 或最新版 App、侧栏已展开仍没有按钮；按钮进入的不是 Crown Rush 活动页。收集：端、App 版本、游戏名称、时间（GMT+8）、截图</div><div class="en">No button on H5 or the latest app with the sidebar open while an event is in warm-up, live or claim window; or the button opens a page other than Crown Rush. Collect: device, app version, game name, time (GMT+8), screenshot</div></td><td class="bi"><div class="zh">技术</div><div class="en">Tech</div></td></tr>
+    <tr><td class="bi"><div class="zh">点按钮离开游戏后注单结算或余额异常。收集：游戏名称、时间（GMT+8）、投注记录截图</div><div class="en">Bet settlement or balance issue after leaving the game via the button. Collect: game name, time (GMT+8), betting history screenshot</div></td><td class="bi"><div class="zh">技术</div><div class="en">Tech</div></td></tr>
+    <tr><td class="bi"><div class="zh">活动规则、奖励问题</div><div class="en">Event rules or reward questions</div></td><td class="bi"><div class="zh">按 Crown Rush 活动现有客服口径；无法回答转运营</div><div class="en">Use the existing Crown Rush CS guide; escalate to Operations if not covered</div></td></tr>
+  </tbody>
+</table></div>
+
+<h2 id="q5">资料未覆盖的问题 <span class="en-t">Not covered yet</span></h2>
+<ul class="qa-open">
+  <li class="bi"><div class="zh">本份 QA 对应完整版（以后排期）。完整版上线前按 v1.0 迅速版的客服 QA 回复：那时按钮只认圣诞这一期，圣诞这期下架后按钮隐藏。</div><div class="en">This Q&amp;A is for the full version (scheduled later). Before it goes live, use the v1.0 Q&amp;A: the button only follows the Christmas event and is hidden after that event is taken down.</div></li>
+  <li class="bi"><div class="zh">游戏中途（如免费次数使用中）点按钮的具体处理：与点 Home 相同，具体表现待技术确认；玩家投诉时转技术。</div><div class="en">What happens when tapping the button mid-round (e.g. during free spins): same as Home, details pending Tech confirmation; escalate complaints to Tech.</div></li>
+</ul>
+
+</article></div>
+</div>
+<script>window.NAV_ROOT = "../../";</script>
+<script src="../../assets/nav-data.js"></script>
+<script src="../../assets/nav.js"></script>
+<script>
+(function () {
+  /* 语言切换：双语 / 中文 / English，记在本机浏览器 */
+  var KEY = "游戏页侧栏圣诞闯关入口功能需求-客服QA-lang";
+  function set(l) {
+    document.body.dataset.lang = l;
+    document.querySelectorAll(".qa-lang button").forEach(function (b) { b.setAttribute("aria-pressed", b.dataset.l === l); });
+    try { localStorage.setItem(KEY, l); } catch (e) {}
+  }
+  document.querySelectorAll(".qa-lang button").forEach(function (b) { b.onclick = function () { set(b.dataset.l); }; });
+  try { var s = localStorage.getItem(KEY); if (s) set(s); } catch (e) {}
+  /* 复制英文回复 */
+  document.addEventListener("click", function (e) {
+    var b = e.target.closest(".qa-copy"); if (!b) return;
+    var box = b.parentNode.cloneNode(true); box.querySelector(".qa-copy").remove();
+    var text = box.textContent.trim();
+    function done(ok) { b.textContent = ok ? "已复制 Copied" : "复制失败 Failed"; setTimeout(function () { b.textContent = "复制 Copy"; }, 1500); }
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(function () { done(true); }, function () { done(fallback(text)); });
+    else done(fallback(text));
+  });
+  function fallback(text) {
+    var t = document.createElement("textarea"); t.value = text; t.style.cssText = "position:fixed;left:-9999px"; document.body.appendChild(t); t.select();
+    var ok = false; try { ok = document.execCommand("copy"); } catch (e) {}
+    t.remove(); return ok;
+  }
+})();
+</script>
+</body>
+</html>
