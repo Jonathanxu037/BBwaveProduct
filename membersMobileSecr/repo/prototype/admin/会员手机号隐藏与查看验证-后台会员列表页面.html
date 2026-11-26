@@ -73,9 +73,9 @@
     <div class="sim" id="simPanel"></div>
     <h3>规则批注</h3>
     <ol>
-      <li><b>脱敏显示</b>：后端脱敏后给页面，前 3 位 + **** + 后 4 位；不足 8 位显示 ****；未绑定显示「-」。<span class="ref">PRD 规则 N1 · F01-01 脱敏显示</span></li>
-      <li><b>验证查看</b>：点闭眼图标 → 谷歌身份验证 → 通过显示完整号码、图标变睁眼；点睁眼、刷新、翻页、查询恢复脱敏。<span class="ref">PRD 规则 N2 · F02-01 验证查看</span></li>
-      <li><b>验证不通过</b>：号码保持脱敏，提示沿用《后台谷歌验证码加固》需求。<span class="ref">PRD 规则 N3</span></li>
+      <li><b>脱敏显示</b>：后端脱敏后给页面，前 3 位 + **** + 后 4 位；不足 8 位显示 ****；未绑定显示「-」。固定生效，不受系统参数「隐藏用户资料为 **」控制。<span class="ref">PRD 规则 N1 · F01-01 脱敏显示</span></li>
+      <li><b>验证查看</b>：点闭眼图标 → 谷歌身份验证 → 通过只显示该会员完整号码、图标变睁眼，其他会员保持各自状态；点睁眼、刷新、翻页（含改每页条数、跳转页码）、查询恢复脱敏，再看需重新验证。<span class="ref">PRD 规则 N2 · F02-01 验证查看</span></li>
+      <li><b>验证不通过</b>：号码保持脱敏，提示沿用《后台谷歌验证码加固》需求；错误次数、锁定和未绑定验证器的提示原型不演示。<span class="ref">PRD 规则 N3</span></li>
       <li><b>查看记录</b>：每次查看记入现有操作日志，如「操作人 A 查看会员 B 的手机号」。<span class="ref">PRD 规则 N4 · F03-01 查看记录</span></li>
     </ol>
     <div class="pager"><span></span><span></span></div>
@@ -124,7 +124,7 @@
   var EYE_OFF = '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><path d="M14.12 14.12a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>';
   var EYE_ON = '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>';
 
-  var shown = {}, filtered = MEMBERS.slice(), errs = 0;
+  var shown = {}, filtered = MEMBERS.slice();
   function phoneCell(m) {
     var open = !!shown[m.id];
     var h = '<span class="mp-phone"><span class="mp-num">' + (open ? m.num : mask(m)) + "</span>";
@@ -166,9 +166,8 @@
   /* 确定：正确码显示完整号码；错误码提示沿用加固需求文案（PRD 规则 N2、N3） */
   $("mpOk").onclick = function () {
     var m = cur; if (!m) return;
-    if ($("mpCode").value === DEMO_CODE) { errs = 0; shown[m.id] = true; closeDlg(); draw(); return; }
-    errs++;
-    $("mpErr").textContent = "验证码错误，再错 " + Math.max(1, 5 - errs) + " 次将锁定 15 分钟";
+    if ($("mpCode").value === DEMO_CODE) { shown[m.id] = true; closeDlg(); draw(); return; }
+    $("mpErr").textContent = "验证码错误";   /* 错误次数和锁定提示沿用加固需求，原型不演示 */
     $("mpCode").value = ""; $("mpOk").disabled = true; $("mpCode").focus();
   };
 

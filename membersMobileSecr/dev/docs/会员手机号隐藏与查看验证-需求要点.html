@@ -23,9 +23,13 @@
   <div class="fa">↓</div>
   <div class="fs"><div class="no">2</div><div><b>点闭眼图标</b>：谷歌身份验证弹窗 → 输入 6 位验证码</div></div>
   <div class="fa">↓</div>
-  <div class="fs key"><div class="no">3</div><div><b>验证通过</b>：记入操作日志 → 返回并显示完整号码，图标变睁眼</div></div>
+  <div class="fs key"><div class="no">3</div><div><b>校验验证码</b>：按结果分两种情况</div></div>
+  <div class="brs">
+    <div class="bc"><h5>A - 验证通过</h5><p class="s"><b>记入操作日志</b></p><div class="d">↓</div><p class="s"><b>显示完整号码</b><small>只显示所点的这一个会员，图标变睁眼</small></p></div>
+    <div class="bc"><h5>B - 验证不通过</h5><p class="s"><b>号码保持脱敏</b></p><div class="d">↓</div><p class="s"><b>弹窗内提示</b><small>沿用《后台谷歌验证码加固》需求</small></p></div>
+  </div>
   <div class="fa">↓</div>
-  <div class="fs"><div class="no">4</div><div><b>恢复脱敏</b>：点睁眼，或刷新、翻页、查询</div></div>
+  <div class="fs"><div class="no">4</div><div><b>恢复脱敏</b>（A 之后）：点睁眼，或刷新、翻页、查询</div></div>
 </div>
 
 <h2 id="k3">开发功能点</h2>
@@ -33,9 +37,9 @@
   <h3><span class="code">F01-01</span>脱敏显示<a href="会员手机号隐藏与查看验证-需求开发PRD文档.html#F01-01">查看 PRD ›</a></h3>
   <div class="fpgrid">
     <b>要做什么</b>
-    <ul><li>后端返回脱敏号码，页面和返回数据里没有完整号码。</li></ul>
+    <ul><li>后端返回脱敏号码，页面和返回数据里没有完整号码。</li><li>脱敏固定生效，不受系统参数「隐藏用户资料为 **」控制。</li><li>回归：用完整手机号仍能筛选到会员；编辑用户弹窗保存其他资料后，手机号不被改成脱敏号码。</li></ul>
     <b>公式</b>
-    <div class="formula">去掉国码和符号后 ≥ 8 位 → 前 3 位 + **** + 后 4 位<br>不足 8 位 → ****<br>未绑定 → -</div>
+    <div class="formula">去掉国码和符号后的数字 ≥ 8 位 → 前 3 位 + **** + 后 4 位<br>不足 8 位 → ****<br>未绑定 → -</div>
     <b>涉及端</b>
     <div class="ends"><span>后端</span><span>后台前端</span></div>
   </div>
@@ -44,7 +48,7 @@
   <h3><span class="code">F02-01</span>验证查看<a href="会员手机号隐藏与查看验证-需求开发PRD文档.html#F02-01">查看 PRD ›</a></h3>
   <div class="fpgrid">
     <b>要做什么</b>
-    <ul><li>号码后加闭眼图标，点击弹出谷歌身份验证弹窗。</li><li>通过：显示该会员完整号码，图标变睁眼。</li><li>不通过：号码保持脱敏，提示沿用《后台谷歌验证码加固》需求。</li><li>点睁眼、刷新、翻页、查询恢复脱敏。</li></ul>
+    <ul><li>号码后加闭眼图标，点击弹出谷歌身份验证弹窗。</li><li>通过：只显示所点的这一个会员的完整号码，图标变睁眼；其他会员保持各自状态。</li><li>不通过或操作人未绑定谷歌验证器：号码保持脱敏，提示沿用《后台谷歌验证码加固》需求。</li><li>点睁眼、刷新、翻页（含改每页条数、跳转页码）、查询恢复脱敏，再看需重新验证。</li></ul>
     <b>公式</b>
     <div class="formula">显示完整号码 ＝ 本人谷歌验证码校验通过</div>
     <b>涉及端</b>
