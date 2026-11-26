@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>会员手机号隐藏与查看验证-需求要点</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<div class="with-nav">
+<div class="desk"><article class="paper">
+
+<h1 class="doc-title">会员手机号隐藏与查看验证 · 需求要点 · v1.0</h1>
+<div class="doc-meta"><span>版本：v1.0</span><span>站点：789Bingo【B】、789Games【G】</span><span>端：管理后台</span><span>依据：<a href="会员手机号隐藏与查看验证-需求开发PRD文档.html">需求开发 PRD 文档</a></span></div>
+<hr class="doc-rule">
+
+<h2 id="k1">一句话需求</h2>
+<div class="oneline">在两站管理后台【用户管理 › 会员】列表「会员信息」卡片的「手机号」一行，由后端按「前 3 位 + **** + 后 4 位」脱敏后再给页面显示；点号码后的闭眼图标并通过本人谷歌身份验证后，显示该会员的完整号码，点睁眼恢复脱敏；查看记入操作日志。</div>
+
+<h2 id="k2">业务流程</h2>
+<div class="flow">
+  <div class="fs key"><div class="no">1</div><div><b>进入会员列表</b>：显示「091****1234」+ 闭眼图标</div></div>
+  <div class="fa">↓</div>
+  <div class="fs"><div class="no">2</div><div><b>点闭眼图标</b>：谷歌身份验证弹窗 → 输入 6 位验证码</div></div>
+  <div class="fa">↓</div>
+  <div class="fs key"><div class="no">3</div><div><b>验证通过</b>：记入操作日志 → 返回并显示完整号码，图标变睁眼</div></div>
+  <div class="fa">↓</div>
+  <div class="fs"><div class="no">4</div><div><b>恢复脱敏</b>：点睁眼，或刷新、翻页、查询</div></div>
+</div>
+
+<h2 id="k3">开发功能点</h2>
+<div class="fpcard" id="F01-01">
+  <h3><span class="code">F01-01</span>脱敏显示<a href="会员手机号隐藏与查看验证-需求开发PRD文档.html#F01-01">查看 PRD ›</a></h3>
+  <div class="fpgrid">
+    <b>要做什么</b>
+    <ul><li>后端返回脱敏号码，页面和返回数据里没有完整号码。</li></ul>
+    <b>公式</b>
+    <div class="formula">去掉国码和符号后 ≥ 8 位 → 前 3 位 + **** + 后 4 位<br>不足 8 位 → ****<br>未绑定 → -</div>
+    <b>涉及端</b>
+    <div class="ends"><span>后端</span><span>后台前端</span></div>
+  </div>
+</div>
+<div class="fpcard" id="F02-01">
+  <h3><span class="code">F02-01</span>验证查看<a href="会员手机号隐藏与查看验证-需求开发PRD文档.html#F02-01">查看 PRD ›</a></h3>
+  <div class="fpgrid">
+    <b>要做什么</b>
+    <ul><li>号码后加闭眼图标，点击弹出谷歌身份验证弹窗。</li><li>通过：显示该会员完整号码，图标变睁眼。</li><li>不通过：号码保持脱敏，提示沿用《后台谷歌验证码加固》需求。</li><li>点睁眼、刷新、翻页、查询恢复脱敏。</li></ul>
+    <b>公式</b>
+    <div class="formula">显示完整号码 ＝ 本人谷歌验证码校验通过</div>
+    <b>涉及端</b>
+    <div class="ends"><span>后台前端</span><span>后端</span></div>
+  </div>
+</div>
+<div class="fpcard" id="F03-01">
+  <h3><span class="code">F03-01</span>查看记录<a href="会员手机号隐藏与查看验证-需求开发PRD文档.html#F03-01">查看 PRD ›</a></h3>
+  <div class="fpgrid">
+    <b>要做什么</b>
+    <ul><li>每次查看记入【日志管理 › 操作日志】，记录方式沿用现有，如「操作人 A 查看会员 B 的手机号」。</li></ul>
+    <b>公式</b>
+    <div class="formula">无</div>
+    <b>涉及端</b>
+    <div class="ends"><span>后端</span></div>
+  </div>
+</div>
+
+</article></div>
+</div>
+<script>window.NAV_ROOT = "../";</script>
+<script src="../assets/nav-data.js"></script>
+<script src="../assets/nav.js"></script>
+</body>
+</html>

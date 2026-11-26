@@ -1,0 +1,359 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>会员手机号隐藏与查看验证-需求开发PRD文档</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<div class="with-nav">
+<div id="fp-banner" class="fp-banner" hidden><span id="fp-text"></span><button type="button" id="fp-clear">清除标注</button></div>
+<div class="desk"><article class="paper" id="doc">
+
+<h1 class="doc-title">会员手机号隐藏与查看验证 · 需求开发PRD文档 · v1.0</h1>
+<div class="doc-meta"><span>版本：v1.0</span><span>平台：789Bingo【B】、789Games【G】</span><span>端：管理后台</span><span>状态：确认中</span><span>时区：GMT+8</span></div>
+<hr class="doc-rule">
+
+<h2 id="ver">需求版本管理表</h2>
+<div class="tbl"><table id="vtable" data-fit>
+<tr><th>版本号</th><th>时间</th><th>修改人</th><th>概述</th><th>涉及章节</th></tr>
+<tr data-v="v1.0" data-sum="创建 v1.0"><td>v1.0</td><td><nobr>2026-11-26</nobr></td><td>Joshua</td><td class="w">创建 v1.0</td><td>全文</td></tr>
+</table></div>
+
+<h2 id="toc">全文目录</h2>
+<nav class="toc-full" aria-label="全文目录"><ol id="toc-list"></ol></nav>
+
+<h2 id="c0">0. 本迭代范围</h2>
+<p>本期做手机号脱敏显示，验证身份后查看完整号码。与其他章节冲突时，以本章为准。</p>
+<div class="tbl"><table data-fit>
+<tr><th>类别</th><th>本迭代包含</th><th>顺延至</th></tr>
+<tr data-fp="F01 F02 F03"><td>做</td><td class="w">两站管理后台【用户管理 › 会员】列表「会员信息」卡片的手机号：脱敏显示（N1）；验证后查看完整号码（N2、N3）；查看记入操作日志（N4）。<br><span class="cell-sub">第一期已建单，只含脱敏显示：老站 BB789BINGO-7720、新站 GAM-690</span></td><td>-</td></tr>
+<tr><td>不做</td><td class="w">其他页面、字段和导出里的手机号保持现状。</td><td>-</td></tr>
+</table></div>
+
+<h2 id="c1">1. 项目概述</h2>
+<div class="tbl"><table data-fit>
+<tr><th>项目</th><th>说明</th></tr>
+<tr data-fp="F01"><td>需求描述</td><td class="w">两站管理后台会员列表「会员信息」卡片的手机号由后端脱敏后显示；输入本人谷歌验证码后可查看完整号码；每次查看记入操作日志。</td></tr>
+<tr><td>背景与目标</td><td class="w">卡片现在直接显示完整手机号。改为默认脱敏，查看需验证并留记录。<br><span class="cell-sub">来源：原始需求；大当家 <nobr>2026-11-26</nobr> 原话和截图</span></td></tr>
+<tr><td>成功指标</td><td class="w">上线后两站各抽查 3 个会员，页面和返回数据里的完整号码为 0。</td></tr>
+<tr><td>用户故事（P0）</td><td class="w">作为后台人员，我希望手机号默认脱敏、需要时验证后查看完整号码，以便保护会员信息，又不耽误处理会员问题。</td></tr>
+<tr><td>多端范围</td><td class="w">只改两站管理后台。<br><span class="warn-2">※ 新站现状资料未覆盖，待技术核对（Q1）。</span></td></tr>
+<tr><td>时间与时区</td><td class="w">GMT+8；上线时间待排期。</td></tr>
+</table></div>
+
+<h2 id="c2">2. 整体业务流程</h2>
+<h3 id="c2-1">2.1 主流程</h3>
+<div class="flow">
+  <div class="fs key" data-fp="F01-01"><div class="no">1</div><div><b>进入会员列表</b>：显示后端脱敏号码（如「091****1234」）和闭眼图标。</div></div>
+  <div class="fa">↓</div>
+  <div class="fs" data-fp="F02-01"><div class="no">2</div><div><b>点闭眼图标</b>：弹出「谷歌身份验证」弹窗，输入 6 位验证码，点「确定」。</div></div>
+  <div class="fa">↓</div>
+  <div class="fs key" data-fp="F02-01 F03-01"><div class="no">3</div><div><b>验证通过</b>：记入操作日志，显示完整号码，图标变睁眼。<br><b>验证不通过</b>：号码保持脱敏，提示沿用加固需求。</div></div>
+  <div class="fa">↓</div>
+  <div class="fs" data-fp="F02-01"><div class="no">4</div><div><b>恢复脱敏</b>：点睁眼图标，或刷新、翻页、查询。</div></div>
+</div>
+
+<h2 id="c3">3. 业务规则</h2>
+<h3 id="c3-1">3.1 本需求规则</h3>
+<div class="tbl"><table data-fit>
+<tr><th>编号</th><th>规则</th><th>起因</th><th>功能点</th></tr>
+<tr id="n1" data-fp="F01-01" data-brief="手机号由后端脱敏后给页面：前 3 位 + **** + 后 4 位；不足 8 位显示 ****；未绑定显示 -"><td>N1</td><td class="w">手机号由后端脱敏后返回，页面和返回数据里没有完整号码。按去掉国码和符号后的位数：≥ 8 位显示前 3 位 + 「****」+ 后 4 位（如「091****1234」）；不足 8 位显示「****」；未绑定显示「-」。</td><td class="w">大当家 <nobr>2026-11-26</nobr> 原话「后端需要脱敏后传到前端」「显示前三后四中间四个*」</td><td><span class="fp">F01-01</span> <nobr>脱敏显示</nobr></td></tr>
+<tr id="n2" data-fp="F02-01" data-brief="点闭眼图标→谷歌身份验证→通过后显示该会员完整号码，图标变睁眼；点睁眼、刷新、翻页、查询恢复脱敏"><td>N2</td><td class="w">有号码时，号码后显示闭眼图标。点击弹出「谷歌身份验证」弹窗，输入本人 6 位谷歌验证码（不足 6 位时「确定」置灰；点「取消」或 × 关闭弹窗）。验证通过后显示该会员的完整号码，图标变睁眼；点睁眼，或刷新、翻页、查询后恢复脱敏。</td><td class="w">大当家 <nobr>2026-11-26</nobr> 原话「用户点击眼睛后，进行身份验证，验证通过后显示该用户的完整电话」</td><td><span class="fp">F02-01</span> <nobr>验证查看</nobr></td></tr>
+<tr id="n3" data-fp="F02-01" data-brief="验证码错误等情况沿用《后台谷歌验证码加固》需求"><td>N3</td><td class="w">验证码错误、错误次数、锁定的处理和提示，沿用《后台谷歌验证码加固》需求；验证不通过时号码保持脱敏。</td><td class="w">需求分析 T05：验证码规则复用加固需求</td><td><span class="fp">F02-01</span> <nobr>验证查看</nobr></td></tr>
+<tr id="n4" data-fp="F03-01" data-brief="每次查看完整手机号记入操作日志，沿用现有记录方式"><td>N4</td><td class="w">每次查看完整手机号，记入【日志管理 › 操作日志】，记录方式沿用现有，例如「操作人 A 查看会员 B 的手机号」。</td><td class="w">原始需求「查询手机号的操作需要记入日志」；大当家 <nobr>2026-11-26</nobr> 原话「日志只要说沿用目前的即可」</td><td><span class="fp">F03-01</span> <nobr>查看记录</nobr></td></tr>
+</table></div>
+
+<h3 id="c3-2">3.2 与知识库的冲突与取舍</h3>
+<p>已比对 <code>789Bingo管理后台知识库.md</code>、<code>789Bingo平台知识库.md</code>，未发现冲突。</p>
+
+<h2 id="c4">4. 运营后台需求</h2>
+<h3 id="c4-1">4.1 会员列表「会员信息」卡片</h3>
+<p>原型：<a href="../prototype/admin/会员手机号隐藏与查看验证-后台会员列表页面.html">后台会员列表页面</a>。操作日志沿用现有，不做原型。</p>
+<div class="tbl"><table data-fit>
+<tr><th>功能</th><th>说明</th></tr>
+<tr data-fp="F01-01"><td>手机号</td><td class="w">按 N1 显示；「手机号」后带「?」帮助（见 4.2）。</td></tr>
+<tr data-fp="F02-01"><td>闭眼 / 睁眼图标</td><td class="w">按 N2；鼠标悬停提示「查看完整号码」/「隐藏号码」。</td></tr>
+<tr data-fp="F02-01"><td>谷歌身份验证弹窗</td><td class="w">说明「查看会员 {会员账号} 的完整手机号」；输入框提示「请输入 6 位谷歌验证码」，后带「?」帮助；验证不通过时，输入框下方红字提示（N3）。</td></tr>
+<tr data-fp="F02-01"><td>列表分页</td><td class="w">沿用现有会员列表：分页方式、每页条数、默认排序、翻页停留页、空列表和加载失败、导出都不变。</td></tr>
+</table></div>
+
+<h3 id="c4-2">4.2 帮助提示内容</h3>
+<div class="tbl"><table data-fit>
+<tr><th>数据项 / 操作</th><th>说明内容</th></tr>
+<tr data-fp="F01-01"><td class="w">手机号<br><span class="cell-sub">会员信息卡片</span></td><td class="w">默认隐藏部分号码：8 位及以上显示前 3 位 + **** + 后 4 位，不足 8 位只显示 ****。点闭眼图标并输入本人谷歌验证码，可查看该会员的完整号码；每次查看都记入操作日志。</td></tr>
+<tr data-fp="F02-01"><td class="w">谷歌验证码<br><span class="cell-sub">验证弹窗</span></td><td class="w">输入本人谷歌验证器 App 当前显示的 6 位数字；每个验证码只能用一次。</td></tr>
+</table></div>
+
+<h2 id="c5">5. 接口与异常</h2>
+<div class="tbl"><table data-fit>
+<tr><th>场景</th><th>处理方式</th><th>用户提示</th></tr>
+<tr data-fp="F02-01"><td>验证不通过</td><td class="w">号码保持脱敏，不返回完整号码</td><td class="w">沿用加固需求</td></tr>
+</table></div>
+
+<h2 id="c6">6. 验收标准</h2>
+<h3 id="c6-1">6.1 验收条目</h3>
+<ol>
+<li data-fp="F01-01"><span class="fp">F01-01</span> AC-1（正常）Given 会员号码为 11 位（前 3 位 091、后 4 位 1234） When 打开会员列表 Then 显示「091****1234」和闭眼图标。</li>
+<li data-fp="F01-01"><span class="fp">F01-01</span> AC-2（边界）Given 会员号码不足 8 位 / 未绑定 When 打开会员列表 Then 分别显示「****」/「-」；未绑定不显示图标。</li>
+<li data-fp="F01-01"><span class="fp">F01-01</span> AC-3（安全）Given 已打开会员列表 When 查看页面源码和返回数据 Then 没有完整号码。</li>
+<li data-fp="F02-01"><span class="fp">F02-01</span> AC-4（正常）Given 操作人已绑定谷歌验证器 When 点闭眼图标，输入正确验证码并点「确定」 Then 显示该会员完整号码，图标变睁眼。</li>
+<li data-fp="F02-01"><span class="fp">F02-01</span> AC-5（异常）Given 验证弹窗已打开 When 输入错误验证码并点「确定」 Then 号码保持脱敏，提示沿用加固需求。</li>
+<li data-fp="F02-01"><span class="fp">F02-01</span> AC-6（状态）Given 某会员已显示完整号码 When 点睁眼图标，或刷新、翻页、查询 Then 恢复脱敏。</li>
+<li data-fp="F03-01"><span class="fp">F03-01</span> AC-7（正常）Given 操作人查看了某会员的完整号码 When 打开【日志管理 › 操作日志】 Then 能查到这条查看记录。</li>
+</ol>
+<h3 id="c6-2">6.2 跨站验收矩阵</h3>
+<div class="tbl"><table data-fit>
+<tr><th>验收点</th><th>功能点编号</th><th>老站后台【B】</th><th>新站后台【G】</th></tr>
+<tr data-fp="F01-01"><td class="w">脱敏显示</td><td><span class="fp">F01-01</span></td><td>✓</td><td>✓</td></tr>
+<tr data-fp="F02-01"><td class="w">验证查看与恢复</td><td><span class="fp">F02-01</span></td><td>✓</td><td>✓</td></tr>
+<tr data-fp="F03-01"><td class="w">查看记录</td><td><span class="fp">F03-01</span></td><td>✓</td><td>✓</td></tr>
+</table></div>
+
+<h2 id="c7">7. 上线方式</h2>
+<ul>
+<li>随版本上线；与加固需求的上线先后待技术确认，见 Q2。</li>
+<li>上线前通知使用会员列表的同事绑定谷歌验证器。</li>
+</ul>
+
+<h2 id="c8">8. 风险与依赖</h2>
+<div class="tbl"><table data-fit>
+<tr><th>风险</th><th>等级</th><th>应对</th></tr>
+<tr><td class="w">只在页面隐藏，返回数据里仍有完整号码</td><td>高</td><td class="w">后端脱敏（N1），按 AC-3 验收</td></tr>
+<tr><td class="w">加固需求未上线时，验证码输错不限次数</td><td>中</td><td class="w">确认上线先后（Q2）</td></tr>
+</table></div>
+<p>依赖：《后台谷歌验证码加固》需求；现有操作日志。</p>
+
+<h2 id="c9">9. 待确认事项</h2>
+<div class="tbl"><table data-fit>
+<tr><th>编号</th><th>事项</th><th>负责人</th><th><nobr>预计确认时间</nobr></th><th>状态</th></tr>
+<tr id="q1" data-brief="新站会员列表和谷歌验证现状是否与老站相同"><td>Q1</td><td class="w">新站会员列表「会员信息」卡片和谷歌验证的现状是否与老站相同（资料未覆盖）。</td><td>包工头康特</td><td>技术评审时</td><td><nobr>待确认</nobr></td></tr>
+<tr id="q2" data-brief="本需求与加固需求的上线先后"><td>Q2</td><td class="w">本需求与《后台谷歌验证码加固》需求的上线先后。</td><td>包工头康特</td><td>技术评审时</td><td><nobr>待确认</nobr></td></tr>
+</table></div>
+<p>未定文案清单：无，文案已全部确认。</p>
+
+<h2 id="c10">10. 各角色协作 Tips</h2>
+<div class="roles-cards">
+  <div class="rc" style="--c:#1560A8"><h4>后端</h4><ul><li>列表只返回脱敏号码；验证码规则复用加固需求。</li></ul></div>
+  <div class="rc" style="--c:#1B7A4C"><h4>测试</h4><ul><li>除了看页面，还要看返回数据里有没有完整号码。</li></ul></div>
+</div>
+
+<h2 id="appA">附录 A 评审清单核对</h2>
+<h3 id="appA-1">A.1 通用评审清单（12 项）</h3>
+<div class="tbl"><table data-fit>
+<tr><th>项</th><th>结论</th><th>位置</th></tr>
+<tr><td>1. 合规</td><td class="w">查看个人信息留记录</td><td>N4</td></tr>
+<tr><td>2. 资金</td><td class="w">不涉及</td><td>-</td></tr>
+<tr><td>3. 口径</td><td class="w">脱敏位数已写明</td><td>N1</td></tr>
+<tr><td>4. 防刷与风控</td><td class="w">沿用加固需求</td><td>N3</td></tr>
+<tr><td>5. 多端范围</td><td class="w">只改两站管理后台</td><td>第 1 章</td></tr>
+<tr><td>6. 后台配套</td><td class="w">无新增配置</td><td>-</td></tr>
+<tr><td>7. 系统约束</td><td class="w">依赖加固需求；新站待核对</td><td>Q1、Q2</td></tr>
+<tr><td>8. 性能</td><td class="w">不涉及</td><td>-</td></tr>
+<tr><td>9. 安全</td><td class="w">后端脱敏，验证通过才显示完整号码</td><td>N1、N2</td></tr>
+<tr><td>10. 上线方式</td><td class="w">随版本上线</td><td>第 7 章</td></tr>
+<tr><td>11. 验收</td><td class="w">Given / When / Then 共 7 条</td><td>第 6 章</td></tr>
+<tr><td>12. 工单规范</td><td class="w">第一期已建单，只含脱敏显示；验证查看建单前给大当家看</td><td>第 0 章</td></tr>
+</table></div>
+<h3 id="appA-2">A.2 异常边界覆盖</h3>
+<div class="tbl"><table data-fit>
+<tr><th>类别</th><th>本需求处理位置</th></tr>
+<tr><td>边界值</td><td class="w">不足 8 位、未绑定（N1）</td></tr>
+<tr><td>异常、用户与权限、时间</td><td class="w">沿用加固需求（N3）</td></tr>
+<tr><td>状态</td><td class="w">恢复脱敏（N2）</td></tr>
+<tr><td>并发与重复、端与版本、数据</td><td class="w">不涉及</td></tr>
+</table></div>
+
+<h2 id="appB">附录 B 原型对照表</h2>
+<div class="tbl"><table data-fit>
+<tr><th>原型页面</th><th>功能点</th><th>可演示的交互</th><th>是否模拟</th></tr>
+<tr data-fp="F01-01"><td class="w"><a href="../prototype/admin/会员手机号隐藏与查看验证-后台会员列表页面.html">后台会员列表页面</a></td><td><span class="fp">F01-01</span> <nobr>脱敏显示</nobr></td><td class="w">11 位、不足 8 位、未绑定的显示</td><td class="w">示例数据</td></tr>
+<tr data-fp="F02-01"><td class="w">后台会员列表页面</td><td><span class="fp">F02-01</span> <nobr>验证查看</nobr></td><td class="w">点闭眼弹窗；正确码显示完整号码；错误码提示；点睁眼、查询、翻页恢复</td><td class="w">模拟，演示码 123456</td></tr>
+<tr data-fp="F03-01"><td>-</td><td><span class="fp">F03-01</span> <nobr>查看记录</nobr></td><td class="w">沿用现有操作日志，不做原型</td><td>-</td></tr>
+</table></div>
+
+<h2 id="appD">附录 D 页面控件说明</h2>
+<p>本表由页面自动读取 <code>assets/dev-notes.js</code> 生成，不手写。</p>
+<div class="tbl"><table id="devTable" class="dev-tbl" data-fit data-iter=""><tr><th>编号</th><th>控件</th><th>说明</th><th>计算公式与规则</th></tr></table></div>
+
+</article></div>
+</div>
+<script>window.NAV_ROOT = "../";</script>
+<script src="../assets/nav-data.js"></script>
+<script src="../assets/nav.js"></script>
+<script src="../assets/dev-notes.js"></script>
+<script>
+(function () {
+  /* 功能点名称（与开发自查清单保持一致） */
+  var FP = {
+    F01: "手机号脱敏", "F01-01": "脱敏显示",
+    F02: "查看完整号码", "F02-01": "验证查看",
+    F03: "查看记录", "F03-01": "查看记录"
+  };
+  var doc = document.getElementById("doc");
+
+  Object.keys(FP).forEach(function (code) {
+    if (code.length === 3 || document.getElementById(code)) return;
+    var el = [].filter.call(doc.querySelectorAll('[data-fp~="' + code + '"]'), function (e) { var f = e.querySelector(".fp"); return f && f.textContent === code; })[0] ||
+      doc.querySelector('[data-fp~="' + code + '"]');
+    if (!el) return;
+    if (!el.id) { el.id = code; return; }
+    var a = document.createElement("span"); a.id = code;
+    (el.tagName === "TR" ? el.cells[0] : el).prepend(a);
+  });
+  Object.keys(FP).forEach(function (code) {
+    if (code.length !== 3 || document.getElementById(code)) return;
+    var el = doc.querySelector('[data-fp~="' + code + '"]') || doc.querySelector('[data-fp^="' + code + '-"]');
+    if (!el) return;
+    var s = document.createElement("span"); s.id = code; (el.tagName === "TR" ? el.cells[0] : el).prepend(s);
+  });
+
+  /* 全文目录：按正文 h2 / h3 自动生成 */
+  var list = document.getElementById("toc-list"), sub = null;
+  doc.querySelectorAll("h2, h3").forEach(function (h) {
+    if (h.id === "toc" || !h.id) return;
+    var li = document.createElement("li"), a = document.createElement("a");
+    a.href = "#" + h.id; a.textContent = h.textContent; li.appendChild(a);
+    if (h.tagName === "H2") { list.appendChild(li); sub = document.createElement("ol"); li.appendChild(sub); }
+    else if (sub) sub.appendChild(li);
+  });
+  list.querySelectorAll("ol").forEach(function (o) { if (!o.children.length) o.remove(); });
+
+  /* 附录 D 页面控件说明：读取 assets/dev-notes.js 自动生成 */
+  (function () {
+    var t = document.getElementById("devTable"), D = window.DEV_NOTES || {};
+    if (!t) return;
+    var ids = Object.keys(D);
+    if (!ids.length) { var r0 = t.insertRow(); var c0 = r0.insertCell(); c0.colSpan = 4; c0.className = "w"; c0.textContent = "还没有填写控件说明。"; return; }
+    function line(box, k, v, cls) { if (!v) return; var p = document.createElement("div"); var b = document.createElement("span"); b.className = "dev-k"; b.textContent = k + "："; p.appendChild(b); var s = document.createElement("span"); if (cls) s.className = cls; s.textContent = v; p.appendChild(s); box.appendChild(p); }
+    var page = null;
+    ids.forEach(function (k) {
+      var d = D[k];
+      if (d.page !== page) { page = d.page; var g = t.insertRow(); var gc = g.insertCell(); gc.colSpan = 4; gc.className = "w"; gc.innerHTML = "<b></b>"; gc.firstChild.textContent = page || "（未写所在页面）"; }
+      var r = t.insertRow(); r.id = "dev-" + k; r.setAttribute("data-brief", (d.name || k) + "：" + (d.what || ""));
+      var c1 = r.insertCell(); c1.className = "dev-id"; c1.textContent = k;
+      r.insertCell().textContent = d.name || "";
+      var c3 = r.insertCell(); c3.className = "w"; line(c3, "作用", d.what); line(c3, "场景与状态", d.scene); line(c3, "交互结果", d.result); line(c3, "限制", d.limit);
+      var c4 = r.insertCell(); c4.className = "w"; line(c4, "公式", d.formula, "dev-f"); line(c4, "规则", d.rules);
+    });
+    function goDev() {
+      var h = decodeURIComponent(location.hash.slice(1)); if (!/^dev-/.test(h)) return;
+      var row = document.getElementById(h); if (!row) return;
+      doc.querySelectorAll("tr.dev-hit").forEach(function (x) { x.classList.remove("dev-hit"); });
+      row.classList.add("dev-hit"); row.scrollIntoView({ block: "center", behavior: "instant" });
+    }
+    goDev();
+    window.addEventListener("load", function () { setTimeout(goDev, 400); });
+    window.addEventListener("hashchange", goDev);
+  })();
+
+  /* 表格自动列宽：带 data-fit 的表不出现水平滚动 */
+  (function () {
+    function cols(tbl) {
+      var cs = tbl.querySelectorAll("col"); if (cs.length) return cs;
+      var first = tbl.rows[0]; if (!first) return cs;
+      var n = 0; [].forEach.call(first.cells, function (c) { n += c.colSpan || 1; });
+      var g = document.createElement("colgroup"); for (var i = 0; i < n; i++) g.appendChild(document.createElement("col"));
+      tbl.insertBefore(g, tbl.firstChild); return tbl.querySelectorAll("col");
+    }
+    function fit(tbl, force) {
+      var cl = cols(tbl); if (!cl.length) return;
+      var n = cl.length, W = tbl.parentNode.clientWidth; if (!W) return;
+      if (!force && tbl._fitW === W) return;
+      tbl._fitW = W;
+      var MIN = 44, STEP = Math.max(4, Math.round(W / 120));
+      var rows = [].slice.call(tbl.rows), len = [];
+      for (var c = 0; c < n; c++) { var m = 1; rows.forEach(function (r) { var cell = r.cells[c]; if (cell && cell.colSpan === 1) m = Math.max(m, cell.textContent.trim().length); }); len.push(Math.sqrt(m)); }
+      var mn = []; for (var k = 0; k < n; k++) mn.push(MIN);
+      rows.forEach(function (r) { for (var k = 0; k < r.cells.length && k < n; k++) { var cell = r.cells[k]; if (cell.colSpan !== 1) continue; [].forEach.call(cell.querySelectorAll(".fp,.nw,.ui-nw,code,nobr"), function (e) { mn[k] = Math.max(mn[k], e.offsetWidth + 18); }); } });
+      var sum = len.reduce(function (a, b) { return a + b; }, 0), w = len.map(function (l, i) { return Math.max(mn[i], Math.floor(W * l / sum)); });
+      var cells = [].slice.call(tbl.querySelectorAll("th,td")), rg = document.createRange();
+      function apply() { var s = w.reduce(function (a, b) { return a + b; }, 0); for (var i = 0; i < n; i++) cl[i].style.width = (w[i] / s * 100).toFixed(3) + "%"; var t = 0; cells.forEach(function (x) { rg.selectNodeContents(x); t += rg.getBoundingClientRect().height; }); return tbl.offsetHeight * 1000 + t; }
+      var best = apply(), guard = 0, improved = true;
+      while (improved && guard++ < 150) {
+        improved = false; var move = null;
+        [1, 2, 4, 8].forEach(function (k) {
+          var d = STEP * k;
+          for (var to = 0; to < n; to++) for (var from = 0; from < n; from++) {
+            if (to === from || w[from] - d < mn[from]) continue;
+            w[from] -= d; w[to] += d; var h = apply();
+            if (h < best - 0.5) { best = h; move = [from, to, d]; }
+            w[from] += d; w[to] -= d;
+          }
+        });
+        if (move) { w[move[0]] -= move[2]; w[move[1]] += move[2]; improved = true; }
+        apply();
+      }
+    }
+    function fitAll(force) { doc.querySelectorAll("table[data-fit]").forEach(function (t) { fit(t, force === true); }); }
+    var tm = 0; function later() { clearTimeout(tm); tm = setTimeout(fitAll, 150); }
+    window.addEventListener("resize", later); window.addEventListener("navtoggle", later);
+    var loaded = document.readyState === "complete" ? Promise.resolve() : new Promise(function (r) { window.addEventListener("load", r); });
+    Promise.all([loaded, document.fonts && document.fonts.ready ? document.fonts.ready : null]).then(function () { fitAll(true); });
+  })();
+
+  /* 荧光蓝标注：网址以 #编号 结尾时出现 */
+  var banner = document.getElementById("fp-banner"), hits = [], pos = -1;
+  function report() { try { if (parent !== window) parent.postMessage({ type: "prd-hits", total: hits.length, pos: pos }, "*"); } catch (e) {} }
+  function clearHit() { doc.querySelectorAll(".fp-hit,.fp-cur").forEach(function (e) { e.classList.remove("fp-hit", "fp-cur"); }); hits = []; pos = -1; banner.hidden = true; }
+  function go(i) {
+    if (!hits.length) return;
+    pos = (i + hits.length) % hits.length;
+    hits.forEach(function (h) { h.classList.remove("fp-cur"); });
+    hits[pos].classList.add("fp-cur");
+    hits[pos].scrollIntoView({ block: "center", behavior: "instant" });
+    report();
+  }
+  window.PRD_CODE_HL = true;
+  function mentions(code, add) {
+    var re = new RegExp("\\b" + code + "\\b"), w = document.createTreeWalker(doc, NodeFilter.SHOW_TEXT), n;
+    while ((n = w.nextNode())) {
+      if (!re.test(n.nodeValue) || !n.parentNode.closest || n.parentNode.closest("h1,h2,h3,.toc-full,#fp-banner,script,style")) continue;
+      var p = n.parentNode.closest("button") ? n.parentNode.closest("button").parentNode : n.parentNode;
+      add(p.closest("tr,li,p,dd,blockquote,h4") || p);
+    }
+  }
+  function applyHit() {
+    var code = decodeURIComponent(location.hash.slice(1)), set = [];
+    clearHit();
+    function add(e) { if (e && set.indexOf(e) < 0 && !set.some(function (s) { return s.contains(e); })) { set = set.filter(function (s) { return !e.contains(s); }); set.push(e); } }
+    var title = "";
+    if (/^F\d{2}(-\d{2})?$/.test(code) && FP[code]) {
+      doc.querySelectorAll("[data-fp]").forEach(function (e) {
+        if (e.dataset.fp.split(/\s+/).some(function (c) { return c === code || c.indexOf(code + "-") === 0; })) add(e);
+      });
+      title = code + " " + FP[code];
+    } else if (/^[NQ]\d{1,3}$/.test(code)) {
+      var row = document.getElementById(code.toLowerCase()); if (!row) { report(); return; }
+      add(row); mentions(code, add);
+      title = code + " " + (row.getAttribute("data-brief") || "");
+    } else if (/^D\d{2,3}$/.test(code)) {
+      var d = (window.DEV_NOTES || {})[code]; if (!d) { report(); return; }
+      String(d.rules || "").split(/[、,，\s]+/).forEach(function (r) { var m = /^[NQ]\d{1,3}/.exec(r); var e = m && document.getElementById(m[0].toLowerCase()); if (e) add(e); });
+      add(document.getElementById("dev-" + code)); mentions(code, add);
+      title = code + " " + (d.name || "");
+    } else { report(); return; }
+    hits = set.filter(Boolean).sort(function (a, b) { return a.compareDocumentPosition(b) & 4 ? -1 : 1; });
+    hits.forEach(function (e) { e.classList.add("fp-hit"); });
+    if (!hits.length) { report(); return; }
+    if (title.length > 60) title = title.slice(0, 60) + "…";
+    document.getElementById("fp-text").textContent = "正在查看：" + title + "（共标出 " + hits.length + " 处，已跳到最前面一处）";
+    banner.hidden = false;
+    go(0);
+    var moved = false, stop = function () { moved = true; };
+    ["wheel", "touchstart", "keydown", "mousedown"].forEach(function (ev) { window.addEventListener(ev, stop, { once: true, passive: true, capture: true }); });
+    [300, 900, 2000].forEach(function (ms) { setTimeout(function () { if (!moved && hits.length) go(pos); }, ms); });
+  }
+  document.getElementById("fp-clear").onclick = function () { clearHit(); history.replaceState(null, "", location.pathname); report(); };
+  window.addEventListener("message", function (e) {
+    var d = e.data || {};
+    if (d.type === "prd-step") go(pos + d.dir);
+    if (d.type === "prd-show") { if (location.hash === "#" + d.code) applyHit(); else location.hash = d.code; }
+  });
+  window.addEventListener("hashchange", applyHit);
+  applyHit();
+})();
+</script>
+</body>
+</html>
