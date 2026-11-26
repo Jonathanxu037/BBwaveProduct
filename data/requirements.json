@@ -116,6 +116,15 @@
       "version": "v1.0",
       "createdAt": "2026-11-25T10:56:27.552Z",
       "lastUploadAt": null
+    },
+    {
+      "id": 14,
+      "name": "会员信息脱敏优化",
+      "owner": "Fast & KK",
+      "folder": "membersMobileSecr",
+      "version": "v1.0",
+      "createdAt": "2026-11-26T05:39:01.089Z",
+      "lastUploadAt": null
     }
   ]
 }
