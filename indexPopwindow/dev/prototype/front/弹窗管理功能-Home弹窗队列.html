@@ -1,0 +1,498 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>弹窗管理功能-Home弹窗队列</title>
+<link rel="stylesheet" href="../../assets/style.css">
+<style>
+.pm-head{display:flex;align-items:center;gap:8px}
+.pm-logo{font-weight:800;font-size:20px;letter-spacing:-.01em}
+.pm-logo b{color:var(--app-gold)}
+.pm-bal{margin-left:auto;display:flex;align-items:center;gap:6px;font-weight:700;font-size:13px}
+.pm-mini{all:unset;cursor:pointer;background:var(--app-gold);color:var(--app-gold-ink);border-radius:14px;padding:3px 10px;font-size:12px;font-weight:700}
+.pm-mini.gh{background:transparent;border:1px solid var(--app-line);color:var(--app-fg)}
+.pm-chips{display:flex;gap:6px}.pm-chips span{flex:1;text-align:center;background:var(--app-card);border-radius:8px;padding:6px 0;font-size:12px;color:var(--app-muted)}
+.pm-chips span.on{background:var(--app-gold);color:var(--app-gold-ink);font-weight:700}
+.pm-h{font-weight:700;font-size:14px}
+.pm-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.pm-grid div{height:78px;border-radius:10px;background:linear-gradient(135deg,#2a3142,#3b2f1a);display:grid;place-items:end center;font-size:11px;padding-bottom:6px;color:var(--app-muted)}
+.pm-ov{position:absolute;inset:0;background:rgba(5,8,12,.74);display:grid;place-items:center;padding:28px 22px;z-index:6}
+.pm-pop{position:relative;width:100%;max-width:320px;background:var(--app-card);border:1px solid var(--app-line);border-radius:16px;padding:16px;display:grid;gap:10px;text-align:center}
+.pm-pop h3{margin:0;font-size:17px;padding:0 24px}
+.pm-pop p{margin:0;font-size:12.5px;color:var(--app-muted)}
+.pm-art{height:118px;border-radius:12px;display:grid;place-items:center;font-weight:800;font-size:19px;color:#fff;padding:8px}
+.pm-pop .btn{line-height:42px;height:42px;font-size:14px}
+.pm-chk{display:flex;gap:6px;justify-content:center;align-items:center;font-size:12px;color:var(--app-muted);cursor:pointer}
+.pm-chk input{accent-color:var(--app-gold)}
+.pm-tbar{position:absolute;left:10px;right:10px;top:36px;z-index:5;display:flex;align-items:center;gap:8px;background:#2a3142;border:1px solid var(--app-line);border-radius:10px;padding:8px 10px;font-size:12.5px;box-shadow:0 6px 16px rgba(0,0,0,.4)}
+.pm-tbar span{flex:1}
+.pm-mask2{position:absolute;inset:0;background:rgba(0,0,0,.55);z-index:7}
+.pm-sheet{position:absolute;left:0;right:0;bottom:0;background:var(--app-card);border-radius:16px 16px 0 0;padding:20px 18px 24px;display:grid;gap:10px;z-index:8;text-align:center}
+.pm-sheet h3{margin:0;font-size:16px}
+.pm-page{flex:1;display:grid;place-items:center;text-align:center;color:var(--app-muted);font-size:14px}
+.pm-trace{margin:0;padding-left:1.4em;display:grid;gap:3px;font-size:12px;max-height:260px;overflow:auto}
+.pm-trace li.y{color:#1B7A4C}.pm-trace li.n{color:#8A6D3B}.pm-trace li.s{color:#6A2BB8}
+</style>
+</head>
+<body>
+<!-- 前台原型：Home 弹窗队列演示（789Bingo、789Games、789Play 三站 H5、iOS、Android；789Play 只有示例弹窗）。手机画面制作时用中文，打包时按 assets/proto-en.js 换英文；批注和模拟不翻译。
+     各弹窗的视觉沿用现网，本页的弹窗画面只示意先后顺序和按钮行为；本需求新增的界面元素（「当日免打扰」勾选、公告跳转按钮）带淡色光晕。
+     后台配置读取同一标签页里「后台首页弹窗管理中心」原型的当前配置（assets/pm-data.js）。 -->
+<div class="with-nav">
+<div class="stage">
+  <div class="app" role="region" aria-label="手机画面">
+    <div class="sb"><span>9:41</span><span>●●● 5G</span></div>
+
+    <!-- ============ Home ============ -->
+    <div class="view" id="vHome">
+      <div class="pm-head"><div class="pm-logo" id="logo">789<b>Bingo</b></div>
+        <div class="pm-bal" id="balLogin">₱ 1,250.00 <button class="pm-mini" type="button">充值</button></div>
+        <div class="pm-bal" id="balGuest" hidden><button class="pm-mini gh" type="button">登录</button><button class="pm-mini" type="button">注册</button></div>
+      </div>
+      <div class="banner">圣诞活动火热进行中</div>
+      <div class="pm-chips"><span class="on">热门</span><span>老虎机</span><span>真人</span><span>捕鱼</span></div>
+      <div class="pm-h">热门游戏</div>
+      <div class="pm-grid"><div>Super Ace</div><div>Magic Ace</div><div>Mahjong Ways</div><div>Fortune Gems</div><div>Money Coming</div><div>Lucky Spin</div></div>
+      <div class="tabbar"><button type="button"><b>⌂</b>首页</button><button type="button"><b>✦</b>促销</button><button type="button"><b>₱</b>钱包</button><button type="button"><b>☺</b>我的</button></div>
+    </div>
+
+    <!-- ============ 离开 Home 后打开的页面（示意） ============ -->
+    <div class="view" id="vPage" hidden>
+      <div class="topline"><button class="back" type="button" data-back aria-label="返回">‹</button><span id="pgTitle">页面</span></div>
+      <div class="pm-page"><div><div id="pgText">已打开：页面</div></div></div>
+      <button class="btn" type="button" data-back data-dev="D12">返回首页</button>
+    </div>
+
+    <!-- ============ 21+ 点 × 后的退出页（沿用现网） ============ -->
+    <div class="view" id="vExit" hidden>
+      <div class="pm-page"><div><div class="pm-h">已退出</div><div style="margin-top:8px">未满 21 岁不能使用本平台。</div></div></div>
+    </div>
+
+    <div class="pm-tbar glow" id="tbar" hidden data-dev="D08"><span>邀请好友赚奖励</span><button class="pm-mini" type="button" id="tbarGo">去邀请</button></div>
+    <div class="pm-ov" id="ov" hidden><div class="pm-pop" id="pop"></div></div>
+    <div class="pm-mask2" id="lgMask" hidden></div>
+    <div class="pm-sheet" id="lg" hidden><h3>请先登录</h3><button class="btn" type="button" id="lgOk" data-dev="D11">登录</button><button class="btn ghost" type="button" id="lgNo" data-dev="D11">取消</button></div>
+    <div class="toast" id="toast" role="status" hidden data-dev="D10"></div>
+  </div>
+
+  <aside class="notes">
+    <h2>Home 弹窗队列</h2>
+    <p class="sub">789Bingo、789Games、789Play 三站 H5、iOS、Android 进入首页时的弹窗先后、按钮跳转和兜底（带淡色光晕的是本需求新增的界面元素）。先在「模拟操作」选站点、身份和条件，再点「进入 Home」。每站读取本站管理后台的配置，三站互不影响：状态、是否展示、显示方式、显示顺序、当日免打扰、单次上限和「点按钮跳走后」来自首页弹窗管理中心；按钮跳转来自各活动配置页的「事件触发信息」。原型读取本标签页里三页后台原型保存的本站配置。789Play 只有 3 个示例弹窗，待前端提供 789Play 现网清单（Q22）。各弹窗的画面、标题和正文沿用现网，本页只示意先后顺序和按钮行为。</p>
+    <h3>模拟场景</h3>
+    <div class="sim">
+      <button type="button" data-scene="old"><span class="simtag">登录</span>789Bingo 老用户进入首页（旧版砸金蛋在合规组之后）</button>
+      <button type="button" data-scene="guestAd"><span class="simtag">游客</span>789Bingo 游客从广告链接进入首页（先弹 21+）</button>
+      <button type="button" data-scene="rgp"><span class="simtag">登录</span>789Bingo 负责任博彩人群进入首页（营销、奖励、引导类不弹）</button>
+      <button type="button" data-scene="games"><span class="simtag">登录</span>789Games 新用户进入首页（强制更新 → 21+ → 协议）</button>
+    </div>
+    <h3>模拟操作</h3>
+    <div class="sim" id="simPanel"></div>
+    <h3>本次判断过程（原型演示）</h3>
+    <ol class="pm-trace" id="trace"><li>还没有进入 Home。</li></ol>
+    <h3>规则批注</h3>
+    <ol>
+      <li><b>进入首页</b>：每次打开 App 或 H5（新打开网站、新开标签页），或登录成功后第一次到达首页，算一次进入；H5 同一标签页刷新、回到首页、App 切回前台都不算（同现网）。例外：「每次进入页面」的弹窗在回到首页或 H5 刷新时重新判断；其他已弹过的不再弹，还没轮到的继续按顺序判断。合规置顶组的刷新口径见 21+ 一条。<span class="ref">PRD 规则 N18 · F02-01 进入口径与判断顺序</span></li>
+      <li><b>合规置顶组先弹</b>：强制更新 → 21+ → 协议 → 责任博彩 → 登录后 KYC 提示；全部处理完之前，普通队列、事件触发弹窗、提示条都不出现。<span class="ref">PRD 规则 N10、N11 · F01-01 组成顺序与只读展示</span></li>
+      <li><b>21+</b>：游客每次打开网站或 App 都弹，不按来源豁免；确认后同一标签页刷新不再弹。登录用户按系统参数开关，「已登录超过 10 分钟的玩家刷新页面需重新弹出 21 岁弹窗」打开时，已登录超过 10 分钟后刷新重弹。未处理完的合规弹窗在刷新、回到首页后继续弹，处理完之前不出现其他弹窗和提示条。789Bingo 游客进站的 21+ 是合并的 Responsible Gaming 声明，现网没有 ×；789Games 有 ×，点 × 去退出页，本次不再弹任何弹窗和提示条。<span class="ref">PRD 规则 N12、N13、N14 · F01-02 固定计次与 21+ 退出</span></li>
+      <li><b>普通队列</b>：按当前状态（未登录 / 登录）队列的顺序逐个判断 弹窗状态（总开关）→ 该状态下是否勾选「展示」（未勾选不弹）→ 显示方式计次 → 当日免打扰 → 活动资格 → 单次上限，满足就弹，关一个再判断下一个；没有插队。玩家端不显示顺序编号。<span class="ref">PRD 规则 N19、N20 · F02-01 进入口径与判断顺序</span></li>
+      <li><b>负责任博彩人群</b>：登录会员属于自我排除、冷静期、禁止投注、冻结等人群（口径同合规硬规则 HR01）时，营销、奖励、引导类弹窗（含开启通知引导、首页顶部邀请好友提示条、VIP 升级 / 生日奖励）不弹；合规置顶组、登录公告（不带跳转按钮）和各类通知照常，到账类里的营销按钮按关闭弹窗处理（登录公告待确认 Q51）。每次弹窗前按当时的会员状态判断：本次中途变为该人群的，剩余营销、奖励弹窗和提示条不再出现，屏幕上的不强制关闭；本次一旦判为该人群，本次内一直过滤，下次进入首页才按新状态判断。只能在弹窗里领取的奖励按活动有效期作废，不补发。判断过程里跳过原因显示「负责任博彩人群」。<span class="ref">PRD 规则 N49 · F02-01 进入口径与判断顺序</span></li>
+      <li><b>显示方式与计次</b>：每次进入页面（含从其他页面回到首页）、首次打开（登录：每次登录后；未登录：每次打开 App / 网站后）、每天首次打开、活动期间一次、永久一次；登录用户按账号、游客按设备计（开启通知引导同样按账号计，现网按设备一次，列为上线有意变更第 ⑥ 条）；只有真正弹出才计一次；GMT+8 00:00 切日。<span class="ref">PRD 规则 N21 · F02-02 显示方式</span></li>
+      <li><b>单次上限</b>：普通队列每次进入最多弹几个；合规弹窗、事件触发弹窗、顶部提示条、系列里的后续弹窗和「无其他领取入口」的领取类弹窗不计入，其中领取类也不受上限限制。<span class="ref">PRD 规则 N22、N23 · F02-03 单次上限</span></li>
+      <li><b>当日免打扰</b>：只对登录用户提供，游客看不到这个勾选，按显示方式照常弹；只在运营打开了的弹窗上显示，每次默认不勾选；勾选后点任何按钮（关闭 ×、跳转类按钮、抽奖或领取等执行活动逻辑的按钮）都按勾选生效，当天不再弹，次日 00:00 恢复。示意文案「当日免打扰」（英文 Don't show again today，示意）。<span class="ref">PRD 规则 N24 · F02-05 当日免打扰</span></li>
+      <li><b>事件触发弹窗</b>：可能在任何页面出现的事件触发弹窗（充值 / 提款失败、认证结果、奖励到账等）按各自逻辑弹出，不在首页弹窗管理中心管理；在首页出现时，合规组弹完前不出现；当前有弹窗时等它关闭后再弹，不叠加；多个按触发先后；之后继续普通队列；「本次剩余不再弹」只停普通队列，不影响事件触发弹窗。玩家在事件触发弹窗等待期间离开首页的，等待中的弹窗按各自逻辑在当前页面弹出；21+ 点 × 退出时，等待中的弹窗本次不弹。顶部提示条不等普通队列，只等合规组；与弹窗同时出现时层级沿用现网；点提示条按钮离开首页视同点按钮跳走：正在显示的弹窗视同关闭（已计一次展示），回到首页后按「点按钮跳走后」处理。<span class="ref">PRD 规则 N28、N29 · F03-01 等待与不叠加</span></li>
+      <li><b>系列弹窗</b>：活动按玩家操作依次弹出的一系列弹窗（如首页转盘 → 结果弹窗 → 首充后在充值页的第 3 次转盘），只有第一个进入普通队列；后续弹窗按活动自身逻辑弹出，可能在任何页面，不占显示顺序、不计单次上限，不受当日免打扰和「点按钮跳走后」影响；后续弹窗在首页显示时普通队列等它关闭，点其按钮离开首页的按「点按钮跳走后」处理；负责任博彩人群按 N49 过滤。<span class="ref">PRD 规则 N49、N52 · F10-02 弹窗注册与纳入</span></li>
+      <li><b>按钮跳转</b>：跳转类按钮按活动配置页「事件触发信息」里的目的链接地址跳转（活动图弹窗按素材菜单的跳转，公告按公告管理的配置），留空只关闭弹窗；抽奖、领取、砸蛋等点击后执行活动逻辑的按钮按活动逻辑处理，不配跳转，失败沿用现网提示。游客点需登录的目标先拉起登录，登录成功再去目标；取消登录回到首页，视同关闭该弹窗，继续判断下一个（不按「点按钮跳走后」处理）。顶部提示条按钮用同一套跳转逻辑：游客去需要登录的页面（如邀请好友页）先拉起登录，取消登录只收起提示条。H5 和 App 用同一个链接：站内路径由系统换成 App 页面，站外链接 H5 新窗口打开，App 用外部浏览器打开。<span class="ref">PRD 规则 N32、N35、N36 · F04-01 事件类型与跳转方式</span></li>
+      <li><b>跳走后回首页</b>：按全局设置处理。「回 Home 继续弹剩余」：按显示顺序从头判断，「每次进入页面」的弹窗重新判断，其他已弹过的跳过，未弹过的照常判断；「本次剩余不再弹」：普通队列本次不再弹，「每次进入页面」的弹窗仍重新判断；兜底后留在首页的视同关闭弹窗，继续判断下一个。<span class="ref">PRD 规则 N25 · F02-06 跳走后剩余队列</span></li>
+      <li><b>兜底</b>：目标已停用（系统页面清单里的页面被停用）、App 端「待 App 确认」、站外链接对应的白名单条目被删除、活动已结束 → 只关闭弹窗；App 版本过低 → 打开首页；游戏维护 → 关闭弹窗并提示「该游戏维护中」（示意）；游戏已下架 → 去游戏大厅。<span class="ref">PRD 规则 N37 · F04-03 兜底</span></li>
+      <li><b>公告按钮</b>：运营在公告管理给公告配了跳转才显示按钮（默认文案 View Details（查看详情），示意）；点按钮关闭公告并跳转。<span class="ref">PRD 规则 N7 · F09-02 公告跳转按钮</span></li>
+      <li><b>配置读取失败</b>：从未取到过配置时只弹合规置顶组，普通队列不弹，下次进入再判断；事件触发弹窗照常，可配按钮按上线初始化的默认跳转；顶部提示条按最近一次成功取到的状态开关，从未取到过的按现网出现条件出现；取到配置时玩家已不在首页的，本次普通队列不再弹；不提示错误。<span class="ref">PRD 4.2 页面状态 · F02-01 进入口径与判断顺序</span></li>
+      <li><b>身份切换</b>：游客登录成功后第一次到首页按登录用户队列重新判断，游客期间的记录不带入；同一设备换账号按新账号判断。<span class="ref">PRD 规则 N27 · F02-07 游客队列与身份切换</span></li>
+    </ol>
+    <h3>评审待确认</h3>
+    <ol>
+      <li><b>弹窗清单</b>：789Bingo、789Games 两端首页弹窗、事件触发弹窗和领取类有无其他领取入口，以前端清单为准；本页 789Games 不演示事件触发弹窗。<span class="ref">PRD 待确认 Q1</span></li>
+      <li><b>789Play 现网清单</b>：789Play 的首页弹窗、事件触发弹窗和现网顺序资料未覆盖，本页只放示例弹窗，不演示事件触发弹窗。<span class="ref">PRD 待确认 Q22</span></li>
+      <li><b>现网叠加</b>：现网事件触发弹窗是否会和队列弹窗叠加。<span class="ref">PRD 待确认 Q8</span></li>
+      <li><b>身份切换现网</b>：同一设备游客看过的弹窗，登录后现网是否重新计次。<span class="ref">PRD 待确认 Q12</span></li>
+      <li><b>回首页重弹与上限</b>：「每次进入页面」的弹窗回首页重弹时计入单次上限、不受「本次剩余不再弹」影响（团队自定，待大当家确认）。<span class="ref">PRD 待确认 Q31</span></li>
+      <li><b>提示条出现条件</b>：首页顶部邀请好友提示条现网的出现条件（实测游客进首页也出现）和与弹窗的层级。<span class="ref">PRD 待确认 Q33</span></li>
+      <li><b>公告弹窗条件</b>：登录公告、游客公告以弹窗形式出现的条件，对应公告配置的页签和展现类型。<span class="ref">PRD 待确认 Q34</span></li>
+      <li><b>下载 App 引导</b>：是否只在首页弹。<span class="ref">PRD 待确认 Q36</span></li>
+      <li><b>老版本 App</b>：未升级到本期版本的 App（含安卓原生老包）沿用现网写死的弹窗逻辑，不读后台配置；本期是否设强制更新，让合规变更对全部玩家生效，待大当家、技术、合规确认。<span class="ref">PRD 待确认 Q37</span></li>
+      <li><b>合并声明</b>：现网合并的 Responsible Gaming 声明是否视为 21+、协议、责任博彩三项同时完成（合规负责人报大当家）。<span class="ref">PRD 待确认 Q38</span></li>
+      <li><b>非首页落地</b>：广告、推广链接落到非首页页面时，现网是否先弹 21+（前端）。<span class="ref">PRD 待确认 Q45</span></li>
+      <li><b>负责任博彩口径</b>：「投注和充值自我限制是否生效」等开关关闭时，设过冷静期的会员是否仍算负责任博彩人群（合规负责人）。<span class="ref">PRD 待确认 Q47</span></li>
+      <li><b>登录公告与 HR01</b>：「会员福利」类登录公告对负责任博彩人群是否也不弹，或在 HR01 补上登录公告照常展示（合规负责人报大当家）。<span class="ref">PRD 待确认 Q51</span></li>
+    </ol>
+    <div class="pager"><a href="../admin/弹窗管理功能-后台其他菜单改动.html">← 上一页：后台其他菜单改动</a><span></span></div>
+  </aside>
+</div>
+</div>
+<script>window.NAV_ROOT = "../../";</script>
+<script src="../../assets/nav-data.js"></script>
+<script src="../../assets/nav.js"></script>
+<script src="../../assets/proto-en.js"></script>
+<script src="../../assets/proto.js"></script>
+<script src="../../assets/pm-data.js"></script>
+<script>
+(function () {
+  P.init({ defaults: { site: "789Bingo", user: "old", end: "H5", ad: false, needUpd: false, agreeNew: false, kycPend: false, p21: true, p21r: false, on10: false, rgDue: true, rgUser: false,
+    eggAmt: true, ntBtn: true, notCfg: false, gameState: "ok", lowVer: false, actFail: false, actEnd: false, day: 1, rec: {}, hide: {} } });
+  window.addEventListener("proto-change", function (e) { if (e.detail.key === "*") PM.reset(); });
+  function $(id) { return document.getElementById(id); }
+  function esc(s) { return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+  var ART = ["linear-gradient(135deg,#632f81,#8c59b6)", "linear-gradient(135deg,#b3261e,#e8a317)", "linear-gradient(135deg,#1c8f70,#124a79)", "linear-gradient(135deg,#124a79,#3d8fd8)", "linear-gradient(135deg,#ff6a3d,#e8a317)"];
+  var BODY = { force: "请更新到最新版本后继续使用。", age21: "本平台仅限 21 岁以上用户使用。", agree: "请阅读并同意最新的用户协议。", rg: "请理性娱乐，合理安排时间和预算。", kyc: "完成实名认证后即可充值和提款。" };
+  var S, C, run = null, cur = null, away = false, exited = false, waitI = [], barPending = false;
+
+  /* ---------- 判断过程（原型演示，只显示在批注区） ---------- */
+  function trace(t, cls) { var li = document.createElement("li"); li.textContent = t; if (cls) li.className = cls; $("trace").appendChild(li); }
+  function who() { return P.get("user") === "guest" ? "设备" : "账号·" + { new: "新用户", old: "老用户", wl: "白名单用户" }[P.get("user")]; }
+  function rk(k) { return P.get("site") + "|" + who() + "|" + k; }
+  function recGet(k) { return (P.get("rec") || {})[rk(k)]; }
+  function recSet(k) { var r = P.get("rec") || {}; r[rk(k)] = { day: P.get("day") }; P.set("rec", r); }
+  function hidden(k) { return (P.get("hide") || {})[rk(k)] === P.get("day"); }
+  function hideSet(k) { var h = P.get("hide") || {}; h[rk(k)] = P.get("day"); P.set("hide", h); }
+
+  /* ---------- 画面 ---------- */
+  function screen(v) {
+    $("vHome").hidden = v !== "home"; $("vPage").hidden = v !== "page"; $("vExit").hidden = v !== "exit";
+    if (window.self !== window.top) window.parent.postMessage({ type: "proto-view", view: v }, "*");
+  }
+  function paintHome() {
+    var g = P.get("site") === "789Games", guest = P.get("user") === "guest";
+    $("logo").innerHTML = "789<b>" + (g ? "Games" : P.get("site") === "789Play" ? "Play" : "Bingo") + "</b>";
+    $("balLogin").hidden = guest; $("balGuest").hidden = !guest;
+  }
+  function toast(t) { P.toast(t, 2600); }
+
+  /* ---------- 进入 Home ---------- */
+  function enter(label) {
+    S = PM.load(); C = S[P.get("site")]; $("trace").innerHTML = "";
+    exited = false; away = false; cur = null; waitI = []; barPending = false; $("ov").hidden = true; $("tbar").hidden = true; closeLogin();
+    paintHome(); screen("home");
+    var u = P.get("user"), guest = u === "guest", q = guest ? "guest" : "login";
+    trace((label || "进入 Home") + "：" + P.get("site") + " · " + P.get("end") + " · " + (guest ? "游客（按设备计）" : who()) + " · 第 " + P.get("day") + " 天", "s");
+    var fx = [];
+    if (P.get("needUpd")) fx.push("force");
+    if (guest) { fx.push("age21"); if (P.get("ad")) trace("从广告链接进入：不豁免 21+（N13）", "s"); }
+    else {
+      if (P.get("p21")) fx.push("age21"); else trace("21+：系统参数「21 岁弹窗登录后是否展示」为关，不弹", "n");
+      if (P.get("agreeNew")) fx.push("agree");
+      if (P.get("rgDue")) fx.push("rg");
+      if (P.get("kycPend")) fx.push("kyc");
+    }
+    if (rgu()) trace("负责任博彩人群（口径同 HR01，本次进入一旦判定即按该人群过滤到本次结束）：合规组、登录公告（不显示跳转按钮）及到账、结果通知、钱包 / 认证 / 系统类通知照常；营销、奖励、引导类弹窗和提示条不出（N49）", "s");
+    run = { fx: fx, list: C.queues[q].slice(), qi: 0, shown: 0, cap: C.cap[q], stop: false, compDone: false, q: q };
+    next();
+  }
+  /* 按钮跳转读取后台「活动按钮跳转」原型里该活动的配置（变更 CH02，不再在首页弹窗管理中心配置）；活动图素材类弹窗演示为使用素材菜单的「默认跳转」（PRD N6） */
+  function cfgOf(p, b) { if (p.material && C.matDef && !P.get("notCfg")) return { text: "", split: false, h5: C.matDef, app: C.matDef }; if (!P.get("notCfg")) return b.cfg; var d = PM.pop(PM.initial(P.get("site")), p.k); var bb = null; d.btns.forEach(function (x) { if (x.id === b.id) bb = x; }); return (bb || b).cfg; }
+  function next() {
+    if (!run || exited || away || cur || !$("lg").hidden) return;
+    if (run.fx.length) { showFixed(run.fx.shift()); return; }
+    if (!run.compDone) { run.compDone = true; trace("合规置顶组已处理完", "s"); if (barPending) { barPending = false; showBar(); } }
+    if (waitI.length) { showInst(waitI.shift()); return; }
+    if (P.get("notCfg")) { if (run.qi === 0) { trace("弹窗配置读取失败（从未取到过）：本次普通队列不弹，下次进入再判断", "n"); run.qi = run.list.length; } return; }
+    /* 回到 Home 时重新判断显示方式为「每次进入页面」的弹窗（变更 CH04），不受「本次剩余不再弹」影响 */
+    while (run.again && run.again.length) {
+      var ia = run.again.shift(), pa = PM.pop(C, ia.k), ra = check(ia, pa);
+      if (ra) { trace("跳过 " + pa.name + "：" + ra, "n"); continue; }
+      showQueue(ia, pa); return;
+    }
+    if (run.stop) return;
+    while (run.qi < run.list.length) {
+      var it = run.list[run.qi++], p = PM.pop(C, it.k), r = check(it, p);
+      if (r) { trace("跳过 " + p.name + "：" + r, "n"); continue; }
+      showQueue(it, p); return;
+    }
+    if (run.qi >= run.list.length && !run.done) { run.done = true; trace("普通队列判断完毕，本次共弹 " + run.shown + " 个（不含合规组、事件触发弹窗和不计上限的领取类）", "s"); }
+  }
+  /* 负责任博彩人群：只对登录用户生效（游客没有会员状态） */
+  /* 本次进入里一旦被判为负责任博彩人群，本次一直按该人群过滤；状态解除在下次「进入 Home」时生效（N49） */
+  function rgu() { var g = P.get("user") === "guest", v = !!P.get("rgUser") && !g; if (run && v) run.rg = true; return v || (!g && !!(run && run.rg)); }
+  function check(it, p) {
+    if (p.on === false) return "弹窗状态已关闭";
+    if (!it.on) return "该状态下未勾选「展示」";
+    if (rgu() && !p.notice) return "负责任博彩人群";   /* 每次轮到这个弹窗时按当时的会员状态判断（中途设为该人群的，剩余营销、奖励、引导类弹窗不再弹） */
+    var rec = recGet(p.k);
+    if (rec && it.freq === "daily" && rec.day === P.get("day")) return "每天首次打开，今天已弹过";
+    if (rec && (it.freq === "once" || it.freq === "period")) return PM.FREQ[it.freq] + "，已弹过";
+    /* 当日免打扰只对登录用户（变更 CH09）：游客按显示方式照常弹 */
+    if (P.get("user") !== "guest" && it.today && PM.todayOk(it.freq) && hidden(p.k)) return "当日免打扰";
+    var u = P.get("user");
+    if (p.status === "已结束") return "资格：活动已结束";
+    if (p.status === "待核对" || (p.who || []).indexOf(u) < 0) return "资格：不满足";
+    if (p.k === "oldEgg" && !P.get("eggAmt")) return "资格：没有可领金额";
+    if (!p.protect && run.cap && run.shown >= run.cap) return "超出单次上限 " + run.cap;
+    return "";
+  }
+
+  /* ---------- 弹窗 ---------- */
+  function pop(html, dev) { $("pop").innerHTML = html; $("pop").setAttribute("data-dev", dev); $("ov").hidden = false; }
+  function closePop() { $("ov").hidden = true; $("pop").innerHTML = ""; cur = null; }
+  function showFixed(k) {
+    var p = PM.pop(C, k); cur = { p: p, fixed: true };
+    trace("弹出 合规 · " + p.name, "y");
+    /* 789Bingo 游客进站的 21+ 是合并声明，现网没有 ×；789Games 有 × */
+    var x = k === "force" || (k === "age21" && P.get("site") === "789Bingo") ? "" : '<button type="button" class="x-close" aria-label="关闭" data-x' + (k === "age21" ? ' data-dev="D02"' : "") + ">×</button>";
+    pop(x + "<h3>" + esc(p.zh) + "</h3><p>" + esc(BODY[k]) + "</p>" + p.btns.map(function (b, i) { return '<button class="btn' + (i ? " ghost" : "") + '" type="button" data-b="' + i + '">' + esc(b.zh) + "</button>"; }).join(""), "D01");
+  }
+  function showQueue(it, p) {
+    cur = { p: p, it: it }; recSet(p.k); if (!p.protect) run.shown++;
+    trace("弹出 " + p.name + (p.protect ? "（领取类 · 不计上限）" : ""), "y");
+    if (p.notice && rgu() && P.get("ntBtn")) trace("负责任博彩人群：登录公告照常弹，不显示跳转按钮", "s");
+    var btns = p.notice ? (P.get("ntBtn") && !rgu() ? '<button class="btn glow" type="button" data-nt data-dev="D09">查看详情</button>' : "") :
+      p.btns.map(function (b, i) { return '<button class="btn' + (i ? " ghost" : "") + '" type="button" data-b="' + i + '" data-dev="D04">' + esc(b.zh) + "</button>"; }).join("");
+    var body = p.notice ? "<p>12 月活动火热进行中，详情见活动页。</p>" : '<div class="pm-art" style="background:' + ART[run.qi % ART.length] + '">' + esc(p.zh) + "</div>";
+    pop('<button type="button" class="x-close" aria-label="关闭" data-x data-dev="D06">×</button><h3>' + esc(p.zh) + "</h3>" + body + btns +
+      (P.get("user") !== "guest" && it.today && PM.todayOk(it.freq) && !p.protect ? '<label class="pm-chk glow"><input type="checkbox" id="today" data-dev="D05"> 当日免打扰</label>' : ""), "D03");
+  }
+  function showInst(k) {
+    var p = PM.pop(C, k);
+    /* 事件触发弹窗不归首页弹窗管理中心（变更 CH12），没有状态开关，按各自逻辑弹出；在首页出现时仍等合规组和当前弹窗 */
+    cur = { p: p, inst: true };
+    trace("弹出 事件触发弹窗 · " + p.name, "y");
+    var body = k === "invRw" ? '<div class="pm-art" style="background:' + ART[2] + '">₱50.00</div>' : '<div class="pm-art" style="background:' + ART[3] + '">' + esc(p.zh) + "</div>";
+    pop('<button type="button" class="x-close" aria-label="关闭" data-x>×</button><h3>' + esc(p.zh) + "</h3>" + body + p.btns.map(function (b, i) { return '<button class="btn' + (i ? " ghost" : "") + '" type="button" data-b="' + i + '">' + esc(b.zh) + "</button>"; }).join(""), "D07");
+  }
+  function showBar() { var bp = PM.pop(C, "invBar"); if (rgu()) { trace("顶部邀请提示条：负责任博彩人群不出现（N49）", "n"); return; } if (bp && bp.on === false) { trace("顶部邀请提示条：弹窗状态已关闭，不出现", "n"); return; } $("tbar").hidden = false; trace("顶部邀请提示条出现（不遮罩，不等普通队列）", "y"); clearTimeout(showBar.t); showBar.t = setTimeout(function () { $("tbar").hidden = true; }, 6000); }
+  function markHide() {
+    var c = cur;
+    if (c && !c.fixed && !c.inst && $("today") && $("today").checked) { hideSet(c.p.k); trace("已勾选当日免打扰：" + c.p.name + " 今天不再弹", "s"); }
+  }
+  function done(why) {
+    if (!cur) return;
+    markHide(); if (why) trace(why, "s");
+    closePop(); setTimeout(next, 260);
+  }
+
+  /* ---------- 跳转与兜底 ---------- */
+  function leave(title, text, why) {
+    markHide(); closePop(); away = true; $("tbar").hidden = true;
+    /* 等待中的事件触发弹窗：玩家离开首页后按各自逻辑在当前页面弹出，不再等首页队列 */
+    if (waitI.length) { trace("等待中的事件触发弹窗按各自逻辑在当前页面弹出：" + waitI.map(function (k) { return PM.pop(C, k).name; }).join("、"), "s"); waitI = []; }
+    $("pgTitle").textContent = title; $("pgText").textContent = text || "已打开：" + title; screen("page");
+    trace("离开 Home：" + (why || title), "s");
+  }
+  function back() {
+    away = false; screen("home");
+    if (run && C.after === "stop" && !run.stop) { run.stop = true; trace("回到 Home：全局设置「本次剩余不再弹」，普通队列本次不再弹" + (run.compDone ? "" : "；合规置顶组继续处理"), "n"); }
+    else if (run && !run.stop) trace("回到 Home：" + (run.compDone ? "全局设置「回 Home 继续弹剩余」：按显示顺序从头判断，「每次进入页面」的重新判断，其他已弹过的跳过，未弹过的照常判断" : "继续处理合规置顶组"), "s");
+    else if (run) trace("回到 Home：本次剩余队列已按「本次剩余不再弹」停止", "n");
+    if (run) reHome();
+    setTimeout(next, 260);
+  }
+  /* 回到 Home（同一次打开，不算新的进入）：本次已判断过、显示方式为「每次进入页面」的弹窗重新判断；「首次打开」等其他显示方式不再弹（变更 CH04） */
+  function reHome() {
+    if (!run.compDone || exited) return;
+    var again = [], skip = [], seen = {};
+    if (cur && cur.it) seen[cur.p.k] = 1;
+    run.list.slice(0, run.qi).forEach(function (it) {
+      var p = PM.pop(C, it.k); if (!p || seen[it.k]) return; seen[it.k] = 1;
+      if (!it.on || p.on === false) return;
+      if (it.freq === "enter") again.push(it); else skip.push(p.name + "（" + PM.freqName(it.freq, run.q) + "）");
+    });
+    run.again = again;
+    if (again.length) { run.done = false; trace("显示方式为「每次进入页面」，回到 Home 重新判断：" + again.map(function (it) { return PM.pop(C, it.k).name; }).join("、"), "s"); }
+    else trace("本次已判断过的弹窗里没有显示方式为「每次进入页面」的，不重新弹", "s");
+    if (skip.length) trace("显示方式不是「每次进入页面」，回到 Home 不再弹：" + skip.join("、"), "n");
+  }
+  function needLogin(go) {
+    if (P.get("user") !== "guest") { go(); return; }
+    trace("游客点击需登录的目标：先拉起登录", "s");
+    $("lg").hidden = false; $("lgMask").hidden = false;
+    $("lgOk").onclick = function () { closeLogin(); P.set("user", "old"); build(); trace("登录成功（演示为老用户）；回到 Home 时算一次新的进入", "s"); afterLogin = true; go(); };
+    /* 取消登录：回到首页，视同关闭该弹窗，继续判断下一个（不按「点按钮跳走后」处理） */
+    $("lgNo").onclick = function () { closeLogin(); done("取消登录：回到首页，视同关闭该弹窗，继续判断下一个"); };
+  }
+  var afterLogin = false;
+  function closeLogin() { $("lg").hidden = true; $("lgMask").hidden = true; }
+  function jump(p, b) {
+    var cf = cfgOf(p, b), end = P.get("end"), j = cf.split && end !== "H5" ? cf.app : cf.h5, app = end !== "H5";
+    if (!j || j.t === "close") { done("按配置：关闭弹窗"); return; }
+    if (j.t === "url") { leave(j.u, (app ? "已用外部浏览器打开：" : "已在新窗口打开：") + j.u, "站外链接"); return; }
+    if (j.t === "page" || j.t === "ext") {
+      var t = PM.target(C, j.id);
+      if (!t || t.st === "stop") { done("兜底：目标已停用 → 只关闭弹窗"); return; }
+      if (app && t.st === "app") { done("兜底：目标待 App 确认 → App 只关闭弹窗"); return; }
+      if (app && P.get("lowVer")) { done("兜底：App 版本低于目标的最低 App 版本 → 打开首页"); return; }
+      var go = function () { if (j.t === "ext") leave(t.name, (app ? "已用外部浏览器打开：" : "已在新窗口打开：") + t.name, "外部链接"); else leave(t.name); };
+      if (t.login) needLogin(go); else go();
+      return;
+    }
+    if (j.t === "game") {
+      if (app && P.get("lowVer")) { done("兜底：App 版本低于目标的最低 App 版本 → 打开首页"); return; }
+      if (P.get("gameState") === "maint") { done("兜底：游戏维护中 → 关闭弹窗并提示，留在 Home"); toast("该游戏维护中（示意）"); return; }
+      if (P.get("gameState") === "off") { leave("游戏大厅 Games", null, "兜底：游戏已下架 → 去游戏大厅"); return; }
+      needLogin(function () { leave("游戏：" + PM.gname(j.v, j.g)); });
+      return;
+    }
+    if (j.t === "act") {
+      if (P.get("actEnd")) { done("兜底：活动已结束 → 只关闭弹窗"); return; }
+      leave("活动详情：" + j.a);
+    }
+  }
+  $("pop").addEventListener("click", function (e) {
+    var c = cur; if (!c) return;
+    if (e.target.closest("[data-x]")) {
+      if (c.fixed && c.p.k === "age21") { closePop(); exited = true; waitI = []; $("tbar").hidden = true; screen("exit"); trace("21+ 点 ×：去退出页，本次不再弹任何弹窗和提示条", "n"); return; }
+      done(c.fixed ? "关闭（沿用现网）" : "点 × 关闭"); return;
+    }
+    if (e.target.closest("[data-nt]")) { var t = PM.target(C, 7); if (t && t.st !== "stop") leave(t.name, null, "公告按钮"); else done("兜底：目标已停用 → 只关闭公告"); return; }
+    var bt = e.target.closest("[data-b]"); if (!bt) return;
+    var b = c.p.btns[+bt.dataset.b];
+    if (c.fixed) {
+      var k = c.p.k;
+      if (k === "force") { leave("应用商店", "已打开：应用商店", "强制更新"); return; }
+      if (k === "agree") P.set("agreeNew", false);
+      if (k === "rg") P.set("rgDue", false);
+      if (k === "kyc" && b.id === "go") { leave("身份认证 KYC"); return; }
+      done(); return;
+    }
+    if (b.kind === "sys") { done("点「" + b.zh + "」：关闭"); return; }
+    if (c.inst && rgu()) { done("负责任博彩人群：到账类弹窗的营销按钮「" + b.zh + "」按关闭弹窗处理（N49）"); return; }
+    if (b.kind === "action") {
+      /* 执行活动逻辑的按钮不配跳转：动作完成后的结果弹窗等按活动自身逻辑出现，不归首页弹窗管理中心（变更 CH16、CH17） */
+      if (P.get("actFail")) { toast("领取失败，请稍后再试"); trace("动作失败：弹窗按现网处理", "n"); return; }
+      done("动作完成：" + b.zh + "；后续弹窗（如结果弹窗）按活动自身逻辑出现"); return;
+    }
+    jump(c.p, b);
+  });
+  /* 顶部提示条按钮：不遮罩，点了离开 Home；正在显示的弹窗回来后照常显示 */
+  /* 顶部提示条按钮：与弹窗按钮用同一套跳转逻辑（需登录先拉起登录、站外链接、兜底）。点了离开首页视同点按钮跳走：
+     正在显示的弹窗视同关闭（已计一次展示），回到首页后剩余队列按「点按钮跳走后」处理；游客取消登录只收起提示条 */
+  $("tbarGo").onclick = function () {
+    var p = PM.pop(C, "invBar"); $("tbar").hidden = true; if (!p) return;
+    var cf = cfgOf(p, p.btns[0]), app = P.get("end") !== "H5", j = cf.split && app ? cf.app : cf.h5;
+    function go(title, text) { if (cur) trace("正在显示的「" + cur.p.name + "」视同关闭（已计一次展示）", "s"); leave(title, text, "顶部提示条按钮"); }
+    function login(f) {
+      if (P.get("user") !== "guest") { f(); return; }
+      trace("游客点提示条按钮去需要登录的页面：先拉起登录", "s");
+      $("lg").hidden = false; $("lgMask").hidden = false;
+      $("lgOk").onclick = function () { closeLogin(); P.set("user", "old"); build(); trace("登录成功（演示为老用户）；回到 Home 时算一次新的进入", "s"); afterLogin = true; f(); };
+      $("lgNo").onclick = function () { closeLogin(); trace("取消登录：只收起提示条，留在首页", "s"); };
+    }
+    if (!j || j.t === "close") { trace("提示条按钮：按配置只收起提示条", "s"); return; }
+    if (j.t === "url") { go(j.u, (app ? "已用外部浏览器打开：" : "已在新窗口打开：") + j.u); return; }
+    if (j.t === "page" || j.t === "ext") {
+      var t = PM.target(C, j.id);
+      if (!t || t.st === "stop" || (app && t.st === "app")) { trace("提示条按钮：兜底，只收起提示条", "n"); return; }
+      if (app && P.get("lowVer")) { trace("提示条按钮：App 版本低于页面最低版本 → 打开首页（留在首页）", "n"); return; }
+      var f = function () { go(t.name); };
+      if (t.login) login(f); else f();
+      return;
+    }
+    if (j.t === "game") {
+      if (P.get("gameState") === "maint") { trace("提示条按钮：游戏维护中 → 提示，留在首页", "n"); toast("该游戏维护中（示意）"); return; }
+      if (P.get("gameState") === "off") { go("游戏大厅 Games"); return; }
+      login(function () { go("游戏：" + PM.gname(j.v, j.g)); });
+      return;
+    }
+    if (j.t === "act") { if (P.get("actEnd")) { trace("提示条按钮：活动已结束 → 只收起提示条", "n"); return; } go("活动详情：" + j.a); }
+  };
+  document.addEventListener("click", function (e) {
+    if (e.target.closest("[data-back]")) {
+      if (afterLogin) { afterLogin = false; enter("登录成功后第一次到 Home"); return; }
+      if (cur && $("ov").hidden) $("ov").hidden = false;
+      back();
+    }
+  });
+
+  /* ---------- 模拟操作面板（演示用，研发不实现） ---------- */
+  function instant(k) {
+    if (P.get("site") !== "789Bingo") { trace(P.get("site") + " 事件触发弹窗待前端清单（" + (P.get("site") === "789Play" ? "Q22" : "Q1") + "），本页不演示", "n"); return; }
+    if (!run) enter();
+    if (exited) { trace("已退出，不再弹", "n"); return; }
+    if (rgu() && k === "excl") { trace("事件触发弹窗触发：" + PM.pop(C, k).name + " → 负责任博彩人群，活动、引导类事件触发弹窗不出现（N49）", "n"); return; }
+    trace("事件触发弹窗触发：" + PM.pop(C, k).name + (cur || away || !run.compDone ? "（等当前弹窗或合规组处理完）" : ""), "s");
+    waitI.push(k); next();
+  }
+  function build() {
+    P.panel($("simPanel"), [
+      { title: "站点、身份、端", items: [
+        { type: "select", key: "site", label: "站点", options: [["789Bingo", "789Bingo"], ["789Games", "789Games"], ["789Play", "789Play（示例弹窗，待前端提供现网清单）"]] },
+        { type: "radio", key: "user", tag: "身份", options: [["guest", "游客"], ["new", "新用户未充值"], ["old", "老用户"], ["wl", "白名单用户"]], change: function () { P.set("rgDue", true); } },
+        { type: "select", key: "end", label: "端", options: ["H5", "iOS", "Android"] }
+      ] },
+      { title: "合规条件", items: [
+        { type: "check", key: "ad", label: "游客从广告链接进入" },
+        { type: "check", key: "needUpd", label: "App 版本低于强制更新要求" },
+        { type: "check", key: "p21", label: "系统参数：21 岁弹窗登录后是否展示" },
+        { type: "check", key: "p21r", label: "系统参数：已登录超过 10 分钟的玩家刷新页面需重新弹出 21 岁弹窗" },
+        { type: "check", key: "on10", label: "玩家已登录超过 10 分钟" },
+        { type: "check", key: "agreeNew", label: "协议有新版本未确认" },
+        { type: "check", key: "rgDue", label: "本次登录还没弹过责任博彩" },
+        { type: "check", key: "kycPend", label: "未完成 KYC" },
+        { type: "check", key: "rgUser", label: "负责任博彩人群（自我排除、冷静期、禁止投注、临时冻结等，口径同 HR01；只对登录用户）" }
+      ] },
+      { title: "活动与配置", items: [
+        { type: "check", key: "eggAmt", label: "789Bingo 旧版砸金蛋有可领金额" },
+        { type: "check", key: "ntBtn", label: "公告管理已给公告配跳转按钮（→ 促销页）" },
+        { type: "check", key: "notCfg", label: "弹窗配置读取失败（从未取到过）" }
+      ] },
+      { title: "兜底条件", items: [
+        { type: "radio", key: "gameState", tag: "游戏", options: [["ok", "正常"], ["maint", "维护中"], ["off", "已下架"]] },
+        { type: "check", key: "lowVer", label: "App 版本低于目标的最低 App 版本" },
+        { type: "check", key: "actFail", label: "领取 / 抽奖动作失败" },
+        { type: "check", key: "actEnd", label: "活动详情的活动已结束" }
+      ] },
+      { title: "进入 Home", items: [
+        { type: "button", label: "进入 Home（新打开 App / 网站、新开标签页）", run: function () { enter(); } },
+        { type: "button", label: "H5 同一标签页刷新（不算新的打开，只重新判断「每次进入页面」的弹窗）", run: function () {
+          if (!run) { enter(); return; }
+          if (P.get("end") !== "H5") { trace("App 没有刷新页面的操作；切到后台再切回同样不算新的打开", "n"); return; }
+          if (exited) { trace("已退出，不再弹", "n"); return; }
+          if (!$("lg").hidden) closeLogin();
+          /* 合规置顶组照常判断：没处理完的继续弹；登录用户按「已登录超过 10 分钟刷新重弹 21+」开关重新弹 21+ */
+          if (P.get("user") !== "guest" && P.get("p21r") && P.get("on10") && run.fx.indexOf("age21") < 0 && !(cur && cur.p.k === "age21")) { run.fx.unshift("age21"); trace("系统参数「已登录超过 10 分钟的玩家刷新页面需重新弹出 21 岁弹窗」为开、已登录超过 10 分钟：刷新后重新弹 21+", "s"); }
+          if (cur && cur.fixed) { run.fx.unshift(cur.p.k); trace("刷新：合规弹窗「" + cur.p.name + "」还没处理，刷新后继续显示", "s"); closePop(); }
+          else if (cur) { trace("刷新：当前弹窗「" + cur.p.name + "」消失（已计一次展示）", "s"); closePop(); }
+          away = false; screen("home"); $("tbar").hidden = true;
+          trace("H5 同一标签页刷新：普通队列不算新的打开（与现网一致），已弹过的只重新判断「每次进入页面」的弹窗，还没轮到的继续按顺序判断；合规置顶组照常判断", "s");
+          reHome(); setTimeout(next, 260);
+        } },
+        { type: "button", label: "从其他页面回到 Home（同一次打开，只重新判断「每次进入页面」的弹窗）", run: function () {
+          if (!run) { enter(); return; }
+          if (exited) { trace("已退出，不再弹", "n"); return; }
+          if (away) { back(); return; }
+          if (cur) { trace("当前有弹窗未关闭：先关闭弹窗再演示从其他页面回到 Home", "n"); return; }
+          trace("模拟：去了其他页面后回到 Home（同一次打开，不算新的进入）", "s"); back();
+        } },
+        { type: "button", label: "本次打开中途被设为负责任博彩人群", run: function () {
+          if (P.get("user") === "guest") { trace("游客没有会员状态，不受负责任博彩过滤", "n"); return; }
+          P.set("rgUser", true); if (run) run.rg = true; build(); trace("会员状态变为负责任博彩人群：已显示的当前弹窗不强制关闭；之后轮到的营销、奖励、引导类弹窗和提示条不再出现（含回到首页重判的「每次进入页面」弹窗）；状态解除在下次进入首页时生效", "s");
+        } },
+        { type: "button", label: "跨到第二天（GMT+8 00:00）", run: function () { P.set("day", P.get("day") + 1); trace("已到第 " + P.get("day") + " 天：「每天首次打开」可再弹，「当日免打扰」失效", "s"); } }
+      ] },
+      { title: "事件触发弹窗与提示条（789Bingo）", items: [
+        { type: "button", label: "邀请奖励到账（Invite Rewards）", run: function () { instant("invRw"); } },
+        { type: "button", label: "专属奖励下发（Exclusive Reward）", run: function () { instant("excl"); } },
+        { type: "button", label: "充值失败（只读按钮）", run: function () { instant("payFail"); } },
+        { type: "button", label: "顶部邀请提示条出现时间到", run: function () { if (!run) enter(); if (exited) return; if (rgu()) { trace("顶部邀请提示条：负责任博彩人群不出现（N49）", "n"); return; } if (!run.compDone) { barPending = true; trace("顶部提示条：等合规置顶组处理完", "s"); } else showBar(); } }
+      ] },
+      { title: "演示值说明", items: [{ type: "note", text: "弹窗状态、两种状态的显示方式、顺序、当日免打扰、上限、跳走后设置读取「后台首页弹窗管理中心」原型；按钮跳转和外部链接状态读取「后台活动按钮跳转」原型；活动图弹窗读取「后台其他菜单改动」原型的素材默认跳转（都是本标签页的配置）。想看「当日免打扰」，先在后台弹窗列表点「活动图弹窗」的「修改配置」，在登录状态一行勾选「当日免打扰」并保存；想看「每次进入页面」，先在后台弹窗列表点某个弹窗的「修改配置」，把登录状态显示方式改成「每次进入页面」并保存，再点按钮跳走后返回或点「从其他页面回到 Home」。示例数据均为虚构。" }] },
+      { items: [{ type: "reset", label: "清空原型状态（回到上线初始化）" }] }
+    ]);
+  }
+  build();
+  [].forEach.call(document.querySelectorAll("[data-scene]"), function (b) {
+    b.onclick = function () {
+      var s = b.dataset.scene;
+      /* 每个场景先把全部模拟条件恢复默认，再设置本场景需要的条件，结果不受上一次操作影响 */
+      var D0 = { end: "H5", ad: false, needUpd: false, agreeNew: false, kycPend: false, p21: true, p21r: false, on10: false, rgDue: true, rgUser: false, eggAmt: true, ntBtn: true, notCfg: false, gameState: "ok", lowVer: false, actFail: false, actEnd: false };
+      Object.keys(D0).forEach(function (k) { P.set(k, D0[k]); });
+      if (s === "old") { P.set("site", "789Bingo"); P.set("user", "old"); }
+      if (s === "guestAd") { P.set("site", "789Bingo"); P.set("user", "guest"); P.set("ad", true); }
+      if (s === "rgp") { P.set("site", "789Bingo"); P.set("user", "old"); P.set("rgUser", true); }
+      if (s === "games") { P.set("site", "789Games"); P.set("user", "new"); P.set("end", "Android"); P.set("needUpd", true); P.set("agreeNew", true); }
+      build(); enter();
+    };
+  });
+  window.addEventListener("proto-change", function (e) { if (e.detail.key === "site" || e.detail.key === "user") paintHome(); });
+  S = PM.load(); C = S[P.get("site")]; paintHome(); screen("home");
+})();
+</script>
+</body>
+</html>

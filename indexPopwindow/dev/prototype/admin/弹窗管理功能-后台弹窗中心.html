@@ -1,0 +1,581 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>弹窗管理功能-后台首页弹窗管理中心</title>
+<link rel="stylesheet" href="../../assets/style.css">
+<style>
+.bo-tabs span[data-tab]{cursor:pointer}.bo-tabs span[data-tab]:hover{color:#409EFF}
+.pm-curbo{font-weight:700;color:#1D6CAE;background:#fff;border-radius:3px;padding:0 8px}
+.pm-tag{display:inline-block;border-radius:3px;padding:0 6px;font-size:11px;margin:1px 3px 1px 0;line-height:18px;white-space:nowrap}
+.pm-tag.fix{background:#F0F0F0;color:#666}.pm-tag.pro{background:#FFF1E0;color:#B25D00}.pm-tag.ro{background:#E6F0FB;color:#1D6CAE}
+.pm-tag.end{background:#FDE8E8;color:#C62828}.pm-tag.ok{background:#E3F5EC;color:#17804F}.pm-tag.wait{background:#FFF7E6;color:#D46B08}.pm-tag.gr{background:#EEE;color:#777}
+.bo td.pm-w{white-space:normal;min-width:120px}
+.bo td.pm-st{white-space:normal;min-width:110px}
+.bo td.pm-st .pm-tag{white-space:normal}
+.pm-cbar{margin:4px 0 6px;padding:8px 10px;background:#FFF7E6;border:1px solid #FFD591;border-radius:4px;font-size:12.5px;line-height:1.7;color:#8A4B00}
+.pm-cbar .bo-btn{margin-left:6px}
+@media print{.pm-tscroll{overflow:visible}.bo table{font-size:11px}.bo td,.bo th{white-space:normal}}
+.pm-jl{line-height:1.7}
+.pm-sub{color:#909399;font-size:12px;line-height:1.6}
+.pm-sw{all:unset;position:relative;display:inline-block;width:36px;height:20px;border-radius:10px;background:#DCDFE6;cursor:pointer;vertical-align:middle}
+.pm-sw::after{content:"";position:absolute;left:2px;top:2px;width:16px;height:16px;border-radius:50%;background:#fff;transition:left .15s}
+.pm-sw[aria-checked="true"]{background:#409EFF}.pm-sw[aria-checked="true"]::after{left:18px}
+.pm-sw:disabled{opacity:.4;cursor:not-allowed}
+.pm-card{border:1px solid #EBEEF5;border-radius:4px;padding:10px 12px;margin-bottom:12px;background:#fff}
+.pm-card h4{margin:0 0 8px;font-size:13.5px;display:flex;align-items:center}
+.pm-gs{display:flex;flex-wrap:wrap;gap:8px 18px;align-items:center}
+.pm-gs label{display:inline-flex;align-items:center;gap:6px;color:#606266}
+.pm-gs select,.pm-pv select{font-family:var(--font);height:28px;border:1px solid #DCDFE6;border-radius:3px;padding:0 6px;font-size:12.5px;color:#333;background:#fff}
+.pm-tscroll{overflow-x:auto;max-width:100%}
+.pm-qwrap{display:grid;grid-template-columns:minmax(0,1fr) 260px;gap:14px;align-items:start}
+@media (max-width:1180px){.pm-qwrap{grid-template-columns:minmax(0,1fr)}}
+.pm-handle{cursor:grab;color:#999;user-select:none;font-weight:700}
+.bo tr.pm-over td{border-top:2px solid #409EFF}
+.bo tr.pm-fixed td{background:#FAFAFA;color:#999}
+.bo tr.pm-hit td{background:#FFFBE6}
+.pm-num{width:48px;height:26px;border:1px solid #DCDFE6;border-radius:3px;text-align:center;font-family:var(--font)}
+.pm-bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:10px}
+.pm-dirty{color:#E6A23C;font-size:12.5px}
+.pm-err{color:#F56C6C;font-size:12px}
+.pm-list{margin:0;padding:0;list-style:none}
+.pm-list li{display:flex;gap:6px;align-items:center;padding:5px 0;border-bottom:1px dashed #EBEEF5;font-size:12.5px}
+.pm-n{min-width:24px;height:20px;border-radius:4px;background:#409EFF;color:#fff;font-size:11.5px;display:inline-grid;place-items:center;padding:0 4px;flex:none}
+.pm-n.fix{background:#909399}.pm-n.no{background:#C0C4CC}
+.pm-why{margin-left:auto;color:#E6A23C;font-size:12px;text-align:right}
+.bo td.pm-state{text-align:center;color:#909399;padding:28px 8px;white-space:normal}
+.pm-noauth{padding:60px 20px;text-align:center;color:#909399}
+.pm-lnk{color:#409EFF;cursor:pointer;text-decoration:none}
+.bo-dlg.pm-wide{width:min(580px,94vw)}
+.pm-dlgbody{max-height:52vh;overflow:auto;line-height:1.7}
+.pm-dlgbody ul{margin:4px 0;padding-left:18px}
+.pm-coderow{display:flex;align-items:center;gap:8px}
+.pm-coderow input{width:110px}
+/* 每个状态「展示」勾选（变更 CH06） */
+.pm-chk{display:inline-flex;align-items:center;gap:4px;margin-right:8px;color:#606266;white-space:nowrap;cursor:pointer}
+.pm-chk input{margin:0}
+.pm-chk + select{width:auto;max-width:200px}
+select + .pm-chk{margin-left:16px}
+.bo-dlg.pm-wide{width:min(640px,96vw)}
+</style>
+</head>
+<body>
+<!-- 后台原型：仿平台后台。本需求新增的控件只加 class="glow" 淡色光晕；新增和不常见的字段后加「?」，文字取自 PRD 5.8「帮助提示内容」。示例数据均为虚构。
+     只有弹窗列表一个视图；改动统一记入平台【日志管理 › 操作日志】；按钮跳转在「后台活动按钮跳转」页（活动中心各活动配置）。 -->
+<div class="with-nav">
+<div class="adm-stage">
+  <div class="bo">
+    <div class="bo-top1"><span class="pm-curbo" data-dev="D20">当前后台：<span id="boName">789Bingo</span> 管理后台</span><span>当前时间：2026/11/24 15:30:00</span><span class="sp">简体中文</span><span>运营账号A ▾</span></div>
+    <div class="bo-top2"><span>在线人数<b class="bo-n r">12</b></span><span>当日注册<b class="bo-n g">8</b></span><span>当日充值成功<b class="bo-n g">15</b></span><span>提款<b class="bo-n g">0</b></span><span>风控审核<b class="bo-n r">1</b></span></div>
+    <div class="bo-body">
+      <nav class="bo-menu" aria-label="后台菜单">
+        <div class="mt">菜单 ≡</div>
+        <div class="g">用户管理</div><div class="g">财务管理</div><div class="g">公告管理</div>
+        <div class="g open">活动配置</div>
+        <div class="i">首页小框广告位</div><div class="i">活动图素材管理</div><div class="i">Home 页轮播弹窗</div>
+        <div class="i on glow" id="menuItem">首页弹窗管理中心</div>
+        <div class="g">活动中心</div><div class="g">日志管理</div><div class="g">系统管理</div>
+      </nav>
+      <div class="bo-main">
+        <div class="bo-crumb">位置 › <span id="crumbSite">789Bingo 管理后台</span> › 活动配置 › <b id="crumb">首页弹窗管理中心</b></div>
+        <div id="authBox">
+
+        <!-- ============ B1 弹窗列表 ============ -->
+        <section id="vB1" hidden>
+          <div class="bo-filter">
+            <label for="fKw">关键字</label><input class="bo-inp" id="fKw" placeholder="弹窗名称" style="width:160px" data-dev="D22">
+            <button class="bo-btn q" type="button" id="fGo">查询</button><button class="bo-btn" type="button" id="fReset">重置</button>
+            <span class="pm-sub" style="margin-left:auto">只管理在首页弹出的弹窗，其他页面的弹窗按各自逻辑；弹窗由开发接入时注册，运营不能在此新增或删除</span>
+          </div>
+          <div class="bo-content">
+            <div class="pm-card glow" style="margin-bottom:10px">
+              <h4>全局设置（本站）</h4>
+              <div class="pm-gs">
+                <span class="ui-nw">单次上限<i class="qm" tabindex="0" data-tip="每次进入首页本状态最多弹几个。合规弹窗、事件触发弹窗、顶部提示条、系列里的后续弹窗和无其他领取入口的领取类弹窗不计入。">?</i></span>
+                <label>登录状态 <select id="capLogin" data-dev="D38"></select></label>
+                <label>未登录状态 <select id="capGuest" data-dev="D38"></select></label>
+                <span class="ui-nw">点按钮跳走后<i class="qm" tabindex="0" data-tip="玩家点按钮离开 Home 再回来时，是否继续弹本次剩下的队列弹窗。">?</i></span>
+                <select id="after" data-dev="D39"><option value="resume">回 Home 继续弹剩余</option><option value="stop">本次剩余不再弹</option></select>
+              </div>
+            </div>
+            <div class="pm-tscroll"><table>
+              <thead><tr><th class="glow"><span class="ui-nw">拖动<i class="qm" tabindex="0" data-tip="按住 ⋮⋮ 上下拖动调整弹出顺序，列表从上到下就是前台的弹出顺序。合规弹窗固定在最前，顶部提示条不参与排序。">?</i></span></th><th class="glow"><span class="ui-nw">显示顺序<i class="qm" tabindex="0" data-tip="前台的弹出顺序。直接改数字可把弹窗移到该位置，用于跨页调整；超出范围时放到最前或最后。">?</i></span></th><th>弹窗</th>
+                <th class="glow"><span class="ui-nw">来源活动<i class="qm" tabindex="0" data-tip="这个弹窗所属活动在后台的位置。点击进入该活动的配置页，配置活动内容和弹窗按钮跳转。">?</i></span></th>
+                <th class="glow"><span class="ui-nw">状态<i class="qm" tabindex="0" data-tip="打开：前台按未登录、登录两列的设置弹出；关闭：前台在任何状态下都不弹。只有合规弹窗常开，其他弹窗都可关闭。在「修改配置」里修改。">?</i></span></th>
+                <th class="glow"><span class="ui-nw">未登录状态<i class="qm" tabindex="0" data-tip="游客（未登录）进入 Home 时的设置：「✓ 展示 · 显示方式」表示按该方式弹出，「不展示」表示未登录时不弹。是否展示由运营决定，在「修改配置」里修改。">?</i></span></th>
+                <th class="glow"><span class="ui-nw">登录状态<i class="qm" tabindex="0" data-tip="已登录玩家进入 Home 时的设置：「✓ 展示 · 显示方式」表示按该方式弹出，「不展示」表示登录时不弹。是否展示由运营决定，在「修改配置」里修改。">?</i></span></th>
+                <th class="glow"><span class="ui-nw">当日免打扰<i class="qm" tabindex="0" data-tip="只对登录用户：打开后弹窗上显示「当日免打扰」勾选，玩家勾选后当天不再弹。未登录状态不提供，游客按显示方式照常弹。只有活动、活动图（素材）、公告弹窗，且登录状态显示方式为「每次进入页面」或「首次打开」时可用。在「修改配置」里修改。">?</i></span></th>
+                <th>更新时间</th><th>操作</th></tr></thead>
+              <tbody id="b1Body"></tbody>
+            </table></div>
+            <div class="bo-page" id="b1Pg" data-dev="D56"></div>
+            <div class="pm-bar" id="b1Ops">
+              <button class="bo-btn q" type="button" id="b1Save" data-dev="D46">保存</button>
+              <button class="bo-btn" type="button" id="b1Reset" data-dev="D47">放弃修改</button>
+              <span class="pm-dirty" id="b1Dirty"></span>
+            </div>
+            <p class="pm-sub" style="margin-top:8px">列表从上到下就是前台的弹出顺序（合规弹窗固定在最前，顶部提示条不参与排序）：按住 ⋮⋮ 上下拖动调整，或直接改显示顺序（用于跨页调整）；按关键字筛选时不能拖动。列表只显示当前设置；状态、是否展示、显示方式和当日免打扰统一点「修改配置」修改。顺序和「修改配置」里的改动先停在页面上，点「保存」一次提交（与上方全局设置一起保存）。显示方式：<span class="ui-nw">「每次进入页面」<i class="qm" tabindex="0" data-tip="每次进入 Home 都弹，包括从其他页面返回 Home。">?</i></span>
+              <span class="ui-nw">「首次打开」<i class="qm" tabindex="0" data-tip="登录状态：每次登录成功后，以及已登录状态下每次打开 App 或网站后，第一次进入 Home 弹一次；未登录状态：每次打开 App 或网站后第一次进入 Home 弹一次。之后从其他页面返回 Home 不再弹。">?</i></span>
+              <span class="ui-nw">「每天首次打开」<i class="qm" tabindex="0" data-tip="每天第一次进入 Home 弹一次，按 GMT+8 切日。登录用户按账号、游客按设备计。">?</i></span>
+              <span class="ui-nw">「活动期间一次」<i class="qm" tabindex="0" data-tip="在活动起止时间内只弹一次；活动没有起止时间时不能选。">?</i></span>
+              <span class="ui-nw">「永久一次」<i class="qm" tabindex="0" data-tip="同一账号（游客按设备）只弹一次。">?</i></span>。只有真正弹出才计一次。示例数据均为虚构，不是线上配置。</p>
+          </div>
+        </section>
+
+        </div>
+        <section id="vNoAuth" class="pm-noauth" hidden>无权限访问该页面，请联系管理员开通「首页弹窗管理中心」菜单权限。</section>
+      </div>
+    </div>
+  </div>
+
+  <aside class="notes adm-notes">
+    <h2>后台首页弹窗管理中心</h2>
+    <p class="sub">【活动配置 › 首页弹窗管理中心】，本需求在 789Bingo、789Games、789Play 三个站的管理后台各新增一个这个菜单（带淡色光晕的是新增控件）。只有弹窗列表一页，不设页签；全局设置在列表上方，改动记入平台【日志管理 › 操作日志】。首页弹窗管理中心只管弹窗的状态（开 / 关）、未登录 / 登录状态下是否展示和显示方式、显示顺序、当日免打扰和全局设置；按钮跳转在活动中心各活动配置页的「事件触发信息」里配置。</p>
+    <h3>模拟场景</h3>
+    <div class="sim">
+      <button type="button" onclick="location.href='弹窗管理功能-后台活动按钮跳转.html'"><span class="simtag">页面</span>活动中心 › 弹窗按钮跳转 →</button>
+    </div>
+    <h3>模拟操作</h3>
+    <div class="sim" id="simPanel"></div>
+    <h3>规则批注</h3>
+    <ol>
+      <li><b>三站各自建模块</b>：789Bingo、789Games、789Play 三个站的管理后台各有一个「首页弹窗管理中心」，各自配置、只对本站前台生效；页面里没有站点下拉，也不能跨站查看或切换，顶部和面包屑显示当前所在后台。演示时用右侧「查看哪个站的后台」切换，相当于换一个后台登录，研发不实现。<span class="ref">PRD 规则 N3 · F10-01 三站各自独立的首页弹窗管理中心</span></li>
+      <li><b>来源活动可直达配置</b>：弹窗列表「来源活动」显示该弹窗所属活动在后台的面包屑位置，点击进入该活动的配置页（活动内容和弹窗按钮跳转在那里配置）；没有配置页的（如系统类的开启通知引导）只显示位置、不能点。首页弹窗管理中心没有按钮跳转配置。<span class="ref">PRD 规则 N1、N38 · F05-01 弹窗列表</span></li>
+      <li><b>状态与显示方式</b>：列表只显示当前设置（状态：打开 / 关闭 / 常开；未登录 / 登录状态：「✓ 展示 · 显示方式」/「不展示」），不能直接操作，统一在「修改配置」里改。每个弹窗有「状态」开关，打开时前台按显示方式弹出，关闭时前台任何状态都不弹（只有合规弹窗常开、不能关闭，系统类「开启通知引导」等其他弹窗都可关闭；领取类关闭时二次确认）。状态打开后，未登录、登录两种状态分别勾选「展示」（不勾选则该状态不弹），勾选后选显示方式：每次进入页面、首次打开（登录：每次登录后；未登录：每次打开 App / 网站后）、每天首次打开、活动期间一次（活动有起止时间才可选）、永久一次。每个排队弹窗在未登录、登录两种状态下是否展示都由运营勾选决定；上线初始化按现网，现网在该状态下不弹的初始为不勾选。改动和顺序、全局设置一起保存。<span class="ref">PRD 规则 N17 · F06-01 修改配置</span></li>
+      <li><b>不可选的选项</b>：页面不显示弹窗分类。个别弹窗不提供的显示方式在下拉里置灰并写明原因（如无其他领取入口的领取类没有「永久一次」，没有起止时间的弹窗没有「活动期间一次」）；不提供当日免打扰的弹窗不显示这个勾选框。<span class="ref">PRD 规则 N21 · F02-02 显示方式</span></li>
+      <li><b>修改配置</b>：弹窗列表「操作」列点「修改配置」，打开该弹窗的配置表单，显示全部可配置项：状态、显示顺序、未登录 / 登录状态的显示方式和当日免打扰，并可点来源活动进入活动配置页；点「确定」后改动停在列表上，与列表其他改动一起点「保存」提交；改了显示顺序的，和列表上改数字一样翻到该弹窗所在页并高亮。合规弹窗只能「查看配置」。<span class="ref">PRD 规则 N17、N51 · F06-01 修改配置</span></li>
+      <li><b>修改配置的布局</b>：常规表单，从上到下为弹窗、来源活动、状态、显示顺序，未登录状态、登录状态各一行：「展示」勾选框 → 显示方式下拉 → 当日免打扰勾选框（只在登录状态这一行，活动、活动图、公告弹窗才有）。未勾选「展示」时显示方式不可选；无其他领取入口的领取类关闭状态或取消「展示」时，在对应行下方显示确认条，点「确定」才改，点「取消」保持原值。<span class="ref">PRD 规则 N21、N23 · F06-01 修改配置</span></li>
+      <li><b>拖动排序</b>：在弹窗列表里按住 ⋮⋮ 上下拖动，列表从上到下就是前台弹出顺序；登录、未登录两个状态按同一顺序弹（各自只弹勾选了「展示」的弹窗）；也可直接改显示顺序，用于跨页调整，超出范围放到最前或最后；拖到合规行、提示条行或表格外松开放回原位；按关键字筛选时不能拖动。<span class="ref">PRD 规则 N51 · F05-01 弹窗列表</span></li>
+      <li><b>管理范围</b>：只管理在首页弹出的弹窗：合规置顶组、普通队列弹窗和首页顶部邀请好友提示条。可能在任何页面出现的事件触发弹窗（充值 / 提款失败、实名认证结果、邀请奖励到账、专属奖励、VIP 升级 / 生日奖励、下载 App 引导）不在本菜单列出，按各自逻辑弹出；它们在首页出现时仍遵守「等合规组和当前弹窗关闭后再弹、不叠加」。<span class="ref">PRD 规则 N1、N28 · F05-01 弹窗列表</span></li>
+      <li><b>系列弹窗</b>：活动按玩家操作依次弹出的一系列弹窗（如首页转盘 → 结果弹窗 → 首充后在充值页的第 3 次转盘），本菜单只管第一个弹窗在首页的显示场景和顺序；后续弹窗按活动自身逻辑弹出，不列出、不占顺序、不计单次上限，事件在活动配置页「事件触发信息」里配置；负责任博彩人群按 N49 过滤。<span class="ref">PRD 规则 N49、N52 · 合规 X03</span></li>
+      <li><b>合规置顶组只读</b>：强制更新 → 21+ → 协议 → 责任博彩 → 登录后 KYC 提示，固定在最前；没有拖动手柄，按现网实际合规弹窗行数固定占显示顺序 1～N（本页演示为 5 行），普通队列从 N+1 起编；不能关闭，不能选显示方式。789Bingo 游客进站的 21+ 是合并的 Responsible Gaming 声明（无 ×，789Games 有 ×），21+ 行「查看配置」写明它覆盖 21+、协议、责任博彩三项；协议、责任博彩两行的来源写「现网写死，待前端确认」。<span class="ref">PRD 规则 N10、N11、N16 · F01-01 组成顺序与只读展示</span></li>
+      <li><b>当日免打扰</b>：只对登录状态提供，按弹窗逐个打开，上线时全部关闭。未登录状态不提供，游客按显示方式照常弹：游客没有账号，转化注册是首要目标，且按设备记录不可靠（清缓存、换浏览器即失效）。只有活动、活动图（素材）、公告弹窗，且登录状态显示方式为「每次进入页面」或「首次打开」时可用，改成其他显示方式或取消勾选「展示」时自动关闭；列表只显示开关状态，在「修改配置」里修改。<span class="ref">PRD 规则 N24 · F02-05 当日免打扰</span></li>
+      <li><b>领取类保护</b>：「无其他领取入口」的领取类弹窗不受单次上限约束、不提供当日免打扰；关闭状态或取消某状态的「展示」时在表单内显示确认条（确认文案为示意），确认条未处理时对话框「确定」置灰。<span class="ref">PRD 规则 N23 · F02-04 领取类保护</span></li>
+      <li><b>全局设置</b>：单次上限登录状态、未登录状态各一个，默认「不限」，可选 1～10 个；点按钮跳走后「回 Home 继续弹剩余 / 本次剩余不再弹」，初始值与现网一致。<span class="ref">PRD 规则 N22、N25 · F06-02 全局设置</span></li>
+      <li><b>保存与生效</b>：保存要 Google 验证码，保存前二次确认按 N43 列出全部改动：一个弹窗一行，多项改动用「；」分隔（如「亏损返利：显示顺序 13 → 6；登录状态 每次登录后首次打开 → 不展示」）；顺延的弹窗合并成一行「其他 N 个弹窗顺序顺延（被动调整）」，可展开明细；没有改动提示「没有改动」；保存后 5 分钟内全量生效；他人已先保存时提示「配置已被他人修改，请刷新后重新编辑」。<span class="ref">PRD 规则 N43、N44 · F06-04 保存与生效</span></li>
+      <li><b>操作日志</b>：本菜单不设操作日志页签，每次保存的改动（旧值 → 新值）统一记入平台现有的【日志管理 › 操作日志】，按平台日志模块的规则查看和保留。<span class="ref">PRD 规则 N45 · F08-01 记入平台操作日志</span></li>
+      <li><b>权限与状态</b>：只有查看权限时列表只读、不显示保存和拖动手柄；没有菜单权限看不到菜单。列表有加载中、暂无数据、加载失败（可重试）状态。<span class="ref">PRD 5.1 菜单、角色与权限 · F10-03 菜单权限与保存校验</span></li>
+    </ol>
+    <h3>评审待确认</h3>
+    <ol>
+      <li><b>落点推断</b>：非活动来源弹窗按钮在其来源菜单配置、素材默认跳转放原素材菜单、系统页面清单由技术维护三处落点待大当家确认。<span class="ref">PRD 待确认 Q25</span></li>
+      <li><b>各站弹窗清单</b>：789Games 两端、789Bingo App 的首页弹窗清单和事件触发弹窗、领取类有无其他领取入口，以前端清单为准。<span class="ref">PRD 待确认 Q1</span></li>
+      <li><b>789Play 现网清单</b>：资料未覆盖，本页只放 3 个示例弹窗。<span class="ref">PRD 待确认 Q22</span></li>
+      <li><b>跳走后初始值</b>：现网点按钮跳走后剩余队列是否继续弹。<span class="ref">PRD 待确认 Q4</span></li>
+      <li><b>789Games 21+ 开关</b>：789Games 是否有两个 21+ 系统参数开关。<span class="ref">PRD 待确认 Q11</span></li>
+      <li><b>合并声明</b>：现网合并的 Responsible Gaming 声明是否视为 21+、协议、责任博彩三项同时完成（合规负责人报大当家）。<span class="ref">PRD 待确认 Q38</span></li>
+      <li><b>活动图、公告计次</b>：活动图、公告弹窗按整个弹窗还是按每条素材 / 公告计次（前端、大当家）。<span class="ref">PRD 待确认 Q39</span></li>
+      <li><b>领取类二次确认</b>：无其他领取入口的领取类关闭状态或取消展示时二次确认（团队自定，待大当家确认）。<span class="ref">PRD 待确认 Q28</span></li>
+      <li><b>当日免打扰范围</b>：除「每次进入页面」外，「首次打开」也提供当日免打扰（团队自定，待大当家确认）。<span class="ref">PRD 待确认 Q29</span></li>
+      <li><b>上线初始显示方式</b>：现网每次打开或登录后弹一次的弹窗初始化为「首次打开」（团队自定，待大当家确认）。<span class="ref">PRD 待确认 Q30</span></li>
+      <li><b>回首页重弹与上限</b>：「每次进入页面」的弹窗回首页重弹时计入单次上限、不受「本次剩余不再弹」影响（团队自定，待大当家确认）。<span class="ref">PRD 待确认 Q31</span></li>
+      <li><b>两种状态共用顺序</b>：未登录、登录两种状态按同一个显示顺序弹（团队自定，待大当家确认）。<span class="ref">PRD 待确认 Q32</span></li>
+      <li><b>合规负责人角色</b>：后台没有现成的「合规负责人」角色，由谁担任、每站几人待定（合规负责人、大当家确认）。<span class="ref">PRD 第 11 章待确认</span></li>
+    </ol>
+    <div class="pager"><span></span><a href="弹窗管理功能-后台活动按钮跳转.html">下一页：后台活动按钮跳转 →</a></div>
+  </aside>
+</div>
+</div>
+
+<!-- 通用确认框 -->
+<div class="bo-mask" id="mk" hidden>
+  <div class="bo-dlg" id="mkDlg" role="dialog" aria-modal="true" aria-labelledby="mkT">
+    <h4 id="mkT">确认</h4>
+    <div class="pm-dlgbody" id="mkB"></div>
+    <div class="pm-coderow" id="mkCodeRow"><label for="mkCode">Google 验证码</label><input class="bo-inp" id="mkCode" inputmode="numeric" maxlength="6" placeholder="6 位数字"></div>
+    <div class="pm-err" id="mkErr" role="alert"></div>
+    <div class="row2"><button class="bo-btn" type="button" id="mkCancel" data-cancel>取消</button><button class="bo-btn q" type="button" id="mkOk">确认</button></div>
+  </div>
+</div>
+
+<script>window.NAV_ROOT = "../../";</script>
+<script src="../../assets/nav-data.js"></script>
+<script src="../../assets/nav.js"></script>
+<script src="../../assets/proto.js"></script>
+<script src="../../assets/pm-data.js"></script>
+<script>
+(function () {
+  P.init({ defaults: { site: "789Bingo", perm: "edit", list: "ok" } });
+  window.addEventListener("proto-change", function (e) { if (e.detail.key === "*") PM.reset(); });
+  var S = PM.load(), site = P.get("site"), view = "b1", conflict = false;
+  if (PM.SITES.indexOf(site) < 0) site = "789Bingo";
+  function C() { return S[site]; }
+  function save() { PM.save(S); }
+  function $(id) { return document.getElementById(id); }
+  function esc(s) { return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+  function now() { var d = new Date(Date.now() + 8 * 3600e3); return d.toISOString().slice(0, 19).replace("T", " "); }
+  function msg(t, bad) { var m = document.createElement("div"); m.className = "bo-msg " + (bad ? "err" : "ok"); m.setAttribute("role", "status"); m.textContent = t; document.body.appendChild(m); setTimeout(function () { m.remove(); }, 2200); }
+  function perm() { return P.get("perm"); }
+  function canEdit() { return perm() === "edit"; }
+  function log(type, obj, chg) { C().logs.unshift({ t: now(), who: "运营账号A", type: type, obj: obj, chg: chg }); }
+  function tip(t) { return '<i class="qm" tabindex="0" data-tip="' + esc(t) + '">?</i>'; }
+  var HT_PRO = "玩家只能通过这个弹窗领取奖励，关闭弹出后玩家将无法领取。";
+  var HT_FIX = "合规要求的弹窗，固定在最前，不能关闭、排序，不计入单次上限，由系统参数控制。";
+  var QN = { login: "登录状态", guest: "未登录状态" };
+
+  /* ---------- 通用确认框 ---------- */
+  function ask(o) {
+    $("mkT").textContent = o.title; $("mkB").innerHTML = o.html || ""; $("mkCodeRow").hidden = !o.code; $("mkCode").value = ""; $("mkErr").textContent = "";
+    $("mkOk").textContent = o.ok || "确认"; $("mkOk").disabled = false; $("mkOk").title = ""; $("mkDlg").classList.toggle("pm-wide", !!o.wide); $("mk").hidden = false;
+    var api = { err: function (m) { $("mkErr").textContent = m; } };
+    $("mkOk").onclick = function () { var r = o.onOk ? o.onOk($("mkCode").value.trim(), api) : true; if (r !== false) $("mk").hidden = true; };
+    $("mkCancel").onclick = function () { $("mk").hidden = true; };
+  }
+  function codeOk(v, api) {
+    if (!/^\d{6}$/.test(v)) { api.err("请输入 6 位 Google 验证码"); return false; }
+    if (v === "000000") { api.err("验证码错误"); return false; }
+    return true;
+  }
+  function takeConflict() { if (!conflict) return false; conflict = false; return true; }
+  document.addEventListener("keydown", function (e) { if (e.key === "Escape" && !$("mk").hidden) $("mkCancel").click(); });
+
+  /* ---------- 分页条 ---------- */
+  var PG = { b1: { page: 1, size: 20 } };
+  function pager(box, total, st, redraw) {
+    var n = Math.max(1, Math.ceil(total / st.size)); st.page = Math.min(Math.max(1, st.page), n);
+    var h = '<span>共 <b>' + total + '</b> 条</span><label>每页 <select aria-label="每页条数">' + [10, 20, 50, 100].map(function (s) { return "<option" + (s === st.size ? " selected" : "") + ">" + s + "</option>"; }).join("") + '</select> 条</label>' +
+      '<button type="button" data-p="prev" aria-label="上一页"' + (st.page <= 1 ? " disabled" : "") + '>‹</button>';
+    for (var i = 1; i <= n; i++) h += '<button type="button" data-p="' + i + '"' + (i === st.page ? ' aria-current="page"' : "") + ">" + i + "</button>";
+    h += '<button type="button" data-p="next" aria-label="下一页"' + (st.page >= n ? " disabled" : "") + '>›</button><label>前往 <input inputmode="numeric" aria-label="前往页码" value="' + st.page + '"> 页</label>';
+    box.innerHTML = h;
+    box.querySelector("select").onchange = function () { st.size = +this.value; st.page = 1; redraw(); };
+    box.querySelector("input").onkeydown = function (e) { if (e.key === "Enter") { var v = parseInt(this.value, 10); st.page = isNaN(v) ? st.page : v; redraw(); } };
+    [].forEach.call(box.querySelectorAll("button[data-p]"), function (b) { b.onclick = function () { var p = b.dataset.p; st.page = p === "prev" ? st.page - 1 : p === "next" ? st.page + 1 : +p; redraw(); }; });
+  }
+  function stateRow(cols, emptyText) {
+    var s = P.get("list");
+    if (s === "loading") return '<tr><td class="pm-state" colspan="' + cols + '">加载中…</td></tr>';
+    if (s === "empty") return '<tr><td class="pm-state" colspan="' + cols + '">' + (emptyText || "暂无数据") + "</td></tr>";
+    if (s === "fail") return '<tr><td class="pm-state" colspan="' + cols + '">加载失败，请重试 <button class="bo-btn link" type="button" data-retry>重试</button></td></tr>';
+    return "";
+  }
+  document.addEventListener("click", function (e) { if (e.target.closest("[data-retry]")) { P.set("list", "ok"); renderAll(); } });
+
+  /* ---------- 视图 ---------- */
+  var VIEWS = { b1: "vB1" }, hitK = "";
+  function show(v, force) {
+    if (!VIEWS[v]) v = "b1";   /* 只有弹窗列表一个视图 */
+    view = v;
+    Object.keys(VIEWS).forEach(function (k) { $(VIEWS[k]).hidden = k !== v; });
+    [].forEach.call(document.querySelectorAll("[data-tab]"), function (t) { var on = t.dataset.tab === v; t.classList.toggle("on", on); t.setAttribute("aria-selected", on); });
+    $("crumb").textContent = "首页弹窗管理中心";
+    if (location.hash.slice(1) !== v) history.replaceState(null, "", "#" + v);
+    renderAll();
+    if (window.self !== window.top) window.parent.postMessage({ type: "proto-view", view: v }, "*");
+  }
+  function leaveAsk(go) { ask({ title: "有未保存的修改", html: "弹窗列表有未保存的修改，离开后这些修改不会保存。确定离开？", ok: "确定离开", onOk: function () { go(); } }); }
+  [].forEach.call(document.querySelectorAll("[data-tab]"), function (t) {
+    t.onclick = function () { show(t.dataset.tab); };
+    t.onkeydown = function (e) { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); show(t.dataset.tab); } };
+  });
+  document.addEventListener("click", function (e) {
+    var g = e.target.closest("[data-go]"); if (g) { e.preventDefault(); show(g.dataset.go); }
+  });
+  window.addEventListener("hashchange", function () { show(location.hash.slice(1) || "b1"); });
+  function showSite() { $("boName").textContent = site; $("crumbSite").textContent = site + " 管理后台"; }
+  function syncSiteBtns() { [].forEach.call(document.querySelectorAll("#simPanel button[aria-pressed]"), function (b) { if (/^.*789(Bingo|Games|Play) 管理后台$/.test(b.textContent)) b.setAttribute("aria-pressed", b.textContent.indexOf(site + " ") >= 0); }); }
+  function switchSite(to) {
+    if (to === site) return;
+    function go() { site = to; P.set("site", to); qd = null; movedK = {}; PG.b1.page = 1; syncSiteBtns(); showSite(); renderAll(); }
+    if (qDirty()) { P.set("site", site); syncSiteBtns(); leaveAsk(go); return; }
+    go();
+  }
+  showSite();
+  function renderAll() {
+    var p = perm();
+    $("authBox").hidden = p === "none"; $("vNoAuth").hidden = p !== "none"; $("menuItem").hidden = p === "none";
+    if (p === "none") return;
+    renderB1();
+  }
+
+  /* ---------- B1 弹窗列表 ---------- */
+  var F1 = { kw: "" };
+  /* 弹窗列表的未保存草稿 qd（变更 CH04）：状态总开关 master、两个状态的显示方式、顺序、当日免打扰、全局设置 */
+  function D() { if (!qd) qd = qBase(); return qd; }
+  /* 统一弹出顺序（变更 CH05）：弹窗列表从上到下就是弹出顺序，登录、未登录两个队列按同一顺序排（各自只含适用该状态的弹窗）。
+     上线初始化时把现网两个队列的顺序合并成一个，保持两边原有先后不变 */
+  function gOrder(d) {
+    var L = d.queues.login.map(function (x) { return x.k; }), G = d.queues.guest.map(function (x) { return x.k; }), out = [], i = 0, j = 0;
+    function put(k) { if (out.indexOf(k) < 0) out.push(k); }
+    while (i < L.length && j < G.length) {
+      var a = L[i], b = G[j];
+      if (out.indexOf(a) >= 0) { i++; continue; } if (out.indexOf(b) >= 0) { j++; continue; }
+      if (a === b) { put(a); i++; j++; } else if (L.indexOf(b, i) > i) { put(a); i++; } else if (G.indexOf(a, j) > j) { put(b); j++; } else { put(a); i++; }
+    }
+    L.slice(i).concat(G.slice(j)).forEach(put);
+    return out;
+  }
+  function gMove(k, pos) {
+    var d = D(), o = gOrder(d), i = o.indexOf(k); if (i < 0) return;
+    o.splice(i, 1); pos = Math.max(1, Math.min(o.length + 1, pos)); o.splice(pos - 1, 0, k);
+    ["login", "guest"].forEach(function (q) { d.queues[q].sort(function (x, y) { return o.indexOf(x.k) - o.indexOf(y.k); }); });
+  }
+  /* 显示顺序（变更 CH11）：合规弹窗按固定顺序占 1～N，普通队列弹窗从 N+1 起接着编号；顶部提示条不参与排序，显示「即时」 */
+  function fixList() { return C().popups.filter(function (p) { return p.cat === "fix"; }); }
+  function rowsB1() {
+    var c = C(), out = [];
+    c.popups.forEach(function (p) { if (p.cat === "fix") out.push(p); });
+    gOrder(D()).forEach(function (k) { out.push(PM.pop(c, k)); });
+    /* 只管理首页弹窗（变更 CH12）：事件触发弹窗（充值 / 提款失败、认证结果、奖励到账、VIP、下载 App 引导等）可能在任何页面出现，按各自逻辑，不在本菜单列出 */
+    c.popups.forEach(function (p) { if (p.cat === "bar") out.push(p); });
+    return out.filter(function (p) { return (!F1.kw || p.name.indexOf(F1.kw) >= 0); });
+  }
+  /* 显示方式下拉：本类型不提供的选项置灰并写明原因；是否展示由前面的勾选决定，下拉里没有「不显示」 */
+  function freqOpts(p, q, v) {
+    return Object.keys(PM.FREQ).map(function (f) { return [f, PM.freqName(f, q), PM.freqWhy(p, f)]; }).map(function (o) {
+      return '<option value="' + o[0] + '"' + (o[0] === v ? " selected" : "") + (o[2] ? " disabled" : "") + ">" + o[1] + (o[2] ? "（" + o[2] + "）" : "") + "</option>";
+    }).join("");
+  }
+  /* 状态总开关：合规弹窗只读常开（ro 标记的弹窗都是事件触发弹窗，不在列表里） */
+  function lockOn(p) { return p.cat === "fix" || !!p.ro; }
+  /* 列表只显示当前状态，不提供操作；状态、展示、显示方式、当日免打扰统一在「修改配置」里改（变更 CH07） */
+  function masterCell(p) {
+    if (lockOn(p)) return '<span class="pm-tag fix" title="' + (p.cat === "fix" ? "合规弹窗不能关闭" : "该弹窗不能关闭") + '">常开</span>';
+    return D().master[p.k] !== false ? '<span class="pm-tag ok">打开</span>' : '<span class="pm-tag end">关闭</span>';
+  }
+  /* 某状态下的当前设置：展示时显示显示方式，不展示时显示「不展示」 */
+  function modeCell(p, q) {
+    var s = PM.stateOf(D(), p, q);
+    if (s.fix) return p.scene.indexOf(q === "login" ? "登录" : "游客") >= 0 ? '<span class="pm-tag fix">合规固定 · 沿用现网</span>' : '<span class="pm-tag fix">合规固定 · 不弹</span>';
+    if (s.inst) return '<span class="pm-tag gr">条件满足时即时弹出</span>';
+    if (s.na) return '<span class="pm-tag end">不展示</span>';
+    if (D().master[p.k] === false) return '<span class="pm-sub">状态已关闭，不弹</span>';
+    return s.it.on ? '<span data-dev="D24">✓ 展示 · ' + esc(PM.freqName(s.it.freq, q)) + "</span>" : '<span class="pm-tag end">不展示</span>';
+  }
+  function todayCell(p) {
+    if (!PM.todayType(p)) return "-";
+    var t = [];
+    /* 当日免打扰只对登录状态（变更 CH09）：未登录状态一直按显示方式弹，不提供免打扰 */
+    var s = PM.stateOf(D(), p, "login");
+    if (s.na) return "-";
+    return s.it.today && s.it.on && PM.todayOk(s.it.freq) ? '<span class="pm-tag ok">开</span>' : "关";
+  }
+  /* 来源活动：显示该活动在后台的面包屑位置，有配置页的可点击进入 */
+  function srcHref(p) {
+    if (p.material) return "弹窗管理功能-后台其他菜单改动.html#material";
+    if (p.notice) return "弹窗管理功能-后台其他菜单改动.html#notice";
+    if (p.k === "age21" || p.k === "kyc") return "弹窗管理功能-后台其他菜单改动.html#param";
+    if (p.src.indexOf("活动中心") === 0 && PM.configurable(p)) return "弹窗管理功能-后台活动按钮跳转.html#act-" + p.k;
+    return "";
+  }
+  function srcCell(p) {
+    var h = srcHref(p);
+    return h ? '<a class="pm-lnk" href="' + h + '" data-dev="D27" title="进入该活动的配置页">' + esc(p.src) + " ›</a>" : '<span data-dev="D27" title="没有可配置的页面">' + esc(p.src) + "</span>";
+  }
+  function renderB1() {
+    var st = stateRow(10), body = $("b1Body"), ed = canEdit();
+    $("b1Ops").hidden = !ed; $("b1Dirty").textContent = qDirty() ? "● 有未保存的修改" : ""; renderGs();
+    if (st) { body.innerHTML = st; $("b1Pg").innerHTML = ""; return; }
+    var rows = rowsB1(), pg = PG.b1;
+    pager($("b1Pg"), rows.length, pg, renderB1);
+    if (!rows.length) { body.innerHTML = '<tr><td class="pm-state" colspan="10">暂无数据</td></tr>'; return; }
+    var order = gOrder(D()), canDrag = ed && !F1.kw, fixes = fixList(), nFix = fixes.length;
+    body.innerHTML = rows.slice((pg.page - 1) * pg.size, pg.page * pg.size).map(function (p) {
+      var tags = (p.cat === "fix" ? tip(HT_FIX) : "") + (p.protect ? '<span class="pm-tag pro">无其他领取入口</span>' + tip(HT_PRO) : "") +
+        (p.status === "已结束" ? '<span class="pm-tag end">活动已结束</span>' : "");
+      var lead, tr;
+      if (p.cat === "q") {
+        var pos = nFix + order.indexOf(p.k) + 1;
+        tr = "<tr" + (canDrag ? ' draggable="true"' : "") + (hitK === p.k ? ' class="pm-hit"' : "") + ' data-k="' + p.k + '">';
+        lead = '<td class="pm-handle glow" data-dev="D41" title="' + (canDrag ? "按住上下拖动调整顺序" : F1.kw ? "按关键字筛选时不能拖动，可改显示顺序" : "") + '">' + (canDrag ? "⋮⋮" : "") + "</td>" +
+          '<td><input class="pm-num" data-num="' + p.k + '" value="' + pos + '" aria-label="显示顺序"' + (ed ? "" : " disabled") + ' data-dev="D41"></td>';
+      } else {
+        tr = '<tr class="pm-fixed">';
+        lead = p.cat === "fix" ? '<td title="合规弹窗固定在最前，顺序不能调整">🔒</td><td title="合规弹窗固定在最前，顺序不能调整">' + (fixes.indexOf(p) + 1) + "</td>" : '<td></td><td title="条件满足时立即弹出，不参与排序">即时</td>';
+      }
+      return tr + lead + '<td class="pm-w" data-dev="D23"><b>' + esc(p.name) + "</b><br>" + tags + '</td><td class="pm-w">' + srcCell(p) + '</td><td data-dev="D24">' + masterCell(p) +
+        '</td><td class="pm-st">' + modeCell(p, "guest") + '</td><td class="pm-st">' + modeCell(p, "login") + '</td><td class="pm-sub" data-dev="D59">' + todayCell(p) +
+        '</td><td class="pm-sub">' + esc(p.upd).replace(" ", "<br>") + '</td><td><button class="bo-btn link glow" type="button" data-cfg="' + p.k + '" data-dev="D69">' + (ed && p.cat !== "fix" ? "修改配置" : "查看配置") + "</button></td></tr>";
+    }).join("");
+    if (hitK) { var h = body.querySelector('tr[data-k="' + hitK + '"]'); if (h) h.scrollIntoView({ block: "center" }); hitK = ""; }
+  }
+  $("fGo").onclick = function () { F1.kw = $("fKw").value.trim(); PG.b1.page = 1; renderB1(); };
+  $("fReset").onclick = function () { $("fKw").value = ""; F1 = { kw: "" }; PG.b1.page = 1; renderB1(); };
+  $("fKw").onkeydown = function (e) { if (e.key === "Enter") $("fGo").click(); };
+  $("b1Body").addEventListener("click", function (e) {
+    var m = e.target.closest("[data-ms]");
+    if (m && !m.disabled) {
+      var p = PM.pop(C(), m.dataset.ms), d = D();
+      if (d.master[p.k] !== false && p.protect) { ask({ title: "关闭弹窗", html: "关闭后前台不再弹出，玩家将无法领取这项奖励（没有其他领取入口）。确定关闭？（示意）", ok: "确定关闭", onOk: function () { d.master[p.k] = false; renderB1(); } }); return; }
+      d.master[p.k] = d.master[p.k] === false; renderB1(); return;
+    }
+  });
+  /* 修改配置（变更 CH05、CH06）：常规表单。未登录、登录两种状态各一行：勾选「展示」后选显示方式，登录状态下活动、活动图、公告弹窗可勾当日免打扰；
+     「确定」后改动停在列表上，与列表其他改动一起点「保存」提交 */
+  $("b1Body").addEventListener("click", function (e) {
+    var b = e.target.closest("[data-cfg]"); if (!b) return;
+    var d = D(), p = PM.pop(C(), b.dataset.cfg), ed = canEdit() && p.cat !== "fix", order = gOrder(d), qd2 = PM.clone(d.queues), m2 = d.master[p.k] !== false, pend = null;
+    function it2(q) { var r = null; qd2[q].forEach(function (x) { if (x.k === p.k) r = x; }); return r; }
+    /* 领取类（无其他领取入口）关闭状态或取消展示：在表单对应行下方显示页面内确认条，点「确定」才改值（示意文案） */
+    function cbar(t) { return '<div class="pm-cbar" role="alert">' + esc(t) + ' <button type="button" class="bo-btn q" data-pc="1">确定</button><button type="button" class="bo-btn" data-pc="0">取消</button></div>'; }
+    function row(l, v) { return '<div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;padding:7px 0;border-bottom:1px dashed #EBEEF5"><span style="min-width:90px;color:#606266">' + l + "</span><span>" + v + "</span></div>"; }
+    function draw() {
+      var off = !m2, dis = ed ? "" : " disabled";
+      var h = row("弹窗", "<b>" + esc(p.name) + "</b>") + row("来源活动", srcHref(p) ? '<a class="pm-lnk" href="' + srcHref(p) + '">' + esc(p.src) + " ›</a>" : esc(p.src));
+      h += row("状态", lockOn(p) ? "常开（" + (p.cat === "fix" ? "合规弹窗" : "该弹窗") + "不能关闭）" : '<button type="button" class="pm-sw" role="switch" id="cfM" aria-checked="' + m2 + '" aria-label="状态"' + dis + "></button> " + (m2 ? "打开：前台按下面的设置弹出" : "关闭：前台任何状态都不弹"));
+      if (pend && pend.kind === "m") h += cbar("关闭后前台不再弹出，玩家将无法领取这项奖励（没有其他领取入口）。确定关闭？（示意）");
+      if (p.k === "age21") h += row("现网形式", "游客进站为合并的 Responsible Gaming 声明，覆盖 21+、协议、责任博彩三项（789Bingo 无 ×，789Games 有 ×）；合并声明是否视为三项同时完成待确认（Q38）");
+      if (p.cat === "fix") h += row("控制来源", esc(p.ctrl)) + row("当前取值", esc(p.val) + ' <span class="pm-sub">只读，在来源菜单修改</span>');   /* 合规专项 F2：只在「查看配置」里只读显示（大当家 2026-11-25） */
+      if (p.cat === "fix") h += row("显示顺序", (fixList().indexOf(p) + 1) + ' <span class="pm-sub">合规弹窗固定在最前，顺序不能调整</span>');
+      if (p.cat === "q") h += row("显示顺序", '<input class="pm-num" id="cfN" value="' + (fixList().length + order.indexOf(p.k) + 1) + '"' + dis + '> <span class="pm-sub">可填 ' + (fixList().length + 1) + "～" + (fixList().length + order.length) + "（1～" + fixList().length + " 为合规弹窗，固定在最前）</span>");
+      ["guest", "login"].forEach(function (q) {
+        var s = PM.stateOf({ queues: qd2 }, p, q), lab = QN[q];
+        if (s.fix) { h += row(lab, p.scene.indexOf(q === "login" ? "登录" : "游客") >= 0 ? "合规固定 · 沿用现网" : "合规固定 · 不弹"); return; }
+        if (s.inst) { h += row(lab, "条件满足时即时弹出"); return; }
+        if (s.na) { h += row(lab, "不展示"); return; }
+        var it = s.it, d2 = off || !ed;
+        var v = '<label class="pm-chk"><input type="checkbox" data-cs="' + q + '"' + (it.on ? " checked" : "") + (d2 ? " disabled" : "") + "> 展示</label>" +
+          '<select class="bo-inp" data-cq="' + q + '" aria-label="' + QN[q] + '显示方式"' + (d2 || !it.on ? " disabled" : "") + ">" + freqOpts(p, q, it.freq) + "</select>";
+        if (PM.todayType(p) && q === "guest") v += '<span class="pm-sub">未登录不提供当日免打扰，按显示方式弹出</span>';
+        if (PM.todayType(p) && q === "login") {
+          var tdOk = !off && it.on && PM.todayOk(it.freq);
+          v += '<label class="pm-chk" title="' + (tdOk ? "弹窗上显示「当日免打扰」，玩家勾选后当天不再弹" : "只有显示方式为「每次进入页面」或「首次打开」时可用") + '"><input type="checkbox" data-ct="' + q + '"' + (it.today && tdOk ? " checked" : "") + (tdOk && ed ? "" : " disabled") + "> 当日免打扰</label>";
+        }
+        h += row(lab, v);
+        if (pend && pend.kind === "s" && pend.q === q) h += cbar("取消后" + lab + "下不再弹出，玩家将无法领取这项奖励（没有其他领取入口）。确定取消？（示意）");
+      });
+      if (p.cat === "inst" || p.cat === "bar") h += row("显示顺序", "即时 <span class=\"pm-sub\">条件满足时立即弹出，不参与排序</span>") + row("单次上限", "不计入");
+      $("mkB").innerHTML = h;
+      /* 确认条未处理时，对话框「确定」置灰，避免运营以为已改 */
+      $("mkOk").disabled = !!pend; $("mkOk").title = pend ? "请先确认或取消上面的提示" : ""; $("mkErr").textContent = pend ? "请先确认或取消上面的提示" : "";
+      var ms = $("cfM"); if (ms) ms.onclick = function () {
+        if (m2 && p.protect) { pend = { kind: "m" }; draw(); return; }
+        m2 = !m2; pend = null; draw();
+      };
+      [].forEach.call($("mkB").querySelectorAll("[data-cs]"), function (cb) { cb.onchange = function () {
+        var it = it2(cb.dataset.cs);
+        if (!cb.checked && p.protect) { pend = { kind: "s", q: cb.dataset.cs }; draw(); return; }
+        it.on = cb.checked; if (!it.on) it.today = false; pend = null; draw();
+      }; });
+      [].forEach.call($("mkB").querySelectorAll("[data-pc]"), function (bt) { bt.onclick = function () {
+        if (bt.dataset.pc === "1" && pend) { if (pend.kind === "m") m2 = false; else { var it = it2(pend.q); it.on = false; it.today = false; } }
+        pend = null; draw();
+      }; });
+      [].forEach.call($("mkB").querySelectorAll("[data-cq]"), function (sel) { sel.onchange = function () { var it = it2(sel.dataset.cq); it.freq = sel.value; if (!PM.todayOk(it.freq)) it.today = false; draw(); }; });
+      [].forEach.call($("mkB").querySelectorAll("[data-ct]"), function (cb) { cb.onchange = function () { it2(cb.dataset.ct).today = cb.checked; }; });
+    }
+    ask({ title: (ed ? "修改配置 · " : "查看配置 · ") + p.name, wide: true, ok: ed ? "确定" : "关闭", onOk: function () {
+      if (!ed) return true;
+      var n = $("cfN") ? Math.floor(Number($("cfN").value)) : 0;
+      d.queues = qd2; if (!lockOn(p)) d.master[p.k] = m2;
+      if (p.cat === "q" && n && !isNaN(n)) {
+        var pos0 = gOrder(d).indexOf(p.k) + 1;
+        gMove(p.k, n - fixList().length);   /* 填到合规弹窗的位置时放到普通弹窗最前 */
+        if (gOrder(d).indexOf(p.k) + 1 !== pos0) movedK[p.k] = 1;
+      }
+      /* 与列表上改数字一致：翻到该弹窗所在页并高亮 */
+      if (p.cat === "q" && !F1.kw) PG.b1.page = Math.floor((fixList().length + gOrder(d).indexOf(p.k)) / PG.b1.size) + 1;
+      hitK = p.k; renderB1(); msg("已修改，点「保存」后生效"); return true;
+    } });
+    draw();
+  });
+  /* 上下拖动排序（变更 CH05）：只有普通队列行可拖；拖到合规行、提示条行或表格外松开放回原位；跨页用显示顺序 */
+  var drag1 = null;
+  function clear1() { [].forEach.call($("b1Body").querySelectorAll(".pm-over"), function (x) { x.classList.remove("pm-over"); }); }
+  $("b1Body").addEventListener("dragstart", function (e) { var tr = e.target.closest("tr[data-k]"); if (tr) { drag1 = tr.dataset.k; e.dataTransfer.effectAllowed = "move"; try { e.dataTransfer.setData("text/plain", drag1); } catch (x) {} } });
+  $("b1Body").addEventListener("dragover", function (e) { var tr = e.target.closest("tr[data-k]"); clear1(); if (tr && drag1) { e.preventDefault(); tr.classList.add("pm-over"); } });
+  $("b1Body").addEventListener("drop", function (e) {
+    var tr = e.target.closest("tr[data-k]"); if (!tr || !drag1) return; e.preventDefault();
+    var k = drag1; drag1 = null; gMove(k, gOrder(D()).indexOf(tr.dataset.k) + 1); movedK[k] = 1; hitK = k; renderB1();
+  });
+  $("b1Body").addEventListener("dragend", function () { if (drag1) msg("未放到可排序的位置，已放回原位"); drag1 = null; clear1(); });
+  $("b1Body").addEventListener("change", function (e) {
+    var el = e.target;
+    if (el.dataset.num) {
+      var v = el.value.trim(), n = Math.floor(Number(v));
+      if (v === "" || isNaN(n)) { renderB1(); return; }
+      var nFix = fixList().length, total = gOrder(D()).length; n = Math.max(1, Math.min(total, n - nFix));   /* 填到合规弹窗的位置时放到普通弹窗最前 */
+      gMove(el.dataset.num, n); movedK[el.dataset.num] = 1; hitK = el.dataset.num; PG.b1.page = Math.floor((nFix + n - 1) / PG.b1.size) + 1; renderB1(); return;
+    }
+    var key = el.dataset.md || el.dataset.sh; if (!key) return;
+    var a = D().queues[el.dataset.q], it = null; a.forEach(function (x) { if (x.k === key) it = x; });
+    var p = PM.pop(C(), it.k);
+    if (el.dataset.md) { it.freq = el.value; if (!PM.todayOk(it.freq)) it.today = false; renderB1(); return; }
+    function apply() { it.on = el.checked; if (!it.on) it.today = false; renderB1(); }
+    if (!el.checked && p.protect) { ask({ title: "取消展示", html: "取消后" + QN[el.dataset.q] + "下不再弹出，玩家将无法领取这项奖励（没有其他领取入口）。确定？（示意）", ok: "确定", onOk: apply }); $("mkCancel").onclick = function () { $("mk").hidden = true; renderB1(); }; return; }
+    apply();
+  });
+  $("b1Save").onclick = function () { saveAll(); };
+  $("b1Reset").onclick = function () { qd = null; movedK = {}; renderB1(); };
+
+  /* ---------- 草稿与全局设置（顺序在弹窗列表调整，全局设置在列表上方） ---------- */
+  var qd = null, movedK = {};   /* movedK：运营直接移动过的弹窗（拖动、改显示顺序），保存确认里区分「被动调整」 */
+  function qBase() { var c = C(), m = {}; c.popups.forEach(function (p) { if (!lockOn(p)) m[p.k] = p.on !== false; }); return { master: m, queues: PM.clone(c.queues), cap: PM.clone(c.cap), after: c.after }; }
+  function qDirty() { return !!qd && JSON.stringify(qd) !== JSON.stringify(qBase()); }
+  function capOpts(v) { return '<option value="0">不限</option>' + [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(function (n) { return '<option value="' + n + '"' + (+v === n ? " selected" : "") + ">" + n + " 个</option>"; }).join(""); }
+  function renderGs() {
+    var d = D(), ed = canEdit();
+    $("capLogin").innerHTML = capOpts(d.cap.login); $("capGuest").innerHTML = capOpts(d.cap.guest); $("after").value = d.after;
+    $("capLogin").disabled = $("capGuest").disabled = $("after").disabled = !ed;
+  }
+  $("capLogin").onchange = function () { D().cap.login = +this.value; renderB1(); };
+  $("capGuest").onchange = function () { D().cap.guest = +this.value; renderB1(); };
+  $("after").onchange = function () { D().after = this.value; renderB1(); };
+  /* 保存确认的改动清单（PRD N43）：一个弹窗一行，同一弹窗的多项改动合并在这一行；只因别的弹窗移动而顺序变化的（被动调整）合并成一行摘要，可展开看明细 */
+  function changes(touched) {
+    var c = C(), out = [], per = {}, keys = [], passive = []; touched = touched || {};
+    function add(k, s, pas) { if (!per[k]) { per[k] = { parts: [], pas: null }; keys.push(k); } if (pas) per[k].pas = s; else per[k].parts.push(s); touched[k] = 1; }
+    function mode(it, q) { return it.on ? PM.freqName(it.freq, q) : "不展示"; }
+    var nFix = fixList().length, o0 = gOrder({ queues: c.queues }), o1 = gOrder(qd);
+    o1.forEach(function (k, i) {
+      var oi = o0.indexOf(k); if (oi === i) return;
+      var s = "显示顺序 " + (nFix + oi + 1) + " → " + (nFix + i + 1);
+      if (movedK[k]) add(k, s); else add(k, s + "（被动调整）", true);
+    });
+    Object.keys(qd.master).forEach(function (k) {
+      var p = PM.pop(c, k), o = p.on !== false;
+      if (o !== qd.master[k]) add(k, "状态 " + (o ? "打开" : "关闭") + " → " + (qd.master[k] ? "打开" : "关闭"));
+    });
+    ["guest", "login"].forEach(function (q) {
+      var qn = QN[q], before = c.queues[q];
+      qd.queues[q].forEach(function (it) {
+        var o = null; before.forEach(function (x) { if (x.k === it.k) o = x; });
+        if (mode(o, q) !== mode(it, q)) add(it.k, qn + " " + mode(o, q) + " → " + mode(it, q));
+        if (o.today !== it.today) add(it.k, "当日免打扰 " + (o.today ? "开" : "关") + " → " + (it.today ? "开" : "关"));
+      });
+    });
+    keys.forEach(function (k) {
+      var x = per[k], nm = PM.pop(c, k).name;
+      if (!x.parts.length) { passive.push(nm + "：" + x.pas); return; }
+      out.push(nm + "：" + x.parts.concat(x.pas ? [x.pas] : []).join("；"));
+    });
+    out.passive = passive;    function cap(v) { return v ? v + " 个" : "不限"; }
+    if (c.cap.login !== qd.cap.login) out.push("单次上限 · 登录状态：" + cap(c.cap.login) + " → " + cap(qd.cap.login));
+    if (c.cap.guest !== qd.cap.guest) out.push("单次上限 · 未登录状态：" + cap(c.cap.guest) + " → " + cap(qd.cap.guest));
+    if (c.after !== qd.after) out.push("点按钮跳走后：" + PM.AFTER[c.after] + " → " + PM.AFTER[qd.after]);
+    if (passive.length) out.push("其他 " + passive.length + " 个弹窗顺序顺延（被动调整）");
+    return out;
+  }
+  function saveAll() {
+    D(); var touched = {}, ch = changes(touched);
+    if (!ch.length) { msg("没有改动"); return; }
+    ask({ title: "确认保存", wide: true, code: true, ok: "确认保存",
+      html: "以下改动保存后 5 分钟内对本站前台全量生效：<ul>" + ch.map(function (x) { return "<li>" + esc(x) + (ch.passive.length && /被动调整）$/.test(x) && /^其他 /.test(x) ? "<details><summary>展开明细</summary><ul>" + ch.passive.map(function (y) { return "<li>" + esc(y) + "</li>"; }).join("") + "</ul></details>" : "") + "</li>"; }).join("") + "</ul>",
+      onOk: function (code, api) {
+        if (!codeOk(code, api)) return false;
+        if (takeConflict()) { api.err("配置已被他人修改，请刷新后重新编辑"); return false; }
+        var c = C(), t = now().slice(0, 16); c.queues = PM.clone(qd.queues); c.cap = PM.clone(qd.cap); c.after = qd.after;
+        Object.keys(qd.master).forEach(function (k) { PM.pop(c, k).on = qd.master[k]; });
+        Object.keys(touched).forEach(function (k) { PM.pop(c, k).upd = t; });
+        log("保存配置", "首页弹窗管理中心", ch.join("；")); save(); qd = null; movedK = {}; msg("保存成功"); renderAll(); return true;
+      } });
+  }
+
+  /* ---------- 模拟操作面板（演示用，研发不实现） ---------- */
+  P.panel($("simPanel"), [
+    { title: "查看哪个站的后台（演示用，三站后台各自独立，页面内没有站点切换）", items: [{ type: "radio", key: "site", tag: "后台", options: [["789Bingo", "789Bingo 管理后台"], ["789Games", "789Games 管理后台"], ["789Play", "789Play 管理后台"]], change: switchSite }] },
+    { title: "后台账号权限", items: [{ type: "radio", key: "perm", tag: "权限", options: [["edit", "查看 + 编辑"], ["view", "只有查看"], ["none", "没有菜单权限"]], change: renderAll }] },
+    { title: "列表状态", items: [{ type: "radio", key: "list", tag: "列表", options: [["ok", "正常"], ["loading", "加载中"], ["empty", "暂无数据"], ["fail", "加载失败"]], change: renderAll }] },
+    { title: "注入异常", items: [
+      { type: "button", label: "他人已先保存同一配置（下一次保存失败）", run: function () { conflict = true; } }
+    ] },
+    { title: "演示值说明", items: [{ type: "note", text: "Google 验证码输入任意 6 位数字即可保存；输入 000000 演示「验证码错误」。所有数据均为虚构，不是线上配置。" }] },
+    { items: [{ type: "reset", label: "清空原型状态（回到上线初始化）" }] }
+  ]);
+  window.addEventListener("beforeunload", function (e) { if (qDirty()) { e.preventDefault(); e.returnValue = ""; } });
+  show(location.hash.slice(1) || "b1", true);
+})();
+</script>
+</body>
+</html>

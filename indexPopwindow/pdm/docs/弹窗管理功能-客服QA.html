@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>弹窗管理功能-客服QA</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body class="qa-page" data-lang="both">
+<div class="with-nav">
+<div class="desk"><article class="paper qa">
+
+<h1 class="doc-title">弹窗管理功能 · 客服 QA<span class="qa-sub">Home Pop-up Center · Customer Service Q&amp;A</span></h1>
+<div class="doc-meta"><span>版本 / Version：v1.0</span><span>适用 / For：客服 Customer Service</span><span>依据 / Based on：PRD、后台操作手册 Admin Manual</span></div>
+<div class="qa-lang" role="group" aria-label="语言 Language">
+  <button type="button" data-l="both" aria-pressed="true">双语 Bilingual</button>
+  <button type="button" data-l="zh" aria-pressed="false">中文</button>
+  <button type="button" data-l="en" aria-pressed="false">English</button>
+</div>
+<hr class="doc-rule">
+
+<h2 id="q0">适用范围 <span class="en-t">Scope</span></h2>
+<div class="bi"><div class="zh">789Bingo、789Games、789Play 的 H5、iOS、Android 首页（Home）弹窗（三个站各自在本站后台配置，互不影响）：玩家进入首页时弹出的合规弹窗、活动弹窗、公告，以及首页顶部的邀请好友提示条。充值 / 提款失败、实名认证结果、奖励到账、VIP 升级等由玩家操作或系统事件触发的弹窗，可能出现在任何页面，按各自的活动或系统逻辑弹出；它们出现在首页时，会等合规弹窗和当前弹窗关闭后再弹，不会叠在一起。从本需求上线起适用（上线时间以运营通知为准）。PC 端不在范围内。</div><div class="en">Home page pop-ups on 789Bingo, 789Games and 789Play (H5, iOS, Android; each site is set up separately in its own back office): compliance pop-ups, promotion pop-ups and announcements shown when a player enters Home, plus the invite-friends bar at the top of Home. Pop-ups triggered by a player action or system event (deposit / withdrawal failure, KYC result, reward credited, VIP upgrade, etc.) can appear on any page and follow their own event or system logic; when they appear on Home, they wait until compliance pop-ups and the current pop-up are closed and never stack. Applies from the launch of this feature (launch date as announced by Operations). PC is not included.</div></div>
+
+<h2 id="q1">这次改了什么 <span class="en-t">What changed</span></h2>
+<div class="bi"><div class="zh">运营可以在后台调整首页弹窗的先后顺序、每个弹窗是否开启、游客和已登录玩家分别是否弹出和多久弹一次（每次回到首页都弹、每次打开或登录后弹一次、每天一次等）、一次最多弹几个，以及（在各活动里）弹窗按钮的文字和点击后去哪里。上线当天玩家看到的弹窗和现网一致，只有以下几处不同：① 789Bingo 旧版砸金蛋不再排到 21+ 等合规弹窗前面；② 从广告链接进入的游客也要先确认 21+；③ 789Games 先确认 21+、再确认协议；④ 21+ 确认按钮的英文统一为「I'm 21+」（现网已是这句的没有变化）；⑤ 处于自我排除、冷静期、禁止投注、冻结等负责任博彩状态的会员，不再看到活动、奖励和引导类弹窗和首页顶部邀请提示条；合规弹窗、登录公告（不带跳转按钮），以及奖励到账、结果通知和充值 / 提款失败、实名认证结果等账户通知照常；⑥「开启通知」引导弹窗改为按账号计次，同一账号换新手机登录不会再弹。789Play 上线时哪几处有变化，以运营通知为准。没升级到新版本的旧版 App 仍按原来的方式弹窗，以上变化对它不生效。已登录玩家在部分活动、活动图、公告弹窗上可能看到「当日免打扰」勾选，勾选后该弹窗当天不再弹，次日 00:00（GMT+8）恢复；未登录的游客没有这个勾选。公告可能带一个跳转按钮。</div><div class="en">Operations can now adjust, in the back office, the order of Home pop-ups, whether each pop-up is on, whether and how often it shows for guests and for logged-in players (every time Home is opened, once after each app open or login, once a day, etc.), how many per visit, and each button's text and destination. On launch day players see the same pop-ups as before, with these differences: (1) on 789Bingo, the old egg-smash pop-up (旧版砸金蛋) no longer appears before the 21+ and other compliance pop-ups; (2) guests coming from ad links must also confirm 21+; (3) on 789Games, 21+ is confirmed before the agreement; (4) the 21+ confirmation button reads "I'm 21+" on all three sites (no change where it already does); (5) members under a responsible gaming status (self-exclusion, cooling-off, betting ban, freeze, etc.) no longer see promotion, reward and guide pop-ups or the invite bar at the top of Home; compliance pop-ups, login announcements (without a button), reward-credited and result notices, and account notices such as deposit / withdrawal failure and KYC results still appear; (6) the "turn on notifications" guide pop-up is now counted per account, so it does not show again when the same account logs in on a new phone. Which of these apply to 789Play at launch follows the Operations notice. Older app versions that have not been updated keep the old pop-up behaviour, and these changes do not apply to them. Logged-in players may see a "Don't show again today" checkbox on some promotion, banner and announcement pop-ups: once ticked, that pop-up stays hidden for the rest of the day and returns at 00:00 (GMT+8). Guests (not logged in) don't have this checkbox. Announcements may have a button that opens a page.</div></div>
+
+<h2 id="q2">客服核查步骤 <span class="en-t">How to check</span></h2>
+<ol class="qa-steps">
+  <li class="bi"><div class="zh"><b>确认站点、端和身份</b>：玩家用的是 789Bingo、789Games 还是 789Play，H5 还是 App（App 版本号）、是否已登录。三个站的弹窗各自在本站后台配置，查配置时到对应站的后台查。App 版本低于本期版本的，不读后台配置，按旧规则弹窗（见问答 14）。</div><div class="en"><b>Site, device and status</b>: 789Bingo, 789Games or 789Play, H5 or App (App version), logged in or guest. Each site's pop-ups are set up in that site's own back office, so check the settings there. App versions older than this release don't read the back-office settings and keep the old pop-up behaviour (see Q&amp;A 14).</div></li>
+  <li class="bi"><div class="zh"><b>查弹窗配置</b>：登录该玩家所在站的管理后台，打开【活动配置 › 首页弹窗管理中心】，用关键字找到该弹窗，看「显示顺序」「状态」、玩家当时对应的「未登录状态」或「登录状态」（「✓ 展示 · 显示方式」或「不展示」）、「当日免打扰」，以及弹窗名称下是否标「活动已结束」；列表上方「全局设置」里看「单次上限」。需要看全部设置时点操作列的「查看配置」（账号有编辑权限时显示为「修改配置」，只看不改，点「取消」退出）。</div><div class="en"><b>Pop-up settings</b>: in the player's site back office, open 活动配置 › 首页弹窗管理中心 (Activity Config › Home Pop-up Center), search the pop-up by keyword and check 显示顺序 (display order), 状态 (on/off), 未登录状态 / 登录状态 (logged out / logged in: "✓ 展示 · mode" means shown with that frequency, 不展示 means not shown), 当日免打扰 (don't show again today), and whether the name is tagged 活动已结束 (event ended). Check 单次上限 (max per visit) under 全局设置 (global settings) above the list. Click 查看配置 (view settings) in the action column for full details (shown as 修改配置 (edit settings) if your account can edit; only view, then click 取消 (cancel)).</div></li>
+  <li class="bi"><div class="zh"><b>查按钮去向</b>：在首页弹窗管理中心点该弹窗的「来源活动」，进入活动配置页「弹窗按钮跳转」页签，在「事件触发信息」里找到玩家点的按钮，看「跳转位置」：写「不跳转，只关闭弹窗」表示运营配置的就是只关闭；抽奖、领取、砸蛋等按钮显示「触发逻辑」，点击后执行活动动作，之后按活动自身逻辑继续。要看页面是否停用或 App 是否支持，展开「系统页面清单」看「状态」和「最低 App 版本」。</div><div class="en"><b>Button destination</b>: in the Home Pop-up Center, click the pop-up's 来源活动 (source event) to open the event's 弹窗按钮跳转 (pop-up buttons) tab, find the button in 事件触发信息 (event triggers) and check 跳转位置 (destination). 不跳转，只关闭弹窗 means the button is set to only close the pop-up. Buttons such as spin, claim or smash show 触发逻辑 (what the button does) instead: they run the event action and then follow the event's own flow. To see whether a page is disabled or supported on App, open 系统页面清单 (system page list) and check 状态 (status) and 最低 App 版本 (minimum App version).</div></li>
+  <li class="bi"><div class="zh"><b>查活动资格</b>：弹窗是否弹还取决于活动资格，在对应活动菜单查玩家是否满足条件、活动是否在进行中。</div><div class="en"><b>Event eligibility</b>: whether a pop-up shows also depends on eligibility. Check the event's own menu for the player's eligibility and whether the event is running.</div></li>
+  <li class="bi"><div class="zh"><b>查最近改动</b>：在【日志管理 › 操作日志】看最近是否改过弹窗的顺序、状态、展示、显示方式，或按钮文案和链接（每次保存都记录修改人、时间和旧值 → 新值；保存后 5 分钟内生效）。</div><div class="en"><b>Recent changes</b>: 日志管理 › 操作日志 (Log Management › Operation Log) shows recent changes to pop-up order, on/off, shown / not shown, frequency, button text and links, with who, when and old → new values. Changes take effect within 5 minutes.</div></li>
+  <li class="bi"><div class="zh"><b>查会员状态</b>：已登录玩家看不到任何活动弹窗时，先在会员资料里看是否处于自我排除、冷静期、禁止投注、冻结等负责任博彩状态；处于这些状态的会员不弹营销、奖励、引导类弹窗；合规弹窗、登录公告（不带按钮），以及到账、结果通知和账户通知照常，属于正常表现。</div><div class="en"><b>Member status</b>: if a logged-in player sees no promotion pop-ups at all, first check the member profile for a responsible gaming status (self-exclusion, cooling-off, betting ban, freeze, etc.). Such members don't get promotion, reward or guide pop-ups; compliance pop-ups, login announcements (without a button), reward-credited and result notices and account notices still appear; this is expected.</div></li>
+</ol>
+
+<h2 id="q3">问答 <span class="en-t">Q&amp;A</span></h2>
+<section class="qa-card" id="qa1">
+  <h3><span class="qa-no">1</span><span class="bi-inline"><span class="zh">我之前每次都能看到的活动弹窗，今天怎么没有了？</span><span class="en">The promo pop-up I used to see every time is gone today. Why?</span></span></h3>
+  <div class="qa-row"><b>回复玩家<small>Reply</small></b>
+    <div class="bi"><div class="en qa-reply">Hi! Pop-ups on the Home page are shown based on the event period, your eligibility and how often each one is set to appear. You may have already seen it today, chosen to hide it for today, or the event may have ended. You can still find running events on the Promotions page.<button type="button" class="qa-copy">复制 Copy</button></div>
+    <div class="zh">您好！首页弹窗会按活动时间、您的参与资格和弹出次数设置来显示。可能今天已经看过、勾选了「当日免打扰」，或活动已经结束。进行中的活动仍可以在活动页面找到。</div></div></div>
+  <div class="qa-row"><b>客服核查<small>Check</small></b>
+    <div class="bi"><div class="zh">按核查步骤 2、4 查该弹窗的状态、在玩家当时状态（未登录 / 登录）下是否展示和显示方式、是否标「活动已结束」，以及玩家资格。状态关闭或该状态「不展示」只停首页自动弹出，活动页入口照常；显示方式为「首次打开」的，回到首页或 H5 同一标签页刷新都不再弹；单次上限已满时，排在后面的弹窗本次不弹；已登录玩家勾过「当日免打扰」的当天不再弹。以上都属正常。</div><div class="en">Follow steps 2 and 4: the pop-up's on/off, whether it is shown and how often for the player's state (logged out / logged in), whether it is tagged as ended, and eligibility. Off or "not shown" only stops it on Home; the event page still works. With "first open", it does not show again when the player returns to Home or refreshes the same H5 tab. When the max per visit is reached, pop-ups further down the order wait for the next visit. A logged-in player who ticked "Don't show again today" won't see it that day. All of these are expected.</div></div></div>
+  <div class="qa-row"><b>转交<small>Escalate</small></b>
+    <div class="bi"><div class="zh">配置和资格都满足但仍不弹，转技术（附站点、端、App 版本、发生时间）。</div><div class="en">If settings and eligibility are fine but it still doesn't show, escalate to Tech (site, device, App version, time).</div></div></div>
+</section>
+
+<section class="qa-card" id="qa2">
+  <h3><span class="qa-no">2</span><span class="bi-inline"><span class="zh">我没登录，为什么每次打开都看到同一个活动弹窗？怎么没有「当日免打扰」？</span><span class="en">I'm not logged in. Why do I see the same promo pop-up every time, and why is there no "Don't show again today"?</span></span></h3>
+  <div class="qa-row"><b>回复玩家<small>Reply</small></b>
+    <div class="bi"><div class="en qa-reply">Hi! When you're not logged in, Home page promotions follow each event's settings, so some may appear every time you open the site or app. The option to hide a pop-up for today is available after you log in: tick it on a supported pop-up and it won't show again that day. You can also close any pop-up with ×.<button type="button" class="qa-copy">复制 Copy</button></div>
+    <div class="zh">您好！未登录时，首页活动弹窗按各活动的设置显示，部分弹窗每次打开网站或 App 都会出现。「当日免打扰」需要登录后使用：在支持的弹窗上勾选后，当天不再显示。您也可以随时点 × 关闭弹窗。</div></div></div>
+  <div class="qa-row"><b>客服核查<small>Check</small></b>
+    <div class="bi"><div class="zh">当日免打扰只对已登录玩家提供，游客看不到这个勾选，按该弹窗「未登录状态」的显示方式照常弹：「每次进入页面」每次回到首页都弹；「首次打开」每次打开 App 或网站后弹一次；「每天首次打开」「活动期间一次」「永久一次」按设备计，清缓存、换浏览器后会重新弹。按核查步骤 2 看该弹窗的「未登录状态」。属正常表现。</div><div class="en">"Don't show again today" is only for logged-in players. Guests don't see the checkbox and get the pop-up according to its 未登录状态 (logged-out) setting: "every time" (每次进入页面) shows on each return to Home; "first open" (首次打开) shows once each time the app or site is opened; "first open each day" (每天首次打开), "once per event period" (活动期间一次) and "only once" (永久一次) are counted per device, so clearing the cache or switching browser resets them. Check the 未登录状态 column per step 2. This is expected.</div></div></div>
+  <div class="qa-row"><b>转交<small>Escalate</small></b>
+    <div class="bi"><div class="zh">玩家要求为自己关掉某个弹窗：客服不能为单个玩家关闭，建议登录后使用当日免打扰，不转交。多名玩家反映同一弹窗太频繁，转运营评估显示方式。</div><div class="en">If a player asks to stop a pop-up just for them: CS can't do that; suggest logging in and using "Don't show again today", no escalation. If many players complain about the same pop-up, pass to Operations to review its frequency.</div></div></div>
+</section>
+
+<section class="qa-card" id="qa3">
+  <h3><span class="qa-no">3</span><span class="bi-inline"><span class="zh">我勾了「当日免打扰」，现在想再看那个活动怎么办？</span><span class="en">I ticked "Don't show again today". How can I see that event again?</span></span></h3>
+  <div class="qa-row"><b>回复玩家<small>Reply</small></b>
+    <div class="bi"><div class="en qa-reply">Hi! That pop-up will appear again from 00:00 tomorrow (GMT+8). In the meantime, you can open the event from the Promotions page at any time.<button type="button" class="qa-copy">复制 Copy</button></div>
+    <div class="zh">您好！该弹窗明天 00:00（GMT+8）起会再次出现。在此之前，您随时可以从活动页面打开该活动。</div></div></div>
+  <div class="qa-row"><b>客服核查<small>Check</small></b>
+    <div class="bi"><div class="zh">当日免打扰只对已登录玩家。勾选后点弹窗上任何按钮（×、跳转按钮、抽奖或领取等），当天都不再弹，次日 00:00（GMT+8）恢复；客服和运营都不能为单个玩家撤销。玩家退出登录后以游客身份进入首页，按游客设置照常弹。</div><div class="en">Only for logged-in players. Once ticked, whichever button the player taps on the pop-up (×, a link button, spin, claim, etc.), it stays hidden that day and returns at 00:00 (GMT+8); neither CS nor Operations can undo it for a single player. If the player logs out and enters Home as a guest, guest settings apply and the pop-up may show.</div></div></div>
+  <div class="qa-row"><b>转交<small>Escalate</small></b>
+    <div class="bi"><div class="zh">不转交。已登录玩家勾选后当天仍看到同一弹窗，转技术（附站点、端、玩家账号、时间、截图）。</div><div class="en">No escalation. If a logged-in player still sees the same pop-up that day after ticking it, escalate to Tech (site, device, account, time, screenshot).</div></div></div>
+</section>
+
+<section class="qa-card" id="qa4">
+  <h3><span class="qa-no">4</span><span class="bi-inline"><span class="zh">为什么每次打开都要我确认 21 岁？</span><span class="en">Why do I have to confirm I'm 21+ every time I open the site?</span></span></h3>
+  <div class="qa-row"><b>回复玩家<small>Reply</small></b>
+    <div class="bi"><div class="en qa-reply">Hi! The 21+ age confirmation is a regulatory requirement. Guests are asked to confirm it each time they open the site or app, whichever link they came from. Thank you for your understanding.<button type="button" class="qa-copy">复制 Copy</button></div>
+    <div class="zh">您好！21 岁年龄确认是合规要求。游客每次打开网站或 App 都需要确认，无论从哪个链接进入。感谢理解。</div></div></div>
+  <div class="qa-row"><b>客服核查<small>Check</small></b>
+    <div class="bi"><div class="zh">游客每次新打开网站或 App 都弹，不按来源豁免（含广告链接）；H5 确认后同一标签页刷新不再弹，未确认则刷新后继续弹，确认前不出现其他弹窗。已登录玩家是否弹由【系统管理 › 系统参数管理 › 注册登陆 › 合规】两个开关决定，客服不能修改；其中「已登录超过 10 分钟的玩家刷新页面需重新弹出 21 岁弹窗」打开时，登录超过 10 分钟后刷新会再弹，属正常。广告链接落到非首页页面时是否弹，按现网各页面逻辑（待前端确认）。</div><div class="en">Guests see it every time they open the site or app, whatever link they came from (including ads). On H5, once confirmed, refreshing the same tab does not show it again; if not confirmed, it shows again after refresh and nothing else appears until it is confirmed. For logged-in players it depends on two switches under 系统管理 › 系统参数管理 › 注册登陆 › 合规 (System Management › System Parameters › Registration &amp; Login › Compliance), which CS cannot change; if "re-show 21+ after refresh for players logged in over 10 minutes" is on, it shows again on refresh after 10 minutes. This is expected. Whether it shows when an ad link lands on a page other than Home follows that page's current logic (pending front-end confirmation).</div></div></div>
+  <div class="qa-row"><b>转交<small>Escalate</small></b>
+    <div class="bi"><div class="zh">玩家要求关闭 21+ 确认：不能关闭，按上面口径回复，不转交。</div><div class="en">If the player asks to turn it off: it cannot be turned off; reply as above, no escalation.</div></div></div>
+</section>
+
+<section class="qa-card" id="qa5">
+  <h3><span class="qa-no">5</span><span class="bi-inline"><span class="zh">我点了 21 岁确认上的 ×，页面就跳走了。</span><span class="en">I tapped × on the 21+ confirmation and the page left.</span></span></h3>
+  <div class="qa-row"><b>回复玩家<small>Reply</small></b>
+    <div class="bi"><div class="en qa-reply">Hi! Our games are only available to players aged 21 or above. If you are 21 or older, please reopen the site or app and confirm your age to continue.<button type="button" class="qa-copy">复制 Copy</button></div>
+    <div class="zh">您好！我们的游戏只对 21 岁及以上的玩家开放。如果您已满 21 岁，请重新打开网站或 App 并确认年龄后继续。</div></div></div>
+  <div class="qa-row"><b>客服核查<small>Check</small></b>
+    <div class="bi"><div class="zh">现网游客进站的 21+ 是一个合并的责任博彩声明。789Games 的声明有 ×，点 × 或不同意时按现网去退出页；789Bingo 的声明没有 ×，沿用现网。去退出页后本次不再弹任何弹窗和提示条。</div><div class="en">For guests, 21+ is currently part of a combined responsible gaming declaration. On 789Games the declaration has an ×: tapping × or declining leads to the exit page as before; on 789Bingo the declaration has no ×, as now. After the exit page, no other pop-ups or bars appear in that visit.</div></div></div>
+  <div class="qa-row"><b>转交<small>Escalate</small></b>
+    <div class="bi"><div class="zh">不转交。</div><div class="en">No escalation.</div></div></div>
+</section>
+
+<section class="qa-card" id="qa6">
+  <h3><span class="qa-no">6</span><span class="bi-inline"><span class="zh">为什么我在充值页或其他页面也弹出了弹窗？</span><span class="en">Why did a pop-up appear on the deposit page or another page, not just on Home?</span></span></h3>
+  <div class="qa-row"><b>回复玩家<small>Reply</small></b>
+    <div class="bi"><div class="en qa-reply">Hi! Some pop-ups are triggered by what you do rather than by opening the Home page, for example deposit or withdrawal results, verification results, rewards being credited, or the next step of an event you joined (such as an extra spin after your first deposit). These can appear on any page. Pop-ups never stack: a new one waits until the current one is closed.<button type="button" class="qa-copy">复制 Copy</button></div>
+    <div class="zh">您好！有些弹窗是由您的操作触发的，而不是打开首页时弹出，例如充值或提款结果、实名认证结果、奖励到账，或您参与活动的下一步（如首充后的额外转盘）。这类弹窗可能出现在任何页面。弹窗不会叠在一起，新的弹窗会等当前弹窗关闭后再出现。</div></div></div>
+  <div class="qa-row"><b>客服核查<small>Check</small></b>
+    <div class="bi"><div class="zh">首页弹窗管理中心只管在首页弹出的弹窗。事件触发弹窗（充值 / 提款失败、实名认证结果、邀请奖励到账、专属奖励、VIP 升级 / 生日奖励、下载 App 引导）和活动系列里的后续弹窗（如转盘结果弹窗、首充后在充值页的第 3 次转盘），按活动或系统自身逻辑弹出，可能出现在任何页面，不受首页弹窗管理中心的顺序和单次上限控制；它们在首页出现时，会等合规弹窗和当前弹窗关闭后再弹。后续弹窗里的按钮在该活动「事件触发信息」里查。属正常表现。</div><div class="en">The Home Pop-up Center only manages pop-ups shown on Home. Event-triggered pop-ups (deposit / withdrawal failure, KYC result, invite reward credited, exclusive reward, VIP upgrade / birthday reward, app download guide) and follow-up pop-ups in an event series (e.g. the spin result, or the 3rd spin on the deposit page after the first deposit) follow the event's or system's own logic, can appear on any page, and are not subject to the Home order or max per visit. On Home, they wait until compliance pop-ups and the current pop-up are closed. Buttons on follow-up pop-ups are listed in the event's 事件触发信息 (event triggers). This is expected.</div></div></div>
+  <div class="qa-row"><b>转交<small>Escalate</small></b>
+    <div class="bi"><div class="zh">两个弹窗叠在一起，或这类弹窗出现在 21+ 等合规弹窗之前，转技术（附站点、端、时间、截图）。弹窗出现的时机与活动规则不符，转运营。</div><div class="en">If two pop-ups stack, or one of these appears before the 21+ or other compliance pop-ups, escalate to Tech (site, device, time, screenshot). If a pop-up appears at a moment that doesn't match the event rules, pass to Operations.</div></div></div>
+</section>
+
+<section class="qa-card" id="qa7">
+  <h3><span class="qa-no">7</span><span class="bi-inline"><span class="zh">我点了弹窗按钮，被带到了别的页面 / 打开了浏览器 / 先要我登录。</span><span class="en">I tapped a pop-up button and it took me to another page / opened my browser / asked me to log in first.</span></span></h3>
+  <div class="qa-row"><b>回复玩家<small>Reply</small></b>
+    <div class="bi"><div class="en qa-reply">Hi! Each pop-up button leads to the page set for that event, such as the deposit page, a game, the event details, or one of our official pages (e.g. our social media page or the app store), which opens in your browser. If the page needs an account, you'll be asked to log in first and then taken there. Buttons such as Spin or Claim run the event action instead.<button type="button" class="qa-copy">复制 Copy</button></div>
+    <div class="zh">您好！每个弹窗按钮会打开该活动设定的页面，例如充值页、某个游戏、活动详情，或我们的官方页面（如官方社交主页、应用商店），官方页面会在浏览器中打开。需要账号的页面会先请您登录，登录后再带您过去。抽奖、领取等按钮则是执行活动动作。</div></div></div>
+  <div class="qa-row"><b>客服核查<small>Check</small></b>
+    <div class="bi"><div class="zh">按核查步骤 3 找到该按钮看「跳转位置」：站内页面、游戏、活动详情直接打开；「站外网页（域名）」在 H5 新窗口打开、在 App 用外部浏览器打开，只能是外部链接白名单里登记过的地址：本站和 PAGCOR 官网，以及本站官方社交账号（如 https://www.facebook.com/789bingo.official）和本站 App 的应用商店页面，不会是其他博彩平台、私人或代理主页、聊天群和群组邀请链接、短链或带会员信息的链接；游客点需要登录的页面或游戏（系统页面清单「需登录」为「是」），先登录，登录成功后再打开；取消登录则回到首页，这个弹窗视同关闭，继续弹下一个；抽奖、领取、砸蛋等按钮显示「触发逻辑」，执行活动动作后按活动自身逻辑继续。H5 和 App 用同一个配置。</div><div class="en">Find the button per step 3 and check 跳转位置 (destination). In-site pages, games and event details open directly. 站外网页 (external page, with domain) opens in a new window on H5 and in the external browser on App; only addresses registered in the external link allowlist are possible: our sites and PAGCOR, plus our official social media accounts (e.g. https://www.facebook.com/789bingo.official) and our app's store pages; never other gambling platforms, personal or agent pages, chat groups or group invite links, short links or links containing member information. If a guest taps a page or game that needs login (需登录 = 是 in the system page list), the login screen opens first and the page opens after login; cancelling returns to Home, the pop-up is treated as closed and the next one is checked. Spin, claim, smash and similar buttons show 触发逻辑 (what the button does): they run the event action and then follow the event's own flow. H5 and App share the same settings.</div></div></div>
+  <div class="qa-row"><b>转交<small>Escalate</small></b>
+    <div class="bi"><div class="zh">跳转位置与活动安排不符（如该去充值页却去了别处），转运营。打开的站外网页不是本站官方页面（如其他博彩平台、私人或代理主页、聊天群和群组邀请链接、短链、带会员信息的链接），立即转运营和合规（附截图、时间）。实际打开的页面和「跳转位置」不一致，转技术。</div><div class="en">Destination doesn't match the event plan (e.g. should open the deposit page but goes elsewhere): Operations. An external page that is not one of our official pages (e.g. another gambling platform, a personal or agent page, a chat group or group invite link, a short link or a link containing member information): escalate to Operations and Compliance immediately (screenshot, time). The page actually opened differs from 跳转位置: Tech.</div></div></div>
+</section>
+
+<section class="qa-card" id="qa8">
+  <h3><span class="qa-no">8</span><span class="bi-inline"><span class="zh">我点了弹窗上的按钮，弹窗只是关掉了 / 回到了首页，没有打开页面。</span><span class="en">I tapped the button on a pop-up but it just closed / took me to the Home page.</span></span></h3>
+  <div class="qa-row"><b>回复玩家<small>Reply</small></b>
+    <div class="bi"><div class="en qa-reply">Hi! Sorry for the inconvenience. This can happen when the page is temporarily unavailable or your app version doesn't support it yet. Please update the app to the latest version and try again. You can also open the page from the menu directly.<button type="button" class="qa-copy">复制 Copy</button></div>
+    <div class="zh">您好！抱歉给您带来不便。页面暂时不可用，或您的 App 版本暂不支持时会出现这种情况。请把 App 更新到最新版本后再试，也可以直接从菜单打开该页面。</div></div></div>
+  <div class="qa-row"><b>客服核查<small>Check</small></b>
+    <div class="bi"><div class="zh">按核查步骤 3 看该按钮的「跳转位置」。显示「不跳转，只关闭弹窗」：运营配置的就是只关闭，属正常。以下情况点击也只关闭弹窗，属正常：链接指向的页面已停用；页面状态为「待 App 确认」时在 App 上点击（H5 正常打开）；站外链接对应的白名单条目已被删除；链接指向的活动详情所属活动已结束。玩家 App 版本低于该页面在该端的「最低 App 版本」时打开首页（在系统页面清单里看）。</div><div class="en">Check the button's 跳转位置 (destination) per step 3. 不跳转，只关闭弹窗 (close only) means it is set up that way; this is expected. The pop-up also only closes, as expected, when the linked page is disabled, when the page is marked 待 App 确认 (pending App support) and the player is on App (H5 opens normally), when the allowlist entry for the external link has been deleted, or when the linked event has ended. If the player's App version is below the page's 最低 App 版本 (minimum App version, see the system page list), the Home page opens.</div></div></div>
+  <div class="qa-row"><b>转交<small>Escalate</small></b>
+    <div class="bi"><div class="zh">页面启用、版本也满足但仍打不开，转技术；按钮本应跳转却配成只关闭、站外链接对应的白名单条目已被删除，或去向明显不对，转运营。</div><div class="en">Page enabled and version OK but still fails: Tech. Button should open a page but is set to close only, the allowlist entry for its external link was deleted, or it clearly leads to the wrong page: Operations.</div></div></div>
+</section>
+
+<section class="qa-card" id="qa9">
+  <h3><span class="qa-no">9</span><span class="bi-inline"><span class="zh">点了弹窗按钮去玩游戏，却提示游戏维护中 / 跳到了游戏大厅。</span><span class="en">The pop-up button was supposed to open a game, but it said the game is under maintenance / took me to the game lobby.</span></span></h3>
+  <div class="qa-row"><b>回复玩家<small>Reply</small></b>
+    <div class="bi"><div class="en qa-reply">Hi! The game is currently under maintenance or no longer available, so we kept you on the Home page or took you to the game lobby instead. Please try again later or choose another game in the lobby.<button type="button" class="qa-copy">复制 Copy</button></div>
+    <div class="zh">您好！该游戏正在维护或已不再提供，所以系统让您留在首页或带您到游戏大厅。请稍后再试，或在大厅选择其他游戏。</div></div></div>
+  <div class="qa-row"><b>客服核查<small>Check</small></b>
+    <div class="bi"><div class="zh">游戏维护中：关闭弹窗并提示维护，留在首页；游戏已下架或关闭：去游戏大厅。在游戏管理里核对该游戏状态。</div><div class="en">Game under maintenance: pop-up closes with a maintenance notice, player stays on Home. Game removed or closed: game lobby opens. Check the game's status in game management.</div></div></div>
+  <div class="qa-row"><b>转交<small>Escalate</small></b>
+    <div class="bi"><div class="zh">游戏正常但仍提示维护，转技术。</div><div class="en">Game is fine but still shows maintenance: Tech.</div></div></div>
+</section>
+
+<section class="qa-card" id="qa10">
+  <h3><span class="qa-no">10</span><span class="bi-inline"><span class="zh">我是新玩家，为什么一进来先弹年龄确认、协议这些，活动弹窗要等很久？</span><span class="en">I'm new. Why do I see age and agreement confirmations first, and the promo pop-ups only later?</span></span></h3>
+  <div class="qa-row"><b>回复玩家<small>Reply</small></b>
+    <div class="bi"><div class="en qa-reply">Hi! For your protection, required confirmations such as app update, age and terms are always shown first. Promotions and rewards may appear after you complete them.<button type="button" class="qa-copy">复制 Copy</button></div>
+    <div class="zh">您好！为了保护您的权益，App 更新、年龄、条款等必要确认会最先显示，完成后才会显示活动和奖励弹窗。</div></div></div>
+  <div class="qa-row"><b>客服核查<small>Check</small></b>
+    <div class="bi"><div class="zh">合规弹窗（强制更新 → 21+ → 协议 → 责任博彩 → KYC 提示）固定在最前，全部处理完前不出现其他弹窗和提示条。</div><div class="en">Compliance pop-ups (force update → 21+ → agreement → responsible gaming → KYC reminder) always come first; nothing else shows until they are done.</div></div></div>
+  <div class="qa-row"><b>转交<small>Escalate</small></b>
+    <div class="bi"><div class="zh">玩家反映活动弹窗出现在年龄确认之前，转技术（附站点、端、时间、截图）。</div><div class="en">If a promo pop-up appears before the age confirmation, escalate to Tech (site, device, time, screenshot).</div></div></div>
+</section>
+
+<section class="qa-card" id="qa11">
+  <h3><span class="qa-no">11</span><span class="bi-inline"><span class="zh">弹窗没弹出来，我的奖励是不是领不到了？</span><span class="en">The pop-up didn't show. Did I lose my reward?</span></span></h3>
+  <div class="qa-row"><b>回复玩家<small>Reply</small></b>
+    <div class="bi"><div class="en qa-reply">Hi! Please check the event page for your reward status. Rewards follow the event rules shown on the event page. We'll look into it if you still can't find it.<button type="button" class="qa-copy">复制 Copy</button></div>
+    <div class="zh">您好！请先到活动页面查看奖励状态，奖励以活动页面显示的规则为准。如果仍找不到，我们会帮您核查。</div></div></div>
+  <div class="qa-row"><b>客服核查<small>Check</small></b>
+    <div class="bi"><div class="zh">查该活动是否有其他领取入口：首页弹窗管理中心里名称下标「无其他领取入口」的弹窗是唯一领取入口，不受单次上限限制；按核查步骤 2 查它的状态是否关闭、玩家当时所在状态（未登录 / 登录）是否「不展示」，以及玩家是否满足资格。玩家处于负责任博彩状态时，这类弹窗不弹，奖励按活动有效期作废，不补发（见问答 12）。</div><div class="en">Check whether the event has another claim entry. In the Home Pop-up Center, pop-ups tagged 无其他领取入口 (claim only via pop-up) under the name are the only way to claim and are not limited by max per visit. Per step 2, check whether it is turned off or set to 不展示 (not shown) for the player's state (logged out / logged in), and whether the player is eligible. If the player is under a responsible gaming status, these pop-ups don't show and the reward expires with the event; it is not reissued (see Q&amp;A 12).</div></div></div>
+  <div class="qa-row"><b>转交<small>Escalate</small></b>
+    <div class="bi"><div class="zh">「无其他领取入口」的弹窗被关闭或设为不展示、玩家满足资格却领不到，转运营；不承诺补发。</div><div class="en">If a claim-only pop-up was turned off or set to not shown and an eligible player can't claim, escalate to Operations. Do not promise compensation.</div></div></div>
+</section>
+
+<section class="qa-card" id="qa12">
+  <h3><span class="qa-no">12</span><span class="bi-inline"><span class="zh">我登录后首页不再弹任何活动和奖励了，是不是账号出问题了？</span><span class="en">I no longer see any promotion or reward pop-ups after logging in. Is something wrong with my account?</span></span></h3>
+  <div class="qa-row"><b>回复玩家<small>Reply</small></b>
+    <div class="bi"><div class="en qa-reply">Hi! Your account is working normally. While a responsible gaming limit such as self-exclusion or a cooling-off period is active on your account, we don't show promotion or reward pop-ups. Account notices like deposit or withdrawal updates still appear. Rewards that can only be claimed through a pop-up are not available during the limit and expire with the event. Promotions will show again after the limit ends.<button type="button" class="qa-copy">复制 Copy</button></div>
+    <div class="zh">您好！您的账号正常。账号处于自我排除、冷静期等负责任博彩限制期间，我们不会显示活动和奖励弹窗；充值、提款等账户通知照常显示。限制期间只能通过弹窗领取的奖励无法领取，会按活动有效期失效。限制结束后活动弹窗会恢复。</div></div></div>
+  <div class="qa-row"><b>客服核查<small>Check</small></b>
+    <div class="bi"><div class="zh">按核查步骤 6 查会员状态。处于负责任博彩状态时：活动、奖励、引导类弹窗（含「开启通知」引导）、首页顶部邀请好友提示条，以及活动系列里的营销、奖励类后续弹窗（如首充后在充值页的第 3 次转盘）在任何页面都不弹；合规弹窗、登录公告（不带跳转按钮）、账户通知和结果通知照常，邀请奖励到账等到账类弹窗的按钮只关闭弹窗（「会员福利」类登录公告是否也不弹待确认 Q51，确认前照常）。只能通过弹窗领取的奖励按活动有效期作废，不补发。每次弹窗前按当时的会员状态判断：本次中途被设为冷静期、禁止投注等的，之后的活动弹窗不再弹（屏幕上的不强制关闭）；本次中途解除也不恢复，下次进入首页才恢复。退出登录后以游客身份进站按游客设置弹窗，这是已知限制。运营和客服都不能为单个玩家关闭这条规则。</div><div class="en">Follow step 6. Under a responsible gaming status, promotion, reward and guide pop-ups (including the "turn on notifications" guide), the invite bar at the top of Home, and promotion or reward follow-ups in an event series (e.g. the 3rd spin on the deposit page after the first deposit) don't show on any page. Compliance pop-ups, login announcements (without a button), account notices and result notices still show; buttons on reward-credited pop-ups such as Invite Rewards only close them (whether "member benefits" login announcements should also be hidden is pending, Q51; they show until decided). Rewards that can only be claimed through a pop-up expire with the event and are not reissued. Status is checked before each pop-up: if the player is put on cooling-off, a betting ban, etc. during the visit, later promotion pop-ups stop (one already on screen stays); if the status ends mid-visit, pop-ups return only on the next visit to Home. If the member logs out and browses as a guest, guest settings apply; this is a known limitation. Neither Operations nor CS can turn this off for a single player.</div></div></div>
+  <div class="qa-row"><b>转交<small>Escalate</small></b>
+    <div class="bi"><div class="zh">玩家要求在限制期间恢复活动弹窗或补发弹窗奖励：不能恢复、不补发，按上面口径回复。玩家不在任何负责任博彩状态却看不到活动弹窗，按问答 1 处理。限制期内看到活动或奖励弹窗，转技术（附站点、端、玩家账号、时间、截图）。</div><div class="en">If the player asks to get promotions back or have a pop-up reward reissued during the limit: not possible; reply as above. If the player has no responsible gaming status but sees no promotions, handle as Q&amp;A 1. If a member under a limit sees promotion or reward pop-ups, escalate to Tech (site, device, account, time, screenshot).</div></div></div>
+</section>
+
+<section class="qa-card" id="qa13">
+  <h3><span class="qa-no">13</span><span class="bi-inline"><span class="zh">我点了弹窗按钮去玩游戏 / 去充值，却被要求先实名认证或提示超出限额。</span><span class="en">I tapped a pop-up button to play a game / deposit, but I was asked to verify my identity first or told I've reached my limit.</span></span></h3>
+  <div class="qa-row"><b>回复玩家<small>Reply</small></b>
+    <div class="bi"><div class="en qa-reply">Hi! Pop-up buttons take you to the same page as the menu, so the same checks apply. Please complete identity verification, or check your deposit limit, and then try again.<button type="button" class="qa-copy">复制 Copy</button></div>
+    <div class="zh">您好！弹窗按钮打开的页面和从菜单进入的是同一个页面，校验规则也相同。请先完成实名认证或查看您的充值限额后再试。</div></div></div>
+  <div class="qa-row"><b>客服核查<small>Check</small></b>
+    <div class="bi"><div class="zh">从弹窗、公告按钮进入充值页、游戏或活动详情时，KYC、充值和投注限额、自我限制、禁止投注、游戏入口限制等校验全部照常，弹窗不提供绕过方式。按玩家从菜单进入时的口径处理。</div><div class="en">Entering the deposit page, a game or an event page from a pop-up or announcement button goes through all existing checks (KYC, deposit and betting limits, self-limits, betting ban, game access rules). Pop-ups never bypass them. Handle it the same way as entry from the menu.</div></div></div>
+  <div class="qa-row"><b>转交<small>Escalate</small></b>
+    <div class="bi"><div class="zh">从弹窗进入时没有出现应有的校验（如未认证也进了游戏），转技术。</div><div class="en">If a check that should apply was skipped when entering from a pop-up (e.g. an unverified player got into a game), escalate to Tech.</div></div></div>
+</section>
+
+<section class="qa-card" id="qa14">
+  <h3><span class="qa-no">14</span><span class="bi-inline"><span class="zh">我 App 里的弹窗和别人（或网页版）不一样。</span><span class="en">The pop-ups in my app are different from other players' (or from the website).</span></span></h3>
+  <div class="qa-row"><b>回复玩家<small>Reply</small></b>
+    <div class="bi"><div class="en qa-reply">Hi! Your app may be an older version. Please update the app to the latest version from the official app store or our website, then reopen it. Pop-ups will then follow the current settings.<button type="button" class="qa-copy">复制 Copy</button></div>
+    <div class="zh">您好！您的 App 可能是旧版本。请从官方应用商店或我们的网站把 App 更新到最新版本后重新打开，弹窗就会按当前设置显示。</div></div></div>
+  <div class="qa-row"><b>客服核查<small>Check</small></b>
+    <div class="bi"><div class="zh">按核查步骤 1 问清 App 版本。没升级到本期版本的 App（含安卓原生老包）不读后台配置，仍按上线前写死的顺序和跳转弹窗；上线有意变更（如负责任博彩人群过滤、取消 21+ 广告来源豁免）对它也不生效。本期是否设强制更新还未确定。H5 和已升级的 App 按后台配置。</div><div class="en">Ask for the App version per step 1. Apps not updated to this release (including old native Android packages) don't read the back-office settings and keep the pre-launch hard-coded order and links; the intended launch changes (e.g. the responsible gaming filter, no 21+ exemption for ad links) don't apply to them either. Whether this release will force an update is not decided yet. H5 and updated apps follow the back-office settings.</div></div></div>
+  <div class="qa-row"><b>转交<small>Escalate</small></b>
+    <div class="bi"><div class="zh">玩家已是最新版本但弹窗仍与后台配置不符，转技术（附站点、端、App 版本、时间、截图）。旧版本 App 的负责任博彩会员看到营销弹窗，同时转合规。</div><div class="en">If the player is on the latest version but pop-ups still don't match the settings, escalate to Tech (site, device, App version, time, screenshot). If a member under a responsible gaming status sees promotion pop-ups on an old app version, also inform Compliance.</div></div></div>
+</section>
+
+<h2 id="q4">转交与升级 <span class="en-t">Escalation</span></h2>
+<div class="tbl"><table class="qa-tbl">
+  <thead><tr><th>情况 <small>Situation</small></th><th>转给 <small>To</small></th></tr></thead>
+  <tbody>
+    <tr><td class="bi"><div class="zh">配置和资格都满足但弹窗不弹、按钮打不开、两个弹窗叠在一起、活动弹窗出现在合规弹窗之前、勾选当日免打扰后当天仍弹。收集：站点、端、App 版本、玩家账号、发生时间（GMT+8）、截图或录屏</div><div class="en">Settings and eligibility OK but pop-up doesn't show, button fails, two pop-ups stack, a promo pop-up appears before compliance pop-ups, or a pop-up still shows the same day after "Don't show again today" was ticked. Collect: site, device, App version, player account, time (GMT+8), screenshot or recording</div></td><td class="bi"><div class="zh">技术</div><div class="en">Tech</div></td></tr>
+    <tr><td class="bi"><div class="zh">按钮去向不对、弹窗顺序或次数与活动安排不符、领取类弹窗被关闭或设为不展示导致玩家领不到奖励、多名玩家反映同一弹窗太频繁。收集：站点、弹窗名称、玩家账号、时间、截图。打开的站外网页不是官方页面时，同时转合规</div><div class="en">Wrong button destination, order or frequency not matching the event plan, a claim-only pop-up turned off or set to not shown so the player can't claim, or many players complaining about the same pop-up. Collect: site, pop-up name, player account, time, screenshot. If a button opens a non-official external page, also inform Compliance</div></td><td class="bi"><div class="zh">运营</div><div class="en">Operations</div></td></tr>
+  </tbody>
+</table></div>
+
+<h2 id="q5">资料未覆盖的问题 <span class="en-t">Not covered yet</span></h2>
+<ul class="qa-open">
+  <li class="bi"><div class="zh">789Games、789Bingo App 具体有哪些首页弹窗、事件触发弹窗，以前端清单为准（PRD 待确认 Q1）；789Play 的弹窗清单待前端提供（PRD 待确认 Q22）。确认前遇到相关问题转运营。</div><div class="en">The exact list of Home and event-triggered pop-ups on 789Games and the 789Bingo app depends on the front-end list (PRD item Q1); the 789Play list is pending from front-end (PRD item Q22). Until confirmed, escalate related questions to Operations.</div></li>
+  <li class="bi"><div class="zh">负责任博彩状态的会员是否也不弹「会员福利」类登录公告，待合规负责人报大当家（PRD 待确认 Q51）；确认前按「登录公告照常、不带按钮」回答。</div><div class="en">Whether members under a responsible gaming status should also not see "member benefits" login announcements is pending Compliance and management (PRD item Q51); until then, answer that login announcements still show, without a button.</div></li>
+  <li class="bi"><div class="zh">旧版本 App 是否强制更新还未确定（待大当家、技术、合规确认）；确认前按问答 14 回复。</div><div class="en">Whether old app versions will be forced to update is not decided yet (pending management, Tech and Compliance); until then, reply as in Q&amp;A 14.</div></li>
+  <li class="bi"><div class="zh">游客看过的弹窗登录后是否还会再弹，现网口径待前端确认（PRD 待确认 Q12）；需求上线后按「登录后按账号重新判断」回答。</div><div class="en">Whether pop-ups seen as a guest show again after logging in is pending front-end confirmation (PRD item Q12). After launch, answer that logged-in players are checked again by account.</div></li>
+  <li class="bi"><div class="zh">「当日免打扰」、游戏维护提示、公告按钮的英文文案还没定稿，回复玩家时不要引用具体按钮文字（本页英文回复已用中性说法，如「hide it for today」）。本页英文核查说明里的「Don't show again today」只是内部称呼。</div><div class="en">The English wording for the "hide for today" checkbox, the game maintenance notice and the announcement button is not final; don't quote exact button text to players (the English replies on this page use neutral wording such as "hide it for today"). "Don't show again today" in the internal check notes is only a working name.</div></li>
+</ul>
+
+</article></div>
+</div>
+<script>window.NAV_ROOT = "../";</script>
+<script src="../assets/nav-data.js"></script>
+<script src="../assets/nav.js"></script>
+<script>
+(function () {
+  /* 语言切换：双语 / 中文 / English，记在本机浏览器 */
+  var KEY = "弹窗管理功能功能需求-客服QA-lang";
+  function set(l) {
+    document.body.dataset.lang = l;
+    document.querySelectorAll(".qa-lang button").forEach(function (b) { b.setAttribute("aria-pressed", b.dataset.l === l); });
+    try { localStorage.setItem(KEY, l); } catch (e) {}
+  }
+  document.querySelectorAll(".qa-lang button").forEach(function (b) { b.onclick = function () { set(b.dataset.l); }; });
+  try { var s = localStorage.getItem(KEY); if (s) set(s); } catch (e) {}
+  /* 复制英文回复 */
+  document.addEventListener("click", function (e) {
+    var b = e.target.closest(".qa-copy"); if (!b) return;
+    var box = b.parentNode.cloneNode(true); box.querySelector(".qa-copy").remove();
+    var text = box.textContent.trim();
+    function done(ok) { b.textContent = ok ? "已复制 Copied" : "复制失败 Failed"; setTimeout(function () { b.textContent = "复制 Copy"; }, 1500); }
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(function () { done(true); }, function () { done(fallback(text)); });
+    else done(fallback(text));
+  });
+  function fallback(text) {
+    var t = document.createElement("textarea"); t.value = text; t.style.cssText = "position:fixed;left:-9999px"; document.body.appendChild(t); t.select();
+    var ok = false; try { ok = document.execCommand("copy"); } catch (e) {}
+    t.remove(); return ok;
+  }
+})();
+</script>
+</body>
+</html>

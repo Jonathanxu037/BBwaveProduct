@@ -1,0 +1,437 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>弹窗管理功能-后台活动按钮跳转</title>
+<link rel="stylesheet" href="../../assets/style.css">
+<style>
+.pm-curbo{font-weight:700;color:#1D6CAE;background:#fff;border-radius:3px;padding:0 8px}
+.pm-tag{display:inline-block;border-radius:3px;padding:0 6px;font-size:11px;margin:1px 3px 1px 0;line-height:18px;white-space:nowrap}
+.pm-tag.pro{background:#FFF1E0;color:#B25D00}.pm-tag.ro{background:#E6F0FB;color:#1D6CAE}.pm-tag.end{background:#FDE8E8;color:#C62828}
+.pm-tag.ok{background:#E3F5EC;color:#17804F}.pm-tag.wait{background:#FFF7E6;color:#D46B08}.pm-tag.gr{background:#EEE;color:#777}
+.bo td.pm-w{white-space:normal;min-width:140px}
+.pm-sub{color:#909399;font-size:12px;line-height:1.6}
+.pm-tscroll{overflow-x:auto;max-width:100%}
+.pm-acttabs{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:10px}
+.pm-acttabs button{all:unset;cursor:pointer;padding:3px 10px;border:1px solid #DCDFE6;border-radius:3px;font-size:12px;color:#606266}
+.pm-acttabs button[aria-pressed="true"]{border-color:#409EFF;color:#409EFF;background:#ECF5FF}
+.pm-ptabs{display:flex;border-bottom:1px solid #E4E7ED;margin-bottom:10px}
+.pm-ptabs span{padding:7px 14px;font-size:13px;color:#C0C4CC;border-bottom:2px solid transparent}
+.pm-ptabs span.on{color:#409EFF;border-bottom-color:#409EFF}
+.pm-blk{border:1px solid #EBEEF5;border-radius:4px;padding:10px 12px;margin-bottom:12px;background:#fff}
+.pm-blk>h4{margin:0 0 8px;font-size:13.5px}
+.pm-grp{border:1px solid #E4E7ED;border-radius:4px;padding:10px 12px;margin-bottom:10px}
+.pm-grp.ro{background:#FAFAFA;color:#999}
+.pm-grp.bad{border-color:#F56C6C}
+.bo tr.pm-bad td{background:#FEF0F0}
+.pm-feat{background:#FDF6EC;border-left:3px solid #E6A23C;color:#8A5A00;font-size:12.5px;line-height:1.7;padding:6px 10px;margin:0 0 8px}
+.bo tr.pm-sty td{background:#F5F7FA;white-space:normal}
+.pm-f{display:grid;grid-template-columns:110px minmax(0,1fr);gap:8px 10px;align-items:center;margin-top:8px}
+.pm-f .lb{color:#606266;text-align:right;display:flex;justify-content:flex-end;align-items:center}
+.pm-f .ctl{display:flex;flex-wrap:wrap;gap:6px;align-items:center;min-width:0}
+.pm-f select,.pm-f input,.pm-form select,.pm-form input{font-family:var(--font);height:28px;border:1px solid #DCDFE6;border-radius:3px;padding:0 6px;font-size:12.5px;color:#333;background:#fff}
+.pm-res{background:#F0F9EB;color:#529B2E;border-radius:3px;padding:4px 8px;font-size:12px}
+.pm-err{color:#F56C6C;font-size:12px}
+.pm-bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:10px 0}
+.pm-dirty{color:#E6A23C;font-size:12.5px}
+.pm-lnk{color:#409EFF;cursor:pointer;text-decoration:none}
+.bo td.pm-state{text-align:center;color:#909399;padding:20px 8px;white-space:normal}
+.bo-dlg.pm-wide{width:min(560px,94vw)}
+.pm-dlgbody{max-height:52vh;overflow:auto;line-height:1.7}
+.pm-dlgbody ul{margin:4px 0;padding-left:18px}
+.pm-coderow{display:flex;align-items:center;gap:8px}
+.pm-coderow input{width:110px}
+.pm-form{display:grid;grid-template-columns:110px minmax(0,1fr);gap:8px 10px;align-items:center}
+.pm-form>span{color:#606266;text-align:right;display:flex;justify-content:flex-end;align-items:center}
+.pm-form input[type=text]{width:100%}
+</style>
+</head>
+<body>
+<!-- 后台原型：活动中心各活动配置页新增的「弹窗按钮跳转」页签（变更 CH02）。
+     视图用 #act-<弹窗 key> 定位到该弹窗所属活动。带淡色光晕的是本需求新增控件；示例数据均为虚构。 -->
+<div class="with-nav">
+<div class="adm-stage">
+  <div class="bo">
+    <div class="bo-top1"><span class="pm-curbo">当前后台：<span id="boName">789Bingo</span> 管理后台</span><span>当前时间：2026/11/24 15:30:00</span><span class="sp">简体中文</span><span id="who">运营账号A ▾</span></div>
+    <div class="bo-top2"><span>在线人数<b class="bo-n r">12</b></span><span>当日注册<b class="bo-n g">8</b></span><span>当日充值成功<b class="bo-n g">15</b></span><span>提款<b class="bo-n g">0</b></span><span>风控审核<b class="bo-n r">1</b></span></div>
+    <div class="bo-body">
+      <nav class="bo-menu" aria-label="后台菜单">
+        <div class="mt">菜单 ≡</div>
+        <div class="g">用户管理</div><div class="g">财务管理</div><div class="g">公告管理</div>
+        <div class="g">活动配置</div>
+        <div class="g open">活动中心</div>
+        <div id="menuActs"></div>
+        <div class="g">日志管理</div><div class="g">系统管理</div>
+      </nav>
+      <div class="bo-main">
+        <div class="bo-crumb">位置 › <span id="crumbSite">789Bingo 管理后台</span> › <b id="crumb"></b></div>
+        <div class="bo-content">
+          <div class="pm-sub" style="margin-bottom:6px">选择活动（演示用：真实后台在左侧菜单进入各活动）</div>
+          <div class="pm-acttabs" id="actTabs"></div>
+          <div class="pm-ptabs"><span>基础设置</span><span>奖励设置</span><span class="on glow" data-dev="D70">弹窗按钮跳转</span></div>
+          <p class="ui-reqnote">本活动在首页是否弹出、显示方式和顺序在【活动配置 ›<a class="pm-lnk" href="弹窗管理功能-后台弹窗中心.html#b1">首页弹窗管理中心</a>】设置。这里列出本活动弹窗的全部事件，配置按钮文案和目的链接地址。只有跳转类事件配目的链接地址；执行活动逻辑的事件（抽奖、领取、砸蛋、展开规则、关闭）只显示触发逻辑，不配链接；合规 / 系统按钮只读。</p>
+          <div id="viewOnly" class="pm-sub" hidden style="margin-bottom:8px;color:#E6A23C">当前账号对本活动只有查看权限，所有配置只读。</div>
+
+          <div class="pm-blk glow">
+            <h4>事件触发信息</h4>
+            <div id="actFeat" class="pm-feat" hidden></div>
+            <p class="pm-sub" style="margin:0 0 6px">列出本活动弹窗里玩家能触发的全部事件和各自的跳转。目的链接地址：留空 = 只关闭弹窗；站内页面填路径（如 /user/walletbox，示意，以本站系统页面清单为准；输入时可从下拉选），本站域名的链接也要填站内路径；站外填 https:// 完整地址，须在外部链接白名单内（如 https://www.facebook.com/789bingo.official）；链接不能带邀请码或会员信息。H5 和 App 用同一个链接。</p>
+            <div class="pm-tscroll"><table>
+              <thead><tr><th>事件</th><th><span class="ui-nw">按钮文案<i class="qm" tabindex="0" data-tip="只能用英文字母、数字、常用英文符号和 ₱；最多 20 个字符，默认文案更长的以默认文案长度为上限；留空用默认文案；默认文案含金额的必须保留 {amount}；不能另写金额（如 ₱100、100 PHP、P100）。">?</i></span></th><th><span class="ui-nw">目的链接地址<i class="qm" tabindex="0" data-tip="留空：只关闭弹窗。站内页面：填系统页面清单里的路径，如 /user/walletbox；本站域名的链接也要填站内路径，只能带清单为该页面登记的附加参数；指定游戏：/game/厂商编码/游戏 ID，只能填支持手机端的游戏；活动详情：/promo/活动名（路径为示意，以本站系统页面清单为准）。站外：http:// 或 https:// 开头，须在外部链接白名单内。链接（含路径）不能带邀请码或会员信息。">?</i></span></th><th>跳转位置</th></tr></thead>
+              <tbody id="btnBody"></tbody>
+            </table></div>
+            <datalist id="linkList"></datalist>
+            <div class="pm-bar" id="saveBar">
+              <label for="sCode">Google 验证码</label><input class="bo-inp" id="sCode" inputmode="numeric" maxlength="6" style="width:100px" placeholder="6 位数字" data-dev="D79">
+              <button class="bo-btn q" type="button" id="sSave" data-dev="D79">保存</button>
+              <button class="bo-btn" type="button" id="sReset" data-dev="D80">恢复默认</button><i class="qm" tabindex="0" data-tip="把本活动所有按钮恢复为上线时的文案和跳转，保存后生效。">?</i>
+              <span class="pm-dirty" id="sDirty"></span><span class="pm-err" id="sErr" role="alert"></span>
+            </div>
+          </div>
+
+          <div class="pm-blk glow">
+            <h4>可填的站内页面</h4>
+            <div style="display:flex;align-items:center;gap:8px">
+              <b style="font-size:13px">站内页面（系统页面清单，只读）</b><i class="qm" tabindex="0" data-tip="本站可以跳转的站内页面，由技术维护，这里只能查看和选择。">?</i>
+              <button class="bo-btn link" type="button" id="pgToggle" data-dev="D81">查看系统页面清单</button>
+            </div>
+            <div id="pgBox" hidden>
+              <div class="bo-filter" style="margin:6px 0"><label for="pgKw">关键字</label><input class="bo-inp" id="pgKw" placeholder="页面名称" style="width:160px"><button class="bo-btn q" type="button" id="pgGo">查询</button></div>
+              <div class="pm-tscroll"><table>
+                <thead><tr><th>分组</th><th>名称</th><th>H5 页面</th><th><span class="ui-nw">App 端目标<i class="qm" tabindex="0" data-tip="App 打开这个页面用的标识，由 App 开发提供。">?</i></span></th><th>附加参数</th><th><span class="ui-nw">需登录<i class="qm" tabindex="0" data-tip="「是」表示游客点击会先拉起登录，登录成功后再打开；游客公告不能选这类页面。">?</i></span></th><th><span class="ui-nw">最低 App 版本<i class="qm" tabindex="0" data-tip="iOS、Android 分别显示；低于该端版本的 App 点击时打开首页。显示「不限」表示该端所有版本都支持。">?</i></span></th><th><span class="ui-nw">状态<i class="qm" tabindex="0" data-tip="启用：两端正常跳转。待 App 确认：H5 正常，App 点击只关闭弹窗。停用：选了它的按钮只关闭弹窗。">?</i></span></th></tr></thead>
+                <tbody id="pgBody"></tbody>
+              </table></div>
+            </div>
+          </div>
+
+          <div class="pm-blk">
+            <h4>本活动最近记录（完整记录在【日志管理 › 操作日志】）</h4>
+            <ul class="pm-sub" id="opLog" data-dev="D85" style="margin:0;padding-left:18px"></ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <aside class="notes adm-notes">
+    <h2>后台活动按钮跳转</h2>
+    <p class="sub">【活动中心 › &lt;活动名&gt;】配置页新增的「弹窗按钮跳转」页签，用「事件触发信息」表列出本活动弹窗的全部事件，配置按钮文案和目的链接地址。三站后台各自一套，页面里没有站点切换。范围：活动中心里有弹窗的活动，列出本活动全部弹窗（首页弹窗、事件触发弹窗和系列后续弹窗）里玩家能触发的事件；非活动来源的弹窗（如下载 App 引导、专属奖励提示）在其来源菜单配置，表格结构相同。页面上方「选择活动」列活动中心的活动，以及不在活动中心的独立活动菜单（红包雨不在活动中心，配置页在【红包雨管理】）。来源菜单名按 PRD N38 对照表（示意，待前端确认）。示例活动中签到、Crown Rush、任务砸金蛋、免费旋转、红包雨、KYC 认证送彩金只在 789Bingo 有。</p>
+    <h3>模拟场景</h3>
+    <div class="sim">
+      <button type="button" data-act="newSpin"><span class="simtag">活动</span>新用户转盘（一个活动多种转盘样式）</button>
+      <button type="button" data-act="oldSpin"><span class="simtag">活动</span>老用户充值转盘（按钮随次数变化）</button>
+      <button type="button" data-act="signIn"><span class="simtag">活动</span>签到（按钮随状态变化、可补领）</button>
+      <button type="button" data-act="crown"><span class="simtag">活动</span>Crown Rush（按阶段换样式）</button>
+      <button type="button" data-act="taskEgg"><span class="simtag">活动</span>任务砸金蛋（多个任务各跳一处）</button>
+      <button type="button" data-act="freeSpin"><span class="simtag">活动</span>免费旋转（跳指定游戏、有过期提醒）</button>
+      <button type="button" data-act="redRain"><span class="simtag">活动</span>红包雨（限时、反复点击）</button>
+      <button type="button" data-act="kycBonus"><span class="simtag">活动</span>KYC 认证送彩金（事件触发、自动到账）</button>
+      <button type="button" data-act="invRw"><span class="simtag">活动</span>邀请好友活动（提示条 + 到账弹窗）</button>
+      <button type="button" onclick="location.href='弹窗管理功能-后台弹窗中心.html#b1'"><span class="simtag">页面</span>← 回首页弹窗管理中心</button>
+    </div>
+    <h3>模拟操作</h3>
+    <div class="sim" id="simPanel"></div>
+    <h3>规则批注</h3>
+    <ol>
+      <li><b>落点</b>：事件跳转在弹窗来源菜单配置；活动类弹窗在活动中心该活动的「弹窗按钮跳转」页签；首页弹窗管理中心点「来源活动」可直接打开。素材、公告仍在原菜单。<span class="ref">PRD 规则 N38 · F07-01 事件触发信息</span></li>
+      <li><b>事件触发信息</b>：列出本活动全部弹窗里玩家能触发的事件：每个按钮、规则入口、结果弹窗按钮、SPIN 各一行，每组另加「点击关闭 ×」。同一活动调用多种弹窗样式时按样式分组（如新用户转盘：首页转盘、结果弹窗、首充后在充值页的第 3 次转盘），组头写弹出条件。首页顶部邀请好友提示条归首页弹窗管理中心（只用状态开关），在邀请好友活动里单独一组，不是弹窗，没有「点击关闭 ×」行。跳转类事件显示目的链接地址和跳转位置（点击后去的页面名称，随链接实时更新）；点击后执行活动逻辑的事件（抽奖、砸蛋、领取、补领、展开规则、关闭、合规 / 系统按钮）只显示触发逻辑，不配链接。事件清单以前端现网为准。<span class="ref">PRD 规则 N29、N32、N38 · F07-01 事件触发信息 · 待确认 Q1、Q33</span></li>
+      <li><b>系列弹窗</b>：活动按玩家操作依次出现的一系列弹窗，只有第一个弹窗在首页的显示场景和顺序由首页弹窗管理中心管理；后续弹窗（如结果弹窗、首充后在充值页的第 3 次转盘）按活动自身逻辑弹出，组头标「后续弹窗」；负责任博彩人群按 N49 过滤。<span class="ref">PRD 规则 N49、N52 · F07-01 事件触发信息</span></li>
+      <li><b>目的链接地址</b>：运营直接填写，路径均为示意，以本站系统页面清单为准。留空 = 只关闭弹窗；站内页面填系统页面清单里的路径（如 /user/walletbox），只能带清单为该页面登记的附加参数（如游戏大厅 ?cat=Slots），输入时下拉提示可填路径；本站域名的完整地址要改填站内路径；指定游戏 /game/厂商编码/游戏 ID（如 /game/JDB/14001，下拉显示游戏名称，只能填已开启且支持手机端的游戏）；活动详情 /promo/活动名；站外填 http:// 或 https:// 完整地址，须命中【系统管理 › 系统参数管理 › 注册登陆 › 合规】外部链接白名单（白名单只由合规负责人或超级管理员维护；命中规则见 N39：规范化后比对，域名部分含「@」的不命中，路径里的「@」如 tiktok.com/@账号 允许，网址前缀后只能紧跟「/」「?」「#」或结尾）。站内、站外链接的参数和路径都不能带邀请码、推广码、代理码或会员信息。H5 和 App 用同一个链接：站内路径由系统换成 App 页面，站外链接 H5 新窗口、App 外部浏览器打开。填错时该行标红并写明原因（报错原文见 N39），不能保存。<span class="ref">PRD 规则 N33、N39 · F07-02 目的链接地址与校验</span></li>
+      <li><b>兜底</b>：页面被技术停用后，用到它的事件前台按「只关闭弹窗」处理，再次保存本活动时该行标红「该页面已停用」，改链接或清空后才能保存；站外链接对应的白名单条目被删除后，已保存的这类链接前台按「只关闭弹窗」处理，再次保存本活动时该行标红「链接不在外部链接白名单内」，需改链接才能保存；页面待 App 确认时 App 只关闭弹窗；App 版本低于页面的最低 App 版本时打开首页。<span class="ref">PRD 规则 N40、N41</span></li>
+      <li><b>按钮文案</b>：留空用默认文案；上限 N 取默认文案长度和 20 中较大者，输入框下方显示「n / N」，超出标红「文案超过 N 个字符」；只能用英文字母、数字、常用英文符号和 ₱；默认文案含金额的必须保留 {amount}，所有按钮都不能另写金额（金额口径见 N34），否则标红「文案不能写金额」。<span class="ref">PRD 规则 N34 · F04-02 按钮文案</span></li>
+      <li><b>保存与日志</b>：保存要 Google 验证码，5 分钟内本站前台生效；改动记入平台【日志管理 › 操作日志】，他人已先保存时保存失败。<span class="ref">PRD 规则 N43、N44、N45 · F07-01 事件触发信息</span></li>
+      <li><b>权限</b>：沿用该活动菜单的查看 / 编辑权限；只有查看权限时全部只读。<span class="ref">PRD 5.1 菜单、角色与权限 · F10-03 菜单权限与保存校验</span></li>
+    </ol>
+    <h3>评审待确认</h3>
+    <ol>
+
+      <li><b>落点推断</b>：非活动来源弹窗按钮的配置位置、系统页面清单由技术维护。<span class="ref">PRD 待确认 Q25</span></li>
+      <li><b>各活动配置页现状</b>：三站活动配置页能否统一加这个页签、系统页面清单如何维护。<span class="ref">PRD 待确认 Q26</span></li>
+      <li><b>页面 App 支持情况</b>：系统页面清单各页面 App 是否支持、iOS 和 Android 最低版本。<span class="ref">PRD 待确认 Q6</span></li>
+    </ol>
+    <div class="pager"><a href="弹窗管理功能-后台弹窗中心.html">← 上一页：后台首页弹窗管理中心</a><a href="弹窗管理功能-后台其他菜单改动.html">下一页：后台其他菜单改动 →</a></div>
+  </aside>
+</div>
+</div>
+
+<div class="bo-mask" id="mk" hidden>
+  <div class="bo-dlg" id="mkDlg" role="dialog" aria-modal="true" aria-labelledby="mkT">
+    <h4 id="mkT">确认</h4>
+    <div class="pm-dlgbody" id="mkB"></div>
+    <div class="pm-coderow" id="mkCodeRow"><label for="mkCode">Google 验证码</label><input class="bo-inp" id="mkCode" inputmode="numeric" maxlength="6" placeholder="6 位数字"></div>
+    <div class="pm-err" id="mkErr" role="alert"></div>
+    <div class="row2"><button class="bo-btn" type="button" id="mkCancel" data-cancel>取消</button><button class="bo-btn q" type="button" id="mkOk">确认</button></div>
+  </div>
+</div>
+
+<script>window.NAV_ROOT = "../../";</script>
+<script src="../../assets/nav-data.js"></script>
+<script src="../../assets/nav.js"></script>
+<script src="../../assets/proto.js"></script>
+<script src="../../assets/pm-data.js"></script>
+<script>
+(function () {
+  P.init({ defaults: { site: "789Bingo", perm: "edit", role: "opr" } });
+  window.addEventListener("proto-change", function (e) { if (e.detail.key === "*") PM.reset(); });
+  var S = PM.load(), site = P.get("site"), conflict = false;
+  if (PM.SITES.indexOf(site) < 0) site = "789Bingo";
+  /* 外部链接白名单读本站【系统参数 › 合规】的登记（pm-data 共用数据，「后台其他菜单改动」页可增删），可登记域名（含子域名）或网址前缀 */
+  function C() { return S[site]; }
+  function save() { PM.save(S); }
+  function $(id) { return document.getElementById(id); }
+  function esc(s) { return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+  function now() { var d = new Date(Date.now() + 8 * 3600e3); return d.toISOString().slice(0, 19).replace("T", " "); }
+  function msg(t, bad) { var m = document.createElement("div"); m.className = "bo-msg " + (bad ? "err" : "ok"); m.setAttribute("role", "status"); m.textContent = t; document.body.appendChild(m); setTimeout(function () { m.remove(); }, 2200); }
+  function tip(t) { return '<i class="qm" tabindex="0" data-tip="' + esc(t) + '">?</i>'; }
+  function canEdit() { return P.get("perm") === "edit"; }
+  function isComp() { var r = P.get("role"); return r === "comp" || r === "admin"; }
+  var ROLE = { opr: "运营", comp: "合规负责人", admin: "超级管理员" };
+  function oplog(type, chg) { C().oplogs.unshift({ t: now(), who: ROLE[P.get("role")] + "账号", type: type, obj: grp, chg: chg }); }
+  function domainOk(u) { return PM.wlHit(C().wl, u); }
+  /* 链接里的邀请码、推广码、代理、会员参数（演示名单，正式名单由技术按现网整理） */
+  var BADQ = /^(invite|invitecode|inv|ref|referral|refcode|code|promo|promocode|agent|agentid|aff|affiliate|uid|userid|user|member|memberid|mid)$/i;
+  function qKeys(s) { var i = s.indexOf("?"); if (i < 0) return []; return s.slice(i + 1).split("#")[0].split("&").filter(function (x) { return x; }).map(function (x) { return decodeURIComponent(x.split("=")[0]); }); }   /* 编码残缺时抛出异常，由 parseLink 按「链接格式不正确」处理 */
+  /* 路径里带邀请码、推广码、代理码的写法（演示：/register/<码>、/r/<码>、/invite/<码>、/ref/<码>、/agent/<码>、/aff/<码>，正式格式由技术按现网整理） */
+  var BADP = /\/(register|r|invite|ref|agent|aff|code)\/[^\/?#]+/i;
+  function pathOf(s) { return s.replace(/^https?:\/\/[^\/?#]*/i, "").split(/[?#]/)[0]; }
+  /* 按钮文案字符上限 = 默认文案长度和 20 中较大的一个 */
+  function capOf(b) { return Math.max(20, (b.label || "").length); }
+
+  function ask(o) {
+    $("mkT").textContent = o.title; $("mkB").innerHTML = o.html || ""; $("mkCodeRow").hidden = !o.code; $("mkCode").value = ""; $("mkErr").textContent = "";
+    $("mkOk").textContent = o.ok || "确认"; $("mkOk").hidden = !!o.noOk; $("mkCancel").textContent = o.noOk ? "关闭" : "取消";
+    $("mkDlg").classList.toggle("pm-wide", !!o.wide); $("mk").hidden = false;
+    var api = { err: function (m) { $("mkErr").textContent = m; } };
+    $("mkOk").onclick = function () { var r = o.onOk ? o.onOk($("mkCode").value.trim(), api) : true; if (r !== false) $("mk").hidden = true; };
+    $("mkCancel").onclick = function () { $("mk").hidden = true; };
+  }
+  function codeOk(v, api) { if (!/^\d{6}$/.test(v)) { api.err("请输入 6 位 Google 验证码"); return false; } if (v === "000000") { api.err("验证码错误"); return false; } return true; }
+  function takeConflict() { if (!conflict) return false; conflict = false; return true; }
+
+  /* ---------- 当前活动（按来源菜单分组，PRD N38） ---------- */
+  var grp = "", draft = null, orig = "";
+  function pops() { return C().popups.filter(function (p) { return p.src === grp && PM.configurable(p); }); }
+  function exts() { return C().targets.filter(function (t) { return t.type === "ext" && t.owner === grp; }); }
+  function dirty() { return !!draft && JSON.stringify(draft) !== orig; }
+  function pick(g, force) {
+    if (!force && dirty()) { ask({ title: "有未保存的修改", html: "有未保存的修改，确定离开？", ok: "确定离开", onOk: function () { pick(g, true); } }); return; }
+    grp = g; draft = {}; pops().forEach(function (p) { draft[p.k] = evAll(p).map(function (b) { return { text: b.cfg.text, link: linkOf(b.cfg.h5) }; }); }); orig = JSON.stringify(draft);
+    $("sErr").textContent = ""; $("sCode").value = ""; render();
+  }
+  function fromHash() {
+    var m = /^act-(.+)$/.exec(decodeURIComponent(location.hash.slice(1))), gs = PM.groups(C()), np = PM.pop(C(), "newSpin"), g = np && gs.indexOf(np.src) >= 0 ? np.src : gs[0];   /* 默认打开新用户转盘（多种样式，最能说明问题） */
+    if (m) { var p = PM.pop(C(), m[1]); if (p && PM.configurable(p)) g = p.src; }
+    pick(g, true);
+  }
+  function actName(g) { return g.replace(/^活动中心 › /, ""); }
+  /* 活动类配置页：活动中心各活动，以及不在活动中心的独立活动菜单（如【红包雨管理】） */
+  function isMenu(g) { return /^活动中心 › /.test(g) || g === "红包雨管理"; }
+  function render() {
+    $("boName").textContent = site; $("crumbSite").textContent = site + " 管理后台";
+    var isAct = /^活动中心 › /.test(grp);
+    $("crumb").textContent = (isAct ? "活动中心 › " + actName(grp) : grp) + " › 弹窗按钮跳转";
+    /* 左侧菜单列出活动中心全部有弹窗的活动，点击切换（示例活动见各项「本活动特点」） */
+    $("menuActs").innerHTML = PM.groups(C()).filter(function (g) { return isMenu(g) || g === grp; }).map(function (g) { return '<div class="i' + (g === grp ? " on" : "") + '" data-g="' + esc(g) + '" style="cursor:pointer">' + esc(actName(g)) + "</div>"; }).join("");
+    $("who").textContent = ROLE[P.get("role")] + "账号 ▾";
+    $("actTabs").innerHTML = PM.groups(C()).filter(isMenu).map(function (g) { return '<button type="button" aria-pressed="' + (g === grp) + '" data-g="' + esc(g) + '">' + esc(actName(g)) + "</button>"; }).join("");
+    $("viewOnly").hidden = canEdit(); $("saveBar").hidden = !canEdit();
+    linkOpts(); drawBtns(); drawPages(); drawLog();
+  }
+  $("actTabs").addEventListener("click", function (e) { var b = e.target.closest("[data-g]"); if (b) pick(b.dataset.g); });
+  $("menuActs").addEventListener("click", function (e) { var b = e.target.closest("[data-g]"); if (b) pick(b.dataset.g); });
+  document.addEventListener("click", function (e) { var a = e.target.closest("[data-act]"); if (a) { e.preventDefault(); var p = PM.pop(C(), a.dataset.act); if (p) pick(p.src); else msg("当前站点没有这个示例活动", true); } });
+
+  /* ---------- 事件触发信息（变更 CH14）：列出本活动弹窗里的全部事件、各自跳到哪里；运营直接填目的链接地址 ----------
+     链接写法：留空 = 只关闭弹窗；站内页面填系统页面清单里的路径（如 /user/walletbox）；指定游戏 /game/厂商编码/游戏 ID；活动详情 /promo/活动名；
+     站外填 http:// 或 https:// 完整地址，须在外部链接白名单内（合规负责人或超级管理员维护）。H5 和 App 用同一个链接，App 由系统把站内路径换成 App 页面，站外链接用外部浏览器打开 */
+  function linkOf(j) {
+    if (!j || j.t === "close") return "";
+    if (j.t === "url") return j.u || "";
+    if (j.t === "page" || j.t === "ext") { var t = PM.target(C(), j.id); return t ? t.h5 + (j.param ? "?cat=" + j.param : "") : ""; }
+    if (j.t === "game") return "/game/" + (j.v || "") + "/" + (j.g || "");
+    if (j.t === "act") return "/promo/" + (j.a || "");
+    return "";
+  }
+  /* 把链接解析成跳转；返回 { j } 或 { err } */
+  function parseLink(s) {
+    s = (s || "").trim();
+    if (!s) return { j: { t: "close" } };
+    if (!/^https?:\/\//i.test(s) && s.charAt(0) !== "/") return { err: "链接须以 /、http:// 或 https:// 开头" };
+    var ks; try { ks = qKeys(s); decodeURIComponent(s); } catch (e) { return { err: "链接格式不正确" }; }
+    if (ks.some(function (k) { return BADQ.test(k); }) || BADP.test(pathOf(s))) return { err: "链接不能带邀请码或会员信息" };
+    if (/^https?:\/\//i.test(s)) {
+      if (PM.ownHost(site, s)) return { err: "本站链接请填站内路径" };   /* 本站域名的链接一律按站内路径走系统页面清单校验 */
+      return domainOk(s) ? { j: { t: "url", u: s } } : { err: "链接不在外部链接白名单内" };
+    }
+    var path = s.split("?")[0], q = s.indexOf("?cat=") > 0 ? s.slice(s.indexOf("?cat=") + 5).split("&")[0] : "", m;
+    if ((m = /^\/game\/([^\/]+)\/(.+)$/.exec(path))) {
+      var gm = PM.game(m[1], m[2]);
+      if (!gm) return { err: "游戏不存在或未开启" };
+      if (!gm.m) return { err: "游戏不存在或未开启" };   /* 不支持手机端的游戏按「未开启」处理 */
+      return { j: { t: "game", v: m[1], g: m[2] } };
+    }
+    if ((m = /^\/promo\/(.+)$/.exec(path))) return PM.ACTS.indexOf(m[1]) >= 0 ? { j: { t: "act", a: m[1] } } : { err: "活动不存在或未展示" };
+    var t = null; C().targets.forEach(function (x) { if (x.type === "page" && x.h5 === path) t = x; });
+    if (!t) return { err: "站内页面不在系统页面清单里" };
+    if (t.st === "stop") return { err: "该页面已停用" };
+    if (ks.some(function (k) { return !(t.param && k === "cat"); })) return { err: "该页面不支持此附加参数" };
+    var j = { t: "page", id: t.id }; if (q) j.param = q; return { j: j };
+  }
+  function effect(j, end) {
+    if (!j || j.t === "close") return end + " 只关闭弹窗";
+    if (j.t === "url") return (end === "H5" ? "H5 新窗口打开 " : "App 外部浏览器打开 ") + j.u;
+    if (j.t === "page" || j.t === "ext") {
+      var t = PM.target(C(), j.id); if (!t) return end + " 未填链接";
+      if (t.st === "stop") return end + " 页面已停用 → 只关闭弹窗";
+      if (end === "App" && t.st === "app") return "App 待确认 → 只关闭弹窗";
+      return (j.t === "ext" ? (end === "H5" ? "H5 新窗口打开 " : "App 外部浏览器打开 ") + t.name : end + " 打开" + t.name) + (t.login ? "（游客先登录）" : "");
+    }
+    if (j.t === "game") return end + " 进入 " + PM.gname(j.v, j.g) + "（游客先登录）";
+    if (j.t === "act") return end + " 打开活动详情 " + j.a;
+    return "-";
+  }
+  /* 跳转位置（变更 CH19）：只写点击后去哪个页面；H5 / App 兜底等技术处理写在规则里，不在表格里显示 */
+  function effText(link) {
+    var r = parseLink(link), j = r.j; if (r.err) return "";
+    if (j.t === "close") return "不跳转，只关闭弹窗";
+    if (j.t === "url") return "站外网页（" + j.u.replace(/^https?:\/\//i, "").split("/")[0] + "）";
+    if (j.t === "page") { var t = PM.target(C(), j.id); return t ? t.name + (j.param ? " · " + j.param : "") : ""; }
+    if (j.t === "game") return "游戏 " + PM.gname(j.v, j.g) + "（" + j.v + "）";
+    if (j.t === "act") return "活动详情页 · " + j.a;
+    return "";
+  }
+  /* 事件补全（变更 CH16）：每个弹窗的按钮加上 evs 里的其他事件；同一活动调用的不同样式（不同弹窗、sty）分组显示。
+     点击后执行活动逻辑的事件（动作、合规 / 系统）只显示触发逻辑，不显示也不配链接（用户 2026-11-25） */
+  var LOGIC = { go: "转动转盘抽奖，显示结果弹窗", smash: "砸蛋并领取奖励", claim: "领取奖励", ok: "确认领取返利" };
+  function evAll(p) { return p.btns.concat(p.evs || []); }
+  function logicOf(b) { return b.logic || (b.kind === "sys" ? "合规 / 系统按钮，按系统逻辑处理" : LOGIC[b.id] || "执行活动动作"); }
+  function eventName(b) { return b.evn || "点击「" + b.label + "」"; }
+  function groups() {
+    var out = [];
+    pops().forEach(function (p) {
+      /* 首页顶部提示条归首页弹窗管理中心（只用状态开关），不是弹窗，没有关闭 × */
+      var base = p.cat === "bar" ? { label: p.name, cond: "状态在首页弹窗管理中心设置；出现时机沿用现网（不遮罩，自动收起）", noClose: true, p: p, items: [] } :
+        { label: p.name, cond: (p.elig ? p.elig + "；" : "") + (p.cat === "q" ? "首页弹出的场景和顺序在首页弹窗管理中心设置" : p.cat === "inst" ? "事件触发，按活动自身逻辑弹出，不受首页弹窗管理中心控制" : "按活动自身逻辑弹出"), p: p, items: [] }, extra = {};
+      out.push(base);
+      evAll(p).forEach(function (b, i) {
+        /* 结果弹窗是系列里的后续弹窗，单独成组（变更 CH17） */
+        var key = b.sty || (b.where === "结果弹窗" ? p.name + " · 结果弹窗" : "");
+        if (!key) { base.items.push({ b: b, i: i }); return; }
+        var notPop = /不是弹窗/.test(key);   /* 浮标、气泡等常驻入口：不是弹窗，没有关闭 × */
+        if (!extra[key]) { extra[key] = { label: key, cond: notPop ? "常驻入口，按活动自身逻辑显示" : "后续弹窗，按活动自身逻辑弹出，不受首页弹窗管理中心的顺序和显示方式控制", noClose: notPop, p: p, items: [] }; out.push(extra[key]); }
+        extra[key].items.push({ b: b, i: i });
+      });
+    });
+    return out;
+  }
+  function drawBtns() {
+    var gs = groups(), dis = canEdit() ? "" : " disabled", h = "", ft = "";
+    pops().forEach(function (p) { if (!ft && p.feat) ft = p.feat; });   /* 原型说明：本活动特点（演示用，真实后台不显示） */
+    $("actFeat").hidden = !ft; $("actFeat").innerHTML = ft ? "<b>原型示例 · 本活动特点：</b>" + esc(ft) : "";
+    if (!gs.length) { $("btnBody").innerHTML = '<tr><td class="pm-state" colspan="4">本活动弹窗没有事件</td></tr>'; return; }
+    gs.forEach(function (g) {
+      if (gs.length > 1) h += '<tr class="pm-sty"><td colspan="4"><b>样式：' + esc(g.label) + "</b>" + (g.cond ? '<span class="pm-sub">　弹出条件：' + esc(g.cond) + "</span>" : "") + "</td></tr>";
+      g.items.forEach(function (x) {
+        var p = g.p, b = x.b, i = x.i, c = draft[p.k][i], id = p.k + "_" + i;
+        var ev = '<td class="pm-w">' + esc(eventName(b)) + (b.where ? '<br><span class="pm-sub">出现位置：' + esc(b.where) + "</span>" : "") + "</td>";
+        var txt = b.kind === "sys" ? '<td class="pm-sub">-</td>' : '<td><input class="bo-inp" type="text" style="width:150px" data-k="text" data-p="' + p.k + '" data-i="' + i + '" value="' + esc(c.text) + '" placeholder="' + esc(b.label) + '"' + dis + ' data-dev="D71"><br><span class="pm-sub" id="cnt' + id + '">' + c.text.length + " / " + capOf(b) + "</span></td>";
+        if (b.kind !== "jump") { h += '<tr id="g' + id + '">' + ev + txt + '<td colspan="2"><span class="pm-sub">触发逻辑：</span>' + esc(logicOf(b)) + '<br><span class="pm-err" id="e' + id + '"></span></td></tr>'; return; }
+        var r = parseLink(c.link);
+        h += '<tr id="g' + id + '">' + ev + txt +
+          '<td><input class="bo-inp" type="text" list="linkList" style="width:230px" data-k="link" data-p="' + p.k + '" data-i="' + i + '" value="' + esc(c.link) + '" placeholder="留空 = 只关闭弹窗"' + dis + ' data-dev="D73"><br><span class="pm-err" id="e' + id + '">' + esc(r.err || "") + "</span></td>" +
+          '<td class="pm-w"><span class="pm-res" id="f' + id + '" data-dev="D78">' + esc(effText(c.link) || "-") + "</span></td></tr>";
+      });
+      if (!g.noClose) h += '<tr><td class="pm-w">点击关闭 ×</td><td class="pm-sub">-</td><td colspan="2"><span class="pm-sub">触发逻辑：</span>关闭弹窗，不跳转</td></tr>';
+    });
+    $("btnBody").innerHTML = h;
+    $("sDirty").textContent = dirty() ? "● 有未保存的修改" : "";
+  }
+  function linkOpts() {
+    var o = [];
+    C().targets.forEach(function (t) { if (t.type === "page" && t.st !== "stop") o.push([t.h5, t.name]); });
+    PM.GAMES.forEach(function (v) { v.g.forEach(function (g) { if (g.m) o.push(["/game/" + v.v + "/" + g.id, "游戏 · " + v.v + " · " + g.n]); }); });
+    PM.ACTS.forEach(function (a) { o.push(["/promo/" + a, "活动详情 · " + a]); });
+    $("linkList").innerHTML = o.map(function (x) { return '<option value="' + esc(x[0]) + '">' + esc(x[1]) + "</option>"; }).join("");
+  }
+  $("btnBody").addEventListener("input", function (e) {
+    var el = e.target, k = el.dataset.k; if (k !== "text" && k !== "link") return;
+    var c = draft[el.dataset.p][+el.dataset.i], id = el.dataset.p + "_" + el.dataset.i; c[k] = el.value;
+    if (k === "text") { var bb = evAll(PM.pop(C(), el.dataset.p))[+el.dataset.i]; $("cnt" + id).textContent = el.value.length + " / " + capOf(bb); }
+    else { var r = parseLink(el.value); $("e" + id).textContent = r.err || ""; $("f" + id).textContent = effText(el.value) || "-"; }
+    $("sDirty").textContent = dirty() ? "● 有未保存的修改" : "";
+  });
+  function validate() {
+    var ok = true;
+    pops().forEach(function (p) {
+      evAll(p).forEach(function (b, i) {
+        if (b.kind === "sys") return;
+        var c = draft[p.k][i], m = [], id = p.k + "_" + i;
+        if (c.text.length > capOf(b)) m.push("文案超过 " + capOf(b) + " 个字符");
+        if (/[^\x20-\x7E₱]/.test(c.text)) m.push("文案只能写英文");
+        if (b.label.indexOf("{amount}") >= 0 && c.text && c.text.indexOf("{amount}") < 0) m.push("文案必须保留金额 {amount}");
+        /* 金额只能用系统的 {amount}：₱、PHP、P、peso(s) 前后紧跟数字的写法都算金额；默认文案不含金额的按钮也不能填 {amount} */
+        var noAmt = c.text.replace(/\{amount\}/g, "");
+        if (/(₱|\bPHP|\bP|\bpesos?)\s*\d|\d\s*(₱|PHP\b|pesos?\b)/i.test(noAmt) || (b.label.indexOf("{amount}") < 0 && c.text.indexOf("{amount}") >= 0)) m.push("文案不能写金额");
+        if (b.kind === "jump") { var r = parseLink(c.link); if (r.err) m.push(r.err); }
+        $("e" + id).textContent = m.join("；"); $("g" + id).classList.toggle("pm-bad", m.length > 0); if (m.length) ok = false;
+      });
+    });
+    return ok;
+  }
+  function evText(b, c) { return eventName(b) + "：" + (c.text || b.label) + (b.kind === "jump" ? " → " + (c.link || "只关闭弹窗") : ""); }
+  $("sSave").onclick = function () {
+    $("sErr").textContent = "";
+    if (!dirty()) { msg("没有改动"); return; }
+    if (!validate()) { $("sErr").textContent = "请修正标红项"; return; }
+    if (!codeOk($("sCode").value.trim(), { err: function (m) { $("sErr").textContent = m; } })) return;
+    if (takeConflict()) { $("sErr").textContent = "配置已被他人修改，请刷新后重新编辑"; return; }
+    var chg = [];
+    pops().forEach(function (p) {
+      var any = false;
+      evAll(p).forEach(function (b, i) {
+        if (b.kind === "sys") return;
+        var d = draft[p.k][i], o = { text: b.cfg.text, link: linkOf(b.cfg.h5) }, n = { text: d.text, link: d.link.trim() };
+        if (evText(b, o) !== evText(b, n)) { chg.push((b.sty || p.name) + " · " + evText(b, o) + " ⇒ " + evText(b, n)); any = true; }
+        b.cfg.text = d.text;
+        if (b.kind === "jump") { var j = parseLink(d.link).j; b.cfg.split = false; b.cfg.h5 = j; b.cfg.app = PM.clone(j); }
+      });
+      if (any) p.upd = now().slice(0, 16);
+    });
+    oplog("修改弹窗事件", chg.join("；")); save(); pick(grp, true); $("sCode").value = ""; msg("保存成功，5 分钟内本站前台生效");
+  };
+  $("sReset").onclick = function () { pops().forEach(function (p) { draft[p.k] = evAll(p).map(function (b) { return { text: "", link: linkOf(b.def) }; }); }); drawBtns(); msg("已填回默认值，保存后生效"); };
+
+  /* ---------- 系统页面清单（只读） ---------- */
+  var pgKw = "", ST = { on: "启用", app: "待 App 确认", stop: "停用" };
+  $("pgToggle").onclick = function () { $("pgBox").hidden = !$("pgBox").hidden; this.textContent = $("pgBox").hidden ? "查看系统页面清单" : "收起系统页面清单"; };
+  $("pgGo").onclick = function () { pgKw = $("pgKw").value.trim(); drawPages(); };
+  function drawPages() {
+    var list = C().targets.filter(function (t) { return t.type === "page" && (!pgKw || t.name.indexOf(pgKw) >= 0); });
+    $("pgBody").innerHTML = list.length ? list.map(function (t) {
+      return "<tr><td>" + esc(t.g) + "</td><td>" + esc(t.name) + '</td><td class="pm-w">' + esc(t.h5) + "</td><td>" + esc(t.app || "-") + "</td><td>" + esc(t.param || "-") + "</td><td>" + (t.login ? "是" : "否") + "</td><td>iOS " + esc(t.verI || "不限") + "<br>Android " + esc(t.verA || "不限") + '</td><td><span class="pm-tag ' + (t.st === "on" ? "ok" : t.st === "app" ? "wait" : "end") + '">' + ST[t.st] + "</span></td></tr>";
+    }).join("") : '<tr><td class="pm-state" colspan="8">暂无数据</td></tr>';
+  }
+  function drawLog() {
+    var l = C().oplogs.filter(function (x) { return x.obj === grp || x.obj === "各活动弹窗按钮跳转"; }).slice(0, 5);
+    $("opLog").innerHTML = l.map(function (x) { return "<li>" + esc(x.t) + " · " + esc(x.who) + " · " + esc(x.type) + " · " + esc(x.chg) + "</li>"; }).join("") || "<li>暂无数据</li>";
+  }
+
+  /* ---------- 模拟操作面板（演示用，研发不实现） ---------- */
+  P.panel($("simPanel"), [
+    { title: "查看哪个站的后台（演示用，三站后台各自独立）", items: [{ type: "radio", key: "site", tag: "后台", options: [["789Bingo", "789Bingo 管理后台"], ["789Games", "789Games 管理后台"], ["789Play", "789Play 管理后台"]], change: function (v) { site = v; fromHash(); } }] },
+    { title: "对本活动菜单的权限", items: [{ type: "radio", key: "perm", tag: "权限", options: [["edit", "查看 + 编辑"], ["view", "只有查看"]], change: render }] },
+    { title: "注入异常", items: [
+      { type: "button", label: "他人已先保存同一配置（下一次保存失败）", run: function () { conflict = true; } },
+      { type: "button", label: "技术把系统页面「充值页」停用", run: function () { var t = PM.target(C(), 3); t.st = "stop"; save(); render(); } }
+    ] },
+    { title: "演示值说明", items: [{ type: "note", text: "Google 验证码输入任意 6 位数字即可保存；输入 000000 演示「验证码错误」。演示白名单：每站只登记本站域名和 pagcor.ph 按域名（本站域名的链接要填站内路径）；Facebook、Instagram 官方主页和 App Store、Google Play 的本站 App 页面按网址前缀（如 facebook.com/789bingo.official）。所有数据均为虚构。" }] },
+    { items: [{ type: "reset", label: "清空原型状态（回到上线初始化）" }] }
+  ]);
+  window.addEventListener("hashchange", fromHash);
+  window.addEventListener("beforeunload", function (e) { if (dirty()) { e.preventDefault(); e.returnValue = ""; } });
+  fromHash();
+})();
+</script>
+</body>
+</html>
