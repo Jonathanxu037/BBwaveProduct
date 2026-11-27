@@ -231,6 +231,7 @@ table.list { width: 100%; border-collapse: collapse; font-size: 13.5px; min-widt
 .c-time { width: 156px; white-space: nowrap; }
 .list:not(.docs) .c-time { width: 128px; }
 .list:not(.docs) td .own { white-space: nowrap; }   /* 日期和 ✎ 保持在一行 */
+.list:not(.docs) tbody tr[data-folder] td:nth-child(2) { min-width: 170px; }   /* 窄屏时需求名称不被挤成多行 */
 .c-ops { width: 190px; }
 .ops { white-space: nowrap; }
 .ops .btn + .btn { margin-left: 6px; }
@@ -249,6 +250,9 @@ table.list { width: 100%; border-collapse: collapse; font-size: 13.5px; min-widt
   background: var(--purple); color: var(--gold-lt); border-radius: 6px; padding: 2px 6px;
 }
 .r-name { font-weight: 700; color: var(--title); }
+.r-name + .edit-ico { margin-left: 4px; vertical-align: 1px; }
+.name-hist { margin: -4px 0 14px; padding: 8px 12px; border: 1px dashed var(--line); border-radius: 8px; }
+.name-hist ul { margin: 4px 0 0; padding-left: 18px; font-size: 12.5px; line-height: 1.7; color: var(--sub); max-height: 120px; overflow-y: auto; word-break: break-all; }
 .r-folder { display: block; font-size: 12px; color: var(--sub); margin-top: 2px; font-family: Consolas, monospace; }
 .ver { display: inline-block; font-size: 12px; font-weight: 700; padding: 1px 8px; border-radius: 4px; background: #FFF7E6; color: #AD6800; }
 .none { color: var(--sub); }

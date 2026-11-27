@@ -486,7 +486,9 @@
         '<button class="btn btn-line btn-sm" type="button" data-op="version">改版本号</button></td>' : '';
       return '<tr tabindex="0" data-folder="' + esc(it.folder) + '"' + (it.folder === flashFolder ? ' class="flash"' : '') + '>' +
         '<td><span class="no">' + (i + 1) + '</span></td>' +
-        '<td><span class="r-name">' + esc(it.name) + '</span><span class="r-folder">/' + esc(it.folder) + '/</span></td>' +
+        '<td><span class="r-name"' + nameTip(it) + '>' + esc(it.name) + '</span>' +
+          '<button class="edit-ico" type="button" data-op="name" title="修改需求名称" aria-label="修改需求名称">✎</button>' +
+          '<span class="r-folder">/' + esc(it.folder) + '/</span></td>' +
         '<td><span class="own">' + esc(it.owner) +
           '<button class="edit-ico" type="button" data-op="owner" title="修改需求方" aria-label="修改需求方">✎</button></span></td>' +
         '<td><span class="ver">' + esc(it.version || INIT_VER) + '</span></td>' +
@@ -536,7 +538,7 @@
     if (lastFocus && lastFocus.focus) lastFocus.focus();
   }
   function closeAll() {
-    ['addMask', 'ghMask', 'ownMask', 'tmMask', 'upMask', 'verMask', 'grpMask', 'renMask', 'viewMask'].forEach(function (id) { if ($(id)) $(id).hidden = true; });
+    ['addMask', 'ghMask', 'nameMask', 'ownMask', 'tmMask', 'upMask', 'verMask', 'grpMask', 'renMask', 'viewMask'].forEach(function (id) { if ($(id)) $(id).hidden = true; });
   }
 
   /* ---------- 页签：开发需求管理 / 方案文档管理 ---------- */
@@ -842,6 +844,104 @@
     });
   }
 
+  /* ---------- 修改需求名称（本地管理模式、GitHub 模式都可用） ----------
+   * 需求的唯一标识是文件夹名称（folder）：角色访问地址、写入接口、云端运营意见都按它定位，所以改名只改显示名 name，folder 不变。
+   * 每次改名在 nameHistory 里追加一条 { from 旧名, to 新名, at 改名时间（GMT+8） }，只追加不删改。
+   * 还没上传需求包时，pdm/ 里的「待上传」占位页显示需求名称，同步换成新名称；已上传的需求包内容不改。 */
+  var NAME_MAX = 50;
+
+  function iso8(ms) {   // 指定时间换成 GMT+8 的 ISO 时间，如 2026-11-27T14:05:00+08:00
+    var d = new Date((ms == null ? Date.now() : ms) + 8 * 3600000);
+    return d.getUTCFullYear() + '-' + pad(d.getUTCMonth() + 1) + '-' + pad(d.getUTCDate()) + 'T' +
+      pad(d.getUTCHours()) + ':' + pad(d.getUTCMinutes()) + ':' + pad(d.getUTCSeconds()) + '+08:00';
+  }
+  function fmt8(iso) {   // 按 GMT+8 显示到分钟，和电脑时区无关
+    var t = Date.parse(iso);
+    return isNaN(t) ? '' : iso8(t).slice(0, 16).replace('T', ' ');
+  }
+  function nameTip(it) {
+    var h = it.nameHistory;
+    if (!h || !h.length) return '';
+    var last = h[h.length - 1];
+    return ' title="' + esc('原名：' + last.from + '（' + fmt8(last.at) + ' GMT+8 改名）') + '"';
+  }
+  function checkName(v, it) {
+    if (!v) return '请填写需求名称。';
+    if (v.length > NAME_MAX) return '需求名称不能超过 ' + NAME_MAX + ' 个字。';
+    if (v === it.name) return '和当前名称相同，无需修改。';
+    var dup = state.items.filter(function (x) { return x.folder !== it.folder && norm(x.name) === norm(v); })[0];
+    if (dup) return '已有同名需求「' + dup.name + '」（/' + dup.folder + '/），请换一个名称（不区分大小写和空格）。';
+    return '';
+  }
+
+  var naming = null;
+  function openName(it) {
+    if (state.mode === 'readonly') {
+      openGh('当前是只读模式，修改需求名称需要先连接 GitHub 仓库（或在本机用本地管理模式打开）。');
+      return;
+    }
+    naming = it;
+    $('nameCur').textContent = it.name;
+    $('nameFolder').textContent = '/' + it.folder + '/';
+    $('nameVal').value = it.name;
+    var h = it.nameHistory || [];
+    $('nameHist').hidden = !h.length;
+    $('nameHistList').innerHTML = h.slice().reverse().map(function (r) {
+      return '<li>' + esc(fmt8(r.at)) + '　' + esc(r.from) + ' → ' + esc(r.to) + '</li>';
+    }).join('');
+    fieldErr('nameVal', '');
+    $('nameErr').textContent = '';
+    btnBusy('nameOk', 'nameCancel', false, '确定');
+    openMask('nameMask');
+    setTimeout(function () { $('nameVal').focus(); $('nameVal').select(); }, 0);
+  }
+
+  function cancelName() {
+    if ($('nameCancel').disabled) return;
+    naming = null;
+    closeMask('nameMask');
+  }
+
+  function onNameSubmit(e) {
+    e.preventDefault();
+    if ($('nameOk').disabled || !naming) return;
+    var it = naming, v = $('nameVal').value.trim();
+    if (!fieldErr('nameVal', checkName(v, it))) { $('nameVal').focus(); return; }
+    $('nameErr').textContent = '';
+    btnBusy('nameOk', 'nameCancel', true, '正在保存…');
+    var job = state.mode === 'local'
+      ? postJson('api/requirements/' + encodeURIComponent(it.folder) + '/name', { name: v })
+      : ghCommit(function (data, headSha) {
+          var hit = data.items.filter(function (x) { return x.folder === it.folder; })[0];
+          if (!hit) throw new Error('仓库里找不到这个需求，可能已被删除，请刷新列表。');
+          var dup = data.items.filter(function (x) { return x.folder !== it.folder && norm(x.name) === norm(v); })[0];
+          if (dup) throw new Error('已有同名需求「' + dup.name + '」，请换一个名称。');
+          var old = hit.name;
+          hit.name = v;
+          (hit.nameHistory = hit.nameHistory || []).push({ from: old, to: v, at: iso8() });
+          // 占位页还在（未上传需求包）时一起换成新名称
+          return ghApi('GET', '/contents/' + encodeURIComponent(it.folder) + '/pdm/index.html?ref=' + headSha)
+            .then(function (j) { return b64ToUtf8(j.content).indexOf('name="prdhub-placeholder"') >= 0; }, function () { return false; })
+            .then(function (isPh) {
+              return {
+                message: '修改需求名称：' + old + ' → ' + v + '（' + it.folder + '/）',
+                files: isPh ? [{ path: it.folder + '/pdm/index.html', content: placeholderPage(v) }] : [],
+                result: hit
+              };
+            });
+        });
+    job.then(function () {
+      btnBusy('nameOk', 'nameCancel', false, '确定');
+      closeMask('nameMask');
+      toast('已将「' + it.name + '」改名为「' + v + '」，访问地址不变');
+      naming = null;
+      return refresh(it.folder);
+    }).catch(function (err) {
+      btnBusy('nameOk', 'nameCancel', false, '确定');
+      $('nameErr').textContent = state.mode === 'github' && err.status ? ghErrText(err) : ('修改失败：' + err.message);
+    });
+  }
+
   /* ---------- 上传需求包、修改版本号（仅本地管理模式） ---------- */
 
   var VER_RE = /^v(\d{1,3})\.(\d{1,3})$/;
@@ -1077,7 +1177,8 @@
       var it = findItem(folder);
       if (!it) return;
       var kind = op.getAttribute('data-op');
-      if (kind === 'owner') openOwner(it);
+      if (kind === 'name') openName(it);
+      else if (kind === 'owner') openOwner(it);
       else if (kind === 'upload') openUpload(it);
       else if (kind === 'version') openVersion(it);
       else if (kind === 'times') openTimes(it);
@@ -1097,6 +1198,9 @@
     $('tmClear').addEventListener('click', function () { $('tmUpload').value = ''; fieldErr('tmUpload', ''); });
     $('tmCreated').addEventListener('input', function () { fieldErr('tmCreated', ''); });
     $('tmUpload').addEventListener('input', function () { fieldErr('tmUpload', ''); });
+    $('nameForm').addEventListener('submit', onNameSubmit);
+    $('nameCancel').addEventListener('click', cancelName);
+    $('nameVal').addEventListener('input', function () { fieldErr('nameVal', ''); });
     $('ownForm').addEventListener('submit', onOwnerSubmit);
     $('ownCancel').addEventListener('click', function () { cancelMask('ownMask', 'ownCancel'); });
     $('ownVal').addEventListener('input', function () { if (this.value.trim()) fieldErr('ownVal', ''); });
@@ -1110,6 +1214,7 @@
     document.addEventListener('keydown', function (e) {
       if (e.key !== 'Escape') return;
       if (!$('addMask').hidden) cancelAdd();
+      else if (!$('nameMask').hidden) cancelName();
       else if (!$('ownMask').hidden) cancelMask('ownMask', 'ownCancel');
       else if (!$('tmMask').hidden && !$('tmCancel').disabled) { timing = null; closeMask('tmMask'); }
       else if (!$('upMask').hidden) cancelMask('upMask', 'upCancel');

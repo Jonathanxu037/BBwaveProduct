@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>产品需求管理</title>
-<link rel="stylesheet" href="assets/app.css?v=6cccd48e">
+<link rel="stylesheet" href="assets/app.css?v=80e022ca">
 </head>
 <body>
 
@@ -320,6 +320,32 @@
   </form>
 </div>
 
+<!-- 修改需求名称弹窗 -->
+<div class="mask" id="nameMask" hidden>
+  <form class="dialog" id="nameForm" role="dialog" aria-modal="true" aria-labelledby="nameTitle" novalidate>
+    <h3 id="nameTitle">修改需求名称</h3>
+    <dl class="auto">
+      <div><dt>当前名称</dt><dd id="nameCur"></dd></div>
+      <div><dt>文件夹</dt><dd id="nameFolder" class="mono"></dd></div>
+    </dl>
+    <div class="err" id="nameErr" role="alert"></div>
+    <label class="field">
+      <span>新需求名称 <i>*</i></span>
+      <input id="nameVal" type="text" maxlength="50" placeholder="例如：老用户充值转盘">
+      <small class="f-tip">只改列表里显示的名称，1–50 个字，不能和其他需求重名。文件夹名称和角色访问地址不变，已上传的需求包内容不变。</small>
+      <small class="f-err" data-for="nameVal"></small>
+    </label>
+    <div class="name-hist" id="nameHist" hidden>
+      <div class="small muted">改名记录（GMT+8）</div>
+      <ul id="nameHistList"></ul>
+    </div>
+    <div class="dlg-btns">
+      <button class="btn btn-line" id="nameCancel" type="button">取消</button>
+      <button class="btn btn-gold" id="nameOk" type="submit">确定</button>
+    </div>
+  </form>
+</div>
+
 <!-- 文档分组弹窗 -->
 <div class="mask" id="grpMask" hidden>
   <form class="dialog" id="grpForm" role="dialog" aria-modal="true" aria-labelledby="grpTitle" novalidate>
@@ -396,7 +422,7 @@
 <div class="toast" id="toast" role="status" hidden></div>
 
 <script src="assets/config.js?v=bd7dad73"></script>
-<script src="assets/app.js?v=d77c655c"></script>
+<script src="assets/app.js?v=2ae6a10c"></script>
 <script src="assets/docs.js?v=75423901"></script>
 </body>
 </html>
