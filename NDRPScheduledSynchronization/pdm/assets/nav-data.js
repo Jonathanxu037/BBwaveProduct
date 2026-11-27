@@ -34,7 +34,9 @@ window.NAV_DATA = {
         { title: "7. 验收标准", href: "docs/NDRP名单定期同步-需求开发PRD文档.html#c7" },
         { title: "8. 待确认", href: "docs/NDRP名单定期同步-需求开发PRD文档.html#c8" },
         { title: "9. 各站工单", href: "docs/NDRP名单定期同步-需求开发PRD文档.html#c9" },
-        { title: "10. 备用方案", href: "docs/NDRP名单定期同步-需求开发PRD文档.html#c10" }
+        { title: "10. 备用方案", href: "docs/NDRP名单定期同步-需求开发PRD文档.html#c10" },
+        { title: "附录 C 前台文案中英对照", href: "docs/NDRP名单定期同步-需求开发PRD文档.html#appC" },
+        { title: "附录 D 页面控件说明", href: "docs/NDRP名单定期同步-需求开发PRD文档.html#appD" }
       ]},
       { title: "备用方案 A：人工维护", href: "docs/NDRP名单定期同步-备用方案A-人工维护.html", type: "doc", roles: ["dev"] },
       { title: "备用方案 B：PAGCOR 定期文件", href: "docs/NDRP名单定期同步-备用方案B-PAGCOR定期文件.html", type: "doc", roles: ["dev"] },
