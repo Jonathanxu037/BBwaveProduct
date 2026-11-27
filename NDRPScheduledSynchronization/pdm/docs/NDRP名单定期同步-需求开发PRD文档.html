@@ -1,0 +1,534 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>NDRP名单定期同步-需求开发PRD文档</title>
+<link rel="stylesheet" href="../assets/style.css">
+<style>.paper img{max-width:100%;height:auto;border:1px solid #dfe1e6}.paper p.cap{color:#5e6c84;font-size:13px;margin:4px 0 20px}</style>
+</head>
+<body>
+<div class="with-nav">
+<div id="fp-banner" class="fp-banner" hidden><span id="fp-text"></span><button type="button" id="fp-clear">清除标注</button></div>
+<div class="desk"><article class="paper" id="doc">
+
+<h1 class="doc-title">NDRP名单定期同步 · KYC 前置名单筛选与名单定期同步 · 产品开发需求文档（PRD）· v1.0</h1>
+<div class="doc-meta"><span>版本：v1.0</span><span>平台：789Bingo / 789Games / 789Play（PH）</span><span>端：H5、PC、iOS、Android、后台</span><span>状态：确认中</span><span>时区：GMT+8</span></div>
+<hr class="doc-rule">
+
+<h2 id="ver">需求版本管理表</h2>
+<div class="tbl"><table id="vtable" data-fit>
+<tr><th>版本号</th><th>时间</th><th>修改人</th><th>概述</th><th>涉及章节</th></tr>
+<tr data-v="v1.0" data-sum="按 Wiki 第 10 版建需求包，新增备用方案 A、B、C"><td>v1.0</td><td>2026-11-26</td><td>Joshua</td><td class="w">按 Wiki 需求文档第 10 版建需求包；新增备用方案 A、B、C</td><td>全文</td></tr>
+<!-- 新版本的「涉及章节」写法（每行左边「章节号 + 章节标题」，右边状态标签；不分新旧版本，改动 3 项以内由脚本直接列出，超过 3 项自动收起为「查看详细」）：
+<td><button type="button" class="linkbtn" data-chg="chg-v1-1"></button><ul class="chg" id="chg-v1-1">
+  <li><a href="#c5">5. 前台页面二：活动进行中页<span class="st add">新增</span></a></li><!-- 章号随前台页数顺延，这里是有两个前台页面时的示例 -->
+  <li><a href="#c0-1">0.1 评审结论补充（2026-10-01）<span class="st mod">修改</span></a></li>
+  <li><span class="row">3.2 旧规则名称<span class="st del">删除</span></span></li>
+</ul></td> -->
+
+</table></div>
+<!-- 新版本：在表格最上面加一行；正文里新增或修改的内容用 <span class="vmark" data-v="v1.1">…<button class="vtag" data-v="v1.1">v1.1</button></span> 标注（规范第五章第 3 节） -->
+
+<h2 id="toc">全文目录</h2>
+<nav class="toc-full" aria-label="全文目录"><ol id="toc-list"></ol></nav>
+
+<div class="tip">
+<p><b>适用前提：</b>本文件是主方案，内容为 Wiki 第 9 版。适用前提：PAGCOR NDRP 系统能下载全量名单，或提供批量接口（技术正在确认，见 BB789BINGO-7677）。</p>
+<p><b>备用方案：</b>技术确认两种都没有时，从以下三份备用方案中选一份：备用方案 A（本地名单库人工维护）、备用方案 B（PAGCOR 定期提供名单文件，由技术导入）、备用方案 C（人工维护本地名单库，并定期复查已通过 KYC 的会员）。</p>
+</div>
+<h2 id="c1">1. 背景与问题</h2>
+<ul>
+<li><b>NDRP 名单</b>：PAGCOR 官方发布的受限制人员名单（National Database of Restricted Persons，全国受限人员数据库），来源为 PAGCOR NDRP 网站。本需求用它判断用户是否在名单内：在名单内的，KYC 不通过；不在的，继续 KYC 流程。<br><span style="color:#C00000"><b>※ 命中名单即拦截，不区分名单内人员类别（政府官员、自我排除、家属申请排除、博彩从业人员等）。</b></span></li>
+<li><b>现状</b>：用户完成 KYC 后，平台才实时调用 PAGCOR 接口查询名单；接口失败时重试 3 次，再改查本地名单库（BB789BINGO-250、BB789BINGO-2801）。</li>
+<li><b>存在问题</b>：
+<ul>
+<li>校验滞后：名单校验在 KYC 完成之后才做，此时名单内人员已完成注册和 KYC（BB789BINGO-1416、BB789BINGO-1523）。</li>
+<li>依赖对方接口：PAGCOR 接口返回 503（服务不可用）时校验直接失败（BB789BINGO-6200）；每日批量核对任务曾连续 6 天全部失败，无人发现（BB789BINGO-6572）。</li>
+<li>名单时效差：本地名单库不是最新，名单内人员仍能通过 KYC，已移出名单的人员仍被拒绝。</li>
+<li>事后补救成本高：每周人工清理名单内的用户数据（BB789BINGO-3868 等）。</li>
+</ul></li>
+<li><b>相关工单</b>：BB789BINGO-6387（原技改单，已挂起）、GAM-636（789Games 请 PAGCOR 放行出口 IP 访问 NDRP 接口）。本期各站工单见第 9 节。</li>
+</ul>
+
+<h2 id="c2">2. 需求目标与范围</h2>
+<p><b>目标：</b>平台每天 04:00（GMT+8）从 PAGCOR 同步 NDRP 名单到本地名单库，后台也可手动同步。用户做 KYC 时先填写姓名，用本地名单库初筛；未命中再做证件识别，证件姓名（证件识别返回的姓名原值）与填写姓名一致后，调 PAGCOR 实时查询接口做实时核对。初筛或实时核对命中名单的，KYC 不通过。同步和核对结果由系统记录、可追溯；告警情况见第 6 节。</p>
+<p><b>适用站点：</b>789Bingo、789Games、789Play 三站，规则一致；三站各自建单、各自验收。</p>
+<p><b>本期范围</b></p>
+<ol>
+<li>名单定期同步：每天 04:00 定时从 PAGCOR 获取最新名单，也可在【用户管理 › KYC审核】页手动同步；数据校验不通过时不覆盖现有名单。</li>
+<li>本地名单库：沿用现有【系统管理 › NDRP名单配置】，页面本期不改；同步成功后只更新从 PAGCOR 同步的名单，后台手动新增的名单不变。</li>
+<li>KYC 名单筛选：新增「填写姓名」页，先用本地名单库初筛；再比对证件姓名与填写姓名，不一致则 KYC 不通过；一致后调 PAGCOR 实时查询接口做实时核对，3 次请求都失败则跳过实时核对。</li>
+<li>同步失败重试；四种告警情况见第 6 节「告警」。</li>
+<li>后台管理：在【用户管理 › KYC审核】页增加手动同步按钮和同步状态；KYC 不通过原因写进审核记录现有的原因（备注）；同步记录由系统保存供审计，不在页面显示。</li>
+</ol>
+<p><b>不在本期范围</b></p>
+<ul>
+<li>已通过 KYC 的存量用户不因名单更新而复查；需要复查时另提需求（见第 8 节 Q9）。</li>
+<li>实时核对跳过后的自动补查、本地名单库超过 26 小时未同步成功时改为不跳过实时核对、KYC 重新提交次数上限，本期不做（见第 8 节 Q7、Q8、Q10）。</li>
+<li>名单版本管理（版本号、历史版本查看和导出）、同步参数的后台配置页面，本期不做；同步时间、校验阈值、重试次数、告警接收人（技术负责人和合规负责人）由技术配置。</li>
+<li>注册环节已有的校验、21+ 年龄校验、同名校验（现有规则）等其他规则保持现状。</li>
+</ul>
+
+<h2 id="c3">3. 业务流程</h2>
+<p><b>核心变化：</b>名单由平台每天定时同步到本地名单库，也可在后台手动同步；KYC 从「完成后才查」改为三道检查：填写姓名后本地初筛 → 证件姓名比对 → PAGCOR 实时核对。</p>
+<p><img src="img/图1-KYC新流程总图.png" alt="图1 KYC 新流程总图"></p>
+<p class="cap">图1 KYC 新流程总图：前台自助 KYC 的 6 步及各分支结果；其他三个入口从步骤 2 汇入，跳过步骤 3、4。步骤说明见 3.2。</p>
+
+<p><b>3.1 名单同步</b></p>
+<p><img src="img/图2-名单同步流程图.png" alt="图2 名单同步流程图"></p>
+<p class="cap">图2 名单同步流程图：定时或手动触发，同一时间只运行一个同步任务；数据校验不通过时不覆盖现有名单；定时同步重试 3 次仍失败则告警。</p>
+<div class="tbl"><table>
+<tr><th>步骤</th><th>处理</th><th>结果 / 下一步</th></tr>
+<tr><td>1</td><td>每天 04:00 定时触发，或后台手动触发</td><td>已有同步任务在运行时，本次不启动新任务（手动点击的，等当前任务完成后按其结果提示）；否则进入步骤 2</td></tr>
+<tr><td>2</td><td>登录 PAGCOR NDRP 系统，获取名单</td><td>成功 → 步骤 3；登录失败或网络异常 → 记为失败，定时同步进入重试，手动同步不重试</td></tr>
+<tr><td>3</td><td>数据校验：结果为空、条数比本地名单库中从 PAGCOR 同步的名单减少超过 20%、格式异常，任一情况即不通过</td><td>通过 → 步骤 4；不通过 → 记为失败、保留现有名单，定时同步进入重试，手动同步不重试</td></tr>
+<tr><td>4</td><td>按 PAGCOR 名单更新本地名单库中从 PAGCOR 同步的名单；后台手动新增的名单不变</td><td>系统记录新增、移出的条数和明细；没有变化时名单不变，新增、移出记为 0</td></tr>
+</table></div>
+<p>定时同步失败后每 10 分钟重试一次，最多重试 3 次（首次 + 重试 3 次，共执行 4 次）；仍失败则告警，当天不再自动同步，等次日 04:00 或手动同步。同步失败时继续使用现有名单，KYC 初筛不受影响。</p>
+
+<p><b>3.2 KYC 名单筛选</b>（流程见图1）</p>
+<div class="tbl"><table>
+<tr><th>步骤</th><th>处理</th><th>结果 / 下一步</th></tr>
+<tr><td>1</td><td>用户在 KYC 第一步「填写姓名」页（新增）填写姓名</td><td>提交后进入步骤 2</td></tr>
+<tr><td>2</td><td>用填写的姓名在本地名单库初筛</td><td>命中 → KYC 状态置为「拒绝」，本次流程结束；未命中 → 步骤 3</td></tr>
+<tr><td>3</td><td>原 KYC：证件识别、活体检测（789Bingo 用 Zoloz；789Games 计划用阿里云 eKYC；789Play 暂定与另两站流程一致，见第 8 节 Q4、Q14）</td><td>沿用现有；完成后进入步骤 4</td></tr>
+<tr><td>4</td><td>证件姓名与填写姓名比对</td><td>一致 → 步骤 5；不一致 → KYC 状态置为「拒绝」，本次流程结束；可修改姓名后重新提交</td></tr>
+<tr><td>5</td><td>用证件姓名调 PAGCOR 实时查询接口做实时核对，最多请求 3 次（首次 + 重试 2 次）</td><td>命中 → KYC 状态置为「拒绝」，本次流程结束；未命中 → 步骤 6；3 次都失败 → 跳过实时核对，记录并告警，进入步骤 6</td></tr>
+<tr><td>6</td><td>原有其他审核（21+ 年龄校验、同名校验、自动或人工审核）</td><td>沿用现有；通过 → KYC 状态置为「完全认证」</td></tr>
+</table></div>
+<p><span style="color:#C00000"><i>※ 现状「实时查询失败重试 3 次后改查本地名单库」不再保留，本地名单库初筛已在步骤 2 完成。</i></span></p>
+
+<h2 id="c4">4. 功能需求</h2>
+
+<h3 id="c4-1">4.1 名单同步任务</h3>
+<ul>
+<li>用平台的运营商账号登录 PAGCOR NDRP 系统获取名单，获取方式由技术确定。</li>
+<li>登录账号和密码加密保存，不写进代码和日志，由技术维护，不做后台修改入口。</li>
+<li>每天 04:00（GMT+8）执行一次；时间由技术配置，不做后台配置页面。调整同步时间时参考后台按小时的投注和登录数据（见第 8 节 Q11）。</li>
+<li>可在【用户管理 › KYC审核】页手动同步（规则见 4.4「手动同步」）；同一时间只运行一个同步任务，定时、手动、重试都受此限制。</li>
+<li>数据校验：结果为空、条数比本地名单库中从 PAGCOR 同步的名单减少超过 20%、格式异常，任一情况即判本次同步失败，不覆盖现有名单。</li>
+<li>失败重试：定时同步失败后每 10 分钟重试一次，最多重试 3 次（首次 + 重试 3 次，共执行 4 次）；仍失败则告警，当天不再自动同步，等次日 04:00 或手动同步；手动同步不重试。</li>
+</ul>
+
+<h3 id="c4-2">4.2 本地名单库</h3>
+<ul>
+<li><b>本地名单库</b>：沿用现有【系统管理 › NDRP名单配置】，不新建模块，页面本期不改。【系统管理 › 风控黑名单配置】与本需求无关，不变。</li>
+<li><b>同步范围</b>：同步只更新从 PAGCOR 同步的名单，后台手动新增的名单不变；两者如何区分由技术确定，不在页面显示。后台手动新增名单的增删改沿用现有。从 PAGCOR 同步的名单以 PAGCOR 为准，后台对这部分名单的修改、删除，在下次同步时恢复为 PAGCOR 的内容。</li>
+<li><b>更新</b>：数据校验通过后，PAGCOR 名单新增的人员加入本地名单库，PAGCOR 名单已移出的人员从本地名单库移出；新增和移出明细由系统记录（见第 5 节）。</li>
+<li><b>写入完整性</b>：新名单全部写入后才生效，KYC 初筛不读取未写完的名单。</li>
+<li><b>首次上线</b>：上线前须成功同步一次，未成功同步前不上线 KYC 名单筛选。首次同步时，本地名单库现有记录全部按后台手动新增保留，不自动移出；上线前由合规负责人人工核对，删除已不需要的记录。</li>
+</ul>
+<p><span style="color:#C00000"><b><u>※ 名单含真实受限人员的个人信息：名单查询、导出的权限和脱敏沿用现有，不得外传。</u></b></span></p>
+
+<h3 id="c4-3">4.3 KYC 名单筛选</h3>
+<ul>
+<li><b>填写姓名页（新增）</b>：KYC 第一步，字段为 First Name（名）、Middle Name（中间名）、Last Name（姓），必填和格式规则沿用现有；原 KYC 资料页的姓名填写移到本页，后续步骤不再填写姓名。文案：标题 Enter Your Name（填写姓名）；说明 Enter your name as shown on your ID.（请按证件填写姓名。）；按钮 Next（下一步）。重新提交时带出上次填写的姓名；加载、网络异常和隐私告知沿用现有 KYC 页面。见图3。</li>
+<li><b>本地初筛</b>：用户点击 Next 后，在证件识别和活体检测之前，立即用填写姓名比对本地名单库（含后台手动新增的名单）。此时没有证件生日等信息，只比对姓名。</li>
+<li><b>证件姓名比对</b>：
+<ul>
+<li>证件信息确认页沿用现有；姓名比对和实时核对只用证件姓名（证件识别返回的姓名原值），不受确认页修改影响。</li>
+<li>识别不出姓名：按证件识别失败处理（沿用现有提示，重新拍摄证件），不按姓名不一致处理。</li>
+<li>不一致：KYC 状态置为「拒绝」，本次流程结束，不转人工审核；前台提示见下文「前台提示」；原因「证件姓名与填写姓名不一致」写进 KYC 审核记录现有的原因（备注）。</li>
+</ul></li>
+<li><b>PAGCOR 实时核对</b>：
+<ul>
+<li>用证件姓名（不是填写的姓名）调 PAGCOR 实时查询接口做实时核对；需要附带哪些证件信息由技术确定。</li>
+<li>最多请求 3 次（首次 + 重试 2 次），任一次成功返回即按该次结果处理。3 次的总等待时长上限由技术确定，超过上限按 3 次都失败处理，跳过实时核对。核对期间前台沿用现有提交加载状态。</li>
+<li>3 次都失败 → 跳过实时核对：只跳过这一步，本地初筛、姓名比对、21+ 年龄校验和其他审核照常；原因（备注）标注「实时核对跳过」；触发告警；前台不提示。</li>
+</ul></li>
+<li><b>覆盖所有能使 KYC 变为通过的入口</b>：前台自助 KYC 的所有端（H5、PC、PWA、iOS、Android、小程序，以及仍能发起 KYC 的安卓原生老包）走上述全部步骤，不能跳过填写姓名页。以下三个入口没有填写姓名，不做姓名比对，只用入口带入的证件姓名做本地初筛和实时核对；命中则 KYC 状态置为「拒绝」，不通过原因同下文「命中处理」；实时核对跳过的规则与前台自助 KYC 相同；读取本地名单库失败时不放行，并触发告警：
+<ul>
+<li>PAGCOR 手机号自动认证。</li>
+<li>后台人工补录通过 KYC：点击 Pass KYC（通过 KYC）时，用证件姓名做本地初筛和实时核对；命中则弹出提示「命中 NDRP 名单，不能通过 KYC」。</li>
+<li>跨站 KYC 数据互通（如 789Games 同步 789Bingo 已通过的 KYC）：命中则不同步为通过。</li>
+</ul></li>
+<li><b>名单比对和姓名比对规则</b>：名单比对（本地初筛、实时核对）和证件姓名比对，两种比对的处理方式都由技术确定，包括比对哪些字段，大小写、空格、标点、Ñ 与 N、Middle Name 缺失或缩写、后缀（Jr.、III）怎么处理，名单记录缺少字段时怎么处理；要求名单内人员能被识别，姓名与名单内人员不同的正常用户不被误拦（同名情况见第 8 节 Q12）。</li>
+<li><b>命中处理</b>（本地初筛命中、实时核对命中相同）：
+<ul>
+<li>KYC 状态置为「拒绝」，本次流程结束。</li>
+<li>前台提示：Verification failed. Please contact support.（验证失败，请联系客服。），按钮为 Contact Support（联系客服）。不向用户提示命中 NDRP 名单。</li>
+<li>不通过原因「命中 NDRP 名单（本地初筛）」或「命中 NDRP 名单（实时核对）」写进 KYC 审核记录现有的原因（备注），操作人为 System（系统）。</li>
+<li>KYC 不通过后，用户的充值、游戏、提现限制沿用现有「KYC 未通过」规则，本需求不改。上线前三站的「实名验证」（充值需 KYC）和「游戏 KYC 设置」（进游戏需 KYC）开关必须打开，确保 KYC 未通过的用户不能充值、进游戏。</li>
+</ul></li>
+<li><b>前台提示</b>（见图4）：
+<ul>
+<li>姓名不一致：标题 Name Mismatch（姓名不一致）；Your name doesn't match your ID. Please check and resubmit.（姓名与证件不一致，请核对后重新提交。）；按钮 Resubmit（重新提交）。</li>
+<li>名单命中：见上文「命中处理」。实时核对跳过：不提示。</li>
+<li><span style="color:#C00000"><b>※ 前台任何页面和提示都不出现 NDRP、名单、政府官员字样。</b></span></li>
+<li>客服口径：只告知审核未通过，不说明是否在名单内；用户申诉的（含与名单内人员同名被误拦的正常用户），转合规负责人核实；核实后如何放行，另提需求。参考话术：Your verification was not approved. We can forward your appeal to our compliance team.（验证未通过，可为您转交合规团队申诉。）</li>
+</ul></li>
+<li><b>重新提交</b>：用户重新提交 KYC 时从填写姓名页开始，证件识别和活体检测重新做，不复用上次结果。姓名不一致的，可修改姓名后重新提交；仍在名单内的，再次不通过；已从名单移出的，按正常流程继续。</li>
+<li><b>本地名单库读取失败</b>：初筛时读取本地名单库失败，本次提交不成功，前台沿用现有网络异常提示，用户稍后重试；同时触发告警。</li>
+<li><b>上线切换</b>：上线时已提交、尚未审核完成的 KYC 按原流程审核完；上线时尚未提交的，下次进入 KYC 时走新流程。</li>
+</ul>
+<p><img src="img/图3-前台填写姓名页.png" alt="图3 前台填写姓名页"></p>
+<p class="cap">图3 前台「填写姓名」页（手机 375 像素宽）：KYC 第一步，提交后立即用本地名单库初筛。</p>
+<p><img src="img/图4-前台提示页.png" alt="图4 前台提示页"></p>
+<p class="cap">图4 前台提示页：左为姓名不一致（可重新提交），右为验证失败（名单命中，不透露原因）。</p>
+
+<h3 id="c4-4">4.4 后台管理</h3>
+<p>不新建模块，在下表所列的现有页面上增加功能。</p>
+<div class="tbl"><table>
+<tr><th>模块</th><th>所在页面</th><th>功能</th></tr>
+<tr><td>同步状态</td><td>【用户管理 › KYC审核】「KYC审核」页签筛选栏右侧</td><td>状态行「最后同步 YYYY-MM-DD HH:mm:ss · 成功 / 失败」；时间为最近一次同步（含失败）的结束时间（GMT+8）；失败时「失败」二字显示为红色</td></tr>
+<tr><td>手动同步</td><td>同上</td><td>按钮「同步NDRP名单」，规则见表下「手动同步」</td></tr>
+</table></div>
+<p><b>KYC 审核记录</b>：【用户管理 › KYC审核】「KYC审核记录」页签沿用现有页面，不新增筛选、列和展示。不通过原因「命中 NDRP 名单（本地初筛）」「命中 NDRP 名单（实时核对）」「证件姓名与填写姓名不一致」和标注「实时核对跳过」写进现有的原因（备注），沿用现有显示和导出。</p>
+<p><b>手动同步</b></p>
+<ul>
+<li>能进入【用户管理 › KYC审核】页的账号即可使用（沿用现有页面权限）。点击「同步NDRP名单」按钮即开始同步；已有同步任务在运行时，本次点击不启动新任务，等当前任务完成后按其结果提示。成功时提示「同步完成，变更 N 条」（N 为新增与移出条数之和），失败时提示「同步失败，已保留现有名单」。</li>
+</ul>
+<p><img src="img/图5-后台KYC审核页.png" alt="图5 后台 KYC审核页示意"></p>
+<p class="cap">图5 后台【用户管理 › KYC审核】页：原筛选和列表不变，红框为新增的「同步NDRP名单」按钮和同步状态行（示例数据）。</p>
+
+<h2 id="c5">5. 同步与核对记录</h2>
+<p>每次同步（含每次重试）各记录一条：触发方式（定时 / 手动 / 重试）、操作人（手动时）、开始和结束时间、结果、获取条数、新增和移出明细、失败原因。</p>
+<p>每次 KYC 记录每一步结果：本地初筛结果和时间（命中时含命中的名单记录）、姓名比对结果（含两边姓名）、实时核对每次请求的时间、结果（未命中 / 命中 / 失败）和失败原因、是否跳过。</p>
+<p>后台对本地名单库任何记录的增删改、人工补录 KYC 被名单拦截，写后台操作日志（沿用现有）：时间、操作人、变更前后的内容（拦截时为命中的名单记录）。操作日志与每次同步的新增、移出明细一起，能还原任一时刻的名单。</p>
+<p>以上记录由系统保存，供审计追溯；不新增页面展示，查询方式由技术确定。后台 KYC 审核记录只在现有的原因（备注）里写不通过原因和「实时核对跳过」。</p>
+
+<h2 id="c6">6. 非功能需求</h2>
+<div class="tbl"><table>
+<tr><th>类别</th><th>要求</th></tr>
+<tr><td>同步频率</td><td>每天 04:00（GMT+8）一次，由技术配置</td></tr>
+<tr><td>失败重试</td><td>定时同步失败后每 10 分钟重试一次，最多重试 3 次（首次 + 重试 3 次，共执行 4 次）；仍失败则当天不再自动同步，等次日 04:00 或手动同步；手动同步不重试；同一时间只运行一个同步任务；每次重试都由系统记录</td></tr>
+<tr><td>告警</td><td>四种情况告警：① 定时同步重试 3 次仍失败；② 距最后一次成功同步超过 26 小时（含定时任务未执行），每天告警一次，直到同步成功；③ 读取本地名单库失败（含三个其他入口）；④ 实时核对跳过（同一时段多次可合并，规则由技术确定）。渠道为 Telegram 和邮件，接收人为技术负责人和合规负责人</td></tr>
+<tr><td>降级</td><td>同步失败时不覆盖、继续使用现有名单；读取本地名单库失败时本次 KYC 提交不成功，不放行；PAGCOR 实时查询接口 3 次都失败时只跳过实时核对，其他校验照常</td></tr>
+<tr><td>性能</td><td>同步任务在后台执行，不影响线上业务；本地初筛和实时核对的等待时长上限由技术确定</td></tr>
+<tr><td>安全</td><td>账号密码加密存储；名单查询、导出的权限和脱敏沿用现有，不得外传</td></tr>
+<tr><td>审计</td><td>每次同步的系统记录（含新增和移出明细）、KYC 核对记录（含填写姓名、姓名比对、实时核对和跳过）、后台操作日志至少保存 5 年，从记录产生或账户关闭起算，取两者中较晚的</td></tr>
+</table></div>
+
+<h2 id="c7">7. 验收标准</h2>
+<ul>
+<li>定时同步在每天 04:00（GMT+8）按时执行。</li>
+<li>能进入 KYC审核页的账号都能看到并使用「同步NDRP名单」按钮；点击后开始同步，成功提示「同步完成，变更 N 条」（无变化时 N 为 0），失败提示「同步失败，已保留现有名单」；系统记录的触发方式为「手动」，并有操作人。</li>
+<li>模拟登录失败、网络异常、结果为空、条数减少超过 20%、格式异常：同步判为失败，不覆盖现有名单；定时同步每 10 分钟重试一次，最多重试 3 次，仍失败则触发告警、当天不再自动同步，KYC审核页同步状态行的「失败」显示为红色；手动同步失败不重试；同一时间只运行一个同步任务。</li>
+<li>模拟定时任务未执行超过 26 小时：触发告警，之后每天告警一次，直到同步成功。</li>
+<li>同步成功后，从 PAGCOR 同步的名单与 PAGCOR 名单一致，后台手动新增的名单不变；后台修改或删除过的从 PAGCOR 同步的名单，恢复为 PAGCOR 的内容；系统记录的新增、移出条数和明细与实际差异一致。</li>
+<li>用名单内人员姓名在填写姓名页点 Next：立即提示验证失败，不进入证件识别和活体检测；KYC 状态为「拒绝」；审核记录原因（备注）显示「命中 NDRP 名单（本地初筛）」，导出包含该内容；系统记录命中的名单记录和时间。</li>
+<li>填写姓名与证件姓名不一致：前台显示 Name Mismatch，点 Resubmit 回到填写姓名页；KYC 状态为「拒绝」，不进入人工审核；审核记录原因（备注）显示「证件姓名与填写姓名不一致」，导出包含该内容。识别不出姓名时提示重新拍摄证件，不判为不一致。</li>
+<li>名单比对：名单内人员能被拦截，姓名与名单内人员不同的正常用户不被误拦。</li>
+<li>证件姓名比对：按技术确定的规则，大小写、空格不同的同一人不被判为不一致。</li>
+<li>PAGCOR 实时核对命中：前台提示验证失败；审核记录原因（备注）显示「命中 NDRP 名单（实时核对）」，导出包含该内容。</li>
+<li>模拟 PAGCOR 实时查询接口 3 次都失败：KYC 继续进入原有审核，前台无跳过提示；审核记录原因（备注）显示「实时核对跳过」，导出包含该内容；系统有 3 次请求记录和初筛时间；触发告警。第 1 次失败、第 2 次成功时，按第 2 次返回的结果（命中或未命中）处理，不标注跳过。</li>
+<li>PAGCOR 手机号自动认证、后台人工补录通过 KYC、跨站 KYC 数据互通三个入口：名单内人员的 KYC 状态都置为「拒绝」；人工补录命中时，点击 Pass KYC 后弹出提示，KYC 状态为「拒绝」；三个入口不做姓名比对；读取本地名单库失败时不放行，并触发告警。</li>
+<li>某人从名单移出并同步成功后，再次提交 KYC 可按正常流程继续；名单新增某人并同步成功后，此人下一次提交 KYC 被拦截。</li>
+<li>模拟初筛时读取本地名单库失败：本次提交不成功，前台显示现有网络异常提示，不放行；触发告警。</li>
+<li>前台自助 KYC 的每个端（H5、PC、PWA、iOS、Android、小程序、仍能发起 KYC 的安卓原生老包）分别走一遍：都先进入填写姓名页，本地初筛、证件姓名比对、实时核对都生效。</li>
+<li>三站「实名验证」和「游戏 KYC 设置」开关已打开；KYC 为「拒绝」的用户不能充值、进游戏、提现。</li>
+<li>前台所有提示和客服参考话术中，不出现 NDRP、名单、政府官员字样。</li>
+<li>789Bingo、789Games、789Play 三站分别按以上各条验收。</li>
+</ul>
+
+<h2 id="c8">8. 待确认</h2>
+<div class="tbl"><table>
+<tr><th>编号</th><th>问题</th><th>建议 / 结论</th><th>确认方</th></tr>
+<tr><td>Q1</td><td>比对哪些字段，名单记录缺少生日等字段时怎么处理</td><td>已定：由技术确定（2026-11-24 产品确认）</td><td>技术、合规</td></tr>
+<tr><td>Q2</td><td>三站是否共用一份名单同步结果</td><td>已定：由技术确定（2026-11-24 产品确认）</td><td>技术</td></tr>
+<tr><td>Q3</td><td>789Games 访问 NDRP 接口的出口 IP 是否已获 PAGCOR 放行（GAM-636）；789Play 是否有同样问题</td><td>已定：由技术跟进确认（2026-11-24 产品确认）</td><td>技术</td></tr>
+<tr><td>Q4</td><td>789Play 的 KYC 流程和后台菜单与另两站是否一致</td><td>已定：789Play 暂定与 789Bingo、789Games 流程一致（2026-11-24 产品确认）</td><td>技术</td></tr>
+<tr><td>Q5</td><td>审计记录保留期限</td><td>已定：至少 5 年，从记录产生或账户关闭起算，取两者中较晚的（2026-11-24 产品确认）</td><td>产品</td></tr>
+<tr><td>Q6</td><td>名单适用人群：NDRP 除政府官员外，还含自我排除、家属申请排除、博彩从业人员</td><td>已定：命中名单即拦截，不区分类别（2026-11-24 产品确认）</td><td>产品</td></tr>
+<tr><td>Q7</td><td>实时核对跳过的用户，下次同步成功后是否自动用新名单补查</td><td>已定：本期不做（2026-11-24 产品确认）</td><td>产品</td></tr>
+<tr><td>Q8</td><td>本地名单库超过 26 小时未成功同步时，若实时核对也失败，是否不跳过、改为停在「待初审」</td><td>已定：本期不做（2026-11-24 产品确认）</td><td>产品</td></tr>
+<tr><td>Q9</td><td>已通过 KYC 的存量用户，名单新增人员后是否复查</td><td>已定：本期不做，另提需求（2026-11-24 产品确认）</td><td>产品</td></tr>
+<tr><td>Q10</td><td>姓名不一致或名单命中后，同一账号每天重新提交 KYC 的次数是否设上限（防止反复换姓名试探名单）</td><td>已定：本期不做（2026-11-24 产品确认）</td><td>产品</td></tr>
+<tr><td>Q11</td><td>04:00（GMT+8）是否为全天在线人数最少的时段</td><td>已定：本期不另做核对，按 04:00 执行。前台展示的在线人数是后台配置的数字，不能作依据；调整同步时间时参考后台按小时的投注和登录数据（2026-11-24 产品确认）</td><td>产品</td></tr>
+<tr><td>Q12</td><td>同名误拦：本地初筛只比姓名，与名单内人员同名的正常用户会被拒，人工补录也不能通过，怎么放行</td><td>已定：本期由客服转合规负责人核实；核实后的放行方式另提需求（2026-11-24 产品确认）</td><td>产品</td></tr>
+<tr><td>Q13</td><td>现网 KYC 填写姓名时，是否已有用 NDRP名单配置做的本地初筛（资料矛盾）</td><td>请技术确认；已有则改造为 3.2 步骤 2，没有则新增</td><td>技术</td></tr>
+<tr><td>Q14</td><td>789Games 的阿里云 eKYC、789Play 的证件识别，能否返回证件姓名（证件识别返回的姓名原值）</td><td>请技术确认；不能返回时 3.2 步骤 4 无法执行，需另定方案</td><td>技术</td></tr>
+<tr><td>Q15</td><td>现有后台操作日志是否记录变更前后的内容</td><td>请技术确认；不记录的，按第 5 节补齐</td><td>技术</td></tr>
+<tr><td>Q16</td><td>仍能发起 KYC 的安卓原生老包版本号和机型范围；小程序能否发起 KYC</td><td>请技术确认；确认后写进 4.3「覆盖所有能使 KYC 变为通过的入口」</td><td>技术</td></tr>
+</table></div>
+
+<h2 id="c9">9. 各站工单</h2>
+<p>789Bingo：BB789BINGO-7677；789Games：GAM-649；789Play：PLY-2。</p>
+
+<h2 id="c10">10. 备用方案</h2>
+<p>技术确认 PAGCOR NDRP 系统既不能下载全量名单、也没有批量接口时，从以下三份备用方案中选一份；选定后以对应文档为准。</p>
+<h3 id="c10-1">10.1 备用方案 A：本地名单库人工维护</h3>
+
+<p><b>适用前提：</b>技术确认 PAGCOR NDRP 系统既不能下载全量名单，也没有批量接口。</p>
+<p><b>与主方案的差异：</b></p>
+<ul>
+<li>不做名单同步（定时同步、手动同步都不做）；本地名单库由合规负责人在【系统管理 › NDRP名单配置】人工维护。</li>
+<li>【用户管理 › KYC审核】页不加「同步NDRP名单」按钮和同步状态行。</li>
+<li>告警从四种减为两种：读取本地名单库失败、实时核对跳过。</li>
+<li>KYC 的三道检查（本地初筛 → 证件姓名比对 → PAGCOR 实时核对）、三个其他入口、前台页面和提示，与主方案相同。</li>
+<li>依赖：合规负责人日常维护本地名单库。本地名单库会比 PAGCOR 名单旧，实时核对 3 次都失败而跳过时，漏拦风险比主方案高（见该备用方案文档第 8 节 Q8）。</li>
+<li>第 8 节待确认沿用主方案编号，便于对照；本方案不适用的编号不列，新增的从 Q16 起编。</li>
+</ul>
+<p>完整文档：<a href="NDRP名单定期同步-备用方案A-人工维护.html">备用方案 A：本地名单库人工维护</a></p>
+<h3 id="c10-2">10.2 备用方案 B：PAGCOR 定期提供名单文件</h3>
+
+<p><b>适用前提：</b>技术确认 PAGCOR NDRP 系统既不能下载全量名单，也没有批量接口；同时 PAGCOR 同意定期向平台提供全量名单文件（由法务申请）。</p>
+<p><b>与主方案的差异：</b></p>
+<ul>
+<li>名单来源从「登录 PAGCOR NDRP 系统获取」改为「PAGCOR 定期提供的名单文件」；收到文件后由技术导入本地名单库，不做定时同步，也不做后台导入页面。</li>
+<li>【用户管理 › KYC审核】页不加「同步NDRP名单」按钮和同步状态行。</li>
+<li>导入的数据校验、只更新从 PAGCOR 获取的名单、首次上线规则，与主方案的同步规则相同。</li>
+<li>告警 ①「定时同步重试 3 次仍失败」改为「导入数据校验不通过」；告警 ②「超过 26 小时未成功同步」改为「超过约定的文件周期仍未成功导入」。</li>
+<li>KYC 的三道检查（本地初筛 → 证件姓名比对 → PAGCOR 实时核对）、三个其他入口、前台页面和提示，与主方案相同。</li>
+<li>依赖：法务向 PAGCOR 申请；PAGCOR 同意并确定文件周期和格式（见该备用方案文档第 8 节 Q16）；技术导入。本地名单库按文件周期更新，周期长于一天时，实时核对跳过时的漏拦风险比主方案高（见该备用方案文档第 8 节 Q8）。</li>
+<li>第 8 节待确认沿用主方案编号，便于对照；本方案不适用的编号不列，新增的从 Q16 起编。</li>
+</ul>
+<p>完整文档：<a href="NDRP名单定期同步-备用方案B-PAGCOR定期文件.html">备用方案 B：PAGCOR 定期提供名单文件</a></p>
+<h3 id="c10-3">10.3 备用方案 C：批量复查存量会员</h3>
+
+<p><b>适用前提：</b>技术确认 PAGCOR NDRP 系统既不能下载全量名单，也没有批量接口；同时技术确认 PAGCOR 实时查询接口能承受批量查询（见该备用方案文档第 8 节 Q16）。</p>
+<p><b>与主方案的差异：</b></p>
+<ul>
+<li>不做名单同步（定时同步、手动同步都不做）；本地名单库由合规负责人在【系统管理 › NDRP名单配置】人工维护（与备用方案 A 相同）。</li>
+<li>新增「存量会员复查」：定期用 PAGCOR 实时查询接口逐个复查 KYC 已通过的会员，命中的 KYC 状态改为「拒绝」。主方案第 8 节 Q9「存量用户复查」在本方案中要做。</li>
+<li>【用户管理 › KYC审核】页不加「同步NDRP名单」按钮和同步状态行。</li>
+<li>告警改为三种：读取本地名单库失败、实时核对跳过、存量复查结果。</li>
+<li>KYC 的三道检查（本地初筛 → 证件姓名比对 → PAGCOR 实时核对）、三个其他入口、前台页面和提示，与主方案相同。</li>
+<li>依赖：合规负责人日常维护本地名单库；PAGCOR 实时查询接口能否承受批量查询、一轮复查需要多久，待技术确认（Q16）。存量复查能发现通过 KYC 后才被列入名单的会员，也会补查实时核对被跳过的会员。</li>
+<li>第 8 节待确认沿用主方案编号，便于对照；本方案不适用的编号不列，新增的从 Q16 起编。</li>
+</ul>
+<p>完整文档：<a href="NDRP名单定期同步-备用方案C-批量复查存量会员.html">备用方案 C：批量复查存量会员</a></p>
+</article></div>
+</div>
+<script>window.NAV_ROOT = "../";</script>
+<script src="../assets/nav-data.js"></script>
+<script src="../assets/nav.js"></script>
+<script src="../assets/proto-en.js"></script>
+<script src="../assets/dev-notes.js"></script>
+<script>
+(function () {
+  /* 功能点名称（与开发自查清单保持一致） */
+  var FP = {
+    F01: "KYC 名单筛选与名单同步", "F01-01": "KYC 名单筛选", "F01-02": "名单同步（主方案）", "F01-03": "备用方案"
+  };
+  var doc = document.getElementById("doc");
+
+  /* 子功能点锚点：第一处相关内容 */
+  Object.keys(FP).forEach(function (code) {
+    if (code.length === 3 || document.getElementById(code)) return;
+    var el = [].filter.call(doc.querySelectorAll('[data-fp~="' + code + '"]'), function (e) { var f = e.querySelector(".fp"); return f && f.textContent === code; })[0] ||
+      doc.querySelector('[data-fp~="' + code + '"]');
+    if (!el) return;
+    if (!el.id) { el.id = code; return; }
+    var a = document.createElement("span"); a.id = code;
+    (el.tagName === "TR" ? el.cells[0] : el).prepend(a);
+  });
+  /* 大功能点（如 F01）没有单独位置时，锚到它第一处相关内容 */
+  Object.keys(FP).forEach(function (code) {
+    if (code.length !== 3 || document.getElementById(code)) return;
+    var el = doc.querySelector('[data-fp~="' + code + '"]') || doc.querySelector('[data-fp^="' + code + '-"]');
+    if (!el) return;
+    var s = document.createElement("span"); s.id = code; (el.tagName === "TR" ? el.cells[0] : el).prepend(s);
+  });
+
+  /* 全文目录：按正文 h2 / h3 自动生成 */
+  var list = document.getElementById("toc-list"), sub = null;
+  doc.querySelectorAll("h2, h3").forEach(function (h) {
+    if (h.id === "toc" || !h.id) return;
+    var li = document.createElement("li"), a = document.createElement("a");
+    a.href = "#" + h.id; a.textContent = h.textContent; li.appendChild(a);
+    if (h.tagName === "H2") { list.appendChild(li); sub = document.createElement("ol"); li.appendChild(sub); }
+    else if (sub) sub.appendChild(li);
+  });
+  list.querySelectorAll("ol").forEach(function (o) { if (!o.children.length) o.remove(); });
+
+  /* 版本标注（v1.0 首版没有标注；以后的版本沿用这段逻辑） */
+  var rows = [].slice.call(document.querySelectorAll("#vtable tr[data-v]"));
+  /* 最新版本按版本号判断（不依赖表格的排列顺序） */
+  function vnum(v) { var m = /(\d+)\.(\d+)/.exec(v || ""); return m ? (+m[1]) * 1000 + (+m[2]) : -1; }
+  var latest = rows.reduce(function (a, r) { return vnum(r.dataset.v) > vnum(a) ? r.dataset.v : a; }, rows[0].dataset.v), sum = {};
+  rows.forEach(function (r) { sum[r.dataset.v] = r.dataset.sum; });
+  doc.querySelectorAll(".vmark").forEach(function (m) { if (m.dataset.v !== latest) m.classList.add("old"); });
+  var tip = null;
+  function hideTip() { if (tip) { tip.remove(); tip = null; } }
+  doc.querySelectorAll(".vtag").forEach(function (t) {
+    if (t.dataset.v !== latest) t.classList.add("old");
+    t.tabIndex = 0;
+    function show(e) {
+      if (e) e.stopPropagation();
+      hideTip();
+      tip = document.createElement("div"); tip.className = "vtip"; tip.textContent = t.dataset.v + "：" + (sum[t.dataset.v] || "");
+      document.body.appendChild(tip);
+      var r = t.getBoundingClientRect();
+      tip.style.left = Math.max(8, Math.min(r.left + scrollX, innerWidth - 370)) + "px"; tip.style.top = (r.bottom + scrollY + 6) + "px";
+    }
+    t.addEventListener("mouseenter", show); t.addEventListener("click", show); t.addEventListener("focus", show);
+    t.addEventListener("mouseleave", hideTip);
+  });
+  document.addEventListener("click", hideTip);
+  /* 涉及章节（生成内容规范第五章第 3 节）：按项数折叠，不分新旧版本——3 项以内直接列出；超过 3 项只显示「查看详细（共 N 项）」，点开后清单末尾有「收起」 */
+  document.querySelectorAll("[data-chg]").forEach(function (b) {
+    var ul = document.getElementById(b.dataset.chg); if (!ul) return;
+    var n = ul.querySelectorAll("li:not(.chg-fold)").length;
+    if (n <= 3) { ul.hidden = false; b.hidden = true; return; }
+    b.textContent = "查看详细（共 " + n + " 项）"; ul.hidden = true;
+    var fold = document.createElement("li"); fold.className = "chg-fold";
+    var fb = document.createElement("button"); fb.type = "button"; fb.className = "linkbtn"; fb.textContent = "收起";
+    fb.onclick = function () { ul.hidden = true; b.hidden = false; b.focus(); };
+    fold.appendChild(fb); ul.appendChild(fold);
+    b.onclick = function () { ul.hidden = false; b.hidden = true; };
+  });
+
+  /* 附录 C 前台文案中英对照：读取 assets/proto-en.js（window.PROTO_EN）自动生成 */
+  (function () {
+    var t = document.getElementById("enTable"), D = window.PROTO_EN || {}, keys = Object.keys(D); if (!t) return;
+    if (!keys.length) { var r0 = t.insertRow(); var c0 = r0.insertCell(); c0.colSpan = 3; c0.className = "w"; c0.textContent = "还没有填写英文对照（打包前在 assets/proto-en.js 填写）。"; return; }
+    keys.forEach(function (k, i) { var r = t.insertRow(); r.insertCell().textContent = i + 1; var a = r.insertCell(); a.className = "w"; a.textContent = k; var b = r.insertCell(); b.className = "w"; b.textContent = D[k]; });
+  })();
+
+  /* 附录 D 页面控件说明：读取 assets/dev-notes.js（window.DEV_NOTES）自动生成，按所在页面分组；多迭代 PRD 在表格上写 data-iter="v1.1"，只列这个迭代的控件 */
+  (function () {
+    var t = document.getElementById("devTable"), D = window.DEV_NOTES || {}, it = t ? t.getAttribute("data-iter") || "" : "";
+    if (!t) return;
+    var ids = Object.keys(D).filter(function (k) { var x = D[k].iter; return !it || !x || [].concat(x).indexOf(it) >= 0; });
+    if (!ids.length) { var r0 = t.insertRow(); var c0 = r0.insertCell(); c0.colSpan = 4; c0.className = "w"; c0.textContent = "还没有填写控件说明（在 assets/dev-notes.js 填写，原型控件加 data-dev 编号）。"; return; }
+    function line(box, k, v, cls) { if (!v) return; var p = document.createElement("div"); var b = document.createElement("span"); b.className = "dev-k"; b.textContent = k + "："; p.appendChild(b); var s = document.createElement("span"); if (cls) s.className = cls; s.textContent = v; p.appendChild(s); box.appendChild(p); }
+    var page = null;
+    ids.forEach(function (k) {
+      var d = D[k];
+      if (d.page !== page) { page = d.page; var g = t.insertRow(); var gc = g.insertCell(); gc.colSpan = 4; gc.className = "w"; gc.innerHTML = "<b></b>"; gc.firstChild.textContent = page || "（未写所在页面）"; }
+      var r = t.insertRow(); r.id = "dev-" + k; r.setAttribute("data-brief", (d.name || k) + "：" + (d.what || ""));
+      var c1 = r.insertCell(); c1.className = "dev-id"; c1.textContent = k;
+      r.insertCell().textContent = d.name || "";
+      var c3 = r.insertCell(); c3.className = "w"; line(c3, "作用", d.what); line(c3, "场景与状态", d.scene); line(c3, "交互结果", d.result); line(c3, "限制", d.limit);
+      var c4 = r.insertCell(); c4.className = "w"; line(c4, "公式", d.formula, "dev-f"); line(c4, "规则", d.rules);
+    });
+    /* 从原型「在 PRD 中查看」跳来（#dev-D01）时，行是刚生成的，浏览器打开页面时还找不到它：生成后定位一次，
+       表格自动列宽和字体加载会改变行的位置，load 后和稍后各再定位一次；用户自己滚动过就不再拉回 */
+    function goDev() {
+      var h = decodeURIComponent(location.hash.slice(1)); if (!/^dev-/.test(h)) return;
+      var row = document.getElementById(h); if (!row) return;
+      doc.querySelectorAll("tr.dev-hit").forEach(function (x) { x.classList.remove("dev-hit"); });
+      row.classList.add("dev-hit"); row.scrollIntoView({ block: "center", behavior: "instant" });   /* 不用平滑滚动：多次定位时平滑滚动会互相打断，后台标签页里也不执行 */
+    }
+    var moved = false;
+    ["wheel", "touchmove", "keydown"].forEach(function (ev) { window.addEventListener(ev, function () { moved = true; }, { once: true, passive: true }); });
+    function again() { if (!moved) goDev(); }
+    goDev();
+    window.addEventListener("load", function () { again(); setTimeout(again, 400); setTimeout(again, 1200); });
+    window.addEventListener("hashchange", function () { moved = false; goDev(); });
+  })();
+
+  /* 引用编号（规则 N、待确认 Q、功能点 F、控件说明 D）换成可点击的编号按钮（点击打开 PRD 并标出相关位置）由公共 assets/nav.js 统一处理（生成内容规范第五章第 2 节「引用编号」），本页不再自带脚本 */
+  /* 表格自动列宽（生成内容规范第五章第 2 节「表格排版」，参考「用户提款风控规则升级」需求包）：带 data-fit 的表，
+     表格宽度等于正文宽度、不出现水平滚动；从有富余的列把宽度挪给撑高行的列，直到整张表的高度不能再降低。单元格允许换行，不会溢出或重叠。
+     没写 <colgroup> 时自动补上。打开页面、窗口大小变化、目录栏展开收起、字体加载完成后各算一次 */
+  (function () {
+    function cols(tbl) {
+      var cs = tbl.querySelectorAll("col"); if (cs.length) return cs;
+      var first = tbl.rows[0]; if (!first) return cs;
+      var n = 0; [].forEach.call(first.cells, function (c) { n += c.colSpan || 1; });
+      var g = document.createElement("colgroup"); for (var i = 0; i < n; i++) g.appendChild(document.createElement("col"));
+      tbl.insertBefore(g, tbl.firstChild); return tbl.querySelectorAll("col");
+    }
+    function fit(tbl, force) {
+      var cl = cols(tbl); if (!cl.length) return;
+      var n = cl.length, W = tbl.parentNode.clientWidth; if (!W) return;
+      /* 宽度和上次计算时一样就不重算（列宽已经设好），避免窗口事件、切换标签时卡顿（2026-10-26，来源「客服系统待回复列表优化」实测） */
+      if (!force && tbl._fitW === W) return;
+      tbl._fitW = W;
+      var MIN = 44, STEP = Math.max(4, Math.round(W / 120));
+      var rows = [].slice.call(tbl.rows), len = [];
+      for (var c = 0; c < n; c++) { var m = 1; rows.forEach(function (r) { var cell = r.cells[c]; if (cell && cell.colSpan === 1) m = Math.max(m, cell.textContent.trim().length); }); len.push(Math.sqrt(m)); }
+      /* 每列下限：不会折行的元素（功能点标签 .fp、.nw、code、nobr）不能被挤出单元格（2026-10-26，来源「实体奖品管理」） */
+      var mn = []; for (var k = 0; k < n; k++) mn.push(MIN);
+      rows.forEach(function (r) { for (var k = 0; k < r.cells.length && k < n; k++) { var cell = r.cells[k]; if (cell.colSpan !== 1) continue; [].forEach.call(cell.querySelectorAll(".fp,.nw,.ui-nw,code,nobr"), function (e) { mn[k] = Math.max(mn[k], e.offsetWidth + 18); }); } });
+      var sum = len.reduce(function (a, b) { return a + b; }, 0), w = len.map(function (l, i) { return Math.max(mn[i], Math.floor(W * l / sum)); });
+      var cells = [].slice.call(tbl.querySelectorAll("th,td")), rg = document.createRange();
+      /* 评分 = 表格总高度为主，各单元格文字高度之和为辅：先压最高的行，同高时也让其他格子少折行 */
+      function apply() { var s = w.reduce(function (a, b) { return a + b; }, 0); for (var i = 0; i < n; i++) cl[i].style.width = (w[i] / s * 100).toFixed(3) + "%"; var t = 0; cells.forEach(function (x) { rg.selectNodeContents(x); t += rg.getBoundingClientRect().height; }); return tbl.offsetHeight * 1000 + t; }
+      var best = apply(), guard = 0, improved = true;
+      while (improved && guard++ < 150) {
+        improved = false; var move = null;
+        /* 每轮同时试 1、2、4、8 倍步长，取评分下降最多的一次：一格要少折一行常要挪 20px 以上，只试单步会停在原处（2026-10-26，来源「用户提款风控规则升级」） */
+        [1, 2, 4, 8].forEach(function (k) {
+          var d = STEP * k;
+          for (var to = 0; to < n; to++) for (var from = 0; from < n; from++) {
+            if (to === from || w[from] - d < mn[from]) continue;
+            w[from] -= d; w[to] += d; var h = apply();
+            if (h < best - 0.5) { best = h; move = [from, to, d]; }
+            w[from] += d; w[to] -= d;
+          }
+        });
+        if (move) { w[move[0]] -= move[2]; w[move[1]] += move[2]; improved = true; }
+        apply();
+      }
+    }
+    function fitAll(force) { doc.querySelectorAll("table[data-fit]").forEach(function (t) { fit(t, force === true); }); }
+    var tm = 0; function later() { clearTimeout(tm); tm = setTimeout(fitAll, 150); }
+    window.addEventListener("resize", later); window.addEventListener("navtoggle", later);
+    /* 打开页面只算一次：等页面和字体都加载完（字体会改变文字宽度），不在脚本执行、字体就绪、load 时各算一遍 */
+    var loaded = document.readyState === "complete" ? Promise.resolve() : new Promise(function (r) { window.addEventListener("load", r); });
+    Promise.all([loaded, document.fonts && document.fonts.ready ? document.fonts.ready : null]).then(function () { fitAll(true); });
+  })();
+  /* 荧光蓝标注：网址以 #编号 结尾时出现（来自原型、开发自查清单等页面的编号标签和「在 PRD 中查看」） */
+  var banner = document.getElementById("fp-banner"), hits = [], pos = -1;
+  function report() { try { if (parent !== window) parent.postMessage({ type: "prd-hits", total: hits.length, pos: pos }, "*"); } catch (e) {} }
+  function clearHit() { doc.querySelectorAll(".fp-hit,.fp-cur").forEach(function (e) { e.classList.remove("fp-hit", "fp-cur"); }); hits = []; pos = -1; banner.hidden = true; }
+  function go(i) {
+    if (!hits.length) return;
+    pos = (i + hits.length) % hits.length;
+    hits.forEach(function (h) { h.classList.remove("fp-cur"); });
+    hits[pos].classList.add("fp-cur");
+    hits[pos].scrollIntoView({ block: "center", behavior: "instant" });   /* 不用平滑滚动：多次定位时会互相打断，后台标签页里也不执行 */
+    report();
+  }
+  /* 编号定位（所有需求通用，用户 2026-11-02）：原型和文档里点编号标签（规则 N、待确认 Q、功能点 F、研发说明 D）或研发说明弹窗「在 PRD 中查看」，
+     打开 PRD 并带 #编号；本页标出所有相关位置（荧光蓝底色，优先级最高），跳到文档中最前面的一处。
+     - F：data-fp 含该功能点的块；N / Q：定义行 + 正文里引用它的段落、表格行、列表项；
+     - D：研发说明关联的规则行（dev-notes 的 rules）+ 附录 D 行 + 正文里引用它的位置。 */
+  window.PRD_CODE_HL = true;
+  function mentions(code, add) {
+    var re = new RegExp("\\b" + code + "\\b"), w = document.createTreeWalker(doc, NodeFilter.SHOW_TEXT), n;
+    while ((n = w.nextNode())) {
+      if (!re.test(n.nodeValue) || !n.parentNode.closest || n.parentNode.closest("h1,h2,h3,.toc-full,#fp-banner,script,style")) continue;
+      var p = n.parentNode.closest("button") ? n.parentNode.closest("button").parentNode : n.parentNode;   /* 编号按钮里的文字：标它所在的整段，不只标按钮 */
+      add(p.closest("tr,li,p,dd,blockquote,h4") || p.closest(".vmark") || p);
+    }
+  }
+  function applyHit() {
+    var code = decodeURIComponent(location.hash.slice(1)), set = [];
+    clearHit();
+    function add(e) { if (e && set.indexOf(e) < 0 && !set.some(function (s) { return s.contains(e); })) { set = set.filter(function (s) { return !e.contains(s); }); set.push(e); } }
+    var title = "";
+    if (/^F\d{2}(-\d{2})?$/.test(code) && FP[code]) {
+      doc.querySelectorAll("[data-fp]").forEach(function (e) {
+        if (e.dataset.fp.split(/\s+/).some(function (c) { return c === code || c.indexOf(code + "-") === 0; })) add(e);
+      });
+      var big = code.slice(0, 3);
+      title = code.length > 3 ? big + " " + FP[big] + " › " + code + " " + FP[code] : code + " " + FP[code];
+    } else if (/^[NQ]\d{1,3}$/.test(code)) {
+      var row = document.getElementById(code.toLowerCase()); if (!row) { report(); return; }
+      add(row); mentions(code, add);
+      title = code + " " + (row.getAttribute("data-brief") || (row.cells[1] ? row.cells[1].textContent.trim().slice(0, 40) : ""));
+    } else if (/^D\d{2,3}$/.test(code)) {
+      var d = (window.DEV_NOTES || {})[code]; if (!d) { report(); return; }
+      String(d.rules || "").split(/[、,，\s]+/).forEach(function (r) { var m = /^[NQ]\d{1,3}/.exec(r); var e = m && document.getElementById(m[0].toLowerCase()); if (e) add(e); });
+      add(document.getElementById("dev-" + code)); mentions(code, add);
+      title = code + " " + (d.name || "");
+    } else { report(); return; }
+    hits = set.filter(Boolean).sort(function (a, b) { return a.compareDocumentPosition(b) & 4 ? -1 : 1; });
+    hits.forEach(function (e) { e.classList.add("fp-hit"); });
+    if (!hits.length) { report(); return; }
+    if (title.length > 60) title = title.slice(0, 60) + "…";
+    document.getElementById("fp-text").textContent = "正在查看：" + title + "（共标出 " + hits.length + " 处，已跳到最前面一处）";
+    banner.hidden = false;
+    go(0);
+    /* 表格自动列宽、字体加载、编号按钮替换会改变上方高度：用户没动之前再定位几次 */
+    var moved = false, stop = function () { moved = true; };
+    ["wheel", "touchstart", "keydown", "mousedown"].forEach(function (ev) { window.addEventListener(ev, stop, { once: true, passive: true, capture: true }); });
+    [300, 900, 2000].forEach(function (ms) { setTimeout(function () { if (!moved && hits.length) go(pos); }, ms); });
+  }
+  document.getElementById("fp-clear").onclick = function () { clearHit(); history.replaceState(null, "", location.pathname); report(); };
+  window.addEventListener("message", function (e) {
+    var d = e.data || {};
+    if (d.type === "prd-step") go(pos + d.dir);
+    if (d.type === "prd-show") { if (location.hash === "#" + d.code) applyHit(); else location.hash = d.code; }
+  });
+  window.addEventListener("hashchange", applyHit);
+  applyHit();
+})();
+</script>
+</body>
+</html>

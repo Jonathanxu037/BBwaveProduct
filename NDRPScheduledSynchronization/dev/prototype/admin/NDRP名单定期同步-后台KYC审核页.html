@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>NDRP名单定期同步-后台KYC审核页</title>
+<link rel="stylesheet" href="../../assets/style.css">
+<style>.bo-tabs span{cursor:pointer}.bo-tabs span:hover{color:#409EFF}.syncbar{display:inline-flex;align-items:center;gap:10px;margin-left:auto}.syncbar .fail{color:#F56C6C}</style>
+</head>
+<body>
+<div class="with-nav">
+<div class="adm-stage">
+  <div class="bo">
+    <div class="bo-top1"><span>当前时间：2026/11/26 10:30:00</span><span class="sp">简体中文</span><span>运营账号A ▾</span></div>
+    <div class="bo-top2"><span>在线人数<b class="bo-n r">12</b></span><span>当日注册<b class="bo-n g">8</b></span><span>当日充值成功<b class="bo-n g">15</b></span><span>提款<b class="bo-n g">0</b></span><span>风控审核<b class="bo-n r">1</b></span></div>
+    <div class="bo-body">
+      <nav class="bo-menu" aria-label="后台菜单">
+        <div class="mt">菜单 ≡</div>
+        <div class="g open">用户管理</div>
+        <div class="i">会员</div><div class="i on">KYC审核</div><div class="i">会员资料修改审核</div>
+        <div class="g">财务管理</div>
+        <div class="g">系统管理</div>
+      </nav>
+      <div class="bo-main">
+        <div class="bo-crumb" id="crumb">位置 › 用户管理 › <b>KYC审核</b></div>
+        <div class="bo-tabs" role="tablist">
+          <span role="tab" tabindex="0" data-go="list" id="tList" class="on" aria-selected="true">KYC审核</span>
+          <span role="tab" tabindex="0" data-go="log" id="tLog">KYC审核记录</span>
+        </div>
+
+        <!-- ============ KYC审核 ============ -->
+        <section id="vList" hidden>
+          <div class="bo-filter" style="display:flex;flex-wrap:wrap;gap:8px;align-items:center">
+            <span>时间</span><input class="bo-inp" style="width:200px" value="2026-11-26 ~ 2026-11-26" aria-label="时间">
+            <span>KYC 状态</span><select class="bo-inp" aria-label="KYC 状态"><option>全部</option><option>待初审</option><option>拒绝</option><option>完全认证</option></select>
+            <button class="bo-btn q" type="button">查询</button>
+            <span class="syncbar" id="syncBar">
+              <span class="glow" id="syncState">最后同步 2026-11-26 04:00:32 · 成功</span>
+              <button class="bo-btn n glow" type="button" id="syncBtn" data-dev="D02">同步NDRP名单</button>
+            </span>
+          </div>
+          <p class="ui-reqnote" id="noSyncNote" hidden>本方案不做名单同步，本页不加「同步NDRP名单」按钮和同步状态行；本地名单库的更新方式见 PRD 第 10 章对应的备用方案。</p>
+          <div class="bo-content">
+            <table>
+              <tr><th>账号</th><th>会员信息</th><th>提交时间</th><th>KYC 状态</th><th>操作人</th><th>操作</th></tr>
+              <tr><td>user_a01</td><td>示例会员 A</td><td>2026-11-26 10:12:05</td><td>待初审</td><td>-</td><td><button class="bo-btn link" type="button" data-pass="miss">Pass KYC</button></td></tr>
+              <tr><td>user_a02</td><td>示例会员 B</td><td>2026-11-26 10:20:41</td><td>待初审</td><td>-</td><td><button class="bo-btn link" type="button" data-pass="hit">Pass KYC</button></td></tr>
+            </table>
+            <div class="bo-page" role="navigation" aria-label="分页"><span>共 <b>2</b> 条</span><label>每页 <select aria-label="每页条数"><option>10</option><option selected>20</option><option>50</option><option>100</option></select> 条</label></div>
+            <p style="font-size:12px;color:#909399;margin:10px 0 0">示例数据均为虚构。原筛选和列表沿用现有，这里只画出与本需求有关的部分。</p>
+          </div>
+        </section>
+
+        <!-- ============ KYC审核记录 ============ -->
+        <section id="vLog" hidden>
+          <div class="bo-content">
+            <table>
+              <tr><th>操作时间</th><th>账号</th><th>KYC 状态</th><th>原因（备注）</th><th>操作人</th></tr>
+              <tr><td>2026-11-26 09:41:10</td><td>user_b01</td><td>拒绝</td><td class="glow">命中 NDRP 名单（本地初筛）</td><td>System</td></tr>
+              <tr><td>2026-11-26 09:52:33</td><td>user_b02</td><td>拒绝</td><td class="glow">命中 NDRP 名单（实时核对）</td><td>System</td></tr>
+              <tr><td>2026-11-26 10:03:18</td><td>user_b03</td><td>拒绝</td><td class="glow">证件姓名与填写姓名不一致</td><td>System</td></tr>
+              <tr><td>2026-11-26 10:15:47</td><td>user_b04</td><td>完全认证</td><td class="glow">实时核对跳过</td><td>System</td></tr>
+              <tr id="rowRecheck"><td>2026-11-26 04:26:09</td><td>user_b05</td><td>拒绝</td><td class="glow">命中 NDRP 名单（存量复查）</td><td>System</td></tr>
+            </table>
+            <p style="font-size:12px;color:#909399;margin:10px 0 0">示例数据均为虚构。页签沿用现有页面，不新增筛选、列和展示；带光晕的是本需求写进现有原因（备注）的内容，沿用现有显示和导出。</p>
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
+
+  <aside class="notes adm-notes">
+    <h2>后台 KYC审核页</h2>
+    <p class="sub">【用户管理 › KYC审核】。主方案在「KYC审核」页签筛选栏右侧加同步状态行和「同步NDRP名单」按钮；各方案的不通过原因都写进「KYC审核记录」现有的原因（备注）。带淡色光晕的是新增内容。</p>
+    <h3>模拟场景</h3>
+    <div class="sim">
+      <button type="button" data-go="list"><span class="simtag">页签</span>KYC审核</button>
+      <button type="button" data-go="log"><span class="simtag">页签</span>KYC审核记录</button>
+    </div>
+    <h3>模拟操作</h3>
+    <div class="sim" id="simPanel"></div>
+    <h3>规则批注</h3>
+    <ol>
+      <li><b>同步状态行</b>（只有主方案）：「最后同步 YYYY-MM-DD HH:mm:ss · 成功 / 失败」，时间为最近一次同步（含失败）的结束时间（GMT+8）；失败时「失败」二字为红色。<span class="ref">PRD 4.4 后台管理</span></li>
+      <li><b>同步NDRP名单</b>（只有主方案）：能进入本页的账号都能用；点击即开始同步，无二次确认。成功提示「同步完成，变更 N 条」（N 为新增与移出条数之和），失败提示「同步失败，已保留现有名单」；已有同步任务在运行时不启动新任务，等当前任务完成后按其结果提示。<span class="ref">PRD 4.4 手动同步</span></li>
+      <li><b>人工补录 Pass KYC</b>：点击时用证件姓名做本地初筛和实时核对；命中则弹出「命中 NDRP 名单，不能通过 KYC」，KYC 状态置为「拒绝」。<span class="ref">PRD 4.3 覆盖所有能使 KYC 变为通过的入口</span></li>
+      <li><b>KYC审核记录</b>：不新增筛选、列和展示；原因（备注）写「命中 NDRP 名单（本地初筛）」「命中 NDRP 名单（实时核对）」「证件姓名与填写姓名不一致」和「实时核对跳过」，操作人为 System。备用方案 C 另有「命中 NDRP 名单（存量复查）」。<span class="ref">PRD 4.4 KYC 审核记录</span></li>
+      <li><b>备用方案 A、B、C</b>：不加同步按钮和同步状态行。<span class="ref">PRD 10 备用方案</span></li>
+    </ol>
+    <h3>评审待确认</h3>
+    <ol>
+      <li><b>PAGCOR 能否提供全量名单</b>：决定用主方案还是备用方案 A、B、C。<span class="ref">PRD 10 备用方案</span></li>
+    </ol>
+    <div class="pager"><a href="../front/NDRP名单定期同步-KYC结果提示页.html">← 上一页：KYC 结果提示页</a><span></span></div>
+  </aside>
+</div>
+</div>
+<script>window.NAV_ROOT = "../../";</script>
+<script src="../../assets/nav-data.js"></script>
+<script src="../../assets/nav.js"></script>
+<script src="../../assets/proto.js"></script>
+<script>
+P.init({ defaults: { plan: "main", syncResult: "ok" } });
+P.panel(document.getElementById("simPanel"), [
+  { title: "切换方案", items: [{ type: "select", key: "plan", label: "方案", options: [["main", "需求方案（主）"], ["A", "备用方案 A"], ["B", "备用方案 B"], ["C", "备用方案 C"]] }] },
+  { title: "手动同步结果（主方案）", items: [{ type: "radio", key: "syncResult", options: [["ok", "成功，变更 3 条"], ["zero", "成功，无变化"], ["fail", "失败"], ["busy", "已有任务在运行（示意：等它完成，按其结果提示）"]] }] },
+  { title: "演示值说明", items: [{ type: "note", text: "账号、时间、条数均为虚构，只用于原型演示。第 2 行会员点 Pass KYC 演示命中名单。" }] },
+  { items: [{ type: "reset" }] }
+]);
+function msg(t, ok) { var m = document.createElement("div"); m.className = "bo-msg " + (ok ? "ok" : "err"); m.textContent = t; m.setAttribute("role", "status"); document.body.appendChild(m); setTimeout(function () { m.remove(); }, 2200); }
+function applyPlan() {
+  var p = P.get("plan");
+  document.getElementById("syncBar").hidden = p !== "main";
+  document.getElementById("noSyncNote").hidden = p === "main";
+  document.getElementById("rowRecheck").hidden = p !== "C";
+}
+window.addEventListener("proto-change", applyPlan);
+applyPlan();
+document.getElementById("syncBtn").onclick = function () {
+  var b = this, st = document.getElementById("syncState"), r = P.get("syncResult");
+  b.disabled = true; b.textContent = "同步中…";
+  setTimeout(function () {
+    b.disabled = false; b.textContent = "同步NDRP名单";
+    if (r === "fail") { st.innerHTML = '最后同步 2026-11-26 10:30:08 · <span class="fail">失败</span>'; msg("同步失败，已保留现有名单", false); return; }
+    st.textContent = "最后同步 2026-11-26 10:30:08 · 成功";
+    msg(r === "zero" ? "同步完成，变更 0 条" : "同步完成，变更 3 条", true);  }, r === "busy" ? 1800 : 900);
+};
+document.addEventListener("click", function (e) {
+  var b = e.target.closest("[data-pass]"); if (!b) return;
+  if (b.dataset.pass === "hit") {
+    var mk = document.createElement("div"); mk.className = "bo-mask";
+    mk.innerHTML = '<div class="bo-dlg" role="dialog" aria-label="提示"><h4>提示</h4><p style="margin:0">命中 NDRP 名单，不能通过 KYC</p><div class="row2"><button class="bo-btn q" type="button">确定</button></div></div>';
+    mk.querySelector("button").onclick = function () { mk.remove(); b.closest("tr").children[3].textContent = "拒绝"; b.remove(); };
+    document.body.appendChild(mk);
+  } else { msg("操作成功", true); b.closest("tr").children[3].textContent = "完全认证"; b.remove(); }
+});
+(function () {
+  var VIEWS = { list: "vList", log: "vLog" };
+  function show(view) {
+    if (!VIEWS[view]) view = "list";
+    Object.keys(VIEWS).forEach(function (k) { document.getElementById(VIEWS[k]).hidden = k !== view; });
+    document.getElementById("tList").className = view === "list" ? "on" : ""; document.getElementById("tLog").className = view === "log" ? "on" : "";
+    if (location.hash.slice(1) !== view) history.replaceState(null, "", "#" + view);
+    if (window.self !== window.top) window.parent.postMessage({ type: "proto-view", view: view }, "*");
+  }
+  window.addEventListener("hashchange", function () { show(location.hash.slice(1) || "list"); });
+  document.addEventListener("click", function (e) { var b = e.target.closest("[data-go]"); if (b) { e.preventDefault(); show(b.dataset.go); } });
+  show(location.hash.slice(1) || "list");
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>NDRP名单定期同步-客服QA</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body class="qa-page" data-lang="both">
+<div class="with-nav">
+<div class="desk"><article class="paper qa">
+
+<h1 class="doc-title">NDRP名单定期同步 · 客服 QA<span class="qa-sub">KYC Name Screening · Customer Service Q&amp;A</span></h1>
+<div class="doc-meta"><span>版本 / Version：v1.0</span><span>适用 / For：客服 Customer Service</span><span>依据 / Based on：PRD、后台操作手册 Admin Manual</span></div>
+<div class="qa-lang" role="group" aria-label="语言 Language">
+  <button type="button" data-l="both" aria-pressed="true">双语 Bilingual</button>
+  <button type="button" data-l="zh" aria-pressed="false">中文</button>
+  <button type="button" data-l="en" aria-pressed="false">English</button>
+</div>
+<hr class="doc-rule">
+
+<h2 id="q0">适用范围 <span class="en-t">Scope</span></h2>
+<div class="bi"><div class="zh">789Bingo、789Games、789Play 三站的 KYC，含 H5、PC、iOS、Android；从本需求上线起。</div><div class="en">KYC on 789Bingo, 789Games and 789Play (H5, PC, iOS, Android), from the release of this update.</div></div>
+
+<h2 id="q1">这次改了什么 <span class="en-t">What changed</span></h2>
+<div class="bi"><div class="zh">KYC 第一步改为先填写姓名。姓名与证件不一致的，提示「姓名不一致」，可修改后重新提交；未通过名单筛选的，提示「验证失败，请联系客服」。</div><div class="en">KYC now starts with entering the name. If the name doesn't match the ID, the player sees "Name Mismatch" and can resubmit. If the player fails the screening, they see "Verification failed. Please contact support."</div></div>
+<p class="tip">※ 不论中文还是英文，都不能向玩家提到 NDRP、名单或政府官员，也不说明玩家是否在名单内。</p>
+
+<h2 id="q2">客服核查步骤 <span class="en-t">How to check</span></h2>
+<ol class="qa-steps">
+  <li class="bi"><div class="zh"><b>看不通过原因</b>：【用户管理 › KYC审核】「KYC审核记录」，按账号查看原因（备注）。</div><div class="en"><b>Check the reason</b>: 用户管理 › KYC审核 › KYC审核记录 (User Management › KYC Review › KYC Review Records), look at the reason (remark) for the account.</div></li>
+</ol>
+
+<h2 id="q3">问答 <span class="en-t">Q&amp;A</span></h2>
+<section class="qa-card" id="qa1">
+  <h3><span class="qa-no">1</span><span class="bi-inline"><span class="zh">为什么我的验证失败了？</span><span class="en">Why did my verification fail?</span></span></h3>
+  <div class="qa-row"><b>回复玩家<small>Reply</small></b>
+    <div class="bi"><div class="en qa-reply">Your verification was not approved. We can forward your appeal to our compliance team.<button type="button" class="qa-copy">复制 Copy</button></div>
+    <div class="zh">验证未通过，可为您转交合规团队申诉。</div></div></div>
+  <div class="qa-row"><b>客服核查<small>Check</small></b>
+    <div class="bi"><div class="zh">原因（备注）以「命中 NDRP 名单」开头的，不向玩家说明原因。</div><div class="en">If the reason starts with "命中 NDRP 名单" (matched NDRP list), do not explain the reason.</div></div></div>
+  <div class="qa-row"><b>转交<small>Escalate</small></b>
+    <div class="bi"><div class="zh">玩家申诉的（含说自己不在名单上的），转合规负责人核实。</div><div class="en">If the player appeals (including saying they are not on any list), escalate to the compliance lead.</div></div></div>
+</section>
+<section class="qa-card" id="qa2">
+  <h3><span class="qa-no">2</span><span class="bi-inline"><span class="zh">提示姓名不一致怎么办？</span><span class="en">It says my name doesn't match. What should I do?</span></span></h3>
+  <div class="qa-row"><b>回复玩家<small>Reply</small></b>
+    <div class="bi"><div class="en qa-reply">Please enter your name exactly as shown on your ID and resubmit.<button type="button" class="qa-copy">复制 Copy</button></div>
+    <div class="zh">请按证件上的姓名填写，然后重新提交。</div></div></div>
+  <div class="qa-row"><b>客服核查<small>Check</small></b>
+    <div class="bi"><div class="zh">原因（备注）为「证件姓名与填写姓名不一致」。</div><div class="en">The reason shows "证件姓名与填写姓名不一致" (ID name does not match the entered name).</div></div></div>
+  <div class="qa-row"><b>转交<small>Escalate</small></b>
+    <div class="bi"><div class="zh">按证件填写后仍提示不一致的：见下文「资料未覆盖的问题」。</div><div class="en">If it still fails after entering the name as on the ID: see "Not covered yet" below.</div></div></div>
+</section>
+
+<h2 id="q4">转交与升级 <span class="en-t">Escalation</span></h2>
+<div class="tbl"><table class="qa-tbl">
+  <thead><tr><th>情况 <small>Situation</small></th><th>转给 <small>To</small></th></tr></thead>
+  <tbody>
+  <tr><td class="bi"><div class="zh">玩家申诉验证失败</div><div class="en">Player appeals a failed verification</div></td><td class="bi"><div class="zh">合规负责人</div><div class="en">Compliance lead</div></td></tr>
+  </tbody>
+</table></div>
+
+<h2 id="q5">资料未覆盖的问题 <span class="en-t">Not covered yet</span></h2>
+<ul class="qa-open">
+  <li class="bi"><div class="zh">按证件填写姓名后仍提示姓名不一致时转给谁：PRD 未规定，统一转运营确认。</div><div class="en">Who handles a name mismatch that persists after entering the name as on the ID: not defined yet; escalate to Operations for confirmation.</div></li>
+  <li class="bi"><div class="zh">合规核实后如何放行同名被误拦的玩家：另提需求，目前统一转合规负责人。</div><div class="en">How to release a player wrongly blocked due to the same name: to be defined later; escalate to the compliance lead for now.</div></li>
+</ul>
+
+</article></div>
+</div>
+<script>window.NAV_ROOT = "../";</script>
+<script src="../assets/nav-data.js"></script>
+<script src="../assets/nav.js"></script>
+<script>
+(function () {
+  var KEY = "NDRP名单定期同步功能需求-客服QA-lang";
+  function set(l) {
+    document.body.dataset.lang = l;
+    document.querySelectorAll(".qa-lang button").forEach(function (b) { b.setAttribute("aria-pressed", b.dataset.l === l); });
+    try { localStorage.setItem(KEY, l); } catch (e) {}
+  }
+  document.querySelectorAll(".qa-lang button").forEach(function (b) { b.onclick = function () { set(b.dataset.l); }; });
+  try { var s = localStorage.getItem(KEY); if (s) set(s); } catch (e) {}
+  document.addEventListener("click", function (e) {
+    var b = e.target.closest(".qa-copy"); if (!b) return;
+    var box = b.parentNode.cloneNode(true); box.querySelector(".qa-copy").remove();
+    var text = box.textContent.trim();
+    function done(ok) { b.textContent = ok ? "已复制 Copied" : "复制失败 Failed"; setTimeout(function () { b.textContent = "复制 Copy"; }, 1500); }
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(function () { done(true); }, function () { done(fallback(text)); });
+    else done(fallback(text));
+  });
+  function fallback(text) {
+    var t = document.createElement("textarea"); t.value = text; t.style.cssText = "position:fixed;left:-9999px"; document.body.appendChild(t); t.select();
+    var ok = false; try { ok = document.execCommand("copy"); } catch (e) {}
+    t.remove(); return ok;
+  }
+})();
+</script>
+</body>
+</html>

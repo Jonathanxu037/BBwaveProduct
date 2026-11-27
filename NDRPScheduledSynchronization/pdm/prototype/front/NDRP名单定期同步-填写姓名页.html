@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>NDRP名单定期同步-填写姓名页</title>
+<link rel="stylesheet" href="../../assets/style.css">
+</head>
+<body>
+<div class="with-nav">
+<div class="stage">
+  <div class="app" role="region" aria-label="手机画面">
+    <div class="sb"><span>9:41</span><span>●●● 5G</span></div>
+
+    <!-- ============ 默认：填写姓名 ============ -->
+    <div class="view" id="vDefault">
+      <div class="topline"><a class="back" href="#default" aria-label="返回">‹</a>填写姓名</div>
+      <p class="glow" style="margin:4px 0 8px;font-size:13px;opacity:.85">请按证件填写姓名</p>
+      <div class="field">
+        <label for="fn">名</label>
+        <div class="inp glow"><input id="fn" value="Juan"></div>
+      </div>
+      <div class="field">
+        <label for="mn">中间名</label>
+        <div class="inp glow"><input id="mn" value="Santos"></div>
+      </div>
+      <div class="field">
+        <label for="ln">姓</label>
+        <div class="inp glow"><input id="ln" value="Dela Cruz"></div>
+      </div>
+      <button class="btn glow" type="button" id="next" data-dev="D01">下一步</button>
+    </div>
+
+    <div class="toast" id="toast" role="status" hidden></div>
+  </div>
+
+  <aside class="notes">
+    <h2>填写姓名页</h2>
+    <p class="sub">KYC 第一步（新增页面，带淡色光晕的控件为新增）。原 KYC 资料页的姓名填写移到本页；点「下一步」后，在证件识别和活体检测之前立即本地初筛。主方案和备用方案 A、B、C 相同。</p>
+    <h3>模拟场景</h3>
+    <div class="sim">
+      <button type="button" data-go="default"><span class="simtag">状态</span>填写姓名</button>
+    </div>
+    <h3>模拟操作</h3>
+    <div class="sim" id="simPanel"></div>
+    <h3>规则批注</h3>
+    <ol>
+      <li><b>字段</b>：名、中间名、姓；必填和格式规则沿用现有。重新提交时带出上次填写的姓名。<span class="ref">PRD 4.3 填写姓名页</span></li>
+      <li><b>本地初筛</b>：点「下一步」后，用填写姓名比对本地名单库（含后台手动新增的名单），只比对姓名。<span class="ref">PRD 4.3 本地初筛</span></li>
+      <li><b>未命中</b>：进入证件识别和活体检测（沿用现有页面）；之后比对证件姓名与填写姓名，一致后调 PAGCOR 实时查询接口做实时核对。<span class="ref">PRD 3.2 步骤 3–5</span></li>
+      <li><b>命中</b>：KYC 状态置为「拒绝」，跳到「验证失败」提示，不提示命中原因。<span class="ref">PRD 4.3 命中处理</span></li>
+      <li><b>读取本地名单库失败</b>：本次提交不成功，沿用现有网络异常提示，用户稍后重试；同时触发告警。<span class="ref">PRD 4.3 本地名单库读取失败</span></li>
+      <li><b>加载、隐私告知</b>：沿用现有 KYC 页面。前台任何页面和提示都不出现 NDRP、名单、政府官员字样。<span class="ref">PRD 4.3 前台提示</span></li>
+    </ol>
+    <h3>评审待确认</h3>
+    <ol>
+      <li><b>现网是否已有本地初筛</b>：已有则改造，没有则新增。<span class="ref">PRD 待确认 Q13</span></li>
+    </ol>
+    <div class="pager"><span></span><a href="NDRP名单定期同步-KYC结果提示页.html">下一页：KYC 结果提示页 →</a></div>
+  </aside>
+</div>
+</div>
+<script>window.NAV_ROOT = "../../";</script>
+<script src="../../assets/nav-data.js"></script>
+<script src="../../assets/nav.js"></script>
+<script src="../../assets/proto-en.js"></script>
+<script src="../../assets/proto.js"></script>
+<script>
+P.init({ defaults: { screen: "miss" } });
+P.panel(document.getElementById("simPanel"), [
+  { title: "点「下一步」后的结果", items: [{ type: "radio", key: "screen", options: [["miss", "初筛未命中"], ["hit", "初筛命中"], ["err", "读取本地名单库失败"]] }] },
+  { title: "演示值说明", items: [{ type: "note", text: "姓名为虚构示例，只用于原型演示。" }] },
+  { items: [{ type: "reset" }] }
+]);
+document.getElementById("next").onclick = function () {
+  var r = P.get("screen");
+  if (r === "hit") { location.href = "NDRP名单定期同步-KYC结果提示页.html#fail"; return; }
+  if (r === "err") { P.toast("网络异常，请稍后重试"); return; }
+  P.toast("（示意）进入证件识别");
+};
+</script>
+<script>
+(function () {
+  var VIEWS = { default: "vDefault" };
+  function show(view) {
+    if (!VIEWS[view]) view = "default";
+    Object.keys(VIEWS).forEach(function (k) { document.getElementById(VIEWS[k]).hidden = k !== view; });
+    if (location.hash.slice(1) !== view) history.replaceState(null, "", "#" + view);
+    if (window.self !== window.top) window.parent.postMessage({ type: "proto-view", view: view }, "*");
+  }
+  window.addEventListener("hashchange", function () { show(location.hash.slice(1) || "default"); });
+  document.addEventListener("click", function (e) { var b = e.target.closest("[data-go]"); if (b) { e.preventDefault(); show(b.dataset.go); } });
+  show(location.hash.slice(1) || "default");
+})();
+</script>
+</body>
+</html>

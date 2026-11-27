@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>NDRP名单定期同步-需求要点</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<div class="with-nav">
+<div class="desk"><article class="paper">
+
+<h1 class="doc-title">NDRP名单定期同步 · 需求要点 · v1.0</h1>
+<div class="doc-meta"><span>版本：v1.0</span><span>端：H5、PC、iOS、Android、后台</span><span>依据：<a href="NDRP名单定期同步-需求开发PRD文档.html">需求开发 PRD 文档</a></span></div>
+<hr class="doc-rule">
+
+<h2 id="k1">一句话需求</h2>
+<div class="oneline">NDRP 名单每天 04:00（GMT+8）从 PAGCOR 同步到本地名单库，后台可手动同步；KYC 改为「填写姓名 → 本地初筛 → 证件姓名比对 → PAGCOR 实时核对」，命中名单或姓名不一致的 KYC 不通过。PAGCOR 不提供全量名单时，改用备用方案 A、B、C 之一。</div>
+
+<h2 id="k2">业务流程</h2>
+<div class="flow">
+  <div class="fs key"><div class="no">1</div><div><b>填写姓名</b>：KYC 第一步新增「填写姓名」页（名、中间名、姓）</div></div>
+  <div class="fa">↓</div>
+  <div class="fs"><div class="no">2</div><div><b>本地初筛</b>：用填写姓名比对本地名单库</div></div>
+  <div class="fa">↓</div>
+  <div class="fs"><div class="no">3</div><div><b>证件识别、活体检测</b>：沿用现有</div></div>
+  <div class="fa">↓</div>
+  <div class="fs"><div class="no">4</div><div><b>证件姓名比对</b>：证件姓名与填写姓名比对</div></div>
+  <div class="fa">↓</div>
+  <div class="fs key"><div class="no">5</div><div><b>PAGCOR 实时核对</b>：用证件姓名调实时查询接口，最多请求 3 次</div></div>
+  <div class="fa">↓</div>
+  <div class="fs"><div class="no">6</div><div><b>原有其他审核</b>：沿用现有；通过 → 「完全认证」</div></div>
+</div>
+<div class="brs">
+  <div class="bc"><h5>① 初筛或实时核对命中</h5><p class="s"><b>KYC「拒绝」</b><small>前台提示验证失败，不透露原因</small></p></div>
+  <div class="bc br"><h5>② 姓名不一致</h5><p class="s"><b>KYC「拒绝」</b><small>前台提示姓名不一致，可修改后重新提交</small></p></div>
+  <div class="bc"><h5>③ 实时核对 3 次都失败</h5><p class="s"><b>跳过实时核对</b><small>其他校验照常，记录并告警，前台不提示</small></p></div>
+</div>
+
+<h2 id="k3">开发功能点</h2>
+<div class="fpcard" id="F01-01">
+  <h3><span class="code">F01-01</span>KYC 名单筛选<a href="NDRP名单定期同步-需求开发PRD文档.html#c4-3">查看 PRD ›</a></h3>
+  <div class="fpgrid">
+    <b>要做什么</b>
+    <ul><li>新增「填写姓名」页；原 KYC 资料页的姓名填写移到本页</li><li>本地初筛、证件姓名比对、PAGCOR 实时核对（最多 3 次，失败跳过并告警）</li><li>PAGCOR 手机号自动认证、后台人工补录、跨站 KYC 数据互通三个入口：用证件姓名做本地初筛和实时核对</li><li>不通过原因写进 KYC 审核记录现有的原因（备注）</li></ul>
+    <b>公式</b>
+    <div class="formula">命中名单 或 证件姓名 ≠ 填写姓名 → KYC「拒绝」；比对规则由技术确定</div>
+    <b>涉及端</b>
+    <div class="ends"><span>H5</span><span>PC</span><span>iOS</span><span>Android</span><span>后台</span></div>
+  </div>
+</div>
+<div class="fpcard" id="F01-02">
+  <h3><span class="code">F01-02</span>名单同步（主方案）<a href="NDRP名单定期同步-需求开发PRD文档.html#c4-1">查看 PRD ›</a></h3>
+  <div class="fpgrid">
+    <b>要做什么</b>
+    <ul><li>每天 04:00（GMT+8）定时同步；失败每 10 分钟重试，最多 3 次</li><li>【用户管理 › KYC审核】页加同步状态行和「同步NDRP名单」按钮</li><li>数据校验不通过不覆盖现有名单；只更新从 PAGCOR 同步的名单</li></ul>
+    <b>公式</b>
+    <div class="formula">结果为空 / 条数比现有 PAGCOR 名单减少超过 20% / 格式异常 → 本次同步失败</div>
+    <b>涉及端</b>
+    <div class="ends"><span>后台</span></div>
+  </div>
+</div>
+<div class="fpcard" id="F01-03">
+  <h3><span class="code">F01-03</span>备用方案（PAGCOR 不提供全量名单时三选一）<a href="NDRP名单定期同步-需求开发PRD文档.html#c10">查看 PRD ›</a></h3>
+  <div class="fpgrid">
+    <b>要做什么</b>
+    <ul><li>A：不做同步，本地名单库由合规负责人人工维护</li><li>B：PAGCOR 定期提供名单文件，由技术导入</li><li>C：人工维护本地名单库，并每天用实时查询接口复查已通过 KYC 的会员</li></ul>
+    <b>公式</b>
+    <div class="formula">无</div>
+    <b>涉及端</b>
+    <div class="ends"><span>后台</span></div>
+  </div>
+</div>
+
+</article></div>
+</div>
+<script>window.NAV_ROOT = "../";</script>
+<script src="../assets/nav-data.js"></script>
+<script src="../assets/nav.js"></script>
+</body>
+</html>

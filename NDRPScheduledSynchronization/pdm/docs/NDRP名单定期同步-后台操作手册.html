@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>NDRP名单定期同步-后台操作手册</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<div class="with-nav">
+  <header class="mh">
+    <div class="k">789BINGO · 后台操作手册 <span class="vp">v1.0</span></div>
+    <h1>NDRP名单定期同步 · KYC 名单筛选操作手册</h1>
+    <p>写给运营和客服：KYC 审核页的手动同步、人工补录被拦截，以及不通过原因怎么看。</p>
+    <div class="btns"><a class="b1" href="../prototype/admin/NDRP名单定期同步-后台KYC审核页.html">打开后台原型 ›</a><a class="b2" href="NDRP名单定期同步-需求开发PRD文档.html">查看 PRD ›</a></div>
+  </header>
+
+  <div class="mk">
+    <b>重要结论</b>
+    <ul><li>「同步NDRP名单」按钮和同步状态行只在主方案有；备用方案 A、B、C 没有（详见 PRD 10 章）。</li><li>命中名单的会员不能通过 KYC，人工补录也不能放行（详见 PRD 4.3）。</li><li>不向用户透露命中名单；用户申诉的转合规负责人核实（详见 PRD 4.3）。</li></ul>
+  </div>
+
+  <div class="mbody">
+    <nav class="mtoc" aria-label="手册目录">
+      <a href="#m1">01 手动同步名单</a>
+      <a href="#m2">02 人工补录被拦截</a>
+      <a href="#m3">03 查看不通过原因</a>
+      <a href="#m9">常见问题</a>
+    </nav>
+    <div>
+      <section class="mcard" id="m1">
+        <h2><span class="no2">01</span>手动同步名单（主方案）</h2>
+        <h3>菜单路径与权限</h3>
+        <p>【用户管理 › KYC审核】「KYC审核」页签。能进入本页的账号都能使用。</p>
+        <h3>字段说明</h3>
+        <table data-fit>
+          <tr><th>字段</th><th>含义</th></tr>
+          <tr><td>最后同步</td><td>最近一次同步（含失败）的结束时间（GMT+8）和结果；失败时「失败」显示为红色</td></tr>
+          <tr><td>同步NDRP名单</td><td>立即从 PAGCOR 同步一次名单</td></tr>
+        </table>
+        <h3>操作步骤</h3>
+        <div class="msteps">
+          <div class="mstep"><i>1</i><div>点「同步NDRP名单」，无二次确认。</div></div>
+          <div class="mstep"><i>2</i><div>成功提示「同步完成，变更 N 条」（N 为新增与移出条数之和）；失败提示「同步失败，已保留现有名单」，可稍后再点。</div></div>
+          <div class="mstep"><i>3</i><div>已有同步任务在运行时，点击不启动新任务，等当前任务完成后按其结果提示。</div></div>
+        </div>
+      </section>
+
+      <section class="mcard" id="m2">
+        <h2><span class="no2">02</span>人工补录被拦截</h2>
+        <h3>菜单路径与权限</h3>
+        <p>【用户管理 › KYC审核】，沿用现有权限。</p>
+        <h3>操作步骤</h3>
+        <div class="msteps">
+          <div class="mstep"><i>1</i><div>点 Pass KYC 时，系统用证件姓名做本地初筛和 PAGCOR 实时核对。</div></div>
+          <div class="mstep"><i>2</i><div>命中时弹出「命中 NDRP 名单，不能通过 KYC」，KYC 状态置为「拒绝」，不能放行。</div></div>
+        </div>
+      </section>
+
+      <section class="mcard" id="m3">
+        <h2><span class="no2">03</span>查看不通过原因</h2>
+        <h3>菜单路径与权限</h3>
+        <p>【用户管理 › KYC审核】「KYC审核记录」页签，沿用现有显示和导出。</p>
+        <table data-fit>
+          <tr><th>原因（备注）</th><th>含义</th></tr>
+          <tr><td>命中 NDRP 名单（本地初筛）</td><td>填写姓名命中本地名单库</td></tr>
+          <tr><td>命中 NDRP 名单（实时核对）</td><td>证件姓名在 PAGCOR 实时查询中命中</td></tr>
+          <tr><td>证件姓名与填写姓名不一致</td><td>用户可修改姓名后重新提交</td></tr>
+          <tr><td>实时核对跳过</td><td>PAGCOR 实时查询 3 次都失败，只跳过这一步，其他审核照常</td></tr>
+          <tr><td>命中 NDRP 名单（存量复查）</td><td>只有备用方案 C：已通过 KYC 的会员在每日复查中命中</td></tr>
+        </table>
+      </section>
+
+      <section class="mcard" id="m9">
+        <h2>常见问题</h2>
+        <dl class="faq">
+          <dt>用户说自己不在名单上，却验证失败？</dt>
+          <dd>可能与名单内人员同名。不向用户说明原因，转合规负责人核实；核实后如何放行另提需求。</dd>
+          <dt>同步失败会影响 KYC 吗？</dt>
+          <dd>不会。同步失败时继续使用现有名单，KYC 照常。</dd>
+        </dl>
+      </section>
+    </div>
+  </div>
+</div>
+<script>window.NAV_ROOT = "../";</script>
+<script src="../assets/nav-data.js"></script>
+<script src="../assets/nav.js"></script>
+</body>
+</html>

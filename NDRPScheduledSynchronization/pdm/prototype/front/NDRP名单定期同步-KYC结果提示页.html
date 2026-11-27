@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>NDRP名单定期同步-KYC结果提示页</title>
+<link rel="stylesheet" href="../../assets/style.css">
+<style>.res{display:grid;gap:12px;justify-items:center;text-align:center;padding:48px 8px 0}.res .ic{width:64px;height:64px;border-radius:50%;display:grid;place-items:center;font-size:32px;font-weight:700;color:#fff}.res h3{margin:0;font-size:18px}.res p{margin:0;font-size:13px;opacity:.8}</style>
+</head>
+<body>
+<div class="with-nav">
+<div class="stage">
+  <div class="app" role="region" aria-label="手机画面">
+    <div class="sb"><span>9:41</span><span>●●● 5G</span></div>
+
+    <!-- ============ 姓名不一致 ============ -->
+    <div class="view" id="vMismatch">
+      <div class="topline"><a class="back" href="NDRP名单定期同步-填写姓名页.html" aria-label="返回">‹</a></div>
+      <div class="res glow">
+        <div class="ic" style="background:#E6A23C">!</div>
+        <h3>姓名不一致</h3>
+        <p>姓名与证件不一致，请核对后重新提交</p>
+      </div>
+      <a class="btn glow" style="margin-top:28px;text-align:center;text-decoration:none" href="NDRP名单定期同步-填写姓名页.html">重新提交</a>
+    </div>
+
+    <!-- ============ 验证失败（名单命中） ============ -->
+    <div class="view" id="vFail" hidden>
+      <div class="topline"><a class="back" href="NDRP名单定期同步-填写姓名页.html" aria-label="返回">‹</a></div>
+      <div class="res glow">
+        <div class="ic" style="background:#F56C6C">×</div>
+        <h3>验证失败</h3>
+        <p>请联系客服</p>
+      </div>
+      <button class="btn glow" style="margin-top:28px" type="button" id="cs">联系客服</button>
+    </div>
+    <div class="toast" id="toast" role="status" hidden></div>
+  </div>
+
+  <aside class="notes">
+    <h2>KYC 结果提示页</h2>
+    <p class="sub">KYC 名单筛选不通过时的两种前台提示（本需求新增，带淡色光晕）。主方案和备用方案 A、B、C 相同。</p>
+    <h3>模拟场景</h3>
+    <div class="sim">
+      <button type="button" data-go="mismatch"><span class="simtag">提示</span>姓名不一致</button>
+      <button type="button" data-go="fail"><span class="simtag">提示</span>验证失败</button>
+    </div>
+    <h3>规则批注</h3>
+    <ol>
+      <li><b>姓名不一致</b>：证件姓名（证件识别返回的姓名原值）与填写姓名不一致时显示。KYC 状态置为「拒绝」，不转人工审核；点「重新提交」回到填写姓名页，证件识别和活体检测重新做。识别不出姓名时按证件识别失败处理（沿用现有），不显示本提示。<span class="ref">PRD 4.3 证件姓名比对</span></li>
+      <li><b>验证失败</b>：本地初筛命中或 PAGCOR 实时核对命中时显示，两种命中提示相同。KYC 状态置为「拒绝」；点「联系客服」进入现有客服入口。<span class="ref">PRD 4.3 命中处理</span></li>
+      <li><b>实时核对跳过</b>：PAGCOR 实时查询接口 3 次都失败时跳过实时核对，前台不提示，继续原有审核。<span class="ref">PRD 4.3 PAGCOR 实时核对</span></li>
+      <li><b>不透露原因</b>：前台任何页面和提示都不出现 NDRP、名单、政府官员字样。客服只告知审核未通过；用户申诉的转合规负责人核实。<span class="ref">PRD 4.3 前台提示</span></li>
+      <li><b>之后的限制</b>：KYC 不通过后，充值、游戏、提现限制沿用现有「KYC 未通过」规则。<span class="ref">PRD 4.3 命中处理</span></li>
+    </ol>
+    <h3>评审待确认</h3>
+    <ol>
+      <li><b>同名误拦</b>：与名单内人员同名的正常用户也会看到「验证失败」，由客服转合规负责人核实，放行方式另提需求。<span class="ref">PRD 待确认 Q12</span></li>
+    </ol>
+    <div class="pager"><a href="NDRP名单定期同步-填写姓名页.html">← 上一页：填写姓名页</a><a href="../admin/NDRP名单定期同步-后台KYC审核页.html">下一页：后台 KYC审核页 →</a></div>
+  </aside>
+</div>
+</div>
+<script>window.NAV_ROOT = "../../";</script>
+<script src="../../assets/nav-data.js"></script>
+<script src="../../assets/nav.js"></script>
+<script src="../../assets/proto-en.js"></script>
+<script src="../../assets/proto.js"></script>
+<script>
+document.getElementById("cs").onclick = function () { P.toast("进入客服（沿用现有入口）"); };
+(function () {
+  var VIEWS = { mismatch: "vMismatch", fail: "vFail" };
+  function show(view) {
+    if (!VIEWS[view]) view = "mismatch";
+    Object.keys(VIEWS).forEach(function (k) { document.getElementById(VIEWS[k]).hidden = k !== view; });
+    if (location.hash.slice(1) !== view) history.replaceState(null, "", "#" + view);
+    if (window.self !== window.top) window.parent.postMessage({ type: "proto-view", view: view }, "*");
+  }
+  window.addEventListener("hashchange", function () { show(location.hash.slice(1) || "mismatch"); });
+  document.addEventListener("click", function (e) { var b = e.target.closest("[data-go]"); if (b) { e.preventDefault(); show(b.dataset.go); } });
+  show(location.hash.slice(1) || "mismatch");
+})();
+</script>
+</body>
+</html>
