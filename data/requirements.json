@@ -20,12 +20,19 @@
     },
     {
       "id": 3,
-      "name": "圣诞闯关活动&圣诞换肤需求",
+      "name": "流水闯关活动",
       "owner": "Claire&David",
       "folder": "CrownRush-turnSkin",
       "version": "v1.0",
       "createdAt": "2026-09-24T14:22:00+08:00",
-      "lastUploadAt": null
+      "lastUploadAt": null,
+      "nameHistory": [
+        {
+          "from": "圣诞闯关活动&圣诞换肤需求",
+          "to": "流水闯关活动",
+          "at": "2026-11-27T11:19:37+08:00"
+        }
+      ]
     },
     {
       "id": 4,
