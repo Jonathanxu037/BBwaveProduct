@@ -101,12 +101,19 @@
     },
     {
       "id": 12,
-      "name": "圣诞闯关附加游戏快捷操作栏添加按钮",
+      "name": "闯关活动附加游戏快捷操作栏添加按钮",
       "owner": "David",
       "folder": "QuickButtons",
       "version": "v1.0",
       "createdAt": "2026-11-20T02:37:31.139Z",
-      "lastUploadAt": null
+      "lastUploadAt": null,
+      "nameHistory": [
+        {
+          "from": "圣诞闯关附加游戏快捷操作栏添加按钮",
+          "to": "闯关活动附加游戏快捷操作栏添加按钮",
+          "at": "2026-11-27T11:19:08+08:00"
+        }
+      ]
     },
     {
       "id": 13,
