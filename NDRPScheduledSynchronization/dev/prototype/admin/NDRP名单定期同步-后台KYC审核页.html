@@ -35,11 +35,10 @@
             <span>KYC 状态</span><select class="bo-inp" aria-label="KYC 状态"><option>全部</option><option>待初审</option><option>拒绝</option><option>完全认证</option></select>
             <button class="bo-btn q" type="button">查询</button>
             <span class="syncbar" id="syncBar">
-              <span class="glow" id="syncState">最后同步 2026-11-26 04:00:32 · 成功</span>
               <button class="bo-btn n glow" type="button" id="syncBtn" data-dev="D02">同步NDRP名单</button>
             </span>
           </div>
-          <p class="ui-reqnote" id="noSyncNote" hidden>本方案不做名单同步，本页不加「同步NDRP名单」按钮和同步状态行；本地名单库的更新方式见 PRD 第 10 章对应的备用方案。</p>
+          <p class="ui-reqnote" id="noSyncNote" hidden>本方案不做名单同步，本页不加「同步NDRP名单」按钮；本地名单库的更新方式见 PRD 第 10 章对应的备用方案。</p>
           <div class="bo-content">
             <table>
               <tr><th>账号</th><th>会员信息</th><th>提交时间</th><th>KYC 状态</th><th>操作人</th><th>操作</th></tr>
@@ -71,7 +70,7 @@
 
   <aside class="notes adm-notes">
     <h2>后台 KYC审核页</h2>
-    <p class="sub">【用户管理 › KYC审核】。主方案在「KYC审核」页签筛选栏右侧加同步状态行和「同步NDRP名单」按钮；各方案的不通过原因都写进「KYC审核记录」现有的原因（备注）。带淡色光晕的是新增内容。</p>
+    <p class="sub">【用户管理 › KYC审核】。主方案在「KYC审核」页签筛选栏右侧加「同步NDRP名单」按钮；各方案的不通过原因都写进「KYC审核记录」现有的原因（备注）。带淡色光晕的是新增内容。</p>
     <h3>模拟场景</h3>
     <div class="sim">
       <button type="button" data-go="list"><span class="simtag">页签</span>KYC审核</button>
@@ -81,11 +80,10 @@
     <div class="sim" id="simPanel"></div>
     <h3>规则批注</h3>
     <ol>
-      <li><b>同步状态行</b>（只有主方案）：「最后同步 YYYY-MM-DD HH:mm:ss · 成功 / 失败」，时间为最近一次同步（含失败）的结束时间（GMT+8）；失败时「失败」二字为红色。<span class="ref">PRD 4.4 后台管理</span></li>
-      <li><b>同步NDRP名单</b>（只有主方案）：能进入本页的账号都能用；点击即开始同步，无二次确认；已有同步任务在运行时不启动新任务。同步跑完后不弹结果提示（成功、失败都不提示），操作人刷新页面，在同步状态行查看最新结果。<span class="ref">PRD 4.4 手动同步</span></li>
+      <li><b>同步NDRP名单</b>（只有主方案）：能进入本页的账号都能用；点击即开始同步，无二次确认；已有同步任务在运行时不启动新任务。页面不显示同步状态，同步跑完后也不弹结果提示（成功、失败都不提示）；同步失败由系统告警。<span class="ref">PRD 4.4 手动同步</span></li>
       <li><b>人工补录 Pass KYC</b>：点击时用证件姓名做本地初筛和实时核对；命中则弹出「命中 NDRP 名单，不能通过 KYC」，KYC 状态置为「拒绝」。<span class="ref">PRD 4.3 覆盖所有能使 KYC 变为通过的入口</span></li>
       <li><b>KYC审核记录</b>：不新增筛选、列和展示；原因（备注）写「命中 NDRP 名单（本地初筛）」「命中 NDRP 名单（实时核对）」「证件姓名与填写姓名不一致」和「实时核对跳过」，操作人为 System。备用方案 C 另有「命中 NDRP 名单（存量复查）」。<span class="ref">PRD 4.4 KYC 审核记录</span></li>
-      <li><b>备用方案 A、B、C</b>：不加同步按钮和同步状态行。<span class="ref">PRD 10 备用方案</span></li>
+      <li><b>备用方案 A、B、C</b>：不加同步按钮。<span class="ref">PRD 10 备用方案</span></li>
     </ol>
     <h3>评审待确认</h3>
     <ol>
@@ -100,10 +98,9 @@
 <script src="../../assets/nav.js"></script>
 <script src="../../assets/proto.js"></script>
 <script>
-P.init({ defaults: { plan: "main", syncResult: "ok" } });
+P.init({ defaults: { plan: "main" } });
 P.panel(document.getElementById("simPanel"), [
   { title: "切换方案", items: [{ type: "select", key: "plan", label: "方案", options: [["main", "需求方案（主）"], ["A", "备用方案 A"], ["B", "备用方案 B"], ["C", "备用方案 C"]] }] },
-  { title: "手动同步结果（主方案，刷新页面后看到）", items: [{ type: "radio", key: "syncResult", options: [["ok", "成功"], ["fail", "失败"]] }, { type: "button", label: "刷新页面", run: function () { refreshSync(); } }] },
   { title: "演示值说明", items: [{ type: "note", text: "账号、时间、条数均为虚构，只用于原型演示。第 2 行会员点 Pass KYC 演示命中名单。" }] },
   { items: [{ type: "reset" }] }
 ]);
@@ -116,15 +113,7 @@ function applyPlan() {
 }
 window.addEventListener("proto-change", applyPlan);
 applyPlan();
-/* 点击后开始同步，页面不弹结果提示；刷新页面后同步状态行显示最新结果 */
-var syncClicked = false;
-document.getElementById("syncBtn").onclick = function () { syncClicked = true; };
-function refreshSync() {
-  if (!syncClicked) return;
-  var st = document.getElementById("syncState");
-  if (P.get("syncResult") === "fail") st.innerHTML = '最后同步 2026-11-26 10:30:08 · <span class="fail">失败</span>';
-  else st.textContent = "最后同步 2026-11-26 10:30:08 · 成功";
-}
+/* 点击后开始同步；页面不显示同步状态，跑完后也不弹结果提示 */
 document.addEventListener("click", function (e) {
   var b = e.target.closest("[data-pass]"); if (!b) return;
   if (b.dataset.pass === "hit") {

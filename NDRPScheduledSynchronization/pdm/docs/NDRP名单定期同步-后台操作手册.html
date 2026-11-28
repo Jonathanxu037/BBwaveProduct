@@ -17,7 +17,7 @@
 
   <div class="mk">
     <b>重要结论</b>
-    <ul><li>「同步NDRP名单」按钮和同步状态行只在主方案有；备用方案 A、B、C 没有（详见 PRD 10 章）。</li><li>命中名单的会员不能通过 KYC，人工补录也不能放行（详见 PRD 4.3）。</li><li>不向用户透露命中名单；用户申诉的转合规负责人核实（详见 PRD 4.3）。</li></ul>
+    <ul><li>「同步NDRP名单」按钮只在主方案有；备用方案 A、B、C 没有（详见 PRD 10 章）。</li><li>命中名单的会员不能通过 KYC，人工补录也不能放行（详见 PRD 4.3）。</li><li>不向用户透露命中名单；用户申诉的转合规负责人核实（详见 PRD 4.3）。</li></ul>
   </div>
 
   <div class="mbody">
@@ -35,13 +35,12 @@
         <h3>字段说明</h3>
         <table data-fit>
           <tr><th>字段</th><th>含义</th></tr>
-          <tr><td>最后同步</td><td>最近一次同步（含失败）的结束时间（GMT+8）和结果；失败时「失败」显示为红色</td></tr>
-          <tr><td>同步NDRP名单</td><td>立即从 PAGCOR 同步一次名单</td></tr>
+                    <tr><td>同步NDRP名单</td><td>立即从 PAGCOR 同步一次名单</td></tr>
         </table>
         <h3>操作步骤</h3>
         <div class="msteps">
           <div class="mstep"><i>1</i><div>点「同步NDRP名单」，无二次确认。</div></div>
-          <div class="mstep"><i>2</i><div>同步跑完后不弹结果提示。稍后刷新页面，看「最后同步」的时间和结果；显示「失败」时现有名单保持不变，可稍后再点。</div></div>
+          <div class="mstep"><i>2</i><div>页面不显示同步状态，同步跑完后也不弹结果提示。同步失败时现有名单保持不变，系统告警通知技术负责人和合规负责人。</div></div>
           <div class="mstep"><i>3</i><div>已有同步任务在运行时，点击不启动新任务。</div></div>
         </div>
       </section>
