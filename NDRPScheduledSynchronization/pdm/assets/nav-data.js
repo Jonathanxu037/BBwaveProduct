@@ -4,7 +4,7 @@
    需求不涉及前台或后台时，删掉对应的三级目录和原型文件；不涉及后台时删掉「后台操作手册」。 */
 window.NAV_DATA = {
   role: "pdm",   /* 发布站点的角色：产品 */
-  title: "NDRP名单定期同步（v1.0）", href: "index.html",
+  title: "NDRP名单定期同步（v1.1）", href: "index.html",
   api: "https://oc-feedback.jonathanxu037.workers.dev", oprKey: "opr-7e295e9a66a7f703410b6d0465a447d00dc311f40eb66150",   /* 云端存储接口和运营写入口令；用 .claude/tools/set_cloud_api.ps1 修改 */
   gate: { salt: "5f202a3109204c31149af70c1e39d0f7", hash: "8235a12748d17c8d8bf9661c8708d27a28b080b4738427d22272cb51dbb63faf" },   /* 产品入口密码（只存哈希，不存明文）；用 .claude/tools/set_pdm_password.ps1 修改 */
   siteTag: "789Bingo & 789Games & 789Play",   /* 目录栏和产品密码页最上方的站点标识（需求包框架规范第 3.2 节） */

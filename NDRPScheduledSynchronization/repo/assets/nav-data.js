@@ -4,7 +4,7 @@
    需求不涉及前台或后台时，删掉对应的三级目录和原型文件；不涉及后台时删掉「后台操作手册」。 */
 window.NAV_DATA = {
   role: "repo",   /* 发布站点的角色：报告 */
-  title: "NDRP名单定期同步（v1.0）", href: "index.html",
+  title: "NDRP名单定期同步（v1.1）", href: "index.html",
   siteTag: "789Bingo & 789Games & 789Play",   /* 目录栏和产品密码页最上方的站点标识（需求包框架规范第 3.2 节） */
   showChanges: false,   /* 运营需求确认页是否显示原型修改标注（版本痕迹）：默认 false 不显示（需求包框架规范第 6.1 节） */
   roles: [],   /* 入口页「需求与原型中心」只有产品能看 */

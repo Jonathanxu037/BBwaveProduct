@@ -12,4 +12,6 @@
      items: ["选项名称由「旧名称」改为「新名称」"]    // 这个版本改了什么，一行一条，写清改前和改后
    }
    同一个元素在多个版本都改过时，每个版本各写一条；原型上只显示最新版本的角标，点开可看到更早的修改。 */
-window.PROTO_CHANGES = [];
+window.PROTO_CHANGES = [
+  { ver: "v1.1", date: "2026-11-28", page: "prototype/admin/NDRP名单定期同步-后台KYC审核页.html", view: "list", target: "#syncBtn", title: "「同步NDRP名单」按钮", items: ["同步跑完后的结果提示（「同步完成，变更 N 条」「同步失败，已保留现有名单」）去掉，改为不弹提示；刷新页面后在同步状态行查看最新结果"] }
+];

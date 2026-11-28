@@ -82,7 +82,7 @@
     <h3>规则批注</h3>
     <ol>
       <li><b>同步状态行</b>（只有主方案）：「最后同步 YYYY-MM-DD HH:mm:ss · 成功 / 失败」，时间为最近一次同步（含失败）的结束时间（GMT+8）；失败时「失败」二字为红色。<span class="ref">PRD 4.4 后台管理</span></li>
-      <li><b>同步NDRP名单</b>（只有主方案）：能进入本页的账号都能用；点击即开始同步，无二次确认。成功提示「同步完成，变更 N 条」（N 为新增与移出条数之和），失败提示「同步失败，已保留现有名单」；已有同步任务在运行时不启动新任务，等当前任务完成后按其结果提示。<span class="ref">PRD 4.4 手动同步</span></li>
+      <li><b>同步NDRP名单</b>（只有主方案）：能进入本页的账号都能用；点击即开始同步，无二次确认；已有同步任务在运行时不启动新任务。同步跑完后不弹结果提示（成功、失败都不提示），操作人刷新页面，在同步状态行查看最新结果。<span class="ref">PRD 4.4 手动同步</span></li>
       <li><b>人工补录 Pass KYC</b>：点击时用证件姓名做本地初筛和实时核对；命中则弹出「命中 NDRP 名单，不能通过 KYC」，KYC 状态置为「拒绝」。<span class="ref">PRD 4.3 覆盖所有能使 KYC 变为通过的入口</span></li>
       <li><b>KYC审核记录</b>：不新增筛选、列和展示；原因（备注）写「命中 NDRP 名单（本地初筛）」「命中 NDRP 名单（实时核对）」「证件姓名与填写姓名不一致」和「实时核对跳过」，操作人为 System。备用方案 C 另有「命中 NDRP 名单（存量复查）」。<span class="ref">PRD 4.4 KYC 审核记录</span></li>
       <li><b>备用方案 A、B、C</b>：不加同步按钮和同步状态行。<span class="ref">PRD 10 备用方案</span></li>
@@ -103,7 +103,7 @@
 P.init({ defaults: { plan: "main", syncResult: "ok" } });
 P.panel(document.getElementById("simPanel"), [
   { title: "切换方案", items: [{ type: "select", key: "plan", label: "方案", options: [["main", "需求方案（主）"], ["A", "备用方案 A"], ["B", "备用方案 B"], ["C", "备用方案 C"]] }] },
-  { title: "手动同步结果（主方案）", items: [{ type: "radio", key: "syncResult", options: [["ok", "成功，变更 3 条"], ["zero", "成功，无变化"], ["fail", "失败"], ["busy", "已有任务在运行（示意：等它完成，按其结果提示）"]] }] },
+  { title: "手动同步结果（主方案，刷新页面后看到）", items: [{ type: "radio", key: "syncResult", options: [["ok", "成功"], ["fail", "失败"]] }, { type: "button", label: "刷新页面", run: function () { refreshSync(); } }] },
   { title: "演示值说明", items: [{ type: "note", text: "账号、时间、条数均为虚构，只用于原型演示。第 2 行会员点 Pass KYC 演示命中名单。" }] },
   { items: [{ type: "reset" }] }
 ]);
@@ -116,15 +116,15 @@ function applyPlan() {
 }
 window.addEventListener("proto-change", applyPlan);
 applyPlan();
-document.getElementById("syncBtn").onclick = function () {
-  var b = this, st = document.getElementById("syncState"), r = P.get("syncResult");
-  b.disabled = true; b.textContent = "同步中…";
-  setTimeout(function () {
-    b.disabled = false; b.textContent = "同步NDRP名单";
-    if (r === "fail") { st.innerHTML = '最后同步 2026-11-26 10:30:08 · <span class="fail">失败</span>'; msg("同步失败，已保留现有名单", false); return; }
-    st.textContent = "最后同步 2026-11-26 10:30:08 · 成功";
-    msg(r === "zero" ? "同步完成，变更 0 条" : "同步完成，变更 3 条", true);  }, r === "busy" ? 1800 : 900);
-};
+/* 点击后开始同步，页面不弹结果提示；刷新页面后同步状态行显示最新结果 */
+var syncClicked = false;
+document.getElementById("syncBtn").onclick = function () { syncClicked = true; };
+function refreshSync() {
+  if (!syncClicked) return;
+  var st = document.getElementById("syncState");
+  if (P.get("syncResult") === "fail") st.innerHTML = '最后同步 2026-11-26 10:30:08 · <span class="fail">失败</span>';
+  else st.textContent = "最后同步 2026-11-26 10:30:08 · 成功";
+}
 document.addEventListener("click", function (e) {
   var b = e.target.closest("[data-pass]"); if (!b) return;
   if (b.dataset.pass === "hit") {
